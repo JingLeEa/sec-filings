@@ -4,7 +4,7 @@
 This is a preprocessing step for manual LLM review. It reads two chunk JSON
 files produced by sec_10k_extractor.py, compares sentences within the same
 company/item/item_title group, removes sentences that appear in both years, and
-writes the remaining year-specific sentences to a separate comparison folder.
+groups the remaining year-specific sentences back into their source paragraphs.
 """
 
 from __future__ import annotations
@@ -62,6 +62,7 @@ def infer_field(records: list[dict[str, Any]], field: str, fallback: str) -> str
 
 
 def split_sentences(text: str) -> list[str]:
+    text = normalize_typography(text)
     text = re.sub(r"\s+", " ", text).strip()
     if not text:
         return []
@@ -76,7 +77,7 @@ def split_sentences(text: str) -> list[str]:
         line = line.strip()
         if not line:
             continue
-        parts.extend(re.split(r"(?<=[.!?])\s+(?=[\"'“‘(\[]?[A-Z0-9])", line))
+        parts.extend(re.split(r"(?<=[.!?])\s+(?=[\"'(\[]?[A-Z0-9])", line))
 
     sentences: list[str] = []
     for part in parts:
@@ -88,17 +89,21 @@ def split_sentences(text: str) -> list[str]:
 
 
 def normalize_sentence(sentence: str) -> str:
-    replacements = {
-        "\u2018": "'",
-        "\u2019": "'",
-        "\u201c": '"',
-        "\u201d": '"',
-        "\u00a0": " ",
-    }
-    for old, new in replacements.items():
-        sentence = sentence.replace(old, new)
+    sentence = normalize_typography(sentence)
     sentence = re.sub(r"\s+", " ", sentence)
     return sentence.strip().casefold()
+
+
+def normalize_typography(text: str) -> str:
+    return (
+        text.replace("\u00a0", " ")
+        .replace("‘", "'")
+        .replace("’", "'")
+        .replace("“", '"')
+        .replace("”", '"')
+        .replace("–", "-")
+        .replace("—", "-")
+    )
 
 
 def group_records(records: list[dict[str, Any]]) -> dict[tuple[str, str], list[dict[str, Any]]]:
@@ -113,12 +118,14 @@ def group_records(records: list[dict[str, Any]]) -> dict[tuple[str, str], list[d
 
 def sentence_occurrences(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     occurrences: list[dict[str, Any]] = []
-    for record in records:
+    for record_index, record in enumerate(records):
         for sentence_index, sentence in enumerate(split_sentences(str(record.get("text", ""))), start=1):
             occurrences.append(
                 {
+                    "record_index": record_index,
                     "source_id": record.get("id", ""),
                     "source_block_index": record.get("source_block_index"),
+                    "item_chunk_index": record.get("item_chunk_index"),
                     "sentence_index": sentence_index,
                     "sentence": sentence,
                     "normalized": normalize_sentence(sentence),
@@ -138,12 +145,36 @@ def remove_shared_sentences(
         if other_counter[key] > 0:
             other_counter[key] -= 1
         else:
-            remaining.append(strip_internal_fields(occurrence))
+            remaining.append(occurrence)
     return remaining
 
 
-def strip_internal_fields(occurrence: dict[str, Any]) -> dict[str, Any]:
-    return {key: value for key, value in occurrence.items() if key != "normalized"}
+def group_sentences_by_paragraph(occurrences: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    paragraphs: list[dict[str, Any]] = []
+    by_source: dict[tuple[int, str], dict[str, Any]] = {}
+
+    for occurrence in occurrences:
+        key = (int(occurrence.get("record_index", 0)), str(occurrence.get("source_id", "")))
+        if key not in by_source:
+            paragraph = {
+                "source_id": occurrence.get("source_id", ""),
+                "source_block_index": occurrence.get("source_block_index"),
+                "item_chunk_index": occurrence.get("item_chunk_index"),
+                "changed_sentence_count": 0,
+                "sentences": [],
+                "text": "",
+            }
+            by_source[key] = paragraph
+            paragraphs.append(paragraph)
+
+        paragraph = by_source[key]
+        paragraph["sentences"].append(occurrence["sentence"])
+        paragraph["changed_sentence_count"] += 1
+
+    for paragraph in paragraphs:
+        paragraph["text"] = " ".join(paragraph["sentences"])
+
+    return paragraphs
 
 
 def item_sort_key(item: str) -> tuple[int, str]:
@@ -171,8 +202,10 @@ def compare_records(
         old_counter = Counter(occurrence["normalized"] for occurrence in old_occurrences)
         new_counter = Counter(occurrence["normalized"] for occurrence in new_occurrences)
         unchanged_count = sum((old_counter & new_counter).values())
-        old_only = remove_shared_sentences(old_occurrences, new_counter)
-        new_only = remove_shared_sentences(new_occurrences, old_counter)
+        old_only_sentences = remove_shared_sentences(old_occurrences, new_counter)
+        new_only_sentences = remove_shared_sentences(new_occurrences, old_counter)
+        old_only_paragraphs = group_sentences_by_paragraph(old_only_sentences)
+        new_only_paragraphs = group_sentences_by_paragraph(new_only_sentences)
 
         item_default_title = first_default_title(old_groups.get((item, item_title), []), new_groups.get((item, item_title), []))
         item_result = items_by_number.setdefault(
@@ -184,25 +217,31 @@ def compare_records(
                 "totals": {
                     f"{old_year}_only_sentences": 0,
                     f"{new_year}_only_sentences": 0,
+                    f"{old_year}_only_paragraphs": 0,
+                    f"{new_year}_only_paragraphs": 0,
                     "unchanged_sentences_removed": 0,
                 },
             },
         )
 
-        if old_only or new_only:
+        if old_only_paragraphs or new_only_paragraphs:
             item_result["item_titles"].append(
                 {
                     "item_title": item_title,
                     f"{old_year}_sentence_count": len(old_occurrences),
                     f"{new_year}_sentence_count": len(new_occurrences),
                     "unchanged_sentences_removed": unchanged_count,
-                    f"{old_year}_only": old_only,
-                    f"{new_year}_only": new_only,
+                    f"{old_year}_only_sentence_count": len(old_only_sentences),
+                    f"{new_year}_only_sentence_count": len(new_only_sentences),
+                    f"{old_year}_only": old_only_paragraphs,
+                    f"{new_year}_only": new_only_paragraphs,
                 }
             )
 
-        item_result["totals"][f"{old_year}_only_sentences"] += len(old_only)
-        item_result["totals"][f"{new_year}_only_sentences"] += len(new_only)
+        item_result["totals"][f"{old_year}_only_sentences"] += len(old_only_sentences)
+        item_result["totals"][f"{new_year}_only_sentences"] += len(new_only_sentences)
+        item_result["totals"][f"{old_year}_only_paragraphs"] += len(old_only_paragraphs)
+        item_result["totals"][f"{new_year}_only_paragraphs"] += len(new_only_paragraphs)
         item_result["totals"]["unchanged_sentences_removed"] += unchanged_count
 
     items = [items_by_number[item] for item in sorted(items_by_number, key=item_sort_key)]
@@ -211,11 +250,13 @@ def compare_records(
         "old_year": old_year,
         "new_year": new_year,
         "comparison": f"{old_year}_vs_{new_year}",
-        "method": "Exact normalized sentence matching within company/item/item_title groups.",
+        "method": "Exact normalized sentence matching within company/item/item_title groups, regrouped by source paragraph.",
         "items": items,
         "totals": {
             f"{old_year}_only_sentences": sum(item["totals"][f"{old_year}_only_sentences"] for item in items),
             f"{new_year}_only_sentences": sum(item["totals"][f"{new_year}_only_sentences"] for item in items),
+            f"{old_year}_only_paragraphs": sum(item["totals"][f"{old_year}_only_paragraphs"] for item in items),
+            f"{new_year}_only_paragraphs": sum(item["totals"][f"{new_year}_only_paragraphs"] for item in items),
             "unchanged_sentences_removed": sum(item["totals"]["unchanged_sentences_removed"] for item in items),
         },
     }
@@ -247,8 +288,10 @@ def write_text_report(path: Path, comparison: dict[str, Any], items: list[dict[s
         lines.append(f"Item {item['item']} - {item['item_default_title']}")
         lines.append(
             "Totals: "
-            f"{old_year}-only {item['totals'][f'{old_year}_only_sentences']}, "
-            f"{new_year}-only {item['totals'][f'{new_year}_only_sentences']}, "
+            f"{old_year}-only {item['totals'][f'{old_year}_only_paragraphs']} paragraphs / "
+            f"{item['totals'][f'{old_year}_only_sentences']} sentences, "
+            f"{new_year}-only {item['totals'][f'{new_year}_only_paragraphs']} paragraphs / "
+            f"{item['totals'][f'{new_year}_only_sentences']} sentences, "
             f"unchanged removed {item['totals']['unchanged_sentences_removed']}"
         )
         lines.append("")
@@ -261,23 +304,39 @@ def write_text_report(path: Path, comparison: dict[str, Any], items: list[dict[s
         for title_group in item["item_titles"]:
             lines.append(f"## {title_group['item_title']}")
             lines.append("")
-            append_sentence_section(lines, f"Only in {old_year}", title_group[f"{old_year}_only"])
-            append_sentence_section(lines, f"Only in {new_year}", title_group[f"{new_year}_only"])
+            append_paragraph_section(
+                lines,
+                f"Only in {old_year}",
+                title_group[f"{old_year}_only"],
+                title_group[f"{old_year}_only_sentence_count"],
+            )
+            append_paragraph_section(
+                lines,
+                f"Only in {new_year}",
+                title_group[f"{new_year}_only"],
+                title_group[f"{new_year}_only_sentence_count"],
+            )
             lines.append("")
 
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
 
-def append_sentence_section(lines: list[str], heading: str, occurrences: list[dict[str, Any]]) -> None:
-    lines.append(f"{heading}: {len(occurrences)}")
-    if not occurrences:
+def append_paragraph_section(
+    lines: list[str],
+    heading: str,
+    paragraphs: list[dict[str, Any]],
+    sentence_count: int,
+) -> None:
+    lines.append(f"{heading}: {len(paragraphs)} paragraphs / {sentence_count} sentences")
+    if not paragraphs:
         lines.append("(none)")
         lines.append("")
         return
-    for occurrence in occurrences:
-        source_id = occurrence.get("source_id", "")
-        sentence = occurrence.get("sentence", "")
-        lines.append(f"[{source_id}] {sentence}")
+    for paragraph in paragraphs:
+        source_id = paragraph.get("source_id", "")
+        text = paragraph.get("text", "")
+        changed_sentence_count = paragraph.get("changed_sentence_count", 0)
+        lines.append(f"[{source_id}] ({changed_sentence_count} changed sentences) {text}")
     lines.append("")
 
 
@@ -326,8 +385,16 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"Output dir: {output_dir}")
     print(f"Items compared: {len(comparison['items'])}")
-    print(f"{old_year}-only sentences: {comparison['totals'][f'{old_year}_only_sentences']}")
-    print(f"{new_year}-only sentences: {comparison['totals'][f'{new_year}_only_sentences']}")
+    print(
+        f"{old_year}-only: "
+        f"{comparison['totals'][f'{old_year}_only_paragraphs']} paragraphs / "
+        f"{comparison['totals'][f'{old_year}_only_sentences']} sentences"
+    )
+    print(
+        f"{new_year}-only: "
+        f"{comparison['totals'][f'{new_year}_only_paragraphs']} paragraphs / "
+        f"{comparison['totals'][f'{new_year}_only_sentences']} sentences"
+    )
     print(f"Unchanged sentences removed: {comparison['totals']['unchanged_sentences_removed']}")
     return 0
 

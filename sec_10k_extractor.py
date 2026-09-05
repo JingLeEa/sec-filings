@@ -233,7 +233,7 @@ class FilingBlockExtractor(HTMLParser):
 
 def clean_block_text(text: str) -> str:
     text = html.unescape(text).replace("\xa0", " ")
-    text = replace_curly_apostrophes(text)
+    text = normalize_typography(text)
     text = text.replace("•", "• ")
     text = re.sub(r"[ \t\r\f\v]+", " ", text)
     text = re.sub(r" *\n *", "\n", text)
@@ -242,8 +242,15 @@ def clean_block_text(text: str) -> str:
     return text.strip()
 
 
-def replace_curly_apostrophes(text: str) -> str:
-    return text.replace("‘", "'").replace("’", "'")
+def normalize_typography(text: str) -> str:
+    return (
+        text.replace("‘", "'")
+        .replace("’", "'")
+        .replace("“", '"')
+        .replace("”", '"')
+        .replace("–", "-")
+        .replace("—", "-")
+    )
 
 
 def is_hidden_style(style: str) -> bool:
@@ -311,7 +318,7 @@ def html_to_clean_text(html_text: str) -> str:
     parser.close()
     text = parser.get_text()
     text = html.unescape(text)
-    text = replace_curly_apostrophes(text)
+    text = normalize_typography(text)
     text = text.replace("\r", "\n").replace("\t", " ")
     text = re.sub(r"[ \f\v]+", " ", text)
     text = re.sub(r" *\n *", "\n", text)
