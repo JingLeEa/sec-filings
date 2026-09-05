@@ -101,7 +101,7 @@ class ExtractorTests(unittest.TestCase):
             <div style="font-weight:700">Item 1. Business</div>
             <div style="margin-bottom:3pt;font-weight:700">Our Company</div>
             <div style="margin-bottom:9pt;text-align:justify">
-              <span>NVIDIA pioneered accelerated computing.</span>
+              <span>NVIDIA’s platform pioneered accelerated computing.</span>
             </div>
             <div style="margin-bottom:9pt;text-align:justify">
               <span>We build full-stack computing infrastructure.</span>
@@ -132,7 +132,7 @@ class ExtractorTests(unittest.TestCase):
         self.assertIn("Our Company", sections["1"])
         self.assertEqual(records[0]["item_title"], "Our Company")
         self.assertEqual(records[0]["company"], "nvda")
-        self.assertEqual(records[0]["text"], "NVIDIA pioneered accelerated computing.")
+        self.assertEqual(records[0]["text"], "NVIDIA's platform pioneered accelerated computing.")
         self.assertEqual(records[1]["item_title"], "Our Company")
         self.assertEqual(records[2]["item_title"], "Risks Related to Our Business and Industry")
         self.assertNotIn("html_tag", records[0])
