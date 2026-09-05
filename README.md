@@ -54,13 +54,42 @@ Each JSON chunk has:
 - If a filing has unusual headings, lower `--max-chars` for smaller LLM chunks or inspect the item TXT files to confirm boundaries.
 - `item` is the SEC item number. `item_default_title` is the standard SEC heading, while `item_title` is the most recent subheader found inside that item.
 
-## Compare Two Years Manually
+## Compare Chunk Files
 
-Run the script once per year, then give the LLM the two JSON or TXT chunk files:
+After extracting two years, compare the chunk JSON files to remove unchanged sentences before LLM review:
 
 ```bash
-python3 sec_10k_extractor.py data/raw/nvda-20230129.htm
-python3 sec_10k_extractor.py data/raw/nvda-20240128.htm
+python3 compare_item_changes.py output/nvda/2023/2023_chunks.json output/nvda/2024/2024_chunks.json
 ```
 
-Use `output/nvda/2023/2023_chunks.txt` and `output/nvda/2024/2024_chunks.txt` as the manual LLM inputs.
+Outputs are written to `comparison/<company>/<old_year>_vs_<new_year>/`.
+
+If you manually verified that a subheader was renamed, pass an explicit title mapping with `--title-map`. The comparison still uses exact sentence matching; it does not fuzzy-match headers.
+
+```bash
+python3 compare_item_changes.py output/nvda/2024/2024_chunks.json output/nvda/2025/2025_chunks.json \
+  --title-map "1A::Risks Related to Demand, Supply and Manufacturing::Risks Related to Demand, Supply, and Manufacturing"
+```
+
+You can also call the comparison logic from Python:
+
+```python
+from pathlib import Path
+
+from compare_item_changes import compare_records, load_records
+
+old_records = load_records(Path("output/nvda/2024/2024_chunks.json"))
+new_records = load_records(Path("output/nvda/2025/2025_chunks.json"))
+
+comparison = compare_records(
+    old_records,
+    new_records,
+    old_year="2024",
+    new_year="2025",
+    company="nvda",
+    title_mappings={
+        ("1A", "Risks Related to Demand, Supply and Manufacturing"):
+            "Risks Related to Demand, Supply, and Manufacturing"
+    },
+)
+```
