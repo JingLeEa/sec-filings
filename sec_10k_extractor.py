@@ -455,6 +455,60 @@ def section_blocks_to_text(section_blocks: dict[str, list[FilingBlock]]) -> dict
     return sections
 
 
+def merge_section_blocks(section_blocks: dict[str, list[FilingBlock]]) -> dict[str, list[FilingBlock]]:
+    return {item: merge_continued_blocks(blocks) for item, blocks in section_blocks.items()}
+
+
+def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
+    merged: list[FilingBlock] = []
+    pending: FilingBlock | None = None
+
+    for block in blocks:
+        if pending is None:
+            pending = block
+            continue
+
+        if should_merge_with_next_block(pending, block):
+            pending = FilingBlock(
+                index=pending.index,
+                tag=pending.tag,
+                text=join_continued_text(pending.text, block.text),
+                style=pending.style,
+                bold=pending.bold,
+            )
+        else:
+            merged.append(pending)
+            pending = block
+
+    if pending is not None:
+        merged.append(pending)
+    return merged
+
+
+def should_merge_with_next_block(previous: FilingBlock, current: FilingBlock) -> bool:
+    if is_subheader_block(previous) or is_subheader_block(current):
+        return False
+    if starts_with_bullet(current.text):
+        return False
+    return not ends_with_sentence_terminal(previous.text)
+
+
+def starts_with_bullet(text: str) -> bool:
+    return text.lstrip().startswith("•")
+
+
+def ends_with_sentence_terminal(text: str) -> bool:
+    return bool(re.search(r"[.!?]\s*[\"')\]]*$", text.strip()))
+
+
+def join_continued_text(previous: str, current: str) -> str:
+    previous = previous.rstrip()
+    current = current.lstrip()
+    if previous.endswith("-"):
+        return previous + current
+    return f"{previous} {current}".strip()
+
+
 def cleanup_section_text(text: str) -> str:
     lines: list[str] = []
     for line in text.splitlines():
@@ -709,7 +763,7 @@ def main(argv: list[str] | None = None) -> int:
 
     raw_html = filing_path.read_text(encoding="utf-8", errors="replace")
     blocks = html_to_blocks(raw_html)
-    section_blocks = extract_section_blocks(blocks)
+    section_blocks = merge_section_blocks(extract_section_blocks(blocks))
     clean_text = html_to_clean_text(raw_html)
     company, filename_year = infer_company_year_from_filename(filing_path)
     year = args.year or filename_year or infer_year(raw_html + "\n" + clean_text, source)

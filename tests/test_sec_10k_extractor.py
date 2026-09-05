@@ -8,6 +8,7 @@ from sec_10k_extractor import (
     html_to_blocks,
     html_to_clean_text,
     infer_company_year_from_filename,
+    merge_continued_blocks,
     normalize_source,
     section_blocks_to_text,
 )
@@ -140,6 +141,54 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual(records[2]["item_title"], "Risks Related to Our Business and Industry")
         self.assertNotIn("html_tag", records[0])
         self.assertNotIn("html_id", records[0])
+
+    def test_merges_cut_off_divs_but_keeps_bullet_points_separate(self):
+        html = """
+        <html>
+          <body>
+            <div style="font-weight:700">Item 1A. Risk Factors</div>
+            <div style="font-weight:700">Operational Risks</div>
+            <div style="margin-bottom:9pt;text-align:justify">
+              <span>The DRIVE Hyperion platform consists of open, modular DRIVE Software</span>
+            </div>
+            <div style="margin-bottom:9pt;text-align:justify">
+              <span>platform.</span>
+            </div>
+            <div style="padding-left:36pt;text-indent:-18pt">
+              <span>&#8226;</span><span>First risk item;</span>
+            </div>
+            <div style="padding-left:36pt;text-indent:-18pt">
+              <span>&#8226;</span><span>Second risk item;</span>
+            </div>
+            <div style="padding-left:36pt;text-indent:-18pt">
+              <span>&#8226;</span><span>Third risk item continues</span>
+            </div>
+            <div style="padding-left:36pt;text-indent:-18pt">
+              <span>onto the next rendered block.</span>
+            </div>
+            <div style="font-weight:700">Item 1B. Unresolved Staff Comments</div>
+          </body>
+        </html>
+        """
+
+        blocks = html_to_blocks(html)
+        section_blocks = extract_section_blocks(blocks, items=("1A",))
+        merged = merge_continued_blocks(section_blocks["1A"])
+        records = build_records_from_section_blocks(
+            {"1A": merged},
+            year="2024",
+            company="nvda",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual(
+            records[0]["text"],
+            "The DRIVE Hyperion platform consists of open, modular DRIVE Software platform.",
+        )
+        self.assertEqual(records[1]["text"], "• First risk item;")
+        self.assertEqual(records[2]["text"], "• Second risk item;")
+        self.assertEqual(records[3]["text"], "• Third risk item continues onto the next rendered block.")
 
 
 if __name__ == "__main__":
