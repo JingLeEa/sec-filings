@@ -115,7 +115,7 @@ def make_annotation(document, title, *, annotator='', previous_section=None,
         (previous_name if previous_section is None else previous_section) if previous_name else '',
         table_chunk_ids(document['previous'], item)[previous_name] if previous_name else '', previous_json,
         (current_name if current_section is None else current_section) if current_name else '',
-        table_chunk_ids(document['previous'], item)[previous_name] if current_name else '', current_json,
+        table_chunk_ids(document['current'], item)[current_name] if current_name else '', current_json,
         change_taxonomy, content_taxonomy, materiality,
     ]))
 
@@ -297,7 +297,12 @@ def main(argv=None):
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--input', type=Path, help='Optional existing result.json; skips extraction')
     parser.add_argument('--table', help='Optional exact table title, case-insensitive; omit for all extracted tables in the Item')
-    parser.add_argument('--output-dir', type=Path, default=Path('table_annotation_export'))
+    parser.add_argument(
+        '--output-dir',
+        type=Path,
+        default=Path('data/table_output/table_annotation_export'),
+        help='Default: data/table_output/table_annotation_export',
+    )
     parser.add_argument('--annotator', default='')
     parser.add_argument('--previous-section', default=None, help='Default: selected table source heading')
     parser.add_argument('--current-section', default=None, help='Default: selected table source heading')

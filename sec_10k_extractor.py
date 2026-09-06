@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Download a SEC 10-K HTML filing and extract cleaned Item sections.
+"""Download a SEC 10-K filing through the SEC API and extract cleaned Item sections.
 
 The pipeline is intentionally small and dependency-free:
 
-    SEC 10-K HTML URL/path -> cleaned text -> Items 1, 1A, 7, 8 -> chunks
+    SEC ticker/year -> filing HTML -> cleaned text -> Items 1, 1A, 7, 8 -> chunks
 
 Outputs are JSON and TXT files with stable paragraph IDs such as 2024_P001.
 """
@@ -11,7 +11,6 @@ Outputs are JSON and TXT files with stable paragraph IDs such as 2024_P001.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import html
 import json
 import os
@@ -22,11 +21,14 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Iterable
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 from urllib.request import Request, urlopen
 
 
 DEFAULT_ITEMS = ("1", "1A", "7", "8")
+SEC_ARCHIVES_BASE = "https://www.sec.gov/Archives/edgar/data"
+SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
+SEC_SUBMISSIONS_BASE = "https://data.sec.gov/submissions"
 ITEM_ENDS = {
     "1": ("1A", "1B", "1C", "2"),
     "1A": ("1B", "1C", "2"),
@@ -289,27 +291,108 @@ def normalize_source(source: str) -> str:
     return source
 
 
-def download_filing(url: str, raw_dir: Path, user_agent: str) -> Path:
-    raw_dir.mkdir(parents=True, exist_ok=True)
-    parsed = urlparse(url)
-    name = Path(parsed.path).name or "filing.html"
-    if not name.lower().endswith((".htm", ".html", ".txt")):
-        digest = hashlib.sha256(url.encode("utf-8")).hexdigest()[:10]
-        name = f"filing_{digest}.html"
-    destination = raw_dir / name
-
+def fetch_url_bytes(url: str, user_agent: str, accept: str = "text/html,application/xhtml+xml,text/plain;q=0.9,*/*;q=0.8") -> bytes:
     request = Request(
         url,
         headers={
             "User-Agent": user_agent,
             "Accept-Encoding": "identity",
-            "Accept": "text/html,application/xhtml+xml,text/plain;q=0.9,*/*;q=0.8",
+            "Accept": accept,
         },
     )
     with urlopen(request, timeout=60) as response:
-        body = response.read()
-    destination.write_bytes(body)
-    return destination
+        return response.read()
+
+
+def fetch_json(url: str, user_agent: str) -> dict:
+    data = fetch_url_bytes(url, user_agent, accept="application/json")
+    try:
+        result = json.loads(data)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"SEC returned non-JSON data for {url}") from exc
+    if not isinstance(result, dict):
+        raise RuntimeError(f"Unexpected SEC JSON response for {url}")
+    return result
+
+
+def normalize_cik(value: str) -> str:
+    digits = re.sub(r"^CIK", "", value.strip(), flags=re.IGNORECASE)
+    if not re.fullmatch(r"\d{1,10}", digits) or int(digits) == 0:
+        raise ValueError("CIK must contain 1-10 digits.")
+    return f"{int(digits):010d}"
+
+
+def resolve_ticker_cik(ticker: str, user_agent: str) -> str:
+    wanted = ticker.strip().upper()
+    if not wanted:
+        raise ValueError("Ticker cannot be blank.")
+    directory = fetch_json(SEC_TICKERS_URL, user_agent)
+    matches = [
+        entry
+        for entry in directory.values()
+        if isinstance(entry, dict) and str(entry.get("ticker", "")).upper() == wanted
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"Ticker {wanted!r} did not resolve uniquely. Use --cik instead.")
+    return normalize_cik(str(matches[0]["cik_str"]))
+
+
+def submissions_rows(columnar: dict) -> list[dict]:
+    count = len(columnar.get("accessionNumber", []))
+    required = ("accessionNumber", "form", "reportDate", "primaryDocument")
+    if any(len(columnar.get(key, [])) != count for key in required):
+        raise RuntimeError("SEC submissions arrays have inconsistent lengths.")
+    return [
+        {key: value[index] for key, value in columnar.items() if isinstance(value, list) and index < len(value)}
+        for index in range(count)
+    ]
+
+
+def sec_document_url(cik: str, filing: dict) -> str:
+    accession = str(filing.get("accessionNumber", ""))
+    document = str(filing.get("primaryDocument", ""))
+    if not re.fullmatch(r"\d{10}-\d{2}-\d{6}", accession):
+        raise ValueError(f"Invalid SEC accession number: {accession}")
+    if not document or document.startswith("/") or ".." in document.split("/"):
+        raise ValueError("SEC filing has an invalid primary document path.")
+    return f"{SEC_ARCHIVES_BASE}/{int(cik)}/{accession.replace('-', '')}/{quote(document, safe='/')}"
+
+
+def discover_10k_filing(cik: str, fiscal_year: str, user_agent: str) -> dict:
+    submissions = fetch_json(f"{SEC_SUBMISSIONS_BASE}/CIK{cik}.json", user_agent)
+    recent = submissions.get("filings", {}).get("recent", {})
+    rows = submissions_rows(recent)
+
+    candidates = [
+        row
+        for row in rows
+        if row.get("form") == "10-K" and str(row.get("reportDate", "")).startswith(fiscal_year)
+    ]
+    if not candidates:
+        available = ", ".join(
+            sorted({str(row.get("reportDate", "")) for row in rows if row.get("form") == "10-K" and row.get("reportDate")})
+        )
+        raise ValueError(f"No original 10-K was found for fiscal year {fiscal_year}. Available report dates: {available}")
+    if len(candidates) > 1:
+        choices = "; ".join(
+            f"{row.get('accessionNumber')} report {row.get('reportDate')} filed {row.get('filingDate')}"
+            for row in candidates
+        )
+        raise ValueError(f"Multiple 10-K filings match fiscal year {fiscal_year}: {choices}. Use a direct filing URL.")
+    return candidates[0]
+
+
+def load_filing_from_sec_api(args: argparse.Namespace) -> tuple[str, str, str]:
+    if not args.user_agent:
+        raise ValueError("SEC API extraction requires --user-agent or SEC_USER_AGENT with your name/email.")
+    if not args.year:
+        raise ValueError("SEC API extraction requires --year, e.g. --year 2024.")
+    cik = resolve_ticker_cik(args.ticker, args.user_agent) if args.ticker else normalize_cik(args.cik)
+    filing = discover_10k_filing(cik, args.year, args.user_agent)
+    source_url = sec_document_url(cik, filing)
+    company = (args.company or args.ticker or args.cik or "unknown").lower()
+    html_text = fetch_url_bytes(source_url, args.user_agent).decode("utf-8", errors="replace")
+    return html_text, source_url, company
 
 
 def html_to_clean_text(html_text: str) -> str:
@@ -734,16 +817,20 @@ def write_outputs(records: list[dict[str, str | int]], sections: dict[str, str],
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Download and extract Item 1, 1A, 7, and 8 from a SEC 10-K HTML filing.")
-    parser.add_argument("source", help="SEC filing HTML URL or a local .html/.htm/.txt file.")
-    parser.add_argument("--year", help="Year prefix for chunk IDs, e.g. 2024. Inferred when possible.")
-    parser.add_argument("--out-dir", default="output", help="Directory for extracted TXT/JSON files.")
-    parser.add_argument("--raw-dir", default="data/raw", help="Directory for downloaded HTML files.")
+    parser = argparse.ArgumentParser(description="Extract Item 1, 1A, 7, and 8 from a SEC 10-K filing.")
+    parser.add_argument("source", nargs="?", help="Optional SEC filing HTML URL or local .html/.htm/.txt file.")
+    identity = parser.add_mutually_exclusive_group()
+    identity.add_argument("--ticker", help="SEC ticker for API extraction, e.g. NVDA.")
+    identity.add_argument("--cik", help="SEC CIK for API extraction.")
+    parser.add_argument("--company", help="Company folder/name override. Defaults to ticker or filing filename.")
+    parser.add_argument("--year", help="Fiscal year / chunk ID prefix, e.g. 2024. Required for API extraction.")
+    parser.add_argument("--out-dir", default="data/raw", help="Directory for extracted TXT/JSON files. Default: data/raw.")
+    parser.add_argument("--raw-dir", help=argparse.SUPPRESS)
     parser.add_argument("--max-chars", type=int, default=1800, help="Maximum characters per disclosure chunk.")
     parser.add_argument("--min-chars", type=int, default=120, help="Small paragraphs are merged until roughly this size.")
     parser.add_argument(
         "--user-agent",
-        default=os.environ.get("SEC_USER_AGENT", "simple-sec-extractor/0.1 contact@example.com"),
+        default=os.environ.get("SEC_USER_AGENT", ""),
         help="SEC download User-Agent. Prefer setting SEC_USER_AGENT='Name email@example.com'.",
     )
     return parser.parse_args(argv)
@@ -751,21 +838,44 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
-    source = normalize_source(args.source)
+    api_mode = bool(args.ticker or args.cik)
 
-    if is_url(source):
-        filing_path = download_filing(source, Path(args.raw_dir), args.user_agent)
-    else:
-        filing_path = Path(source)
-        if not filing_path.exists():
-            print(f"Input file not found: {filing_path}", file=sys.stderr)
-            return 2
+    try:
+        if api_mode:
+            if args.source:
+                raise ValueError("Use either --ticker/--cik API extraction or a source file/URL, not both.")
+            raw_html, source, company = load_filing_from_sec_api(args)
+            filename_year = None
+            source_label = f"Source URL: {source}"
+        else:
+            if not args.source:
+                raise ValueError("Provide --ticker/--cik with --year, or provide a local filing path / SEC filing URL.")
+            source = normalize_source(args.source)
+            if is_url(source):
+                if urlparse(source).netloc.endswith("sec.gov") and not args.user_agent:
+                    raise ValueError("SEC URL extraction requires --user-agent or SEC_USER_AGENT with your name/email.")
+                raw_html = fetch_url_bytes(source, args.user_agent).decode("utf-8", errors="replace")
+                company, filename_year = infer_company_year_from_filename(Path(urlparse(source).path))
+                source_label = f"Source URL: {source}"
+            else:
+                filing_path = Path(source)
+                if not filing_path.exists():
+                    print(f"Input file not found: {filing_path}", file=sys.stderr)
+                    return 2
+                raw_html = filing_path.read_text(encoding="utf-8", errors="replace")
+                company, filename_year = infer_company_year_from_filename(filing_path)
+                source_label = f"Source file: {filing_path}"
+            company = (args.company or company).lower()
+    except (ValueError, RuntimeError, OSError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 2
 
-    raw_html = filing_path.read_text(encoding="utf-8", errors="replace")
+    if args.raw_dir:
+        print("Warning: --raw-dir is deprecated and ignored; source HTML is no longer saved.", file=sys.stderr)
+
     blocks = html_to_blocks(raw_html)
     section_blocks = merge_section_blocks(extract_section_blocks(blocks))
     clean_text = html_to_clean_text(raw_html)
-    company, filename_year = infer_company_year_from_filename(filing_path)
     year = args.year or filename_year or infer_year(raw_html + "\n" + clean_text, source)
 
     if section_blocks:
@@ -795,7 +905,7 @@ def main(argv: list[str] | None = None) -> int:
     output_dir = Path(args.out_dir) / company / year
     write_outputs(records, sections, output_dir, year)
 
-    print(f"Source file: {filing_path}")
+    print(source_label)
     print(f"Company: {company}")
     print(f"Year: {year}")
     print(f"Output dir: {output_dir}")

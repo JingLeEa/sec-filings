@@ -1379,7 +1379,7 @@ def main(argv=None):
     parser.add_argument('--item', type=normalize_item, default='7')
     parser.add_argument('--filings-dir', default='.')
     parser.add_argument('--table', help='Optional exact table title, case-insensitive; otherwise all supported tables in the Item')
-    parser.add_argument('--output-dir')
+    parser.add_argument('--output-dir', help='Default: data/table_output/<company>_<previous>_<current>_item_<item>_tables')
     parser.add_argument('--output-format', choices=['json', 'csv', 'both'], default='json',
                         help='json (default): nested table data; csv: comparison annotations; both: all outputs')
     parser.add_argument('--previous-source-url', default='')
@@ -1463,7 +1463,7 @@ def main(argv=None):
                 setattr(args, side, str(existing[0]))
         if args.previous_year >= args.current_year:
             raise ValueError('Previous fiscal year must be earlier than current fiscal year.')
-        out = Path(args.output_dir or f'{slug(args.company)}_{args.previous_year}_{args.current_year}_item_{args.item.lower()}_tables')
+        out = Path(args.output_dir) if args.output_dir else Path('data/table_output') / f'{slug(args.company)}_{args.previous_year}_{args.current_year}_item_{args.item.lower()}_tables'
         tables, diagnostics = {}, {}
         for side in ['previous', 'current']:
             source = getattr(args, side)

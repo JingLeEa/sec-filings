@@ -1,33 +1,33 @@
 # Simple SEC 10-K Extraction Pipeline
 
-This project downloads a SEC 10-K HTML filing, removes HTML/tables/page noise, extracts Item 1, Item 1A, Item 7, and Item 8, then writes paragraph/disclosure chunks with IDs like `2024_P001`.
+This project uses the SEC submissions API to find a 10-K filing, removes HTML/tables/page noise, extracts Item 1, Item 1A, Item 7, and Item 8, then writes paragraph/disclosure chunks with IDs like `2024_P001`.
 
 For filings like NVIDIA's inline XBRL HTML, displayed paragraphs are usually stored as styled `<div>` blocks rather than `<p>` tags. The extractor therefore chunks by meaningful HTML block and carries the latest short subheader, such as `Our Company` or `Data Center`, into each chunk's `item_title`.
 
 ## Usage
 
-Use a SEC filing URL:
+Use the SEC API with a ticker and fiscal year:
 
 ```bash
 export SEC_USER_AGENT="Your Name your.email@example.com"
-python3 sec_10k_extractor.py "https://www.sec.gov/Archives/edgar/data/.../.../nvda-20240128.htm"
+python3 sec_10k_extractor.py --ticker NVDA --year 2024
 ```
 
-Or use a local HTML file:
+You can still use a direct SEC filing URL or local HTML file when needed:
 
 ```bash
-python3 sec_10k_extractor.py data/raw/nvda-20240128.htm
+python3 sec_10k_extractor.py "https://www.sec.gov/Archives/edgar/data/.../.../nvda-20240128.htm" --year 2024
 ```
 
 ## Outputs
 
-For filenames like `nvda-20240128.htm`, the pipeline writes to `output/<company>/<year>/`:
+The pipeline writes extracted chunk outputs to `data/raw/<company>/<year>/`:
 
 - `<year>_chunks.json`: structured chunks for LLM input.
 - `<year>_chunks.txt`: readable chunk file for manual copy/paste.
 - `<year>_item_1.txt`, `<year>_item_1a.txt`, `<year>_item_7.txt`, `<year>_item_8.txt`: cleaned full section text.
 
-Downloaded SEC HTML files are saved in `data/raw/`.
+SEC API extraction reads the filing HTML in memory and does not save downloaded HTML files.
 
 Each JSON chunk has:
 
@@ -50,24 +50,25 @@ Each JSON chunk has:
 
 - The extractor removes HTML tables before section text is written, matching the goal of clean disclosure text. Item 8 financial statements often contain important tables, so this pipeline is best for narrative extraction rather than numeric statement reconstruction.
 - SEC downloads should use a descriptive `SEC_USER_AGENT` with your name/email.
-- Company/year are inferred from the downloaded or local filing filename. For `nvda-20240128.htm`, company is `nvda` and year is `2024`.
+- API extraction uses the ticker as the company folder by default. For local files, company/year are inferred from filenames like `nvda-20240128.htm`.
 - If a filing has unusual headings, lower `--max-chars` for smaller LLM chunks or inspect the item TXT files to confirm boundaries.
 - `item` is the SEC item number. `item_default_title` is the standard SEC heading, while `item_title` is the most recent subheader found inside that item.
+- Generated files live under `data/`, which is ignored by Git.
 
 ## Compare Chunk Files
 
 After extracting two years, compare the chunk JSON files to remove unchanged sentences before LLM review:
 
 ```bash
-python3 compare_item_changes.py output/nvda/2023/2023_chunks.json output/nvda/2024/2024_chunks.json
+python3 compare_item_changes.py data/raw/nvda/2023/2023_chunks.json data/raw/nvda/2024/2024_chunks.json
 ```
 
-Outputs are written to `comparison/<company>/<old_year>_vs_<new_year>/`.
+Outputs are written to `data/comparison/<company>/<old_year>_vs_<new_year>/`.
 
 If you manually verified that a subheader was renamed, pass an explicit title mapping with `--title-map`. The comparison still uses exact sentence matching; it does not fuzzy-match headers.
 
 ```bash
-python3 compare_item_changes.py output/nvda/2024/2024_chunks.json output/nvda/2025/2025_chunks.json \
+python3 compare_item_changes.py data/raw/nvda/2024/2024_chunks.json data/raw/nvda/2025/2025_chunks.json \
   --title-map "1A::Risks Related to Demand, Supply and Manufacturing::Risks Related to Demand, Supply, and Manufacturing"
 ```
 
@@ -78,8 +79,8 @@ from pathlib import Path
 
 from compare_item_changes import compare_records, load_records
 
-old_records = load_records(Path("output/nvda/2024/2024_chunks.json"))
-new_records = load_records(Path("output/nvda/2025/2025_chunks.json"))
+old_records = load_records(Path("data/raw/nvda/2024/2024_chunks.json"))
+new_records = load_records(Path("data/raw/nvda/2025/2025_chunks.json"))
 
 comparison = compare_records(
     old_records,
@@ -93,6 +94,26 @@ comparison = compare_records(
     },
 )
 ```
+
+## Convert Annotation IDs
+
+If chunk IDs change after rerunning extraction, convert an existing annotation CSV to the latest IDs:
+
+```bash
+python3 convert_annotation_ids.py data/id_conversion/nvidia_input.csv \
+  --previous-json data/raw/nvda/2023/2023_chunks.json \
+  --current-json data/raw/nvda/2024/2024_chunks.json \
+  --output-csv data/id_conversion/nvidia_input_converted.csv
+```
+
+The input CSV must include these columns:
+
+- `Previous Paragraph / Chunk ID`
+- `Current Paragraph / Chunk ID`
+- `Previous Disclosure Text`
+- `Current Disclosure Text`
+
+The converter keeps the original CSV columns, updates the previous/current chunk ID columns when the disclosure text matches the latest chunks, and adds audit columns such as `Previous ID Conversion Status` and `Current ID Conversion Status`.
 
 # HTML 10-K tables to nested JSON
 
@@ -110,7 +131,7 @@ python export_table_annotations.py \
   --ticker MU --company Micron \
   --previous-year 2024 --current-year 2025 --item 7 \
   --user-agent "Your name your-email@example.com" \
-  --output-dir item7_all_tables_annotations
+  --output-dir data/table_output/item7_all_tables_annotations
 ```
 or the command below if you wish to get result from specify table
 
@@ -120,10 +141,10 @@ python export_table_annotations.py \
   --previous-year 2024 --current-year 2025 --item 7 \
   --table "Consolidated Results" \
   --user-agent "Your name your-email@example.com" \
-  --output-dir consolidated_results_annotations
+  --output-dir data/table_output/consolidated_results_annotations
 ```
 
-Replace the contact details with your own.
+Replace the contact details with your own. If `--output-dir` is omitted, table annotation files are written under `data/table_output/table_annotation_export/`.
 
 The output folder contains:
 
