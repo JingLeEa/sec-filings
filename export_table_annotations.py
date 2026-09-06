@@ -86,7 +86,7 @@ def table_chunk_ids(filing, item):
         index = metadata.get(name, {}).get('item_table_index', position)
         if type(index) is not int or index < 1:
             raise ValueError(f'{name!r}: item_table_index must be a positive integer.')
-        chunk_id = f'table_{item}_{index:02d}'
+        chunk_id = f"table_{filing['fiscal_year']}_{item}_{index:02d}"
         if chunk_id in used:
             raise ValueError(f'Duplicate table position {index} within one filing.')
         used.add(chunk_id)
