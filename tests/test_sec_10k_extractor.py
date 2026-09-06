@@ -10,6 +10,7 @@ from sec_10k_extractor import (
     infer_company_year_from_filename,
     merge_continued_blocks,
     normalize_source,
+    parse_args,
     section_blocks_to_text,
 )
 from pathlib import Path
@@ -44,6 +45,14 @@ class ExtractorTests(unittest.TestCase):
 
         self.assertEqual(company, "nvda")
         self.assertEqual(year, "2023")
+
+    def test_api_extraction_args_default_to_data_raw(self):
+        args = parse_args(["--ticker", "NVDA", "--year", "2024"])
+
+        self.assertEqual(args.ticker, "NVDA")
+        self.assertEqual(args.year, "2024")
+        self.assertEqual(args.out_dir, "data/raw")
+        self.assertIsNone(args.source)
 
     def test_extracts_body_items_and_assigns_global_ids(self):
         html = """

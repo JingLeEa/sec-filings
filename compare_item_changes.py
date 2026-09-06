@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_OUT_DIR = "comparison"
+DEFAULT_OUT_DIR = "data/comparison"
 COMMON_ABBREVIATIONS = (
     "Co.",
     "Corp.",
@@ -467,9 +467,9 @@ def write_outputs(comparison: dict[str, Any], out_dir: Path) -> None:
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Compare SEC extraction chunks across two consecutive years.")
-    parser.add_argument("old_json", type=Path, help="Older year chunks JSON, e.g. output/nvda/2023/2023_chunks.json")
-    parser.add_argument("new_json", type=Path, help="Newer year chunks JSON, e.g. output/nvda/2024/2024_chunks.json")
-    parser.add_argument("--out-dir", default=DEFAULT_OUT_DIR, type=Path, help="Base directory for comparison outputs.")
+    parser.add_argument("old_json", type=Path, help="Older year chunks JSON, e.g. data/raw/nvda/2023/2023_chunks.json")
+    parser.add_argument("new_json", type=Path, help="Newer year chunks JSON, e.g. data/raw/nvda/2024/2024_chunks.json")
+    parser.add_argument("--out-dir", default=DEFAULT_OUT_DIR, type=Path, help="Base directory for comparison outputs. Default: data/comparison.")
     parser.add_argument("--company", help="Company folder/name override. Defaults to the JSON company field.")
     parser.add_argument("--old-year", help="Older year override. Defaults to the JSON year field.")
     parser.add_argument("--new-year", help="Newer year override. Defaults to the JSON year field.")
