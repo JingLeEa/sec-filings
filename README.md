@@ -93,3 +93,45 @@ comparison = compare_records(
     },
 )
 ```
+
+# HTML 10-K tables to nested JSON
+
+Extract numerical tables from **one selected Item** of two full 10-K HTML filings.
+Nested JSON is the default output. Main extractor version 1.3.0 adds verified labels for unlabelled footer totals and explicit nulls for missing percentage displays. The existing CSV comparison remains available with `--output-format csv` or `--output-format both`.
+
+It runs locally using Python 3.10+ and `lxml`. No LLM, API key, pandas, browser automation, or PDF parsing is involved.
+
+## One command: SEC API to your annotation TSV
+
+Keep `export_table_annotations.py` and `compare_html_tables.py` in the same folder. Install the dependency once with `python -m pip install -r requirements.txt`, then run only the exporter:
+
+```bash
+python export_table_annotations.py \
+  --ticker MU --company Micron \
+  --previous-year 2024 --current-year 2025 --item 7 \
+  --user-agent "Your name your-email@example.com" \
+  --output-dir item7_all_tables_annotations
+```
+or the command below if you wish to get result from specify table
+
+```bash
+python export_table_annotations.py \
+  --ticker MU --company Micron \
+  --previous-year 2024 --current-year 2025 --item 7 \
+  --table "Consolidated Results" \
+  --user-agent "Your name your-email@example.com" \
+  --output-dir consolidated_results_annotations
+```
+
+Replace the contact details with your own.
+
+The output folder contains:
+
+| File | Purpose |
+|---|---|
+| `result.json` | The selected table from each filing, plus the extractor's provenance. |
+| `table_annotations.tsv` | Your 17 columns with a header and one complete table-pair annotation row. |
+| `paste_into_sheets.tsv` | The same annotation row without a header, using fully quoted TSV fields. |
+| `paste_into_sheets.html` | A local copy helper that supplies a 17-cell HTML table and a quoted-text fallback to the clipboard. |
+
+Open **`paste_into_sheets.html` in your browser**, click **Copy row**, single-click column **A** of an empty annotation row in Google Sheets, then paste normally with **Cmd+V / Ctrl+V**.
