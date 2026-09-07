@@ -1,6 +1,6 @@
 # Simple SEC 10-K Extraction Pipeline
 
-This project uses the SEC submissions API to find a 10-K filing, removes HTML/tables/page noise, extracts Item 1, Item 1A, Item 7, and Item 8, then writes paragraph/disclosure chunks with IDs like `2024_P001`.
+This project uses the SEC submissions API to find a 10-K filing, removes HTML/tables/page noise, extracts Item 1, Item 1A, Item 7, and Item 8, then writes paragraph/disclosure chunks with IDs like `2024_1_P001` and `2024_7_P001`.
 
 For filings like NVIDIA's inline XBRL HTML, displayed paragraphs are usually stored as styled `<div>` blocks rather than `<p>` tags. The extractor therefore chunks by meaningful HTML block and carries the latest short subheader, such as `Our Company` or `Data Center`, into each chunk's `item_title`.
 
@@ -33,7 +33,7 @@ Each JSON chunk has:
 
 ```json
 {
-  "id": "2024_P001",
+  "id": "2024_1_P001",
   "company": "nvda",
   "year": "2024",
   "item": "1",
@@ -53,6 +53,7 @@ Each JSON chunk has:
 - API extraction uses the ticker as the company folder by default. For local files, company/year are inferred from filenames like `nvda-20240128.htm`.
 - If a filing has unusual headings, lower `--max-chars` for smaller LLM chunks or inspect the item TXT files to confirm boundaries.
 - `item` is the SEC item number. `item_default_title` is the standard SEC heading, while `item_title` is the most recent subheader found inside that item.
+- Chunk IDs reset within each item: Item 1 starts at `2024_1_P001`, Item 1A starts at `2024_1A_P001`, Item 7 starts at `2024_7_P001`, and Item 8 starts at `2024_8_P001`.
 - Generated files live under `data/`, which is ignored by Git.
 
 ## Compare Chunk Files
@@ -97,23 +98,32 @@ comparison = compare_records(
 
 ## Convert Annotation IDs
 
-If chunk IDs change after rerunning extraction, convert an existing annotation CSV to the latest IDs:
+If chunk IDs change after rerunning extraction, convert an existing annotation CSV to the latest IDs. The converter can process mixed year pairs in one file by reading `Previous Fiscal Year` and `Current Fiscal Year` on each row:
 
 ```bash
 python3 convert_annotation_ids.py data/id_conversion/nvidia_input.csv \
-  --previous-json data/raw/nvda/2023/2023_chunks.json \
-  --current-json data/raw/nvda/2024/2024_chunks.json \
-  --output-csv data/id_conversion/nvidia_input_converted.csv
+  --chunks-root data/raw \
+  --company nvda
 ```
 
 The input CSV must include these columns:
 
 - `Previous Paragraph / Chunk ID`
 - `Current Paragraph / Chunk ID`
+- `Previous Fiscal Year`
+- `Current Fiscal Year`
 - `Previous Disclosure Text`
 - `Current Disclosure Text`
 
 The converter keeps the original CSV columns, updates the previous/current chunk ID columns when the disclosure text matches the latest chunks, and adds audit columns such as `Previous ID Conversion Status` and `Current ID Conversion Status`.
+
+For a CSV that contains only one year pair, you can still point directly to the two chunk JSON files:
+
+```bash
+python3 convert_annotation_ids.py data/id_conversion/nvidia_input.csv \
+  --previous-json data/raw/nvda/2023/2023_chunks.json \
+  --current-json data/raw/nvda/2024/2024_chunks.json
+```
 
 # HTML 10-K tables to nested JSON
 

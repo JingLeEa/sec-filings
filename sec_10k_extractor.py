@@ -5,7 +5,7 @@ The pipeline is intentionally small and dependency-free:
 
     SEC ticker/year -> filing HTML -> cleaned text -> Items 1, 1A, 7, 8 -> chunks
 
-Outputs are JSON and TXT files with stable paragraph IDs such as 2024_P001.
+Outputs are JSON and TXT files with stable paragraph IDs such as 2024_1_P001.
 """
 
 from __future__ import annotations
@@ -727,6 +727,10 @@ def infer_company_year_from_filename(path: Path) -> tuple[str, str | None]:
     return (company or "unknown", None)
 
 
+def make_chunk_id(year: str, item: str, item_chunk_index: int) -> str:
+    return f"{year}_{item}_P{item_chunk_index:03d}"
+
+
 def build_records(
     sections: dict[str, str],
     year: str,
@@ -736,14 +740,13 @@ def build_records(
     min_chars: int,
 ) -> list[dict[str, str | int]]:
     records: list[dict[str, str | int]] = []
-    sequence = 1
     for item in DEFAULT_ITEMS:
         if item not in sections:
             continue
         for chunk_index, chunk in enumerate(split_into_chunks(sections[item], max_chars=max_chars, min_chars=min_chars), start=1):
             records.append(
                 {
-                    "id": f"{year}_P{sequence:03d}",
+                    "id": make_chunk_id(year, item, chunk_index),
                     "company": company,
                     "year": year,
                     "item": item,
@@ -754,7 +757,6 @@ def build_records(
                     "source": source,
                 }
             )
-            sequence += 1
     return records
 
 
@@ -766,7 +768,6 @@ def build_records_from_section_blocks(
     max_chars: int,
 ) -> list[dict[str, str | int]]:
     records: list[dict[str, str | int]] = []
-    sequence = 1
 
     for item in DEFAULT_ITEMS:
         if item not in section_blocks:
@@ -782,7 +783,7 @@ def build_records_from_section_blocks(
             for text in split_long_paragraph(block.text, max_chars=max_chars):
                 records.append(
                     {
-                        "id": f"{year}_P{sequence:03d}",
+                        "id": make_chunk_id(year, item, item_chunk_index),
                         "company": company,
                         "year": year,
                         "item": item,
@@ -794,7 +795,6 @@ def build_records_from_section_blocks(
                         "source": source,
                     }
                 )
-                sequence += 1
                 item_chunk_index += 1
 
     return records

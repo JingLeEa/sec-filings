@@ -24,6 +24,9 @@ PREVIOUS_TEXT_COL = "Previous Disclosure Text"
 CURRENT_TEXT_COL = "Current Disclosure Text"
 PREVIOUS_SECTION_COL = "Previous Section / Subsection"
 CURRENT_SECTION_COL = "Current Section / Subsection"
+PREVIOUS_YEAR_COL = "Previous Fiscal Year"
+CURRENT_YEAR_COL = "Current Fiscal Year"
+COMPANY_COL = "Company"
 ITEM_COL = "Item"
 
 AUDIT_COLUMNS = [
@@ -34,6 +37,18 @@ AUDIT_COLUMNS = [
     "Previous ID Match Count",
     "Current ID Match Count",
 ]
+COLUMN_ALIASES = {
+    PREVIOUS_ID_COL: [PREVIOUS_ID_COL],
+    CURRENT_ID_COL: [CURRENT_ID_COL],
+    PREVIOUS_TEXT_COL: [PREVIOUS_TEXT_COL],
+    CURRENT_TEXT_COL: [CURRENT_TEXT_COL],
+    PREVIOUS_SECTION_COL: [PREVIOUS_SECTION_COL, "Previous Section / Subsection (Header 2)"],
+    CURRENT_SECTION_COL: [CURRENT_SECTION_COL, "Current Section / Subsection (Header 2)"],
+    PREVIOUS_YEAR_COL: [PREVIOUS_YEAR_COL],
+    CURRENT_YEAR_COL: [CURRENT_YEAR_COL],
+    COMPANY_COL: [COMPANY_COL],
+    ITEM_COL: [ITEM_COL],
+}
 
 
 def load_chunks(path: Path) -> list[dict[str, Any]]:
@@ -47,6 +62,33 @@ def load_chunks(path: Path) -> list[dict[str, Any]]:
     if not isinstance(records, list):
         raise SystemExit(f"Expected chunk JSON to be a list: {path}")
     return records
+
+
+def normalize_header(value: str) -> str:
+    return re.sub(r"\s+", " ", value).strip().casefold()
+
+
+def resolve_columns(fieldnames: list[str]) -> dict[str, str]:
+    by_name = {normalize_header(fieldname): fieldname for fieldname in fieldnames}
+    resolved: dict[str, str] = {}
+    for canonical, aliases in COLUMN_ALIASES.items():
+        for alias in aliases:
+            actual = by_name.get(normalize_header(alias))
+            if actual:
+                resolved[canonical] = actual
+                break
+    return resolved
+
+
+def require_columns(column_map: dict[str, str], columns: list[str]) -> None:
+    for column in columns:
+        if column not in column_map:
+            raise SystemExit(f"Required column missing from CSV: {column}")
+
+
+def row_value(row: dict[str, str], column_map: dict[str, str], column: str) -> str:
+    actual = column_map.get(column)
+    return row.get(actual, "") if actual else ""
 
 
 def normalize_text(text: str) -> str:
@@ -66,6 +108,17 @@ def normalize_text(text: str) -> str:
 def normalize_item(value: str) -> str:
     value = re.sub(r"^item\s+", "", value.strip(), flags=re.IGNORECASE)
     return value.upper().replace(" ", "")
+
+
+def normalize_year(value: str) -> str:
+    match = re.search(r"(?:19|20)\d{2}", value.strip())
+    if not match:
+        return ""
+    return match.group(0)
+
+
+def normalize_company(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", value.strip().lower()).strip("_")
 
 
 def build_search_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -165,7 +218,9 @@ def convert_rows(
     rows: list[dict[str, str]],
     previous_records: list[dict[str, Any]],
     current_records: list[dict[str, Any]],
+    column_map: dict[str, str] | None = None,
 ) -> tuple[list[dict[str, str]], Counter[str]]:
+    column_map = column_map or {column: column for column in COLUMN_ALIASES}
     previous_search = build_search_records(previous_records)
     current_search = build_search_records(current_records)
     statuses: Counter[str] = Counter()
@@ -173,28 +228,28 @@ def convert_rows(
     converted_rows: list[dict[str, str]] = []
     for row in rows:
         converted = dict(row)
-        original_previous_id = converted.get(PREVIOUS_ID_COL, "")
-        original_current_id = converted.get(CURRENT_ID_COL, "")
+        original_previous_id = row_value(converted, column_map, PREVIOUS_ID_COL)
+        original_current_id = row_value(converted, column_map, CURRENT_ID_COL)
         converted["Original Previous Paragraph / Chunk ID"] = original_previous_id
         converted["Original Current Paragraph / Chunk ID"] = original_current_id
 
         previous_id, previous_status, previous_count = find_latest_id(
-            disclosure_text=converted.get(PREVIOUS_TEXT_COL, ""),
+            disclosure_text=row_value(converted, column_map, PREVIOUS_TEXT_COL),
             old_id=original_previous_id,
-            item=converted.get(ITEM_COL, ""),
-            item_title=converted.get(PREVIOUS_SECTION_COL, ""),
+            item=row_value(converted, column_map, ITEM_COL),
+            item_title=row_value(converted, column_map, PREVIOUS_SECTION_COL),
             records=previous_search,
         )
         current_id, current_status, current_count = find_latest_id(
-            disclosure_text=converted.get(CURRENT_TEXT_COL, ""),
+            disclosure_text=row_value(converted, column_map, CURRENT_TEXT_COL),
             old_id=original_current_id,
-            item=converted.get(ITEM_COL, ""),
-            item_title=converted.get(CURRENT_SECTION_COL, ""),
+            item=row_value(converted, column_map, ITEM_COL),
+            item_title=row_value(converted, column_map, CURRENT_SECTION_COL),
             records=current_search,
         )
 
-        converted[PREVIOUS_ID_COL] = previous_id
-        converted[CURRENT_ID_COL] = current_id
+        converted[column_map[PREVIOUS_ID_COL]] = previous_id
+        converted[column_map[CURRENT_ID_COL]] = current_id
         converted["Previous ID Conversion Status"] = previous_status
         converted["Current ID Conversion Status"] = current_status
         converted["Previous ID Match Count"] = str(previous_count)
@@ -206,12 +261,107 @@ def convert_rows(
     return converted_rows, statuses
 
 
+class ChunkCache:
+    def __init__(self, chunks_root: Path, default_company: str = "") -> None:
+        self.chunks_root = chunks_root
+        self.default_company = normalize_company(default_company)
+        self._cache: dict[tuple[str, str], list[dict[str, Any]]] = {}
+
+    def records_for(self, company: str, year: str) -> list[dict[str, Any]]:
+        normalized_company = normalize_company(company) or self.default_company
+        normalized_year = normalize_year(year)
+        if not normalized_company:
+            raise SystemExit("Company is required for year-based conversion. Pass --company, or include a Company column.")
+        if not normalized_year:
+            raise SystemExit(f"Could not read fiscal year from value: {year!r}")
+
+        key = (normalized_company, normalized_year)
+        if key not in self._cache:
+            path = self.chunks_root / normalized_company / normalized_year / f"{normalized_year}_chunks.json"
+            self._cache[key] = build_search_records(load_chunks(path))
+        return self._cache[key]
+
+
+def convert_rows_by_fiscal_year(
+    rows: list[dict[str, str]],
+    chunks_root: Path,
+    default_company: str,
+    column_map: dict[str, str],
+) -> tuple[list[dict[str, str]], Counter[str]]:
+    cache = ChunkCache(chunks_root, default_company)
+    statuses: Counter[str] = Counter()
+    converted_rows: list[dict[str, str]] = []
+
+    for row in rows:
+        converted = dict(row)
+        original_previous_id = row_value(converted, column_map, PREVIOUS_ID_COL)
+        original_current_id = row_value(converted, column_map, CURRENT_ID_COL)
+        converted["Original Previous Paragraph / Chunk ID"] = original_previous_id
+        converted["Original Current Paragraph / Chunk ID"] = original_current_id
+
+        company = default_company or row_value(converted, column_map, COMPANY_COL)
+        previous_id, previous_status, previous_count = find_latest_id_for_year(
+            cache=cache,
+            company=company,
+            year=row_value(converted, column_map, PREVIOUS_YEAR_COL),
+            disclosure_text=row_value(converted, column_map, PREVIOUS_TEXT_COL),
+            old_id=original_previous_id,
+            item=row_value(converted, column_map, ITEM_COL),
+            item_title=row_value(converted, column_map, PREVIOUS_SECTION_COL),
+        )
+        current_id, current_status, current_count = find_latest_id_for_year(
+            cache=cache,
+            company=company,
+            year=row_value(converted, column_map, CURRENT_YEAR_COL),
+            disclosure_text=row_value(converted, column_map, CURRENT_TEXT_COL),
+            old_id=original_current_id,
+            item=row_value(converted, column_map, ITEM_COL),
+            item_title=row_value(converted, column_map, CURRENT_SECTION_COL),
+        )
+
+        converted[column_map[PREVIOUS_ID_COL]] = previous_id
+        converted[column_map[CURRENT_ID_COL]] = current_id
+        converted["Previous ID Conversion Status"] = previous_status
+        converted["Current ID Conversion Status"] = current_status
+        converted["Previous ID Match Count"] = str(previous_count)
+        converted["Current ID Match Count"] = str(current_count)
+        statuses[f"previous:{previous_status}"] += 1
+        statuses[f"current:{current_status}"] += 1
+        converted_rows.append(converted)
+
+    return converted_rows, statuses
+
+
+def find_latest_id_for_year(
+    cache: ChunkCache,
+    company: str,
+    year: str,
+    disclosure_text: str,
+    old_id: str,
+    item: str,
+    item_title: str,
+) -> tuple[str, str, int]:
+    if not normalize_text(disclosure_text):
+        return old_id, "no_text", 0
+    if not normalize_year(year):
+        return old_id, "missing_year", 0
+    return find_latest_id(
+        disclosure_text=disclosure_text,
+        old_id=old_id,
+        item=item,
+        item_title=item_title,
+        records=cache.records_for(company, year),
+    )
+
+
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Convert annotation CSV IDs to latest chunk IDs.")
     parser.add_argument("input_csv", type=Path, help="Annotation CSV to convert.")
-    parser.add_argument("--previous-json", required=True, type=Path, help="Latest previous-year chunks JSON.")
-    parser.add_argument("--current-json", required=True, type=Path, help="Latest current-year chunks JSON.")
-    parser.add_argument("--output-csv", type=Path, help="Converted CSV path.")
+    parser.add_argument("--chunks-root", default=Path("data/raw"), type=Path, help="Root containing <company>/<year>/<year>_chunks.json. Default: data/raw.")
+    parser.add_argument("--company", default="", help="Company folder for year-based lookup, e.g. nvda. Required unless the CSV has a Company column.")
+    parser.add_argument("--previous-json", type=Path, help="Single-pair mode: latest previous-year chunks JSON.")
+    parser.add_argument("--current-json", type=Path, help="Single-pair mode: latest current-year chunks JSON.")
+    parser.add_argument("--output-csv", type=Path, help="Converted CSV path. Default: <input_name>_converted.csv beside the input file.")
     return parser.parse_args(argv)
 
 
@@ -226,13 +376,24 @@ def main(argv: list[str] | None = None) -> int:
         fieldnames = list(reader.fieldnames)
         rows = list(reader)
 
-    for column in [PREVIOUS_ID_COL, CURRENT_ID_COL, PREVIOUS_TEXT_COL, CURRENT_TEXT_COL]:
-        if column not in fieldnames:
-            raise SystemExit(f"Required column missing from CSV: {column}")
+    column_map = resolve_columns(fieldnames)
+    require_columns(column_map, [PREVIOUS_ID_COL, CURRENT_ID_COL, PREVIOUS_TEXT_COL, CURRENT_TEXT_COL])
 
-    previous_records = load_chunks(args.previous_json)
-    current_records = load_chunks(args.current_json)
-    converted_rows, statuses = convert_rows(rows, previous_records, current_records)
+    single_pair_mode = args.previous_json is not None or args.current_json is not None
+    if single_pair_mode:
+        if args.previous_json is None or args.current_json is None:
+            raise SystemExit("--previous-json and --current-json must be supplied together.")
+        previous_records = load_chunks(args.previous_json)
+        current_records = load_chunks(args.current_json)
+        converted_rows, statuses = convert_rows(rows, previous_records, current_records, column_map)
+    else:
+        require_columns(column_map, [PREVIOUS_YEAR_COL, CURRENT_YEAR_COL])
+        converted_rows, statuses = convert_rows_by_fiscal_year(
+            rows=rows,
+            chunks_root=args.chunks_root,
+            default_company=args.company,
+            column_map=column_map,
+        )
 
     output_fieldnames = fieldnames + [column for column in AUDIT_COLUMNS if column not in fieldnames]
     output_csv.parent.mkdir(parents=True, exist_ok=True)
