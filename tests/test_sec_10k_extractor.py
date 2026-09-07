@@ -9,6 +9,7 @@ from sec_10k_extractor import (
     html_to_clean_text,
     infer_company_year_from_filename,
     merge_continued_blocks,
+    make_chunk_id,
     normalize_source,
     parse_args,
     section_blocks_to_text,
@@ -54,7 +55,12 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual(args.out_dir, "data/raw")
         self.assertIsNone(args.source)
 
-    def test_extracts_body_items_and_assigns_global_ids(self):
+    def test_chunk_id_includes_item_and_resets_per_item(self):
+        self.assertEqual(make_chunk_id("2024", "1", 1), "2024_1_P001")
+        self.assertEqual(make_chunk_id("2024", "1A", 1), "2024_1A_P001")
+        self.assertEqual(make_chunk_id("2024", "7", 12), "2024_7_P012")
+
+    def test_extracts_body_items_and_assigns_per_item_ids(self):
         html = """
         <html>
           <body>
@@ -100,9 +106,9 @@ class ExtractorTests(unittest.TestCase):
         self.assertIn("7", sections)
         self.assertIn("8", sections)
         self.assertNotIn("100", sections["8"])
-        self.assertEqual(records[0]["id"], "2024_P001")
+        self.assertEqual(records[0]["id"], "2024_1_P001")
         self.assertEqual(records[0]["company"], "nvda")
-        self.assertEqual(records[-1]["id"], f"2024_P{len(records):03d}")
+        self.assertEqual([record["id"] for record in records], ["2024_1_P001", "2024_1A_P001", "2024_7_P001", "2024_8_P001"])
 
     def test_div_blocks_become_chunks_with_subheader_titles(self):
         html = """
