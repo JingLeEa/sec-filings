@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Run SEC HTML extraction and export table pairs to a 17-column TSV.
 
-Keep this file beside compare_html_tables.py. Extraction arguments such as
+Keep this file beside compare_html_tables.py and table_titles.py. Extraction arguments such as
 --ticker, --cik, --company, --previous-year, --current-year, --item and
 --user-agent are passed directly to that program. Alternatively, use --input
 to export an existing result.json without fetching filings again. Omit --table
@@ -17,10 +17,13 @@ import os
 import re
 import sys
 import tempfile
+from collections import Counter
 from pathlib import Path
 from html import escape
 
-VERSION = '1.3.0'
+from table_titles import normalize_table_title
+
+VERSION = '1.4.2'
 COLUMNS = [
     'Annotator', 'Company', 'Industry', 'Split', 'Filing Form',
     'Previous Fiscal Year', 'Current Fiscal Year', 'Item',
@@ -58,11 +61,11 @@ def read_result(path):
 
 
 def select_table(filing, requested_title, side, *, allow_missing=False):
-    normalize = lambda s: ' '.join(s.split()).casefold()
     tables = filing.get('tables')
     if not isinstance(tables, dict):
         raise ValueError(f'{side}: expected a tables object.')
-    matches = [name for name in tables if normalize(name) == normalize(requested_title)]
+    matches = [name for name in tables
+               if normalize_table_title(name) == normalize_table_title(requested_title)]
     if not matches and allow_missing:
         return '', ''
     if len(matches) != 1:
@@ -78,18 +81,40 @@ def select_table(filing, requested_title, side, *, allow_missing=False):
     return name, compact
 
 
-def table_chunk_ids(filing, item):
-    """Use pre-filter Item positions; legacy JSON falls back to its table order."""
+def table_chunk_ids(filing, company):
+    """Number annotation chunks independently on each printed source page.
+
+    New JSON records page_chunk_index before filtering. For older JSON, count
+    headings in source order; combined headings count once on their first page.
+    """
     result, used = {}, set()
+    entries = []
+    company_slug = re.sub(r'[^a-z0-9]+', '_', str(company or '').lower()).strip('_') or 'company'
     metadata = filing.get('table_metadata', {})
     for position, name in enumerate(filing['tables'], start=1):
-        index = metadata.get(name, {}).get('item_table_index', position)
+        table_metadata = metadata.get(name, {})
+        index = table_metadata.get('item_table_index', position)
         if type(index) is not int or index < 1:
             raise ValueError(f'{name!r}: item_table_index must be a positive integer.')
-        chunk_id = f"table_{filing['fiscal_year']}_{item}_{index:02d}"
-        if chunk_id in used:
+        if index in used:
             raise ValueError(f'Duplicate table position {index} within one filing.')
-        used.add(chunk_id)
+        used.add(index)
+        first_source = next((source for source in table_metadata.get('source_tables', [])
+                             if source.get('item_table_index') == index), table_metadata)
+        page = first_source.get('printed_page')
+        page_slug = re.sub(r'[^a-z0-9-]+', '_', str(page or '').lower()).strip('_') or 'unknown'
+        entries.append((index, name, page_slug, table_metadata.get('page_chunk_index')))
+    page_counts, used_ids = Counter(), set()
+    for _, name, page_slug, page_index in sorted(entries):
+        if page_index is None:
+            page_index = page_counts[page_slug] + 1
+        if type(page_index) is not int or page_index < 1:
+            raise ValueError(f'{name!r}: page_chunk_index must be a positive integer.')
+        page_counts[page_slug] = max(page_counts[page_slug], page_index)
+        chunk_id = f"table_{company_slug}_{filing['fiscal_year']}_{page_slug}_{page_index:02d}"
+        if chunk_id in used_ids:
+            raise ValueError(f'Duplicate page chunk ID {chunk_id!r}.')
+        used_ids.add(chunk_id)
         result[name] = chunk_id
     return result
 
@@ -113,9 +138,9 @@ def make_annotation(document, title, *, annotator='', previous_section=None,
         document.get('split', 'Development/Validation'), document.get('filing_form', '10-K'),
         document['previous']['fiscal_year'], document['current']['fiscal_year'], item,
         (previous_name if previous_section is None else previous_section) if previous_name else '',
-        table_chunk_ids(document['previous'], item)[previous_name] if previous_name else '', previous_json,
+        table_chunk_ids(document['previous'], document.get('company', ''))[previous_name] if previous_name else '', previous_json,
         (current_name if current_section is None else current_section) if current_name else '',
-        table_chunk_ids(document['current'], item)[current_name] if current_name else '', current_json,
+        table_chunk_ids(document['current'], document.get('company', ''))[current_name] if current_name else '', current_json,
         change_taxonomy, content_taxonomy, materiality,
     ]))
 
@@ -126,18 +151,20 @@ def make_annotations(document, title=None, **options):
             raise ValueError('--table must be a title; omit it to export all tables.')
         return [make_annotation(document, title, **options)]
     # Preserve current filing order, then append previous-only tables. Matching
-    # ignores case/spacing only; renamed tables remain separate for human review.
+    # ignores leading note numbers and case/spacing; other renames stay separate.
     titles = {}
     for side in ('current', 'previous'):
         tables = document[side].get('tables')
         if not isinstance(tables, dict):
             raise ValueError(f'{side}: expected a tables object.')
-        seen = set()
+        seen = {}
         for name in tables:
-            normalized = ' '.join(name.split()).casefold()
+            normalized = normalize_table_title(name)
             if not normalized or normalized in seen:
-                raise ValueError(f'{side}: blank or ambiguous table title {name!r}.')
-            seen.add(normalized)
+                raise ValueError(f'{side}: blank or ambiguous table title {name!r}; '
+                                 f'matching ignores note numbers, case, and whitespace '
+                                 f'(other title: {seen.get(normalized)!r}).')
+            seen[normalized] = name
             titles.setdefault(normalized, name)
     if not titles:
         raise ValueError('No tables are available in either filing.')
@@ -296,7 +323,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--input', type=Path, help='Optional existing result.json; skips extraction')
-    parser.add_argument('--table', help='Optional exact table title, case-insensitive; omit for all extracted tables in the Item')
+    parser.add_argument('--table', help='Optional table title; ignores leading note numbers, case and whitespace. Omit for all tables in the Item')
     parser.add_argument(
         '--output-dir',
         type=Path,

@@ -17,7 +17,7 @@ import re
 import sys
 import time
 from collections import Counter, defaultdict
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -26,12 +26,14 @@ from urllib.parse import quote, urlparse
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from table_titles import normalize_table_title
+
 try:
     from lxml import etree, html
 except ImportError:
     raise SystemExit('Install the dependency first: python -m pip install lxml')
 
-VERSION = '1.3.1'
+VERSION = '1.4.5'
 # Edit this list, or pass --columns columns.json, to reorder/remove/rename exports.
 ANNOTATION_COLUMNS = [
     'Company', 'Industry', 'Split', 'Filing Form', 'Previous Fiscal Year',
@@ -166,6 +168,7 @@ class Table:
     unit_evidence: str = ''
     raw_grid: list[list[str]] = field(default_factory=list)
     header_context: str = ''
+    page_chunk_index: int | None = None
 
 
 def expand_grid(table) -> tuple[list[list[Origin | None]], list[list[Origin]]]:
@@ -211,14 +214,49 @@ def dedupe_origins(cells) -> list[Origin]:
     return result
 
 
+def separate_inline_prose(root):
+    """Expose prose sharing a div with a table without including table text.
+
+    Move existing nodes, preserving their identity and previously captured
+    source XPaths. Separate runs on either side of each table/block boundary so
+    text after a table cannot be used as its introductory heading.
+    """
+    for block in reversed(list(root.iter())):
+        if block.tag not in BLOCK_TAGS or any(a.tag == 'table' for a in block.iterancestors()):
+            continue
+        children = list(block)
+        boundary = lambda child: child.tag in BLOCK_TAGS or child.tag == 'table'
+        if not any(boundary(child) for child in children):
+            continue
+        if not ((block.text or '').strip() or any(
+                not boundary(child) or (child.tail or '').strip() for child in children)):
+            continue
+        pending = html.Element('div')
+        pending.text, block.text = block.text, None
+        for child in children:
+            block.remove(child)
+        for child in children:
+            if boundary(child):
+                if text(pending):
+                    block.append(pending)
+                block.append(child)
+                pending = html.Element('div')
+                pending.text, child.tail = child.tail, None
+            else:
+                pending.append(child)
+        if text(pending):
+            block.append(pending)
+
+
 def primitive_blocks(root) -> list[Any]:
     # Bottom-up marking avoids repeatedly flattening the entire document.
-    has_block = {}
+    has_block, has_table = {}, {}
     result = []
     for e in reversed(list(root.iter())):
         below = any(c.tag in BLOCK_TAGS or has_block.get(c, False) for c in e)
         has_block[e] = below
-        if e.tag in BLOCK_TAGS and not below and not any(a.tag == 'table' for a in e.iterancestors()):
+        has_table[e] = any(c.tag == 'table' or has_table.get(c, False) for c in e)
+        if e.tag in BLOCK_TAGS and not below and not has_table[e] and not any(a.tag == 'table' for a in e.iterancestors()):
             result.append(e)
     return list(reversed(result))
 
@@ -228,6 +266,82 @@ def bold_block(node) -> bool:
         e.tag in {'b', 'strong'} or re.search(r'font-weight\s*:\s*(?:bold|[6-9]00)', e.get('style', ''), re.I)
         for e in node.iter()
     )
+
+
+def table_heading(value, block):
+    """Require a standalone heading, not a paragraph with one bold phrase."""
+    if not value or len(value) > 160 or ITEM_RE.match(value):
+        return False
+    return block.tag in {'h1', 'h2', 'h3', 'h4', 'h5', 'h6'} or any(
+        (e.tag in {'b', 'strong'} or re.search(
+            r'font-weight\s*:\s*(?:bold|[6-9]00)', e.get('style', ''), re.I))
+        and text(e) == value for e in block.iter())
+
+
+def title_furniture(value):
+    return (not value or value.casefold() == 'table of contents'
+            or re.fullmatch(r'\d+(?:\s*\|.*)?', value)
+            or re.match(r'^(?:\*|\(\d+\)|Note:)', value, re.I)
+            or re.fullmatch(r'\(?In (?:millions|billions|thousands|percentages)[^)]*\)?', value, re.I))
+
+
+def last_intro_sentence(value):
+    value = clean(value)
+    start = 0
+    abbreviation = re.compile(
+        r'\b(?:(?:[A-Za-z]\.){2,}|(?:Co|Corp|Inc|Ltd|No|Mr|Mrs|Ms|Dr|Jr|Sr|'
+        r'Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\.)$', re.I)
+    for boundary in re.finditer(r'''[.!?]["”’')\]]*\s+(?=["“‘'(\[]?[A-Z0-9])''', value):
+        if not abbreviation.search(value[:boundary.start() + 1]):
+            start = boundary.end()
+    return value[start:]
+
+
+def inline_table_label(value, block):
+    """Return a formatted lead-in and separator, including an external colon."""
+    for element in block.iterdescendants():
+        styled = element.tag in {'i', 'em', 'b', 'strong'} or re.search(
+            r'(?:font-style\s*:\s*italic|font-weight\s*:\s*(?:bold|[6-9]00))',
+            element.get('style', ''), re.I)
+        label = text(element)
+        if styled and label and len(label) <= 80 and value.startswith(label):
+            remainder = value[len(label):].strip()
+            if remainder:
+                if label.endswith(('–', '—', '-', ':')):
+                    return label[:-1].strip(), label[-1]
+                if re.match(r'^[–—\-:]', remainder):
+                    return label.strip(), remainder[0]
+    return '', ''
+
+
+def explicit_table_heading(value, block):
+    if title_furniture(value):
+        return ''
+    if table_heading(value, block):
+        return value.rstrip(':')
+    label, separator = inline_table_label(value, block)
+    return label if separator == ':' else ''
+
+
+def choose_table_title(node, previous, heading, previous_table_end):
+    caption = node.find('caption')
+    if caption is not None and text(caption):
+        return text(caption)
+    intro = ''
+    for position, value, block in reversed(previous):
+        if position <= previous_table_end:
+            break
+        if title_furniture(value) or ITEM_RE.match(value):
+            continue
+        if table_heading(value, block):
+            break
+        intro = last_intro_sentence(value)
+        # An explicit inline label can introduce a new table within a broader
+        # section. Ordinary sentences never override an existing section title.
+        if (not heading or position > heading[0]) and inline_table_label(value, block)[0]:
+            return intro
+        break
+    return heading[1].rstrip(':') if heading else intro
 
 
 def find_item(blocks, order, item: str) -> tuple[int, int, list[dict]]:
@@ -736,6 +850,7 @@ def extract_tables(data: bytes, company: str, year: int, item: str, source: str 
         if tag in {'script', 'style', 'noscript', 'ix:header', 'ix:hidden'} or 'display:none' in style or 'visibility:hidden' in style:
             if e.getparent() is not None:
                 e.drop_tree()
+    separate_inline_prose(root)
     nodes = list(root.iter())
     order = {e: i for i, e in enumerate(nodes)}
     blocks = primitive_blocks(root)
@@ -755,6 +870,9 @@ def extract_tables(data: bytes, company: str, year: int, item: str, source: str 
     if end <= start:
         raise ValueError('Item end must follow Item start')
     section_blocks = [(order[b], text(b), b) for b in blocks if start <= order[b] < end]
+    title_headings = [(p, title) for p, s, b in section_blocks
+                      if (title := explicit_table_heading(s, b))]
+    title_positions = [p for p, _ in title_headings]
     section_text = ' '.join(s for _, s, _ in section_blocks)
     default_scale, default_evidence = detect_unit(section_text[:2500])
 
@@ -779,26 +897,16 @@ def extract_tables(data: bytes, company: str, year: int, item: str, source: str 
     page_counts = Counter()
     output, skipped = [], []
     block_positions = [p for p, _, _ in section_blocks]
+    previous_table_end = start
     for node in raw_candidates:
         pos = order[node]
         locator = source_paths[node]
         idx = bisect.bisect_left(block_positions, pos)
         previous = section_blocks[max(0, idx-8):idx]
-        # Prefer an immediate caption, then the nearest short bold heading.
-        caption = node.find('caption')
-        title = text(caption) if caption is not None else ''
-        for _, s, b in reversed(previous):
-            if title:
-                break
-            if s == 'Table of Contents' or re.fullmatch(r'\d+(?:\s*\|.*)?', s):
-                continue
-            if bold_block(b) and len(s) <= 160 and not ITEM_RE.match(s):
-                title = s.rstrip(':')
-                break
-            prefix = re.match(r'^([^:]{3,70}):', s)
-            if prefix:
-                title = prefix.group(1)
-                break
+        heading_index = bisect.bisect_left(title_positions, pos) - 1
+        heading = title_headings[heading_index] if heading_index >= 0 else None
+        title = choose_table_title(node, previous, heading, previous_table_end)
+        previous_table_end = max(order[e] for e in node.iter())
         if not title:
             title = f'Untitled table {len(output)+1}'
         fi = bisect.bisect_right(footer_positions, pos)
@@ -1261,27 +1369,58 @@ def json_value_leaf(pairs: list[tuple[Column, Cell]]) -> dict:
     return result
 
 
+def assign_page_chunk_indices(tables: list[Table]):
+    """Count combined headings once per first source page, before --table filtering."""
+    seen, counts = set(), Counter()
+    for table in sorted(tables, key=lambda t: t.index):
+        key = norm(table.title)
+        if key in seen:
+            continue
+        seen.add(key)
+        counts[table.page or 'unknown'] += 1
+        if table.page_chunk_index is None:
+            table.page_chunk_index = counts[table.page or 'unknown']
+
+
 def build_tables_json(tables: list[Table]) -> tuple[dict, dict, int]:
-    """Return the requested data hierarchy, separate provenance, and cell count."""
+    """Combine same-heading tables, preserving all cells and source provenance.
+
+    Resolve row paths across the entire heading before writing any values. This
+    also handles a row label colliding with another table's group name. Source
+    table ordinals (not filing years/pages) disambiguate repeated row labels.
+    """
     data, metadata = {}, {}
-    title_counts = Counter(t.title for t in tables)
-    reserved_titles = set(title_counts)
+    assign_page_chunk_indices(tables)
+    groups = defaultdict(list)
+    for table in tables:
+        groups[norm(table.title)].append(table)
+    combined_paths = {}
+    for key, group in groups.items():
+        rows = [replace(row, row_id=f'table_{ordinal}_{row.row_id}')
+                for ordinal, table in enumerate(group, start=1) for row in table.rows]
+        # Preserve existing row suffixes for single-table headings.
+        combined_paths[key] = json_row_paths(rows if len(group) > 1 else group[0].rows)
+    source_metadata = defaultdict(list)
+    ordinals = Counter()
     accounted = 0
     for table in tables:
-        title = table.title
-        if title_counts[title] > 1 or title in data:
-            title = unique_json_key(title, table.table_id, set(data), reserved_titles)
+        key = norm(table.title)
+        group = groups[key]
+        title = clean(group[0].title)
+        ordinals[key] += 1
+        paths = {row.row_id: combined_paths[key][
+            f'table_{ordinals[key]}_{row.row_id}' if len(group) > 1 else row.row_id]
+            for row in table.rows}
         periods = defaultdict(list)
         for col in table.columns:
             periods[col.period or '[No year/date stated]'].append(col)
-        paths = json_row_paths(table.rows)
         cells = {(c.row_id, c.column_key): c for c in table.cells}
         if len(cells) != len(table.cells):
             raise ValueError(f'{table.table_id}: duplicate source cell identity; no JSON exported.')
         consumed = set()
-        period_data = {}
+        period_data = data.setdefault(title, {})
         for period, columns in periods.items():
-            sections = {}
+            sections = period_data.setdefault(period, {})
             for row in table.rows:
                 pairs = []
                 for col in columns:
@@ -1300,8 +1439,7 @@ def build_tables_json(tables: list[Table]) -> tuple[dict, dict, int]:
             period_data[period] = sections
         if consumed != set(cells):
             raise ValueError(f'{table.table_id}: some source cells were not exported.')
-        data[title] = period_data
-        metadata[title] = {
+        source_metadata[title].append({
             'table_id': table.table_id, 'source_title': table.title,
             'item_table_index': table.index,
             'printed_page': table.page, 'source_url': table.source,
@@ -1317,15 +1455,28 @@ def build_tables_json(tables: list[Table]) -> tuple[dict, dict, int]:
             'columns': [{'year_or_date': c.period, 'measure': c.measure,
                          'source_header': c.header, 'column_key': c.key} for c in table.columns],
             'source_cells': len(table.cells),
-        }
+        })
         accounted += len(consumed)
+    for title, sources in source_metadata.items():
+        if len(sources) == 1:
+            metadata[title] = sources[0]
+        else:
+            metadata[title] = {
+                'source_title': title,
+                'item_table_index': min(s['item_table_index'] for s in sources),
+                'item_table_indices': [s['item_table_index'] for s in sources],
+                'source_cells': sum(s['source_cells'] for s in sources),
+                'source_tables': sources,
+            }
+        first_table = min(groups[norm(title)], key=lambda t: t.index)
+        metadata[title]['page_chunk_index'] = first_table.page_chunk_index
     return data, metadata, accounted
 
 
 def build_json_result(previous: list[Table], current: list[Table], metadata: dict,
                       diagnostics: dict | None = None) -> dict:
     """Keep filing years outside the table-period keys, so shared years survive."""
-    result = {'schema_version': '1.1', 'generator_version': VERSION,
+    result = {'schema_version': '1.2', 'generator_version': VERSION,
               'company': metadata.get('Company', ''), 'industry': metadata.get('Industry', ''),
               'split': metadata.get('Split', 'Development/Validation'),
               'filing_form': metadata.get('Filing Form', '10-K'), 'item': metadata.get('Item', '')}
@@ -1335,7 +1486,8 @@ def build_json_result(previous: list[Table], current: list[Table], metadata: dic
         filing = {'fiscal_year': metadata.get(side.title() + ' Fiscal Year'),
                   'source_url': metadata.get(side.title() + ' Source URL', ''),
                   'tables': data, 'table_metadata': provenance,
-                  'extraction': {'table_count': len(tables), 'source_cells_exported': count,
+                  'extraction': {'table_count': len(tables), 'heading_count': len(data),
+                                 'source_cells_exported': count,
                                  'source_sha256': diag.get('sha256', ''),
                                  'unsupported_tables': diag.get('unsupported_tables', [])}}
         if diag.get('sec_filing_selection'):
@@ -1378,7 +1530,7 @@ def main(argv=None):
     identity.add_argument('--cik', help='Use the SEC API with a CIK instead of a ticker, e.g. 723125')
     parser.add_argument('--item', type=normalize_item, default='7')
     parser.add_argument('--filings-dir', default='.')
-    parser.add_argument('--table', help='Optional exact table title, case-insensitive; otherwise all supported tables in the Item')
+    parser.add_argument('--table', help='Optional table title; ignores leading note numbers, case and whitespace. Otherwise all supported tables in the Item')
     parser.add_argument('--output-dir', help='Default: data/table_output/<company>_<previous>_<current>_item_<item>_tables')
     parser.add_argument('--output-format', choices=['json', 'csv', 'both'], default='json',
                         help='json (default): nested table data; csv: comparison annotations; both: all outputs')
@@ -1485,9 +1637,12 @@ def main(argv=None):
                 out.mkdir(parents=True, exist_ok=True)
                 (out/'extraction_failure.json').write_text(json.dumps(diagnostics[side], ensure_ascii=False, indent=2), encoding='utf-8')
                 raise ValueError(f'{side}: unsupported numerical table(s); see extraction_failure.json. No comparison was exported.')
+        for side_tables in tables.values():
+            assign_page_chunk_indices(side_tables)
         if args.table:
             for side in tables:
-                tables[side] = [t for t in tables[side] if norm(t.title) == norm(args.table)]
+                tables[side] = [t for t in tables[side]
+                                if normalize_table_title(t.title) == normalize_table_title(args.table)]
             if not tables['previous'] and not tables['current']:
                 raise ValueError(f'Table title {args.table!r} was not found. Run without --table to inspect the available table titles.')
         meta = {'Company': args.company, 'Industry': '', 'Split': 'Development/Validation', 'Filing Form': '10-K',
