@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Append original paragraph context to an annotation CSV by chunk ID.
+"""Convert annotation IDs and append original paragraph text.
 
 This is intentionally a post-processing helper. It does not change extracted
 chunk IDs, so previously distributed annotation files can still be used.
@@ -14,16 +14,29 @@ import re
 from pathlib import Path
 from typing import Any
 
+from convert_annotation_ids import find_latest_id, build_search_records
+
 
 PREVIOUS_YEAR_COL = "Previous Fiscal Year"
 CURRENT_YEAR_COL = "Current Fiscal Year"
 PREVIOUS_ID_COL = "Previous Paragraph / Chunk ID"
 CURRENT_ID_COL = "Current Paragraph / Chunk ID"
+PREVIOUS_TEXT_COL = "Previous Disclosure Text"
+CURRENT_TEXT_COL = "Current Disclosure Text"
+PREVIOUS_SECTION_COL = "Previous Section / Subsection"
+CURRENT_SECTION_COL = "Current Section / Subsection"
 PREVIOUS_PARAGRAPH_COL = "Previous Original Paragraph"
 CURRENT_PARAGRAPH_COL = "Current Original Paragraph"
 COMPANY_COL = "Company"
+ITEM_COL = "Item"
 
 AUDIT_COLUMNS = [
+    "Original Previous Paragraph / Chunk ID",
+    "Original Current Paragraph / Chunk ID",
+    "Previous ID Conversion Status",
+    "Current ID Conversion Status",
+    "Previous ID Match Count",
+    "Current ID Match Count",
     "Previous Context IDs",
     "Current Context IDs",
     "Previous Paragraph Lookup Status",
@@ -38,7 +51,6 @@ COMPANY_ALIASES = {
     "jpmorgan_chase_co": "jpm",
 }
 
-BULLET_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|\*\s+|-\s+)")
 ID_RE = re.compile(r"((?:19|20)\d{2}_[A-Z0-9]+_P\d{3,})(?:_[A-Z0-9]+)?", re.IGNORECASE)
 
 
@@ -68,49 +80,13 @@ def normalize_year(value: str) -> str:
     return match.group(0) if match else ""
 
 
-def is_bullet(record: dict[str, Any]) -> bool:
-    return bool(BULLET_RE.match(str(record.get("text", ""))))
-
-
-def same_section(left: dict[str, Any], right: dict[str, Any]) -> bool:
-    return (
-        str(left.get("year", "")) == str(right.get("year", ""))
-        and str(left.get("item", "")) == str(right.get("item", ""))
-        and str(left.get("item_title", "")) == str(right.get("item_title", ""))
-    )
-
-
-def context_span(records: list[dict[str, Any]], position: int) -> tuple[int, int]:
-    """Return inclusive start/end positions for paragraph context.
-
-    If the target is a bullet, include the contiguous bullet list and the
-    immediate lead-in paragraph when it is in the same extracted section.
-    If the target is a normal paragraph, include immediately following bullets.
-    """
-    target = records[position]
-    start = position
-    end = position
-
-    if is_bullet(target):
-        while start > 0 and same_section(records[start - 1], target) and is_bullet(records[start - 1]):
-            start -= 1
-        if start > 0 and same_section(records[start - 1], target) and not is_bullet(records[start - 1]):
-            start -= 1
-        while end + 1 < len(records) and same_section(records[end + 1], target) and is_bullet(records[end + 1]):
-            end += 1
-    else:
-        while end + 1 < len(records) and same_section(records[end + 1], target) and is_bullet(records[end + 1]):
-            end += 1
-
-    return start, end
-
-
 class ChunkCache:
     def __init__(self, chunks_root: Path, default_company: str = "") -> None:
         self.chunks_root = chunks_root
         self.default_company = normalize_company(default_company)
         self._records: dict[tuple[str, str], list[dict[str, Any]]] = {}
         self._index: dict[tuple[str, str], dict[str, int]] = {}
+        self._search_records: dict[tuple[str, str], list[dict[str, Any]]] = {}
 
     def records_for(self, company: str, year: str) -> tuple[list[dict[str, Any]], dict[str, int]]:
         normalized_company = self.default_company or normalize_company(company)
@@ -128,10 +104,18 @@ class ChunkCache:
             self._index[key] = {str(record.get("id", "")): index for index, record in enumerate(records)}
         return self._records[key], self._index[key]
 
+    def search_records_for(self, company: str, year: str) -> list[dict[str, Any]]:
+        records, _ = self.records_for(company, year)
+        normalized_company = self.default_company or normalize_company(company)
+        normalized_year = normalize_year(year)
+        key = (normalized_company, normalized_year)
+        if key not in self._search_records:
+            self._search_records[key] = build_search_records(records)
+        return self._search_records[key]
 
-def extract_first_id(value: str) -> str:
-    match = ID_RE.search(value or "")
-    return match.group(1) if match else ""
+
+def extract_ids(value: str) -> list[str]:
+    return [match.group(1) for match in ID_RE.finditer(value or "")]
 
 
 def paragraph_context_for_id(
@@ -139,35 +123,43 @@ def paragraph_context_for_id(
     *,
     company: str,
     year: str,
-    chunk_id: str,
+    chunk_id_value: str,
 ) -> tuple[str, str, str]:
-    chunk_id = extract_first_id(chunk_id)
-    if not chunk_id:
+    chunk_ids = extract_ids(chunk_id_value)
+    if not chunk_ids:
         return "", "", "no_id"
 
     records, index = cache.records_for(company, year)
-    position = index.get(chunk_id)
-    if position is None:
+    positions = [index[chunk_id] for chunk_id in chunk_ids if chunk_id in index]
+    if not positions:
         return "", "", "id_not_found"
+    if len(positions) != len(chunk_ids):
+        status_suffix = "_partial"
+    else:
+        status_suffix = ""
 
-    start, end = context_span(records, position)
-    span_records = records[start : end + 1]
+    span_records = [records[position] for position in sorted(positions)]
     context_ids = ", ".join(str(record.get("id", "")) for record in span_records)
     context_text = "\n".join(str(record.get("text", "")).strip() for record in span_records if str(record.get("text", "")).strip())
-    if start == end:
-        status = "single_chunk"
-    elif is_bullet(records[position]):
-        status = "bullet_with_list_context"
-    else:
-        status = "paragraph_with_following_bullets"
-    return context_text, context_ids, status
+    status = "single_chunk" if len(span_records) == 1 else "multi_chunk"
+    return context_text, context_ids, status + status_suffix
 
 
 def resolve_columns(fieldnames: list[str]) -> dict[str, str]:
     by_name = {normalize_header(fieldname): fieldname for fieldname in fieldnames}
     required = [PREVIOUS_YEAR_COL, CURRENT_YEAR_COL, PREVIOUS_ID_COL, CURRENT_ID_COL]
     resolved: dict[str, str] = {}
-    for column in required + [COMPANY_COL, PREVIOUS_PARAGRAPH_COL, CURRENT_PARAGRAPH_COL]:
+    optional = [
+        COMPANY_COL,
+        ITEM_COL,
+        PREVIOUS_TEXT_COL,
+        CURRENT_TEXT_COL,
+        PREVIOUS_SECTION_COL,
+        CURRENT_SECTION_COL,
+        PREVIOUS_PARAGRAPH_COL,
+        CURRENT_PARAGRAPH_COL,
+    ]
+    for column in required + optional:
         actual = by_name.get(normalize_header(column))
         if actual:
             resolved[column] = actual
@@ -193,34 +185,70 @@ def enrich_rows(
     cache = ChunkCache(chunks_root, default_company)
     previous_paragraph_col = column_map.get(PREVIOUS_PARAGRAPH_COL, PREVIOUS_PARAGRAPH_COL)
     current_paragraph_col = column_map.get(CURRENT_PARAGRAPH_COL, CURRENT_PARAGRAPH_COL)
-    stats = {status: 0 for status in ("single_chunk", "bullet_with_list_context", "paragraph_with_following_bullets", "no_id", "id_not_found")}
+    stats: dict[str, int] = {}
     enriched: list[dict[str, str]] = []
 
     for row in rows:
         converted = dict(row)
         company = default_company or row_value(converted, column_map, COMPANY_COL)
+        original_previous_id = row_value(converted, column_map, PREVIOUS_ID_COL)
+        original_current_id = row_value(converted, column_map, CURRENT_ID_COL)
+        converted["Original Previous Paragraph / Chunk ID"] = original_previous_id
+        converted["Original Current Paragraph / Chunk ID"] = original_current_id
+
+        previous_id, previous_conversion_status, previous_match_count = convert_id_for_row(
+            cache,
+            row=converted,
+            column_map=column_map,
+            company=company,
+            year_col=PREVIOUS_YEAR_COL,
+            id_col=PREVIOUS_ID_COL,
+            text_col=PREVIOUS_TEXT_COL,
+            section_col=PREVIOUS_SECTION_COL,
+        )
+        current_id, current_conversion_status, current_match_count = convert_id_for_row(
+            cache,
+            row=converted,
+            column_map=column_map,
+            company=company,
+            year_col=CURRENT_YEAR_COL,
+            id_col=CURRENT_ID_COL,
+            text_col=CURRENT_TEXT_COL,
+            section_col=CURRENT_SECTION_COL,
+        )
 
         previous_text, previous_ids, previous_status = paragraph_context_for_id(
             cache,
             company=company,
             year=row_value(converted, column_map, PREVIOUS_YEAR_COL),
-            chunk_id=row_value(converted, column_map, PREVIOUS_ID_COL),
+            chunk_id_value=previous_id,
         )
         current_text, current_ids, current_status = paragraph_context_for_id(
             cache,
             company=company,
             year=row_value(converted, column_map, CURRENT_YEAR_COL),
-            chunk_id=row_value(converted, column_map, CURRENT_ID_COL),
+            chunk_id_value=current_id,
         )
 
+        converted[column_map[PREVIOUS_ID_COL]] = previous_id
+        converted[column_map[CURRENT_ID_COL]] = current_id
         converted[previous_paragraph_col] = previous_text
         converted[current_paragraph_col] = current_text
+        converted["Previous ID Conversion Status"] = previous_conversion_status
+        converted["Current ID Conversion Status"] = current_conversion_status
+        converted["Previous ID Match Count"] = str(previous_match_count)
+        converted["Current ID Match Count"] = str(current_match_count)
         converted["Previous Context IDs"] = previous_ids
         converted["Current Context IDs"] = current_ids
         converted["Previous Paragraph Lookup Status"] = previous_status
         converted["Current Paragraph Lookup Status"] = current_status
-        stats[previous_status] = stats.get(previous_status, 0) + 1
-        stats[current_status] = stats.get(current_status, 0) + 1
+        for status in (
+            f"previous_conversion:{previous_conversion_status}",
+            f"current_conversion:{current_conversion_status}",
+            f"previous_paragraph:{previous_status}",
+            f"current_paragraph:{current_status}",
+        ):
+            stats[status] = stats.get(status, 0) + 1
         enriched.append(converted)
 
     if previous_paragraph_col not in fieldnames:
@@ -233,8 +261,33 @@ def enrich_rows(
     return enriched, stats
 
 
+def convert_id_for_row(
+    cache: ChunkCache,
+    *,
+    row: dict[str, str],
+    column_map: dict[str, str],
+    company: str,
+    year_col: str,
+    id_col: str,
+    text_col: str,
+    section_col: str,
+) -> tuple[str, str, int]:
+    old_id = row_value(row, column_map, id_col)
+    disclosure_text = row_value(row, column_map, text_col)
+    if not disclosure_text.strip() or text_col not in column_map:
+        return old_id, "no_text", 0
+    records = cache.search_records_for(company, row_value(row, column_map, year_col))
+    return find_latest_id(
+        disclosure_text=disclosure_text,
+        old_id=old_id,
+        item=row_value(row, column_map, ITEM_COL),
+        item_title=row_value(row, column_map, section_col),
+        records=records,
+    )
+
+
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Fill original paragraph context in an annotation CSV from chunk IDs.")
+    parser = argparse.ArgumentParser(description="Convert annotation IDs and fill original paragraph text.")
     parser.add_argument("input_csv", type=Path, help="Annotation CSV, e.g. data/include_paragraph/nvidia.csv")
     parser.add_argument("--chunks-root", default=Path("data/raw"), type=Path, help="Root containing <company>/<year>/<year>_chunks.json. Default: data/raw.")
     parser.add_argument("--company", default="", help="Company chunk folder override, e.g. nvda.")

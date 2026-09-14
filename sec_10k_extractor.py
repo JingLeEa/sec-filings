@@ -43,6 +43,7 @@ ITEM_TITLES = {
     "8": "Financial Statements and Supplementary Data",
     "15": "Exhibits and Financial Statement Schedules",
 }
+BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|\*\s+|-\s+)")
 
 
 @dataclass(frozen=True)
@@ -527,14 +528,25 @@ def sec_document_url(cik: str, filing: dict) -> str:
 
 def discover_10k_filing(cik: str, fiscal_year: str, user_agent: str) -> dict:
     submissions = fetch_json(f"{SEC_SUBMISSIONS_BASE}/CIK{cik}.json", user_agent)
-    recent = submissions.get("filings", {}).get("recent", {})
+    filings = submissions.get("filings", {})
+    recent = filings.get("recent", {})
     rows = submissions_rows(recent)
+    history = list(filings.get("files", []))
 
-    candidates = [
-        row
-        for row in rows
-        if row.get("form") == "10-K" and str(row.get("reportDate", "")).startswith(fiscal_year)
-    ]
+    candidates = matching_10k_rows(rows, fiscal_year)
+    loaded_history: list[str] = []
+    if not candidates and history:
+        for entry in history:
+            name = str(entry.get("name", ""))
+            if not re.fullmatch(r"CIK\d{10}-submissions-\d+\.json", name):
+                raise RuntimeError(f"Unrecognized SEC historical submissions filename: {name}")
+            historical = fetch_json(f"{SEC_SUBMISSIONS_BASE}/{name}", user_agent)
+            rows.extend(submissions_rows(historical.get("filings", {}).get("recent", historical)))
+            loaded_history.append(name)
+            candidates = matching_10k_rows(rows, fiscal_year)
+            if candidates:
+                break
+
     if not candidates:
         available = ", ".join(
             sorted({str(row.get("reportDate", "")) for row in rows if row.get("form") == "10-K" and row.get("reportDate")})
@@ -547,6 +559,14 @@ def discover_10k_filing(cik: str, fiscal_year: str, user_agent: str) -> dict:
         )
         raise ValueError(f"Multiple 10-K filings match fiscal year {fiscal_year}: {choices}. Use a direct filing URL.")
     return candidates[0]
+
+
+def matching_10k_rows(rows: list[dict], fiscal_year: str) -> list[dict]:
+    return [
+        row
+        for row in rows
+        if row.get("form") == "10-K" and str(row.get("reportDate", "")).startswith(fiscal_year)
+    ]
 
 
 def load_filing_from_sec_api(args: argparse.Namespace) -> tuple[str, str, str]:
@@ -954,12 +974,12 @@ def should_merge_with_next_block(previous: FilingBlock, current: FilingBlock) ->
     if is_subheader_block(previous) or is_subheader_block(current):
         return False
     if starts_with_bullet(current.text):
-        return False
+        return True
     return not ends_with_sentence_terminal(previous.text)
 
 
 def starts_with_bullet(text: str) -> bool:
-    return text.lstrip().startswith("•")
+    return bool(BULLET_PREFIX_RE.match(text))
 
 
 def ends_with_sentence_terminal(text: str) -> bool:
@@ -969,6 +989,8 @@ def ends_with_sentence_terminal(text: str) -> bool:
 def join_continued_text(previous: str, current: str) -> str:
     previous = previous.rstrip()
     current = current.lstrip()
+    if starts_with_bullet(current):
+        return f"{previous}\n{current}".strip()
     if previous.endswith("-"):
         return previous + current
     return f"{previous} {current}".strip()

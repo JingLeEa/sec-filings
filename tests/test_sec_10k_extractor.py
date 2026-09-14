@@ -3,6 +3,7 @@ import unittest
 from sec_10k_extractor import (
     build_records,
     build_records_from_section_blocks,
+    discover_10k_filing,
     extract_item15_toc_section_blocks,
     extract_section_blocks,
     extract_sections,
@@ -55,6 +56,54 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual(args.year, "2024")
         self.assertEqual(args.out_dir, "data/raw")
         self.assertIsNone(args.source)
+
+    def test_discover_10k_filing_reads_sec_historical_submissions(self):
+        import sec_10k_extractor
+
+        responses = {
+            "https://data.sec.gov/submissions/CIK0000019617.json": {
+                "filings": {
+                    "recent": {
+                        "accessionNumber": ["0001628280-26-008131"],
+                        "form": ["10-K"],
+                        "reportDate": ["2025-12-31"],
+                        "primaryDocument": ["jpm-20251231.htm"],
+                    },
+                    "files": [
+                        {"name": "CIK0000019617-submissions-001.json"},
+                        {"name": "CIK0000019617-submissions-002.json"},
+                    ],
+                }
+            },
+            "https://data.sec.gov/submissions/CIK0000019617-submissions-001.json": {
+                "accessionNumber": ["0000019617-25-000316"],
+                "form": ["10-K"],
+                "reportDate": ["2024-12-31"],
+                "primaryDocument": ["jpm-20241231.htm"],
+            },
+            "https://data.sec.gov/submissions/CIK0000019617-submissions-002.json": {
+                "accessionNumber": ["0000019617-24-000001"],
+                "form": ["10-K"],
+                "reportDate": ["2023-12-31"],
+                "primaryDocument": ["jpm-20231231.htm"],
+            },
+        }
+        original_fetch_json = sec_10k_extractor.fetch_json
+        fetched_urls = []
+
+        def fake_fetch_json(url, user_agent):
+            fetched_urls.append(url)
+            return responses[url]
+
+        sec_10k_extractor.fetch_json = fake_fetch_json
+        try:
+            filing = discover_10k_filing("0000019617", "2024", "tester@example.com")
+        finally:
+            sec_10k_extractor.fetch_json = original_fetch_json
+
+        self.assertEqual(filing["accessionNumber"], "0000019617-25-000316")
+        self.assertEqual(filing["primaryDocument"], "jpm-20241231.htm")
+        self.assertNotIn("https://data.sec.gov/submissions/CIK0000019617-submissions-002.json", fetched_urls)
 
     def test_chunk_id_includes_item_and_resets_per_item(self):
         self.assertEqual(make_chunk_id("2024", "1", 1), "2024_1_P001")
@@ -202,7 +251,7 @@ class ExtractorTests(unittest.TestCase):
         self.assertNotIn("html_tag", records[0])
         self.assertNotIn("html_id", records[0])
 
-    def test_merges_cut_off_divs_but_keeps_bullet_points_separate(self):
+    def test_merges_cut_off_divs_and_groups_bullet_list_as_one_paragraph(self):
         html = """
         <html>
           <body>
@@ -242,13 +291,14 @@ class ExtractorTests(unittest.TestCase):
             max_chars=500,
         )
 
+        self.assertEqual(len(records), 1)
         self.assertEqual(
             records[0]["text"],
-            "The DRIVE Hyperion platform consists of open, modular DRIVE Software platform.",
+            "The DRIVE Hyperion platform consists of open, modular DRIVE Software platform.\n"
+            "• First risk item;\n"
+            "• Second risk item;\n"
+            "• Third risk item continues onto the next rendered block.",
         )
-        self.assertEqual(records[1]["text"], "• First risk item;")
-        self.assertEqual(records[2]["text"], "• Second risk item;")
-        self.assertEqual(records[3]["text"], "• Third risk item continues onto the next rendered block.")
 
     def test_drops_repeated_financial_statement_headers_before_merging(self):
         html = """

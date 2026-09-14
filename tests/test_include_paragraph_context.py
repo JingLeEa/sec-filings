@@ -1,48 +1,99 @@
+import tempfile
 import unittest
+from pathlib import Path
 
-from include_paragraph_context import context_span, paragraph_context_for_id
-
-
-def record(chunk_id, text, item_title="Competition"):
-    return {
-        "id": chunk_id,
-        "year": "2024",
-        "item": "1",
-        "item_title": item_title,
-        "text": text,
-    }
+from include_paragraph_context import enrich_rows, paragraph_context_for_id, resolve_columns, ChunkCache
 
 
 class IncludeParagraphContextTests(unittest.TestCase):
-    def test_non_bullet_includes_following_bullet_list(self):
-        records = [
-            record("2024_1_P001", "Intro to competitors including:"),
-            record("2024_1_P002", "• first competitor group;"),
-            record("2024_1_P003", "• second competitor group."),
-            record("2024_1_P004", "A new paragraph."),
-        ]
+    def test_paragraph_context_returns_exact_latest_chunk_text(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "data/raw"
+            chunk_dir = root / "nvda/2024"
+            chunk_dir.mkdir(parents=True)
+            (chunk_dir / "2024_chunks.json").write_text(
+                """[
+                  {
+                    "id": "2024_1_P001",
+                    "company": "nvda",
+                    "year": "2024",
+                    "item": "1",
+                    "item_title": "Competition",
+                    "text": "Our current competitors include:\\n• accelerated computing suppliers;\\n• cloud service companies."
+                  }
+                ]""",
+                encoding="utf-8",
+            )
 
-        self.assertEqual(context_span(records, 0), (0, 2))
+            text, ids, status = paragraph_context_for_id(
+                ChunkCache(root, "nvda"),
+                company="nvda",
+                year="2024",
+                chunk_id_value="2024_1_P001",
+            )
 
-    def test_bullet_includes_lead_in_and_contiguous_bullets(self):
-        records = [
-            record("2024_1_P001", "Intro to competitors including:"),
-            record("2024_1_P002", "• first competitor group;"),
-            record("2024_1_P003", "• second competitor group."),
-            record("2024_1_P004", "A new paragraph."),
-        ]
+        self.assertEqual(ids, "2024_1_P001")
+        self.assertEqual(status, "single_chunk")
+        self.assertIn("cloud service companies", text)
 
-        self.assertEqual(context_span(records, 2), (0, 2))
+    def test_enrich_rows_converts_id_then_uses_converted_single_id(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "data/raw"
+            chunk_dir = root / "nvda/2024"
+            chunk_dir.mkdir(parents=True)
+            (chunk_dir / "2024_chunks.json").write_text(
+                """[
+                  {
+                    "id": "2024_1_P001",
+                    "company": "nvda",
+                    "year": "2024",
+                    "item": "1",
+                    "item_title": "Competition",
+                    "text": "Our current competitors include:\\n• accelerated computing suppliers;\\n• cloud service companies."
+                  }
+                ]""",
+                encoding="utf-8",
+            )
+            fieldnames = [
+                "Company",
+                "Previous Fiscal Year",
+                "Current Fiscal Year",
+                "Item",
+                "Previous Section / Subsection",
+                "Previous Paragraph / Chunk ID",
+                "Previous Disclosure Text",
+                "Current Section / Subsection",
+                "Current Paragraph / Chunk ID",
+                "Current Disclosure Text",
+            ]
+            rows = [
+                {
+                    "Company": "NVIDIA",
+                    "Previous Fiscal Year": "2024",
+                    "Current Fiscal Year": "2024",
+                    "Item": "1",
+                    "Previous Section / Subsection": "Competition",
+                    "Previous Paragraph / Chunk ID": "old_id",
+                    "Previous Disclosure Text": "cloud service companies.",
+                    "Current Section / Subsection": "Competition",
+                    "Current Paragraph / Chunk ID": "2024_1_P001",
+                    "Current Disclosure Text": "",
+                }
+            ]
 
-    def test_bullet_context_stays_inside_same_section(self):
-        records = [
-            record("2024_1_P001", "Other section intro.", item_title="Other"),
-            record("2024_1_P002", "• other bullet.", item_title="Other"),
-            record("2024_1_P003", "• current bullet.", item_title="Competition"),
-            record("2024_1_P004", "• another current bullet.", item_title="Competition"),
-        ]
+            enriched, _ = enrich_rows(
+                rows,
+                fieldnames,
+                chunks_root=root,
+                default_company="nvda",
+                column_map=resolve_columns(fieldnames),
+            )
 
-        self.assertEqual(context_span(records, 2), (2, 3))
+        self.assertEqual(enriched[0]["Previous Paragraph / Chunk ID"], "2024_1_P001")
+        self.assertEqual(enriched[0]["Original Previous Paragraph / Chunk ID"], "old_id")
+        self.assertEqual(enriched[0]["Previous ID Conversion Status"], "exact_text_match")
+        self.assertEqual(enriched[0]["Previous Paragraph Lookup Status"], "single_chunk")
+        self.assertIn("Our current competitors include:", enriched[0]["Previous Original Paragraph"])
 
 
 if __name__ == "__main__":

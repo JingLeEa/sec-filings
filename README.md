@@ -129,7 +129,7 @@ python3 convert_annotation_ids.py data/id_conversion/nvidia_input.csv \
 
 ## Add Original Paragraph Context
 
-After annotation, fill `Previous Original Paragraph` and `Current Original Paragraph` from the previous/current chunk IDs:
+After annotation, convert IDs to the latest extraction and fill `Previous Original Paragraph` and `Current Original Paragraph` from the previous/current chunk IDs:
 
 ```bash
 python3 include_paragraph_context.py data/include_paragraph/nvidia.csv \
@@ -137,7 +137,7 @@ python3 include_paragraph_context.py data/include_paragraph/nvidia.csv \
   --company nvda
 ```
 
-The output is written beside the input as `nvidia_with_paragraphs.csv`. If the selected chunk is a bullet point, the helper includes the immediate lead-in paragraph plus the contiguous bullet list. If the selected chunk is a normal paragraph followed by bullets, it includes the paragraph plus those bullets. Existing IDs are preserved.
+The output is written beside the input as `nvidia_with_paragraphs.csv`. The helper first maps each annotated disclosure to the latest extracted chunk ID, then fills the original paragraph text for that latest ID. Original IDs are retained in audit columns. Bullet lists should be grouped during extraction, so the latest ID itself points to the combined paragraph/list.
 
 # HTML 10-K tables to nested JSON
 
