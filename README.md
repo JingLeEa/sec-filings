@@ -127,6 +127,18 @@ python3 convert_annotation_ids.py data/id_conversion/nvidia_input.csv \
   --current-json data/raw/nvda/2024/2024_chunks.json
 ```
 
+## Add Original Paragraph Context
+
+After annotation, fill `Previous Original Paragraph` and `Current Original Paragraph` from the previous/current chunk IDs:
+
+```bash
+python3 include_paragraph_context.py data/include_paragraph/nvidia.csv \
+  --chunks-root data/raw \
+  --company nvda
+```
+
+The output is written beside the input as `nvidia_with_paragraphs.csv`. If the selected chunk is a bullet point, the helper includes the immediate lead-in paragraph plus the contiguous bullet list. If the selected chunk is a normal paragraph followed by bullets, it includes the paragraph plus those bullets. Existing IDs are preserved.
+
 # HTML 10-K tables to nested JSON
 
 Extract numerical tables from **one selected Item** of two full 10-K HTML filings.
