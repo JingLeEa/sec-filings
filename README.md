@@ -1,8 +1,10 @@
 # Simple SEC 10-K Extraction Pipeline
 
-This project uses the SEC submissions API to find a 10-K filing, removes HTML/tables/page noise, extracts Item 1, Item 1A, Item 7, and Item 8, then writes paragraph/disclosure chunks with IDs like `2024_1_P001` and `2024_7_P001`.
+This project uses the SEC submissions API to find a 10-K filing, removes HTML/tables/page noise, extracts Item 1, Item 1A, Item 7, Item 8, and Item 15, then writes paragraph/disclosure chunks with IDs like `2024_1_P001` and `2024_7_P001`.
 
 For filings like NVIDIA's inline XBRL HTML, displayed paragraphs are usually stored as styled `<div>` blocks rather than `<p>` tags. The extractor therefore chunks by meaningful HTML block and carries the latest short subheader, such as `Our Company` or `Data Center`, into each chunk's `item_title`.
+
+For filings like JPMorgan's annual report wrapper, Item 15 can include a table of contents before the narrative annual-report sections. When that TOC is detected, Item 15 chunks are grouped under those TOC section titles instead of every bold inline phrase.
 
 ## Usage
 
@@ -25,7 +27,7 @@ The pipeline writes extracted chunk outputs to `data/raw/<company>/<year>/`:
 
 - `<year>_chunks.json`: structured chunks for LLM input.
 - `<year>_chunks.txt`: readable chunk file for manual copy/paste.
-- `<year>_item_1.txt`, `<year>_item_1a.txt`, `<year>_item_7.txt`, `<year>_item_8.txt`: cleaned full section text.
+- `<year>_item_1.txt`, `<year>_item_1a.txt`, `<year>_item_7.txt`, `<year>_item_8.txt`, `<year>_item_15.txt`: cleaned full section text.
 
 SEC API extraction reads the filing HTML in memory and does not save downloaded HTML files.
 
@@ -48,12 +50,12 @@ Each JSON chunk has:
 
 ## Notes
 
-- The extractor removes HTML tables before section text is written, matching the goal of clean disclosure text. Item 8 financial statements often contain important tables, so this pipeline is best for narrative extraction rather than numeric statement reconstruction.
+- The extractor removes HTML tables before section text is written, matching the goal of clean disclosure text. Item 8 and Item 15 often contain important tables or exhibit indexes, so this pipeline is best for narrative extraction rather than numeric statement reconstruction.
 - SEC downloads should use a descriptive `SEC_USER_AGENT` with your name/email.
 - API extraction uses the ticker as the company folder by default. For local files, company/year are inferred from filenames like `nvda-20240128.htm`.
 - If a filing has unusual headings, lower `--max-chars` for smaller LLM chunks or inspect the item TXT files to confirm boundaries.
 - `item` is the SEC item number. `item_default_title` is the standard SEC heading, while `item_title` is the most recent subheader found inside that item.
-- Chunk IDs reset within each item: Item 1 starts at `2024_1_P001`, Item 1A starts at `2024_1A_P001`, Item 7 starts at `2024_7_P001`, and Item 8 starts at `2024_8_P001`.
+- Chunk IDs reset within each item: Item 1 starts at `2024_1_P001`, Item 1A starts at `2024_1A_P001`, Item 7 starts at `2024_7_P001`, Item 8 starts at `2024_8_P001`, and Item 15 starts at `2024_15_P001`.
 - Generated files live under `data/`, which is ignored by Git.
 
 ## Compare Chunk Files
