@@ -3,7 +3,7 @@
 
 The pipeline is intentionally small and dependency-free:
 
-    SEC ticker/year -> filing HTML -> cleaned text -> Items 1, 1A, 7, 8 -> chunks
+    SEC ticker/year -> filing HTML -> cleaned text -> Items 1, 1A, 7, 8, 15 -> chunks
 
 Outputs are JSON and TXT files with stable paragraph IDs such as 2024_1_P001.
 """
@@ -25,7 +25,7 @@ from urllib.parse import parse_qs, quote, urlparse
 from urllib.request import Request, urlopen
 
 
-DEFAULT_ITEMS = ("1", "1A", "7", "8")
+DEFAULT_ITEMS = ("1", "1A", "7", "8", "15")
 SEC_ARCHIVES_BASE = "https://www.sec.gov/Archives/edgar/data"
 SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 SEC_SUBMISSIONS_BASE = "https://data.sec.gov/submissions"
@@ -34,13 +34,16 @@ ITEM_ENDS = {
     "1A": ("1B", "1C", "2"),
     "7": ("7A", "8"),
     "8": ("9", "9A", "9B", "9C"),
+    "15": ("16",),
 }
 ITEM_TITLES = {
     "1": "Business",
     "1A": "Risk Factors",
     "7": "Management's Discussion and Analysis",
     "8": "Financial Statements and Supplementary Data",
+    "15": "Exhibits and Financial Statement Schedules",
 }
+BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|\*\s+|-\s+)")
 
 
 @dataclass(frozen=True)
@@ -59,6 +62,23 @@ class FilingBlock:
     text: str
     style: str = ""
     bold: bool = False
+
+
+@dataclass(frozen=True)
+class FilingStructureEvent:
+    index: int
+    kind: str
+    text: str
+    rows: tuple[tuple[str, ...], ...] = ()
+    bold: bool = False
+
+
+@dataclass(frozen=True)
+class TocEntry:
+    title: str
+    normalized: str
+    match_key: str
+    page: str = ""
 
 
 class FilingTextExtractor(HTMLParser):
@@ -233,6 +253,147 @@ class FilingBlockExtractor(HTMLParser):
         return " ".join(style for _, style in self.style_stack)
 
 
+class FilingStructureExtractor(HTMLParser):
+    """Collect block text plus table cells for TOC-guided section labels."""
+
+    BLOCK_TAGS = FilingBlockExtractor.BLOCK_TAGS
+    DROP_TAGS = {"script", "style", "noscript", "svg", "head"}
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.events: list[FilingStructureEvent] = []
+        self.block_stack: list[dict[str, object]] = []
+        self.table_depth = 0
+        self.table_rows: list[list[str]] = []
+        self.current_row: list[str] | None = None
+        self.current_cell_parts: list[str] | None = None
+        self.drop_depth = 0
+        self.style_stack: list[tuple[str, str]] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag = tag.lower()
+        attrs_by_name = {name.lower(): value or "" for name, value in attrs}
+        style = attrs_by_name.get("style", "")
+
+        if self.drop_depth:
+            self.drop_depth += 1
+            return
+        if tag in self.DROP_TAGS or is_hidden_style(style):
+            self.drop_depth = 1
+            return
+
+        self.style_stack.append((tag, style))
+
+        if tag == "table":
+            if self.table_depth == 0:
+                self.table_rows = []
+            self.table_depth += 1
+            return
+
+        if self.table_depth:
+            if tag == "tr":
+                self.current_row = []
+            elif tag in {"td", "th"}:
+                self.current_cell_parts = []
+            elif tag == "br" and self.current_cell_parts is not None:
+                self.current_cell_parts.append(" ")
+            return
+
+        if tag in self.BLOCK_TAGS:
+            self.block_stack.append(
+                {
+                    "tag": tag,
+                    "parts": [],
+                    "bold": is_bold_style(style),
+                }
+            )
+        elif tag == "br":
+            self._append_to_block("\n")
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag = tag.lower()
+        if self.drop_depth:
+            return
+        if tag == "br":
+            if self.table_depth and self.current_cell_parts is not None:
+                self.current_cell_parts.append(" ")
+            else:
+                self._append_to_block("\n")
+
+    def handle_endtag(self, tag: str) -> None:
+        tag = tag.lower()
+        if self.drop_depth:
+            self.drop_depth -= 1
+            return
+
+        if self.table_depth:
+            if tag in {"td", "th"} and self.current_cell_parts is not None:
+                cell = clean_block_text("".join(self.current_cell_parts))
+                if self.current_row is not None:
+                    self.current_row.append(cell)
+                self.current_cell_parts = None
+            elif tag == "tr" and self.current_row is not None:
+                if any(cell for cell in self.current_row):
+                    self.table_rows.append(self.current_row)
+                self.current_row = None
+            elif tag == "table":
+                self.table_depth -= 1
+                if self.table_depth == 0:
+                    rows = tuple(tuple(cell for cell in row) for row in self.table_rows)
+                    text = clean_block_text(" ".join(cell for row in rows for cell in row if cell))
+                    if text:
+                        self.events.append(
+                            FilingStructureEvent(index=len(self.events) + 1, kind="table", text=text, rows=rows)
+                        )
+            self._pop_style(tag)
+            return
+
+        if tag in self.BLOCK_TAGS and self.block_stack:
+            block = self.block_stack.pop()
+            text = clean_block_text("".join(block["parts"]))  # type: ignore[arg-type]
+            if text:
+                self.events.append(
+                    FilingStructureEvent(
+                        index=len(self.events) + 1,
+                        kind=str(block["tag"]),
+                        text=text,
+                        bold=bool(block["bold"]),
+                    )
+                )
+
+        self._pop_style(tag)
+
+    def handle_data(self, data: str) -> None:
+        if self.drop_depth:
+            return
+        data = html.unescape(data).replace("\xa0", " ")
+        if not data.strip():
+            return
+
+        if self.table_depth:
+            if self.current_cell_parts is not None:
+                self.current_cell_parts.append(data)
+        else:
+            self._append_to_block(data)
+            if self.block_stack and is_bold_style(self._current_style()):
+                self.block_stack[-1]["bold"] = True
+
+    def _append_to_block(self, value: str) -> None:
+        if self.block_stack:
+            parts = self.block_stack[-1]["parts"]
+            assert isinstance(parts, list)
+            parts.append(value)
+
+    def _current_style(self) -> str:
+        return " ".join(style for _, style in self.style_stack)
+
+    def _pop_style(self, tag: str) -> None:
+        for index in range(len(self.style_stack) - 1, -1, -1):
+            if self.style_stack[index][0] == tag:
+                del self.style_stack[index]
+                break
+
+
 def clean_block_text(text: str) -> str:
     text = html.unescape(text).replace("\xa0", " ")
     text = normalize_typography(text)
@@ -270,6 +431,13 @@ def html_to_blocks(html_text: str) -> list[FilingBlock]:
     parser.feed(html_text)
     parser.close()
     return parser.blocks
+
+
+def html_to_structure_events(html_text: str) -> list[FilingStructureEvent]:
+    parser = FilingStructureExtractor()
+    parser.feed(html_text)
+    parser.close()
+    return parser.events
 
 
 def is_url(value: str) -> bool:
@@ -360,14 +528,25 @@ def sec_document_url(cik: str, filing: dict) -> str:
 
 def discover_10k_filing(cik: str, fiscal_year: str, user_agent: str) -> dict:
     submissions = fetch_json(f"{SEC_SUBMISSIONS_BASE}/CIK{cik}.json", user_agent)
-    recent = submissions.get("filings", {}).get("recent", {})
+    filings = submissions.get("filings", {})
+    recent = filings.get("recent", {})
     rows = submissions_rows(recent)
+    history = list(filings.get("files", []))
 
-    candidates = [
-        row
-        for row in rows
-        if row.get("form") == "10-K" and str(row.get("reportDate", "")).startswith(fiscal_year)
-    ]
+    candidates = matching_10k_rows(rows, fiscal_year)
+    loaded_history: list[str] = []
+    if not candidates and history:
+        for entry in history:
+            name = str(entry.get("name", ""))
+            if not re.fullmatch(r"CIK\d{10}-submissions-\d+\.json", name):
+                raise RuntimeError(f"Unrecognized SEC historical submissions filename: {name}")
+            historical = fetch_json(f"{SEC_SUBMISSIONS_BASE}/{name}", user_agent)
+            rows.extend(submissions_rows(historical.get("filings", {}).get("recent", historical)))
+            loaded_history.append(name)
+            candidates = matching_10k_rows(rows, fiscal_year)
+            if candidates:
+                break
+
     if not candidates:
         available = ", ".join(
             sorted({str(row.get("reportDate", "")) for row in rows if row.get("form") == "10-K" and row.get("reportDate")})
@@ -380,6 +559,14 @@ def discover_10k_filing(cik: str, fiscal_year: str, user_agent: str) -> dict:
         )
         raise ValueError(f"Multiple 10-K filings match fiscal year {fiscal_year}: {choices}. Use a direct filing URL.")
     return candidates[0]
+
+
+def matching_10k_rows(rows: list[dict], fiscal_year: str) -> list[dict]:
+    return [
+        row
+        for row in rows
+        if row.get("form") == "10-K" and str(row.get("reportDate", "")).startswith(fiscal_year)
+    ]
 
 
 def load_filing_from_sec_api(args: argparse.Namespace) -> tuple[str, str, str]:
@@ -417,7 +604,7 @@ def find_item_headings(text: str) -> list[Heading]:
     item_pattern = re.compile(
         r"^\s*(?:part\s+[ivxlcdm]+\s*)?"
         r"item\s+"
-        r"(1A|1B|1C|7A|9A|9B|9C|1|2|3|4|5|6|7|8|9)"
+        r"(1A|1B|1C|7A|9A|9B|9C|15|16|1|2|3|4|5|6|7|8|9)"
         r"\s*[\.\-:)]?\s*"
         r"([A-Z][A-Za-z0-9 ,;&'’()/.-]{0,120})?\s*$",
         re.IGNORECASE | re.MULTILINE,
@@ -437,7 +624,7 @@ def parse_item_heading(text: str) -> tuple[str, str] | None:
     match = re.fullmatch(
         r"\s*(?:part\s+[ivxlcdm]+\s*)?"
         r"item\s+"
-        r"(1A|1B|1C|7A|9A|9B|9C|1|2|3|4|5|6|7|8|9)"
+        r"(1A|1B|1C|7A|9A|9B|9C|15|16|1|2|3|4|5|6|7|8|9)"
         r"\s*[\.\-:)]?\s*"
         r"(.{0,140})\s*",
         text,
@@ -462,6 +649,205 @@ def is_probable_heading(line: str) -> bool:
     return True
 
 
+def is_terminal_section_heading(text: str) -> bool:
+    return bool(re.fullmatch(r"\s*signatures?\s*", text, re.IGNORECASE))
+
+
+def terminal_section_start(text: str, start_position: int) -> int | None:
+    match = re.search(r"^\s*signatures?\s*$", text[start_position:], re.IGNORECASE | re.MULTILINE)
+    if not match:
+        return None
+    return start_position + match.start()
+
+
+def extract_item15_toc_section_blocks(html_text: str) -> list[FilingBlock] | None:
+    events = html_to_structure_events(html_text)
+    item_range = item15_event_range(events)
+    if item_range is None:
+        return None
+
+    start_index, end_index = item_range
+    toc_table_index, toc_entries = find_item15_toc(events, start_index, end_index)
+    if toc_table_index is None or not is_supported_item15_toc(toc_entries):
+        return None
+
+    entries_by_key = {entry.match_key: entry for entry in toc_entries}
+    seen_toc_headers: set[str] = set()
+    blocks: list[FilingBlock] = []
+    for event in events[start_index + 1 : end_index]:
+        if event.index == toc_table_index:
+            continue
+        if event.kind == "table":
+            blocks.extend(toc_header_blocks_from_table(event, entries_by_key, seen_toc_headers))
+            continue
+        if event.text.casefold() == "table of contents" or should_drop_line(event.text):
+            continue
+        if parse_item_heading(event.text):
+            continue
+
+        toc_entry = entries_by_key.get(toc_match_key(event.text))
+        if toc_entry:
+            if toc_entry.match_key not in seen_toc_headers:
+                seen_toc_headers.add(toc_entry.match_key)
+                blocks.append(toc_header_block(event.index, toc_entry.title))
+        else:
+            blocks.append(
+                FilingBlock(
+                    index=event.index,
+                    tag="toc_text",
+                    text=event.text,
+                    style="",
+                    bold=False,
+                )
+            )
+
+    return blocks or None
+
+
+def item15_event_range(events: list[FilingStructureEvent]) -> tuple[int, int] | None:
+    starts = [index for index, event in enumerate(events) if event.kind != "table" and parse_item_heading(event.text) == ("15", "Exhibits, Financial Statement Schedules.")]
+    if not starts:
+        starts = [
+            index
+            for index, event in enumerate(events)
+            if event.kind != "table" and (heading := parse_item_heading(event.text)) is not None and heading[0] == "15"
+        ]
+    if not starts:
+        return None
+
+    candidates: list[tuple[int, int, int]] = []
+    for start_index in starts:
+        end_index = next(
+            (
+                index
+                for index, event in enumerate(events[start_index + 1 :], start=start_index + 1)
+                if event.kind != "table"
+                and (
+                    is_terminal_section_heading(event.text)
+                    or ((heading := parse_item_heading(event.text)) is not None and heading[0] in ITEM_ENDS["15"])
+                )
+            ),
+            len(events),
+        )
+        text_length = sum(len(event.text) for event in events[start_index + 1 : end_index] if event.kind != "table")
+        candidates.append((text_length, start_index, end_index))
+
+    _, start_index, end_index = max(candidates, key=lambda candidate: candidate[0])
+    return start_index, end_index
+
+
+def find_item15_toc(
+    events: list[FilingStructureEvent],
+    start_index: int,
+    end_index: int,
+) -> tuple[int | None, list[TocEntry]]:
+    toc_index = next(
+        (
+            index
+            for index, event in enumerate(events[start_index + 1 : end_index], start=start_index + 1)
+            if event.kind != "table" and event.text.casefold() == "table of contents"
+        ),
+        None,
+    )
+    if toc_index is None:
+        return None, []
+
+    for index, event in enumerate(events[toc_index + 1 : end_index], start=toc_index + 1):
+        if event.kind == "table":
+            return event.index, toc_entries_from_table(event)
+    return None, []
+
+
+def toc_entries_from_table(event: FilingStructureEvent) -> list[TocEntry]:
+    entries: list[TocEntry] = []
+    seen: set[str] = set()
+    for row in event.rows:
+        cells = [cell for cell in row if cell]
+        for index, cell in enumerate(cells):
+            if not is_plausible_toc_title(cell):
+                continue
+            page = ""
+            if index + 1 < len(cells) and is_page_number(cells[index + 1]):
+                page = cells[index + 1]
+            elif index > 0 and is_page_number(cells[index - 1]):
+                page = cells[index - 1]
+
+            title = canonical_toc_title(cell)
+            normalized = normalize_heading_title(title)
+            if not normalized or normalized in seen:
+                continue
+            seen.add(normalized)
+            entries.append(TocEntry(title=title, normalized=normalized, match_key=toc_match_key(title), page=page))
+    return entries
+
+
+def is_supported_item15_toc(entries: list[TocEntry]) -> bool:
+    if len(entries) < 4:
+        return False
+    normalized_titles = {entry.normalized for entry in entries}
+    narrative_markers = {
+        "management s discussion and analysis",
+        "executive overview",
+        "firmwide risk management",
+        "critical accounting estimates used by the firm",
+    }
+    return bool(normalized_titles & narrative_markers)
+
+
+def toc_header_blocks_from_table(
+    event: FilingStructureEvent,
+    entries_by_key: dict[str, TocEntry],
+    seen_toc_headers: set[str],
+) -> list[FilingBlock]:
+    blocks: list[FilingBlock] = []
+    for row in event.rows:
+        for cell in row:
+            entry = entries_by_key.get(toc_match_key(cell))
+            if entry is None or entry.match_key in seen_toc_headers:
+                continue
+            seen_toc_headers.add(entry.match_key)
+            blocks.append(toc_header_block(event.index, entry.title))
+    return blocks
+
+
+def toc_header_block(index: int, title: str) -> FilingBlock:
+    return FilingBlock(index=index, tag="toc_header", text=title, style="", bold=True)
+
+
+def canonical_toc_title(title: str) -> str:
+    title = re.sub(r"\s+", " ", normalize_typography(title)).strip()
+    return title.strip(" :")
+
+
+def normalize_heading_title(title: str) -> str:
+    title = canonical_toc_title(title).casefold()
+    title = title.replace("&", "and")
+    title = re.sub(r"[^a-z0-9]+", " ", title)
+    return re.sub(r"\s+", " ", title).strip()
+
+
+def toc_match_key(title: str) -> str:
+    title = re.sub(r"\([^)]*\)", " ", canonical_toc_title(title)).casefold()
+    title = title.replace("&", "and")
+    title = re.sub(r"[^a-z0-9]+", " ", title)
+    return re.sub(r"\s+", " ", title).strip()
+
+
+def is_plausible_toc_title(text: str) -> bool:
+    text = canonical_toc_title(text)
+    if not text or is_page_number(text):
+        return False
+    if len(text) > 130:
+        return False
+    if re.search(r"\b(jpmorgan chase & co\.|form 10-k|page)\b", text, re.IGNORECASE):
+        return False
+    return bool(re.search(r"[A-Za-z]", text))
+
+
+def is_page_number(text: str) -> bool:
+    return bool(re.fullmatch(r"\d{1,4}", text.strip()))
+
+
 def extract_section_blocks(
     blocks: list[FilingBlock],
     items: Iterable[str] = DEFAULT_ITEMS,
@@ -479,7 +865,16 @@ def extract_section_blocks(
         starts = [heading for heading in headings if heading[1] == item]
 
         for start_index, _ in starts:
-            end_index = next((index for index, heading_item in headings if index > start_index and heading_item in end_items), None)
+            end_candidates = [index for index, heading_item in headings if index > start_index and heading_item in end_items]
+            if item == "15":
+                end_candidates.extend(
+                    index
+                    for index, block in enumerate(blocks)
+                    if index > start_index and is_terminal_section_heading(block.text)
+                )
+            end_index = min(end_candidates) if end_candidates else None
+            if end_index is None and item == "15":
+                end_index = len(blocks)
             if end_index is None:
                 continue
             candidate = [
@@ -507,10 +902,17 @@ def extract_sections(text: str, items: Iterable[str] = DEFAULT_ITEMS) -> dict[st
         starts = [heading for heading in headings if heading.item == item]
 
         for start in starts:
-            end = next((heading for heading in headings if heading.start > start.end and heading.item in end_items), None)
-            if end is None:
+            end_candidates = [heading.start for heading in headings if heading.start > start.end and heading.item in end_items]
+            if item == "15":
+                terminal_start = terminal_section_start(text, start.end)
+                if terminal_start is not None:
+                    end_candidates.append(terminal_start)
+            end_position = min(end_candidates) if end_candidates else None
+            if end_position is None and item == "15":
+                end_position = len(text)
+            if end_position is None:
                 continue
-            content = text[start.end : end.start].strip()
+            content = text[start.end : end_position].strip()
             content = cleanup_section_text(content)
             if content:
                 candidates.append((len(content), content))
@@ -572,12 +974,12 @@ def should_merge_with_next_block(previous: FilingBlock, current: FilingBlock) ->
     if is_subheader_block(previous) or is_subheader_block(current):
         return False
     if starts_with_bullet(current.text):
-        return False
+        return True
     return not ends_with_sentence_terminal(previous.text)
 
 
 def starts_with_bullet(text: str) -> bool:
-    return text.lstrip().startswith("•")
+    return bool(BULLET_PREFIX_RE.match(text))
 
 
 def ends_with_sentence_terminal(text: str) -> bool:
@@ -587,6 +989,8 @@ def ends_with_sentence_terminal(text: str) -> bool:
 def join_continued_text(previous: str, current: str) -> str:
     previous = previous.rstrip()
     current = current.lstrip()
+    if starts_with_bullet(current):
+        return f"{previous}\n{current}".strip()
     if previous.endswith("-"):
         return previous + current
     return f"{previous} {current}".strip()
@@ -608,6 +1012,8 @@ def cleanup_section_text(text: str) -> str:
 def should_drop_line(line: str) -> bool:
     if not line:
         return False
+    if is_repeated_filing_header(line):
+        return True
     if re.fullmatch(r"\d{1,4}", line):
         return True
     if re.fullmatch(r"[-–—_ ]{3,}", line):
@@ -621,9 +1027,27 @@ def should_drop_line(line: str) -> bool:
     return False
 
 
+def is_repeated_filing_header(line: str) -> bool:
+    cleaned = re.sub(r"\s+", " ", normalize_typography(line)).strip()
+    if re.fullmatch(r"\(?continued\)?", cleaned, re.IGNORECASE):
+        return True
+    if re.fullmatch(r"notes to (the )?consolidated financial statements", cleaned, re.IGNORECASE):
+        return True
+    if re.fullmatch(r"[A-Z0-9&.,' -]+ (corporation|corp\.?|company|co\.?) and subsidiaries", cleaned, re.IGNORECASE):
+        return True
+    return False
+
+
 def is_subheader_block(block: FilingBlock) -> bool:
+    if block.tag == "toc_header":
+        return True
+    if block.tag == "toc_text":
+        return False
+
     text = block.text.strip()
     if not text or parse_item_heading(text) or should_drop_line(text):
+        return False
+    if starts_with_bullet(text):
         return False
     if len(text) > 140:
         return False
@@ -817,7 +1241,7 @@ def write_outputs(records: list[dict[str, str | int]], sections: dict[str, str],
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Extract Item 1, 1A, 7, and 8 from a SEC 10-K filing.")
+    parser = argparse.ArgumentParser(description="Extract Item 1, 1A, 7, 8, and 15 from a SEC 10-K filing.")
     parser.add_argument("source", nargs="?", help="Optional SEC filing HTML URL or local .html/.htm/.txt file.")
     identity = parser.add_mutually_exclusive_group()
     identity.add_argument("--ticker", help="SEC ticker for API extraction, e.g. NVDA.")
@@ -874,7 +1298,11 @@ def main(argv: list[str] | None = None) -> int:
         print("Warning: --raw-dir is deprecated and ignored; source HTML is no longer saved.", file=sys.stderr)
 
     blocks = html_to_blocks(raw_html)
-    section_blocks = merge_section_blocks(extract_section_blocks(blocks))
+    section_blocks = extract_section_blocks(blocks)
+    item15_toc_blocks = extract_item15_toc_section_blocks(raw_html)
+    if item15_toc_blocks:
+        section_blocks["15"] = item15_toc_blocks
+    section_blocks = merge_section_blocks(section_blocks)
     clean_text = html_to_clean_text(raw_html)
     year = args.year or filename_year or infer_year(raw_html + "\n" + clean_text, source)
 
