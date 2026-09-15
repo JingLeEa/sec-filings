@@ -1,6 +1,12 @@
+import io
+import json
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 from sec_10k_extractor import (
+    FilingBlock,
     build_records,
     build_records_from_section_blocks,
     discover_10k_filing,
@@ -9,12 +15,18 @@ from sec_10k_extractor import (
     extract_sections,
     html_to_blocks,
     html_to_clean_text,
+    html_to_structure_events,
     infer_company_year_from_filename,
+    is_subheader_block,
     merge_continued_blocks,
     make_chunk_id,
+    main,
     normalize_source,
     parse_args,
+    report_outline,
+    referenced_section_ranges,
     section_blocks_to_text,
+    should_drop_line,
 )
 from pathlib import Path
 
@@ -56,6 +68,114 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual(args.year, "2024")
         self.assertEqual(args.out_dir, "data/raw")
         self.assertIsNone(args.source)
+
+    def test_cli_selected_items_exclude_item15_in_both_extraction_paths(self):
+        lines = [
+            "Item 1. Business", "We manufacture memory products.",
+            "Item 1A. Risk Factors", "Demand may decrease unexpectedly.",
+            "Item 1B. Unresolved Staff Comments", "None.",
+            "Item 7. Management's Discussion and Analysis", "Revenue increased this year.",
+            "Item 7A. Market Risk", "Interest rates may change.",
+            "Item 8. Financial Statements", "These statements include our subsidiaries.",
+            "Item 9. Changes in Accountants", "None.",
+            "Item 15. Exhibits", "The exhibits are listed here.",
+            "Item 16. Form 10-K Summary", "None.",
+        ]
+        for tag in ("div", "center"):
+            with self.subTest(tag=tag), TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                source = root / "mu-20240829.htm"
+                source.write_text("".join(f"<{tag}>{line}</{tag}>" for line in lines), encoding="utf-8")
+                errors = io.StringIO()
+                with redirect_stdout(io.StringIO()), redirect_stderr(errors), patch(
+                    "sec_10k_extractor.extract_item15_toc_section_blocks"
+                ) as item15_parser:
+                    result = main([
+                        str(source), "--out-dir", str(root / "output"),
+                        "--items", "1", "1a", "7", "8",
+                    ])
+                self.assertEqual(result, 0)
+                self.assertEqual(errors.getvalue(), "")
+                item15_parser.assert_not_called()
+                output = root / "output" / "mu" / "2024"
+                records = json.loads((output / "2024_chunks.json").read_text())
+                self.assertEqual({record["item"] for record in records}, {"1", "1A", "7", "8"})
+                self.assertNotIn("Item 15", (output / "2024_chunks.txt").read_text())
+                self.assertFalse((output / "2024_item_15.txt").exists())
+                for item in ("1", "1a", "7", "8"):
+                    self.assertTrue((output / f"2024_item_{item}.txt").exists())
+
+    def test_page_report_footers_are_dropped_before_heading_detection(self):
+        labels = [
+            "59 |2025 10-K", "11 |2024 10-K", "59|2025 10-K",
+            " 59 \u00a0| 2025 10-K ", "2025 10-K | 59",
+            "Page 59 | 2025 Form 10-K", "2025 FORM 10-K | Page 59",
+            "59 | 2025 10–K", "59 | 2025 10 - k", "59 | 2025 10-K/A",
+        ]
+        for label in labels:
+            with self.subTest(label=label):
+                self.assertTrue(should_drop_line(label))
+                self.assertFalse(is_subheader_block(FilingBlock(index=1, tag="div", text=label, bold=True)))
+
+    def test_footer_filter_preserves_real_headings_and_report_references(self):
+        for text in [
+            "Critical Accounting Estimates", "Income Taxes", "Inventories",
+            "2025 10-K Reporting Requirements", "Item 7. Management's Discussion and Analysis",
+            "See page 59 | 2025 10-K for additional information.",
+            "We filed our 2025 Form 10-K.", "59 |2025 10-K disclosure text follows.",
+        ]:
+            with self.subTest(text=text):
+                self.assertFalse(should_drop_line(text))
+        for text in ("Critical Accounting Estimates", "Income Taxes", "Inventories"):
+            self.assertTrue(is_subheader_block(FilingBlock(index=1, tag="div", text=text, bold=True)))
+
+    def test_footer_does_not_reset_section_title_or_break_continued_paragraph(self):
+        html = """
+        <html><body>
+          <div>Item 7. Management's Discussion and Analysis</div>
+          <div style="font-weight:700">Critical Accounting Estimates</div>
+          <div>Revenue is recognized when</div>
+          <div style="font-weight:700"><span>59 </span><span>|2025 10-K</span></div>
+          <div>control transfers to the customer.</div>
+          <div>Income taxes: We estimate taxes payable in multiple jurisdictions.</div>
+          <div style="font-weight:700">Liquidity</div>
+          <div>Cash balances increased during the fiscal year.</div>
+          <div>Item 7A. Market Risk</div>
+        </body></html>
+        """
+        blocks = html_to_blocks(html)
+        self.assertNotIn("59 |2025 10-K", [block.text for block in blocks])
+        sections = extract_section_blocks(blocks, items=("7",))
+        sections["7"] = merge_continued_blocks(sections["7"])
+        records = build_records_from_section_blocks(sections, year="2025", company="mu", source="sample", max_chars=1800)
+        self.assertEqual([record["item_title"] for record in records], [
+            "Critical Accounting Estimates", "Critical Accounting Estimates", "Liquidity",
+        ])
+        self.assertEqual(records[0]["text"], "Revenue is recognized when control transfers to the customer.")
+        self.assertEqual(records[1]["text"], "Income taxes: We estimate taxes payable in multiple jurisdictions.")
+
+    def test_cli_omits_footer_from_json_and_txt_in_both_extraction_paths(self):
+        lines = [
+            "Item 7. Management's Discussion and Analysis", "Critical Accounting Estimates",
+            "Estimates require management judgment.", "59 |2025 10-K",
+            "Income taxes: We estimate taxes payable in multiple jurisdictions.",
+            "Item 7A. Market Risk", "None.",
+        ]
+        for tag in ("div", "center"):
+            with self.subTest(tag=tag), TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                source = root / "mu-20250828.htm"
+                source.write_text("".join(f"<{tag}>{line}</{tag}>" for line in lines), encoding="utf-8")
+                with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                    self.assertEqual(main([str(source), "--out-dir", str(root / "output"), "--items", "7"]), 0)
+                output = root / "output" / "mu" / "2025"
+                for name in ("2025_chunks.json", "2025_chunks.txt", "2025_item_7.txt"):
+                    text = (output / name).read_text()
+                    self.assertNotIn("59 |2025 10-K", text)
+                    self.assertIn("Income taxes: We estimate taxes payable in multiple jurisdictions.", text)
+                if tag == "div":
+                    records = json.loads((output / "2025_chunks.json").read_text())
+                    self.assertEqual({record["item_title"] for record in records}, {"Critical Accounting Estimates"})
 
     def test_discover_10k_filing_reads_sec_historical_submissions(self):
         import sec_10k_extractor
@@ -459,6 +579,405 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual(records[1]["text"], "• natural disasters or severe weather conditions")
         self.assertEqual(records[1]["item_title"], "Operational")
         self.assertEqual(records[2]["item_title"], "Operational")
+
+    def test_sentence_lead_ins_stay_with_bullets_in_both_html_parsers(self):
+        introductions = [
+            '<span style="font-weight:700">Total trading-related assets (average and period-end)</span>'
+            '<span style="font-weight:400"> increased reflecting:</span>',
+            '<strong>Revenue</strong> increased driven by:',
+            '<b>Our results</b> improved because of:',
+            '<span style="font-weight:700">Revenue increased driven by:</span>',
+            '<span style="font-weight:700">Our results<span style="font-weight:400"> improved because of:</span></span>',
+        ]
+        for introduction in introductions:
+            for parser in (html_to_blocks, html_to_structure_events):
+                with self.subTest(introduction=introduction, parser=parser.__name__):
+                    source = ('<div style="font-weight:700">Balance Sheet</div>'
+                              f'<div>{introduction}</div>'
+                              '<div>• growth across asset classes; and</div>'
+                              '<div>• an increased volume of agreements.</div>'
+                              '<div>Total deposits increased during the year.</div>'
+                              '<div style="font-weight:700">Sources of Revenue:</div>'
+                              '<div>Fees are earned from advisory services.</div>')
+                    parsed = parser(source)
+                    blocks = parsed if parser is html_to_blocks else [
+                        FilingBlock(event.index, event.kind, event.text, bold=event.bold,
+                                    mixed_bold=event.mixed_bold) for event in parsed
+                    ]
+                    intro = blocks[1].text
+                    self.assertFalse(is_subheader_block(blocks[1]))
+                    records = build_records_from_section_blocks(
+                        {"7": merge_continued_blocks(blocks)}, "2025", "example", "sample", 1800,
+                    )
+                    self.assertEqual([r["item_title"] for r in records],
+                                     ["Balance Sheet", "Balance Sheet", "Sources of Revenue:"])
+                    self.assertEqual(records[0]["text"], intro +
+                                     '\n• growth across asset classes; and\n• an increased volume of agreements.')
+                    self.assertEqual(records[1]["text"], 'Total deposits increased during the year.')
+
+    def test_colon_titles_survive_partial_emphasis_and_normal_weight_overrides(self):
+        source = ('<div><b>Sources</b> of Revenue:</div>'
+                  '<div><span style="font-weight:700">Income Taxes</span>:</div>'
+                  '<h3>Business outlook:</h3>'
+                  '<div style="font-weight:700">2025 Business Outlook</div>'
+                  '<div style="font-weight:700">Our results<span style="font-weight:400"> improved because of:</span></div>')
+        for parser in (html_to_blocks, html_to_structure_events):
+            with self.subTest(parser=parser.__name__):
+                parsed = parser(source)
+                blocks = parsed if parser is html_to_blocks else [
+                    FilingBlock(event.index, event.kind, event.text, bold=event.bold,
+                                mixed_bold=event.mixed_bold) for event in parsed
+                ]
+                for block in blocks[:4]:
+                    self.assertTrue(is_subheader_block(block), block.text)
+                self.assertTrue(blocks[0].mixed_bold)
+                self.assertFalse(blocks[1].mixed_bold)  # A plain colon is not narrative text.
+                self.assertTrue(blocks[4].mixed_bold)
+                self.assertFalse(is_subheader_block(blocks[4]))
+
+    def test_fully_bold_sentence_introductions_are_not_headings(self):
+        for text in ('Revenue increased driven by:', 'Assets increased reflecting:',
+                     'The primary drivers were as follows:', 'Our operating costs consist of:'):
+            with self.subTest(text=text):
+                self.assertFalse(is_subheader_block(FilingBlock(1, 'div', text, bold=True)))
+        self.assertTrue(is_subheader_block(FilingBlock(1, 'div', 'Drivers of Revenue:', bold=True)))
+
+    def test_table_captions_do_not_replace_parent_or_enter_disclosure_text(self):
+        for caption in ('Table 2:Ratios and Per Common Share Data', 'TABLE 9f: Balance Sheet',
+                        'Table 25.2 - Restrictions on Cash', 'Table IV: Selected Ratios'):
+            with self.subTest(caption=caption):
+                source = ('<div>Item 7. Management Discussion</div>'
+                          '<div style="font-weight:700">Overview</div>'
+                          '<div>Table 2 presents selected ratios.</div>'
+                          f'<div style="font-weight:700">{caption}</div>'
+                          '<table><tr><td>Ratio</td><td>987654321</td></tr></table>'
+                          '<div>(1)Represents net income divided by average assets.</div>'
+                          '<div style="font-weight:700">Earnings Performance</div>'
+                          '<div>Income increased this year.</div><div>Item 7A. Market Risk</div>')
+                sections = extract_section_blocks(html_to_blocks(source), items=('7',))
+                records = build_records_from_section_blocks(
+                    {'7': merge_continued_blocks(sections['7'])}, '2025', 'example', 'sample', 1800)
+                self.assertEqual([r['item_title'] for r in records],
+                                 ['Overview', 'Overview', 'Earnings Performance'])
+                self.assertEqual([r['text'] for r in records], [
+                    'Table 2 presents selected ratios.',
+                    '(1)Represents net income divided by average assets.', 'Income increased this year.'])
+
+    def test_table_references_in_sentences_remain_narrative(self):
+        for text in ('Table 2 presents selected ratios.',
+                     'Table 2: Ratios and Per Common Share Data is discussed below.',
+                     'Table 3.1 provides the amortized cost',
+                     'Table 14.12 provides our significant assumptions'):
+            with self.subTest(text=text):
+                records = build_records_from_section_blocks(
+                    {'7': [FilingBlock(1, 'div', text)]}, '2025', 'example', 'sample', 1800)
+                self.assertEqual(records[0]['text'], text)
+
+    def test_period_comparison_labels_keep_the_topic_without_entering_paragraphs(self):
+        labels = ('Full year 2025 vs. full year 2024', 'FULL YEAR 2031 VS FULL YEAR 2030:',
+                  'Fiscal year 2025 compared with fiscal year 2024', '2025 versus 2024',
+                  'Fourth quarter 2025 vs. fourth quarter 2024', 'Q1 2025 compared to Q1 2024')
+        for label in labels:
+            for tag in ('div', 'h3'):
+                with self.subTest(label=label, tag=tag):
+                    source = ('<div>Item 7. Management Discussion</div>'
+                              '<div style="font-weight:700">Noninterest Income</div>'
+                              '<div>We earn fees from customer services.</div>'
+                              f'<{tag} style="font-weight:700">{label}</{tag}>'
+                              '<div>Deposit-related fees increased this year.</div>'
+                              '<div style="font-weight:700">Noninterest Expense</div>'
+                              f'<{tag} style="font-weight:700">{label}</{tag}>'
+                              '<div>Personnel expense increased this year.</div>'
+                              '<div>Item 7A. Market Risk</div>')
+                    sections = extract_section_blocks(html_to_blocks(source), items=('7',))
+                    records = build_records_from_section_blocks(
+                        {'7': merge_continued_blocks(sections['7'])}, '2025', 'example', 'sample', 1800)
+                    self.assertEqual([r['item_title'] for r in records],
+                                     ['Noninterest Income', 'Noninterest Income', 'Noninterest Expense'])
+                    self.assertEqual([r['text'] for r in records], [
+                        'We earn fees from customer services.', 'Deposit-related fees increased this year.',
+                        'Personnel expense increased this year.'])
+                    self.assertFalse(is_subheader_block(FilingBlock(1, tag, label, bold=True)))
+
+    def test_period_references_in_narrative_and_topic_headings_are_preserved(self):
+        sentences = ('Full year 2025 vs. full year 2024 revenue increased.',
+                     'We compare full year 2025 vs. full year 2024.',
+                     '2025 versus 2024 results reflect higher fees.')
+        records = build_records_from_section_blocks(
+            {'7': [FilingBlock(i, 'div', text) for i, text in enumerate(sentences)]},
+            '2025', 'example', 'sample', 1800)
+        self.assertEqual([r['text'] for r in records], list(sentences))
+        for title in ('2025 Business Outlook', 'Revenue: 2025 vs. 2024', 'Fiscal Year Results'):
+            self.assertTrue(is_subheader_block(FilingBlock(1, 'div', title, bold=True)))
+
+
+def incorporated_filing(year):
+    def heading(item, title):
+        return f'<table><tr><td>ITEM {item}.</td><td>{title}</td></tr></table>'
+    return ('<html><body>' + heading('1', 'BUSINESS') +
+            '<div>We manufacture industrial equipment.</div>' +
+            '<table><tr><td>Revenue</td><td>987654321</td></tr></table>' +
+            heading('1A', 'RISK FACTORS') +
+            f'<div>Information in response to this Item 1A is in the {year} Annual Report under "Operating Review - Risk Overview." That information is incorporated by reference.</div>' +
+            heading('1B', 'UNRESOLVED STAFF COMMENTS') + '<div>None.</div>' +
+            heading('7', 'MANAGEMENT DISCUSSION') +
+            f'<div>Information in response to this Item 7 is in the {year} Annual Report under "Operating Review." That information is incorporated by reference.</div>' +
+            heading('7A', 'MARKET RISK') + '<div>None.</div>' +
+            heading('8', 'FINANCIAL STATEMENTS') +
+            f'<div>Information in response to this Item 8 is in the {year} Annual Report under "Accounts," under "Notes to the Accounts" and under "Quarterly Results." That information is incorporated by reference.</div>' +
+            heading('9', 'ACCOUNTANTS') + '<div>None.</div></body></html>')
+
+
+def incorporated_report(year):
+    return f'''<html><body><table>
+      <tr><td style="font-weight:700">Operating Review</td></tr>
+      <tr><td>2</td><td>Performance</td></tr>
+      <tr><td>3</td><td>Risk Overview</td></tr>
+      <tr><td style="font-weight:700">Corporate Governance</td></tr>
+      <tr><td style="font-weight:700">Accounts</td></tr>
+      <tr><td style="font-weight:700">Notes to the Accounts</td></tr>
+      <tr><td style="font-weight:700">Quarterly Results</td></tr>
+      <tr><td style="font-weight:700">Glossary</td></tr></table>
+      <div style="font-weight:700">Operating Review</div>
+      <table><tr><td>Performance</td></tr></table>
+      <div>Our revenue increased in {year}.</div>
+      <table><tr><td>Risk Overview</td></tr></table>
+      <div>Supply disruptions could affect our business in {year}.</div>
+      <div style="font-weight:700">Risk Overview (continued)</div>
+      <div>Customers could cancel orders.</div>
+      <table><tr><td>Corporate Governance</td></tr></table>
+      <div>This governance text is outside the requested sections.</div>
+      <div style="font-weight:700">Accounts</div>
+      <div>Our statements consolidate the subsidiaries.</div>
+      <table><tr><td>Assets</td><td>987654321</td></tr></table>
+      <div style="font-weight:700">Notes to the Accounts</div>
+      <table><tr><td>Note 27. Income Taxes</td></tr></table>
+      <div>Our tax expense changed in {year}.</div>
+      <table><tr><td>Quarterly Results</td></tr>
+        <tr><td>Revenue</td><td>987654321</td></tr></table>
+      <div>Quarterly figures were revised in {year}.</div>
+      <table><tr><td>Glossary</td></tr></table>
+      <div>This glossary text is outside the requested sections.</div>
+      </body></html>'''
+
+
+def report_index(filename, document_type='EX-13'):
+    return f'<html><table><tr><td>6</td><td>Annual Report</td><td><a href="{filename}">{filename}</a></td><td>{document_type}</td></tr></table></html>'
+
+
+class IncorporatedReportTests(unittest.TestCase):
+    def make_files(self, root, year='2031', primary='wrapper.htm', report='financial-data.htm', doc_type='EX-13'):
+        source = root / primary
+        source.write_text(incorporated_filing(year))
+        (root / report).write_text(incorporated_report(year))
+        (root / '0000999888-32-000001-index.htm').write_text(report_index(report, doc_type))
+        return source
+
+    def arguments(self, source, root, year='2031'):
+        return [str(source), '--company', 'example', '--year', year, '--items', '1', '1A', '7', '8',
+                '--out-dir', str(root / 'output')]
+
+    def test_discovers_arbitrary_report_names_years_and_sections(self):
+        for year, primary, report, doc_type in [
+            ('2031', 'wrapper.htm', 'financial-data.htm', 'EX-13'),
+            ('2032', 'financial-data.htm', 'wrapper.htm', 'EX-13.1'),
+            ('2033', 'form.htm', 'shareholder-letter.htm', 'EX-99.1'),
+        ]:
+            with self.subTest(year=year), TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                source = self.make_files(root, year, primary, report, doc_type)
+                before = {p.name: p.read_bytes() for p in root.glob('*.htm')}
+                with redirect_stdout(io.StringIO()):
+                    self.assertEqual(main(self.arguments(source, root, year)), 0)
+                destination = root / 'output/example' / year
+                records = json.loads((destination / f'{year}_chunks.json').read_text())
+                self.assertEqual({r['item'] for r in records}, {'1', '1A', '7', '8'})
+                self.assertEqual(len({r['id'] for r in records}), len(records))
+                by_item = {item: ' '.join(r['text'] for r in records if r['item'] == item) for item in ('1', '1A', '7', '8')}
+                self.assertIn('industrial equipment', by_item['1'])
+                self.assertIn('Supply disruptions', by_item['1A'])
+                self.assertIn('cancel orders', by_item['1A'])
+                self.assertIn('revenue increased', by_item['7'])
+                self.assertNotIn('Supply disruptions', by_item['7'])
+                self.assertIn('tax expense', by_item['8'])
+                self.assertIn('Quarterly figures were revised', by_item['8'])
+                all_text = ' '.join(by_item.values())
+                for unwanted in ('987654321', 'incorporated by reference', 'governance text', 'glossary text', '(continued)'):
+                    self.assertNotIn(unwanted, all_text)
+                for record in records:
+                    self.assertEqual(record['source'], str(source if record['item'] == '1' else root / report))
+                audit = json.loads((destination / f'{year}_sources.json').read_text())['referenced_items']
+                self.assertEqual(audit['7']['excluded_sections'][0]['title'], 'Risk Overview')
+                self.assertEqual(audit['8']['document_type'], doc_type)
+                for filename, content in before.items():
+                    self.assertEqual((root / filename).read_bytes(), content)
+
+    def test_referenced_report_keeps_sentence_introduction_under_parent_heading(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = self.make_files(root)
+            report = root / 'financial-data.htm'
+            report.write_text(incorporated_report('2031').replace(
+                '<div>Our revenue increased in 2031.</div>',
+                '<div><span style="font-weight:700">Total trading-related assets (average and period-end)</span>'
+                '<span style="font-weight:400"> increased reflecting:</span></div>'
+                '<div>• growth across asset classes; and</div><div>• increased agreements.</div>'
+                '<div>Total deposits increased.</div>'))
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(main(self.arguments(source, root)), 0)
+            records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
+            review = [r for r in records if r['item'] == '7']
+            self.assertEqual([r['item_title'] for r in review], ['Performance', 'Performance'])
+            self.assertEqual(review[0]['text'],
+                             'Total trading-related assets (average and period-end) increased reflecting:'
+                             '\n• growth across asset classes; and\n• increased agreements.')
+            self.assertEqual(review[1]['text'], 'Total deposits increased.')
+            self.assertEqual(review[0]['source'], str(report))
+
+    def test_table_footnotes_use_enclosing_report_section_and_accounting_note(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = self.make_files(root)
+            report = root / 'financial-data.htm'
+            report.write_text(incorporated_report('2031').replace(
+                '<tr><td style="font-weight:700">Notes to the Accounts</td></tr>',
+                '<tr><td style="font-weight:700">Notes to the Accounts</td></tr>'
+                '<tr><td>Note 27. Income Taxes</td></tr>').replace(
+                '<div>Our revenue increased in 2031.</div>',
+                '<div style="font-weight:700">Credit Quality</div>'
+                '<div>Credit conditions improved.</div>'
+                '<div style="font-weight:700">Table 2: Ratios</div>'
+                '<table><tr><td>Assets</td><td>987654321</td></tr></table>'
+                '<div>(1)Represents income divided by average assets.</div>'
+                '<table><tr><td>Table 3: Equity Ratios</td></tr></table>'
+                '<div>(2)Represents income divided by average equity.</div>').replace(
+                '<div>Our tax expense changed in 2031.</div>',
+                '<div>Our tax expense changed in 2031.</div>'
+                '<div style="font-weight:700">Deferred Taxes</div>'
+                '<div style="font-weight:700">Table 27.1: Tax Balances</div>'
+                '<table><tr><td>Taxes</td><td>987654321</td></tr></table>'
+                '<div>(1)Tax balances exclude interest.</div>'))
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(main(self.arguments(source, root)), 0)
+            records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
+            footnotes = [r for r in records if r['text'].startswith(('(1)', '(2)'))]
+            self.assertEqual([r['item_title'] for r in footnotes],
+                             ['Performance', 'Performance', 'Note 27. Income Taxes'])
+            self.assertEqual([r['text'] for r in footnotes], [
+                '(1)Represents income divided by average assets.',
+                '(2)Represents income divided by average equity.', '(1)Tax balances exclude interest.'])
+            self.assertTrue(all(r['source'] == str(report) for r in footnotes))
+            self.assertTrue(all(not r['item_title'].startswith('Table ') for r in records))
+            self.assertTrue(all('987654321' not in r['text'] for r in records))
+
+    def test_numeric_table_labels_and_prose_bullets_do_not_open_outline_sections(self):
+        report = '''<table>
+          <tr><td style="font-weight:700">Financial Review</td></tr>
+          <tr><td>Overview</td></tr><tr><td>Deposits</td></tr>
+          <tr><td>Income Taxes</td></tr><tr><td>Earnings Performance</td></tr></table>
+          <div>Financial Review</div><div>Overview</div>
+          <table><tr><td>Year</td><td>2031</td></tr>
+          <tr><td>Deposits:</td></tr><tr><td>Assets</td><td>987654321</td></tr></table>
+          <div>• income taxes;</div><div style="font-weight:700">Table 3: Ratios</div>
+          <div>(1)Represents average balances.</div><div>Earnings Performance</div>
+          <div>Income increased.</div>'''
+        nodes = report_outline(html_to_structure_events(report), [['Financial Review', 'Overview']])
+        self.assertEqual([n['title'] for n in nodes], ['Financial Review', 'Overview', 'Earnings Performance'])
+
+    def test_period_labels_in_referenced_reports_restore_the_enclosing_topic(self):
+        for label_html in ('<div style="font-weight:700">Full year 2031 vs. full year 2030</div>',
+                           '<table><tr><td>Full year 2031 vs. full year 2030</td></tr></table>'):
+            with self.subTest(label_html=label_html), TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                source = self.make_files(root)
+                report = root / 'financial-data.htm'
+                report.write_text(incorporated_report('2031').replace(
+                    '<div>Our revenue increased in 2031.</div>',
+                    '<div style="font-weight:700">NM - Not meaningful</div>' + label_html +
+                    '<div>Our revenue increased in 2031.</div>'
+                    '<div>Fees increased due to customer activity.</div>'))
+                with redirect_stdout(io.StringIO()):
+                    self.assertEqual(main(self.arguments(source, root)), 0)
+                records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
+                review = [r for r in records if r['item'] == '7']
+                self.assertEqual([r['item_title'] for r in review], ['Performance', 'Performance'])
+                self.assertEqual([r['text'] for r in review],
+                                 ['Our revenue increased in 2031.', 'Fees increased due to customer activity.'])
+                self.assertTrue(all(r['source'] == str(report) for r in review))
+
+    def test_period_labels_in_html_headings_do_not_create_outline_sections(self):
+        report = ('<h1>Operating Review</h1><h2>Performance</h2>'
+                  '<h3>Full year 2031 vs. full year 2030</h3><p>Fees increased.</p>'
+                  '<h1>Accounts</h1><p>Accounting discussion.</p>')
+        nodes = report_outline(html_to_structure_events(report), [['Operating Review', 'Performance']])
+        self.assertEqual([n['title'] for n in nodes], ['Operating Review', 'Performance', 'Accounts'])
+
+    def test_api_mode_fetches_index_and_report_without_filename_assumptions(self):
+        base = 'https://www.sec.gov/Archives/edgar/data/999888/000099988832000001/'
+        responses = {base + 'main.htm': incorporated_filing('2031'),
+                     base + '0000999888-32-000001-index.htm': report_index('/ix?doc=/Archives/edgar/data/999888/000099988832000001/changed-name.htm'),
+                     base + 'changed-name.htm': incorporated_report('2031')}
+        filing = {'accessionNumber': '0000999888-32-000001', 'primaryDocument': 'main.htm'}
+        with TemporaryDirectory() as temporary, \
+             patch('sec_10k_extractor.discover_10k_filing', return_value=filing), \
+             patch('sec_10k_extractor.fetch_url_bytes', side_effect=lambda url, agent: responses[url].encode()) as fetch, \
+             redirect_stdout(io.StringIO()):
+            self.assertEqual(main(['--cik', '999888', '--company', 'example', '--year', '2031', '--items', '1A', '7', '8',
+                                   '--user-agent', 'Test test@example.com', '--out-dir', temporary]), 0)
+            self.assertEqual([call.args[0] for call in fetch.call_args_list], list(responses))
+            records = json.loads((Path(temporary) / 'example/2031/2031_chunks.json').read_text())
+            self.assertTrue(all(r['source'] == base + 'changed-name.htm' for r in records))
+
+    def test_reference_failures_do_not_replace_existing_outputs(self):
+        for failure in ('missing-heading', 'ambiguous-document', 'pdf-document', 'outside-filing', 'missing-index', 'page-only'):
+            with self.subTest(failure=failure), TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                source = self.make_files(root)
+                index = root / '0000999888-32-000001-index.htm'
+                if failure == 'missing-heading':
+                    (root / 'financial-data.htm').write_text('<html><h1>Unrelated document</h1></html>')
+                elif failure == 'ambiguous-document':
+                    index.write_text(report_index('first.htm') + report_index('second.htm'))
+                elif failure == 'pdf-document':
+                    index.write_text(report_index('financial-data.pdf'))
+                elif failure == 'outside-filing':
+                    index.write_text(report_index('https://example.org/unrelated.htm'))
+                elif failure == 'missing-index':
+                    index.unlink()
+                else:
+                    source.write_text(incorporated_filing('2031').replace('under "Operating Review - Risk Overview."', 'on pages 12-20.'))
+                output = root / 'output/example/2031'
+                output.mkdir(parents=True)
+                existing = output / '2031_chunks.json'
+                existing.write_text('["existing results"]')
+                errors = io.StringIO()
+                with redirect_stdout(io.StringIO()), redirect_stderr(errors):
+                    self.assertEqual(main(self.arguments(source, root)), 2)
+                self.assertEqual(existing.read_text(), '["existing results"]')
+                self.assertIn('Error resolving incorporated report', errors.getvalue())
+
+    def test_explicit_primary_only_and_overlap_options(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = self.make_files(root)
+            with redirect_stdout(io.StringIO()), patch('sec_10k_extractor.discover_referenced_report') as discovery:
+                self.assertEqual(main(self.arguments(source, root) + ['--no-follow-references']), 0)
+                discovery.assert_not_called()
+            output = root / 'output/example/2031/2031_chunks.json'
+            self.assertIn('incorporated by reference', output.read_text())
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(main(self.arguments(source, root) + ['--include-reference-overlaps']), 0)
+            records = json.loads(output.read_text())
+            self.assertTrue(any(r['item'] == '7' and 'Supply disruptions' in r['text'] for r in records))
+
+    def test_html_heading_hierarchy_and_ambiguous_names(self):
+        report = '<h1>Operating Review</h1><h2>Overview</h2><p>Business discussion.</p><h1>Accounts</h1><h2>Overview</h2><p>Accounting discussion.</p><h1>Glossary</h1>'
+        nodes = report_outline(html_to_structure_events(report), [['Operating Review', 'Overview']])
+        sections = referenced_section_ranges(nodes, [['Operating Review', 'Overview']])
+        self.assertEqual(sections[0]['start'], 1)
+        self.assertEqual(sections[0]['end'], 3)
+        with self.assertRaisesRegex(ValueError, 'Ambiguous'):
+            referenced_section_ranges(nodes, [['Overview']])
 
 
 if __name__ == "__main__":

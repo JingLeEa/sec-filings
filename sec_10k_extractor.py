@@ -6,6 +6,8 @@ The pipeline is intentionally small and dependency-free:
     SEC ticker/year -> filing HTML -> cleaned text -> Items 1, 1A, 7, 8, 15 -> chunks
 
 Outputs are JSON and TXT files with stable paragraph IDs such as 2024_1_P001.
+Items incorporated from a separate HTML annual report are resolved through the
+filing index and the report's own section headings/TOC.
 """
 
 from __future__ import annotations
@@ -21,7 +23,7 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Iterable
-from urllib.parse import parse_qs, quote, urlparse
+from urllib.parse import parse_qs, quote, urljoin, urlparse
 from urllib.request import Request, urlopen
 
 
@@ -62,6 +64,7 @@ class FilingBlock:
     text: str
     style: str = ""
     bold: bool = False
+    mixed_bold: bool = False
 
 
 @dataclass(frozen=True)
@@ -71,6 +74,8 @@ class FilingStructureEvent:
     text: str
     rows: tuple[tuple[str, ...], ...] = ()
     bold: bool = False
+    cell_bold: tuple[tuple[bool, ...], ...] = ()
+    mixed_bold: bool = False
 
 
 @dataclass(frozen=True)
@@ -193,7 +198,8 @@ class FilingBlockExtractor(HTMLParser):
                     "tag": tag,
                     "style": style,
                     "parts": [],
-                    "bold": is_bold_style(style),
+                    "bold": False,
+                    "plain": False,
                 }
             )
         elif tag == "br":
@@ -225,6 +231,7 @@ class FilingBlockExtractor(HTMLParser):
                         text=text,
                         style=str(block["style"]),
                         bold=bool(block["bold"]),
+                        mixed_bold=bool(block["bold"] and block["plain"]),
                     )
                 )
 
@@ -240,8 +247,9 @@ class FilingBlockExtractor(HTMLParser):
         if not data.strip():
             return
         self._append(data)
-        if self.block_stack and is_bold_style(self._current_style()):
-            self.block_stack[-1]["bold"] = True
+        if self.block_stack and any(char.isalnum() for char in data):
+            key = "bold" if is_bold_text(self.style_stack) else "plain"
+            self.block_stack[-1][key] = True
 
     def _append(self, value: str) -> None:
         if self.block_stack:
@@ -265,6 +273,9 @@ class FilingStructureExtractor(HTMLParser):
         self.block_stack: list[dict[str, object]] = []
         self.table_depth = 0
         self.table_rows: list[list[str]] = []
+        self.table_cell_bold: list[list[bool]] = []
+        self.current_row_bold: list[bool] = []
+        self.current_cell_bold = False
         self.current_row: list[str] | None = None
         self.current_cell_parts: list[str] | None = None
         self.drop_depth = 0
@@ -287,14 +298,17 @@ class FilingStructureExtractor(HTMLParser):
         if tag == "table":
             if self.table_depth == 0:
                 self.table_rows = []
+                self.table_cell_bold = []
             self.table_depth += 1
             return
 
         if self.table_depth:
             if tag == "tr":
                 self.current_row = []
+                self.current_row_bold = []
             elif tag in {"td", "th"}:
                 self.current_cell_parts = []
+                self.current_cell_bold = tag == "th"
             elif tag == "br" and self.current_cell_parts is not None:
                 self.current_cell_parts.append(" ")
             return
@@ -304,7 +318,8 @@ class FilingStructureExtractor(HTMLParser):
                 {
                     "tag": tag,
                     "parts": [],
-                    "bold": is_bold_style(style),
+                    "bold": False,
+                    "plain": False,
                 }
             )
         elif tag == "br":
@@ -331,10 +346,12 @@ class FilingStructureExtractor(HTMLParser):
                 cell = clean_block_text("".join(self.current_cell_parts))
                 if self.current_row is not None:
                     self.current_row.append(cell)
+                    self.current_row_bold.append(self.current_cell_bold)
                 self.current_cell_parts = None
             elif tag == "tr" and self.current_row is not None:
                 if any(cell for cell in self.current_row):
                     self.table_rows.append(self.current_row)
+                    self.table_cell_bold.append(self.current_row_bold)
                 self.current_row = None
             elif tag == "table":
                 self.table_depth -= 1
@@ -343,7 +360,8 @@ class FilingStructureExtractor(HTMLParser):
                     text = clean_block_text(" ".join(cell for row in rows for cell in row if cell))
                     if text:
                         self.events.append(
-                            FilingStructureEvent(index=len(self.events) + 1, kind="table", text=text, rows=rows)
+                            FilingStructureEvent(index=len(self.events) + 1, kind="table", text=text, rows=rows,
+                                                 cell_bold=tuple(tuple(row) for row in self.table_cell_bold))
                         )
             self._pop_style(tag)
             return
@@ -358,6 +376,7 @@ class FilingStructureExtractor(HTMLParser):
                         kind=str(block["tag"]),
                         text=text,
                         bold=bool(block["bold"]),
+                        mixed_bold=bool(block["bold"] and block["plain"]),
                     )
                 )
 
@@ -373,10 +392,13 @@ class FilingStructureExtractor(HTMLParser):
         if self.table_depth:
             if self.current_cell_parts is not None:
                 self.current_cell_parts.append(data)
+                if is_bold_style(self._current_style()) or any(tag in {"b", "strong"} for tag, _ in self.style_stack):
+                    self.current_cell_bold = True
         else:
             self._append_to_block(data)
-            if self.block_stack and is_bold_style(self._current_style()):
-                self.block_stack[-1]["bold"] = True
+            if self.block_stack and any(char.isalnum() for char in data):
+                key = "bold" if is_bold_text(self.style_stack) else "plain"
+                self.block_stack[-1][key] = True
 
     def _append_to_block(self, value: str) -> None:
         if self.block_stack:
@@ -424,6 +446,17 @@ def is_hidden_style(style: str) -> bool:
 def is_bold_style(style: str) -> bool:
     compact = re.sub(r"\s+", "", style.lower())
     return "font-weight:700" in compact or "font-weight:bold" in compact
+
+
+def is_bold_text(style_stack: list[tuple[str, str]]) -> bool:
+    """Resolve emphasis for this text run, including a child's normal override."""
+    for tag, style in reversed(style_stack):
+        weights = re.findall(r"font-weight\s*:\s*(bold|normal|[1-9]00)\b", style, re.IGNORECASE)
+        if weights:
+            return weights[-1].lower() in {"bold", "700", "800", "900"}
+        if tag in {"b", "strong"}:
+            return True
+    return False
 
 
 def html_to_blocks(html_text: str) -> list[FilingBlock]:
@@ -580,6 +613,307 @@ def load_filing_from_sec_api(args: argparse.Namespace) -> tuple[str, str, str]:
     company = (args.company or args.ticker or args.cik or "unknown").lower()
     html_text = fetch_url_bytes(source_url, args.user_agent).decode("utf-8", errors="replace")
     return html_text, source_url, company
+
+
+def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) -> list[FilingBlock]:
+    """Recover single-row Item labels without retaining financial table data.
+
+    Keep the existing block stream/indices for filings whose Item labels are
+    already outside tables. Only switch streams when a table adds an Item.
+    """
+    existing = {heading[0] for block in blocks if (heading := parse_item_heading(block.text))}
+    events = html_to_structure_events(html_text)
+    table_items = {
+        heading[0] for event in events if event.kind == "table" and len(event.rows) == 1
+        if (heading := parse_item_heading(event.text)) and heading[1]
+    }
+    if not table_items - existing:
+        return blocks
+    result = []
+    for event in events:
+        if should_drop_line(event.text):
+            continue
+        if event.kind == "table":
+            if len(event.rows) != 1 or not parse_item_heading(event.text):
+                continue
+            result.append(FilingBlock(event.index, "div", event.text, bold=True))
+        else:
+            result.append(FilingBlock(event.index, event.kind, event.text, bold=event.bold,
+                                      mixed_bold=event.mixed_bold))
+    return result
+
+
+class FilingDocumentIndex(HTMLParser):
+    """Read document types and links from the SEC filing index."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.documents: list[dict[str, str]] = []
+        self.cells: list[str] | None = None
+        self.parts: list[str] | None = None
+        self.links: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag == "tr":
+            self.cells, self.links = [], []
+        elif tag == "td" and self.cells is not None:
+            self.parts = []
+        elif tag == "a" and self.cells is not None and len(self.cells) == 2:
+            href = dict(attrs).get("href")
+            if href:
+                self.links.append(href)
+
+    def handle_data(self, text: str) -> None:
+        if self.parts is not None:
+            self.parts.append(text)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "td" and self.parts is not None and self.cells is not None:
+            self.cells.append(clean_block_text("".join(self.parts)))
+            self.parts = None
+        elif tag == "tr" and self.cells is not None:
+            if len(self.cells) >= 4 and self.links:
+                self.documents.append({"description": self.cells[1], "document": self.cells[2],
+                                       "type": self.cells[3], "href": self.links[0]})
+            self.cells, self.parts = None, None
+
+
+def filing_index_source(source: str) -> str:
+    if is_url(source):
+        parsed = urlparse(source)
+        match = re.fullmatch(r"/Archives/edgar/data/\d+/(\d{18})/[^/]+", parsed.path)
+        if parsed.hostname not in {"www.sec.gov", "sec.gov"} or not match:
+            raise ValueError("Automatic report discovery needs a SEC archive filing URL or a local filing index.")
+        accession = match.group(1)
+        name = f"{accession[:10]}-{accession[10:12]}-{accession[12:]}-index.htm"
+        return urljoin(source, name)
+    indexes = list(Path(source).parent.glob("*-index.htm"))
+    if len(indexes) != 1:
+        raise ValueError("The local filing references another report. Keep its SEC *-index.htm and report HTML beside it, or use the SEC ticker/year command.")
+    return str(indexes[0])
+
+
+def read_html_source(source: str, user_agent: str) -> str:
+    if is_url(source):
+        if not user_agent.strip():
+            raise ValueError("Referenced-report downloads require --user-agent or SEC_USER_AGENT.")
+        return fetch_url_bytes(source, user_agent).decode("utf-8", errors="replace")
+    return Path(source).read_text(encoding="utf-8", errors="replace")
+
+
+def discover_referenced_report(source: str, user_agent: str) -> tuple[str, dict[str, str]]:
+    index_source = filing_index_source(source)
+    parser = FilingDocumentIndex()
+    parser.feed(read_html_source(index_source, user_agent))
+    candidates = [doc for doc in parser.documents if re.fullmatch(r"EX-13(?:\.\d+)?", doc["type"], re.I)]
+    if not candidates:
+        candidates = [doc for doc in parser.documents if doc["type"].upper().startswith("EX-")
+                      and re.search(r"(?:annual|financial) report", doc["description"], re.I)]
+    if len(candidates) != 1:
+        choices = ", ".join(f"{doc['type']} {doc['document']}" for doc in candidates) or "none"
+        raise ValueError(f"Cannot uniquely identify the referenced annual/financial report in {index_source}: {choices}.")
+    document = candidates[0]
+    href = document["href"]
+    if is_url(source):
+        report_source = normalize_source(urljoin(index_source, href))
+        base = source.rsplit("/", 1)[0] + "/"
+        if not report_source.startswith(base) or ".." in urlparse(report_source).path.split("/"):
+            raise ValueError("Referenced report must belong to the same SEC filing directory.")
+    else:
+        parsed = urlparse(normalize_source(urljoin("https://www.sec.gov", href)))
+        if parsed.hostname not in {"www.sec.gov", "sec.gov"} or ".." in href.split("/"):
+            raise ValueError("Unrecognized report link in the local filing index.")
+        report_source = str(Path(source).parent / Path(parsed.path).name)
+    if Path(urlparse(report_source).path).suffix.lower() not in {".htm", ".html", ".xhtml"}:
+        raise ValueError(f"Referenced report is not HTML: {report_source}. PDF/page-only references need explicit extraction support.")
+    return report_source, {**document, "index_source": index_source}
+
+
+def report_reference(blocks: list[FilingBlock]) -> dict | None:
+    """Recognize an Item supplied by incorporation, not incidental prose links."""
+    text = " ".join(block.text for block in blocks)
+    if len(text) > 1800 or not re.search(r"incorporat\w*\b.{0,80}\breference\b", text, re.I):
+        return None
+    if not re.search(r"\b(?:annual|financial) report\b", text, re.I):
+        return None
+    titles = re.findall(r'"([^"\n]+)"', normalize_typography(text))
+    paths = []
+    for title in titles:
+        if re.search(r"\b(?:annual|financial) report\b", title, re.I):
+            continue
+        path = [part.strip().rstrip(".") for part in re.split(r"\s+-\s+", title)]
+        if all(path) and path not in paths:
+            paths.append(path)
+    if not paths:
+        raise ValueError(f"The Item refers to another report without named sections. Cannot resolve a page-only or unquoted reference automatically: {text}")
+    return {"reference_text": text, "section_paths": paths,
+            "internal_item_references": re.findall(r"this report under Item\s+(\d+[A-Z]?)", text, re.I)}
+
+
+def report_title_key(title: str) -> str:
+    title = re.sub(r"\s*\(continued\)\s*$", "", title, flags=re.I)
+    title = re.sub(r"^Note\s+\d+\s*[.:\-]\s*", "", title, flags=re.I)
+    return normalize_heading_title(title)
+
+
+def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -> list[dict]:
+    """Use the report's own TOC (or explicit HTML heading levels) for ranges."""
+    required = {report_title_key(title) for path in paths for title in path}
+    toc = None
+    titles: dict[str, dict] = {}
+    for position, event in enumerate(events):
+        if event.kind != "table" or len(event.rows) < 4:
+            continue
+        entries = {}
+        for row_index, row in enumerate(event.rows):
+            for cell_index, cell in enumerate(row):
+                if not is_plausible_toc_title(cell):
+                    continue
+                bold = bool(event.cell_bold and event.cell_bold[row_index][cell_index])
+                key = report_title_key(cell)
+                entry = entries.setdefault(key, {"title": cell, "level": 1})
+                entry["level"] = min(entry["level"], 0 if bold else 1)
+        if required <= entries.keys():
+            toc, titles = position, entries
+            break
+
+    nodes = []
+    seen = set()
+    for position, event in enumerate(events):
+        if toc is not None and position <= toc:
+            continue
+        if toc is None:
+            if not re.fullmatch(r"h[1-6]", event.kind):
+                continue
+            matches = [(event.text, int(event.kind[1]))]
+        elif event.kind == "table":
+            # A genuine heading can precede numeric data in the same table.
+            # Stop at the first data row so labels inside the table (e.g.
+            # "Deposits:") cannot open a new document section.
+            matches = []
+            for row in event.rows:
+                cells = [cell for cell in row if cell]
+                if not cells:
+                    continue
+                if len(cells) != 1 or report_title_key(cells[0]) not in titles:
+                    break
+                matches.append((cells[0], titles[report_title_key(cells[0])]["level"]))
+        else:
+            entry = titles.get(report_title_key(event.text))
+            matches = [(event.text, entry["level"])] if entry and not starts_with_bullet(event.text) else []
+        for title, level in matches:
+            if is_period_comparison_label(title):
+                continue
+            key = report_title_key(title)
+            previous = next((index for index in range(len(nodes) - 1, -1, -1) if nodes[index]["key"] == key), None)
+            if previous is not None:
+                # The same title repeated inside its still-open section is a
+                # running header. A title repeated after another peer/parent
+                # is a distinct section and must be disambiguated by its path.
+                if not any(node["level"] <= level for node in nodes[previous + 1:]):
+                    continue
+            seen.add(key)
+            nodes.append({"title": title, "key": key, "start": position, "level": level})
+    if not required <= seen:
+        missing = ", ".join(sorted(required - seen))
+        raise ValueError(f"Cannot locate referenced report headings: {missing}. A usable report TOC or HTML h1-h6 headings is required.")
+    for index, node in enumerate(nodes):
+        node["end"] = next((later["start"] for later in nodes[index + 1:]
+                            if later["level"] <= node["level"]), len(events))
+    return nodes
+
+
+def referenced_section_ranges(nodes: list[dict], paths: list[list[str]]) -> list[dict]:
+    result = []
+    for path in paths:
+        chain = []
+        for title in path:
+            matches = [node for node in nodes if node["key"] == report_title_key(title)
+                       and (not chain or chain[-1]["start"] <= node["start"] < chain[-1]["end"])]
+            if len(matches) != 1:
+                raise ValueError(f"Ambiguous referenced report heading: {title}")
+            node = matches[0]
+            if chain and not chain[-1]["start"] <= node["start"] < chain[-1]["end"]:
+                raise ValueError(f"Cannot establish report section hierarchy for {' / '.join(path)}")
+            chain.append(node)
+        node = chain[-1]
+        if node["end"] <= node["start"]:
+            raise ValueError(f"Cannot determine the end of referenced section {node['title']}")
+        result.append(dict(node))
+    return result
+
+
+def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dict],
+                             ranges: list[dict], exclusions: list[dict]) -> list[FilingBlock]:
+    headings = {node["start"]: node for node in nodes}
+    known_titles = {node["key"] for node in nodes}
+    blocks = []
+    for position, event in enumerate(events):
+        if not any(node["start"] <= position < node["end"] for node in ranges):
+            continue
+        if any(node["start"] <= position < node["end"] for node in exclusions):
+            continue
+        node = headings.get(position)
+        if node:
+            blocks.append(toc_header_block(event.index, node["title"]))
+            continue
+        if is_table_caption(event.text) or is_period_comparison_label(event.text):
+            # Table footnotes and period comparisons belong to the enclosing
+            # topic. Neither a caption nor a standalone pair of periods should
+            # replace that topic (or leave an incidental table legend active).
+            parents = [node for node in nodes if node["start"] <= position < node["end"]]
+            if parents:
+                parent = max(parents, key=lambda node: (node["level"], node["start"]))
+                title = re.sub(r"\s*\(continued\)\s*$", "", parent["title"], flags=re.I)
+                blocks.append(toc_header_block(event.index, title))
+            continue
+        if (report_title_key(event.text) in known_titles and not starts_with_bullet(event.text)) or should_drop_line(event.text):
+            continue
+        if event.kind == "table":
+            # A one-cell, one-row prose heading is a layout table. Financial
+            # tables and repeated page/company footer rows remain excluded.
+            cells = [cell for row in event.rows for cell in row if cell]
+            if len(event.rows) == 1 and len(cells) == 1:
+                block = FilingBlock(event.index, "div", cells[0], bold=True)
+                if is_subheader_block(block):
+                    blocks.append(block)
+            continue
+        blocks.append(FilingBlock(event.index, event.kind, event.text, bold=event.bold,
+                                  mixed_bold=event.mixed_bold))
+    return merge_continued_blocks(blocks)
+
+
+def follow_report_references(section_blocks: dict[str, list[FilingBlock]], source: str,
+                             user_agent: str, include_overlaps: bool = False) -> tuple[dict, dict]:
+    references = {item: reference for item, blocks in section_blocks.items()
+                  if (reference := report_reference(blocks)) is not None}
+    if not references:
+        return section_blocks, {}
+    report_source, document = discover_referenced_report(source, user_agent)
+    events = html_to_structure_events(read_html_source(report_source, user_agent))
+    paths = [path for ref in references.values() for path in ref["section_paths"]]
+    nodes = report_outline(events, paths)
+    selections = {item: referenced_section_ranges(nodes, ref["section_paths"]) for item, ref in references.items()}
+    result = dict(section_blocks)
+    audit = {}
+    for item, ranges in selections.items():
+        exclusions = []
+        if not include_overlaps:
+            exclusions = [other for other_item, other_ranges in selections.items() if other_item != item
+                          for other in other_ranges
+                          if any(parent["start"] <= other["start"] and other["end"] <= parent["end"]
+                                 and (parent["start"], parent["end"]) != (other["start"], other["end"])
+                                 for parent in ranges)]
+        blocks = referenced_report_blocks(events, nodes, ranges, exclusions)
+        # A selected section may be numeric-only, but an entire referenced Item
+        # must not silently become empty after table removal.
+        if not any(not is_subheader_block(block) for block in blocks):
+            raise ValueError(f"Referenced Item {item} contains no extractable narrative in {report_source}.")
+        result[item] = blocks
+        audit[item] = {**references[item], "source": report_source, "document_type": document["type"],
+                       "filing_index": document["index_source"], "sections": ranges,
+                       "excluded_sections": exclusions}
+    return result, audit
 
 
 def html_to_clean_text(html_text: str) -> str:
@@ -956,10 +1290,13 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
         if should_merge_with_next_block(pending, block):
             pending = FilingBlock(
                 index=pending.index,
-                tag=pending.tag,
+                # Both inputs have already been classified as narrative. Do
+                # not let inherited emphasis turn the growing list into a title.
+                tag="merged_text",
                 text=join_continued_text(pending.text, block.text),
                 style=pending.style,
                 bold=pending.bold,
+                mixed_bold=pending.mixed_bold or block.mixed_bold or pending.bold != block.bold,
             )
         else:
             merged.append(pending)
@@ -971,6 +1308,9 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
 
 
 def should_merge_with_next_block(previous: FilingBlock, current: FilingBlock) -> bool:
+    if any(is_table_caption(block.text) or is_period_comparison_label(block.text)
+           for block in (previous, current)):
+        return False
     if is_subheader_block(previous) or is_subheader_block(current):
         return False
     if starts_with_bullet(current.text):
@@ -1029,6 +1369,13 @@ def should_drop_line(line: str) -> bool:
 
 def is_repeated_filing_header(line: str) -> bool:
     cleaned = re.sub(r"\s+", " ", normalize_typography(line)).strip()
+    # Micron-style page footers can otherwise look like headings because the
+    # title heuristic sees only the uppercase K in "59 |2025 10-K". Require
+    # the entire page/report label so narrative references to 10-Ks survive.
+    page = r"(?:page\s+)?\d{1,4}"
+    report = r"(?:19|20)\d{2}\s+(?:form\s+)?10\s*-\s*K(?:/A)?"
+    if re.fullmatch(rf"(?:{page}\s*\|\s*{report}|{report}\s*\|\s*{page})", cleaned, re.IGNORECASE):
+        return True
     if re.fullmatch(r"\(?continued\)?", cleaned, re.IGNORECASE):
         return True
     if re.fullmatch(r"notes to (the )?consolidated financial statements", cleaned, re.IGNORECASE):
@@ -1038,10 +1385,27 @@ def is_repeated_filing_header(line: str) -> bool:
     return False
 
 
+def is_table_caption(text: str) -> bool:
+    """Recognize numbered captions, preserving sentences such as 'Table 2 presents...'."""
+    return bool(re.match(r"^Table\s+(?:\d+(?:\.\d+)*[A-Za-z]?|[IVXLCDM]+)\s*(?::|[\-–—]|\.(?!\d))\s*\S",
+                         text.strip(), re.IGNORECASE)) and not ends_with_sentence_terminal(text)
+
+
+def is_period_comparison_label(text: str) -> bool:
+    """Match only standalone period pairs, not sentences or topic headings."""
+    period = (r"(?:(?:(?:full\s+)?(?:fiscal\s+)?year|fiscal|FY)\s*|"
+              r"(?:first|second|third|fourth)\s+quarter\s+|Q[1-4]\s+)?(?:19|20)\d{2}")
+    comparison = r"(?:vs\.?|versus|compared\s+(?:with|to))"
+    return bool(re.fullmatch(rf"{period}\s+{comparison}\s+{period}\s*[:.]?",
+                             text.strip(), re.IGNORECASE))
+
+
 def is_subheader_block(block: FilingBlock) -> bool:
+    if is_table_caption(block.text) or is_period_comparison_label(block.text):
+        return False
     if block.tag == "toc_header":
         return True
-    if block.tag == "toc_text":
+    if block.tag in {"toc_text", "merged_text"}:
         return False
 
     text = block.text.strip()
@@ -1055,6 +1419,15 @@ def is_subheader_block(block: FilingBlock) -> bool:
         return False
     if re.search(r"[.!?]$", text):
         return False
+    # Bold financial labels often introduce a sentence and its bullet list.
+    # Keep those introductions in the narrative, without banning real colon
+    # headings such as "Sources of Revenue:" or TOC-confirmed titles.
+    if text.endswith(":") and block.tag not in {"h1", "h2", "h3", "h4", "h5", "h6"}:
+        if block.mixed_bold and not looks_like_title(text):
+            return False
+        if re.search(r"\b(reflecting|driven by|due to|because of|as follows|the following|"
+                     r"includes?|consists? of|comprised of)\s*:$", text, re.IGNORECASE):
+            return False
     if re.search(r"\b(or|and|the|a|an|of|to|for|with|from|in|on)\b", text, re.IGNORECASE) and not block.bold:
         return False
     return block.bold or block.tag in {"h1", "h2", "h3", "h4", "h5", "h6"} or looks_like_title(text)
@@ -1200,6 +1573,8 @@ def build_records_from_section_blocks(
         current_subheader = ITEM_TITLES[item]
         item_chunk_index = 1
         for block in section_blocks[item]:
+            if is_table_caption(block.text) or is_period_comparison_label(block.text):
+                continue
             if is_subheader_block(block):
                 current_subheader = block.text
                 continue
@@ -1248,8 +1623,16 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     identity.add_argument("--cik", help="SEC CIK for API extraction.")
     parser.add_argument("--company", help="Company folder/name override. Defaults to ticker or filing filename.")
     parser.add_argument("--year", help="Fiscal year / chunk ID prefix, e.g. 2024. Required for API extraction.")
+    parser.add_argument(
+        "--items", nargs="+", type=normalize_item, choices=DEFAULT_ITEMS, default=DEFAULT_ITEMS,
+        help="Items to extract (space-separated). Default: 1 1A 7 8 15.",
+    )
     parser.add_argument("--out-dir", default="data/raw", help="Directory for extracted TXT/JSON files. Default: data/raw.")
     parser.add_argument("--raw-dir", help=argparse.SUPPRESS)
+    parser.add_argument("--no-follow-references", action="store_true",
+                        help="Inspect only the primary filing; do not resolve Items incorporated from another report.")
+    parser.add_argument("--include-reference-overlaps", action="store_true",
+                        help="Keep referenced subsections in both Items. By default, a subsection assigned to a more specific requested Item is excluded from the broader Item.")
     parser.add_argument("--max-chars", type=int, default=1800, help="Maximum characters per disclosure chunk.")
     parser.add_argument("--min-chars", type=int, default=120, help="Small paragraphs are merged until roughly this size.")
     parser.add_argument(
@@ -1297,12 +1680,22 @@ def main(argv: list[str] | None = None) -> int:
     if args.raw_dir:
         print("Warning: --raw-dir is deprecated and ignored; source HTML is no longer saved.", file=sys.stderr)
 
-    blocks = html_to_blocks(raw_html)
-    section_blocks = extract_section_blocks(blocks)
-    item15_toc_blocks = extract_item15_toc_section_blocks(raw_html)
-    if item15_toc_blocks:
-        section_blocks["15"] = item15_toc_blocks
+    blocks = item_blocks_with_layout_headings(raw_html, html_to_blocks(raw_html))
+    section_blocks = extract_section_blocks(blocks, items=args.items)
+    if "15" in args.items:
+        item15_toc_blocks = extract_item15_toc_section_blocks(raw_html)
+        if item15_toc_blocks:
+            section_blocks["15"] = item15_toc_blocks
     section_blocks = merge_section_blocks(section_blocks)
+    reference_audit = {}
+    if not args.no_follow_references:
+        try:
+            section_blocks, reference_audit = follow_report_references(
+                section_blocks, source, args.user_agent, include_overlaps=args.include_reference_overlaps,
+            )
+        except (ValueError, RuntimeError, OSError) as exc:
+            print(f"Error resolving incorporated report: {exc}", file=sys.stderr)
+            return 2
     clean_text = html_to_clean_text(raw_html)
     year = args.year or filename_year or infer_year(raw_html + "\n" + clean_text, source)
 
@@ -1316,7 +1709,7 @@ def main(argv: list[str] | None = None) -> int:
             max_chars=args.max_chars,
         )
     else:
-        sections = extract_sections(clean_text)
+        sections = extract_sections(clean_text, items=args.items)
         records = build_records(
             sections=sections,
             year=year,
@@ -1326,12 +1719,18 @@ def main(argv: list[str] | None = None) -> int:
             min_chars=args.min_chars,
         )
 
-    missing = [item for item in DEFAULT_ITEMS if item not in sections]
+    missing = [item for item in args.items if item not in sections]
     if missing:
         print(f"Warning: could not find Item(s): {', '.join(missing)}", file=sys.stderr)
 
+    for record in records:
+        if record["item"] in reference_audit:
+            record["source"] = reference_audit[record["item"]]["source"]
     output_dir = Path(args.out_dir) / company / year
     write_outputs(records, sections, output_dir, year)
+    (output_dir / f"{year}_sources.json").write_text(json.dumps(
+        {"primary_source": source, "referenced_items": reference_audit}, indent=2, ensure_ascii=False,
+    ) + "\n", encoding="utf-8")
 
     print(source_label)
     print(f"Company: {company}")
@@ -1339,6 +1738,11 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Output dir: {output_dir}")
     print(f"Sections extracted: {', '.join(sections) if sections else 'none'}")
     print(f"Chunks written: {len(records)}")
+    for item, reference in reference_audit.items():
+        print(f"Item {item}: {reference['document_type']} {reference['source']}")
+        if reference["excluded_sections"]:
+            print("  Excluded subsections assigned to other requested Items: " + ", ".join(
+                section["title"] for section in reference["excluded_sections"]))
     return 0 if sections else 1
 
 
