@@ -2,13 +2,13 @@
 """Extract two 10-Ks, compare disclosures, and export Google Sheets TSV in one run.
 
 Example:
-    python3 run_disclosure_pipeline.py --ticker MU --company Micron \
+    python3 scripts/run_disclosure_pipeline.py --ticker MU --company Micron \
         --previous-year 2024 --current-year 2025 --industry Semiconductors \
         --user-agent "Your Name your.email@example.com"
 
-Keep this runner beside sec_10k_extractor.py, compare_item_changes.py, and
-export_disclosure_annotations.py. It calls their existing entry points in order
-and stops if a step fails. Items 1, 1A, 7, and 8 are selected by default.
+This runner calls the extraction, lexical comparison, and disclosure annotation
+entry points in order and stops if a step fails. Items 1, 1A, 7, and 8 are
+selected by default.
 """
 
 from __future__ import annotations
@@ -20,9 +20,9 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-import compare_item_changes
-import export_disclosure_annotations
-import sec_10k_extractor
+from sec_disclosure.annotation import export_disclosure_annotations
+from sec_disclosure.comparison import lexical_diff as compare_item_changes
+from sec_disclosure.extraction import sec_10k_extractor
 
 
 def fiscal_year(value: str) -> str:

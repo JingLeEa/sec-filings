@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sec-disclosure-comparison"
+version = "0.1.0"
+description = "SEC filing extraction, disclosure comparison, annotation, and evaluation pipeline."
+requires-python = ">=3.10"
+dependencies = [
+    "lxml>=5.0,<7",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

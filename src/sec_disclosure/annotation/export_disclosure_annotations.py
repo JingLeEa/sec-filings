@@ -2,11 +2,11 @@
 """Convert narrative comparison JSON to a 20-column TSV with original paragraphs.
 
 Example:
-    python3 export_disclosure_annotations.py \
+    python3 scripts/export_disclosure_annotations.py \
         --input data/comparison/mu/2024_vs_2025/all_items_diff.json \
         --company Micron --industry Semiconductors
 
-Reads all_items_diff.json or item_*_diff.json from compare_item_changes.py.
+Reads all_items_diff.json or item_*_diff.json from the lexical comparison step.
 One row contains a suggested sentence pair or one unmatched sentence.
 Matching follows filing_sentence_annotator: combined token/character similarity,
 candidate search across each Item, and one-to-one pairing at a 0.55 threshold.
@@ -68,7 +68,7 @@ def read_comparison(path: Path) -> dict[str, Any]:
     data = json.loads(path.read_text(encoding="utf-8-sig"), object_pairs_hook=unique_object)
     if not isinstance(data, dict) or not isinstance(data.get("items"), list):
         raise ValueError(
-            "Expected all_items_diff.json or item_*_diff.json from compare_item_changes.py. "
+            "Expected all_items_diff.json or item_*_diff.json from the lexical comparison step. "
             "For numerical table result.json, use export_table_annotations.py."
         )
     for field in ("old_year", "new_year"):

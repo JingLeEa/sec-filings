@@ -5,7 +5,7 @@ from contextlib import redirect_stderr, redirect_stdout
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-from sec_10k_extractor import (
+from sec_disclosure.extraction.sec_10k_extractor import (
     FilingBlock,
     build_records,
     build_records_from_section_blocks,
@@ -88,7 +88,7 @@ class ExtractorTests(unittest.TestCase):
                 source.write_text("".join(f"<{tag}>{line}</{tag}>" for line in lines), encoding="utf-8")
                 errors = io.StringIO()
                 with redirect_stdout(io.StringIO()), redirect_stderr(errors), patch(
-                    "sec_10k_extractor.extract_item15_toc_section_blocks"
+                    "sec_disclosure.extraction.sec_10k_extractor.extract_item15_toc_section_blocks"
                 ) as item15_parser:
                     result = main([
                         str(source), "--out-dir", str(root / "output"),
@@ -178,7 +178,7 @@ class ExtractorTests(unittest.TestCase):
                     self.assertEqual({record["item_title"] for record in records}, {"Critical Accounting Estimates"})
 
     def test_discover_10k_filing_reads_sec_historical_submissions(self):
-        import sec_10k_extractor
+        from sec_disclosure.extraction import sec_10k_extractor
 
         responses = {
             "https://data.sec.gov/submissions/CIK0000019617.json": {
@@ -919,8 +919,8 @@ class IncorporatedReportTests(unittest.TestCase):
                      base + 'changed-name.htm': incorporated_report('2031')}
         filing = {'accessionNumber': '0000999888-32-000001', 'primaryDocument': 'main.htm'}
         with TemporaryDirectory() as temporary, \
-             patch('sec_10k_extractor.discover_10k_filing', return_value=filing), \
-             patch('sec_10k_extractor.fetch_url_bytes', side_effect=lambda url, agent: responses[url].encode()) as fetch, \
+             patch('sec_disclosure.extraction.sec_10k_extractor.discover_10k_filing', return_value=filing), \
+             patch('sec_disclosure.extraction.sec_10k_extractor.fetch_url_bytes', side_effect=lambda url, agent: responses[url].encode()) as fetch, \
              redirect_stdout(io.StringIO()):
             self.assertEqual(main(['--cik', '999888', '--company', 'example', '--year', '2031', '--items', '1A', '7', '8',
                                    '--user-agent', 'Test test@example.com', '--out-dir', temporary]), 0)
@@ -960,7 +960,7 @@ class IncorporatedReportTests(unittest.TestCase):
         with TemporaryDirectory() as temporary:
             root = Path(temporary)
             source = self.make_files(root)
-            with redirect_stdout(io.StringIO()), patch('sec_10k_extractor.discover_referenced_report') as discovery:
+            with redirect_stdout(io.StringIO()), patch('sec_disclosure.extraction.sec_10k_extractor.discover_referenced_report') as discovery:
                 self.assertEqual(main(self.arguments(source, root) + ['--no-follow-references']), 0)
                 discovery.assert_not_called()
             output = root / 'output/example/2031/2031_chunks.json'

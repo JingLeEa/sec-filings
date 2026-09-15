@@ -2,7 +2,7 @@
 """Create compact item-wise year-over-year SEC disclosure diffs.
 
 This is a preprocessing step for manual LLM review. It reads two chunk JSON
-files produced by sec_10k_extractor.py, compares sentences within the same
+files produced by the extraction step, compares sentences within the same
 company/item/item_title group, removes sentences that appear in both years, and
 writes the remaining year-specific sentences to a separate comparison folder.
 

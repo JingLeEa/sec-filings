@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Run SEC HTML extraction and export table pairs to a 17-column TSV.
 
-Keep this file beside compare_html_tables.py. Extraction arguments such as
---ticker, --cik, --company, --previous-year, --current-year, --item and
---user-agent are passed directly to that program. Alternatively, use --input
-to export an existing result.json without fetching filings again. Omit --table
-to include every extracted table in the Item, one table pair per annotation row.
+Extraction arguments such as --ticker, --cik, --company, --previous-year,
+--current-year, --item and --user-agent are passed to the HTML table comparison
+module. Alternatively, use --input to export an existing result.json without
+fetching filings again. Omit --table to include every extracted table in the
+Item, one table pair per annotation row.
 """
 from __future__ import annotations
 
@@ -284,10 +284,10 @@ def run_extractor(arguments):
     # Use the same Python interpreter and ordinary function arguments; no shell
     # command construction or second manual execution is needed.
     try:
-        import compare_html_tables
+        from sec_disclosure.comparison import compare_html_tables
     except ModuleNotFoundError as exc:
         if exc.name == 'compare_html_tables':
-            raise ValueError('Keep export_table_annotations.py beside compare_html_tables.py.') from exc
+            raise ValueError('Could not import sec_disclosure.comparison.compare_html_tables.') from exc
         raise
     return compare_html_tables.main(arguments)
 

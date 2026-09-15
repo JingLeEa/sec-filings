@@ -9,7 +9,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from export_disclosure_annotations import COLUMNS, DEFAULT_MATCH_THRESHOLD, fill_original_paragraphs, load_paragraphs, main, make_annotations, pair_sentences, quoted_tsv, section_title_key, similarity
+from sec_disclosure.annotation.export_disclosure_annotations import COLUMNS, DEFAULT_MATCH_THRESHOLD, fill_original_paragraphs, load_paragraphs, main, make_annotations, pair_sentences, quoted_tsv, section_title_key, similarity
 
 
 def sentence(source_id, text):

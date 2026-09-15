@@ -1,0 +1,242 @@
+# Preliminary Annotation Pipeline Usage
+
+This page preserves the detailed commands for the currently implemented extraction, comparison, annotation, and table workflows.
+
+This project uses the SEC submissions API to find a 10-K filing, removes HTML/tables/page noise, extracts Item 1, Item 1A, Item 7, Item 8, and Item 15, then writes paragraph/disclosure chunks with IDs like `2024_1_P001` and `2024_7_P001`.
+
+For filings like NVIDIA's inline XBRL HTML, displayed paragraphs are usually stored as styled `<div>` blocks rather than `<p>` tags. The extractor therefore chunks by meaningful HTML block and carries the latest short subheader, such as `Our Company` or `Data Center`, into each chunk's `item_title`.
+
+For filings like JPMorgan's annual report wrapper, Item 15 can include a table of contents before the narrative annual-report sections. When that TOC is detected, Item 15 chunks are grouped under those TOC section titles instead of every bold inline phrase.
+
+For Items incorporated from a separate HTML annual/financial report, the extractor discovers that report through the SEC filing index and resolves the named sections automatically. It does not hardcode a company, fiscal year, report filename, section names, or page ranges.
+
+## Usage
+
+Install dependencies:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+For development, either install the package in editable mode:
+
+```bash
+python3 -m pip install -e .
+```
+
+or run tests with:
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s tests
+```
+
+Use the SEC API with a ticker and fiscal year:
+
+```bash
+export SEC_USER_AGENT="Your Name your.email@example.com"
+python3 scripts/extract_filings.py --ticker NVDA --year 2024
+```
+
+To exclude Item 15, select only Items 1, 1A, 7, and 8. For NVIDIA:
+
+```bash
+python3 scripts/extract_filings.py --ticker NVDA --year 2024 --items 1 1A 7 8
+python3 scripts/extract_filings.py --ticker NVDA --year 2025 --items 1 1A 7 8
+```
+
+The default still includes Item 15. Rerunning replaces the chunk JSON/TXT files with the selected items; section TXT files from earlier runs remain on disk. Rerun the comparison using the new chunk JSON files to update its results.
+
+You can still use a direct SEC filing URL or local HTML file when needed:
+
+```bash
+python3 scripts/extract_filings.py "https://www.sec.gov/Archives/edgar/data/.../.../nvda-20240128.htm" --year 2024
+```
+
+## Outputs
+
+The pipeline writes extracted chunk outputs to `data/raw/<company>/<year>/`:
+
+- `<year>_chunks.json`: structured chunks for LLM input.
+- `<year>_chunks.txt`: readable chunk file for manual copy/paste.
+- `<year>_item_1.txt`, `<year>_item_1a.txt`, `<year>_item_7.txt`, `<year>_item_8.txt`, `<year>_item_15.txt`: cleaned full section text.
+- `<year>_sources.json`: source documents and any resolved incorporation references.
+
+SEC API extraction reads the filing HTML in memory and does not save downloaded HTML files.
+
+Each JSON chunk has:
+
+```json
+{
+  "id": "2024_1_P001",
+  "company": "nvda",
+  "year": "2024",
+  "item": "1",
+  "item_default_title": "Business",
+  "item_title": "Our Company",
+  "item_chunk_index": 1,
+  "source_block_index": 123,
+  "text": "...",
+  "source": "..."
+}
+```
+
+## Notes
+
+- The extractor removes numerical HTML tables before section text is written, while retaining recognized layout-table headings. Item 8 and Item 15 often contain important tables or exhibit indexes, so this pipeline is best for narrative extraction rather than numeric statement reconstruction.
+- SEC downloads should use a descriptive `SEC_USER_AGENT` with your name/email.
+- API extraction uses the ticker as the company folder by default. For local files, company/year are inferred from filenames like `nvda-20240128.htm`.
+- If a filing has unusual headings, lower `--max-chars` for smaller LLM chunks or inspect the item TXT files to confirm boundaries.
+- `item` is the SEC item number. `item_default_title` is the standard SEC heading, while `item_title` is the most recent subheader found inside that item.
+- Chunk IDs reset within each item: Item 1 starts at `2024_1_P001`, Item 1A starts at `2024_1A_P001`, Item 7 starts at `2024_7_P001`, Item 8 starts at `2024_8_P001`, and Item 15 starts at `2024_15_P001`.
+- Generated files live under `data/`, which is ignored by Git.
+
+## Compare Chunk Files
+
+After extracting two years, compare the chunk JSON files to remove unchanged sentences before LLM review:
+
+```bash
+python3 scripts/compare_filings.py data/raw/nvda/2023/2023_chunks.json data/raw/nvda/2024/2024_chunks.json
+```
+
+Outputs are written to `data/comparison/<company>/<old_year>_vs_<new_year>/`.
+
+If you manually verified that a subheader was renamed, pass an explicit title mapping with `--title-map`. The comparison still uses exact sentence matching; it does not fuzzy-match headers.
+
+```bash
+python3 scripts/compare_filings.py data/raw/nvda/2024/2024_chunks.json data/raw/nvda/2025/2025_chunks.json \
+  --title-map "1A::Risks Related to Demand, Supply and Manufacturing::Risks Related to Demand, Supply, and Manufacturing"
+```
+
+You can also call the comparison logic from Python:
+
+```python
+from pathlib import Path
+
+from sec_disclosure.comparison.lexical_diff import compare_records, load_records
+
+old_records = load_records(Path("data/raw/nvda/2024/2024_chunks.json"))
+new_records = load_records(Path("data/raw/nvda/2025/2025_chunks.json"))
+
+comparison = compare_records(
+    old_records,
+    new_records,
+    old_year="2024",
+    new_year="2025",
+    company="nvda",
+    title_mappings={
+        ("1A", "Risks Related to Demand, Supply and Manufacturing"):
+            "Risks Related to Demand, Supply, and Manufacturing"
+    },
+)
+```
+
+## Convert Annotation IDs
+
+If chunk IDs change after rerunning extraction, convert an existing annotation CSV to the latest IDs. The converter can process mixed year pairs in one file by reading `Previous Fiscal Year` and `Current Fiscal Year` on each row:
+
+```bash
+python3 scripts/convert_annotation_ids.py data/id_conversion/nvidia_input.csv \
+  --chunks-root data/raw \
+  --company nvda
+```
+
+The input CSV must include these columns:
+
+- `Previous Paragraph / Chunk ID`
+- `Current Paragraph / Chunk ID`
+- `Previous Fiscal Year`
+- `Current Fiscal Year`
+- `Previous Disclosure Text`
+- `Current Disclosure Text`
+
+The converter keeps the original CSV columns, updates the previous/current chunk ID columns when the disclosure text matches the latest chunks, and adds audit columns such as `Previous ID Conversion Status` and `Current ID Conversion Status`.
+
+For a CSV that contains only one year pair, you can still point directly to the two chunk JSON files:
+
+```bash
+python3 scripts/convert_annotation_ids.py data/id_conversion/nvidia_input.csv \
+  --previous-json data/raw/nvda/2023/2023_chunks.json \
+  --current-json data/raw/nvda/2024/2024_chunks.json
+```
+
+## Add Original Paragraph Context
+Save the annotated csv file in data/include_paragraph folder. 
+
+This code converts IDs to the latest extraction and fill `Previous Original Paragraph` and `Current Original Paragraph` from the previous/current chunk IDs:
+
+```bash
+python3 scripts/include_paragraph_context.py data/include_paragraph/nvidia.csv \
+  --chunks-root data/raw \
+  --company nvda
+```
+
+The output is written beside the input as `nvidia_with_paragraphs.csv`. The helper first maps each annotated disclosure to the latest extracted chunk ID, then fills the original paragraph text for that latest ID. Original IDs are retained in audit columns. Bullet lists should be grouped during extraction, so the latest ID itself points to the combined paragraph/list.
+
+# HTML 10-K tables to nested JSON
+
+Extract numerical tables from **one selected Item** of two full 10-K HTML filings.
+Nested JSON is the default output. Main extractor version 1.3.0 adds verified labels for unlabelled footer totals and explicit nulls for missing percentage displays. The existing CSV comparison remains available with `--output-format csv` or `--output-format both`.
+
+It runs locally using Python 3.10+ and `lxml`. No LLM, API key, pandas, browser automation, or PDF parsing is involved.
+
+## One command: SEC API to your annotation TSV
+
+Install the dependency once with `python3 -m pip install -r requirements.txt`, then run only the exporter:
+
+```bash
+python3 scripts/export_table_annotations.py \
+  --ticker MU --company Micron \
+  --previous-year 2024 --current-year 2025 --item 7 \
+  --user-agent "Your name your-email@example.com" \
+  --output-dir data/table_output/item7_all_tables_annotations
+```
+or the command below if you wish to get result from specify table
+
+```bash
+python3 scripts/export_table_annotations.py \
+  --ticker MU --company Micron \
+  --previous-year 2024 --current-year 2025 --item 7 \
+  --table "Consolidated Results" \
+  --user-agent "Your name your-email@example.com" \
+  --output-dir data/table_output/consolidated_results_annotations
+```
+
+Replace the contact details with your own. If `--output-dir` is omitted, table annotation files are written under `data/table_output/table_annotation_export/`.
+
+The output folder contains:
+
+| File | Purpose |
+|---|---|
+| `result.json` | The selected table from each filing, plus the extractor's provenance. |
+| `table_annotations.tsv` | Your 17 columns with a header and one complete table-pair annotation row. |
+| `paste_into_sheets.tsv` | The same annotation row without a header, using fully quoted TSV fields. |
+| `paste_into_sheets.html` | A local copy helper that supplies a 17-cell HTML table and a quoted-text fallback to the clipboard. |
+
+Open **`paste_into_sheets.html` in your browser**, click **Copy row**, single-click column **A** of an empty annotation row in Google Sheets, then paste normally with **Cmd+V / Ctrl+V**.
+
+## Run disclosure annotation pipeline
+
+Use the same ticker/year arguments when a short Item incorporates its content from another report:
+
+```bash
+python3 scripts/extract_filings.py --ticker WFC --year 2024 --items 1 1A 7 8
+python3 scripts/extract_filings.py --ticker WFC --year 2025 --items 1 1A 7 8
+```
+
+Or run extraction for both years, comparison, and annotation export together (using `SEC_USER_AGENT` set above):
+
+```bash
+python3 scripts/run_disclosure_pipeline.py \
+  --ticker WFC --company "Wells Fargo" --industry Banking \
+  --previous-year 2024 --current-year 2025
+```
+
+The extractor reads the quoted section names in the Item's incorporation reference, opens the same filing's document index, and selects its `EX-13`/`EX-13.*` report. If there is no Exhibit 13, it looks for a uniquely identified annual/financial report exhibit by description. The report's own table of contents or explicit HTML heading hierarchy supplies the section boundaries. Layout tables containing Item/section titles are retained as headings; numerical tables are still removed.
+
+When a referenced section is also assigned to a more specific requested Item, it is excluded from the broader Item. For Wells Fargo with Items 1A and 7 selected, Risk Factors appears under **Item 1A only**. The standalone extractor's `--include-reference-overlaps` option retains overlapping sections under both Items if needed.
+
+Each chunk's `source` identifies the document actually used. `<year>_sources.json` records the primary filing, original incorporation references, report/index locations, resolved sections, and excluded overlaps. The existing comparison and annotation exporter consume the resulting chunk files normally; no manual TSV conversion or separate download command is needed.
+
+This follows **short Items whose content is supplied by a named HTML report reference**. It does not recursively expand every incidental cross-reference in substantive Item text. For example, Wells Fargo's Item 1 stays in the main filing, and the internal Item 1 reference in Item 1A is recorded without duplicating Item 1's prose. Ambiguous exhibits, missing headings, unsupported section hierarchies, PDF reports, and page-only references stop extraction with an explanation before existing outputs are replaced. Such layouts need explicit support rather than guessed boundaries.
+
+For offline HTML extraction, keep the primary filing, its SEC `*-index.htm`, and the referenced report HTML together in one folder. `--no-follow-references` explicitly extracts only the primary document for inspection; its short incorporation paragraphs are not the full referenced disclosures.

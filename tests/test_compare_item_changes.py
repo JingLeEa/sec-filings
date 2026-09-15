@@ -1,6 +1,6 @@
 import unittest
 
-from compare_item_changes import compare_records, parse_title_map_args
+from sec_disclosure.comparison.lexical_diff import compare_records, parse_title_map_args
 
 
 class CompareItemChangesTests(unittest.TestCase):

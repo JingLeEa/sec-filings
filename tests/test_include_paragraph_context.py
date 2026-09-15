@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from include_paragraph_context import enrich_rows, paragraph_context_for_id, resolve_columns, ChunkCache
+from sec_disclosure.annotation.include_paragraph_context import ChunkCache, enrich_rows, paragraph_context_for_id, resolve_columns
 
 
 class IncludeParagraphContextTests(unittest.TestCase):

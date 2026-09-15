@@ -8,7 +8,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-import run_disclosure_pipeline as pipeline
+from sec_disclosure.pipelines import run_disclosure_pipeline as pipeline
 
 
 def filing(year):

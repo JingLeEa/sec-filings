@@ -1,13 +1,13 @@
 # Export narrative comparisons to Google Sheets
 
-`export_disclosure_annotations.py` is a standalone Python 3.10+ script. It reads an existing narrative comparison JSON plus the corresponding extraction chunk JSON files, and creates a 20-column TSV and an offline browser copy helper. No extra packages, SEC downloads, API keys, or LLM calls are needed. Existing extraction, comparison, and table-export scripts are not modified.
+`scripts/export_disclosure_annotations.py` reads an existing narrative comparison JSON plus the corresponding extraction chunk JSON files, and creates a 20-column TSV and an offline browser copy helper. No extra packages, SEC downloads, API keys, or LLM calls are needed.
 
 ## Micron 2024 versus 2025
 
 To run extraction for both years, comparison, and TSV export in **one command**, use the separate runner. Replace the contact details with your own:
 
 ```bash
-python3 run_disclosure_pipeline.py \
+python3 scripts/run_disclosure_pipeline.py \
   --ticker MU --company Micron --industry Semiconductors \
   --previous-year 2024 --current-year 2025 \
   --user-agent "Your Name your.email@example.com"
@@ -24,7 +24,7 @@ If the comparison JSON already exists, you can run only the exporter:
 Run from the project directory after extracting and comparing the filings:
 
 ```bash
-python3 export_disclosure_annotations.py \
+python3 scripts/export_disclosure_annotations.py \
   --input data/comparison/mu/2024_vs_2025/all_items_diff.json \
   --company Micron \
   --industry Semiconductors \
@@ -120,7 +120,7 @@ When extraction split a long paragraph into several chunks, the exporter rejoins
 For a custom extraction location, add `--chunks-root /path/to/raw`, or specify the two files explicitly:
 
 ```bash
-python3 export_disclosure_annotations.py \
+python3 scripts/export_disclosure_annotations.py \
   --input data/comparison/mu/2024_vs_2025/all_items_diff.json \
   --previous-json data/raw/mu/2024/2024_chunks.json \
   --current-json data/raw/mu/2025/2025_chunks.json \
@@ -134,7 +134,7 @@ Each paragraph stays inside one cell, including its quotes and line breaks. The 
 For just Item 7, use the corresponding comparison JSON:
 
 ```bash
-python3 export_disclosure_annotations.py \
+python3 scripts/export_disclosure_annotations.py \
   --input data/comparison/mu/2024_vs_2025/item_7_diff.json \
   --company Micron --industry Semiconductors
 ```

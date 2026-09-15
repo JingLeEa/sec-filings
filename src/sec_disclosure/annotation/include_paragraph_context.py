@@ -14,7 +14,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from convert_annotation_ids import find_latest_id, build_search_records
+from sec_disclosure.annotation.convert_annotation_ids import build_search_records, find_latest_id
 
 
 PREVIOUS_YEAR_COL = "Previous Fiscal Year"
