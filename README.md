@@ -17,11 +17,11 @@ export SEC_USER_AGENT="Your Name your.email@example.com"
 python3 sec_10k_extractor.py --ticker NVDA --year 2024
 ```
 
-To exclude Item 15, select only Items 1, 1A, 7, and 8. For Micron:
+To exclude Item 15, select only Items 1, 1A, 7, and 8. For NVIDIA:
 
 ```bash
-python3 sec_10k_extractor.py --ticker MU --year 2024 --items 1 1A 7 8
-python3 sec_10k_extractor.py --ticker MU --year 2025 --items 1 1A 7 8
+python3 sec_10k_extractor.py --ticker NVDA --year 2024 --items 1 1A 7 8
+python3 sec_10k_extractor.py --ticker NVDA --year 2025 --items 1 1A 7 8
 ```
 
 The default still includes Item 15. Rerunning replaces the chunk JSON/TXT files with the selected items; section TXT files from earlier runs remain on disk. Rerun the comparison using the new chunk JSON files to update its results.
@@ -31,33 +31,6 @@ You can still use a direct SEC filing URL or local HTML file when needed:
 ```bash
 python3 sec_10k_extractor.py "https://www.sec.gov/Archives/edgar/data/.../.../nvda-20240128.htm" --year 2024
 ```
-
-## Separate reports, including Wells Fargo
-
-Use the same ticker/year arguments when a short Item incorporates its content from another report:
-
-```bash
-python3 sec_10k_extractor.py --ticker WFC --year 2024 --items 1 1A 7 8
-python3 sec_10k_extractor.py --ticker WFC --year 2025 --items 1 1A 7 8
-```
-
-Or run extraction for both years, comparison, and annotation export together (using `SEC_USER_AGENT` set above):
-
-```bash
-python3 run_disclosure_pipeline.py \
-  --ticker WFC --company "Wells Fargo" --industry Banking \
-  --previous-year 2024 --current-year 2025
-```
-
-The extractor reads the quoted section names in the Item's incorporation reference, opens the same filing's document index, and selects its `EX-13`/`EX-13.*` report. If there is no Exhibit 13, it looks for a uniquely identified annual/financial report exhibit by description. The report's own table of contents or explicit HTML heading hierarchy supplies the section boundaries. Layout tables containing Item/section titles are retained as headings; numerical tables are still removed.
-
-When a referenced section is also assigned to a more specific requested Item, it is excluded from the broader Item. For Wells Fargo with Items 1A and 7 selected, Risk Factors appears under **Item 1A only**. The standalone extractor's `--include-reference-overlaps` option retains overlapping sections under both Items if needed.
-
-Each chunk's `source` identifies the document actually used. `<year>_sources.json` records the primary filing, original incorporation references, report/index locations, resolved sections, and excluded overlaps. The existing comparison and annotation exporter consume the resulting chunk files normally; no manual TSV conversion or separate download command is needed.
-
-This follows **short Items whose content is supplied by a named HTML report reference**. It does not recursively expand every incidental cross-reference in substantive Item text. For example, Wells Fargo's Item 1 stays in the main filing, and the internal Item 1 reference in Item 1A is recorded without duplicating Item 1's prose. Ambiguous exhibits, missing headings, unsupported section hierarchies, PDF reports, and page-only references stop extraction with an explanation before existing outputs are replaced. Such layouts need explicit support rather than guessed boundaries.
-
-For offline HTML extraction, keep the primary filing, its SEC `*-index.htm`, and the referenced report HTML together in one folder. `--no-follow-references` explicitly extracts only the primary document for inspection; its short incorporation paragraphs are not the full referenced disclosures.
 
 ## Outputs
 
@@ -167,8 +140,9 @@ python3 convert_annotation_ids.py data/id_conversion/nvidia_input.csv \
 ```
 
 ## Add Original Paragraph Context
+Save the annotated csv file in data/include_paragraph folder. 
 
-After annotation, convert IDs to the latest extraction and fill `Previous Original Paragraph` and `Current Original Paragraph` from the previous/current chunk IDs:
+This code converts IDs to the latest extraction and fill `Previous Original Paragraph` and `Current Original Paragraph` from the previous/current chunk IDs:
 
 ```bash
 python3 include_paragraph_context.py data/include_paragraph/nvidia.csv \
@@ -219,3 +193,30 @@ The output folder contains:
 | `paste_into_sheets.html` | A local copy helper that supplies a 17-cell HTML table and a quoted-text fallback to the clipboard. |
 
 Open **`paste_into_sheets.html` in your browser**, click **Copy row**, single-click column **A** of an empty annotation row in Google Sheets, then paste normally with **Cmd+V / Ctrl+V**.
+
+## Run disclosure annotation pipeline
+
+Use the same ticker/year arguments when a short Item incorporates its content from another report:
+
+```bash
+python3 sec_10k_extractor.py --ticker WFC --year 2024 --items 1 1A 7 8
+python3 sec_10k_extractor.py --ticker WFC --year 2025 --items 1 1A 7 8
+```
+
+Or run extraction for both years, comparison, and annotation export together (using `SEC_USER_AGENT` set above):
+
+```bash
+python3 run_disclosure_pipeline.py \
+  --ticker WFC --company "Wells Fargo" --industry Banking \
+  --previous-year 2024 --current-year 2025
+```
+
+The extractor reads the quoted section names in the Item's incorporation reference, opens the same filing's document index, and selects its `EX-13`/`EX-13.*` report. If there is no Exhibit 13, it looks for a uniquely identified annual/financial report exhibit by description. The report's own table of contents or explicit HTML heading hierarchy supplies the section boundaries. Layout tables containing Item/section titles are retained as headings; numerical tables are still removed.
+
+When a referenced section is also assigned to a more specific requested Item, it is excluded from the broader Item. For Wells Fargo with Items 1A and 7 selected, Risk Factors appears under **Item 1A only**. The standalone extractor's `--include-reference-overlaps` option retains overlapping sections under both Items if needed.
+
+Each chunk's `source` identifies the document actually used. `<year>_sources.json` records the primary filing, original incorporation references, report/index locations, resolved sections, and excluded overlaps. The existing comparison and annotation exporter consume the resulting chunk files normally; no manual TSV conversion or separate download command is needed.
+
+This follows **short Items whose content is supplied by a named HTML report reference**. It does not recursively expand every incidental cross-reference in substantive Item text. For example, Wells Fargo's Item 1 stays in the main filing, and the internal Item 1 reference in Item 1A is recorded without duplicating Item 1's prose. Ambiguous exhibits, missing headings, unsupported section hierarchies, PDF reports, and page-only references stop extraction with an explanation before existing outputs are replaced. Such layouts need explicit support rather than guessed boundaries.
+
+For offline HTML extraction, keep the primary filing, its SEC `*-index.htm`, and the referenced report HTML together in one folder. `--no-follow-references` explicitly extracts only the primary document for inspection; its short incorporation paragraphs are not the full referenced disclosures.
