@@ -382,13 +382,9 @@ FY 2024 compared to FY 2023
 Q1 2024 versus Q1 2023
 ```
 
-These are not treated as normal narrative chunks.
+These are treated as section context rather than normal narrative chunks.
 
-Styled standalone period-comparison labels can still become subheaders when the HTML marks them as heading-like. In the current code, `is_period_comparison_heading` allows a period label as a header if it is:
-
-- a TOC-derived header with tag `toc_header`;
-- an HTML heading tag `h1` to `h6`; or
-- bold.
+Standalone period-comparison labels become subheaders even when they are plain text. The important restriction is that the whole block must be only the standalone period-comparison label.
 
 Example:
 
@@ -402,7 +398,15 @@ can become a child heading under a parent such as:
 Consolidated Results of Operations > 2024 compared with 2023
 ```
 
-Plain, unstyled period labels are still skipped so table period labels do not become narrative chunks or fake section titles.
+But a full sentence such as:
+
+```text
+2024 compared with 2023 revenue increased due to higher demand.
+```
+
+does not match the standalone-label rule and remains narrative text.
+
+Period labels inside table events are still treated as table context and are not promoted to narrative subheaders.
 
 ## 9. Dropped Lines and Page Noise
 
@@ -467,7 +471,6 @@ Subheaders are detected by `is_subheader_block`.
 A block is not treated as a subheader if:
 
 - It is a table caption.
-- It is a plain period comparison label. Styled period comparison labels may be treated as subheaders.
 - It has tag `toc_text`.
 - It has tag `merged_text`.
 - It is empty.
@@ -804,10 +807,9 @@ For each Item:
 2. Set `item_chunk_index` to 1.
 3. Iterate through the Item's blocks in order.
 4. Skip table captions.
-5. Skip plain period comparison labels, unless the label is styled as a heading.
-6. If a block is a subheader, update the section path and do not create a chunk record for that header block.
-7. Otherwise, create one chunk record for the full block text.
-8. Increment `item_chunk_index`.
+5. If a block is a subheader, update the section path and do not create a chunk record for that header block.
+6. Otherwise, create one chunk record for the full block text.
+7. Increment `item_chunk_index`.
 
 The current block-based path does not split long narrative blocks by `max_chars`.
 

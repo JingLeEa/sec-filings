@@ -1166,7 +1166,7 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
         if node:
             blocks.append(toc_header_block(event.index, node["title"], node.get("font_size")))
             continue
-        if is_table_caption(event.text) or is_period_comparison_label(event.text):
+        if is_table_caption(event.text) or (event.kind == "table" and is_period_comparison_label(event.text)):
             # Table footnotes and period comparisons belong to the enclosing
             # topic. Neither a caption nor a standalone pair of periods should
             # replace that topic (or leave an incidental table legend active).
@@ -1175,6 +1175,16 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                 parent = max(parents, key=lambda node: (node["level"], node["start"]))
                 title = re.sub(r"\s*\(continued\)\s*$", "", parent["title"], flags=re.I)
                 blocks.append(toc_header_block(event.index, title, parent.get("font_size")))
+            continue
+        if is_period_comparison_label(event.text):
+            parents = [node for node in nodes if node["start"] <= position < node["end"]]
+            if parents:
+                parent = max(parents, key=lambda node: (node["level"], node["start"]))
+                title = re.sub(r"\s*\(continued\)\s*$", "", parent["title"], flags=re.I)
+                blocks.append(toc_header_block(event.index, title, parent.get("font_size")))
+            blocks.append(FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
+                                      mixed_bold=event.mixed_bold, font_size=event.font_size,
+                                      segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),)))
             continue
         if should_drop_line(event.text):
             continue
@@ -2155,15 +2165,8 @@ def is_period_comparison_label(text: str) -> bool:
 
 
 def is_period_comparison_heading(block: FilingBlock) -> bool:
-    """Allow period comparison labels only when the HTML marks them as headings."""
-    return (
-        is_period_comparison_label(block.text)
-        and (
-            block.tag == "toc_header"
-            or block.tag in {"h1", "h2", "h3", "h4", "h5", "h6"}
-            or block.bold
-        )
-    )
+    """Treat standalone period comparison labels as section context."""
+    return is_period_comparison_label(block.text)
 
 
 def is_subheader_block(block: FilingBlock) -> bool:
@@ -2454,6 +2457,11 @@ def update_section_path(path: list[SectionHeading], block: FilingBlock) -> list[
     if not header:
         return path
     current = SectionHeading(header, block.font_size, all_caps_heading_priority(header))
+    if is_period_comparison_label(header):
+        parent_path = list(path)
+        while parent_path and is_period_comparison_label(parent_path[-1].title):
+            parent_path.pop()
+        return [*parent_path, current] if parent_path else [current]
     if block.font_size is not None:
         next_path = list(path)
         while next_path and closes_heading_level(current, next_path[-1]):
@@ -2515,8 +2523,6 @@ def build_records_from_section_blocks(
         item_chunk_index = 1
         for block in section_blocks[item]:
             if is_table_caption(block.text):
-                continue
-            if is_period_comparison_label(block.text) and not is_period_comparison_heading(block):
                 continue
             if is_subheader_block(block):
                 section_path = update_section_path(section_path, block)

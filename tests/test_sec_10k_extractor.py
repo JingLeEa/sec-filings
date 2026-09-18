@@ -1020,7 +1020,7 @@ class ExtractorTests(unittest.TestCase):
                     {'7': [FilingBlock(1, 'div', text)]}, '2025', 'example', 'sample', 1800)
                 self.assertEqual(records[0]['text'], text)
 
-    def test_period_comparison_labels_keep_the_topic_without_entering_paragraphs(self):
+    def test_period_comparison_labels_become_child_subheaders(self):
         labels = ('Full year 2025 vs. full year 2024', 'FULL YEAR 2031 VS FULL YEAR 2030:',
                   'Fiscal year 2025 compared with fiscal year 2024', '2025 versus 2024',
                   'Fourth quarter 2025 vs. fourth quarter 2024', 'Q1 2025 compared to Q1 2024')
@@ -1039,11 +1039,13 @@ class ExtractorTests(unittest.TestCase):
                 records = build_records_from_section_blocks(
                     {'7': merge_continued_blocks(sections['7'])}, '2025', 'example', 'sample', 1800)
                 self.assertEqual([r['item_title'] for r in records],
-                                 ['Noninterest Income', 'Noninterest Income', 'Noninterest Expense'])
+                                 ['Noninterest Income',
+                                  f'Noninterest Income > {label}',
+                                  f'Noninterest Expense > {label}'])
                 self.assertEqual([r['text'] for r in records], [
                     'We earn fees from customer services.', 'Deposit-related fees increased this year.',
                     'Personnel expense increased this year.'])
-                self.assertFalse(is_subheader_block(FilingBlock(1, 'div', label)))
+                self.assertTrue(is_subheader_block(FilingBlock(1, 'div', label)))
 
     def test_styled_period_comparison_labels_can_be_subheaders(self):
         records = build_records_from_section_blocks(
@@ -1368,7 +1370,12 @@ class IncorporatedReportTests(unittest.TestCase):
                     self.assertEqual(main(self.arguments(source, root)), 0)
                 records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
                 review = [r for r in records if r['item'] == '7']
-                self.assertEqual([r['item_title'] for r in review], ['Performance', 'Performance'])
+                expected_title = (
+                    'Performance > Full year 2031 vs. full year 2030'
+                    if label_html.startswith('<div')
+                    else 'Performance'
+                )
+                self.assertEqual([r['item_title'] for r in review], [expected_title, expected_title])
                 self.assertEqual([r['text'] for r in review],
                                  ['Our revenue increased in 2031.', 'Fees increased due to customer activity.'])
                 self.assertTrue(all(r['source'] == str(report) for r in review))
