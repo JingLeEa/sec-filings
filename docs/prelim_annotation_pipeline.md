@@ -2,7 +2,7 @@
 
 This page preserves the detailed commands for the currently implemented extraction, comparison, annotation, and table workflows.
 
-This project uses the SEC submissions API to find a 10-K filing, removes HTML/tables/page noise, extracts Item 1, Item 1A, Item 7, Item 8, and Item 15, then writes paragraph/disclosure chunks with IDs like `2024_1_P001` and `2024_7_P001`.
+This project uses the SEC submissions API to find a 10-K filing, removes HTML/tables/page noise, extracts Item 1, Item 1A, Item 7, Item 8, and Item 15, then writes paragraph/disclosure chunks with IDs like `nvda_2024_1_P001` and `nvda_2024_7_P001`.
 
 For filings like NVIDIA's inline XBRL HTML, displayed paragraphs are usually stored as styled `<div>` blocks rather than `<p>` tags. The extractor therefore chunks by meaningful HTML block and carries the latest short subheader, such as `Our Company` or `Data Center`, into each chunk's `item_title`.
 
@@ -67,7 +67,7 @@ Each JSON chunk has:
 
 ```json
 {
-  "id": "2024_1_P001",
+  "id": "nvda_2024_1_P001",
   "company": "nvda",
   "year": "2024",
   "item": "1",
@@ -87,7 +87,7 @@ Each JSON chunk has:
 - API extraction uses the ticker as the company folder by default. For local files, company/year are inferred from filenames like `nvda-20240128.htm`.
 - If a filing has unusual headings, lower `--max-chars` for smaller LLM chunks or inspect the item TXT files to confirm boundaries.
 - `item` is the SEC item number. `item_default_title` is the standard SEC heading, while `item_title` is the most recent subheader found inside that item.
-- Chunk IDs reset within each item: Item 1 starts at `2024_1_P001`, Item 1A starts at `2024_1A_P001`, Item 7 starts at `2024_7_P001`, Item 8 starts at `2024_8_P001`, and Item 15 starts at `2024_15_P001`.
+- Chunk IDs reset within each company/year/item: Item 1 starts at `nvda_2024_1_P001`, Item 1A starts at `nvda_2024_1A_P001`, Item 7 starts at `nvda_2024_7_P001`, Item 8 starts at `nvda_2024_8_P001`, and Item 15 starts at `nvda_2024_15_P001`.
 - Generated files live under `data/`, which is ignored by Git.
 
 ## Compare Chunk Files

@@ -9,7 +9,7 @@ The current implementation focuses on the preprocessing and benchmark dataset wo
 - Download 10-K filings through the SEC submissions API.
 - Extract Items 1, 1A, 7, 8, and 15 from filing HTML.
 - Clean HTML, tables, repeated headers, and page artifacts.
-- Chunk disclosures with stable IDs such as `2024_1A_P001`.
+- Chunk disclosures with stable IDs such as `nvda_2024_1A_P001`.
 - Compare consecutive-year disclosures and remove unchanged sentences.
 - Handle manually verified section title mappings.
 - Export narrative and table annotation files for human review.
@@ -84,6 +84,7 @@ python3 scripts/run_disclosure_pipeline.py \
 ## Documentation
 
 - [Pipeline Usage](docs/pipeline_usage.md): detailed extraction, comparison, ID conversion, paragraph context, and table commands.
+- [Current Text Preprocessing Flow](docs/current_text_preprocessing_flow.md): current extraction, chunking, sentence splitting, bullet handling, and ID behavior.
 - [Disclosure Annotation Export](docs/disclosure_annotation_export.md): detailed guide for exporting narrative comparison rows to Google Sheets.
 
 ## Development
