@@ -215,6 +215,8 @@ text
 style
 bold
 mixed_bold
+italic
+mixed_italic
 font_size
 segments
 ```
@@ -450,7 +452,14 @@ The extractor tracks boldness using:
 - CSS `font-weight:bold`
 - CSS `font-weight:700`, `800`, or `900`
 
-It also tracks plain text inside the same block. A block can therefore be:
+It also tracks italic styling using:
+
+- `<i>`
+- `<em>`
+- CSS `font-style:italic`
+- CSS `font-style:oblique`
+
+It tracks plain/non-emphasized text inside the same block. A block can therefore be:
 
 ```text
 bold=True
@@ -465,6 +474,22 @@ mixed_bold=True
 ```
 
 `mixed_bold=True` means part of the block looked bold and part looked plain.
+
+Similarly:
+
+```text
+italic=True
+mixed_italic=False
+```
+
+means the whole text run looked italic, while:
+
+```text
+italic=True
+mixed_italic=True
+```
+
+means only part of the block looked italic.
 
 Subheaders are detected by `is_subheader_block`.
 
@@ -486,10 +511,26 @@ A block is treated as a subheader if it passes the exclusions above and one of t
 - It is a TOC-derived header with tag `toc_header`.
 - It has font size at least 10 and looks like a title.
 - It is bold.
+- It is a short standalone italic label.
 - It is an HTML heading tag `h1` to `h6`.
 - It looks like a title.
 
 `looks_like_title` means at least 65% of scored alphabetic words begin with uppercase, are all uppercase, or contain product-style uppercase/digit patterns such as `x86` or `xPU`.
+
+A short standalone italic label is a conservative rule for filings such as JPMorgan where subsection labels are italic but not bold. The current rule requires:
+
+- the whole block is italic, not mixed italic;
+- it has 2 to 8 alphabetic/alphanumeric words;
+- the first alphabetic word starts with uppercase, or the text otherwise looks like a title;
+- the usual subheader exclusions still pass, such as no bullet marker and no sentence-ending punctuation.
+
+Example:
+
+```text
+Human capital > Global workforce
+```
+
+where `Global workforce` is italic in the filing.
 
 Connector words are ignored for title scoring, including:
 
@@ -543,7 +584,66 @@ Header hierarchy uses font size when available:
 
 1. If a new header has a larger font size than the current header, it replaces higher-level context.
 2. If a new header has a smaller font size, it is treated as a child.
-3. If font sizes are the same, all-caps priority can close the previous same-level header.
+3. If font sizes are the same, visual style is checked before all-caps priority.
+
+For same-size headings, stronger styles close weaker styles or same-style siblings, while weaker styles can remain under stronger parent headings.
+
+Current style strength is:
+
+```text
+toc/html heading > bold > bold_italic > italic > title
+```
+
+This allows JPM-style same-size headings such as:
+
+```text
+Human capital
+Global workforce
+```
+
+to become:
+
+```text
+Human capital > Global workforce
+```
+
+when `Human capital` is bold and `Global workforce` is italic.
+
+It also handles Citi-style headings where a bold parent is followed by a bold+italic child:
+
+```text
+2025 Results Summary
+Citigroup
+```
+
+can become:
+
+```text
+2025 Results Summary > Citigroup
+```
+
+when `2025 Results Summary` is bold and `Citigroup` is bold+italic at the same font size.
+
+If font size and style do not decide the relationship, all-caps priority can close the previous same-level header.
+
+Same-size, same-style headings are treated as siblings before all-caps priority is considered. This prevents a short all-caps heading from being nested under a longer all-caps heading only because of the all-caps priority heuristic.
+
+For example:
+
+```text
+SEGMENT REVENUES AND INCOME (LOSS)
+REVENUES(1)
+INCOME
+```
+
+becomes:
+
+```text
+SEGMENT REVENUES AND INCOME (LOSS) > REVENUES(1)
+SEGMENT REVENUES AND INCOME (LOSS) > INCOME
+```
+
+rather than nesting `INCOME` under `REVENUES(1)`, assuming `REVENUES(1)` and `INCOME` have the same font size and style.
 
 All-caps priority is only used for:
 
@@ -551,6 +651,36 @@ All-caps priority is only used for:
 - Longer all-caps words.
 
 Short all-caps acronyms such as `CCG`, `DCAI`, or `MD&A` are not automatically treated as higher-priority all-caps headings.
+
+When font size is unavailable, the extractor also tracks the style kind of each header:
+
+```text
+toc
+html_heading
+bold
+bold_italic
+italic
+title
+```
+
+This prevents the hierarchy from depending only on text casing. A weaker/different style can be treated as a child of the current parent, while same-style headings become siblings. For example:
+
+```text
+Human capital
+Global workforce
+Rewarding and supporting employees
+```
+
+can become:
+
+```text
+Human capital > Global workforce
+Human capital > Rewarding and supporting employees
+```
+
+where `Human capital` is bold and the two child labels are italic.
+
+If a stronger style appears after an italic child, the extractor climbs back out of the italic subsection instead of nesting the stronger header underneath it.
 
 Some generic child titles keep parent context when font size is unavailable, including:
 
@@ -578,13 +708,33 @@ can become:
 DCAI > Overview
 ```
 
+Connector words such as `and`, `of`, `for`, and `with` do not automatically disqualify a standalone line from being a header. If the line otherwise looks title-like, it can still become a same-level header.
+
+Example:
+
+```text
+Management's Discussion and Analysis
+Operating Segment Results
+Consolidated Results of Operations
+Liquidity and Capital Resources
+Critical Accounting Estimates
+```
+
+can become:
+
+```text
+Management's Discussion and Analysis
+Operating Segment Results
+Consolidated Results of Operations
+Liquidity and Capital Resources
+Critical Accounting Estimates
+```
+
 ## 12. Item 15 TOC-Guided Extraction
 
 Item 15 has special handling because some companies include annual report content inside or after Item 15.
 
 This special handling is only used if Item 15 is explicitly requested or auto-included.
-
-For experiments, `--no-item15-toc` disables this TOC-guided path and forces Item 15 to use normal body/header extraction.
 
 The extractor:
 
@@ -675,10 +825,90 @@ For Item 7, pages assigned to Item 8 or Item 15 are excluded from the Item 7 fal
 
 For Item 1, pages assigned to other requested Items are excluded.
 
+### Intel-style Item 7 root selection
+
+Some non-traditional filings, including Intel's 2025 filing, list only selected
+Item 7 subsections and page ranges in the cross-reference index. The actual HTML
+still places additional content immediately under the Item 7 parent, for example:
+
+```text
+Management's Discussion and Analysis
+  Overview
+  Significant Events and Trends Impacting Results
+  Operating Segment Results
+  Consolidated Results of Operations
+  Liquidity and Capital Resources
+```
+
+The extractor therefore treats the cross-reference title
+`Management's Discussion and Analysis` as a root range. It keeps the
+unpaginated introductory headings and their text, rather than selecting only
+the page-linked subsection titles.
+
+The root range stops before known non-Item-7 sections such as `Properties`,
+`Quantitative and Qualitative Disclosures About Market Risk`, and the financial
+statement section. Any additional subsection explicitly listed for Item 7 in the
+cross-reference index, such as `Critical Accounting Estimates`, is selected
+separately so it is retained even when it appears after another Item in the
+HTML layout.
+
+For this path, the output hierarchy can therefore look like:
+
+```text
+Item 7 - Management's Discussion and Analysis > Overview
+Item 7 - Operating Segment Results
+Item 7 - Management's Discussion and Analysis > Critical Accounting Estimates
+```
+
 Important implication:
 
 ```text
-This helps with Intel, Citigroup, and Morgan Stanley-style structures where standard Item headings alone are not enough.
+The cross-reference index identifies the candidate content and page range, but
+the final hierarchy follows the source HTML heading styles. A heading with the
+same effective style as the Item 7 root is a sibling; a smaller or weaker
+heading becomes its child.
+```
+
+### Cross-reference page-range filtering
+
+When the cross-reference index includes printed page ranges, the extractor also
+uses those ranges as a content filter. This is especially useful when the HTML
+contains several report sections with similar headings or when the filing does
+not use standard SEC Item headings.
+
+The page-range flow is:
+
+1. Read the page numbers from the cross-reference index, including ranges such
+   as `Pages 18-29`.
+2. Scan the HTML structure events for footer-style printed-page markers such as
+   `MD&A | 18`, `MD&A | 19`, or `Image | MD&A | 18`.
+3. Assign the events before each footer marker to that marker's page. A footer
+   is treated as appearing after the content on its printed page.
+4. Keep only events whose inferred page is included in the Item's referenced
+   page set.
+5. Apply the report heading hierarchy and known Item boundaries afterward.
+
+The page range is therefore a candidate filter, not the only extraction rule.
+It does not replace heading hierarchy, root-section selection, or overlap
+exclusions. For example, Item 7 can still stop before Properties or Item 7A
+even when the page ranges overlap because the section boundary logic is applied
+after page filtering.
+
+Footer markers are removed from the extracted text. A bare number is not treated
+as a page marker because it could be a table value, year, or other narrative
+number. If the filing does not expose usable footer-style markers in its HTML,
+the extractor keeps the existing heading-based fallback rather than silently
+dropping content.
+
+This means page-based extraction is best understood as:
+
+```text
+cross-reference page range
+        +
+HTML footer page markers
+        +
+heading hierarchy and Item boundaries
+        -> selected narrative blocks
 ```
 
 ## 14. Referenced Annual or Financial Reports
@@ -755,6 +985,54 @@ Current bullet markers are detected by:
 ```
 
 If the current block does not start with a bullet, the extractor merges it with the previous block when the previous block does not end with a sentence terminal.
+
+There is also a narrow wrapped-reference exception. If the previous block ends
+with an unfinished connector such as `and`, `of`, `to`, `above`, or `below`,
+and the next block begins with a quote or opening parenthesis, the blocks are
+merged even if the next block is styled like a heading. This handles references
+that are split across HTML blocks, for example:
+
+```text
+... see the discussion above and
+"Managing Global Risk-Other Risks-Country Risk" below
+```
+
+The exception is intentionally limited so a quoted heading after a complete
+sentence remains a separate heading.
+
+There is one extra bullet-list safeguard:
+
+- If the previous block starts with a bullet and the current block does not start with a bullet, the current block is not merged merely because the bullet lacks a full stop.
+- It is merged only when the current block still has bullet-continuation layout, such as `padding-left`, `margin-left`, or `text-indent`.
+
+This keeps rendered bullet continuations together while preventing a short bullet label from swallowing the normal paragraph that follows the list.
+
+The same idea is applied at the HTML segment level:
+
+- If a non-bullet segment follows a bullet segment, it is only appended to the bullet when it is marked as a bullet continuation.
+- A new normal segment after a bullet starts a new sentence unit when it looks like a new context.
+- If the previous bullet has not ended with sentence punctuation and the next segment starts with a lowercase letter, the next segment is treated as a continuation of that same bullet.
+- If non-bullet text appears later inside the same HTML segment after a bullet sentence, it can become a separate sentence unit instead of being forced into the bullet.
+
+The last case matters for Citi-style text such as:
+
+```text
+• Banamex-related notable item: expenses included ... (Banamex) Excluding the Russia-related notable item ..., net income was ...
+```
+
+This can become:
+
+```text
+• Banamex-related notable item: expenses included ... (Banamex)
+Excluding the Russia-related notable item ..., net income was ...
+```
+
+In code, this distinction is tracked in `sentence_units_from_block`:
+
+```text
+segment.continues_previous_bullet -> layout-confirmed continuation
+segment_units                    -> already emitted a sentence from the same HTML segment
+```
 
 Sentence terminals are:
 
@@ -941,6 +1219,16 @@ e.g.
 i.e.
 ```
 
+The extractor also protects generic uppercase dotted initialisms that have at least two letters, such as:
+
+```text
+J.P.
+P.C.
+U.S.A.
+```
+
+This prevents `J.P. Morgan` from being split into `J.P.` and `Morgan ...`.
+
 It splits non-bullet lines using:
 
 ```regex
@@ -953,6 +1241,25 @@ That means it splits after `.`, `!`, or `?` when the next sentence starts with:
 - Then uppercase A-Z or a digit.
 
 After splitting, abbreviation periods are restored.
+
+If a rendered line break splits one sentence into two lines, the extractor can join the second line back to the previous sentence when:
+
+- the previous sentence does not end with `.`, `!`, or `?`;
+- the previous sentence is not a bullet; and
+- the new line starts with a lowercase letter.
+
+Example:
+
+```text
+... heightened standards guidelines should
+be rescinded.
+```
+
+becomes:
+
+```text
+... heightened standards guidelines should be rescinded.
+```
 
 ## 19. Bullet Sentence Handling
 
@@ -977,6 +1284,42 @@ If a bullet line has no punctuation-based sentence boundary, the whole bullet re
 If a non-bullet continuation line follows a bullet unit, the continuation is appended to the previous bullet sentence.
 
 This is useful for cases where a bullet is broken across rendered HTML divs.
+
+There is a narrow exception for embedded narrative after a short bullet label. This was added for Citi-style text where a short bullet label is immediately followed by a new explanatory lead-in.
+
+The split is applied when:
+
+- the text starts with a bullet marker;
+- the text before the new lead-in is short, currently at most 10 alphanumeric words; and
+- the next lead-in starts with uppercase `The`.
+
+For example, if one line looks like:
+
+```text
+• Non-Markets net interest income The following are details ...
+```
+
+the extractor splits it into:
+
+```text
+• Non-Markets net interest income
+The following are details ...
+```
+
+This prevents a short bullet label from absorbing a new narrative lead-in. In contrast, normal bullet continuations are merged when they continue the previous bullet context, such as a same-segment continuation, a layout-marked continuation block, or a lowercase segment after an unfinished bullet.
+
+For example, Intel has a rendered split like:
+
+```text
+▪we and
+the DOC entered into an amendment ...
+```
+
+Because `the DOC...` starts with lowercase and the bullet has not ended with punctuation, it remains one bullet sentence unit:
+
+```text
+▪we and the DOC entered into an amendment ...
+```
 
 ## 20. Bullet Level Handling
 
@@ -1304,6 +1647,14 @@ U.S.
 U.K.
 e.g.
 i.e.
+```
+
+It also protects generic uppercase dotted initialisms that have at least two letters, such as:
+
+```text
+J.P.
+P.C.
+U.S.A.
 ```
 
 It temporarily replaces periods in those abbreviations with a placeholder.

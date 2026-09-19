@@ -22,6 +22,7 @@ from typing import Any
 
 
 DEFAULT_OUT_DIR = "data/comparison"
+INITIALISM_ABBREVIATION_RE = re.compile(r"\b(?:[A-Z]\.){2,}(?=$|[\s,;:)\]\}'\"])")
 COMMON_ABBREVIATIONS = (
     "Co.",
     "Corp.",
@@ -43,6 +44,16 @@ COMMON_ABBREVIATIONS = (
 PERIOD_TOKEN = "<PERIOD>"
 TitleKey = tuple[str, str]
 TitleMapping = dict[TitleKey, str]
+
+
+def protect_sentence_periods(text: str) -> str:
+    protected = text
+    for abbreviation in COMMON_ABBREVIATIONS:
+        protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
+    return INITIALISM_ABBREVIATION_RE.sub(
+        lambda match: match.group(0).replace(".", PERIOD_TOKEN),
+        protected,
+    )
 
 
 def load_records(path: Path) -> list[dict[str, Any]]:
@@ -73,9 +84,7 @@ def split_sentences(text: str) -> list[str]:
         return []
 
     text = re.sub(r"\s*•\s*", "\n• ", text)
-    protected = text
-    for index, abbreviation in enumerate(COMMON_ABBREVIATIONS):
-        protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
+    protected = protect_sentence_periods(text)
 
     parts: list[str] = []
     for line in protected.splitlines():

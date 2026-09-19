@@ -48,10 +48,18 @@ ITEM_TITLES = {
     "8": "Financial Statements and Supplementary Data",
     "15": "Exhibits and Financial Statement Schedules",
 }
+ITEM_7_ROOT_KEY = "management s discussion and analysis"
+ITEM_7_EXCLUDED_SECTION_KEYS = {
+    "financial statements and supplemental details",
+    "financial statements and supplementary data",
+    "properties",
+    "quantitative and qualitative disclosures about market risk",
+}
 BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|\*\s+|-\s+)")
 SENTENCE_BULLET_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|\*\s+|-\s+)")
 FOOTNOTE_REF_RE = re.compile(r"\[\[FNREF:(\d{1,3})\]\]")
 PERIOD_TOKEN = "<PERIOD>"
+INITIALISM_ABBREVIATION_RE = re.compile(r"\b(?:[A-Z]\.){2,}(?=$|[\s,;:)\]\}'\"])")
 COMMON_ABBREVIATIONS = (
     "Co.",
     "Corp.",
@@ -117,6 +125,8 @@ class FilingBlock:
     style: str = ""
     bold: bool = False
     mixed_bold: bool = False
+    italic: bool = False
+    mixed_italic: bool = False
     font_size: float | None = None
     segments: tuple[BlockSegment, ...] = ()
 
@@ -132,6 +142,8 @@ class FilingStructureEvent:
     cell_bold: tuple[tuple[bool, ...], ...] = ()
     cell_styles: tuple[tuple[str, ...], ...] = ()
     mixed_bold: bool = False
+    italic: bool = False
+    mixed_italic: bool = False
     font_size: float | None = None
 
 
@@ -156,6 +168,7 @@ class SectionHeading:
     title: str
     font_size: float | None = None
     caps_priority: int = 0
+    style_kind: str = "title"
 
 
 @dataclass(frozen=True)
@@ -163,6 +176,7 @@ class SentenceUnit:
     text: str
     bullet_level: int | None = None
     bullet_indent_pt: float | None = None
+    starts_new_context: bool = False
 
 
 @dataclass(frozen=True)
@@ -170,6 +184,7 @@ class BlockSegment:
     text: str
     bullet_level: int | None = None
     bullet_indent_pt: float | None = None
+    continues_previous_bullet: bool = False
 
 
 class FilingTextExtractor(HTMLParser):
@@ -297,6 +312,8 @@ class FilingBlockExtractor(HTMLParser):
                     "parts": [],
                     "bold": False,
                     "plain": False,
+                    "italic": False,
+                    "roman": False,
                     "font_size": None,
                 }
             )
@@ -331,6 +348,8 @@ class FilingBlockExtractor(HTMLParser):
                         style=style,
                         bold=bool(block["bold"]),
                         mixed_bold=bool(block["bold"] and block["plain"]),
+                        italic=bool(block["italic"]),
+                        mixed_italic=bool(block["italic"] and block["roman"]),
                         font_size=block["font_size"],  # type: ignore[arg-type]
                         segments=(BlockSegment(text, bullet_indent_pt=bullet_indent_from_style(text, style)),),
                     )
@@ -353,6 +372,8 @@ class FilingBlockExtractor(HTMLParser):
         if self.block_stack and any(char.isalnum() for char in data):
             key = "bold" if is_bold_text(self.style_stack) else "plain"
             self.block_stack[-1][key] = True
+            italic_key = "italic" if is_italic_text(self.style_stack) else "roman"
+            self.block_stack[-1][italic_key] = True
             font_size = current_font_size(self.style_stack)
             if font_size is not None:
                 existing = self.block_stack[-1]["font_size"]
@@ -438,6 +459,8 @@ class FilingStructureExtractor(HTMLParser):
                     "parts": [],
                     "bold": False,
                     "plain": False,
+                    "italic": False,
+                    "roman": False,
                     "font_size": None,
                 }
             )
@@ -510,6 +533,8 @@ class FilingStructureExtractor(HTMLParser):
                         style=str(block["style"]),
                         bold=bool(block["bold"]),
                         mixed_bold=bool(block["bold"] and block["plain"]),
+                        italic=bool(block["italic"]),
+                        mixed_italic=bool(block["italic"] and block["roman"]),
                         font_size=block["font_size"],  # type: ignore[arg-type]
                     )
                 )
@@ -545,6 +570,8 @@ class FilingStructureExtractor(HTMLParser):
             if self.block_stack and any(char.isalnum() for char in data):
                 key = "bold" if is_bold_text(self.style_stack) else "plain"
                 self.block_stack[-1][key] = True
+                italic_key = "italic" if is_italic_text(self.style_stack) else "roman"
+                self.block_stack[-1][italic_key] = True
                 font_size = current_font_size(self.style_stack)
                 if font_size is not None:
                     existing = self.block_stack[-1]["font_size"]
@@ -605,6 +632,17 @@ def is_bold_text(style_stack: list[tuple[str, str]]) -> bool:
         if weights:
             return weights[-1].lower() in {"bold", "700", "800", "900"}
         if tag in {"b", "strong"}:
+            return True
+    return False
+
+
+def is_italic_text(style_stack: list[tuple[str, str]]) -> bool:
+    """Resolve italic style for this text run, including a child's normal override."""
+    for tag, style in reversed(style_stack):
+        styles = re.findall(r"font-style\s*:\s*(italic|oblique|normal)\b", style, re.IGNORECASE)
+        if styles:
+            return styles[-1].lower() in {"italic", "oblique"}
+        if tag in {"i", "em"}:
             return True
     return False
 
@@ -908,7 +946,8 @@ def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) 
             result.append(FilingBlock(event.index, "div", event.text, bold=True))
         else:
             result.append(FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
-                                      mixed_bold=event.mixed_bold, font_size=event.font_size,
+                                      mixed_bold=event.mixed_bold, italic=event.italic,
+                                      mixed_italic=event.mixed_italic, font_size=event.font_size,
                                       segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),)))
     return result
 
@@ -1146,7 +1185,10 @@ def referenced_section_ranges(nodes: list[dict], paths: list[list[str]]) -> list
 
 
 def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dict],
-                             ranges: list[dict], exclusions: list[dict]) -> list[FilingBlock]:
+                             ranges: list[dict], exclusions: list[dict],
+                             preserve_toc_levels: bool = False,
+                             allowed_pages: set[int] | None = None,
+                             use_html_hierarchy: bool = False) -> list[FilingBlock]:
     headings = {node["start"]: node for node in nodes}
     known_titles = {node["key"] for node in nodes}
     heading_continuations = {
@@ -1154,17 +1196,47 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
         for node in nodes
         for position in range(node["start"] + 1, node.get("heading_end", node["start"] + 1))
     }
+    page_by_position = event_page_numbers(events) if allowed_pages is not None else {}
     blocks = []
     for position, event in enumerate(events):
         if not any(node["start"] <= position < node["end"] for node in ranges):
             continue
         if any(node["start"] <= position < node["end"] for node in exclusions):
             continue
+        if allowed_pages is not None:
+            page = page_by_position.get(position)
+            if page is not None and page not in allowed_pages:
+                continue
         if position in heading_continuations:
+            continue
+        if page_marker_from_text(event.text) is not None:
             continue
         node = headings.get(position)
         if node:
-            blocks.append(toc_header_block(event.index, node["title"], node.get("font_size")))
+            if use_html_hierarchy:
+                # The cross-reference index identifies the content range, but
+                # the source event supplies the actual visual heading style.
+                # This prevents a TOC level from overriding equal-sized HTML
+                # headings that should be siblings.
+                blocks.append(FilingBlock(
+                    event.index,
+                    "div" if event.kind == "table" else event.kind,
+                    node["title"],
+                    style=event.style,
+                    bold=event.bold or event.kind == "table",
+                    mixed_bold=event.mixed_bold,
+                    italic=event.italic,
+                    mixed_italic=event.mixed_italic,
+                    font_size=node.get("font_size") or event.font_size,
+                    segments=(BlockSegment(node["title"]),),
+                ))
+            else:
+                blocks.append(toc_header_block(
+                    event.index,
+                    node["title"],
+                    node.get("font_size"),
+                    toc_level=node.get("level") if preserve_toc_levels else None,
+                ))
             continue
         if is_table_caption(event.text) or (event.kind == "table" and is_period_comparison_label(event.text)):
             # Table footnotes and period comparisons belong to the enclosing
@@ -1174,23 +1246,35 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
             if parents:
                 parent = max(parents, key=lambda node: (node["level"], node["start"]))
                 title = re.sub(r"\s*\(continued\)\s*$", "", parent["title"], flags=re.I)
-                blocks.append(toc_header_block(event.index, title, parent.get("font_size")))
+                blocks.append(toc_header_block(
+                    event.index,
+                    title,
+                    parent.get("font_size"),
+                    toc_level=parent.get("level") if preserve_toc_levels else None,
+                ))
             continue
         if is_period_comparison_label(event.text):
             parents = [node for node in nodes if node["start"] <= position < node["end"]]
             if parents:
                 parent = max(parents, key=lambda node: (node["level"], node["start"]))
                 title = re.sub(r"\s*\(continued\)\s*$", "", parent["title"], flags=re.I)
-                blocks.append(toc_header_block(event.index, title, parent.get("font_size")))
+                blocks.append(toc_header_block(
+                    event.index,
+                    title,
+                    parent.get("font_size"),
+                    toc_level=parent.get("level") if preserve_toc_levels else None,
+                ))
             blocks.append(FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
-                                      mixed_bold=event.mixed_bold, font_size=event.font_size,
+                                      mixed_bold=event.mixed_bold, italic=event.italic,
+                                      mixed_italic=event.mixed_italic, font_size=event.font_size,
                                       segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),)))
             continue
         if should_drop_line(event.text):
             continue
         if report_title_key(event.text) in known_titles and not starts_with_bullet(event.text):
             block = FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
-                                mixed_bold=event.mixed_bold, font_size=event.font_size,
+                                mixed_bold=event.mixed_bold, italic=event.italic,
+                                mixed_italic=event.mixed_italic, font_size=event.font_size,
                                 segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),))
             if is_contextual_child_title(event.text) and is_subheader_block(block):
                 blocks.append(block)
@@ -1221,9 +1305,22 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                 if is_subheader_block(block):
                     blocks.append(block)
             continue
-        blocks.append(FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
-                                  mixed_bold=event.mixed_bold, font_size=event.font_size,
-                                  segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),)))
+        event_block = FilingBlock(
+            event.index,
+            event.kind,
+            event.text,
+            style=event.style,
+            bold=event.bold,
+            mixed_bold=event.mixed_bold,
+            italic=event.italic,
+            mixed_italic=event.mixed_italic,
+            font_size=event.font_size,
+            segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+        )
+        if preserve_toc_levels and not use_html_hierarchy and is_subheader_block(event_block):
+            blocks.append(toc_header_block(event.index, event.text, toc_level=1))
+        else:
+            blocks.append(event_block)
     return merge_continued_blocks(blocks)
 
 
@@ -1252,7 +1349,13 @@ def narrative_layout_table_rows(event: FilingStructureEvent) -> list[str]:
     return [text for text in row_texts if starts_with_bullet(text)]
 
 
-def blocks_for_exact_title(events: list[FilingStructureEvent], title: str) -> list[FilingBlock]:
+def blocks_for_exact_title(
+    events: list[FilingStructureEvent],
+    title: str,
+    preserve_toc_levels: bool = False,
+    allowed_pages: set[int] | None = None,
+    use_html_hierarchy: bool = False,
+) -> list[FilingBlock]:
     key = report_title_key(title)
     starts = []
     for position, event in enumerate(events):
@@ -1280,9 +1383,18 @@ def blocks_for_exact_title(events: list[FilingStructureEvent], title: str) -> li
         ),
         len(events),
     )
-    node = {"title": title, "key": key, "start": start, "end": end, "level": 0,
+    node = {"title": title, "key": key, "start": start, "end": end,
+            "level": 1 if preserve_toc_levels else 0,
             "heading_end": start + 1, "font_size": font_size}
-    return referenced_report_blocks(events, [node], [node], [])
+    return referenced_report_blocks(
+        events,
+        [node],
+        [node],
+        [],
+        preserve_toc_levels=preserve_toc_levels,
+        allowed_pages=allowed_pages,
+        use_html_hierarchy=use_html_hierarchy,
+    )
 
 
 def follow_report_references(section_blocks: dict[str, list[FilingBlock]], source: str,
@@ -1435,6 +1547,8 @@ def extract_item15_toc_section_blocks(html_text: str) -> list[FilingBlock] | Non
                     style=event.style,
                     bold=event.bold,
                     mixed_bold=event.mixed_bold,
+                    italic=event.italic,
+                    mixed_italic=event.mixed_italic,
                     font_size=event.font_size,
                     segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
                 )
@@ -1682,6 +1796,59 @@ def page_numbers_from_text(text: str) -> tuple[int, ...]:
     return tuple(sorted(pages))
 
 
+PAGE_MARKER_RE = re.compile(r"\|\s*(\d{1,3})\s*$")
+
+
+def page_marker_from_text(text: str) -> int | None:
+    """Return a rendered-document page number from a footer-style marker.
+
+    SEC HTML often keeps printed-page footers as text such as ``MD&A | 18``
+    or ``Image | MD&A | 18``.  A bare number is intentionally not treated as
+    a marker because it is too easy to confuse with a table value or a period.
+    """
+    cleaned = re.sub(r"\s+", " ", normalize_typography(text)).strip()
+    match = PAGE_MARKER_RE.search(cleaned)
+    if not match:
+        return None
+    prefix = cleaned[:match.start()].strip(" |")
+    if not prefix:
+        return None
+    label = prefix.rsplit("|", 1)[-1].strip()
+    if not label or len(label.split()) > 8:
+        return None
+    # Avoid mistaking compact table/narrative labels for printed-page
+    # footers. These words commonly occur immediately before a data value.
+    if re.search(r"\b(?:year|period|revenue|income|assets|liabilities|expenses|total|versus|vs)\b", label, re.I):
+        return None
+    return int(match.group(1))
+
+
+def event_page_numbers(events: list[FilingStructureEvent]) -> dict[int, int]:
+    """Map structure-event positions to printed pages using footer markers.
+
+    A footer appears after the content it belongs to. Therefore, events up to
+    and including ``MD&A | 18`` are assigned to page 18, and events after it
+    are assigned to the next discovered marker's page. Positions after the
+    final marker remain unmapped and are retained by callers as a conservative
+    fallback.
+    """
+    markers = [
+        (position, page)
+        for position, event in enumerate(events)
+        if (page := page_marker_from_text(event.text)) is not None
+    ]
+    if not markers:
+        return {}
+
+    page_by_position: dict[int, int] = {}
+    start = 0
+    for marker_position, page in markers:
+        for position in range(start, marker_position + 1):
+            page_by_position[position] = page
+        start = marker_position + 1
+    return page_by_position
+
+
 def row_page_numbers(cells: list[str]) -> tuple[int, ...]:
     page_cells = [cell for cell in cells if re.search(r"\bpages?\b|\b\d{1,4}\s*-\s*\d{1,4}\b", cell, re.I)]
     return page_numbers_from_text(" ".join(page_cells))
@@ -1826,6 +1993,52 @@ def item_reference_titles(events: list[FilingStructureEvent],
     return titles
 
 
+def is_item7_root_title(title: str) -> bool:
+    """Recognize the Item 7 label used by cross-reference indexes."""
+    return report_title_key(title).startswith(ITEM_7_ROOT_KEY)
+
+
+def item7_root_range(nodes: list[dict], events: list[FilingStructureEvent], title: str) -> list[dict]:
+    """Expand the Item 7 root to include unpaginated introductory subsections.
+
+    Intel's cross-reference index points to Item 7's paginated subsections, but
+    the HTML section also contains introductory headings such as Overview and
+    Significant Events and Trends Impacting Results. The root should run until
+    the first known non-Item-7 section, while later Item 7 headings (for
+    example Critical Accounting Estimates) can still be selected separately.
+    """
+    root_key = report_title_key(title)
+    matches = [node for node in nodes if node["key"] == root_key]
+    if not matches:
+        return []
+
+    root = dict(matches[0])
+    child_levels = [node["level"] for node in nodes if node["start"] > root["start"]]
+    if child_levels:
+        # The report TOC can flatten the parent and child labels when their
+        # indentation is represented by layout rather than cell styling.
+        # Keep the cross-reference Item 7 title as the explicit root.
+        root["level"] = max(0, min(child_levels) - 1)
+        matches[0]["level"] = root["level"]
+    boundary_positions = [
+        node["start"]
+        for node in nodes
+        if node["start"] > root["start"]
+        and node["key"] in ITEM_7_EXCLUDED_SECTION_KEYS
+    ]
+    if not boundary_positions:
+        boundary_positions = [
+            position
+            for position, event in enumerate(events)
+            if position > root["start"]
+            and report_title_key(event.text) in ITEM_7_EXCLUDED_SECTION_KEYS
+            and not starts_with_bullet(event.text)
+        ]
+    if boundary_positions:
+        root["end"] = min(boundary_positions)
+    return [root]
+
+
 def extract_indexed_section_blocks(
     html_text: str,
     items: Iterable[str] = DEFAULT_ITEMS,
@@ -1843,25 +2056,75 @@ def extract_indexed_section_blocks(
     for item, refs in references.items():
         blocks: list[FilingBlock] = []
         seen_blocks: set[tuple[int, str]] = set()
+        allowed_pages = pages_by_item.get(item) or None
         excluded_pages = (
             set().union(*(pages for other, pages in pages_by_item.items() if other != item))
             if item == "1"
             else pages_by_item.get("8", set()) | pages_by_item.get("15", set()) if item == "7"
             else set()
         )
-        for title in item_reference_titles(events, refs, item, excluded_pages=excluded_pages):
+
+        # For Intel-style filings, selecting only the page-linked titles loses
+        # the opening Item 7 headings because Overview and Significant Events
+        # do not have their own page references. Select the root range first;
+        # then add any additional Item 7 titles explicitly listed in the
+        # cross-reference index, such as Critical Accounting Estimates.
+        titles = item_reference_titles(events, refs, item, excluded_pages=excluded_pages)
+        if item == "7" and any(is_item7_root_title(title) for title in titles):
+            root_title = next(
+                (title for title in titles if report_title_key(title) == ITEM_7_ROOT_KEY),
+                next(title for title in titles if is_item7_root_title(title)),
+            )
+            try:
+                nodes = report_outline(events, [[root_title]])
+                ranges = item7_root_range(nodes, events, root_title)
+                if ranges:
+                    for block in referenced_report_blocks(
+                        events,
+                        nodes,
+                        ranges,
+                        [],
+                        preserve_toc_levels=False,
+                        allowed_pages=allowed_pages,
+                        use_html_hierarchy=True,
+                    ):
+                        marker = (block.index, block.text)
+                        if marker not in seen_blocks:
+                            seen_blocks.add(marker)
+                            blocks.append(block)
+                    titles = [ref.title for ref in refs if not is_item7_root_title(ref.title)]
+            except ValueError:
+                # Preserve the existing title-by-title fallback if the filing
+                # has no usable report outline.
+                pass
+
+        for title in titles:
             try:
                 nodes = report_outline(events, [[title]])
                 ranges = referenced_section_ranges(nodes, [[title]])
             except ValueError:
-                for block in blocks_for_exact_title(events, title):
+                for block in blocks_for_exact_title(
+                    events,
+                    title,
+                    preserve_toc_levels=False,
+                    allowed_pages=allowed_pages,
+                    use_html_hierarchy=item == "7",
+                ):
                     marker = (block.index, block.text)
                     if marker in seen_blocks:
                         continue
                     seen_blocks.add(marker)
                     blocks.append(block)
                 continue
-            for block in referenced_report_blocks(events, nodes, ranges, []):
+            for block in referenced_report_blocks(
+                events,
+                nodes,
+                ranges,
+                [],
+                preserve_toc_levels=False,
+                allowed_pages=allowed_pages,
+                use_html_hierarchy=item == "7",
+            ):
                 marker = (block.index, block.text)
                 if marker in seen_blocks:
                     continue
@@ -2048,6 +2311,9 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
             continue
 
         if should_merge_with_next_block(pending, block):
+            current_segments = block_segments(block)
+            if starts_with_bullet(pending.text) and has_bullet_continuation_layout(block):
+                current_segments = mark_segments_as_bullet_continuation(current_segments)
             pending = FilingBlock(
                 index=pending.index,
                 # Both inputs have already been classified as narrative. Do
@@ -2057,10 +2323,16 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
                 style=pending.style,
                 bold=pending.bold,
                 mixed_bold=pending.mixed_bold or block.mixed_bold or pending.bold != block.bold,
+                italic=pending.italic,
+                mixed_italic=(
+                    pending.mixed_italic
+                    or block.mixed_italic
+                    or pending.italic != block.italic
+                ),
                 font_size=max(
                     value for value in (pending.font_size, block.font_size) if value is not None
                 ) if pending.font_size is not None or block.font_size is not None else None,
-                segments=block_segments(pending) + block_segments(block),
+                segments=block_segments(pending) + current_segments,
             )
         else:
             merged.append(pending)
@@ -2075,15 +2347,56 @@ def should_merge_with_next_block(previous: FilingBlock, current: FilingBlock) ->
     if any(is_table_caption(block.text) or is_period_comparison_label(block.text)
            for block in (previous, current)):
         return False
+    if is_wrapped_sentence_continuation(previous, current):
+        return True
     if is_subheader_block(previous) or is_subheader_block(current):
         return False
     if starts_with_bullet(current.text):
         return True
+    if starts_with_bullet(previous.text):
+        return has_bullet_continuation_layout(current)
     return not ends_with_sentence_terminal(previous.text)
+
+
+def is_wrapped_sentence_continuation(previous: FilingBlock, current: FilingBlock) -> bool:
+    """Merge a wrapped prose reference before header classification can split it.
+
+    Citi sometimes places a quoted cross-reference on the next HTML block:
+
+        ``... see the discussion above and``
+        ``"Managing Global Risk-Other Risks-Country Risk" below``
+
+    The second block can look like a title because it is styled emphatically,
+    but grammatically it continues the first sentence. Restrict this exception
+    to an unfinished block ending in a connector and a quoted/parenthesized
+    continuation so ordinary standalone headings remain separate.
+    """
+    if starts_with_bullet(current.text):
+        return False
+    if ends_with_sentence_terminal(previous.text):
+        return False
+    if not re.search(
+        r"\b(?:and|or|but|nor|of|to|for|in|on|with|from|as|at|by|above|below|under)\s*$",
+        previous.text.strip(),
+        re.IGNORECASE,
+    ):
+        return False
+    return bool(re.match(r"^\s*[\"'“‘(]", current.text))
 
 
 def starts_with_bullet(text: str) -> bool:
     return bool(BULLET_PREFIX_RE.match(text))
+
+
+def has_bullet_continuation_layout(block: FilingBlock) -> bool:
+    return (
+        not starts_with_bullet(block.text)
+        and (
+            css_style_length_pt(block.style, "padding-left") is not None
+            or css_style_length_pt(block.style, "margin-left") is not None
+            or css_style_length_pt(block.style, "text-indent") is not None
+        )
+    )
 
 
 def ends_with_sentence_terminal(text: str) -> bool:
@@ -2190,6 +2503,9 @@ def is_subheader_block(block: FilingBlock) -> bool:
         return False
     if re.search(r"[.!?]$", text):
         return False
+    normalized_heading = normalize_heading_title(text)
+    if normalized_heading in CONTEXTUAL_CHILD_TITLES:
+        return True
     # Bold financial labels often introduce a sentence and its bullet list.
     # Keep those introductions in the narrative, without banning real colon
     # headings such as "Sources of Revenue:" or TOC-confirmed titles.
@@ -2205,9 +2521,25 @@ def is_subheader_block(block: FilingBlock) -> bool:
             return False
     if block.font_size is not None and block.font_size >= 10 and looks_like_title(text):
         return True
-    if re.search(r"\b(or|and|the|a|an|of|to|for|with|from|in|on)\b", text, re.IGNORECASE) and not block.bold:
+    if is_italic_subheader(block, text):
+        return True
+    if (
+        re.search(r"\b(or|and|the|a|an|of|to|for|with|from|in|on)\b", text, re.IGNORECASE)
+        and not block.bold
+        and not looks_like_title(text)
+    ):
         return False
     return block.bold or block.tag in {"h1", "h2", "h3", "h4", "h5", "h6"} or looks_like_title(text)
+
+
+def is_italic_subheader(block: FilingBlock, text: str) -> bool:
+    if not block.italic or block.mixed_italic:
+        return False
+    words = re.findall(r"[A-Za-z][A-Za-z0-9'’&.-]*", text)
+    if not 2 <= len(words) <= 8:
+        return False
+    first_word = words[0]
+    return first_word[:1].isupper() or looks_like_title(text)
 
 
 def looks_like_title(text: str) -> bool:
@@ -2286,14 +2618,22 @@ def split_extraction_sentences(text: str) -> list[str]:
     return [unit.text for unit in split_extraction_sentence_units(text)]
 
 
+def protect_sentence_periods(text: str) -> str:
+    protected = text
+    for abbreviation in COMMON_ABBREVIATIONS:
+        protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
+    return INITIALISM_ABBREVIATION_RE.sub(
+        lambda match: match.group(0).replace(".", PERIOD_TOKEN),
+        protected,
+    )
+
+
 def split_extraction_sentence_units(text: str) -> list[SentenceUnit]:
     text = normalize_typography(text).strip()
     if not text:
         return []
-    text = re.sub(r"([^\s\n])\s*([•‣▪▫◦●○])\s*", r"\1\n\2", text)
-    protected = text
-    for abbreviation in COMMON_ABBREVIATIONS:
-        protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
+    text = re.sub(r"([^\s\n])[ \t]*([•‣▪▫◦●○])[ \t]*", r"\1\n\2 ", text)
+    protected = protect_sentence_periods(text)
 
     sentences: list[SentenceUnit] = []
     for raw_line in protected.splitlines():
@@ -2304,7 +2644,10 @@ def split_extraction_sentence_units(text: str) -> list[SentenceUnit]:
         if bullet_level is not None:
             sentence = line.replace(PERIOD_TOKEN, ".").strip()
             sentence = re.sub(r"\s+", " ", sentence)
-            sentences.append(SentenceUnit(sentence, bullet_level))
+            bullet_sentence, following_sentence = split_embedded_narrative_after_bullet(sentence)
+            sentences.append(SentenceUnit(bullet_sentence, bullet_level))
+            if following_sentence:
+                sentences.append(SentenceUnit(following_sentence, starts_new_context=True))
             continue
         if sentences and sentences[-1].bullet_level is not None:
             continuation = line.replace(PERIOD_TOKEN, ".").strip()
@@ -2316,12 +2659,49 @@ def split_extraction_sentence_units(text: str) -> list[SentenceUnit]:
                     sentences[-1].bullet_indent_pt,
                 )
             continue
-        for part in re.split(r"(?<=[.!?])\s+(?=[\"'(\[]?[A-Z0-9])", line):
+        parts = re.split(r"(?<=[.!?])\s+(?=[\"'(\[]?[A-Z0-9])", line)
+        if should_continue_previous_sentence_line(sentences, line):
+            first_part = parts.pop(0)
+            continuation = first_part.replace(PERIOD_TOKEN, ".").strip()
+            continuation = re.sub(r"\s+", " ", continuation)
+            if continuation:
+                sentences[-1] = SentenceUnit(
+                    f"{sentences[-1].text} {continuation}",
+                    sentences[-1].bullet_level,
+                    sentences[-1].bullet_indent_pt,
+                    sentences[-1].starts_new_context,
+                )
+        for part in parts:
             sentence = part.replace(PERIOD_TOKEN, ".").strip()
             sentence = re.sub(r"\s+", " ", sentence)
             if sentence:
                 sentences.append(SentenceUnit(sentence))
     return sentences
+
+
+def should_continue_previous_sentence_line(sentences: list[SentenceUnit], line: str) -> bool:
+    if not sentences:
+        return False
+    previous = sentences[-1]
+    if previous.bullet_level is not None or ends_with_sentence_terminal(previous.text):
+        return False
+    stripped = line.lstrip("\"'([{ ")
+    return bool(stripped and stripped[0].islower())
+
+
+def split_embedded_narrative_after_bullet(text: str) -> tuple[str, str]:
+    match = re.match(
+        r"^((?:[•‣▪▫◦●○]|\*\s+|-\s+)\s*(?:(?!\bThe\b).){1,120}?)\s+"
+        r"((?:The)\b.+)$",
+        text,
+    )
+    if not match:
+        return text, ""
+    bullet_text = re.sub(r"\s+", " ", match.group(1)).strip()
+    following_text = re.sub(r"\s+", " ", match.group(2)).strip()
+    if len(re.findall(r"[A-Za-z0-9]+", bullet_text)) > 10:
+        return text, ""
+    return bullet_text, following_text
 
 
 def bullet_level_from_line(line: str) -> int | None:
@@ -2361,21 +2741,78 @@ def block_segments(block: FilingBlock) -> tuple[BlockSegment, ...]:
     return (BlockSegment(block.text, bullet_indent_pt=bullet_indent_from_style(block.text, block.style)),)
 
 
+def mark_segments_as_bullet_continuation(segments: tuple[BlockSegment, ...]) -> tuple[BlockSegment, ...]:
+    return tuple(
+        BlockSegment(
+            segment.text,
+            segment.bullet_level,
+            segment.bullet_indent_pt,
+            continues_previous_bullet=True,
+        )
+        for segment in segments
+    )
+
+
 def sentence_units_from_block(block: FilingBlock, indent_stack: list[tuple[float, int]] | None = None) -> list[SentenceUnit]:
     units: list[SentenceUnit] = []
     indent_stack = indent_stack if indent_stack is not None else []
     for segment in block_segments(block):
+        segment_units: list[SentenceUnit] = []
         segment_level = segment.bullet_level
         if segment.bullet_indent_pt is not None:
             segment_level = bullet_level_from_indent(segment.bullet_indent_pt, indent_stack)
         for unit in split_extraction_sentence_units(segment.text):
             bullet_level = segment_level if segment_level is not None else unit.bullet_level
             bullet_indent_pt = segment.bullet_indent_pt if segment.bullet_indent_pt is not None else unit.bullet_indent_pt
-            if bullet_level is None and units and units[-1].bullet_level is not None:
-                units[-1] = SentenceUnit(f"{units[-1].text} {unit.text}", units[-1].bullet_level, units[-1].bullet_indent_pt)
+            current_unit = SentenceUnit(unit.text, bullet_level, bullet_indent_pt, unit.starts_new_context)
+            if (
+                bullet_level is None
+                and units
+                and units[-1].bullet_level is not None
+                and not unit.starts_new_context
+                and (
+                    segment.continues_previous_bullet
+                    or segment_units
+                    or should_continue_previous_bullet_sentence_unit(units[-1], current_unit)
+                )
+            ):
+                units[-1] = SentenceUnit(
+                    f"{units[-1].text} {unit.text}",
+                    units[-1].bullet_level,
+                    units[-1].bullet_indent_pt,
+                )
+            elif should_continue_previous_sentence_unit(units, current_unit):
+                units[-1] = SentenceUnit(
+                    f"{units[-1].text} {current_unit.text}",
+                    units[-1].bullet_level,
+                    units[-1].bullet_indent_pt,
+                    units[-1].starts_new_context,
+                )
             else:
-                units.append(SentenceUnit(unit.text, bullet_level, bullet_indent_pt))
+                units.append(current_unit)
+            segment_units.append(unit)
     return units
+
+
+def should_continue_previous_sentence_unit(units: list[SentenceUnit], current: SentenceUnit) -> bool:
+    if not units or current.starts_new_context:
+        return False
+    previous = units[-1]
+    if previous.bullet_level is not None or current.bullet_level is not None:
+        return False
+    if ends_with_sentence_terminal(previous.text):
+        return False
+    stripped = current.text.lstrip("\"'([{ ")
+    return bool(stripped and stripped[0].islower())
+
+
+def should_continue_previous_bullet_sentence_unit(previous: SentenceUnit, current: SentenceUnit) -> bool:
+    if current.starts_new_context or current.bullet_level is not None:
+        return False
+    if previous.bullet_level is None or ends_with_sentence_terminal(previous.text):
+        return False
+    stripped = current.text.lstrip("\"'([{ ")
+    return bool(stripped and stripped[0].islower())
 
 
 def infer_year(text: str, source: str | None = None) -> str:
@@ -2418,6 +2855,32 @@ def is_contextual_child_title(title: str) -> bool:
     return normalize_heading_title(title) in CONTEXTUAL_CHILD_TITLES
 
 
+def header_style_kind(block: FilingBlock, text: str) -> str:
+    if block.tag == "toc_header":
+        return "toc"
+    if block.tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
+        return "html_heading"
+    if block.bold and block.italic and not block.mixed_italic:
+        return "bold_italic"
+    if block.bold:
+        return "bold"
+    if is_italic_subheader(block, text):
+        return "italic"
+    return "title"
+
+
+def header_style_rank(style_kind: str) -> int:
+    ranks = {
+        "toc": 0,
+        "html_heading": 0,
+        "bold": 1,
+        "bold_italic": 2,
+        "italic": 3,
+        "title": 4,
+    }
+    return ranks.get(style_kind, 3)
+
+
 def all_caps_heading_priority(title: str) -> int:
     words = re.findall(r"[A-Za-z][A-Za-z&.-]*", title)
     if not words:
@@ -2431,6 +2894,11 @@ def all_caps_heading_priority(title: str) -> int:
     return int(len(words) >= 2 or len(letters) >= 8)
 
 
+def visually_all_caps_heading(title: str) -> bool:
+    letters = re.findall(r"[A-Za-z]", title)
+    return bool(letters) and not any(char.islower() for char in letters)
+
+
 def closes_heading_level(current: SectionHeading, previous: SectionHeading, tolerance: float = 0.1) -> bool:
     if current.font_size is None:
         return False
@@ -2440,6 +2908,17 @@ def closes_heading_level(current: SectionHeading, previous: SectionHeading, tole
         return True
     if current.font_size < previous.font_size - tolerance:
         return False
+    current_style_rank = header_style_rank(current.style_kind)
+    previous_style_rank = header_style_rank(previous.style_kind)
+    if current_style_rank > previous_style_rank:
+        return False
+    if current_style_rank < previous_style_rank:
+        return True
+    if (
+        current.style_kind == previous.style_kind
+        and visually_all_caps_heading(current.title) == visually_all_caps_heading(previous.title)
+    ):
+        return True
     return current.caps_priority >= previous.caps_priority
 
 
@@ -2456,17 +2935,44 @@ def update_section_path(path: list[SectionHeading], block: FilingBlock) -> list[
     header = re.sub(r"\s+", " ", normalize_typography(block.text)).strip()
     if not header:
         return path
-    current = SectionHeading(header, block.font_size, all_caps_heading_priority(header))
+    current = SectionHeading(
+        header,
+        block.font_size,
+        all_caps_heading_priority(header),
+        header_style_kind(block, header),
+    )
     if is_period_comparison_label(header):
         parent_path = list(path)
         while parent_path and is_period_comparison_label(parent_path[-1].title):
             parent_path.pop()
         return [*parent_path, current] if parent_path else [current]
+    path = [heading for heading in path]
+    while path and is_period_comparison_label(path[-1].title):
+        path.pop()
     if block.font_size is not None:
         next_path = list(path)
         while next_path and closes_heading_level(current, next_path[-1]):
             next_path.pop()
         return [*next_path, current]
+    if current.style_kind == "italic":
+        parent_path = list(path)
+        while parent_path and parent_path[-1].style_kind == current.style_kind:
+            parent_path.pop()
+        return [*parent_path, current] if parent_path else [current]
+    if path and current.style_kind != "title":
+        parent_path = list(path)
+        current_rank = header_style_rank(current.style_kind)
+        while (
+            parent_path
+            and parent_path[-1].style_kind != "title"
+            and header_style_rank(parent_path[-1].style_kind) >= current_rank
+        ):
+            parent_path.pop()
+        return [*parent_path, current] if parent_path else [current]
+    if path and current.style_kind == path[-1].style_kind and current.style_kind != "title":
+        sibling_path = list(path)
+        sibling_path.pop()
+        return [*sibling_path, current] if sibling_path else [current]
     if is_contextual_child_title(header):
         parent_path = list(path)
         while parent_path and is_contextual_child_title(parent_path[-1].title):
@@ -2637,8 +3143,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--raw-dir", help=argparse.SUPPRESS)
     parser.add_argument("--no-follow-references", action="store_true",
                         help="Inspect only the primary filing; do not resolve Items incorporated from another report.")
-    parser.add_argument("--no-item15-toc", action="store_true",
-                        help="Disable Item 15 TOC-guided extraction and use normal body/header extraction instead.")
     parser.add_argument("--include-reference-overlaps", action="store_true",
                         help="Keep referenced subsections in both Items. By default, a subsection assigned to a more specific requested Item is excluded from the broader Item.")
     parser.add_argument("--max-chars", type=int, default=1800, help="Maximum characters per disclosure chunk.")
@@ -2693,15 +3197,27 @@ def main(argv: list[str] | None = None) -> int:
     blocks = item_blocks_with_layout_headings(raw_html, html_to_blocks(raw_html))
     section_blocks = extract_section_blocks(blocks, items=requested_items)
     missing_items = [item for item in requested_items if item not in section_blocks]
-    if missing_items:
-        indexed_blocks = extract_indexed_section_blocks(raw_html, items=missing_items)
-        section_blocks.update({item: blocks for item, blocks in indexed_blocks.items() if item not in section_blocks})
+    indexed_items = list(missing_items)
+    # A cross-reference index is authoritative for non-standard Item 7
+    # layouts, even when a stray "Item 7" label elsewhere in the filing made
+    # the ordinary boundary parser produce a partial section.
+    if "7" in requested_items and "7" not in indexed_items:
+        indexed_items.append("7")
+    if indexed_items:
+        indexed_blocks = extract_indexed_section_blocks(raw_html, items=indexed_items)
+        section_blocks.update(
+            {
+                item: item_blocks
+                for item, item_blocks in indexed_blocks.items()
+                if item not in section_blocks or item == "7"
+            }
+        )
 
     needs_item15 = "15" in requested_items or should_auto_include_item15(section_blocks, requested_items)
     if needs_item15:
         if "15" not in active_items:
             active_items.append("15")
-        item15_toc_blocks = None if args.no_item15_toc else extract_item15_toc_section_blocks(raw_html)
+        item15_toc_blocks = extract_item15_toc_section_blocks(raw_html)
         if item15_toc_blocks:
             section_blocks["15"] = item15_toc_blocks
         elif "15" not in section_blocks:
