@@ -61,10 +61,12 @@ FOOTNOTE_REF_RE = re.compile(r"\[\[FNREF:(\d{1,3})\]\]")
 PERIOD_TOKEN = "<PERIOD>"
 INITIALISM_ABBREVIATION_RE = re.compile(r"\b(?:[A-Z]\.){2,}(?=$|[\s,;:)\]\}'\"])")
 COMMON_ABBREVIATIONS = (
+    "Cal. App.",
     "Co.",
     "Corp.",
     "Dr.",
     "Inc.",
+    "INC.",
     "Jr.",
     "Ltd.",
     "Mr.",
@@ -73,11 +75,13 @@ COMMON_ABBREVIATIONS = (
     "No.",
     "Prof.",
     "Sr.",
+    "Sup.",
     "U.S.",
     "U.K.",
     "e.g.",
     "i.e.",
 )
+SINGLE_LETTER_ABBREVIATION_RE = re.compile(r"\b[A-Za-z]\.(?=\s+[A-Z0-9])")
 TITLE_CONNECTOR_WORDS = {
     "a",
     "an",
@@ -2622,6 +2626,10 @@ def protect_sentence_periods(text: str) -> str:
     protected = text
     for abbreviation in COMMON_ABBREVIATIONS:
         protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
+    protected = SINGLE_LETTER_ABBREVIATION_RE.sub(
+        lambda match: match.group(0).replace(".", PERIOD_TOKEN),
+        protected,
+    )
     return INITIALISM_ABBREVIATION_RE.sub(
         lambda match: match.group(0).replace(".", PERIOD_TOKEN),
         protected,
@@ -3069,6 +3077,11 @@ def build_records_from_section_blocks(
         for block in section_blocks[item]:
             if is_table_caption(block.text):
                 continue
+            if is_repeated_item_root_header(block, item, section_path):
+                # Printed page headers repeat the Item title while the
+                # underlying discussion is still inside the prior subsection.
+                # Do not let the running header erase that active context.
+                continue
             if is_subheader_block(block):
                 next_path = update_section_path(section_path, block)
                 if (
@@ -3109,6 +3122,19 @@ def build_records_from_section_blocks(
             append_record(pending_header, pending_header_path, "", [], empty_header=True)
 
     return records
+
+
+def is_repeated_item_root_header(
+    block: FilingBlock,
+    item: str,
+    section_path: list[SectionHeading],
+) -> bool:
+    """Ignore a repeated Item title once a real subsection is active."""
+    if not section_path:
+        return False
+    if item == "7":
+        return is_item7_root_title(block.text)
+    return report_title_key(block.text) == report_title_key(ITEM_TITLES[item])
 
 
 def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:

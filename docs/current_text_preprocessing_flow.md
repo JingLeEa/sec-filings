@@ -443,6 +443,11 @@ Important implication:
 This repeated-header removal is deliberately narrow. It tries to avoid deleting normal narrative references to Form 10-Ks.
 ```
 
+During section-path construction, a repeated Item root such as
+`Management's Discussion and Analysis` is also ignored once a real subsection
+is active. This handles page headers that reappear above a continued section;
+the active subsection remains in context for the next period label or paragraph.
+
 ## 10. Subheader Detection
 
 The extractor tracks boldness using:
@@ -1223,6 +1228,7 @@ Protected abbreviations include:
 ```text
 Co.
 Corp.
+Cal. App.
 Dr.
 Inc.
 Jr.
@@ -1233,6 +1239,7 @@ Ms.
 No.
 Prof.
 Sr.
+Sup.
 U.S.
 U.K.
 e.g.
@@ -1246,6 +1253,15 @@ J.P.
 P.C.
 U.S.A.
 ```
+
+It also protects one-letter dotted references such as `v. Smith` and
+`S. Corp.`. Rather than protecting every possible three-letter dotted token,
+the extractor only includes the known `Sup.` abbreviation; a generic rule for
+all `Aaa.` patterns could suppress legitimate sentence boundaries.
+
+The exact legal citation phrase `Cal. App.` is also protected as one unit.
+Standalone `App.` is intentionally not protected because it is too broad and
+could hide genuine sentence boundaries.
 
 This prevents `J.P. Morgan` from being split into `J.P.` and `Morgan ...`.
 
@@ -1653,6 +1669,7 @@ The comparison splitter protects these abbreviations from period splitting:
 ```text
 Co.
 Corp.
+Cal. App.
 Dr.
 Inc.
 Jr.
@@ -1663,6 +1680,7 @@ Ms.
 No.
 Prof.
 Sr.
+Sup.
 U.S.
 U.K.
 e.g.
@@ -1676,6 +1694,11 @@ J.P.
 P.C.
 U.S.A.
 ```
+
+The comparison splitter uses the same one-letter protection for references such
+as `v. Smith` and `S. Corp.`, the same explicit `Sup.` abbreviation, and the
+exact legal citation phrase `Cal. App.`. Standalone `App.` is intentionally not
+protected because it is too broad.
 
 It temporarily replaces periods in those abbreviations with a placeholder.
 

@@ -637,13 +637,18 @@ class ExtractorTests(unittest.TestCase):
 
     def test_uppercase_initialism_abbreviations_do_not_split_sentence_units(self):
         units = split_extraction_sentence_units(
-            "J.P. Morgan serves clients globally. P.C. fees changed. U.S.A. operations expanded."
+            "J.P. Morgan serves clients globally. P.C. fees changed. U.S.A. operations expanded. CITI, INC. announced results. See v. Smith. Sup. Smith reviewed the filing. S. Corp. filed an update. See Cal. App. 4th 123 for the ruling."
         )
 
         self.assertEqual([unit.text for unit in units], [
             "J.P. Morgan serves clients globally.",
             "P.C. fees changed.",
             "U.S.A. operations expanded.",
+            "CITI, INC. announced results.",
+            "See v. Smith.",
+            "Sup. Smith reviewed the filing.",
+            "S. Corp. filed an update.",
+            "See Cal. App. 4th 123 for the ruling.",
         ])
 
     def test_lowercase_rendered_line_continues_previous_sentence_unit(self):
@@ -1009,6 +1014,27 @@ class ExtractorTests(unittest.TestCase):
         sentence_records = build_sentence_records(records)
         self.assertEqual(sentence_records[0]["text"], "")
         self.assertEqual(sentence_records[0]["chunk_id"], records[0]["id"])
+
+    def test_repeated_item7_header_does_not_erase_active_subsection(self):
+        records = build_records_from_section_blocks(
+            {
+                "7": [
+                    FilingBlock(1, "div", "Management's Discussion and Analysis", bold=True, font_size=14),
+                    FilingBlock(2, "div", "SERVICES", bold=True, font_size=14),
+                    FilingBlock(3, "div", "Services", italic=True, font_size=11),
+                    FilingBlock(4, "div", "Management's Discussion and Analysis", bold=True, font_size=14),
+                    FilingBlock(5, "div", "2025 vs. 2024", bold=True, font_size=11),
+                    FilingBlock(6, "div", "Net income increased.", font_size=9),
+                ]
+            },
+            year="2025",
+            company="c",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual(records[-1]["item_title"], "SERVICES > Services > 2025 vs. 2024")
+        self.assertNotIn("Management's Discussion and Analysis", records[-1]["item_title"])
 
     def test_all_caps_breaks_same_size_header_ties_without_treating_acronyms_as_caps_headers(self):
         records = build_records_from_section_blocks(
