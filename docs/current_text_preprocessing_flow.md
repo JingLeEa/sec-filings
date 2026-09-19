@@ -999,6 +999,24 @@ Two adjacent blocks are not merged if either block is:
 
 If the current block starts with a bullet marker, it is merged into the previous pending block.
 
+There is one structural exception: if the current block contains only a bullet
+glyph, it is not merged backward. It remains pending and is merged forward with
+the next text block. A trailing marker-only block is discarded. This handles
+filings where the HTML emits:
+
+```text
+<div>•</div>
+<div>Bullet text</div>
+```
+
+without assigning that marker to the preceding paragraph.
+
+When the standalone marker has non-zero `margin-left`, it can also mark the
+preceding unmarked text block as a bullet, provided that block is not a
+colon-ended lead-in. This handles filings where the visual bullet is emitted
+after the text block it introduces. The rule uses HTML block shape and
+indentation rather than a company-specific condition.
+
 Current bullet markers are detected by:
 
 ```text

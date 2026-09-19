@@ -2350,12 +2350,35 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
     merged: list[FilingBlock] = []
     pending: FilingBlock | None = None
 
-    for block in blocks:
+    for block_index, block in enumerate(blocks):
         if pending is None:
             pending = block
             continue
 
-        if should_merge_with_next_block(pending, block):
+        # Some filings emit the bullet glyph as its own block before the
+        # block containing the bullet text. Do not attach that marker to the
+        # preceding paragraph; keep it pending so it can merge forward.
+        if is_bullet_marker_only(block.text):
+            if is_bullet_separator(block) and is_unmarked_bullet_text(pending):
+                pending = mark_block_as_bullet(pending)
+            merged.append(pending)
+            pending = block
+            continue
+
+        separator_follows = (
+            block_index + 1 < len(blocks)
+            and is_bullet_marker_only(blocks[block_index + 1].text)
+            and is_bullet_separator(blocks[block_index + 1])
+        )
+        marker_without_list_successor = (
+            is_bullet_marker_only(pending.text)
+            and not separator_follows
+        )
+        if (
+            not marker_without_list_successor
+            and not (separator_follows and pending.text.rstrip().endswith(":"))
+            and should_merge_with_next_block(pending, block)
+        ):
             current_segments = block_segments(block)
             if starts_with_bullet(pending.text) and has_bullet_continuation_layout(block):
                 current_segments = mark_segments_as_bullet_continuation(current_segments)
@@ -2386,10 +2409,11 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
                 segments=block_segments(pending) + current_segments,
             )
         else:
-            merged.append(pending)
+            if not is_bullet_marker_only(pending.text):
+                merged.append(pending)
             pending = block
 
-    if pending is not None:
+    if pending is not None and not is_bullet_marker_only(pending.text):
         merged.append(pending)
     return merged
 
@@ -2403,6 +2427,8 @@ def should_merge_with_next_block(previous: FilingBlock, current: FilingBlock) ->
     if is_subheader_block(previous) or is_subheader_block(current):
         return False
     if starts_with_bullet(current.text):
+        return True
+    if is_bullet_marker_only(previous.text):
         return True
     if starts_with_bullet(previous.text):
         return has_bullet_continuation_layout(current)
@@ -2437,6 +2463,32 @@ def is_wrapped_sentence_continuation(previous: FilingBlock, current: FilingBlock
 
 def starts_with_bullet(text: str) -> bool:
     return bool(BULLET_PREFIX_RE.match(text))
+
+
+def is_bullet_marker_only(text: str) -> bool:
+    return bool(re.fullmatch(r"\s*[•‣▪▫◦●○]\s*", text))
+
+
+def is_bullet_separator(block: FilingBlock) -> bool:
+    return re.search(
+        r"margin-left\s*:\s*(?!0(?:\.0+)?\s*)(?:[0-9]+(?:\.[0-9]+)?)\s*(?:pt|px|%)",
+        block.style,
+        re.IGNORECASE,
+    ) is not None
+
+
+def is_unmarked_bullet_text(block: FilingBlock) -> bool:
+    return not starts_with_bullet(block.text) and not block.text.rstrip().endswith(":")
+
+
+def mark_block_as_bullet(block: FilingBlock) -> FilingBlock:
+    text = f"• {block.text.lstrip()}"
+    segments = block_segments(block)
+    marked_segments = tuple(
+        replace(segment, text=f"• {segment.text.lstrip()}")
+        for segment in segments
+    )
+    return replace(block, text=text, segments=marked_segments)
 
 
 def has_bullet_continuation_layout(block: FilingBlock) -> bool:
@@ -2710,7 +2762,11 @@ def split_extraction_sentence_units(text: str) -> list[SentenceUnit]:
             if following_sentence:
                 sentences.append(SentenceUnit(following_sentence, starts_new_context=True))
             continue
-        if sentences and sentences[-1].bullet_level is not None:
+        if (
+            sentences
+            and sentences[-1].bullet_level is not None
+            and not ends_with_sentence_terminal(sentences[-1].text)
+        ):
             continuation = line.replace(PERIOD_TOKEN, ".").strip()
             continuation = re.sub(r"\s+", " ", continuation)
             if continuation:
@@ -2828,7 +2884,20 @@ def mark_segments_as_bullet_continuation(segments: tuple[BlockSegment, ...]) -> 
 def sentence_units_from_block(block: FilingBlock, indent_stack: list[tuple[float, int]] | None = None) -> list[SentenceUnit]:
     units: list[SentenceUnit] = []
     indent_stack = indent_stack if indent_stack is not None else []
-    for segment in block_segments(block):
+    segments = list(block_segments(block))
+    segment_index = 0
+    while segment_index < len(segments):
+        segment = segments[segment_index]
+        if (
+            is_bullet_marker_only(segment.text)
+            and segment_index + 1 < len(segments)
+            and not is_bullet_marker_only(segments[segment_index + 1].text)
+        ):
+            next_segment = segments[segment_index + 1]
+            segment = replace(segment, text=f"• {next_segment.text.lstrip()}")
+            segment_index += 2
+        else:
+            segment_index += 1
         segment_units: list[SentenceUnit] = []
         segment_level = segment.bullet_level
         if segment.bullet_indent_pt is not None:

@@ -593,6 +593,63 @@ class ExtractorTests(unittest.TestCase):
             "• Third risk item continues onto the next rendered block.",
         )
 
+    def test_standalone_bullet_markers_merge_forward_not_backward(self):
+        blocks = merge_continued_blocks([
+            FilingBlock(1, "div", "The ambitions include:"),
+            FilingBlock(2, "div", "Reinvent productivity."),
+            FilingBlock(3, "div", "•", style="margin-left:36pt"),
+            FilingBlock(4, "div", "Build the intelligent cloud."),
+            FilingBlock(5, "div", "•", style="margin-left:36pt"),
+            FilingBlock(6, "div", "Create more personal computing."),
+            FilingBlock(7, "div", "•", style="margin-left:36pt"),
+        ])
+
+        self.assertEqual([block.text for block in blocks], [
+            "The ambitions include:",
+            "• Reinvent productivity.",
+            "• Build the intelligent cloud.",
+            "• Create more personal computing.",
+        ])
+
+    def test_standalone_bullet_separators_mark_preceding_text(self):
+        blocks = merge_continued_blocks([
+            FilingBlock(1, "div", "The ambitions include:", style="margin-left:0pt"),
+            FilingBlock(2, "div", "Reinvent productivity.", style="margin-left:0pt"),
+            FilingBlock(3, "div", "•", style="margin-left:36pt"),
+            FilingBlock(4, "div", "Build the intelligent cloud.", style="margin-left:0pt"),
+            FilingBlock(5, "div", "•", style="margin-left:36pt"),
+            FilingBlock(6, "div", "Create more personal computing.", style="margin-left:0pt"),
+            FilingBlock(7, "div", "•", style="margin-left:36pt"),
+        ])
+
+        self.assertEqual([block.text for block in blocks], [
+            "The ambitions include:",
+            "• Reinvent productivity.",
+            "• Build the intelligent cloud.",
+            "• Create more personal computing.",
+        ])
+
+    def test_inline_bullets_remain_unchanged_by_separator_logic(self):
+        blocks = merge_continued_blocks([
+            FilingBlock(1, "div", "The risks include:"),
+            FilingBlock(2, "div", "• First risk item;"),
+            FilingBlock(3, "div", "• Second risk item."),
+        ])
+
+        self.assertEqual([block.text for block in blocks], [
+            "The risks include:\n• First risk item;\n• Second risk item.",
+        ])
+
+    def test_marker_without_list_successor_is_discarded(self):
+        blocks = merge_continued_blocks([
+            FilingBlock(1, "div", "•", style="margin-left:36pt"),
+            FilingBlock(2, "div", "Ordinary text after the list."),
+        ])
+
+        self.assertEqual([block.text for block in blocks], [
+            "Ordinary text after the list.",
+        ])
+
     def test_bullet_label_does_not_absorb_following_normal_paragraph(self):
         merged = merge_continued_blocks([
             FilingBlock(1, "div", "• Non-Markets net interest income"),
@@ -720,6 +777,24 @@ class ExtractorTests(unittest.TestCase):
             "The following are details for the above non-GAAP financial measures:",
         ])
         self.assertEqual([unit.bullet_level for unit in units], [1, None])
+
+    def test_completed_bullet_does_not_absorb_following_segment(self):
+        block = FilingBlock(
+            1,
+            "merged_text",
+            "• Completed bullet. Following ordinary text.",
+            segments=(
+                BlockSegment("• Completed bullet."),
+                BlockSegment("Following ordinary text."),
+            ),
+        )
+
+        units = sentence_units_from_block(block, [])
+
+        self.assertEqual([unit.text for unit in units], [
+            "• Completed bullet.",
+            "Following ordinary text.",
+        ])
 
     def test_lowercase_segment_continues_previous_bullet_sentence_unit(self):
         block = FilingBlock(
