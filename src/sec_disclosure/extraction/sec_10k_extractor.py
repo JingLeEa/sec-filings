@@ -62,7 +62,10 @@ BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|
 SENTENCE_BULLET_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
 FOOTNOTE_REF_RE = re.compile(r"\[\[FNREF:(\d{1,3})\]\]")
 PERIOD_TOKEN = "<PERIOD>"
-WRAPPED_NOTE_TITLE_RE = re.compile(r'("[^"]*\bNote\s+\d{1,3})\.(?=\s+[A-Z])', re.IGNORECASE)
+WRAPPED_REFERENCE_TITLE_RE = re.compile(
+    r'("[^"]*\b(?:Note|Item)\s+\d{1,3}[A-Z]?)\.(?=\s+[A-Z])',
+    re.IGNORECASE,
+)
 INITIALISM_ABBREVIATION_RE = re.compile(r"\b(?:[A-Z]\.){2,}(?=$|[\s,;:)\]\}'\"])")
 COMMON_ABBREVIATIONS = (
     "Cal. App.",
@@ -2793,7 +2796,7 @@ def protect_sentence_periods(text: str) -> str:
     protected = text
     for abbreviation in COMMON_ABBREVIATIONS:
         protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
-    protected = WRAPPED_NOTE_TITLE_RE.sub(
+    protected = WRAPPED_REFERENCE_TITLE_RE.sub(
         lambda match: f"{match.group(1)}{PERIOD_TOKEN}",
         protected,
     )
@@ -2866,7 +2869,7 @@ def should_continue_previous_sentence_line(sentences: list[SentenceUnit], line: 
     if not sentences:
         return False
     previous = sentences[-1]
-    if is_wrapped_note_title_continuation(previous.text, line):
+    if is_wrapped_note_title_continuation(previous.text, line) or is_wrapped_item_title_continuation(previous.text, line):
         return True
     if previous.bullet_level is not None or ends_with_sentence_terminal(previous.text):
         return False
@@ -2875,7 +2878,19 @@ def should_continue_previous_sentence_line(sentences: list[SentenceUnit], line: 
 
 
 def is_wrapped_note_title_continuation(previous_text: str, line: str) -> bool:
-    if not re.search(r"\bNote\s+\d{1,3}\.$", previous_text, re.IGNORECASE):
+    return is_wrapped_reference_title_continuation(previous_text, line, "Note")
+
+
+def is_wrapped_item_title_continuation(previous_text: str, line: str) -> bool:
+    return is_wrapped_reference_title_continuation(previous_text, line, "Item")
+
+
+def is_wrapped_reference_title_continuation(
+    previous_text: str,
+    line: str,
+    reference_type: str,
+) -> bool:
+    if not re.search(rf"\b{reference_type}\s+\d{{1,3}}[A-Z]?\.$", previous_text, re.IGNORECASE):
         return False
     if previous_text.count('"') % 2 == 0:
         return False

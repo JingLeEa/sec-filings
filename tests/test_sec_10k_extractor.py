@@ -752,6 +752,16 @@ class ExtractorTests(unittest.TestCase):
             'Additional information is provided in this Annual Report in "Notes to Consolidated Financial Statements, Note 8. Segment Information."',
         ])
 
+    def test_wrapped_quoted_item_title_stays_one_sentence(self):
+        units = split_extraction_sentence_units(
+            'See "Item 1.\n'
+            'Business" for additional information.'
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            'See "Item 1. Business" for additional information.',
+        ])
+
     def test_plain_note_reference_still_ends_a_sentence(self):
         units = split_extraction_sentence_units(
             "See Note 8. Segment information is presented separately."
@@ -760,6 +770,16 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual([unit.text for unit in units], [
             "See Note 8.",
             "Segment information is presented separately.",
+        ])
+
+    def test_plain_item_reference_still_ends_a_sentence(self):
+        units = split_extraction_sentence_units(
+            "See Item 1. Business information is presented separately."
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "See Item 1.",
+            "Business information is presented separately.",
         ])
 
     def test_lowercase_segment_continues_previous_sentence_unit(self):
