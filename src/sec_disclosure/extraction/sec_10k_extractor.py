@@ -59,6 +59,7 @@ BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|\*\s+|-\s+)")
 SENTENCE_BULLET_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|\*\s+|-\s+)")
 FOOTNOTE_REF_RE = re.compile(r"\[\[FNREF:(\d{1,3})\]\]")
 PERIOD_TOKEN = "<PERIOD>"
+WRAPPED_NOTE_TITLE_RE = re.compile(r'("[^"]*\bNote\s+\d{1,3})\.(?=\s+[A-Z])', re.IGNORECASE)
 INITIALISM_ABBREVIATION_RE = re.compile(r"\b(?:[A-Z]\.){2,}(?=$|[\s,;:)\]\}'\"])")
 COMMON_ABBREVIATIONS = (
     "Cal. App.",
@@ -131,6 +132,8 @@ class FilingBlock:
     mixed_bold: bool = False
     italic: bool = False
     mixed_italic: bool = False
+    underlined: bool = False
+    mixed_underlined: bool = False
     font_size: float | None = None
     segments: tuple[BlockSegment, ...] = ()
 
@@ -148,6 +151,8 @@ class FilingStructureEvent:
     mixed_bold: bool = False
     italic: bool = False
     mixed_italic: bool = False
+    underlined: bool = False
+    mixed_underlined: bool = False
     font_size: float | None = None
 
 
@@ -318,6 +323,8 @@ class FilingBlockExtractor(HTMLParser):
                     "plain": False,
                     "italic": False,
                     "roman": False,
+                    "underlined": False,
+                    "not_underlined": False,
                     "font_size": None,
                 }
             )
@@ -354,6 +361,8 @@ class FilingBlockExtractor(HTMLParser):
                         mixed_bold=bool(block["bold"] and block["plain"]),
                         italic=bool(block["italic"]),
                         mixed_italic=bool(block["italic"] and block["roman"]),
+                        underlined=bool(block["underlined"]),
+                        mixed_underlined=bool(block["underlined"] and block["not_underlined"]),
                         font_size=block["font_size"],  # type: ignore[arg-type]
                         segments=(BlockSegment(text, bullet_indent_pt=bullet_indent_from_style(text, style)),),
                     )
@@ -378,6 +387,8 @@ class FilingBlockExtractor(HTMLParser):
             self.block_stack[-1][key] = True
             italic_key = "italic" if is_italic_text(self.style_stack) else "roman"
             self.block_stack[-1][italic_key] = True
+            underlined_key = "underlined" if is_underlined_text(self.style_stack) else "not_underlined"
+            self.block_stack[-1][underlined_key] = True
             font_size = current_font_size(self.style_stack)
             if font_size is not None:
                 existing = self.block_stack[-1]["font_size"]
@@ -465,6 +476,8 @@ class FilingStructureExtractor(HTMLParser):
                     "plain": False,
                     "italic": False,
                     "roman": False,
+                    "underlined": False,
+                    "not_underlined": False,
                     "font_size": None,
                 }
             )
@@ -539,6 +552,8 @@ class FilingStructureExtractor(HTMLParser):
                         mixed_bold=bool(block["bold"] and block["plain"]),
                         italic=bool(block["italic"]),
                         mixed_italic=bool(block["italic"] and block["roman"]),
+                        underlined=bool(block["underlined"]),
+                        mixed_underlined=bool(block["underlined"] and block["not_underlined"]),
                         font_size=block["font_size"],  # type: ignore[arg-type]
                     )
                 )
@@ -576,6 +591,8 @@ class FilingStructureExtractor(HTMLParser):
                 self.block_stack[-1][key] = True
                 italic_key = "italic" if is_italic_text(self.style_stack) else "roman"
                 self.block_stack[-1][italic_key] = True
+                underlined_key = "underlined" if is_underlined_text(self.style_stack) else "not_underlined"
+                self.block_stack[-1][underlined_key] = True
                 font_size = current_font_size(self.style_stack)
                 if font_size is not None:
                     existing = self.block_stack[-1]["font_size"]
@@ -648,6 +665,21 @@ def is_italic_text(style_stack: list[tuple[str, str]]) -> bool:
             return styles[-1].lower() in {"italic", "oblique"}
         if tag in {"i", "em"}:
             return True
+    return False
+
+
+def is_underlined_text(style_stack: list[tuple[str, str]]) -> bool:
+    """Resolve underline from <u> tags and CSS text-decoration styles."""
+    for tag, style in reversed(style_stack):
+        if tag == "u":
+            return True
+        decorations = re.findall(
+            r"text-decoration(?:-line)?\s*:\s*([^;]+)",
+            style,
+            re.IGNORECASE,
+        )
+        if decorations:
+            return "underline" in decorations[-1].lower()
     return False
 
 
@@ -951,7 +983,8 @@ def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) 
         else:
             result.append(FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
                                       mixed_bold=event.mixed_bold, italic=event.italic,
-                                      mixed_italic=event.mixed_italic, font_size=event.font_size,
+                                      mixed_italic=event.mixed_italic, underlined=event.underlined,
+                                      mixed_underlined=event.mixed_underlined, font_size=event.font_size,
                                       segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),)))
     return result
 
@@ -1231,6 +1264,8 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                     mixed_bold=event.mixed_bold,
                     italic=event.italic,
                     mixed_italic=event.mixed_italic,
+                    underlined=event.underlined,
+                    mixed_underlined=event.mixed_underlined,
                     font_size=node.get("font_size") or event.font_size,
                     segments=(BlockSegment(node["title"]),),
                 ))
@@ -1270,7 +1305,8 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                 ))
             blocks.append(FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
                                       mixed_bold=event.mixed_bold, italic=event.italic,
-                                      mixed_italic=event.mixed_italic, font_size=event.font_size,
+                                      mixed_italic=event.mixed_italic, underlined=event.underlined,
+                                      mixed_underlined=event.mixed_underlined, font_size=event.font_size,
                                       segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),)))
             continue
         if should_drop_line(event.text):
@@ -1278,7 +1314,8 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
         if report_title_key(event.text) in known_titles and not starts_with_bullet(event.text):
             block = FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
                                 mixed_bold=event.mixed_bold, italic=event.italic,
-                                mixed_italic=event.mixed_italic, font_size=event.font_size,
+                                mixed_italic=event.mixed_italic, underlined=event.underlined,
+                                mixed_underlined=event.mixed_underlined, font_size=event.font_size,
                                 segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),))
             if is_contextual_child_title(event.text) and is_subheader_block(block):
                 blocks.append(block)
@@ -1318,6 +1355,8 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
             mixed_bold=event.mixed_bold,
             italic=event.italic,
             mixed_italic=event.mixed_italic,
+            underlined=event.underlined,
+            mixed_underlined=event.mixed_underlined,
             font_size=event.font_size,
             segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
         )
@@ -1553,6 +1592,8 @@ def extract_item15_toc_section_blocks(html_text: str) -> list[FilingBlock] | Non
                     mixed_bold=event.mixed_bold,
                     italic=event.italic,
                     mixed_italic=event.mixed_italic,
+                    underlined=event.underlined,
+                    mixed_underlined=event.mixed_underlined,
                     font_size=event.font_size,
                     segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
                 )
@@ -2333,6 +2374,12 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
                     or block.mixed_italic
                     or pending.italic != block.italic
                 ),
+                underlined=pending.underlined,
+                mixed_underlined=(
+                    pending.mixed_underlined
+                    or block.mixed_underlined
+                    or pending.underlined != block.underlined
+                ),
                 font_size=max(
                     value for value in (pending.font_size, block.font_size) if value is not None
                 ) if pending.font_size is not None or block.font_size is not None else None,
@@ -2527,6 +2574,8 @@ def is_subheader_block(block: FilingBlock) -> bool:
         return True
     if is_italic_subheader(block, text):
         return True
+    if block.underlined and not block.mixed_underlined and looks_like_title(text):
+        return True
     if (
         re.search(r"\b(or|and|the|a|an|of|to|for|with|from|in|on)\b", text, re.IGNORECASE)
         and not block.bold
@@ -2626,6 +2675,10 @@ def protect_sentence_periods(text: str) -> str:
     protected = text
     for abbreviation in COMMON_ABBREVIATIONS:
         protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
+    protected = WRAPPED_NOTE_TITLE_RE.sub(
+        lambda match: f"{match.group(1)}{PERIOD_TOKEN}",
+        protected,
+    )
     protected = SINGLE_LETTER_ABBREVIATION_RE.sub(
         lambda match: match.group(0).replace(".", PERIOD_TOKEN),
         protected,
@@ -2691,10 +2744,21 @@ def should_continue_previous_sentence_line(sentences: list[SentenceUnit], line: 
     if not sentences:
         return False
     previous = sentences[-1]
+    if is_wrapped_note_title_continuation(previous.text, line):
+        return True
     if previous.bullet_level is not None or ends_with_sentence_terminal(previous.text):
         return False
     stripped = line.lstrip("\"'([{ ")
     return bool(stripped and stripped[0].islower())
+
+
+def is_wrapped_note_title_continuation(previous_text: str, line: str) -> bool:
+    if not re.search(r"\bNote\s+\d{1,3}\.$", previous_text, re.IGNORECASE):
+        return False
+    if previous_text.count('"') % 2 == 0:
+        return False
+    stripped = line.lstrip()
+    return bool(stripped and stripped[0].isupper())
 
 
 def split_embedded_narrative_after_bullet(text: str) -> tuple[str, str]:
@@ -2868,10 +2932,22 @@ def header_style_kind(block: FilingBlock, text: str) -> str:
         return "toc"
     if block.tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
         return "html_heading"
+    if (
+        block.bold
+        and block.italic
+        and block.underlined
+        and not block.mixed_italic
+        and not block.mixed_underlined
+    ):
+        return "bold_italic_underlined"
+    if block.bold and block.underlined and not block.mixed_underlined:
+        return "bold_underlined"
     if block.bold and block.italic and not block.mixed_italic:
         return "bold_italic"
     if block.bold:
         return "bold"
+    if block.underlined and not block.mixed_underlined:
+        return "underlined"
     if is_italic_subheader(block, text):
         return "italic"
     return "title"
@@ -2881,8 +2957,11 @@ def header_style_rank(style_kind: str) -> int:
     ranks = {
         "toc": 0,
         "html_heading": 0,
+        "bold_italic_underlined": 1,
+        "bold_underlined": 1,
         "bold": 1,
         "bold_italic": 2,
+        "underlined": 2,
         "italic": 3,
         "title": 4,
     }
@@ -2908,6 +2987,27 @@ def visually_all_caps_heading(title: str) -> bool:
 
 
 def closes_heading_level(current: SectionHeading, previous: SectionHeading, tolerance: float = 0.1) -> bool:
+    if (
+        visually_all_caps_heading(previous.title)
+        and "underlined" in previous.style_kind
+        and not (
+            visually_all_caps_heading(current.title)
+            and "underlined" in current.style_kind
+        )
+    ):
+        # Keep ordinary child headings, including larger bold headings, below
+        # a strong underlined all-caps section anchor.
+        return False
+    if (
+        visually_all_caps_heading(current.title)
+        and "underlined" in current.style_kind
+        and "underlined" not in previous.style_kind
+        and not visually_all_caps_heading(previous.title)
+    ):
+        # A fully underlined all-caps heading is a strong visual section
+        # boundary, even when the filing renders it smaller than a preceding
+        # bold-only heading.
+        return True
     if current.font_size is None:
         return False
     if previous.font_size is None:

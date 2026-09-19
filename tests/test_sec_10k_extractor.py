@@ -662,6 +662,26 @@ class ExtractorTests(unittest.TestCase):
             "The agencies also requested comments.",
         ])
 
+    def test_wrapped_quoted_note_title_stays_one_sentence(self):
+        units = split_extraction_sentence_units(
+            'Additional information is provided in this Annual Report in "Notes to Consolidated Financial Statements, Note 8.\n'
+            'Segment Information."'
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            'Additional information is provided in this Annual Report in "Notes to Consolidated Financial Statements, Note 8. Segment Information."',
+        ])
+
+    def test_plain_note_reference_still_ends_a_sentence(self):
+        units = split_extraction_sentence_units(
+            "See Note 8. Segment information is presented separately."
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "See Note 8.",
+            "Segment information is presented separately.",
+        ])
+
     def test_lowercase_segment_continues_previous_sentence_unit(self):
         block = FilingBlock(
             1,
@@ -795,6 +815,71 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual(records[2]["text"], "The Firm provides market-competitive compensation and benefits programs.")
         self.assertEqual(records[3]["item_title"], "Risk management")
         self.assertEqual(records[3]["text"], "Risk management text.")
+
+    def test_underlined_heading_style_is_preserved(self):
+        html = """
+        <html><body>
+          <div><span style="font-weight:700; text-decoration: underline">GENERAL</span></div>
+          <div style="text-decoration-line: underline">What We Offer</div>
+          <div><span style="text-decoration: underline">underlined phrase</span> continues in a sentence.</div>
+        </body></html>
+        """
+
+        blocks = html_to_blocks(html)
+
+        self.assertEqual([block.text for block in blocks], [
+            "GENERAL",
+            "What We Offer",
+            "underlined phrase continues in a sentence.",
+        ])
+        self.assertTrue(blocks[0].bold)
+        self.assertTrue(blocks[0].underlined)
+        self.assertTrue(blocks[1].underlined)
+        self.assertTrue(blocks[2].underlined)
+        self.assertTrue(blocks[2].mixed_underlined)
+        self.assertTrue(is_subheader_block(blocks[0]))
+        self.assertTrue(is_subheader_block(blocks[1]))
+        self.assertFalse(is_subheader_block(blocks[2]))
+
+    def test_underlined_all_caps_heading_closes_bold_only_parent(self):
+        records = build_records_from_section_blocks(
+            {
+                "1": [
+                    FilingBlock(1, "div", "Note About Forward-Looking Statements", bold=True, font_size=12),
+                    FilingBlock(2, "div", "This report includes forward-looking statements."),
+                    FilingBlock(3, "div", "GENERAL", bold=True, underlined=True, font_size=10),
+                    FilingBlock(4, "div", "Microsoft is a technology company."),
+                ]
+            },
+            year="2025",
+            company="example",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "Note About Forward-Looking Statements",
+            "GENERAL",
+        ])
+
+    def test_bold_heading_stays_below_underlined_all_caps_anchor(self):
+        records = build_records_from_section_blocks(
+            {
+                "1": [
+                    FilingBlock(1, "div", "GENERAL", bold=True, underlined=True, font_size=10),
+                    FilingBlock(2, "div", "What We Offer", bold=True, font_size=14),
+                    FilingBlock(3, "div", "Microsoft offers technology solutions."),
+                ]
+            },
+            year="2025",
+            company="example",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "GENERAL > What We Offer",
+        ])
 
     def test_same_size_italic_header_stays_under_bold_parent(self):
         html = """

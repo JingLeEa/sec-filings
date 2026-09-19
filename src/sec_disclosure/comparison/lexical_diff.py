@@ -45,6 +45,7 @@ COMMON_ABBREVIATIONS = (
 )
 SINGLE_LETTER_ABBREVIATION_RE = re.compile(r"\b[A-Za-z]\.(?=\s+[A-Z0-9])")
 PERIOD_TOKEN = "<PERIOD>"
+WRAPPED_NOTE_TITLE_RE = re.compile(r'("[^"]*\bNote\s+\d{1,3})\.(?=\s+[A-Z])', re.IGNORECASE)
 TitleKey = tuple[str, str]
 TitleMapping = dict[TitleKey, str]
 
@@ -53,6 +54,10 @@ def protect_sentence_periods(text: str) -> str:
     protected = text
     for abbreviation in COMMON_ABBREVIATIONS:
         protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
+    protected = WRAPPED_NOTE_TITLE_RE.sub(
+        lambda match: f"{match.group(1)}{PERIOD_TOKEN}",
+        protected,
+    )
     protected = SINGLE_LETTER_ABBREVIATION_RE.sub(
         lambda match: match.group(0).replace(".", PERIOD_TOKEN),
         protected,

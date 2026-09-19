@@ -464,6 +464,12 @@ It also tracks italic styling using:
 - CSS `font-style:italic`
 - CSS `font-style:oblique`
 
+It also tracks underline styling using:
+
+- `<u>`
+- CSS `text-decoration:underline`
+- CSS `text-decoration-line:underline`
+
 It tracks plain/non-emphasized text inside the same block. A block can therefore be:
 
 ```text
@@ -496,6 +502,9 @@ mixed_italic=True
 
 means only part of the block looked italic.
 
+Similarly, `underlined=True` means the block contains underlined text, while
+`mixed_underlined=True` means that only part of the block is underlined.
+
 Subheaders are detected by `is_subheader_block`.
 
 A block is not treated as a subheader if:
@@ -518,6 +527,7 @@ A block is treated as a subheader if it passes the exclusions above and one of t
 - It is bold.
 - It is a short standalone italic label.
 - It is an HTML heading tag `h1` to `h6`.
+- It is a fully underlined block that looks like a title.
 - It looks like a title.
 
 `looks_like_title` means at least 65% of scored alphabetic words begin with uppercase, are all uppercase, or contain product-style uppercase/digit patterns such as `x86` or `xPU`.
@@ -591,13 +601,27 @@ Header hierarchy uses font size when available:
 2. If a new header has a smaller font size, it is treated as a child.
 3. If font sizes are the same, visual style is checked before all-caps priority.
 
+A fully underlined all-caps heading is treated as a strong visual boundary. It
+can replace a preceding non-underlined heading even when its rendered font is
+smaller. This handles layouts where a bold-only introductory heading is
+followed by an all-caps underlined section heading.
+
+Once established, a strong underlined all-caps heading remains the parent of
+ordinary following headings, including larger bold headings. Another strong
+underlined all-caps heading can establish a new peer section.
+
 For same-size headings, stronger styles close weaker styles or same-style siblings, while weaker styles can remain under stronger parent headings.
 
 Current style strength is:
 
 ```text
-toc/html heading > bold > bold_italic > italic > title
+toc/html heading > bold/underlined combinations > bold > bold_italic/underlined > italic > title
 ```
+
+Underlined headings are also retained as a distinct style signal. Bold and
+underlined headings are treated as stronger than either style alone. Underline
+inside an otherwise narrative sentence is marked as mixed and does not by
+itself turn the sentence into a subheader.
 
 This allows JPM-style same-size headings such as:
 
@@ -1296,6 +1320,19 @@ becomes:
 ```text
 ... heightened standards guidelines should be rescinded.
 ```
+
+There is one additional narrow line-wrap rule for quoted note titles. If the
+previous line ends with `Note N.` (where `N` is a note number), still has an
+unclosed double quote, and the next line starts with an uppercase letter, the
+two lines are joined. This handles cases such as:
+
+```text
+... "Notes to Consolidated Financial Statements, Note 8.
+Segment Information."
+```
+
+The rule does not apply to an ordinary unquoted reference such as `See Note
+8. Segment information ...`; that remains two sentence units.
 
 ## 19. Bullet Sentence Handling
 

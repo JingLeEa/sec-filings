@@ -19,6 +19,15 @@ class CompareItemChangesTests(unittest.TestCase):
             "See Cal. App. 4th 123 for the ruling.",
         ])
 
+    def test_wrapped_quoted_note_title_does_not_split_sentence(self):
+        sentences = split_sentences(
+            'Additional information is provided in this Annual Report in "Notes to Consolidated Financial Statements, Note 8. Segment Information."'
+        )
+
+        self.assertEqual(sentences, [
+            'Additional information is provided in this Annual Report in "Notes to Consolidated Financial Statements, Note 8. Segment Information."',
+        ])
+
     def test_removes_same_sentences_as_sentence_rows(self):
         old_records = [
             {
