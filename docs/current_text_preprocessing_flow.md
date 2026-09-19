@@ -1085,9 +1085,12 @@ For each Item:
 2. Set `item_chunk_index` to 1.
 3. Iterate through the Item's blocks in order.
 4. Skip table captions.
-5. If a block is a subheader, update the section path and do not create a chunk record for that header block.
-6. Otherwise, create one chunk record for the full block text.
-7. Increment `item_chunk_index`.
+5. If a block is a subheader, update the section path.
+6. If the subheader has no narrative block before the next same-level header,
+   preserve it as an empty header anchor. Nested header-only sections are
+   retained; top-level report titles are not emitted as empty rows.
+7. Otherwise, create one chunk record for the full block text.
+8. Increment `item_chunk_index` for every normal or empty-header record.
 
 The current block-based path does not split long narrative blocks by `max_chars`.
 
@@ -1110,6 +1113,20 @@ Each block-based JSON record contains:
   "source": "..."
 }
 ```
+
+An empty header anchor has an empty `text` value and is marked explicitly:
+
+```json
+{
+  "item_title": "Risk Factors > Credit Risks > Country Risk",
+  "text": "",
+  "is_empty_header": true,
+  "source_block_index": 456
+}
+```
+
+This preserves a stable location for a table that is extracted separately and
+joined back later using the section path and source block position.
 
 The chunk ID format is:
 
@@ -1144,7 +1161,9 @@ These are written to:
 <year>_chunk_sentences.txt
 ```
 
-Sentence IDs are derived from the parent chunk ID:
+Sentence IDs are derived from the parent chunk ID. Empty header anchors receive
+one empty sentence record so they remain addressable in the sentence-level
+output:
 
 ```text
 <company>_<year>_<item>_P<chunk index>_S<sentence index>
@@ -1156,6 +1175,7 @@ Examples:
 nvda_2024_1A_P001_S001
 nvda_2024_1A_P001_S002
 intc_2025_7_P004_S003
+intc_2025_1A_P109_S001
 ```
 
 Sentence records contain:

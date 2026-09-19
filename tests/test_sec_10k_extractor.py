@@ -982,6 +982,34 @@ class ExtractorTests(unittest.TestCase):
             "Our Business > Products > Key Products",
         ])
 
+    def test_nested_header_without_narrative_gets_empty_table_anchor(self):
+        records = build_records_from_section_blocks(
+            {
+                "1A": [
+                    FilingBlock(1, "div", "Risk Factors", bold=True, font_size=14),
+                    FilingBlock(2, "div", "Credit Risks", bold=True, font_size=11),
+                    FilingBlock(3, "div", "Country Risk", bold=True, font_size=11),
+                    FilingBlock(4, "div", "Country risk discussion.", font_size=9),
+                ]
+            },
+            year="2025",
+            company="c",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "Risk Factors > Credit Risks",
+            "Risk Factors > Country Risk",
+        ])
+        self.assertEqual(records[0]["text"], "")
+        self.assertTrue(records[0]["is_empty_header"])
+        self.assertEqual(records[1]["text"], "Country risk discussion.")
+
+        sentence_records = build_sentence_records(records)
+        self.assertEqual(sentence_records[0]["text"], "")
+        self.assertEqual(sentence_records[0]["chunk_id"], records[0]["id"])
+
     def test_all_caps_breaks_same_size_header_ties_without_treating_acronyms_as_caps_headers(self):
         records = build_records_from_section_blocks(
             {
@@ -1826,9 +1854,12 @@ class IncorporatedReportTests(unittest.TestCase):
                     if label_html.startswith('<div')
                     else 'Performance'
                 )
-                self.assertEqual([r['item_title'] for r in review], [expected_title, expected_title])
-                self.assertEqual([r['text'] for r in review],
-                                 ['Our revenue increased in 2031.', 'Fees increased due to customer activity.'])
+                self.assertEqual([r['item_title'] for r in review], [
+                    'Performance > NM - Not meaningful', expected_title, expected_title,
+                ])
+                self.assertEqual([r['text'] for r in review], [
+                    '', 'Our revenue increased in 2031.', 'Fees increased due to customer activity.',
+                ])
                 self.assertTrue(all(r['source'] == str(report) for r in review))
 
     def test_period_labels_in_html_headings_do_not_create_outline_sections(self):

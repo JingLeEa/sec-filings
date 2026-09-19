@@ -3027,39 +3027,86 @@ def build_records_from_section_blocks(
         section_path: list[SectionHeading] = []
         bullet_indent_stack: list[tuple[float, int]] = []
         item_chunk_index = 1
+
+        def append_record(
+            block: FilingBlock,
+            path: list[SectionHeading],
+            text: str,
+            sentence_units: list[SentenceUnit],
+            empty_header: bool = False,
+        ) -> None:
+            nonlocal item_chunk_index
+            record = {
+                "id": make_chunk_id(company, year, item, item_chunk_index),
+                "company": company,
+                "year": year,
+                "item": item,
+                "item_default_title": ITEM_TITLES[item],
+                "item_title": section_path_title(path, ITEM_TITLES[item]),
+                "section_path": section_path_values(path, ITEM_TITLES[item]),
+                "item_chunk_index": item_chunk_index,
+                "source_block_index": block.index,
+                "text": text,
+                "_sentence_units": [
+                    {
+                        "text": unit.text,
+                        "bullet_level": unit.bullet_level,
+                        "bullet_indent_pt": unit.bullet_indent_pt,
+                    }
+                    for unit in sentence_units
+                ],
+                "source": source,
+            }
+            if empty_header:
+                record["is_empty_header"] = True
+            records.append(record)
+            item_chunk_index += 1
+
+        pending_header: FilingBlock | None = None
+        pending_header_path: list[SectionHeading] | None = None
+        has_text_after_pending_header = False
+
         for block in section_blocks[item]:
             if is_table_caption(block.text):
                 continue
             if is_subheader_block(block):
-                section_path = update_section_path(section_path, block)
+                next_path = update_section_path(section_path, block)
+                if (
+                    pending_header is not None
+                    and pending_header_path is not None
+                    and not has_text_after_pending_header
+                    and len(pending_header_path) >= 2
+                    and len(next_path) <= len(pending_header_path)
+                    and not is_period_comparison_label(block.text)
+                ):
+                    append_record(
+                        pending_header,
+                        pending_header_path,
+                        "",
+                        [],
+                        empty_header=True,
+                    )
+                section_path = next_path
+                pending_header = block
+                pending_header_path = list(section_path)
+                has_text_after_pending_header = False
                 bullet_indent_stack = []
                 continue
 
-            item_title = section_path_title(section_path, ITEM_TITLES[item])
-            section_values = section_path_values(section_path, ITEM_TITLES[item])
             sentence_units = sentence_units_from_block(block, bullet_indent_stack)
             if not any(unit.bullet_level is not None for unit in sentence_units):
                 bullet_indent_stack = []
-            records.append(
-                {
-                    "id": make_chunk_id(company, year, item, item_chunk_index),
-                    "company": company,
-                    "year": year,
-                    "item": item,
-                    "item_default_title": ITEM_TITLES[item],
-                    "item_title": item_title,
-                    "section_path": section_values,
-                    "item_chunk_index": item_chunk_index,
-                    "source_block_index": block.index,
-                    "text": block.text,
-                    "_sentence_units": [
-                        {"text": unit.text, "bullet_level": unit.bullet_level, "bullet_indent_pt": unit.bullet_indent_pt}
-                        for unit in sentence_units
-                    ],
-                    "source": source,
-                }
-            )
-            item_chunk_index += 1
+            append_record(block, section_path, block.text, sentence_units)
+            has_text_after_pending_header = True
+
+        if (
+            pending_header is not None
+            and pending_header_path is not None
+            and not has_text_after_pending_header
+            and len(pending_header_path) >= 2
+            and not is_period_comparison_label(pending_header.text)
+        ):
+            append_record(pending_header, pending_header_path, "", [], empty_header=True)
 
     return records
 
@@ -3074,6 +3121,27 @@ def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]
             if isinstance(raw_units, list)
             else split_extraction_sentence_units(str(record.get("text", "")))
         )
+        if not units:
+            sentence_records.append(
+                {
+                    "id": make_sentence_id(chunk_id, 1),
+                    "chunk_id": chunk_id,
+                    "company": record["company"],
+                    "year": record["year"],
+                    "item": record["item"],
+                    "item_default_title": record["item_default_title"],
+                    "item_title": record["item_title"],
+                    "section_path": record.get("section_path", []),
+                    "item_chunk_index": record["item_chunk_index"],
+                    "sentence_index": 1,
+                    "bullet_level": None,
+                    "bullet_indent_pt": None,
+                    "source_block_index": record.get("source_block_index", ""),
+                    "text": "",
+                    "source": record["source"],
+                }
+            )
+            continue
         for sentence_index, sentence in enumerate(units, start=1):
             sentence_records.append(
                 {
