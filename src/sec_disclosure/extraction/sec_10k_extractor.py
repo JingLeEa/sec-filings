@@ -55,8 +55,11 @@ ITEM_7_EXCLUDED_SECTION_KEYS = {
     "properties",
     "quantitative and qualitative disclosures about market risk",
 }
-BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|\*\s+|-\s+)")
-SENTENCE_BULLET_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|\*\s+|-\s+)")
+# Some filings encode a hollow-circle bullet as a standalone lowercase `o`.
+# Require whitespace plus an uppercase/numbered list body for inline `o`
+# markers so ordinary prose beginning with words such as "operating" is safe.
+BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
+SENTENCE_BULLET_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
 FOOTNOTE_REF_RE = re.compile(r"\[\[FNREF:(\d{1,3})\]\]")
 PERIOD_TOKEN = "<PERIOD>"
 WRAPPED_NOTE_TITLE_RE = re.compile(r'("[^"]*\bNote\s+\d{1,3})\.(?=\s+[A-Z])', re.IGNORECASE)
@@ -136,6 +139,7 @@ class FilingBlock:
     mixed_underlined: bool = False
     font_size: float | None = None
     segments: tuple[BlockSegment, ...] = ()
+    list_depth: int | None = None
 
 
 @dataclass(frozen=True)
@@ -154,6 +158,7 @@ class FilingStructureEvent:
     underlined: bool = False
     mixed_underlined: bool = False
     font_size: float | None = None
+    list_depth: int | None = None
 
 
 @dataclass(frozen=True)
@@ -194,6 +199,7 @@ class BlockSegment:
     bullet_level: int | None = None
     bullet_indent_pt: float | None = None
     continues_previous_bullet: bool = False
+    list_depth: int | None = None
 
 
 class FilingTextExtractor(HTMLParser):
@@ -298,6 +304,7 @@ class FilingBlockExtractor(HTMLParser):
         self.block_stack: list[dict[str, object]] = []
         self.drop_depth = 0
         self.style_stack: list[tuple[str, str]] = []
+        self.list_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
@@ -313,6 +320,10 @@ class FilingBlockExtractor(HTMLParser):
 
         self.style_stack.append((tag, style))
 
+        if tag in {"ul", "ol"}:
+            self.list_depth += 1
+            return
+
         if tag in self.BLOCK_TAGS:
             self.block_stack.append(
                 {
@@ -326,6 +337,7 @@ class FilingBlockExtractor(HTMLParser):
                     "underlined": False,
                     "not_underlined": False,
                     "font_size": None,
+                    "list_depth": self.list_depth or None,
                 }
             )
         elif tag == "br":
@@ -346,6 +358,9 @@ class FilingBlockExtractor(HTMLParser):
             self.drop_depth -= 1
             return
 
+        if tag in {"ul", "ol"}:
+            self.list_depth = max(0, self.list_depth - 1)
+
         if tag in self.BLOCK_TAGS and self.block_stack:
             block = self.block_stack.pop()
             text = clean_block_text("".join(block["parts"]))  # type: ignore[arg-type]
@@ -364,7 +379,12 @@ class FilingBlockExtractor(HTMLParser):
                         underlined=bool(block["underlined"]),
                         mixed_underlined=bool(block["underlined"] and block["not_underlined"]),
                         font_size=block["font_size"],  # type: ignore[arg-type]
-                        segments=(BlockSegment(text, bullet_indent_pt=bullet_indent_from_style(text, style)),),
+                        segments=(BlockSegment(
+                            text,
+                            bullet_indent_pt=bullet_indent_from_style(text, style),
+                            list_depth=block["list_depth"],  # type: ignore[arg-type]
+                        ),),
+                        list_depth=block["list_depth"],  # type: ignore[arg-type]
                     )
                 )
 
@@ -428,6 +448,7 @@ class FilingStructureExtractor(HTMLParser):
         self.current_cell_parts: list[str] | None = None
         self.drop_depth = 0
         self.style_stack: list[tuple[str, str]] = []
+        self.list_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
@@ -442,6 +463,10 @@ class FilingStructureExtractor(HTMLParser):
             return
 
         self.style_stack.append((tag, style))
+
+        if tag in {"ul", "ol"}:
+            self.list_depth += 1
+            return
 
         if tag == "table":
             if self.table_depth == 0:
@@ -479,6 +504,7 @@ class FilingStructureExtractor(HTMLParser):
                     "underlined": False,
                     "not_underlined": False,
                     "font_size": None,
+                    "list_depth": self.list_depth or None,
                 }
             )
         elif tag == "br":
@@ -499,6 +525,9 @@ class FilingStructureExtractor(HTMLParser):
         if self.drop_depth:
             self.drop_depth -= 1
             return
+
+        if tag in {"ul", "ol"}:
+            self.list_depth = max(0, self.list_depth - 1)
 
         if self.table_depth:
             if tag in {"td", "th"} and self.current_cell_parts is not None:
@@ -532,7 +561,8 @@ class FilingStructureExtractor(HTMLParser):
                             FilingStructureEvent(index=len(self.events) + 1, kind="table", text=text, rows=rows,
                                                  cell_bold=tuple(tuple(row) for row in self.table_cell_bold),
                                                  cell_styles=tuple(tuple(row) for row in self.table_cell_styles),
-                                                 font_size=self.table_font_size)
+                                                 font_size=self.table_font_size,
+                                                 list_depth=self.list_depth or None)
                         )
                     self.table_font_size = None
             self._pop_style(tag)
@@ -555,6 +585,7 @@ class FilingStructureExtractor(HTMLParser):
                         underlined=bool(block["underlined"]),
                         mixed_underlined=bool(block["underlined"] and block["not_underlined"]),
                         font_size=block["font_size"],  # type: ignore[arg-type]
+                        list_depth=block["list_depth"],  # type: ignore[arg-type]
                     )
                 )
 
@@ -985,7 +1016,8 @@ def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) 
                                       mixed_bold=event.mixed_bold, italic=event.italic,
                                       mixed_italic=event.mixed_italic, underlined=event.underlined,
                                       mixed_underlined=event.mixed_underlined, font_size=event.font_size,
-                                      segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),)))
+                                      segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+                                      list_depth=event.list_depth))
     return result
 
 
@@ -1268,6 +1300,7 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                     mixed_underlined=event.mixed_underlined,
                     font_size=node.get("font_size") or event.font_size,
                     segments=(BlockSegment(node["title"]),),
+                    list_depth=event.list_depth,
                 ))
             else:
                 blocks.append(toc_header_block(
@@ -1307,7 +1340,8 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                                       mixed_bold=event.mixed_bold, italic=event.italic,
                                       mixed_italic=event.mixed_italic, underlined=event.underlined,
                                       mixed_underlined=event.mixed_underlined, font_size=event.font_size,
-                                      segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),)))
+                                      segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+                                      list_depth=event.list_depth))
             continue
         if should_drop_line(event.text):
             continue
@@ -1316,7 +1350,8 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                                 mixed_bold=event.mixed_bold, italic=event.italic,
                                 mixed_italic=event.mixed_italic, underlined=event.underlined,
                                 mixed_underlined=event.mixed_underlined, font_size=event.font_size,
-                                segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),))
+                                segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+                                list_depth=event.list_depth)
             if is_contextual_child_title(event.text) and is_subheader_block(block):
                 blocks.append(block)
             continue
@@ -1338,11 +1373,19 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                             row_text,
                             font_size=event.font_size,
                             segments=(BlockSegment(row_text),),
+                            list_depth=event.list_depth,
                         )
                     )
                 continue
             if len(event.rows) == 1 and len(cells) == 1:
-                block = FilingBlock(event.index, "div", cells[0], bold=True, font_size=event.font_size)
+                block = FilingBlock(
+                    event.index,
+                    "div",
+                    cells[0],
+                    bold=True,
+                    font_size=event.font_size,
+                    list_depth=event.list_depth,
+                )
                 if is_subheader_block(block):
                     blocks.append(block)
             continue
@@ -1359,6 +1402,7 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
             mixed_underlined=event.mixed_underlined,
             font_size=event.font_size,
             segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+            list_depth=event.list_depth,
         )
         if preserve_toc_levels and not use_html_hierarchy and is_subheader_block(event_block):
             blocks.append(toc_header_block(event.index, event.text, toc_level=1))
@@ -1596,6 +1640,7 @@ def extract_item15_toc_section_blocks(html_text: str) -> list[FilingBlock] | Non
                     mixed_underlined=event.mixed_underlined,
                     font_size=event.font_size,
                     segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+                    list_depth=event.list_depth,
                 )
             )
 
@@ -2360,7 +2405,11 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
         # preceding paragraph; keep it pending so it can merge forward.
         if is_bullet_marker_only(block.text):
             if is_bullet_separator(block) and is_unmarked_bullet_text(pending):
-                pending = mark_block_as_bullet(pending)
+                pending = mark_block_as_bullet(
+                    pending,
+                    bullet_indent_pt=bullet_indent_from_style(block.text, block.style),
+                    list_depth=block.list_depth,
+                )
             merged.append(pending)
             pending = block
             continue
@@ -2407,6 +2456,7 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
                     value for value in (pending.font_size, block.font_size) if value is not None
                 ) if pending.font_size is not None or block.font_size is not None else None,
                 segments=block_segments(pending) + current_segments,
+                list_depth=pending.list_depth if pending.list_depth is not None else block.list_depth,
             )
         else:
             if not is_bullet_marker_only(pending.text):
@@ -2466,7 +2516,7 @@ def starts_with_bullet(text: str) -> bool:
 
 
 def is_bullet_marker_only(text: str) -> bool:
-    return bool(re.fullmatch(r"\s*[•‣▪▫◦●○]\s*", text))
+    return bool(re.fullmatch(r"\s*(?:[•‣▪▫◦●○]|o)\s*", text))
 
 
 def is_bullet_separator(block: FilingBlock) -> bool:
@@ -2481,14 +2531,30 @@ def is_unmarked_bullet_text(block: FilingBlock) -> bool:
     return not starts_with_bullet(block.text) and not block.text.rstrip().endswith(":")
 
 
-def mark_block_as_bullet(block: FilingBlock) -> FilingBlock:
+def mark_block_as_bullet(
+    block: FilingBlock,
+    bullet_indent_pt: float | None = None,
+    list_depth: int | None = None,
+) -> FilingBlock:
     text = f"• {block.text.lstrip()}"
     segments = block_segments(block)
     marked_segments = tuple(
-        replace(segment, text=f"• {segment.text.lstrip()}")
+        replace(
+            segment,
+            text=f"• {segment.text.lstrip()}",
+            bullet_indent_pt=(
+                bullet_indent_pt if bullet_indent_pt is not None else segment.bullet_indent_pt
+            ),
+            list_depth=list_depth if list_depth is not None else segment.list_depth,
+        )
         for segment in segments
     )
-    return replace(block, text=text, segments=marked_segments)
+    return replace(
+        block,
+        text=text,
+        segments=marked_segments,
+        list_depth=list_depth if list_depth is not None else block.list_depth,
+    )
 
 
 def has_bullet_continuation_layout(block: FilingBlock) -> bool:
@@ -2840,10 +2906,14 @@ def bullet_level_from_line(line: str) -> int | None:
 
 
 def bullet_indent_from_style(text: str, style: str) -> float | None:
-    if not SENTENCE_BULLET_RE.match(text):
+    if not (SENTENCE_BULLET_RE.match(text) or is_bullet_marker_only(text)):
         return None
-    match = re.search(r"padding-left\s*:\s*([0-9]+(?:\.[0-9]+)?)\s*pt", style, re.IGNORECASE)
-    return float(match.group(1)) if match else None
+    indents = [
+        css_style_length_pt(style, "padding-left"),
+        css_style_length_pt(style, "margin-left"),
+    ]
+    values = [indent for indent in indents if indent is not None]
+    return max(values) if values else None
 
 
 def bullet_level_from_indent(indent: float, stack: list[tuple[float, int]], tolerance: float = 0.1) -> int:
@@ -2865,8 +2935,22 @@ def bullet_level_from_indent(indent: float, stack: list[tuple[float, int]], tole
 
 def block_segments(block: FilingBlock) -> tuple[BlockSegment, ...]:
     if block.segments:
-        return block.segments
-    return (BlockSegment(block.text, bullet_indent_pt=bullet_indent_from_style(block.text, block.style)),)
+        if block.list_depth is None:
+            return block.segments
+        return tuple(
+            replace(
+                segment,
+                list_depth=segment.list_depth if segment.list_depth is not None else block.list_depth,
+            )
+            for segment in block.segments
+        )
+    return (
+        BlockSegment(
+            block.text,
+            bullet_indent_pt=bullet_indent_from_style(block.text, block.style),
+            list_depth=block.list_depth,
+        ),
+    )
 
 
 def mark_segments_as_bullet_continuation(segments: tuple[BlockSegment, ...]) -> tuple[BlockSegment, ...]:
@@ -2876,6 +2960,7 @@ def mark_segments_as_bullet_continuation(segments: tuple[BlockSegment, ...]) -> 
             segment.bullet_level,
             segment.bullet_indent_pt,
             continues_previous_bullet=True,
+            list_depth=segment.list_depth,
         )
         for segment in segments
     )
@@ -2900,7 +2985,9 @@ def sentence_units_from_block(block: FilingBlock, indent_stack: list[tuple[float
             segment_index += 1
         segment_units: list[SentenceUnit] = []
         segment_level = segment.bullet_level
-        if segment.bullet_indent_pt is not None:
+        if segment.list_depth is not None:
+            segment_level = segment.list_depth
+        elif segment.bullet_indent_pt is not None:
             segment_level = bullet_level_from_indent(segment.bullet_indent_pt, indent_stack)
         for unit in split_extraction_sentence_units(segment.text):
             bullet_level = segment_level if segment_level is not None else unit.bullet_level
@@ -3124,7 +3211,21 @@ def update_section_path(path: list[SectionHeading], block: FilingBlock) -> list[
             parent_path.pop()
         return [*parent_path, current] if parent_path else [current]
     path = [heading for heading in path]
+    # A period-comparison heading can introduce lower-level headings, such as
+    # a segment name. Remove it only when the next heading closes that level;
+    # otherwise retain it as the parent context.
     while path and is_period_comparison_label(path[-1].title):
+        period_heading = path[-1]
+        if period_heading.font_size is None or current.font_size is None:
+            # When source style sizes are unavailable, use the style rank
+            # fallback so an unstyled period label does not absorb unrelated
+            # sibling headings.
+            current_rank = header_style_rank(current.style_kind)
+            period_rank = header_style_rank(period_heading.style_kind)
+            if current_rank > period_rank:
+                break
+        elif not closes_heading_level(current, period_heading):
+            break
         path.pop()
     if block.font_size is not None:
         next_path = list(path)
@@ -3180,10 +3281,11 @@ def build_records(
                     "item_default_title": ITEM_TITLES[item],
                     "item_title": ITEM_TITLES[item],
                     "section_path": [ITEM_TITLES[item]],
-                    "item_chunk_index": chunk_index,
-                    "text": chunk,
-                    "source": source,
-                }
+                "item_chunk_index": chunk_index,
+                "text": chunk,
+                "source": source,
+                "html_list_depth": None,
+            }
             )
     return records
 
@@ -3224,6 +3326,7 @@ def build_records_from_section_blocks(
                 "item_chunk_index": item_chunk_index,
                 "source_block_index": block.index,
                 "text": text,
+                "html_list_depth": block.list_depth,
                 "_sentence_units": [
                     {
                         "text": unit.text,
@@ -3331,6 +3434,7 @@ def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]
                     "sentence_index": 1,
                     "bullet_level": None,
                     "bullet_indent_pt": None,
+                    "html_list_depth": record.get("html_list_depth"),
                     "source_block_index": record.get("source_block_index", ""),
                     "text": "",
                     "source": record["source"],
@@ -3352,6 +3456,7 @@ def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]
                     "sentence_index": sentence_index,
                     "bullet_level": sentence.bullet_level,
                     "bullet_indent_pt": sentence.bullet_indent_pt,
+                    "html_list_depth": record.get("html_list_depth"),
                     "source_block_index": record.get("source_block_index", ""),
                     "text": sentence.text,
                     "source": record["source"],

@@ -20,6 +20,7 @@ from sec_disclosure.extraction.sec_10k_extractor import (
     html_to_clean_text,
     html_to_structure_events,
     infer_company_year_from_filename,
+    is_bullet_marker_only,
     is_subheader_block,
     merge_continued_blocks,
     make_chunk_id,
@@ -33,6 +34,7 @@ from sec_disclosure.extraction.sec_10k_extractor import (
     sentence_units_from_block,
     should_drop_line,
     split_extraction_sentence_units,
+    starts_with_bullet,
 )
 from pathlib import Path
 
@@ -402,6 +404,27 @@ class ExtractorTests(unittest.TestCase):
         styled_sentences = build_sentence_records(styled_records)
         self.assertEqual([record["bullet_level"] for record in styled_sentences], [1, 2, 3])
         self.assertEqual([record["bullet_indent_pt"] for record in styled_sentences], [36.0, 72.0, 108.0])
+
+    def test_html_list_depth_sets_nested_bullet_level(self):
+        html = """
+        <ul>
+          <li><div>• We selected a sample of customer agreements and performed the following procedures:</div>
+            <ul>
+              <li><div>• Obtained and read contract source documents.</div></li>
+            </ul>
+          </li>
+        </ul>
+        """
+
+        blocks = html_to_blocks(html)
+        self.assertEqual([block.list_depth for block in blocks], [1, 2])
+
+        records = build_records_from_section_blocks(
+            {"8": blocks}, "2025", "msft", "sample", 1800,
+        )
+        sentences = build_sentence_records(records)
+        self.assertEqual([record["bullet_level"] for record in sentences], [1, 2])
+        self.assertEqual([record["html_list_depth"] for record in sentences], [1, 2])
 
     def test_extracts_body_items_and_assigns_per_item_ids(self):
         html = """
@@ -1518,6 +1541,24 @@ class ExtractorTests(unittest.TestCase):
                                      '\n• growth across asset classes; and\n• an increased volume of agreements.')
                     self.assertEqual(records[1]["text"], 'Total deposits increased during the year.')
 
+    def test_standalone_lowercase_o_marks_the_adjacent_list_text(self):
+        blocks = [
+            FilingBlock(1, "div", "Tested management's identification and treatment of contract terms."),
+            FilingBlock(2, "div", "o", style="margin-left:72pt"),
+        ]
+
+        merged = merge_continued_blocks(blocks)
+
+        self.assertEqual([block.text for block in merged], [
+            "• Tested management's identification and treatment of contract terms."
+        ])
+        self.assertEqual(merged[0].segments[0].bullet_indent_pt, 72.0)
+        units = sentence_units_from_block(merged[0], [(36.0, 1)])
+        self.assertEqual(units[0].bullet_level, 2)
+        self.assertEqual(units[0].bullet_indent_pt, 72.0)
+        self.assertTrue(is_bullet_marker_only("o"))
+        self.assertFalse(starts_with_bullet("operating income increased."))
+
     def test_colon_titles_survive_partial_emphasis_and_normal_weight_overrides(self):
         source = ('<div><b>Sources</b> of Revenue:</div>'
                   '<div><span style="font-weight:700">Income Taxes</span>:</div>'
@@ -1615,6 +1656,35 @@ class ExtractorTests(unittest.TestCase):
                          'Consolidated Results of Operations > 2024 compared with 2023')
         self.assertEqual(records[0]['section_path'],
                          ['Consolidated Results of Operations', '2024 compared with 2023'])
+
+    def test_lower_style_heading_stays_under_period_comparison_heading(self):
+        records = build_records_from_section_blocks(
+            {'7': [
+                FilingBlock(1, 'div', 'Reportable Segments', bold=True, font_size=10),
+                FilingBlock(
+                    2,
+                    'div',
+                    'Fiscal Year 2025 Compared with Fiscal Year 2024',
+                    bold=True,
+                    italic=True,
+                    font_size=10,
+                ),
+                FilingBlock(
+                    3,
+                    'div',
+                    'Productivity and Business Processes',
+                    italic=True,
+                    font_size=10,
+                ),
+                FilingBlock(4, 'div', 'Revenue increased.', font_size=9),
+            ]},
+            '2025', 'msft', 'sample', 1800,
+        )
+        self.assertEqual(records[-1]['section_path'], [
+            'Reportable Segments',
+            'Fiscal Year 2025 Compared with Fiscal Year 2024',
+            'Productivity and Business Processes',
+        ])
 
     def test_period_references_in_narrative_and_topic_headings_are_preserved(self):
         sentences = ('Full year 2025 vs. full year 2024 revenue increased.',
