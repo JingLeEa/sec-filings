@@ -425,6 +425,21 @@ class FilingBlockExtractor(HTMLParser):
 
     def _current_style(self) -> str:
         return " ".join(style for _, style in self.style_stack)
+    
+    #AMD: recover narrative texts (CAMs etc.)
+    def is_narrative_table(rows: list[list[str]]) -> bool:
+        """Detect if a table contains narrative text (like CAMs) rather than numeric matrices."""
+        total_cells = sum(len(row) for row in rows)
+        if total_cells == 0:
+            return False
+        text_cells = 0
+        for row in rows:
+            for cell in row:
+                # If cell contains sentences (more than 10 words), treat as narrative
+                if len(cell.strip().split()) >= 10:
+                    text_cells += 1
+        # If a significant portion is narrative, don't drop
+        return (text_cells / total_cells) > 0.2
 
 
 class FilingStructureExtractor(HTMLParser):
@@ -2814,6 +2829,10 @@ def split_extraction_sentence_units(text: str) -> list[SentenceUnit]:
     text = normalize_typography(text).strip()
     if not text:
         return []
+    
+    #AMD: # Fix inline subheaders where a dot directly connects a heading and the next sentence
+    text = re.sub(r'([A-Za-z]{2,}\.)([A-Z][a-z])', r'\1 \2', text)
+    
     text = re.sub(r"([^\s\n])[ \t]*([•‣▪▫◦●○])[ \t]*", r"\1\n\2 ", text)
     protected = protect_sentence_periods(text)
 
@@ -3370,6 +3389,16 @@ def build_records_from_section_blocks(
                 # Do not let the running header erase that active context.
                 continue
             if is_subheader_block(block):
+
+                # In is_subheader_block()
+                TABLE_INTRO_PATTERNS = re.compile(
+                    r"\b(following table|summarizes|as follows|the following|consists of|below)\b", 
+                    re.IGNORECASE
+                )
+
+                if text.endswith(":"):
+                    if TABLE_INTRO_PATTERNS.search(text):
+                        return False
                 next_path = update_section_path(section_path, block)
                 if (
                     pending_header is not None
