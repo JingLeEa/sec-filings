@@ -55,9 +55,7 @@ ITEM_7_EXCLUDED_SECTION_KEYS = {
     "properties",
     "quantitative and qualitative disclosures about market risk",
 }
-# Some filings encode a hollow-circle bullet as a standalone lowercase `o`.
-# Require whitespace plus an uppercase/numbered list body for inline `o`
-# markers so ordinary prose beginning with words such as "operating" is safe.
+
 BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
 SENTENCE_BULLET_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
 FOOTNOTE_REF_RE = re.compile(r"\[\[FNREF:(\d{1,3})\]\]")
@@ -117,6 +115,33 @@ CONTEXTUAL_CHILD_TITLES = {
     "financial performance",
     "operating performance",
 }
+
+NAV_AND_FOLIO_PATTERN = re.compile(
+    r"^(?:"
+    r"table\s+of\s+contents|"
+    r"back\s+to\s+table\s+of\s+contents|"
+    r"index\s+to\s+(?:financial\s+statements|consolidated\s+financial\s+statements)|"
+    r"form\s+10-k|"
+    r"\d{4}\s+form\s+10-k|"
+    r"(?:december|january|february|march|april|may|june|july|august|september|october|november)\s+\d{4}\s+form\s+10-k|"
+    r"(?:page\s+)?\d{1,4}|"
+    r"[a-z0-9\s,\.\-]{1,35}\s+\d{1,4}|"
+    r"\d{1,4}\s+[a-z0-9\s,\.\-]{1,35}"
+    r")$",
+    re.IGNORECASE,
+)
+
+TABLE_INTRO_PATTERNS = re.compile(
+    r"\b(following table|summarizes|as follows|the following|consists of|below)\b",
+    re.IGNORECASE,
+)
+
+
+def is_boilerplate_or_nav(text: str) -> bool:
+    cleaned = text.strip()
+    if not cleaned:
+        return True
+    return bool(NAV_AND_FOLIO_PATTERN.match(cleaned))
 
 
 @dataclass(frozen=True)
@@ -209,36 +234,10 @@ class FilingTextExtractor(HTMLParser):
     """Turn HTML into readable text while dropping tables and chrome."""
 
     BLOCK_TAGS = {
-        "address",
-        "article",
-        "aside",
-        "blockquote",
-        "br",
-        "center",
-        "dd",
-        "div",
-        "dl",
-        "dt",
-        "figcaption",
-        "footer",
-        "form",
-        "h1",
-        "h2",
-        "h3",
-        "h4",
-        "h5",
-        "h6",
-        "header",
-        "hr",
-        "li",
-        "main",
-        "nav",
-        "ol",
-        "p",
-        "pre",
-        "section",
-        "tr",
-        "ul",
+        "address", "article", "aside", "blockquote", "br", "center", "dd",
+        "div", "dl", "dt", "figcaption", "footer", "form", "h1", "h2", "h3",
+        "h4", "h5", "h6", "header", "hr", "li", "main", "nav", "ol", "p",
+        "pre", "section", "tr", "ul",
     }
     DROP_TAGS = {"script", "style", "noscript", "table", "svg", "head"}
 
@@ -367,7 +366,8 @@ class FilingBlockExtractor(HTMLParser):
         if tag in self.BLOCK_TAGS and self.block_stack:
             block = self.block_stack.pop()
             text = clean_block_text("".join(block["parts"]))  # type: ignore[arg-type]
-            if text and not should_drop_line(text):
+
+            if text and not should_drop_line(text) and not is_boilerplate_or_nav(text):
                 style = str(block["style"])
                 self.blocks.append(
                     FilingBlock(
@@ -425,21 +425,19 @@ class FilingBlockExtractor(HTMLParser):
 
     def _current_style(self) -> str:
         return " ".join(style for _, style in self.style_stack)
-    
-    #AMD: recover narrative texts (CAMs etc.)
-    def is_narrative_table(rows: list[list[str]]) -> bool:
-        """Detect if a table contains narrative text (like CAMs) rather than numeric matrices."""
-        total_cells = sum(len(row) for row in rows)
-        if total_cells == 0:
-            return False
-        text_cells = 0
-        for row in rows:
-            for cell in row:
-                # If cell contains sentences (more than 10 words), treat as narrative
-                if len(cell.strip().split()) >= 10:
-                    text_cells += 1
-        # If a significant portion is narrative, don't drop
-        return (text_cells / total_cells) > 0.2
+
+
+def is_narrative_table(rows: tuple[tuple[str, ...], ...] | list[list[str]]) -> bool:
+    """Detect if a table contains narrative text (like CAMs) rather than numeric matrices."""
+    total_cells = sum(len(row) for row in rows)
+    if total_cells == 0:
+        return False
+    text_cells = 0
+    for row in rows:
+        for cell in row:
+            if len(cell.strip().split()) >= 10:
+                text_cells += 1
+    return (text_cells / total_cells) > 0.2
 
 
 class FilingStructureExtractor(HTMLParser):
@@ -576,11 +574,16 @@ class FilingStructureExtractor(HTMLParser):
                     text = clean_block_text(" ".join(cell for row in rows for cell in row if cell))
                     if text:
                         self.events.append(
-                            FilingStructureEvent(index=len(self.events) + 1, kind="table", text=text, rows=rows,
-                                                 cell_bold=tuple(tuple(row) for row in self.table_cell_bold),
-                                                 cell_styles=tuple(tuple(row) for row in self.table_cell_styles),
-                                                 font_size=self.table_font_size,
-                                                 list_depth=self.list_depth or None)
+                            FilingStructureEvent(
+                                index=len(self.events) + 1,
+                                kind="table",
+                                text=text,
+                                rows=rows,
+                                cell_bold=tuple(tuple(row) for row in self.table_cell_bold),
+                                cell_styles=tuple(tuple(row) for row in self.table_cell_styles),
+                                font_size=self.table_font_size,
+                                list_depth=self.list_depth or None,
+                            )
                         )
                     self.table_font_size = None
             self._pop_style(tag)
@@ -696,7 +699,6 @@ def is_bold_style(style: str) -> bool:
 
 
 def is_bold_text(style_stack: list[tuple[str, str]]) -> bool:
-    """Resolve emphasis for this text run, including a child's normal override."""
     for tag, style in reversed(style_stack):
         weights = re.findall(r"font-weight\s*:\s*(bold|normal|[1-9]00)\b", style, re.IGNORECASE)
         if weights:
@@ -707,7 +709,6 @@ def is_bold_text(style_stack: list[tuple[str, str]]) -> bool:
 
 
 def is_italic_text(style_stack: list[tuple[str, str]]) -> bool:
-    """Resolve italic style for this text run, including a child's normal override."""
     for tag, style in reversed(style_stack):
         styles = re.findall(r"font-style\s*:\s*(italic|oblique|normal)\b", style, re.IGNORECASE)
         if styles:
@@ -718,7 +719,6 @@ def is_italic_text(style_stack: list[tuple[str, str]]) -> bool:
 
 
 def is_underlined_text(style_stack: list[tuple[str, str]]) -> bool:
-    """Resolve underline from <u> tags and CSS text-decoration styles."""
     for tag, style in reversed(style_stack):
         if tag == "u":
             return True
@@ -870,7 +870,6 @@ def is_url(value: str) -> bool:
 
 
 def normalize_source(source: str) -> str:
-    """Accept plain SEC URLs and common pasted Markdown link forms."""
     source = source.strip()
     markdown_match = re.fullmatch(r"\[([^\]]+)\]\(([^)]+)\)", source)
     if markdown_match:
@@ -1008,11 +1007,6 @@ def load_filing_from_sec_api(args: argparse.Namespace) -> tuple[str, str, str]:
 
 
 def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) -> list[FilingBlock]:
-    """Recover single-row Item labels without retaining financial table data.
-
-    Keep the existing block stream/indices for filings whose Item labels are
-    already outside tables. Only switch streams when a table adds an Item.
-    """
     existing = {heading[0] for block in blocks if (heading := parse_item_heading(block.text))}
     events = html_to_structure_events(html_text)
     table_items = {
@@ -1023,7 +1017,7 @@ def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) 
         return blocks
     result = []
     for event in events:
-        if should_drop_line(event.text):
+        if should_drop_line(event.text) or is_boilerplate_or_nav(event.text):
             continue
         if event.kind == "table":
             if len(event.rows) != 1 or not parse_item_heading(event.text):
@@ -1126,7 +1120,6 @@ def discover_referenced_report(source: str, user_agent: str) -> tuple[str, dict[
 
 
 def report_reference(blocks: list[FilingBlock]) -> dict | None:
-    """Recognize an Item supplied by incorporation, not incidental prose links."""
     text = " ".join(block.text for block in blocks)
     if len(text) > 1800 or not re.search(r"incorporat\w*\b.{0,80}\breference\b", text, re.I):
         return None
@@ -1155,7 +1148,6 @@ def report_title_key(title: str) -> str:
 
 
 def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -> list[dict]:
-    """Use the report's own TOC (or explicit HTML heading levels) for ranges."""
     required = {report_title_key(title) for path in paths for title in path}
     toc = None
     titles: dict[str, dict] = {}
@@ -1186,9 +1178,6 @@ def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -
                 continue
             matches = [(event.text, int(event.kind[1]), 1, event.font_size)]
         elif event.kind == "table":
-            # A genuine heading can precede numeric data in the same table.
-            # Stop at the first data row so labels inside the table (e.g.
-            # "Deposits:") cannot open a new document section.
             matches = []
             for row in event.rows:
                 cells = [cell for cell in row if cell]
@@ -1223,9 +1212,6 @@ def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -
             key = report_title_key(title)
             previous = next((index for index in range(len(nodes) - 1, -1, -1) if nodes[index]["key"] == key), None)
             if previous is not None:
-                # The same title repeated inside its still-open section is a
-                # running header. A title repeated after another peer/parent
-                # is a distinct section and must be disambiguated by its path.
                 if not any(node["level"] <= level for node in nodes[previous + 1:]):
                     continue
             seen.add(key)
@@ -1298,13 +1284,11 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
             continue
         if page_marker_from_text(event.text) is not None:
             continue
+        if is_boilerplate_or_nav(event.text):
+            continue
         node = headings.get(position)
         if node:
             if use_html_hierarchy:
-                # The cross-reference index identifies the content range, but
-                # the source event supplies the actual visual heading style.
-                # This prevents a TOC level from overriding equal-sized HTML
-                # headings that should be siblings.
                 blocks.append(FilingBlock(
                     event.index,
                     "div" if event.kind == "table" else event.kind,
@@ -1329,9 +1313,6 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                 ))
             continue
         if is_table_caption(event.text) or (event.kind == "table" and is_period_comparison_label(event.text)):
-            # Table footnotes and period comparisons belong to the enclosing
-            # topic. Neither a caption nor a standalone pair of periods should
-            # replace that topic (or leave an incidental table legend active).
             parents = [node for node in nodes if node["start"] <= position < node["end"]]
             if parents:
                 parent = max(parents, key=lambda node: (node["level"], node["start"]))
@@ -1374,8 +1355,6 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                 blocks.append(block)
             continue
         if event.kind == "table":
-            # A one-cell, one-row prose heading is a layout table. Financial
-            # tables and repeated page/company footer rows remain excluded.
             cells = [cell for row in event.rows for cell in row if cell]
             note_header = note_header_from_layout_table(event)
             if note_header:
@@ -1394,6 +1373,21 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                             list_depth=event.list_depth,
                         )
                     )
+                continue
+            if is_narrative_table(event.rows):
+                for row in event.rows:
+                    row_prose = " ".join(c.strip() for c in row if len(c.strip().split()) >= 10)
+                    if row_prose:
+                        blocks.append(
+                            FilingBlock(
+                                event.index,
+                                "div",
+                                row_prose,
+                                font_size=event.font_size,
+                                segments=(BlockSegment(row_prose),),
+                                list_depth=event.list_depth,
+                            )
+                        )
                 continue
             if len(event.rows) == 1 and len(cells) == 1:
                 block = FilingBlock(
@@ -1430,7 +1424,6 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
 
 
 def note_header_from_layout_table(event: FilingStructureEvent) -> str:
-    """Recover financial statement note headings stored as one-row layout tables."""
     nonempty_rows = [[cell for cell in row if cell] for row in event.rows]
     if len(nonempty_rows) != 1 or len(nonempty_rows[0]) < 2:
         return ""
@@ -1524,8 +1517,6 @@ def follow_report_references(section_blocks: dict[str, list[FilingBlock]], sourc
                                  and (parent["start"], parent["end"]) != (other["start"], other["end"])
                                  for parent in ranges)]
         blocks = referenced_report_blocks(events, nodes, ranges, exclusions)
-        # A selected section may be numeric-only, but an entire referenced Item
-        # must not silently become empty after table removal.
         if not any(not is_subheader_block(block) for block in blocks):
             raise ValueError(f"Referenced Item {item} contains no extractable narrative in {report_source}.")
         result[item] = blocks
@@ -1633,7 +1624,7 @@ def extract_item15_toc_section_blocks(html_text: str) -> list[FilingBlock] | Non
         if event.kind == "table":
             blocks.extend(toc_header_blocks_from_table(event, entries_by_key, seen_toc_headers))
             continue
-        if event.text.casefold() == "table of contents" or should_drop_line(event.text):
+        if event.text.casefold() == "table of contents" or should_drop_line(event.text) or is_boilerplate_or_nav(event.text):
             continue
         if parse_item_heading(event.text):
             continue
@@ -1908,12 +1899,6 @@ PAGE_MARKER_RE = re.compile(r"\|\s*(\d{1,3})\s*$")
 
 
 def page_marker_from_text(text: str) -> int | None:
-    """Return a rendered-document page number from a footer-style marker.
-
-    SEC HTML often keeps printed-page footers as text such as ``MD&A | 18``
-    or ``Image | MD&A | 18``.  A bare number is intentionally not treated as
-    a marker because it is too easy to confuse with a table value or a period.
-    """
     cleaned = re.sub(r"\s+", " ", normalize_typography(text)).strip()
     match = PAGE_MARKER_RE.search(cleaned)
     if not match:
@@ -1924,22 +1909,12 @@ def page_marker_from_text(text: str) -> int | None:
     label = prefix.rsplit("|", 1)[-1].strip()
     if not label or len(label.split()) > 8:
         return None
-    # Avoid mistaking compact table/narrative labels for printed-page
-    # footers. These words commonly occur immediately before a data value.
     if re.search(r"\b(?:year|period|revenue|income|assets|liabilities|expenses|total|versus|vs)\b", label, re.I):
         return None
     return int(match.group(1))
 
 
 def event_page_numbers(events: list[FilingStructureEvent]) -> dict[int, int]:
-    """Map structure-event positions to printed pages using footer markers.
-
-    A footer appears after the content it belongs to. Therefore, events up to
-    and including ``MD&A | 18`` are assigned to page 18, and events after it
-    are assigned to the next discovered marker's page. Positions after the
-    final marker remain unmapped and are retained by callers as a conservative
-    fallback.
-    """
     markers = [
         (position, page)
         for position, event in enumerate(events)
@@ -2102,19 +2077,10 @@ def item_reference_titles(events: list[FilingStructureEvent],
 
 
 def is_item7_root_title(title: str) -> bool:
-    """Recognize the Item 7 label used by cross-reference indexes."""
     return report_title_key(title).startswith(ITEM_7_ROOT_KEY)
 
 
 def item7_root_range(nodes: list[dict], events: list[FilingStructureEvent], title: str) -> list[dict]:
-    """Expand the Item 7 root to include unpaginated introductory subsections.
-
-    Intel's cross-reference index points to Item 7's paginated subsections, but
-    the HTML section also contains introductory headings such as Overview and
-    Significant Events and Trends Impacting Results. The root should run until
-    the first known non-Item-7 section, while later Item 7 headings (for
-    example Critical Accounting Estimates) can still be selected separately.
-    """
     root_key = report_title_key(title)
     matches = [node for node in nodes if node["key"] == root_key]
     if not matches:
@@ -2123,9 +2089,6 @@ def item7_root_range(nodes: list[dict], events: list[FilingStructureEvent], titl
     root = dict(matches[0])
     child_levels = [node["level"] for node in nodes if node["start"] > root["start"]]
     if child_levels:
-        # The report TOC can flatten the parent and child labels when their
-        # indentation is represented by layout rather than cell styling.
-        # Keep the cross-reference Item 7 title as the explicit root.
         root["level"] = max(0, min(child_levels) - 1)
         matches[0]["level"] = root["level"]
     boundary_positions = [
@@ -2151,7 +2114,6 @@ def extract_indexed_section_blocks(
     html_text: str,
     items: Iterable[str] = DEFAULT_ITEMS,
 ) -> dict[str, list[FilingBlock]]:
-    """Fallback for filings organized by cross-reference index or multi-column TOC."""
     wanted = {normalize_item(item) for item in items}
     events = html_to_structure_events(html_text)
     references = item_references_from_tables(events, wanted)
@@ -2172,11 +2134,6 @@ def extract_indexed_section_blocks(
             else set()
         )
 
-        # For Intel-style filings, selecting only the page-linked titles loses
-        # the opening Item 7 headings because Overview and Significant Events
-        # do not have their own page references. Select the root range first;
-        # then add any additional Item 7 titles explicitly listed in the
-        # cross-reference index, such as Critical Accounting Estimates.
         titles = item_reference_titles(events, refs, item, excluded_pages=excluded_pages)
         if item == "7" and any(is_item7_root_title(title) for title in titles):
             root_title = next(
@@ -2202,8 +2159,6 @@ def extract_indexed_section_blocks(
                             blocks.append(block)
                     titles = [ref.title for ref in refs if not is_item7_root_title(ref.title)]
             except ValueError:
-                # Preserve the existing title-by-title fallback if the filing
-                # has no usable report outline.
                 pass
 
         for title in titles:
@@ -2246,7 +2201,6 @@ def extract_indexed_section_blocks(
 
 
 def remove_broad_item_overlaps(sections: dict[str, list[FilingBlock]]) -> None:
-    """Remove exact source-block overlaps where broad Items absorb later Items."""
     for broad_item, narrower_items in (("1", ("1A", "7", "8", "15")), ("7", ("8", "15"))):
         if broad_item not in sections:
             continue
@@ -2294,7 +2248,7 @@ def extract_section_blocks(
             candidate = [
                 block
                 for block in blocks[start_index + 1 : end_index]
-                if block.text and not should_drop_line(block.text) and parse_item_heading(block.text) is None
+                if block.text and not should_drop_line(block.text) and not is_boilerplate_or_nav(block.text) and parse_item_heading(block.text) is None
             ]
             length = sum(len(block.text) for block in candidate)
             if length:
@@ -2342,7 +2296,6 @@ def section_reference_text(blocks: list[FilingBlock]) -> str:
 
 
 def item15_reference_trigger(text: str) -> bool:
-    """Return True when an extracted item points readers into Item 15 material."""
     normalized = re.sub(r"\s+", " ", normalize_typography(text)).strip().casefold()
     if not normalized:
         return False
@@ -2418,9 +2371,6 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
             pending = block
             continue
 
-        # Some filings emit the bullet glyph as its own block before the
-        # block containing the bullet text. Do not attach that marker to the
-        # preceding paragraph; keep it pending so it can merge forward.
         if is_bullet_marker_only(block.text):
             if is_bullet_separator(block) and is_unmarked_bullet_text(pending):
                 pending = mark_block_as_bullet(
@@ -2451,8 +2401,6 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
                 current_segments = mark_segments_as_bullet_continuation(current_segments)
             pending = FilingBlock(
                 index=pending.index,
-                # Both inputs have already been classified as narrative. Do
-                # not let inherited emphasis turn the growing list into a title.
                 tag="merged_text",
                 text=join_continued_text(pending.text, block.text),
                 style=pending.style,
@@ -2504,18 +2452,6 @@ def should_merge_with_next_block(previous: FilingBlock, current: FilingBlock) ->
 
 
 def is_wrapped_sentence_continuation(previous: FilingBlock, current: FilingBlock) -> bool:
-    """Merge a wrapped prose reference before header classification can split it.
-
-    Citi sometimes places a quoted cross-reference on the next HTML block:
-
-        ``... see the discussion above and``
-        ``"Managing Global Risk-Other Risks-Country Risk" below``
-
-    The second block can look like a title because it is styled emphatically,
-    but grammatically it continues the first sentence. Restrict this exception
-    to an unfinished block ending in a connector and a quoted/parenthesized
-    continuation so ordinary standalone headings remain separate.
-    """
     if starts_with_bullet(current.text):
         return False
     if ends_with_sentence_terminal(previous.text):
@@ -2604,7 +2540,7 @@ def cleanup_section_text(text: str) -> str:
     lines: list[str] = []
     for line in text.splitlines():
         line = re.sub(r"\s+", " ", line).strip()
-        if should_drop_line(line):
+        if should_drop_line(line) or is_boilerplate_or_nav(line):
             continue
         lines.append(line)
 
@@ -2633,9 +2569,6 @@ def should_drop_line(line: str) -> bool:
 
 def is_repeated_filing_header(line: str) -> bool:
     cleaned = re.sub(r"\s+", " ", normalize_typography(line)).strip()
-    # Micron-style page footers can otherwise look like headings because the
-    # title heuristic sees only the uppercase K in "59 |2025 10-K". Require
-    # the entire page/report label so narrative references to 10-Ks survive.
     page = r"(?:page\s+)?\d{1,4}"
     report = r"(?:19|20)\d{2}\s+(?:form\s+)?10\s*-\s*K(?:/A)?"
     if re.fullmatch(rf"(?:{page}\s*\|\s*{report}|{report}\s*\|\s*{page})", cleaned, re.IGNORECASE):
@@ -2650,13 +2583,11 @@ def is_repeated_filing_header(line: str) -> bool:
 
 
 def is_table_caption(text: str) -> bool:
-    """Recognize numbered captions, preserving sentences such as 'Table 2 presents...'."""
     return bool(re.match(r"^Table\s+(?:\d+(?:\.\d+)*[A-Za-z]?|[IVXLCDM]+)\s*(?::|[\-–—]|\.(?!\d))\s*\S",
                          text.strip(), re.IGNORECASE)) and not ends_with_sentence_terminal(text)
 
 
 def is_period_comparison_label(text: str) -> bool:
-    """Match only standalone period pairs, not sentences or topic headings."""
     period = (r"(?:(?:(?:full\s+)?(?:fiscal\s+)?year|fiscal|FY)\s*|"
               r"(?:first|second|third|fourth)\s+quarter\s+|Q[1-4]\s+)?(?:19|20)\d{2}")
     comparison = r"(?:vs\.?|versus|compared\s+(?:with|to))"
@@ -2665,7 +2596,6 @@ def is_period_comparison_label(text: str) -> bool:
 
 
 def is_period_comparison_heading(block: FilingBlock) -> bool:
-    """Treat standalone period comparison labels as section context."""
     return is_period_comparison_label(block.text)
 
 
@@ -2680,7 +2610,7 @@ def is_subheader_block(block: FilingBlock) -> bool:
         return False
 
     text = block.text.strip()
-    if not text or parse_item_heading(text) or should_drop_line(text):
+    if not text or parse_item_heading(text) or should_drop_line(text) or is_boilerplate_or_nav(text):
         return False
     if starts_with_bullet(text):
         return False
@@ -2693,19 +2623,21 @@ def is_subheader_block(block: FilingBlock) -> bool:
     normalized_heading = normalize_heading_title(text)
     if normalized_heading in CONTEXTUAL_CHILD_TITLES:
         return True
-    # Bold financial labels often introduce a sentence and its bullet list.
-    # Keep those introductions in the narrative, without banning real colon
-    # headings such as "Sources of Revenue:" or TOC-confirmed titles.
-    if text.endswith(":") and block.tag not in {"h1", "h2", "h3", "h4", "h5", "h6"}:
-        if block.mixed_bold and not looks_like_title(text):
+
+    if text.endswith(":"):
+        if TABLE_INTRO_PATTERNS.search(text):
             return False
-        if "," in text and re.search(r"\b[a-z][a-z'-]+\b", text):
-            return False
-        if re.search(r"\b(reflecting|driven by|due to|because of|as follows|the following|"
-                     r"includes?|consists? of|comprised of)\s*:$", text, re.IGNORECASE):
-            return False
-        if re.search(r"\b(reflecting|driven by|due to|because of)\b.+:$", text, re.IGNORECASE):
-            return False
+        if block.tag not in {"h1", "h2", "h3", "h4", "h5", "h6"}:
+            if block.mixed_bold and not looks_like_title(text):
+                return False
+            if "," in text and re.search(r"\b[a-z][a-z'-]+\b", text):
+                return False
+            if re.search(r"\b(reflecting|driven by|due to|because of|as follows|the following|"
+                         r"includes?|consists? of|comprised of)\s*:$", text, re.IGNORECASE):
+                return False
+            if re.search(r"\b(reflecting|driven by|due to|because of)\b.+:$", text, re.IGNORECASE):
+                return False
+
     if block.font_size is not None and block.font_size >= 10 and looks_like_title(text):
         return True
     if is_italic_subheader(block, text):
@@ -2743,8 +2675,6 @@ def looks_like_title(text: str) -> bool:
 def is_title_case_word(word: str) -> bool:
     if word[:1].isupper() or word.isupper():
         return True
-    # Product-style tokens such as x86 and xPU often appear in SEC headings,
-    # even though they do not start with an uppercase letter.
     return bool(re.search(r"[A-Z0-9]", word[1:]))
 
 
@@ -2771,7 +2701,7 @@ def split_into_chunks(text: str, max_chars: int = 1800, min_chars: int = 120) ->
 
 def normalize_paragraph(paragraph: str) -> str:
     lines = [re.sub(r"\s+", " ", line).strip() for line in paragraph.splitlines()]
-    lines = [line for line in lines if line and not should_drop_line(line)]
+    lines = [line for line in lines if line and not should_drop_line(line) and not is_boilerplate_or_nav(line)]
     return " ".join(lines).strip()
 
 
@@ -2808,7 +2738,12 @@ def split_extraction_sentences(text: str) -> list[str]:
 
 
 def protect_sentence_periods(text: str) -> str:
-    protected = text
+    protected = re.sub(
+        r'\b(Item\s+\d+[A-Z]?|Part\s+[IVXLCDM]+|Note\s+\d+[A-Z]?)\.',
+        rf"\1{PERIOD_TOKEN}",
+        text,
+        flags=re.IGNORECASE,
+    )
     for abbreviation in COMMON_ABBREVIATIONS:
         protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
     protected = WRAPPED_REFERENCE_TITLE_RE.sub(
@@ -2829,10 +2764,8 @@ def split_extraction_sentence_units(text: str) -> list[SentenceUnit]:
     text = normalize_typography(text).strip()
     if not text:
         return []
-    
-    #AMD: # Fix inline subheaders where a dot directly connects a heading and the next sentence
+
     text = re.sub(r'([A-Za-z]{2,}\.)([A-Z][a-z])', r'\1 \2', text)
-    
     text = re.sub(r"([^\s\n])[ \t]*([•‣▪▫◦●○])[ \t]*", r"\1\n\2 ", text)
     protected = protect_sentence_periods(text)
 
@@ -3095,7 +3028,6 @@ def infer_year(text: str, source: str | None = None) -> str:
 
 
 def infer_company_year_from_filename(path: Path) -> tuple[str, str | None]:
-    """Infer company/year from names like nvda-20230129.htm."""
     stem = path.stem
     match = re.match(r"([A-Za-z0-9]+)-(20\d{2})", stem)
     if match:
@@ -3165,9 +3097,6 @@ def all_caps_heading_priority(title: str) -> int:
     letters = "".join(re.findall(r"[A-Za-z]", title))
     if not letters or any(char.islower() for char in letters):
         return 0
-    # Short all-caps tokens are often acronyms such as CCG, DCAI, MD&A.
-    # Treat multi-word all-caps headings, or longer all-caps words like
-    # OVERVIEW, as visual hierarchy signals.
     return int(len(words) >= 2 or len(letters) >= 8)
 
 
@@ -3185,8 +3114,6 @@ def closes_heading_level(current: SectionHeading, previous: SectionHeading, tole
             and "underlined" in current.style_kind
         )
     ):
-        # Keep ordinary child headings, including larger bold headings, below
-        # a strong underlined all-caps section anchor.
         return False
     if (
         visually_all_caps_heading(current.title)
@@ -3194,9 +3121,6 @@ def closes_heading_level(current: SectionHeading, previous: SectionHeading, tole
         and "underlined" not in previous.style_kind
         and not visually_all_caps_heading(previous.title)
     ):
-        # A fully underlined all-caps heading is a strong visual section
-        # boundary, even when the filing renders it smaller than a preceding
-        # bold-only heading.
         return True
     if current.font_size is None:
         return False
@@ -3229,9 +3153,8 @@ def section_path_values(path: list[SectionHeading], fallback: str) -> list[str]:
 
 
 def update_section_path(path: list[SectionHeading], block: FilingBlock) -> list[SectionHeading]:
-    """Keep useful parent context for generic repeated child headings."""
     header = re.sub(r"\s+", " ", normalize_typography(block.text)).strip()
-    if not header:
+    if not header or is_boilerplate_or_nav(header):
         return path
     current = SectionHeading(
         header,
@@ -3245,15 +3168,9 @@ def update_section_path(path: list[SectionHeading], block: FilingBlock) -> list[
             parent_path.pop()
         return [*parent_path, current] if parent_path else [current]
     path = [heading for heading in path]
-    # A period-comparison heading can introduce lower-level headings, such as
-    # a segment name. Remove it only when the next heading closes that level;
-    # otherwise retain it as the parent context.
     while path and is_period_comparison_label(path[-1].title):
         period_heading = path[-1]
         if period_heading.font_size is None or current.font_size is None:
-            # When source style sizes are unavailable, use the style rank
-            # fallback so an unstyled period label does not absorb unrelated
-            # sibling headings.
             current_rank = header_style_rank(current.style_kind)
             period_rank = header_style_rank(period_heading.style_kind)
             if current_rank > period_rank:
@@ -3315,11 +3232,11 @@ def build_records(
                     "item_default_title": ITEM_TITLES[item],
                     "item_title": ITEM_TITLES[item],
                     "section_path": [ITEM_TITLES[item]],
-                "item_chunk_index": chunk_index,
-                "text": chunk,
-                "source": source,
-                "html_list_depth": None,
-            }
+                    "item_chunk_index": chunk_index,
+                    "text": chunk,
+                    "source": source,
+                    "html_list_depth": None,
+                }
             )
     return records
 
@@ -3384,21 +3301,11 @@ def build_records_from_section_blocks(
             if is_table_caption(block.text):
                 continue
             if is_repeated_item_root_header(block, item, section_path):
-                # Printed page headers repeat the Item title while the
-                # underlying discussion is still inside the prior subsection.
-                # Do not let the running header erase that active context.
                 continue
+            if is_boilerplate_or_nav(block.text):
+                continue
+
             if is_subheader_block(block):
-
-                # In is_subheader_block()
-                TABLE_INTRO_PATTERNS = re.compile(
-                    r"\b(following table|summarizes|as follows|the following|consists of|below)\b", 
-                    re.IGNORECASE
-                )
-
-                if text.endswith(":"):
-                    if TABLE_INTRO_PATTERNS.search(text):
-                        return False
                 next_path = update_section_path(section_path, block)
                 if (
                     pending_header is not None
@@ -3445,7 +3352,6 @@ def is_repeated_item_root_header(
     item: str,
     section_path: list[SectionHeading],
 ) -> bool:
-    """Ignore a repeated Item title once a real subsection is active."""
     if not section_path:
         return False
     if item == "7":
@@ -3610,9 +3516,7 @@ def main(argv: list[str] | None = None) -> int:
     section_blocks = extract_section_blocks(blocks, items=requested_items)
     missing_items = [item for item in requested_items if item not in section_blocks]
     indexed_items = list(missing_items)
-    # A cross-reference index is authoritative for non-standard Item 7
-    # layouts, even when a stray "Item 7" label elsewhere in the filing made
-    # the ordinary boundary parser produce a partial section.
+
     if "7" in requested_items and "7" not in indexed_items:
         indexed_items.append("7")
     if indexed_items:
