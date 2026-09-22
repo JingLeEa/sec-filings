@@ -20,6 +20,7 @@ from sec_disclosure.extraction.sec_10k_extractor import (
     html_to_clean_text,
     html_to_structure_events,
     infer_company_year_from_filename,
+    is_boilerplate_or_nav,
     is_bullet_marker_only,
     is_subheader_block,
     merge_continued_blocks,
@@ -290,7 +291,7 @@ class ExtractorTests(unittest.TestCase):
                 root = Path(temporary)
                 source = root / "mu-20250828.htm"
                 source.write_text("".join(f"<{tag}>{line}</{tag}>" for line in lines), encoding="utf-8")
-                with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                with redirect_stdout(io.StringIO()):
                     self.assertEqual(main([str(source), "--out-dir", str(root / "output"), "--items", "7"]), 0)
                 output = root / "output" / "mu" / "2025"
                 for name in ("2025_chunks.json", "2025_chunks.txt", "2025_item_7.txt"):
@@ -1595,7 +1596,7 @@ class ExtractorTests(unittest.TestCase):
                 for block in blocks[:4]:
                     self.assertTrue(is_subheader_block(block), block.text)
                 self.assertTrue(blocks[0].mixed_bold)
-                self.assertFalse(blocks[1].mixed_bold)  # A plain colon is not narrative text.
+                self.assertFalse(blocks[1].mixed_bold)
                 self.assertTrue(blocks[4].mixed_bold)
                 self.assertFalse(is_subheader_block(blocks[4]))
 
@@ -1935,6 +1936,84 @@ class ExtractorTests(unittest.TestCase):
         self.assertNotIn("Properties text should not", text)
         self.assertNotIn("MD&A |", text)
 
+    def test_navigation_and_running_folios_are_dropped_from_blocks_and_headers(self):
+        """Ensure repeated page folios and jump links do not become false headers or chunks."""
+        boilerplate_samples = [
+            "Table of Contents",
+            "table of contents",
+            "TABLE OF CONTENTS",
+            "Back to Table of Contents",
+            "Bank of America 28",
+            "29 Bank of America",
+            "Bank of America 30",
+            "41 Bank of America",
+            "Form 10-K",
+            "2024 Form 10-K",
+            "December 2025 Form 10-K",
+            "Page 26",
+            "5",
+        ]
+        for sample in boilerplate_samples:
+            with self.subTest(sample=sample):
+                self.assertTrue(is_boilerplate_or_nav(sample))
+                block = FilingBlock(1, "div", sample, bold=True)
+                self.assertFalse(is_subheader_block(block))
+
+        html = """
+        <html><body>
+          <div style="font-weight:700">Item 1. Business</div>
+          <div style="font-weight:700">Competition</div>
+          <div>We operate in a competitive market.</div>
+          <div style="font-weight:700"><a href="#toc">Table of Contents</a></div>
+          <div style="font-weight:700">5</div>
+          <div style="font-weight:700">December 2025 Form 10-K</div>
+          <div style="font-weight:700">Bank of America 28</div>
+          <div>Within our Investment Management business segment, we advise clients.</div>
+          <div>Item 1A. Risk Factors</div>
+        </body></html>
+        """
+        blocks = html_to_blocks(html)
+        block_texts = [b.text for b in blocks]
+        self.assertNotIn("Table of Contents", block_texts)
+        self.assertNotIn("5", block_texts)
+        self.assertNotIn("December 2025 Form 10-K", block_texts)
+        self.assertNotIn("Bank of America 28", block_texts)
+
+        sections = extract_section_blocks(blocks, items=("1",))
+        records = build_records_from_section_blocks(sections, year="2025", company="ms", source="sample", max_chars=1800)
+        self.assertEqual([r["item_title"] for r in records], ["Competition", "Competition"])
+        self.assertNotIn("Table of Contents", [r["item_title"] for r in records])
+
+    def test_protects_sec_item_and_part_citations_from_sentence_splitting(self):
+        """Ensure Item 1A. and similar references do not break across sentences."""
+        text = (
+            "For more details, see Item 1A. Risk Factors of this Annual Report on Form 10-K. "
+            "Refer also to Part I. for an overview of business risks and Note 16. for accounting details."
+        )
+        units = split_extraction_sentence_units(text)
+        self.assertEqual(len(units), 2)
+        self.assertEqual(
+            units[0].text,
+            "For more details, see Item 1A. Risk Factors of this Annual Report on Form 10-K.",
+        )
+        self.assertEqual(
+            units[1].text,
+            "Refer also to Part I. for an overview of business risks and Note 16. for accounting details.",
+        )
+
+    def test_table_intro_colons_are_not_subheaders(self):
+        """Ensure prose lines ending in colons that introduce tables remain body narrative."""
+        introductions = [
+            "The following table provides items included in All Other category:",
+            "The following table summarizes sales to external customers by geographic regions:",
+            "Property and equipment, net consists of the following:",
+            "Details regarding our loans are as follows:",
+        ]
+        for intro in introductions:
+            with self.subTest(intro=intro):
+                block = FilingBlock(index=1, tag="div", text=intro, bold=True)
+                self.assertFalse(is_subheader_block(block))
+
 
 def incorporated_filing(year):
     def heading(item, title):
@@ -2121,22 +2200,22 @@ class IncorporatedReportTests(unittest.TestCase):
                     '<div style="font-weight:700">NM - Not meaningful</div>' + label_html +
                     '<div>Our revenue increased in 2031.</div>'
                     '<div>Fees increased due to customer activity.</div>'))
-                with redirect_stdout(io.StringIO()):
-                    self.assertEqual(main(self.arguments(source, root)), 0)
-                records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
-                review = [r for r in records if r['item'] == '7']
-                expected_title = (
-                    'Performance > Full year 2031 vs. full year 2030'
-                    if label_html.startswith('<div')
-                    else 'Performance'
-                )
-                self.assertEqual([r['item_title'] for r in review], [
-                    'Performance > NM - Not meaningful', expected_title, expected_title,
-                ])
-                self.assertEqual([r['text'] for r in review], [
-                    '', 'Our revenue increased in 2031.', 'Fees increased due to customer activity.',
-                ])
-                self.assertTrue(all(r['source'] == str(report) for r in review))
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(main(self.arguments(source, root)), 0)
+            records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
+            review = [r for r in records if r['item'] == '7']
+            expected_title = (
+                'Performance > Full year 2031 vs. full year 2030'
+                if label_html.startswith('<div')
+                else 'Performance'
+            )
+            self.assertEqual([r['item_title'] for r in review], [
+                'Performance > NM - Not meaningful', expected_title, expected_title,
+            ])
+            self.assertEqual([r['text'] for r in review], [
+                '', 'Our revenue increased in 2031.', 'Fees increased due to customer activity.',
+            ])
+            self.assertTrue(all(r['source'] == str(report) for r in review))
 
     def test_period_labels_in_html_headings_do_not_create_outline_sections(self):
         report = ('<h1>Operating Review</h1><h2>Performance</h2>'
