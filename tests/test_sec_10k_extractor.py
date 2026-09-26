@@ -732,6 +732,30 @@ class ExtractorTests(unittest.TestCase):
             "See Cal. App. 4th 123 for the ruling.",
         ])
 
+    def test_repairs_missing_space_after_heading_like_text(self):
+        units = split_extraction_sentence_units(
+            "Data Center GPUs.Our AMD products grew. Notebook CPUs.Our AMD products expanded."
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "Data Center GPUs.",
+            "Our AMD products grew.",
+            "Notebook CPUs.",
+            "Our AMD products expanded.",
+        ])
+
+    def test_missing_space_repair_skips_urls_emails_and_common_abbreviations(self):
+        units = split_extraction_sentence_units(
+            "Visit www.Example.com.Today for details. Contact team@example.com.Today for help. "
+            "Results for 2024 vs.The prior year improved, etc.The company continued."
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "Visit www.Example.com.Today for details.",
+            "Contact team@example.com.Today for help.",
+            "Results for 2024 vs. The prior year improved, etc. The company continued.",
+        ])
+
     def test_lowercase_rendered_line_continues_previous_sentence_unit(self):
         units = split_extraction_sentence_units(
             "In the proposed rulemaking, the OCC also invited comments on a number of questions, including whether the heightened standards guidelines should\n"

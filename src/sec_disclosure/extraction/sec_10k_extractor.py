@@ -85,8 +85,18 @@ COMMON_ABBREVIATIONS = (
     "U.K.",
     "e.g.",
     "i.e.",
+    "approx.",
+    "etc.",
+    "vs.",
 )
 SINGLE_LETTER_ABBREVIATION_RE = re.compile(r"\b[A-Za-z]\.(?=\s+[A-Z0-9])")
+MISSING_SPACE_AFTER_PERIOD_RE = re.compile(r"([A-Za-z]{2,}\.)([A-Z][a-z])")
+PROTECTED_INLINE_SPAN_RE = re.compile(
+    r"(?:https?://|ftp://|www\.)[^\s]+|"
+    r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|"
+    r"\b[\w-]+\.(?:com|org|net|gov|edu|io|co|ai)\b",
+    re.IGNORECASE,
+)
 TITLE_CONNECTOR_WORDS = {
     "a",
     "an",
@@ -2754,11 +2764,23 @@ def protect_sentence_periods(text: str) -> str:
     )
 
 
+def repair_missing_sentence_spaces(text: str) -> str:
+    protected_spans = [match.span() for match in PROTECTED_INLINE_SPAN_RE.finditer(text)]
+
+    def replacement(match: re.Match[str]) -> str:
+        if any(start <= match.start() < end for start, end in protected_spans):
+            return match.group(0)
+        return f"{match.group(1)} {match.group(2)}"
+
+    return MISSING_SPACE_AFTER_PERIOD_RE.sub(replacement, text)
+
+
 def split_extraction_sentence_units(text: str) -> list[SentenceUnit]:
     text = normalize_typography(text).strip()
     if not text:
         return []
-    text = re.sub(r'([A-Za-z]{2,}\.)([A-Z][a-z])', r'\1 \2', text)
+    # TODO: Expand this repair for additional malformed HTML and abbreviation cases if needed.
+    text = repair_missing_sentence_spaces(text)
     text = re.sub(r"([^\s\n])[ \t]*([•‣▪▫◦●○])[ \t]*", r"\1\n\2 ", text)
     protected = protect_sentence_periods(text)
 
