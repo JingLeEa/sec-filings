@@ -1,9 +1,33 @@
 import unittest
 
-from sec_disclosure.comparison.lexical_diff import compare_records, parse_title_map_args
+from sec_disclosure.comparison.lexical_diff import compare_records, parse_title_map_args, split_sentences
 
 
 class CompareItemChangesTests(unittest.TestCase):
+    def test_uppercase_initialism_abbreviations_do_not_split_sentences(self):
+        sentences = split_sentences(
+            "J.P. Morgan serves clients globally. P.C. fees changed. U.S.A. operations expanded. See v. Smith. Sup. Smith reviewed the filing. S. Corp. filed an update. See Cal. App. 4th 123 for the ruling."
+        )
+
+        self.assertEqual(sentences, [
+            "J.P. Morgan serves clients globally.",
+            "P.C. fees changed.",
+            "U.S.A. operations expanded.",
+            "See v. Smith.",
+            "Sup. Smith reviewed the filing.",
+            "S. Corp. filed an update.",
+            "See Cal. App. 4th 123 for the ruling.",
+        ])
+
+    def test_wrapped_quoted_note_title_does_not_split_sentence(self):
+        sentences = split_sentences(
+            'Additional information is provided in this Annual Report in "Notes to Consolidated Financial Statements, Note 8. Segment Information."'
+        )
+
+        self.assertEqual(sentences, [
+            'Additional information is provided in this Annual Report in "Notes to Consolidated Financial Statements, Note 8. Segment Information."',
+        ])
+
     def test_removes_same_sentences_as_sentence_rows(self):
         old_records = [
             {

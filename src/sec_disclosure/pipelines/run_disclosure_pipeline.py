@@ -57,7 +57,7 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--industry", help="Industry label in the TSV.")
     parser.add_argument("--annotator", help="Annotator name in the TSV.")
     parser.add_argument("--split", help="Dataset split label in the TSV.")
-    parser.add_argument("--items", nargs="+", type=str.upper, choices=sec_10k_extractor.DEFAULT_ITEMS,
+    parser.add_argument("--items", nargs="+", type=str.upper, choices=sec_10k_extractor.SUPPORTED_ITEMS,
                         default=["1", "1A", "7", "8"], help="Default: 1 1A 7 8 (excludes Item 15).")
     parser.add_argument("--user-agent", default=os.environ.get("SEC_USER_AGENT", ""),
                         help="Your name/email for SEC requests; defaults to SEC_USER_AGENT.")

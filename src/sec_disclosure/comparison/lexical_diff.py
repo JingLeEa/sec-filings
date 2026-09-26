@@ -22,7 +22,9 @@ from typing import Any
 
 
 DEFAULT_OUT_DIR = "data/comparison"
+INITIALISM_ABBREVIATION_RE = re.compile(r"\b(?:[A-Z]\.){2,}(?=$|[\s,;:)\]\}'\"])")
 COMMON_ABBREVIATIONS = (
+    "Cal. App.",
     "Co.",
     "Corp.",
     "Dr.",
@@ -35,14 +37,35 @@ COMMON_ABBREVIATIONS = (
     "No.",
     "Prof.",
     "Sr.",
+    "Sup.",
     "U.S.",
     "U.K.",
     "e.g.",
     "i.e.",
 )
+SINGLE_LETTER_ABBREVIATION_RE = re.compile(r"\b[A-Za-z]\.(?=\s+[A-Z0-9])")
 PERIOD_TOKEN = "<PERIOD>"
+WRAPPED_NOTE_TITLE_RE = re.compile(r'("[^"]*\bNote\s+\d{1,3})\.(?=\s+[A-Z])', re.IGNORECASE)
 TitleKey = tuple[str, str]
 TitleMapping = dict[TitleKey, str]
+
+
+def protect_sentence_periods(text: str) -> str:
+    protected = text
+    for abbreviation in COMMON_ABBREVIATIONS:
+        protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
+    protected = WRAPPED_NOTE_TITLE_RE.sub(
+        lambda match: f"{match.group(1)}{PERIOD_TOKEN}",
+        protected,
+    )
+    protected = SINGLE_LETTER_ABBREVIATION_RE.sub(
+        lambda match: match.group(0).replace(".", PERIOD_TOKEN),
+        protected,
+    )
+    return INITIALISM_ABBREVIATION_RE.sub(
+        lambda match: match.group(0).replace(".", PERIOD_TOKEN),
+        protected,
+    )
 
 
 def load_records(path: Path) -> list[dict[str, Any]]:
@@ -73,9 +96,7 @@ def split_sentences(text: str) -> list[str]:
         return []
 
     text = re.sub(r"\s*•\s*", "\n• ", text)
-    protected = text
-    for index, abbreviation in enumerate(COMMON_ABBREVIATIONS):
-        protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
+    protected = protect_sentence_periods(text)
 
     parts: list[str] = []
     for line in protected.splitlines():

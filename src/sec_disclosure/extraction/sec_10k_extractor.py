@@ -3,9 +3,9 @@
 
 The pipeline is intentionally small and dependency-free:
 
-    SEC ticker/year -> filing HTML -> cleaned text -> Items 1, 1A, 7, 8, 15 -> chunks
+    SEC ticker/year -> filing HTML -> cleaned text -> Items 1, 1A, 7, 8 -> chunks
 
-Outputs are JSON and TXT files with stable paragraph IDs such as 2024_1_P001.
+Outputs are JSON and TXT files with stable paragraph IDs such as nvda_2024_1_P001.
 Items incorporated from a separate HTML annual report are resolved through the
 filing index and the report's own section headings/TOC.
 """
@@ -19,18 +19,21 @@ import os
 import re
 import sys
 import textwrap
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 from urllib.parse import parse_qs, quote, urljoin, urlparse
 from urllib.request import Request, urlopen
 
 
-DEFAULT_ITEMS = ("1", "1A", "7", "8", "15")
+SUPPORTED_ITEMS = ("1", "1A", "7", "8", "15")
+DEFAULT_ITEMS = ("1", "1A", "7", "8")
+ITEM_OUTPUT_ORDER = SUPPORTED_ITEMS
 SEC_ARCHIVES_BASE = "https://www.sec.gov/Archives/edgar/data"
 SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 SEC_SUBMISSIONS_BASE = "https://data.sec.gov/submissions"
+AUTO_ITEM15_POINTER_MAX_CHARS = 1800
 ITEM_ENDS = {
     "1": ("1A", "1B", "1C", "2"),
     "1A": ("1B", "1C", "2"),
@@ -45,7 +48,110 @@ ITEM_TITLES = {
     "8": "Financial Statements and Supplementary Data",
     "15": "Exhibits and Financial Statement Schedules",
 }
-BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|\*\s+|-\s+)")
+ITEM_7_ROOT_KEY = "management s discussion and analysis"
+ITEM_7_EXCLUDED_SECTION_KEYS = {
+    "financial statements and supplemental details",
+    "financial statements and supplementary data",
+    "properties",
+    "quantitative and qualitative disclosures about market risk",
+}
+
+BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
+SENTENCE_BULLET_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
+FOOTNOTE_REF_RE = re.compile(r"\[\[FNREF:(\d{1,3})\]\]")
+PERIOD_TOKEN = "<PERIOD>"
+WRAPPED_REFERENCE_TITLE_RE = re.compile(
+    r'("[^"]*\b(?:Note|Item)\s+\d{1,3}[A-Z]?)\.(?=\s+[A-Z])',
+    re.IGNORECASE,
+)
+INITIALISM_ABBREVIATION_RE = re.compile(r"\b(?:[A-Z]\.){2,}(?=$|[\s,;:)\]\}'\"])")
+COMMON_ABBREVIATIONS = (
+    "Cal. App.",
+    "Co.",
+    "Corp.",
+    "Dr.",
+    "Inc.",
+    "INC.",
+    "Jr.",
+    "Ltd.",
+    "Mr.",
+    "Mrs.",
+    "Ms.",
+    "No.",
+    "Prof.",
+    "Sr.",
+    "Sup.",
+    "U.S.",
+    "U.K.",
+    "e.g.",
+    "i.e.",
+    "approx.",
+    "etc.",
+    "vs.",
+)
+SINGLE_LETTER_ABBREVIATION_RE = re.compile(r"\b[A-Za-z]\.(?=\s+[A-Z0-9])")
+MISSING_SPACE_AFTER_PERIOD_RE = re.compile(r"([A-Za-z]{2,}\.)([A-Z][a-z])")
+PROTECTED_INLINE_SPAN_RE = re.compile(
+    r"(?:https?://|ftp://|www\.)[^\s]+|"
+    r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|"
+    r"\b[\w-]+\.(?:com|org|net|gov|edu|io|co|ai)\b",
+    re.IGNORECASE,
+)
+TITLE_CONNECTOR_WORDS = {
+    "a",
+    "an",
+    "and",
+    "as",
+    "at",
+    "by",
+    "for",
+    "from",
+    "in",
+    "into",
+    "of",
+    "on",
+    "or",
+    "the",
+    "to",
+    "with",
+}
+CONTEXTUAL_CHILD_TITLES = {
+    "overview",
+    "market trends",
+    "competition",
+    "customers",
+    "products",
+    "services",
+    "financial performance",
+    "operating performance",
+}
+
+NAV_AND_FOLIO_PATTERN = re.compile(
+    r"^(?:"
+    r"table\s+of\s+contents|"
+    r"back\s+to\s+table\s+of\s+contents|"
+    r"index\s+to\s+(?:financial\s+statements|consolidated\s+financial\s+statements)|"
+    r"form\s+10-k|"
+    r"\d{4}\s+form\s+10-k|"
+    r"(?:december|january|february|march|april|may|june|july|august|september|october|november)\s+\d{4}\s+form\s+10-k|"
+    r"(?:page\s+)?\d{1,4}|"
+    r"[a-z0-9\s,\.\-]{1,35}\s+\d{1,4}|"
+    r"\d{1,4}\s+[a-z0-9\s,\.\-]{1,35}"
+    r")$",
+    re.IGNORECASE,
+)
+
+TABLE_INTRO_PATTERNS = re.compile(
+    r"\b(following table|summarizes|as follows|the following|consists of|below)\b",
+    re.IGNORECASE,
+)
+
+
+def is_boilerplate_or_nav(text: str) -> bool:
+    cleaned = text.strip()
+    if not cleaned:
+        return True
+    return bool(NAV_AND_FOLIO_PATTERN.match(cleaned))
 
 
 @dataclass(frozen=True)
@@ -65,6 +171,13 @@ class FilingBlock:
     style: str = ""
     bold: bool = False
     mixed_bold: bool = False
+    italic: bool = False
+    mixed_italic: bool = False
+    underlined: bool = False
+    mixed_underlined: bool = False
+    font_size: float | None = None
+    segments: tuple[BlockSegment, ...] = ()
+    list_depth: int | None = None
 
 
 @dataclass(frozen=True)
@@ -73,9 +186,17 @@ class FilingStructureEvent:
     kind: str
     text: str
     rows: tuple[tuple[str, ...], ...] = ()
+    style: str = ""
     bold: bool = False
     cell_bold: tuple[tuple[bool, ...], ...] = ()
+    cell_styles: tuple[tuple[str, ...], ...] = ()
     mixed_bold: bool = False
+    italic: bool = False
+    mixed_italic: bool = False
+    underlined: bool = False
+    mixed_underlined: bool = False
+    font_size: float | None = None
+    list_depth: int | None = None
 
 
 @dataclass(frozen=True)
@@ -84,42 +205,49 @@ class TocEntry:
     normalized: str
     match_key: str
     page: str = ""
+    level: int = 0
+
+
+@dataclass(frozen=True)
+class InlineItemReference:
+    item: str
+    title: str
+    pages: tuple[int, ...] = ()
+
+
+@dataclass(frozen=True)
+class SectionHeading:
+    title: str
+    font_size: float | None = None
+    caps_priority: int = 0
+    style_kind: str = "title"
+
+
+@dataclass(frozen=True)
+class SentenceUnit:
+    text: str
+    bullet_level: int | None = None
+    bullet_indent_pt: float | None = None
+    starts_new_context: bool = False
+
+
+@dataclass(frozen=True)
+class BlockSegment:
+    text: str
+    bullet_level: int | None = None
+    bullet_indent_pt: float | None = None
+    continues_previous_bullet: bool = False
+    list_depth: int | None = None
 
 
 class FilingTextExtractor(HTMLParser):
     """Turn HTML into readable text while dropping tables and chrome."""
 
     BLOCK_TAGS = {
-        "address",
-        "article",
-        "aside",
-        "blockquote",
-        "br",
-        "center",
-        "dd",
-        "div",
-        "dl",
-        "dt",
-        "figcaption",
-        "footer",
-        "form",
-        "h1",
-        "h2",
-        "h3",
-        "h4",
-        "h5",
-        "h6",
-        "header",
-        "hr",
-        "li",
-        "main",
-        "nav",
-        "ol",
-        "p",
-        "pre",
-        "section",
-        "tr",
-        "ul",
+        "address", "article", "aside", "blockquote", "br", "center", "dd",
+        "div", "dl", "dt", "figcaption", "footer", "form", "h1", "h2", "h3",
+        "h4", "h5", "h6", "header", "hr", "li", "main", "nav", "ol", "p",
+        "pre", "section", "tr", "ul",
     }
     DROP_TAGS = {"script", "style", "noscript", "table", "svg", "head"}
 
@@ -127,14 +255,19 @@ class FilingTextExtractor(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.parts: list[str] = []
         self.drop_stack: list[str] = []
+        self.style_stack: list[tuple[str, str]] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
+        attrs_by_name = {name.lower(): value or "" for name, value in attrs}
+        style = attrs_by_name.get("style", "")
         if tag in self.DROP_TAGS:
             self.drop_stack.append(tag)
             return
         if self.drop_stack:
             return
+        if tag != "br":
+            self.style_stack.append((tag, style))
         if tag == "li":
             self._newline()
             self.parts.append("- ")
@@ -149,12 +282,18 @@ class FilingTextExtractor(HTMLParser):
             return
         if tag in self.BLOCK_TAGS:
             self._newline()
+        for index in range(len(self.style_stack) - 1, -1, -1):
+            if self.style_stack[index][0] == tag:
+                del self.style_stack[index]
+                break
 
     def handle_data(self, data: str) -> None:
         if self.drop_stack:
             return
         data = html.unescape(data).replace("\xa0", " ")
         if data.strip():
+            if is_superscript_footnote_marker(data, self.style_stack):
+                data = footnote_marker_text(data)
             self.parts.append(data)
 
     def get_text(self) -> str:
@@ -177,6 +316,7 @@ class FilingBlockExtractor(HTMLParser):
         self.block_stack: list[dict[str, object]] = []
         self.drop_depth = 0
         self.style_stack: list[tuple[str, str]] = []
+        self.list_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
@@ -192,6 +332,10 @@ class FilingBlockExtractor(HTMLParser):
 
         self.style_stack.append((tag, style))
 
+        if tag in {"ul", "ol"}:
+            self.list_depth += 1
+            return
+
         if tag in self.BLOCK_TAGS:
             self.block_stack.append(
                 {
@@ -200,6 +344,12 @@ class FilingBlockExtractor(HTMLParser):
                     "parts": [],
                     "bold": False,
                     "plain": False,
+                    "italic": False,
+                    "roman": False,
+                    "underlined": False,
+                    "not_underlined": False,
+                    "font_size": None,
+                    "list_depth": self.list_depth or None,
                 }
             )
         elif tag == "br":
@@ -220,18 +370,34 @@ class FilingBlockExtractor(HTMLParser):
             self.drop_depth -= 1
             return
 
+        if tag in {"ul", "ol"}:
+            self.list_depth = max(0, self.list_depth - 1)
+
         if tag in self.BLOCK_TAGS and self.block_stack:
             block = self.block_stack.pop()
             text = clean_block_text("".join(block["parts"]))  # type: ignore[arg-type]
-            if text and not should_drop_line(text):
+
+            if text and not should_drop_line(text) and not is_boilerplate_or_nav(text):
+                style = str(block["style"])
                 self.blocks.append(
                     FilingBlock(
                         index=len(self.blocks) + 1,
                         tag=str(block["tag"]),
                         text=text,
-                        style=str(block["style"]),
+                        style=style,
                         bold=bool(block["bold"]),
                         mixed_bold=bool(block["bold"] and block["plain"]),
+                        italic=bool(block["italic"]),
+                        mixed_italic=bool(block["italic"] and block["roman"]),
+                        underlined=bool(block["underlined"]),
+                        mixed_underlined=bool(block["underlined"] and block["not_underlined"]),
+                        font_size=block["font_size"],  # type: ignore[arg-type]
+                        segments=(BlockSegment(
+                            text,
+                            bullet_indent_pt=bullet_indent_from_style(text, style),
+                            list_depth=block["list_depth"],  # type: ignore[arg-type]
+                        ),),
+                        list_depth=block["list_depth"],  # type: ignore[arg-type]
                     )
                 )
 
@@ -246,10 +412,20 @@ class FilingBlockExtractor(HTMLParser):
         data = html.unescape(data).replace("\xa0", " ")
         if not data.strip():
             return
+        if is_superscript_footnote_marker(data, self.style_stack):
+            data = footnote_marker_text(data)
         self._append(data)
         if self.block_stack and any(char.isalnum() for char in data):
             key = "bold" if is_bold_text(self.style_stack) else "plain"
             self.block_stack[-1][key] = True
+            italic_key = "italic" if is_italic_text(self.style_stack) else "roman"
+            self.block_stack[-1][italic_key] = True
+            underlined_key = "underlined" if is_underlined_text(self.style_stack) else "not_underlined"
+            self.block_stack[-1][underlined_key] = True
+            font_size = current_font_size(self.style_stack)
+            if font_size is not None:
+                existing = self.block_stack[-1]["font_size"]
+                self.block_stack[-1]["font_size"] = max(existing, font_size) if existing is not None else font_size
 
     def _append(self, value: str) -> None:
         if self.block_stack:
@@ -274,12 +450,18 @@ class FilingStructureExtractor(HTMLParser):
         self.table_depth = 0
         self.table_rows: list[list[str]] = []
         self.table_cell_bold: list[list[bool]] = []
+        self.table_cell_styles: list[list[str]] = []
         self.current_row_bold: list[bool] = []
+        self.current_row_styles: list[str] = []
         self.current_cell_bold = False
+        self.current_cell_style = ""
+        self.table_font_size: float | None = None
+        self.current_cell_font_size: float | None = None
         self.current_row: list[str] | None = None
         self.current_cell_parts: list[str] | None = None
         self.drop_depth = 0
         self.style_stack: list[tuple[str, str]] = []
+        self.list_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
@@ -295,10 +477,16 @@ class FilingStructureExtractor(HTMLParser):
 
         self.style_stack.append((tag, style))
 
+        if tag in {"ul", "ol"}:
+            self.list_depth += 1
+            return
+
         if tag == "table":
             if self.table_depth == 0:
                 self.table_rows = []
                 self.table_cell_bold = []
+                self.table_cell_styles = []
+                self.table_font_size = None
             self.table_depth += 1
             return
 
@@ -306,9 +494,12 @@ class FilingStructureExtractor(HTMLParser):
             if tag == "tr":
                 self.current_row = []
                 self.current_row_bold = []
+                self.current_row_styles = []
             elif tag in {"td", "th"}:
                 self.current_cell_parts = []
                 self.current_cell_bold = tag == "th"
+                self.current_cell_style = style
+                self.current_cell_font_size = None
             elif tag == "br" and self.current_cell_parts is not None:
                 self.current_cell_parts.append(" ")
             return
@@ -317,9 +508,16 @@ class FilingStructureExtractor(HTMLParser):
             self.block_stack.append(
                 {
                     "tag": tag,
+                    "style": style,
                     "parts": [],
                     "bold": False,
                     "plain": False,
+                    "italic": False,
+                    "roman": False,
+                    "underlined": False,
+                    "not_underlined": False,
+                    "font_size": None,
+                    "list_depth": self.list_depth or None,
                 }
             )
         elif tag == "br":
@@ -341,17 +539,30 @@ class FilingStructureExtractor(HTMLParser):
             self.drop_depth -= 1
             return
 
+        if tag in {"ul", "ol"}:
+            self.list_depth = max(0, self.list_depth - 1)
+
         if self.table_depth:
             if tag in {"td", "th"} and self.current_cell_parts is not None:
                 cell = clean_block_text("".join(self.current_cell_parts))
                 if self.current_row is not None:
                     self.current_row.append(cell)
                     self.current_row_bold.append(self.current_cell_bold)
+                    self.current_row_styles.append(self.current_cell_style)
+                    if self.current_cell_font_size is not None:
+                        self.table_font_size = (
+                            max(self.table_font_size, self.current_cell_font_size)
+                            if self.table_font_size is not None
+                            else self.current_cell_font_size
+                        )
                 self.current_cell_parts = None
+                self.current_cell_style = ""
+                self.current_cell_font_size = None
             elif tag == "tr" and self.current_row is not None:
                 if any(cell for cell in self.current_row):
                     self.table_rows.append(self.current_row)
                     self.table_cell_bold.append(self.current_row_bold)
+                    self.table_cell_styles.append(self.current_row_styles)
                 self.current_row = None
             elif tag == "table":
                 self.table_depth -= 1
@@ -360,9 +571,18 @@ class FilingStructureExtractor(HTMLParser):
                     text = clean_block_text(" ".join(cell for row in rows for cell in row if cell))
                     if text:
                         self.events.append(
-                            FilingStructureEvent(index=len(self.events) + 1, kind="table", text=text, rows=rows,
-                                                 cell_bold=tuple(tuple(row) for row in self.table_cell_bold))
+                            FilingStructureEvent(
+                                index=len(self.events) + 1,
+                                kind="table",
+                                text=text,
+                                rows=rows,
+                                cell_bold=tuple(tuple(row) for row in self.table_cell_bold),
+                                cell_styles=tuple(tuple(row) for row in self.table_cell_styles),
+                                font_size=self.table_font_size,
+                                list_depth=self.list_depth or None,
+                            )
                         )
+                    self.table_font_size = None
             self._pop_style(tag)
             return
 
@@ -375,8 +595,15 @@ class FilingStructureExtractor(HTMLParser):
                         index=len(self.events) + 1,
                         kind=str(block["tag"]),
                         text=text,
+                        style=str(block["style"]),
                         bold=bool(block["bold"]),
                         mixed_bold=bool(block["bold"] and block["plain"]),
+                        italic=bool(block["italic"]),
+                        mixed_italic=bool(block["italic"] and block["roman"]),
+                        underlined=bool(block["underlined"]),
+                        mixed_underlined=bool(block["underlined"] and block["not_underlined"]),
+                        font_size=block["font_size"],  # type: ignore[arg-type]
+                        list_depth=block["list_depth"],  # type: ignore[arg-type]
                     )
                 )
 
@@ -388,17 +615,37 @@ class FilingStructureExtractor(HTMLParser):
         data = html.unescape(data).replace("\xa0", " ")
         if not data.strip():
             return
+        if is_superscript_footnote_marker(data, self.style_stack):
+            data = footnote_marker_text(data)
 
         if self.table_depth:
             if self.current_cell_parts is not None:
                 self.current_cell_parts.append(data)
+                current_style = self._current_style()
+                if current_style and current_style not in self.current_cell_style:
+                    self.current_cell_style = f"{self.current_cell_style} {current_style}".strip()
                 if is_bold_style(self._current_style()) or any(tag in {"b", "strong"} for tag, _ in self.style_stack):
                     self.current_cell_bold = True
+                font_size = current_font_size(self.style_stack)
+                if font_size is not None:
+                    self.current_cell_font_size = (
+                        max(self.current_cell_font_size, font_size)
+                        if self.current_cell_font_size is not None
+                        else font_size
+                    )
         else:
             self._append_to_block(data)
             if self.block_stack and any(char.isalnum() for char in data):
                 key = "bold" if is_bold_text(self.style_stack) else "plain"
                 self.block_stack[-1][key] = True
+                italic_key = "italic" if is_italic_text(self.style_stack) else "roman"
+                self.block_stack[-1][italic_key] = True
+                underlined_key = "underlined" if is_underlined_text(self.style_stack) else "not_underlined"
+                self.block_stack[-1][underlined_key] = True
+                font_size = current_font_size(self.style_stack)
+                if font_size is not None:
+                    existing = self.block_stack[-1]["font_size"]
+                    self.block_stack[-1]["font_size"] = max(existing, font_size) if existing is not None else font_size
 
     def _append_to_block(self, value: str) -> None:
         if self.block_stack:
@@ -449,7 +696,6 @@ def is_bold_style(style: str) -> bool:
 
 
 def is_bold_text(style_stack: list[tuple[str, str]]) -> bool:
-    """Resolve emphasis for this text run, including a child's normal override."""
     for tag, style in reversed(style_stack):
         weights = re.findall(r"font-weight\s*:\s*(bold|normal|[1-9]00)\b", style, re.IGNORECASE)
         if weights:
@@ -457,6 +703,149 @@ def is_bold_text(style_stack: list[tuple[str, str]]) -> bool:
         if tag in {"b", "strong"}:
             return True
     return False
+
+
+def is_italic_text(style_stack: list[tuple[str, str]]) -> bool:
+    for tag, style in reversed(style_stack):
+        styles = re.findall(r"font-style\s*:\s*(italic|oblique|normal)\b", style, re.IGNORECASE)
+        if styles:
+            return styles[-1].lower() in {"italic", "oblique"}
+        if tag in {"i", "em"}:
+            return True
+    return False
+
+
+def is_underlined_text(style_stack: list[tuple[str, str]]) -> bool:
+    for tag, style in reversed(style_stack):
+        if tag == "u":
+            return True
+        decorations = re.findall(
+            r"text-decoration(?:-line)?\s*:\s*([^;]+)",
+            style,
+            re.IGNORECASE,
+        )
+        if decorations:
+            return "underline" in decorations[-1].lower()
+    return False
+
+
+def current_font_size(style_stack: list[tuple[str, str]]) -> float | None:
+    for _, style in reversed(style_stack):
+        match = re.search(r"font-size\s*:\s*([0-9]+(?:\.[0-9]+)?)\s*(pt|px)", style, re.IGNORECASE)
+        if not match:
+            continue
+        return css_length_to_pt(float(match.group(1)), match.group(2))
+    return None
+
+
+def css_length_to_pt(value: float, unit: str) -> float:
+    return value * 0.75 if unit.lower() == "px" else value
+
+
+def is_superscript_footnote_marker(data: str, style_stack: list[tuple[str, str]]) -> bool:
+    marker = data.strip()
+    if not re.fullmatch(r"\d{1,3}", marker):
+        return False
+    style = " ".join(style for _, style in style_stack)
+    font_size = current_font_size(style_stack)
+    if font_size is not None and font_size <= 7:
+        return bool(re.search(r"(?:top\s*:\s*-\s*[0-9.]+pt|vertical-align\s*:\s*(?:super|baseline))", style, re.I))
+    return bool(re.search(r"vertical-align\s*:\s*super", style, re.I))
+
+
+def footnote_marker_text(data: str) -> str:
+    return f" [[FNREF:{data.strip()}]] "
+
+
+def footnote_definition(block: FilingBlock) -> tuple[str, str] | None:
+    text = clean_block_text(block.text)
+    marker_match = FOOTNOTE_REF_RE.match(text)
+    numbered_match = re.match(r"^(\d{1,3})(?:\s+|(?=[A-Z]))(.+)$", text)
+    if marker_match:
+        number = marker_match.group(1)
+        note = text[marker_match.end():].strip()
+    elif numbered_match:
+        number = numbered_match.group(1)
+        note = numbered_match.group(2).strip()
+    else:
+        return None
+    if block.font_size is not None and block.font_size > 8.5:
+        return None
+    if len(note) < 8 or is_subheader_block(block) or parse_item_heading(text):
+        return None
+    return number, note
+
+
+def replace_footnote_reference(
+    text: str,
+    number: str,
+    note: str | None = None,
+    *,
+    replace_unresolved: bool = False,
+) -> str:
+    def repl(match: re.Match[str]) -> str:
+        if match.group(1) != number:
+            return match.group(0)
+        if note is not None:
+            return f" [footnote {number}: {note}] "
+        if replace_unresolved:
+            return f" [footnote {number}] "
+        return match.group(0)
+
+    return clean_block_text(FOOTNOTE_REF_RE.sub(repl, text))
+
+
+def replace_footnote_reference_in_block(
+    block: FilingBlock,
+    number: str,
+    note: str | None = None,
+    *,
+    replace_unresolved: bool = False,
+) -> FilingBlock:
+    segments = tuple(
+        replace(
+            segment,
+            text=replace_footnote_reference(
+                segment.text, number, note, replace_unresolved=replace_unresolved,
+            ),
+        )
+        for segment in block_segments(block)
+    )
+    return replace(
+        block,
+        text=replace_footnote_reference(block.text, number, note, replace_unresolved=replace_unresolved),
+        segments=segments,
+    )
+
+
+def inline_footnote_references(blocks: list[FilingBlock]) -> list[FilingBlock]:
+    output: list[FilingBlock] = []
+    waiting: dict[str, list[int]] = {}
+
+    for block in blocks:
+        definition = footnote_definition(block)
+        if definition and definition[0] in waiting:
+            number, note = definition
+            for output_index in waiting.pop(number):
+                output[output_index] = replace_footnote_reference_in_block(output[output_index], number, note)
+            continue
+
+        output_index = len(output)
+        output.append(block)
+        for number in FOOTNOTE_REF_RE.findall(block.text):
+            waiting.setdefault(number, []).append(output_index)
+
+    for number, output_indexes in waiting.items():
+        for output_index in output_indexes:
+            output[output_index] = replace_footnote_reference_in_block(
+                output[output_index], number, replace_unresolved=True,
+            )
+
+    return output
+
+
+def resolve_section_footnotes(section_blocks: dict[str, list[FilingBlock]]) -> dict[str, list[FilingBlock]]:
+    return {item: inline_footnote_references(blocks) for item, blocks in section_blocks.items()}
 
 
 def html_to_blocks(html_text: str) -> list[FilingBlock]:
@@ -478,7 +867,6 @@ def is_url(value: str) -> bool:
 
 
 def normalize_source(source: str) -> str:
-    """Accept plain SEC URLs and common pasted Markdown link forms."""
     source = source.strip()
     markdown_match = re.fullmatch(r"\[([^\]]+)\]\(([^)]+)\)", source)
     if markdown_match:
@@ -631,15 +1019,19 @@ def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) 
         return blocks
     result = []
     for event in events:
-        if should_drop_line(event.text):
+        if should_drop_line(event.text) or is_boilerplate_or_nav(event.text):
             continue
         if event.kind == "table":
             if len(event.rows) != 1 or not parse_item_heading(event.text):
                 continue
             result.append(FilingBlock(event.index, "div", event.text, bold=True))
         else:
-            result.append(FilingBlock(event.index, event.kind, event.text, bold=event.bold,
-                                      mixed_bold=event.mixed_bold))
+            result.append(FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
+                                      mixed_bold=event.mixed_bold, italic=event.italic,
+                                      mixed_italic=event.mixed_italic, underlined=event.underlined,
+                                      mixed_underlined=event.mixed_underlined, font_size=event.font_size,
+                                      segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+                                      list_depth=event.list_depth))
     return result
 
 
@@ -730,9 +1122,10 @@ def discover_referenced_report(source: str, user_agent: str) -> tuple[str, dict[
 
 
 def report_reference(blocks: list[FilingBlock]) -> dict | None:
-    """Recognize an Item supplied by incorporation, not incidental prose links."""
     text = " ".join(block.text for block in blocks)
     if len(text) > 1800 or not re.search(r"incorporat\w*\b.{0,80}\breference\b", text, re.I):
+        return None
+    if not re.search(r"\binformation in response to this item\b", text, re.I):
         return None
     if not re.search(r"\b(?:annual|financial) report\b", text, re.I):
         return None
@@ -764,17 +1157,18 @@ def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -
     for position, event in enumerate(events):
         if event.kind != "table" or len(event.rows) < 4:
             continue
-        entries = {}
-        for row_index, row in enumerate(event.rows):
-            for cell_index, cell in enumerate(row):
-                if not is_plausible_toc_title(cell):
-                    continue
-                bold = bool(event.cell_bold and event.cell_bold[row_index][cell_index])
-                key = report_title_key(cell)
-                entry = entries.setdefault(key, {"title": cell, "level": 1})
-                entry["level"] = min(entry["level"], 0 if bold else 1)
-        if required <= entries.keys():
-            toc, titles = position, entries
+        entries: dict[str, dict] = {}
+        toc_end = position
+        for table_position in range(position, min(position + 4, len(events))):
+            table = events[table_position]
+            if table.kind != "table":
+                break
+            toc_end = table_position
+            add_toc_title_entries(table, entries)
+            if required <= entries.keys():
+                toc, titles = toc_end, entries
+                break
+        if toc is not None:
             break
 
     nodes = []
@@ -785,11 +1179,8 @@ def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -
         if toc is None:
             if not re.fullmatch(r"h[1-6]", event.kind):
                 continue
-            matches = [(event.text, int(event.kind[1]))]
+            matches = [(event.text, int(event.kind[1]), 1, event.font_size)]
         elif event.kind == "table":
-            # A genuine heading can precede numeric data in the same table.
-            # Stop at the first data row so labels inside the table (e.g.
-            # "Deposits:") cannot open a new document section.
             matches = []
             for row in event.rows:
                 cells = [cell for cell in row if cell]
@@ -797,23 +1188,38 @@ def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -
                     continue
                 if len(cells) != 1 or report_title_key(cells[0]) not in titles:
                     break
-                matches.append((cells[0], titles[report_title_key(cells[0])]["level"]))
+                matches.append((cells[0], titles[report_title_key(cells[0])]["level"], 1, event.font_size))
         else:
             entry = titles.get(report_title_key(event.text))
-            matches = [(event.text, entry["level"])] if entry and not starts_with_bullet(event.text) else []
-        for title, level in matches:
+            matches = [(event.text, entry["level"], 1, event.font_size)] if entry and not starts_with_bullet(event.text) else []
+            if not matches and position + 1 < len(events):
+                next_event = events[position + 1]
+                combined = f"{event.text} {next_event.text}"
+                entry = titles.get(report_title_key(combined))
+                if (
+                    entry
+                    and event.kind != "table"
+                    and next_event.kind != "table"
+                    and event.bold
+                    and next_event.bold
+                    and not starts_with_bullet(event.text)
+                    and not starts_with_bullet(next_event.text)
+                ):
+                    font_size = max(
+                        value for value in (event.font_size, next_event.font_size) if value is not None
+                    ) if event.font_size is not None or next_event.font_size is not None else None
+                    matches = [(entry["title"], entry["level"], 2, font_size)]
+        for title, level, heading_span, font_size in matches:
             if is_period_comparison_label(title):
                 continue
             key = report_title_key(title)
             previous = next((index for index in range(len(nodes) - 1, -1, -1) if nodes[index]["key"] == key), None)
             if previous is not None:
-                # The same title repeated inside its still-open section is a
-                # running header. A title repeated after another peer/parent
-                # is a distinct section and must be disambiguated by its path.
                 if not any(node["level"] <= level for node in nodes[previous + 1:]):
                     continue
             seen.add(key)
-            nodes.append({"title": title, "key": key, "start": position, "level": level})
+            nodes.append({"title": title, "key": key, "start": position, "level": level, "font_size": font_size,
+                          "heading_end": position + heading_span})
     if not required <= seen:
         missing = ", ".join(sorted(required - seen))
         raise ValueError(f"Cannot locate referenced report headings: {missing}. A usable report TOC or HTML h1-h6 headings is required.")
@@ -821,6 +1227,17 @@ def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -
         node["end"] = next((later["start"] for later in nodes[index + 1:]
                             if later["level"] <= node["level"]), len(events))
     return nodes
+
+
+def add_toc_title_entries(event: FilingStructureEvent, entries: dict[str, dict]) -> None:
+    for row_index, row in enumerate(event.rows):
+        for cell_index, cell in enumerate(row):
+            if not is_plausible_toc_title(cell):
+                continue
+            bold = bool(event.cell_bold and event.cell_bold[row_index][cell_index])
+            key = report_title_key(cell)
+            entry = entries.setdefault(key, {"title": cell, "level": 1})
+            entry["level"] = min(entry["level"], 0 if bold else 1)
 
 
 def referenced_section_ranges(nodes: list[dict], paths: list[list[str]]) -> list[dict]:
@@ -844,43 +1261,226 @@ def referenced_section_ranges(nodes: list[dict], paths: list[list[str]]) -> list
 
 
 def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dict],
-                             ranges: list[dict], exclusions: list[dict]) -> list[FilingBlock]:
+                             ranges: list[dict], exclusions: list[dict],
+                             preserve_toc_levels: bool = False,
+                             allowed_pages: set[int] | None = None,
+                             use_html_hierarchy: bool = False) -> list[FilingBlock]:
     headings = {node["start"]: node for node in nodes}
     known_titles = {node["key"] for node in nodes}
+    heading_continuations = {
+        position
+        for node in nodes
+        for position in range(node["start"] + 1, node.get("heading_end", node["start"] + 1))
+    }
+    page_by_position = event_page_numbers(events) if allowed_pages is not None else {}
     blocks = []
     for position, event in enumerate(events):
         if not any(node["start"] <= position < node["end"] for node in ranges):
             continue
         if any(node["start"] <= position < node["end"] for node in exclusions):
             continue
+        if allowed_pages is not None:
+            page = page_by_position.get(position)
+            if page is not None and page not in allowed_pages:
+                continue
+        if position in heading_continuations:
+            continue
+        if page_marker_from_text(event.text) is not None:
+            continue
+        if is_boilerplate_or_nav(event.text):
+            continue
         node = headings.get(position)
         if node:
-            blocks.append(toc_header_block(event.index, node["title"]))
+            if use_html_hierarchy:
+                blocks.append(FilingBlock(
+                    event.index,
+                    "div" if event.kind == "table" else event.kind,
+                    node["title"],
+                    style=event.style,
+                    bold=event.bold or event.kind == "table",
+                    mixed_bold=event.mixed_bold,
+                    italic=event.italic,
+                    mixed_italic=event.mixed_italic,
+                    underlined=event.underlined,
+                    mixed_underlined=event.mixed_underlined,
+                    font_size=node.get("font_size") or event.font_size,
+                    segments=(BlockSegment(node["title"]),),
+                    list_depth=event.list_depth,
+                ))
+            else:
+                blocks.append(toc_header_block(
+                    event.index,
+                    node["title"],
+                    node.get("font_size"),
+                    toc_level=node.get("level") if preserve_toc_levels else None,
+                ))
             continue
-        if is_table_caption(event.text) or is_period_comparison_label(event.text):
-            # Table footnotes and period comparisons belong to the enclosing
-            # topic. Neither a caption nor a standalone pair of periods should
-            # replace that topic (or leave an incidental table legend active).
+        if is_table_caption(event.text) or (event.kind == "table" and is_period_comparison_label(event.text)):
             parents = [node for node in nodes if node["start"] <= position < node["end"]]
             if parents:
                 parent = max(parents, key=lambda node: (node["level"], node["start"]))
                 title = re.sub(r"\s*\(continued\)\s*$", "", parent["title"], flags=re.I)
-                blocks.append(toc_header_block(event.index, title))
+                blocks.append(toc_header_block(
+                    event.index,
+                    title,
+                    parent.get("font_size"),
+                    toc_level=parent.get("level") if preserve_toc_levels else None,
+                ))
             continue
-        if (report_title_key(event.text) in known_titles and not starts_with_bullet(event.text)) or should_drop_line(event.text):
+        if is_period_comparison_label(event.text):
+            parents = [node for node in nodes if node["start"] <= position < node["end"]]
+            if parents:
+                parent = max(parents, key=lambda node: (node["level"], node["start"]))
+                title = re.sub(r"\s*\(continued\)\s*$", "", parent["title"], flags=re.I)
+                blocks.append(toc_header_block(
+                    event.index,
+                    title,
+                    parent.get("font_size"),
+                    toc_level=parent.get("level") if preserve_toc_levels else None,
+                ))
+            blocks.append(FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
+                                      mixed_bold=event.mixed_bold, italic=event.italic,
+                                      mixed_italic=event.mixed_italic, underlined=event.underlined,
+                                      mixed_underlined=event.mixed_underlined, font_size=event.font_size,
+                                      segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+                                      list_depth=event.list_depth))
+            continue
+        if should_drop_line(event.text):
+            continue
+        if report_title_key(event.text) in known_titles and not starts_with_bullet(event.text):
+            block = FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
+                                mixed_bold=event.mixed_bold, italic=event.italic,
+                                mixed_italic=event.mixed_italic, underlined=event.underlined,
+                                mixed_underlined=event.mixed_underlined, font_size=event.font_size,
+                                segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+                                list_depth=event.list_depth)
+            if is_contextual_child_title(event.text) and is_subheader_block(block):
+                blocks.append(block)
             continue
         if event.kind == "table":
-            # A one-cell, one-row prose heading is a layout table. Financial
-            # tables and repeated page/company footer rows remain excluded.
             cells = [cell for row in event.rows for cell in row if cell]
+            note_header = note_header_from_layout_table(event)
+            if note_header:
+                blocks.append(toc_header_block(event.index, note_header, event.font_size))
+                continue
+            narrative_rows = narrative_layout_table_rows(event)
+            if narrative_rows:
+                for row_text in narrative_rows:
+                    blocks.append(
+                        FilingBlock(
+                            event.index,
+                            "div",
+                            row_text,
+                            font_size=event.font_size,
+                            segments=(BlockSegment(row_text),),
+                            list_depth=event.list_depth,
+                        )
+                    )
+                continue
             if len(event.rows) == 1 and len(cells) == 1:
-                block = FilingBlock(event.index, "div", cells[0], bold=True)
+                block = FilingBlock(
+                    event.index,
+                    "div",
+                    cells[0],
+                    bold=True,
+                    font_size=event.font_size,
+                    list_depth=event.list_depth,
+                )
                 if is_subheader_block(block):
                     blocks.append(block)
             continue
-        blocks.append(FilingBlock(event.index, event.kind, event.text, bold=event.bold,
-                                  mixed_bold=event.mixed_bold))
+        event_block = FilingBlock(
+            event.index,
+            event.kind,
+            event.text,
+            style=event.style,
+            bold=event.bold,
+            mixed_bold=event.mixed_bold,
+            italic=event.italic,
+            mixed_italic=event.mixed_italic,
+            underlined=event.underlined,
+            mixed_underlined=event.mixed_underlined,
+            font_size=event.font_size,
+            segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+            list_depth=event.list_depth,
+        )
+        if preserve_toc_levels and not use_html_hierarchy and is_subheader_block(event_block):
+            blocks.append(toc_header_block(event.index, event.text, toc_level=1))
+        else:
+            blocks.append(event_block)
     return merge_continued_blocks(blocks)
+
+
+def note_header_from_layout_table(event: FilingStructureEvent) -> str:
+    nonempty_rows = [[cell for cell in row if cell] for row in event.rows]
+    if len(nonempty_rows) != 1 or len(nonempty_rows[0]) < 2:
+        return ""
+    first, *rest = nonempty_rows[0]
+    note_match = re.fullmatch(r"(Note\s+\d+[A-Z]?)\s*:?", first.strip(), re.IGNORECASE)
+    if not note_match:
+        return ""
+    title = " ".join(cell.strip(" :") for cell in rest if cell.strip(" :"))
+    if not title or page_numbers_from_text(title) or re.search(r"[$%]|\b\d{4}\b", title):
+        return ""
+    return f"{note_match.group(1)}: {title}"
+
+
+def narrative_layout_table_rows(event: FilingStructureEvent) -> list[str]:
+    nonempty_rows = [[cell for cell in row if cell] for row in event.rows]
+    if not nonempty_rows or not all(len(row) == 1 for row in nonempty_rows):
+        return []
+    row_texts = [row[0] for row in nonempty_rows]
+    if not any(starts_with_bullet(text) for text in row_texts):
+        return []
+    return [text for text in row_texts if starts_with_bullet(text)]
+
+
+def blocks_for_exact_title(
+    events: list[FilingStructureEvent],
+    title: str,
+    preserve_toc_levels: bool = False,
+    allowed_pages: set[int] | None = None,
+    use_html_hierarchy: bool = False,
+) -> list[FilingBlock]:
+    key = report_title_key(title)
+    starts = []
+    for position, event in enumerate(events):
+        if (
+            event.kind != "table"
+            and report_title_key(event.text) == key
+            and (event.bold or event.font_size is not None or re.fullmatch(r"h[1-6]", event.kind))
+        ):
+            starts.append((position, event.font_size))
+        elif (
+            event.kind == "table"
+            and len(event.rows) == 1
+            and len([cell for row in event.rows for cell in row if cell]) == 1
+            and report_title_key(event.text) == key
+        ):
+            starts.append((position, event.font_size))
+    if not starts:
+        return []
+    start, font_size = starts[0]
+    end = next(
+        (
+            position
+            for position, event in enumerate(events[start + 1 :], start=start + 1)
+            if event.kind != "table" and (is_terminal_section_heading(event.text) or parse_item_heading(event.text))
+        ),
+        len(events),
+    )
+    node = {"title": title, "key": key, "start": start, "end": end,
+            "level": 1 if preserve_toc_levels else 0,
+            "heading_end": start + 1, "font_size": font_size}
+    return referenced_report_blocks(
+        events,
+        [node],
+        [node],
+        [],
+        preserve_toc_levels=preserve_toc_levels,
+        allowed_pages=allowed_pages,
+        use_html_hierarchy=use_html_hierarchy,
+    )
 
 
 def follow_report_references(section_blocks: dict[str, list[FilingBlock]], source: str,
@@ -905,8 +1505,6 @@ def follow_report_references(section_blocks: dict[str, list[FilingBlock]], sourc
                                  and (parent["start"], parent["end"]) != (other["start"], other["end"])
                                  for parent in ranges)]
         blocks = referenced_report_blocks(events, nodes, ranges, exclusions)
-        # A selected section may be numeric-only, but an entire referenced Item
-        # must not silently become empty after table removal.
         if not any(not is_subheader_block(block) for block in blocks):
             raise ValueError(f"Referenced Item {item} contains no extractable narrative in {report_source}.")
         result[item] = blocks
@@ -1014,7 +1612,7 @@ def extract_item15_toc_section_blocks(html_text: str) -> list[FilingBlock] | Non
         if event.kind == "table":
             blocks.extend(toc_header_blocks_from_table(event, entries_by_key, seen_toc_headers))
             continue
-        if event.text.casefold() == "table of contents" or should_drop_line(event.text):
+        if event.text.casefold() == "table of contents" or should_drop_line(event.text) or is_boilerplate_or_nav(event.text):
             continue
         if parse_item_heading(event.text):
             continue
@@ -1023,15 +1621,23 @@ def extract_item15_toc_section_blocks(html_text: str) -> list[FilingBlock] | Non
         if toc_entry:
             if toc_entry.match_key not in seen_toc_headers:
                 seen_toc_headers.add(toc_entry.match_key)
-                blocks.append(toc_header_block(event.index, toc_entry.title))
+                blocks.append(toc_header_block(event.index, toc_entry.title, font_size=event.font_size, toc_level=toc_entry.level))
         else:
             blocks.append(
                 FilingBlock(
                     index=event.index,
-                    tag="toc_text",
+                    tag=event.kind,
                     text=event.text,
-                    style="",
-                    bold=False,
+                    style=event.style,
+                    bold=event.bold,
+                    mixed_bold=event.mixed_bold,
+                    italic=event.italic,
+                    mixed_italic=event.mixed_italic,
+                    underlined=event.underlined,
+                    mixed_underlined=event.mixed_underlined,
+                    font_size=event.font_size,
+                    segments=(BlockSegment(event.text, bullet_indent_pt=bullet_indent_from_style(event.text, event.style)),),
+                    list_depth=event.list_depth,
                 )
             )
 
@@ -1093,9 +1699,9 @@ def find_item15_toc(
 
 
 def toc_entries_from_table(event: FilingStructureEvent) -> list[TocEntry]:
-    entries: list[TocEntry] = []
+    raw_entries: list[tuple[str, str, str, str, int, int]] = []
     seen: set[str] = set()
-    for row in event.rows:
+    for row_index, row in enumerate(event.rows):
         cells = [cell for cell in row if cell]
         for index, cell in enumerate(cells):
             if not is_plausible_toc_title(cell):
@@ -1111,8 +1717,55 @@ def toc_entries_from_table(event: FilingStructureEvent) -> list[TocEntry]:
             if not normalized or normalized in seen:
                 continue
             seen.add(normalized)
-            entries.append(TocEntry(title=title, normalized=normalized, match_key=toc_match_key(title), page=page))
-    return entries
+            raw_entries.append((title, normalized, toc_match_key(title), page, row_index, index))
+
+    levels = toc_entry_levels(event, raw_entries)
+    return [
+        TocEntry(title=title, normalized=normalized, match_key=match_key, page=page, level=levels[position])
+        for position, (title, normalized, match_key, page, _, _) in enumerate(raw_entries)
+    ]
+
+
+def toc_entry_levels(event: FilingStructureEvent, raw_entries: list[tuple[str, str, str, str, int, int]]) -> list[int]:
+    indents = [toc_cell_indent(event, row_index, cell_index) for *_, row_index, cell_index in raw_entries]
+    if any(indent is not None for indent in indents):
+        indents = [0.0 if indent is None else indent for indent in indents]
+    distinct_indents: list[float] = []
+    for indent in indents:
+        if indent is None:
+            continue
+        if not any(abs(indent - known) <= 0.1 for known in distinct_indents):
+            distinct_indents.append(indent)
+    distinct_indents.sort()
+    if len(distinct_indents) > 1:
+        return [
+            next(
+                (level for level, known in enumerate(distinct_indents) if indent is not None and abs(indent - known) <= 0.1),
+                0,
+            )
+            for indent in indents
+        ]
+
+    return [0 for _ in raw_entries]
+
+
+def toc_cell_indent(event: FilingStructureEvent, row_index: int, cell_index: int) -> float | None:
+    if not event.cell_styles or row_index >= len(event.cell_styles) or cell_index >= len(event.cell_styles[row_index]):
+        return None
+    style = event.cell_styles[row_index][cell_index]
+    padding_left = css_style_length_pt(style, "padding-left")
+    margin_left = css_style_length_pt(style, "margin-left")
+    text_indent = css_style_length_pt(style, "text-indent")
+    base_indent = max(value for value in (padding_left, margin_left, 0.0) if value is not None)
+    effective_indent = base_indent + (text_indent or 0.0)
+    return effective_indent if effective_indent > 0.1 else None
+
+
+def css_style_length_pt(style: str, property_name: str) -> float | None:
+    match = re.search(rf"{property_name}\s*:\s*(-?[0-9]+(?:\.[0-9]+)?)\s*(pt|px)", style, re.IGNORECASE)
+    if not match:
+        return None
+    return css_length_to_pt(float(match.group(1)), match.group(2))
 
 
 def is_supported_item15_toc(entries: list[TocEntry]) -> bool:
@@ -1140,12 +1793,32 @@ def toc_header_blocks_from_table(
             if entry is None or entry.match_key in seen_toc_headers:
                 continue
             seen_toc_headers.add(entry.match_key)
-            blocks.append(toc_header_block(event.index, entry.title))
+            blocks.append(toc_header_block(event.index, entry.title, font_size=event.font_size, toc_level=entry.level))
     return blocks
 
 
-def toc_header_block(index: int, title: str) -> FilingBlock:
-    return FilingBlock(index=index, tag="toc_header", text=title, style="", bold=True)
+def toc_font_size_for_level(level: int) -> float:
+    return 100.0 - level
+
+
+def toc_header_font_size(font_size: float | None, toc_level: int | None) -> float | None:
+    return toc_font_size_for_level(toc_level) if toc_level is not None else font_size
+
+
+def toc_header_block(
+    index: int,
+    title: str,
+    font_size: float | None = None,
+    toc_level: int | None = None,
+) -> FilingBlock:
+    return FilingBlock(
+        index=index,
+        tag="toc_header",
+        text=title,
+        style="",
+        bold=True,
+        font_size=toc_header_font_size(font_size, toc_level),
+    )
 
 
 def canonical_toc_title(title: str) -> str:
@@ -1179,7 +1852,371 @@ def is_plausible_toc_title(text: str) -> bool:
 
 
 def is_page_number(text: str) -> bool:
-    return bool(re.fullmatch(r"\d{1,4}", text.strip()))
+    value = text.strip()
+    return bool(re.fullmatch(r"\d{1,3}", value)) and int(value) <= 500
+
+
+def parse_item_reference_cell(text: str, allow_bare: bool = False) -> str | None:
+    text = canonical_toc_title(text)
+    if allow_bare:
+        bare_match = re.fullmatch(r"(1A|1B|1C|7A|9A|9B|9C|15|16|1|2|3|4|5|6|7|8|9)", text, re.IGNORECASE)
+        if bare_match:
+            return normalize_item(bare_match.group(1))
+    match = re.fullmatch(
+        r"(?:item\s*)?(1A|1B|1C|7A|9A|9B|9C|15|16|1|2|3|4|5|6|7|8|9)\.",
+        text,
+        re.IGNORECASE,
+    )
+    return normalize_item(match.group(1)) if match else None
+
+
+def page_numbers_from_text(text: str) -> tuple[int, ...]:
+    pages: set[int] = set()
+    for start, end in re.findall(r"\b(\d{1,4})\s*-\s*(\d{1,4})\b", text):
+        first, last = int(start), int(end)
+        if first <= last <= 500 and last - first <= 300:
+            pages.update(range(first, last + 1))
+    for value in re.findall(r"\b\d{1,4}\b", text):
+        page = int(value)
+        if page <= 500:
+            pages.add(page)
+    return tuple(sorted(pages))
+
+
+PAGE_MARKER_RE = re.compile(r"\|\s*(\d{1,3})\s*$")
+
+
+def page_marker_from_text(text: str) -> int | None:
+    """Return a rendered-document page number from a footer-style marker.
+
+    SEC HTML often keeps printed-page footers as text such as ``MD&A | 18``
+    or ``Image | MD&A | 18``.  A bare number is intentionally not treated as
+    a marker because it is too easy to confuse with a table value or a period.
+    """
+    cleaned = re.sub(r"\s+", " ", normalize_typography(text)).strip()
+    match = PAGE_MARKER_RE.search(cleaned)
+    if not match:
+        return None
+    prefix = cleaned[:match.start()].strip(" |")
+    if not prefix:
+        return None
+    label = prefix.rsplit("|", 1)[-1].strip()
+    if not label or len(label.split()) > 8:
+        return None
+    if re.search(r"\b(?:year|period|revenue|income|assets|liabilities|expenses|total|versus|vs)\b", label, re.I):
+        return None
+    return int(match.group(1))
+
+
+def event_page_numbers(events: list[FilingStructureEvent]) -> dict[int, int]:
+    """Map structure-event positions to printed pages using footer markers.
+
+    A footer appears after the content it belongs to. Therefore, events up to
+    and including ``MD&A | 18`` are assigned to page 18, and events after it
+    are assigned to the next discovered marker's page. Positions after the
+    final marker remain unmapped and are retained by callers as a conservative
+    fallback.
+    """
+    markers = [
+        (position, page)
+        for position, event in enumerate(events)
+        if (page := page_marker_from_text(event.text)) is not None
+    ]
+    if not markers:
+        return {}
+
+    page_by_position: dict[int, int] = {}
+    start = 0
+    for marker_position, page in markers:
+        for position in range(start, marker_position + 1):
+            page_by_position[position] = page
+        start = marker_position + 1
+    return page_by_position
+
+
+def row_page_numbers(cells: list[str]) -> tuple[int, ...]:
+    page_cells = [cell for cell in cells if re.search(r"\bpages?\b|\b\d{1,4}\s*-\s*\d{1,4}\b", cell, re.I)]
+    return page_numbers_from_text(" ".join(page_cells))
+
+
+def title_cell_from_reference_row(cells: list[str], item_cell_index: int) -> str:
+    candidates = []
+    for index, cell in enumerate(cells):
+        if index == item_cell_index:
+            continue
+        if parse_item_reference_cell(cell, allow_bare=True) or not is_plausible_toc_title(cell):
+            continue
+        if page_numbers_from_text(cell) and not re.search(r"[A-Za-z]", cell):
+            continue
+        if re.fullmatch(r"pages?\s+[\d,\- ]+", cell, re.IGNORECASE):
+            continue
+        candidates.append(cell)
+    return canonical_toc_title(candidates[0]) if candidates else ""
+
+
+def item_references_from_tables(events: list[FilingStructureEvent],
+                                wanted_items: set[str]) -> dict[str, list[InlineItemReference]]:
+    references: dict[str, list[InlineItemReference]] = {item: [] for item in wanted_items}
+    for event in events:
+        if event.kind != "table" or len(event.rows) < 2:
+            continue
+        table_text = event.text.casefold()
+        has_item_column = any(
+            re.fullmatch(r"item(?:\s+number)?", cell.strip(), re.IGNORECASE)
+            for row in event.rows
+            for cell in row
+        )
+        item_label_count = sum(
+            1
+            for row in event.rows
+            for cell in row
+            if parse_item_reference_cell(cell, allow_bare=False)
+        )
+        if not (
+            "item number" in table_text
+            or "cross-reference" in table_text
+            or ("table of contents" in table_text and "item" in table_text and "page" in table_text)
+            or item_label_count >= 3
+        ):
+            continue
+
+        current_item = None
+        for row in event.rows:
+            cells = [canonical_toc_title(cell) for cell in row if canonical_toc_title(cell)]
+            if not cells:
+                continue
+            item_cells = [(index, item) for index, cell in enumerate(cells)
+                          if (item := parse_item_reference_cell(cell, allow_bare=has_item_column)) is not None]
+            if item_cells:
+                index, item = item_cells[0]
+                current_item = item if item in wanted_items else None
+                if current_item is None:
+                    continue
+                title = title_cell_from_reference_row(cells, index)
+                if title:
+                    references[current_item].append(
+                        InlineItemReference(current_item, title.rstrip(":"), row_page_numbers(cells))
+                    )
+                continue
+
+            if current_item is None:
+                continue
+            pages = row_page_numbers(cells)
+            title = title_cell_from_reference_row(cells, -1)
+            if title and pages:
+                references[current_item].append(InlineItemReference(current_item, title.rstrip(":"), pages))
+
+    return {item: refs for item, refs in references.items() if refs}
+
+
+def toc_entries_by_page(events: list[FilingStructureEvent]) -> dict[int, list[TocEntry]]:
+    by_page: dict[int, list[TocEntry]] = {}
+    for event in events[:150]:
+        if event.kind != "table" or len(event.rows) < 4:
+            continue
+        if not is_toc_like_table(event):
+            continue
+        entries = toc_entries_from_table(event)
+        if len(entries) < 3:
+            continue
+        for entry in entries:
+            if entry.page and is_page_number(entry.page):
+                by_page.setdefault(int(entry.page), []).append(entry)
+    return by_page
+
+
+def is_toc_like_table(event: FilingStructureEvent) -> bool:
+    if "table of contents" in event.text.casefold():
+        return True
+
+    nonempty_rows = [[cell for cell in row if cell] for row in event.rows]
+    if any(len(row) <= 3 and any(cell.casefold() == "page" for cell in row) for row in nonempty_rows[:3]):
+        return True
+
+    title_page_rows = 0
+    for row in nonempty_rows:
+        if 1 < len(row) <= 3 and any(is_page_number(cell) for cell in row[1:]):
+            if is_plausible_toc_title(row[0]) and "$" not in " ".join(row):
+                title_page_rows += 1
+    return title_page_rows >= 4
+
+
+def item_reference_titles(events: list[FilingStructureEvent],
+                          refs: list[InlineItemReference],
+                          item: str,
+                          excluded_pages: set[int] | None = None) -> list[str]:
+    titles: list[str] = []
+    seen: set[str] = set()
+    by_page = toc_entries_by_page(events)
+    excluded_pages = excluded_pages or set()
+
+    def add(title: str) -> None:
+        key = report_title_key(title)
+        if key and key not in seen:
+            seen.add(key)
+            titles.append(canonical_toc_title(title).rstrip(":"))
+
+    for ref in refs:
+        add(ref.title)
+        for page in ref.pages:
+            if page in excluded_pages:
+                continue
+            for entry in by_page.get(page, []):
+                add(entry.title)
+
+    if item == "7":
+        add("Management's Discussion and Analysis")
+    elif item == "8":
+        add("Financial Statements and Supplemental Details")
+        add("Financial Statements and Supplementary Data")
+    elif item == "15":
+        add("Exhibits")
+        add("Exhibit Index")
+        add("Exhibits and Financial Statement Schedules")
+    elif item in ITEM_TITLES:
+        add(ITEM_TITLES[item])
+    return titles
+
+
+def is_item7_root_title(title: str) -> bool:
+    return report_title_key(title).startswith(ITEM_7_ROOT_KEY)
+
+
+def item7_root_range(nodes: list[dict], events: list[FilingStructureEvent], title: str) -> list[dict]:
+    root_key = report_title_key(title)
+    matches = [node for node in nodes if node["key"] == root_key]
+    if not matches:
+        return []
+
+    root = dict(matches[0])
+    child_levels = [node["level"] for node in nodes if node["start"] > root["start"]]
+    if child_levels:
+        root["level"] = max(0, min(child_levels) - 1)
+        matches[0]["level"] = root["level"]
+    boundary_positions = [
+        node["start"]
+        for node in nodes
+        if node["start"] > root["start"]
+        and node["key"] in ITEM_7_EXCLUDED_SECTION_KEYS
+    ]
+    if not boundary_positions:
+        boundary_positions = [
+            position
+            for position, event in enumerate(events)
+            if position > root["start"]
+            and report_title_key(event.text) in ITEM_7_EXCLUDED_SECTION_KEYS
+            and not starts_with_bullet(event.text)
+        ]
+    if boundary_positions:
+        root["end"] = min(boundary_positions)
+    return [root]
+
+
+def extract_indexed_section_blocks(
+    html_text: str,
+    items: Iterable[str] = DEFAULT_ITEMS,
+) -> dict[str, list[FilingBlock]]:
+    """Fallback for filings organized by cross-reference index or multi-column TOC."""
+    wanted = {normalize_item(item) for item in items}
+    events = html_to_structure_events(html_text)
+    references = item_references_from_tables(events, wanted)
+    sections: dict[str, list[FilingBlock]] = {}
+    pages_by_item = {
+        item: {page for ref in refs for page in ref.pages}
+        for item, refs in references.items()
+    }
+
+    for item, refs in references.items():
+        blocks: list[FilingBlock] = []
+        seen_blocks: set[tuple[int, str]] = set()
+        allowed_pages = pages_by_item.get(item) or None
+        excluded_pages = (
+            set().union(*(pages for other, pages in pages_by_item.items() if other != item))
+            if item == "1"
+            else pages_by_item.get("8", set()) | pages_by_item.get("15", set()) if item == "7"
+            else set()
+        )
+
+        titles = item_reference_titles(events, refs, item, excluded_pages=excluded_pages)
+        if item == "7" and any(is_item7_root_title(title) for title in titles):
+            root_title = next(
+                (title for title in titles if report_title_key(title) == ITEM_7_ROOT_KEY),
+                next(title for title in titles if is_item7_root_title(title)),
+            )
+            try:
+                nodes = report_outline(events, [[root_title]])
+                ranges = item7_root_range(nodes, events, root_title)
+                if ranges:
+                    for block in referenced_report_blocks(
+                        events,
+                        nodes,
+                        ranges,
+                        [],
+                        preserve_toc_levels=False,
+                        allowed_pages=allowed_pages,
+                        use_html_hierarchy=True,
+                    ):
+                        marker = (block.index, block.text)
+                        if marker not in seen_blocks:
+                            seen_blocks.add(marker)
+                            blocks.append(block)
+                    titles = [ref.title for ref in refs if not is_item7_root_title(ref.title)]
+            except ValueError:
+                pass
+
+        for title in titles:
+            try:
+                nodes = report_outline(events, [[title]])
+                ranges = referenced_section_ranges(nodes, [[title]])
+            except ValueError:
+                for block in blocks_for_exact_title(
+                    events,
+                    title,
+                    preserve_toc_levels=False,
+                    allowed_pages=allowed_pages,
+                    use_html_hierarchy=item == "7",
+                ):
+                    marker = (block.index, block.text)
+                    if marker in seen_blocks:
+                        continue
+                    seen_blocks.add(marker)
+                    blocks.append(block)
+                continue
+            for block in referenced_report_blocks(
+                events,
+                nodes,
+                ranges,
+                [],
+                preserve_toc_levels=False,
+                allowed_pages=allowed_pages,
+                use_html_hierarchy=item == "7",
+            ):
+                marker = (block.index, block.text)
+                if marker in seen_blocks:
+                    continue
+                seen_blocks.add(marker)
+                blocks.append(block)
+        if any(not is_subheader_block(block) for block in blocks):
+            sections[item] = sorted(blocks, key=lambda block: block.index)
+
+    remove_broad_item_overlaps(sections)
+    return sections
+
+
+def remove_broad_item_overlaps(sections: dict[str, list[FilingBlock]]) -> None:
+    for broad_item, narrower_items in (("1", ("1A", "7", "8", "15")), ("7", ("8", "15"))):
+        if broad_item not in sections:
+            continue
+        narrower_markers = {
+            (block.index, block.text)
+            for item in narrower_items
+            for block in sections.get(item, [])
+        }
+        sections[broad_item] = [
+            block
+            for block in sections[broad_item]
+            if (block.index, block.text) not in narrower_markers
+        ]
 
 
 def extract_section_blocks(
@@ -1214,7 +2251,7 @@ def extract_section_blocks(
             candidate = [
                 block
                 for block in blocks[start_index + 1 : end_index]
-                if block.text and not should_drop_line(block.text) and parse_item_heading(block.text) is None
+                if block.text and not should_drop_line(block.text) and not is_boilerplate_or_nav(block.text) and parse_item_heading(block.text) is None
             ]
             length = sum(len(block.text) for block in candidate)
             if length:
@@ -1257,6 +2294,57 @@ def extract_sections(text: str, items: Iterable[str] = DEFAULT_ITEMS) -> dict[st
     return sections
 
 
+def section_reference_text(blocks: list[FilingBlock]) -> str:
+    return clean_block_text(" ".join(block.text for block in blocks if block.text))
+
+
+def item15_reference_trigger(text: str) -> bool:
+    """Return True when an extracted item points readers into Item 15 material."""
+    normalized = re.sub(r"\s+", " ", normalize_typography(text)).strip().casefold()
+    if not normalized:
+        return False
+
+    financial_target = bool(re.search(
+        r"\b(?:consolidated\s+financial\s+statements?|financial\s+statements?|"
+        r"notes?\s+thereto|notes?\s+to\s+(?:the\s+)?consolidated\s+financial\s+statements?|"
+        r"accounting\s+pronouncements?)\b",
+        normalized,
+    ))
+    explicit_item15 = bool(re.search(r"\b(?:part\s+iv,\s*)?item\s+15\b", normalized))
+    if explicit_item15 and financial_target:
+        return True
+
+    if len(normalized) > AUTO_ITEM15_POINTER_MAX_CHARS:
+        return False
+
+    pointer_phrase = bool(re.search(
+        r"\b(?:appears?\s+on\s+pages?|included\s+on\s+pages?|set\s+forth|"
+        r"information\s+required\s+by\s+this\s+item|read\s+in\s+conjunction|"
+        r"included\s+in\s+this\s+annual\s+report)\b",
+        normalized,
+    ))
+    page_reference = bool(re.search(r"\bpages?\s+\d{1,4}", normalized))
+    glossary_target = "glossary of terms" in normalized
+    return pointer_phrase and (financial_target or glossary_target or page_reference)
+
+
+def should_auto_include_item15(section_blocks: dict[str, list[FilingBlock]], requested_items: Iterable[str]) -> bool:
+    requested = {normalize_item(item) for item in requested_items}
+    if "15" in requested:
+        return False
+    return any(
+        item15_reference_trigger(section_reference_text(section_blocks.get(item, [])))
+        for item in ("7", "8")
+    )
+
+
+def should_auto_include_item15_from_sections(sections: dict[str, str], requested_items: Iterable[str]) -> bool:
+    requested = {normalize_item(item) for item in requested_items}
+    if "15" in requested:
+        return False
+    return any(item15_reference_trigger(sections.get(item, "")) for item in ("7", "8"))
+
+
 def section_blocks_to_text(section_blocks: dict[str, list[FilingBlock]]) -> dict[str, str]:
     sections: dict[str, str] = {}
     for item, blocks in section_blocks.items():
@@ -1282,27 +2370,70 @@ def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
     merged: list[FilingBlock] = []
     pending: FilingBlock | None = None
 
-    for block in blocks:
+    for block_index, block in enumerate(blocks):
         if pending is None:
             pending = block
             continue
 
-        if should_merge_with_next_block(pending, block):
+        if is_bullet_marker_only(block.text):
+            if is_bullet_separator(block) and is_unmarked_bullet_text(pending):
+                pending = mark_block_as_bullet(
+                    pending,
+                    bullet_indent_pt=bullet_indent_from_style(block.text, block.style),
+                    list_depth=block.list_depth,
+                )
+            merged.append(pending)
+            pending = block
+            continue
+
+        separator_follows = (
+            block_index + 1 < len(blocks)
+            and is_bullet_marker_only(blocks[block_index + 1].text)
+            and is_bullet_separator(blocks[block_index + 1])
+        )
+        marker_without_list_successor = (
+            is_bullet_marker_only(pending.text)
+            and not separator_follows
+        )
+        if (
+            not marker_without_list_successor
+            and not (separator_follows and pending.text.rstrip().endswith(":"))
+            and should_merge_with_next_block(pending, block)
+        ):
+            current_segments = block_segments(block)
+            if starts_with_bullet(pending.text) and has_bullet_continuation_layout(block):
+                current_segments = mark_segments_as_bullet_continuation(current_segments)
             pending = FilingBlock(
                 index=pending.index,
-                # Both inputs have already been classified as narrative. Do
-                # not let inherited emphasis turn the growing list into a title.
                 tag="merged_text",
                 text=join_continued_text(pending.text, block.text),
                 style=pending.style,
                 bold=pending.bold,
                 mixed_bold=pending.mixed_bold or block.mixed_bold or pending.bold != block.bold,
+                italic=pending.italic,
+                mixed_italic=(
+                    pending.mixed_italic
+                    or block.mixed_italic
+                    or pending.italic != block.italic
+                ),
+                underlined=pending.underlined,
+                mixed_underlined=(
+                    pending.mixed_underlined
+                    or block.mixed_underlined
+                    or pending.underlined != block.underlined
+                ),
+                font_size=max(
+                    value for value in (pending.font_size, block.font_size) if value is not None
+                ) if pending.font_size is not None or block.font_size is not None else None,
+                segments=block_segments(pending) + current_segments,
+                list_depth=pending.list_depth if pending.list_depth is not None else block.list_depth,
             )
         else:
-            merged.append(pending)
+            if not is_bullet_marker_only(pending.text):
+                merged.append(pending)
             pending = block
 
-    if pending is not None:
+    if pending is not None and not is_bullet_marker_only(pending.text):
         merged.append(pending)
     return merged
 
@@ -1311,15 +2442,88 @@ def should_merge_with_next_block(previous: FilingBlock, current: FilingBlock) ->
     if any(is_table_caption(block.text) or is_period_comparison_label(block.text)
            for block in (previous, current)):
         return False
+    if is_wrapped_sentence_continuation(previous, current):
+        return True
     if is_subheader_block(previous) or is_subheader_block(current):
         return False
     if starts_with_bullet(current.text):
         return True
+    if is_bullet_marker_only(previous.text):
+        return True
+    if starts_with_bullet(previous.text):
+        return has_bullet_continuation_layout(current)
     return not ends_with_sentence_terminal(previous.text)
+
+
+def is_wrapped_sentence_continuation(previous: FilingBlock, current: FilingBlock) -> bool:
+    if starts_with_bullet(current.text):
+        return False
+    if ends_with_sentence_terminal(previous.text):
+        return False
+    if not re.search(
+        r"\b(?:and|or|but|nor|of|to|for|in|on|with|from|as|at|by|above|below|under)\s*$",
+        previous.text.strip(),
+        re.IGNORECASE,
+    ):
+        return False
+    return bool(re.match(r"^\s*[\"'“‘(]", current.text))
 
 
 def starts_with_bullet(text: str) -> bool:
     return bool(BULLET_PREFIX_RE.match(text))
+
+
+def is_bullet_marker_only(text: str) -> bool:
+    return bool(re.fullmatch(r"\s*(?:[•‣▪▫◦●○]|o)\s*", text))
+
+
+def is_bullet_separator(block: FilingBlock) -> bool:
+    return re.search(
+        r"margin-left\s*:\s*(?!0(?:\.0+)?\s*)(?:[0-9]+(?:\.[0-9]+)?)\s*(?:pt|px|%)",
+        block.style,
+        re.IGNORECASE,
+    ) is not None
+
+
+def is_unmarked_bullet_text(block: FilingBlock) -> bool:
+    return not starts_with_bullet(block.text) and not block.text.rstrip().endswith(":")
+
+
+def mark_block_as_bullet(
+    block: FilingBlock,
+    bullet_indent_pt: float | None = None,
+    list_depth: int | None = None,
+) -> FilingBlock:
+    text = f"• {block.text.lstrip()}"
+    segments = block_segments(block)
+    marked_segments = tuple(
+        replace(
+            segment,
+            text=f"• {segment.text.lstrip()}",
+            bullet_indent_pt=(
+                bullet_indent_pt if bullet_indent_pt is not None else segment.bullet_indent_pt
+            ),
+            list_depth=list_depth if list_depth is not None else segment.list_depth,
+        )
+        for segment in segments
+    )
+    return replace(
+        block,
+        text=text,
+        segments=marked_segments,
+        list_depth=list_depth if list_depth is not None else block.list_depth,
+    )
+
+
+def has_bullet_continuation_layout(block: FilingBlock) -> bool:
+    return (
+        not starts_with_bullet(block.text)
+        and (
+            css_style_length_pt(block.style, "padding-left") is not None
+            or css_style_length_pt(block.style, "margin-left") is not None
+            or css_style_length_pt(block.style, "text-indent") is not None
+        )
+    )
 
 
 def ends_with_sentence_terminal(text: str) -> bool:
@@ -1340,7 +2544,7 @@ def cleanup_section_text(text: str) -> str:
     lines: list[str] = []
     for line in text.splitlines():
         line = re.sub(r"\s+", " ", line).strip()
-        if should_drop_line(line):
+        if should_drop_line(line) or is_boilerplate_or_nav(line):
             continue
         lines.append(line)
 
@@ -1369,9 +2573,6 @@ def should_drop_line(line: str) -> bool:
 
 def is_repeated_filing_header(line: str) -> bool:
     cleaned = re.sub(r"\s+", " ", normalize_typography(line)).strip()
-    # Micron-style page footers can otherwise look like headings because the
-    # title heuristic sees only the uppercase K in "59 |2025 10-K". Require
-    # the entire page/report label so narrative references to 10-Ks survive.
     page = r"(?:page\s+)?\d{1,4}"
     report = r"(?:19|20)\d{2}\s+(?:form\s+)?10\s*-\s*K(?:/A)?"
     if re.fullmatch(rf"(?:{page}\s*\|\s*{report}|{report}\s*\|\s*{page})", cleaned, re.IGNORECASE):
@@ -1386,13 +2587,11 @@ def is_repeated_filing_header(line: str) -> bool:
 
 
 def is_table_caption(text: str) -> bool:
-    """Recognize numbered captions, preserving sentences such as 'Table 2 presents...'."""
     return bool(re.match(r"^Table\s+(?:\d+(?:\.\d+)*[A-Za-z]?|[IVXLCDM]+)\s*(?::|[\-–—]|\.(?!\d))\s*\S",
                          text.strip(), re.IGNORECASE)) and not ends_with_sentence_terminal(text)
 
 
 def is_period_comparison_label(text: str) -> bool:
-    """Match only standalone period pairs, not sentences or topic headings."""
     period = (r"(?:(?:(?:full\s+)?(?:fiscal\s+)?year|fiscal|FY)\s*|"
               r"(?:first|second|third|fourth)\s+quarter\s+|Q[1-4]\s+)?(?:19|20)\d{2}")
     comparison = r"(?:vs\.?|versus|compared\s+(?:with|to))"
@@ -1400,16 +2599,22 @@ def is_period_comparison_label(text: str) -> bool:
                              text.strip(), re.IGNORECASE))
 
 
+def is_period_comparison_heading(block: FilingBlock) -> bool:
+    return is_period_comparison_label(block.text)
+
+
 def is_subheader_block(block: FilingBlock) -> bool:
-    if is_table_caption(block.text) or is_period_comparison_label(block.text):
+    if is_table_caption(block.text):
         return False
+    if is_period_comparison_label(block.text):
+        return is_period_comparison_heading(block)
     if block.tag == "toc_header":
         return True
     if block.tag in {"toc_text", "merged_text"}:
         return False
 
     text = block.text.strip()
-    if not text or parse_item_heading(text) or should_drop_line(text):
+    if not text or parse_item_heading(text) or should_drop_line(text) or is_boilerplate_or_nav(text):
         return False
     if starts_with_bullet(text):
         return False
@@ -1419,26 +2624,62 @@ def is_subheader_block(block: FilingBlock) -> bool:
         return False
     if re.search(r"[.!?]$", text):
         return False
-    # Bold financial labels often introduce a sentence and its bullet list.
-    # Keep those introductions in the narrative, without banning real colon
-    # headings such as "Sources of Revenue:" or TOC-confirmed titles.
-    if text.endswith(":") and block.tag not in {"h1", "h2", "h3", "h4", "h5", "h6"}:
-        if block.mixed_bold and not looks_like_title(text):
+    normalized_heading = normalize_heading_title(text)
+    if normalized_heading in CONTEXTUAL_CHILD_TITLES:
+        return True
+
+    if text.endswith(":"):
+        if TABLE_INTRO_PATTERNS.search(text):
             return False
-        if re.search(r"\b(reflecting|driven by|due to|because of|as follows|the following|"
-                     r"includes?|consists? of|comprised of)\s*:$", text, re.IGNORECASE):
-            return False
-    if re.search(r"\b(or|and|the|a|an|of|to|for|with|from|in|on)\b", text, re.IGNORECASE) and not block.bold:
+        if block.tag not in {"h1", "h2", "h3", "h4", "h5", "h6"}:
+            if block.mixed_bold and not looks_like_title(text):
+                return False
+            if "," in text and re.search(r"\b[a-z][a-z'-]+\b", text):
+                return False
+            if re.search(r"\b(reflecting|driven by|due to|because of|as follows|the following|"
+                         r"includes?|consists? of|comprised of)\s*:$", text, re.IGNORECASE):
+                return False
+            if re.search(r"\b(reflecting|driven by|due to|because of)\b.+:$", text, re.IGNORECASE):
+                return False
+
+    if block.font_size is not None and block.font_size >= 10 and looks_like_title(text):
+        return True
+    if is_italic_subheader(block, text):
+        return True
+    if block.underlined and not block.mixed_underlined and looks_like_title(text):
+        return True
+    if (
+        re.search(r"\b(or|and|the|a|an|of|to|for|with|from|in|on)\b", text, re.IGNORECASE)
+        and not block.bold
+        and not looks_like_title(text)
+    ):
         return False
     return block.bold or block.tag in {"h1", "h2", "h3", "h4", "h5", "h6"} or looks_like_title(text)
 
 
-def looks_like_title(text: str) -> bool:
-    words = re.findall(r"[A-Za-z][A-Za-z'’&-]*", text)
-    if not words:
+def is_italic_subheader(block: FilingBlock, text: str) -> bool:
+    if not block.italic or block.mixed_italic:
         return False
-    title_words = sum(1 for word in words if word[:1].isupper() or word.isupper())
-    return title_words / len(words) >= 0.65
+    words = re.findall(r"[A-Za-z][A-Za-z0-9'’&.-]*", text)
+    if not 2 <= len(words) <= 8:
+        return False
+    first_word = words[0]
+    return first_word[:1].isupper() or looks_like_title(text)
+
+
+def looks_like_title(text: str) -> bool:
+    words = re.findall(r"[A-Za-z][A-Za-z0-9'’&.-]*", text)
+    scored_words = [word for word in words if word.casefold() not in TITLE_CONNECTOR_WORDS]
+    if not scored_words:
+        return False
+    title_words = sum(1 for word in scored_words if is_title_case_word(word))
+    return title_words / len(scored_words) >= 0.65
+
+
+def is_title_case_word(word: str) -> bool:
+    if word[:1].isupper() or word.isupper():
+        return True
+    return bool(re.search(r"[A-Z0-9]", word[1:]))
 
 
 def split_into_chunks(text: str, max_chars: int = 1800, min_chars: int = 120) -> list[str]:
@@ -1464,7 +2705,7 @@ def split_into_chunks(text: str, max_chars: int = 1800, min_chars: int = 120) ->
 
 def normalize_paragraph(paragraph: str) -> str:
     lines = [re.sub(r"\s+", " ", line).strip() for line in paragraph.splitlines()]
-    lines = [line for line in lines if line and not should_drop_line(line)]
+    lines = [line for line in lines if line and not should_drop_line(line) and not is_boilerplate_or_nav(line)]
     return " ".join(lines).strip()
 
 
@@ -1496,6 +2737,294 @@ def split_long_paragraph(paragraph: str, max_chars: int) -> list[str]:
     return final_chunks
 
 
+def split_extraction_sentences(text: str) -> list[str]:
+    return [unit.text for unit in split_extraction_sentence_units(text)]
+
+
+def protect_sentence_periods(text: str) -> str:
+    protected = re.sub(
+        r'\b(Item\s+\d+[A-Z]?|Part\s+[IVXLCDM]+|Note\s+\d+[A-Z]?)\.',
+        rf"\1{PERIOD_TOKEN}",
+        text,
+        flags=re.IGNORECASE,
+    )
+    for abbreviation in COMMON_ABBREVIATIONS:
+        protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
+    protected = WRAPPED_REFERENCE_TITLE_RE.sub(
+        lambda match: f"{match.group(1)}{PERIOD_TOKEN}",
+        protected,
+    )
+    protected = SINGLE_LETTER_ABBREVIATION_RE.sub(
+        lambda match: match.group(0).replace(".", PERIOD_TOKEN),
+        protected,
+    )
+    return INITIALISM_ABBREVIATION_RE.sub(
+        lambda match: match.group(0).replace(".", PERIOD_TOKEN),
+        protected,
+    )
+
+
+def repair_missing_sentence_spaces(text: str) -> str:
+    protected_spans = [match.span() for match in PROTECTED_INLINE_SPAN_RE.finditer(text)]
+
+    def replacement(match: re.Match[str]) -> str:
+        if any(start <= match.start() < end for start, end in protected_spans):
+            return match.group(0)
+        return f"{match.group(1)} {match.group(2)}"
+
+    return MISSING_SPACE_AFTER_PERIOD_RE.sub(replacement, text)
+
+
+def split_extraction_sentence_units(text: str) -> list[SentenceUnit]:
+    text = normalize_typography(text).strip()
+    if not text:
+        return []
+    # TODO: Expand this repair for additional malformed HTML and abbreviation cases if needed.
+    text = repair_missing_sentence_spaces(text)
+    text = re.sub(r"([^\s\n])[ \t]*([•‣▪▫◦●○])[ \t]*", r"\1\n\2 ", text)
+    protected = protect_sentence_periods(text)
+
+    sentences: list[SentenceUnit] = []
+    for raw_line in protected.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        bullet_level = bullet_level_from_line(raw_line)
+        if bullet_level is not None:
+            sentence = line.replace(PERIOD_TOKEN, ".").strip()
+            sentence = re.sub(r"\s+", " ", sentence)
+            bullet_sentence, following_sentence = split_embedded_narrative_after_bullet(sentence)
+            sentences.append(SentenceUnit(bullet_sentence, bullet_level))
+            if following_sentence:
+                sentences.append(SentenceUnit(following_sentence, starts_new_context=True))
+            continue
+        if (
+            sentences
+            and sentences[-1].bullet_level is not None
+            and not ends_with_sentence_terminal(sentences[-1].text)
+        ):
+            continuation = line.replace(PERIOD_TOKEN, ".").strip()
+            continuation = re.sub(r"\s+", " ", continuation)
+            if continuation:
+                sentences[-1] = SentenceUnit(
+                    f"{sentences[-1].text} {continuation}",
+                    sentences[-1].bullet_level,
+                    sentences[-1].bullet_indent_pt,
+                )
+            continue
+        parts = re.split(r"(?<=[.!?])\s+(?=[\"'(\[]?[A-Z0-9])", line)
+        if should_continue_previous_sentence_line(sentences, line):
+            first_part = parts.pop(0)
+            continuation = first_part.replace(PERIOD_TOKEN, ".").strip()
+            continuation = re.sub(r"\s+", " ", continuation)
+            if continuation:
+                sentences[-1] = SentenceUnit(
+                    f"{sentences[-1].text} {continuation}",
+                    sentences[-1].bullet_level,
+                    sentences[-1].bullet_indent_pt,
+                    sentences[-1].starts_new_context,
+                )
+        for part in parts:
+            sentence = part.replace(PERIOD_TOKEN, ".").strip()
+            sentence = re.sub(r"\s+", " ", sentence)
+            if sentence:
+                sentences.append(SentenceUnit(sentence))
+    return sentences
+
+
+def should_continue_previous_sentence_line(sentences: list[SentenceUnit], line: str) -> bool:
+    if not sentences:
+        return False
+    previous = sentences[-1]
+    if is_wrapped_note_title_continuation(previous.text, line) or is_wrapped_item_title_continuation(previous.text, line):
+        return True
+    if previous.bullet_level is not None or ends_with_sentence_terminal(previous.text):
+        return False
+    stripped = line.lstrip("\"'([{ ")
+    return bool(stripped and stripped[0].islower())
+
+
+def is_wrapped_note_title_continuation(previous_text: str, line: str) -> bool:
+    return is_wrapped_reference_title_continuation(previous_text, line, "Note")
+
+
+def is_wrapped_item_title_continuation(previous_text: str, line: str) -> bool:
+    return is_wrapped_reference_title_continuation(previous_text, line, "Item")
+
+
+def is_wrapped_reference_title_continuation(
+    previous_text: str,
+    line: str,
+    reference_type: str,
+) -> bool:
+    if not re.search(rf"\b{reference_type}\s+\d{{1,3}}[A-Z]?\.$", previous_text, re.IGNORECASE):
+        return False
+    if previous_text.count('"') % 2 == 0:
+        return False
+    stripped = line.lstrip()
+    return bool(stripped and stripped[0].isupper())
+
+
+def split_embedded_narrative_after_bullet(text: str) -> tuple[str, str]:
+    match = re.match(
+        r"^((?:[•‣▪▫◦●○]|\*\s+|-\s+)\s*(?:(?!\bThe\b).){1,120}?)\s+"
+        r"((?:The)\b.+)$",
+        text,
+    )
+    if not match:
+        return text, ""
+    bullet_text = re.sub(r"\s+", " ", match.group(1)).strip()
+    following_text = re.sub(r"\s+", " ", match.group(2)).strip()
+    if len(re.findall(r"[A-Za-z0-9]+", bullet_text)) > 10:
+        return text, ""
+    return bullet_text, following_text
+
+
+def bullet_level_from_line(line: str) -> int | None:
+    if not SENTENCE_BULLET_RE.match(line):
+        return None
+    indent = len(line) - len(line.lstrip(" \t"))
+    return max(1, indent // 2 + 1)
+
+
+def bullet_indent_from_style(text: str, style: str) -> float | None:
+    if not (SENTENCE_BULLET_RE.match(text) or is_bullet_marker_only(text)):
+        return None
+    indents = [
+        css_style_length_pt(style, "padding-left"),
+        css_style_length_pt(style, "margin-left"),
+    ]
+    values = [indent for indent in indents if indent is not None]
+    return max(values) if values else None
+
+
+def bullet_level_from_indent(indent: float, stack: list[tuple[float, int]], tolerance: float = 0.1) -> int:
+    if not stack:
+        stack.append((indent, 1))
+        return 1
+    if indent > stack[-1][0] + tolerance:
+        level = stack[-1][1] + 1
+        stack.append((indent, level))
+        return level
+    while stack and indent < stack[-1][0] - tolerance:
+        stack.pop()
+    if stack and abs(indent - stack[-1][0]) <= tolerance:
+        return stack[-1][1]
+    level = (stack[-1][1] + 1) if stack else 1
+    stack.append((indent, level))
+    return level
+
+
+def block_segments(block: FilingBlock) -> tuple[BlockSegment, ...]:
+    if block.segments:
+        if block.list_depth is None:
+            return block.segments
+        return tuple(
+            replace(
+                segment,
+                list_depth=segment.list_depth if segment.list_depth is not None else block.list_depth,
+            )
+            for segment in block.segments
+        )
+    return (
+        BlockSegment(
+            block.text,
+            bullet_indent_pt=bullet_indent_from_style(block.text, block.style),
+            list_depth=block.list_depth,
+        ),
+    )
+
+
+def mark_segments_as_bullet_continuation(segments: tuple[BlockSegment, ...]) -> tuple[BlockSegment, ...]:
+    return tuple(
+        BlockSegment(
+            segment.text,
+            segment.bullet_level,
+            segment.bullet_indent_pt,
+            continues_previous_bullet=True,
+            list_depth=segment.list_depth,
+        )
+        for segment in segments
+    )
+
+
+def sentence_units_from_block(block: FilingBlock, indent_stack: list[tuple[float, int]] | None = None) -> list[SentenceUnit]:
+    units: list[SentenceUnit] = []
+    indent_stack = indent_stack if indent_stack is not None else []
+    segments = list(block_segments(block))
+    segment_index = 0
+    while segment_index < len(segments):
+        segment = segments[segment_index]
+        if (
+            is_bullet_marker_only(segment.text)
+            and segment_index + 1 < len(segments)
+            and not is_bullet_marker_only(segments[segment_index + 1].text)
+        ):
+            next_segment = segments[segment_index + 1]
+            segment = replace(segment, text=f"• {next_segment.text.lstrip()}")
+            segment_index += 2
+        else:
+            segment_index += 1
+        segment_units: list[SentenceUnit] = []
+        segment_level = segment.bullet_level
+        if segment.list_depth is not None:
+            segment_level = segment.list_depth
+        elif segment.bullet_indent_pt is not None:
+            segment_level = bullet_level_from_indent(segment.bullet_indent_pt, indent_stack)
+        for unit in split_extraction_sentence_units(segment.text):
+            bullet_level = segment_level if segment_level is not None else unit.bullet_level
+            bullet_indent_pt = segment.bullet_indent_pt if segment.bullet_indent_pt is not None else unit.bullet_indent_pt
+            current_unit = SentenceUnit(unit.text, bullet_level, bullet_indent_pt, unit.starts_new_context)
+            if (
+                bullet_level is None
+                and units
+                and units[-1].bullet_level is not None
+                and not unit.starts_new_context
+                and (
+                    segment.continues_previous_bullet
+                    or segment_units
+                    or should_continue_previous_bullet_sentence_unit(units[-1], current_unit)
+                )
+            ):
+                units[-1] = SentenceUnit(
+                    f"{units[-1].text} {unit.text}",
+                    units[-1].bullet_level,
+                    units[-1].bullet_indent_pt,
+                )
+            elif should_continue_previous_sentence_unit(units, current_unit):
+                units[-1] = SentenceUnit(
+                    f"{units[-1].text} {current_unit.text}",
+                    units[-1].bullet_level,
+                    units[-1].bullet_indent_pt,
+                    units[-1].starts_new_context,
+                )
+            else:
+                units.append(current_unit)
+            segment_units.append(unit)
+    return units
+
+
+def should_continue_previous_sentence_unit(units: list[SentenceUnit], current: SentenceUnit) -> bool:
+    if not units or current.starts_new_context:
+        return False
+    previous = units[-1]
+    if previous.bullet_level is not None or current.bullet_level is not None:
+        return False
+    if ends_with_sentence_terminal(previous.text):
+        return False
+    stripped = current.text.lstrip("\"'([{ ")
+    return bool(stripped and stripped[0].islower())
+
+
+def should_continue_previous_bullet_sentence_unit(previous: SentenceUnit, current: SentenceUnit) -> bool:
+    if current.starts_new_context or current.bullet_level is not None:
+        return False
+    if previous.bullet_level is None or ends_with_sentence_terminal(previous.text):
+        return False
+    stripped = current.text.lstrip("\"'([{ ")
+    return bool(stripped and stripped[0].islower())
+
+
 def infer_year(text: str, source: str | None = None) -> str:
     patterns = [
         r"CONFORMED PERIOD OF REPORT:\s*(20\d{2})\d{4}",
@@ -1514,7 +3043,6 @@ def infer_year(text: str, source: str | None = None) -> str:
 
 
 def infer_company_year_from_filename(path: Path) -> tuple[str, str | None]:
-    """Infer company/year from names like nvda-20230129.htm."""
     stem = path.stem
     match = re.match(r"([A-Za-z0-9]+)-(20\d{2})", stem)
     if match:
@@ -1524,8 +3052,177 @@ def infer_company_year_from_filename(path: Path) -> tuple[str, str | None]:
     return (company or "unknown", None)
 
 
-def make_chunk_id(year: str, item: str, item_chunk_index: int) -> str:
-    return f"{year}_{item}_P{item_chunk_index:03d}"
+def make_chunk_id(company: str, year: str, item: str, item_chunk_index: int) -> str:
+    return f"{company.lower()}_{year}_{item}_P{item_chunk_index:03d}"
+
+
+def make_sentence_id(chunk_id: str, sentence_index: int) -> str:
+    return f"{chunk_id}_S{sentence_index:03d}"
+
+
+def is_contextual_child_title(title: str) -> bool:
+    return normalize_heading_title(title) in CONTEXTUAL_CHILD_TITLES
+
+
+def header_style_kind(block: FilingBlock, text: str) -> str:
+    if block.tag == "toc_header":
+        return "toc"
+    if block.tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
+        return "html_heading"
+    if (
+        block.bold
+        and block.italic
+        and block.underlined
+        and not block.mixed_italic
+        and not block.mixed_underlined
+    ):
+        return "bold_italic_underlined"
+    if block.bold and block.underlined and not block.mixed_underlined:
+        return "bold_underlined"
+    if block.bold and block.italic and not block.mixed_italic:
+        return "bold_italic"
+    if block.bold:
+        return "bold"
+    if block.underlined and not block.mixed_underlined:
+        return "underlined"
+    if is_italic_subheader(block, text):
+        return "italic"
+    return "title"
+
+
+def header_style_rank(style_kind: str) -> int:
+    ranks = {
+        "toc": 0,
+        "html_heading": 0,
+        "bold_italic_underlined": 1,
+        "bold_underlined": 1,
+        "bold": 1,
+        "bold_italic": 2,
+        "underlined": 2,
+        "italic": 3,
+        "title": 4,
+    }
+    return ranks.get(style_kind, 3)
+
+
+def all_caps_heading_priority(title: str) -> int:
+    words = re.findall(r"[A-Za-z][A-Za-z&.-]*", title)
+    if not words:
+        return 0
+    letters = "".join(re.findall(r"[A-Za-z]", title))
+    if not letters or any(char.islower() for char in letters):
+        return 0
+    return int(len(words) >= 2 or len(letters) >= 8)
+
+
+def visually_all_caps_heading(title: str) -> bool:
+    letters = re.findall(r"[A-Za-z]", title)
+    return bool(letters) and not any(char.islower() for char in letters)
+
+
+def closes_heading_level(current: SectionHeading, previous: SectionHeading, tolerance: float = 0.1) -> bool:
+    if (
+        visually_all_caps_heading(previous.title)
+        and "underlined" in previous.style_kind
+        and not (
+            visually_all_caps_heading(current.title)
+            and "underlined" in current.style_kind
+        )
+    ):
+        return False
+    if (
+        visually_all_caps_heading(current.title)
+        and "underlined" in current.style_kind
+        and "underlined" not in previous.style_kind
+        and not visually_all_caps_heading(previous.title)
+    ):
+        return True
+    if current.font_size is None:
+        return False
+    if previous.font_size is None:
+        return True
+    if current.font_size > previous.font_size + tolerance:
+        return True
+    if current.font_size < previous.font_size - tolerance:
+        return False
+    current_style_rank = header_style_rank(current.style_kind)
+    previous_style_rank = header_style_rank(previous.style_kind)
+    if current_style_rank > previous_style_rank:
+        return False
+    if current_style_rank < previous_style_rank:
+        return True
+    if (
+        current.style_kind == previous.style_kind
+        and visually_all_caps_heading(current.title) == visually_all_caps_heading(previous.title)
+    ):
+        return True
+    return current.caps_priority >= previous.caps_priority
+
+
+def section_path_title(path: list[SectionHeading], fallback: str) -> str:
+    return " > ".join(heading.title for heading in path) if path else fallback
+
+
+def section_path_values(path: list[SectionHeading], fallback: str) -> list[str]:
+    return [heading.title for heading in path] if path else [fallback]
+
+
+def update_section_path(path: list[SectionHeading], block: FilingBlock) -> list[SectionHeading]:
+    header = re.sub(r"\s+", " ", normalize_typography(block.text)).strip()
+    if not header or is_boilerplate_or_nav(header):
+        return path
+    current = SectionHeading(
+        header,
+        block.font_size,
+        all_caps_heading_priority(header),
+        header_style_kind(block, header),
+    )
+    if is_period_comparison_label(header):
+        parent_path = list(path)
+        while parent_path and is_period_comparison_label(parent_path[-1].title):
+            parent_path.pop()
+        return [*parent_path, current] if parent_path else [current]
+    path = [heading for heading in path]
+    while path and is_period_comparison_label(path[-1].title):
+        period_heading = path[-1]
+        if period_heading.font_size is None or current.font_size is None:
+            current_rank = header_style_rank(current.style_kind)
+            period_rank = header_style_rank(period_heading.style_kind)
+            if current_rank > period_rank:
+                break
+        elif not closes_heading_level(current, period_heading):
+            break
+        path.pop()
+    if block.font_size is not None:
+        next_path = list(path)
+        while next_path and closes_heading_level(current, next_path[-1]):
+            next_path.pop()
+        return [*next_path, current]
+    if current.style_kind == "italic":
+        parent_path = list(path)
+        while parent_path and parent_path[-1].style_kind == current.style_kind:
+            parent_path.pop()
+        return [*parent_path, current] if parent_path else [current]
+    if path and current.style_kind != "title":
+        parent_path = list(path)
+        current_rank = header_style_rank(current.style_kind)
+        while (
+            parent_path
+            and parent_path[-1].style_kind != "title"
+            and header_style_rank(parent_path[-1].style_kind) >= current_rank
+        ):
+            parent_path.pop()
+        return [*parent_path, current] if parent_path else [current]
+    if path and current.style_kind == path[-1].style_kind and current.style_kind != "title":
+        sibling_path = list(path)
+        sibling_path.pop()
+        return [*sibling_path, current] if sibling_path else [current]
+    if is_contextual_child_title(header):
+        parent_path = list(path)
+        while parent_path and is_contextual_child_title(parent_path[-1].title):
+            parent_path.pop()
+        return [*parent_path, current] if parent_path else [current]
+    return [current]
 
 
 def build_records(
@@ -1535,23 +3232,25 @@ def build_records(
     source: str,
     max_chars: int,
     min_chars: int,
-) -> list[dict[str, str | int]]:
-    records: list[dict[str, str | int]] = []
-    for item in DEFAULT_ITEMS:
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for item in ITEM_OUTPUT_ORDER:
         if item not in sections:
             continue
         for chunk_index, chunk in enumerate(split_into_chunks(sections[item], max_chars=max_chars, min_chars=min_chars), start=1):
             records.append(
                 {
-                    "id": make_chunk_id(year, item, chunk_index),
+                    "id": make_chunk_id(company, year, item, chunk_index),
                     "company": company,
                     "year": year,
                     "item": item,
                     "item_default_title": ITEM_TITLES[item],
                     "item_title": ITEM_TITLES[item],
+                    "section_path": [ITEM_TITLES[item]],
                     "item_chunk_index": chunk_index,
                     "text": chunk,
                     "source": source,
+                    "html_list_depth": None,
                 }
             )
     return records
@@ -1563,46 +3262,179 @@ def build_records_from_section_blocks(
     company: str,
     source: str,
     max_chars: int,
-) -> list[dict[str, str | int]]:
-    records: list[dict[str, str | int]] = []
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
 
-    for item in DEFAULT_ITEMS:
+    for item in ITEM_OUTPUT_ORDER:
         if item not in section_blocks:
             continue
 
-        current_subheader = ITEM_TITLES[item]
+        section_path: list[SectionHeading] = []
+        bullet_indent_stack: list[tuple[float, int]] = []
         item_chunk_index = 1
+
+        def append_record(
+            block: FilingBlock,
+            path: list[SectionHeading],
+            text: str,
+            sentence_units: list[SentenceUnit],
+            empty_header: bool = False,
+        ) -> None:
+            nonlocal item_chunk_index
+            record = {
+                "id": make_chunk_id(company, year, item, item_chunk_index),
+                "company": company,
+                "year": year,
+                "item": item,
+                "item_default_title": ITEM_TITLES[item],
+                "item_title": section_path_title(path, ITEM_TITLES[item]),
+                "section_path": section_path_values(path, ITEM_TITLES[item]),
+                "item_chunk_index": item_chunk_index,
+                "source_block_index": block.index,
+                "text": text,
+                "html_list_depth": block.list_depth,
+                "_sentence_units": [
+                    {
+                        "text": unit.text,
+                        "bullet_level": unit.bullet_level,
+                        "bullet_indent_pt": unit.bullet_indent_pt,
+                    }
+                    for unit in sentence_units
+                ],
+                "source": source,
+            }
+            if empty_header:
+                record["is_empty_header"] = True
+            records.append(record)
+            item_chunk_index += 1
+
+        pending_header: FilingBlock | None = None
+        pending_header_path: list[SectionHeading] | None = None
+        has_text_after_pending_header = False
+
         for block in section_blocks[item]:
-            if is_table_caption(block.text) or is_period_comparison_label(block.text):
+            if is_table_caption(block.text):
                 continue
-            if is_subheader_block(block):
-                current_subheader = block.text
+            if is_repeated_item_root_header(block, item, section_path):
+                continue
+            if is_boilerplate_or_nav(block.text):
                 continue
 
-            for text in split_long_paragraph(block.text, max_chars=max_chars):
-                records.append(
-                    {
-                        "id": make_chunk_id(year, item, item_chunk_index),
-                        "company": company,
-                        "year": year,
-                        "item": item,
-                        "item_default_title": ITEM_TITLES[item],
-                        "item_title": current_subheader,
-                        "item_chunk_index": item_chunk_index,
-                        "source_block_index": block.index,
-                        "text": text,
-                        "source": source,
-                    }
-                )
-                item_chunk_index += 1
+            if is_subheader_block(block):
+                next_path = update_section_path(section_path, block)
+                if (
+                    pending_header is not None
+                    and pending_header_path is not None
+                    and not has_text_after_pending_header
+                    and len(pending_header_path) >= 2
+                    and len(next_path) <= len(pending_header_path)
+                    and not is_period_comparison_label(block.text)
+                ):
+                    append_record(
+                        pending_header,
+                        pending_header_path,
+                        "",
+                        [],
+                        empty_header=True,
+                    )
+                section_path = next_path
+                pending_header = block
+                pending_header_path = list(section_path)
+                has_text_after_pending_header = False
+                bullet_indent_stack = []
+                continue
+
+            sentence_units = sentence_units_from_block(block, bullet_indent_stack)
+            if not any(unit.bullet_level is not None for unit in sentence_units):
+                bullet_indent_stack = []
+            append_record(block, section_path, block.text, sentence_units)
+            has_text_after_pending_header = True
+
+        if (
+            pending_header is not None
+            and pending_header_path is not None
+            and not has_text_after_pending_header
+            and len(pending_header_path) >= 2
+            and not is_period_comparison_label(pending_header.text)
+        ):
+            append_record(pending_header, pending_header_path, "", [], empty_header=True)
 
     return records
 
 
-def write_outputs(records: list[dict[str, str | int]], sections: dict[str, str], out_dir: Path, year: str) -> None:
+def is_repeated_item_root_header(
+    block: FilingBlock,
+    item: str,
+    section_path: list[SectionHeading],
+) -> bool:
+    if not section_path:
+        return False
+    if item == "7":
+        return is_item7_root_title(block.text)
+    return report_title_key(block.text) == report_title_key(ITEM_TITLES[item])
+
+
+def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    sentence_records: list[dict[str, Any]] = []
+    for record in records:
+        chunk_id = str(record["id"])
+        raw_units = record.get("_sentence_units")
+        units = (
+            [SentenceUnit(str(unit["text"]), unit.get("bullet_level"), unit.get("bullet_indent_pt")) for unit in raw_units]
+            if isinstance(raw_units, list)
+            else split_extraction_sentence_units(str(record.get("text", "")))
+        )
+        if not units:
+            sentence_records.append(
+                {
+                    "id": make_sentence_id(chunk_id, 1),
+                    "chunk_id": chunk_id,
+                    "company": record["company"],
+                    "year": record["year"],
+                    "item": record["item"],
+                    "item_default_title": record["item_default_title"],
+                    "item_title": record["item_title"],
+                    "section_path": record.get("section_path", []),
+                    "item_chunk_index": record["item_chunk_index"],
+                    "sentence_index": 1,
+                    "bullet_level": None,
+                    "bullet_indent_pt": None,
+                    "html_list_depth": record.get("html_list_depth"),
+                    "source_block_index": record.get("source_block_index", ""),
+                    "text": "",
+                    "source": record["source"],
+                }
+            )
+            continue
+        for sentence_index, sentence in enumerate(units, start=1):
+            sentence_records.append(
+                {
+                    "id": make_sentence_id(chunk_id, sentence_index),
+                    "chunk_id": chunk_id,
+                    "company": record["company"],
+                    "year": record["year"],
+                    "item": record["item"],
+                    "item_default_title": record["item_default_title"],
+                    "item_title": record["item_title"],
+                    "section_path": record.get("section_path", []),
+                    "item_chunk_index": record["item_chunk_index"],
+                    "sentence_index": sentence_index,
+                    "bullet_level": sentence.bullet_level,
+                    "bullet_indent_pt": sentence.bullet_indent_pt,
+                    "html_list_depth": record.get("html_list_depth"),
+                    "source_block_index": record.get("source_block_index", ""),
+                    "text": sentence.text,
+                    "source": record["source"],
+                }
+            )
+    return sentence_records
+
+
+def write_outputs(records: list[dict[str, Any]], sections: dict[str, str], out_dir: Path, year: str) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    (out_dir / f"{year}_chunks.json").write_text(json.dumps(records, indent=2, ensure_ascii=False), encoding="utf-8")
+    public_records = [{key: value for key, value in record.items() if not key.startswith("_")} for record in records]
+    (out_dir / f"{year}_chunks.json").write_text(json.dumps(public_records, indent=2, ensure_ascii=False), encoding="utf-8")
     txt_lines = []
     for record in records:
         txt_lines.append(f"[{record['id']}] Item {record['item']} - {record['item_title']}")
@@ -1610,13 +3442,26 @@ def write_outputs(records: list[dict[str, str | int]], sections: dict[str, str],
         txt_lines.append("")
     (out_dir / f"{year}_chunks.txt").write_text("\n".join(txt_lines).strip() + "\n", encoding="utf-8")
 
+    sentence_records = build_sentence_records(records)
+    (out_dir / f"{year}_chunk_sentences.json").write_text(
+        json.dumps(sentence_records, indent=2, ensure_ascii=False), encoding="utf-8",
+    )
+    sentence_lines = []
+    for record in sentence_records:
+        sentence_lines.append(f"[{record['id']}] Parent {record['chunk_id']} - Item {record['item']} - {record['item_title']}")
+        sentence_lines.append(str(record["text"]))
+        sentence_lines.append("")
+    (out_dir / f"{year}_chunk_sentences.txt").write_text(
+        "\n".join(sentence_lines).strip() + "\n" if sentence_lines else "", encoding="utf-8",
+    )
+
     for item, section_text in sections.items():
         safe_item = item.lower().replace("a", "a")
         (out_dir / f"{year}_item_{safe_item}.txt").write_text(section_text + "\n", encoding="utf-8")
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Extract Item 1, 1A, 7, 8, and 15 from a SEC 10-K filing.")
+    parser = argparse.ArgumentParser(description="Extract SEC 10-K Item sections into cleaned chunks.")
     parser.add_argument("source", nargs="?", help="Optional SEC filing HTML URL or local .html/.htm/.txt file.")
     identity = parser.add_mutually_exclusive_group()
     identity.add_argument("--ticker", help="SEC ticker for API extraction, e.g. NVDA.")
@@ -1624,8 +3469,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--company", help="Company folder/name override. Defaults to ticker or filing filename.")
     parser.add_argument("--year", help="Fiscal year / chunk ID prefix, e.g. 2024. Required for API extraction.")
     parser.add_argument(
-        "--items", nargs="+", type=normalize_item, choices=DEFAULT_ITEMS, default=DEFAULT_ITEMS,
-        help="Items to extract (space-separated). Default: 1 1A 7 8 15.",
+        "--items", nargs="+", type=normalize_item, choices=SUPPORTED_ITEMS, default=DEFAULT_ITEMS,
+        help="Items to extract (space-separated). Default: 1 1A 7 8. Item 15 can be requested explicitly or auto-included when Item 7/8 points to it.",
     )
     parser.add_argument("--out-dir", default="data/raw", help="Directory for extracted TXT/JSON files. Default: data/raw.")
     parser.add_argument("--raw-dir", help=argparse.SUPPRESS)
@@ -1680,12 +3525,38 @@ def main(argv: list[str] | None = None) -> int:
     if args.raw_dir:
         print("Warning: --raw-dir is deprecated and ignored; source HTML is no longer saved.", file=sys.stderr)
 
+    requested_items = list(dict.fromkeys(normalize_item(item) for item in args.items))
+    active_items = list(requested_items)
     blocks = item_blocks_with_layout_headings(raw_html, html_to_blocks(raw_html))
-    section_blocks = extract_section_blocks(blocks, items=args.items)
-    if "15" in args.items:
+    section_blocks = extract_section_blocks(blocks, items=requested_items)
+    missing_items = [item for item in requested_items if item not in section_blocks]
+    indexed_items = list(missing_items)
+
+    if "7" in requested_items and "7" not in indexed_items:
+        indexed_items.append("7")
+    if indexed_items:
+        indexed_blocks = extract_indexed_section_blocks(raw_html, items=indexed_items)
+        section_blocks.update(
+            {
+                item: item_blocks
+                for item, item_blocks in indexed_blocks.items()
+                if item not in section_blocks or item == "7"
+            }
+        )
+
+    needs_item15 = "15" in requested_items or should_auto_include_item15(section_blocks, requested_items)
+    if needs_item15:
+        if "15" not in active_items:
+            active_items.append("15")
         item15_toc_blocks = extract_item15_toc_section_blocks(raw_html)
         if item15_toc_blocks:
             section_blocks["15"] = item15_toc_blocks
+        elif "15" not in section_blocks:
+            direct_item15 = extract_section_blocks(blocks, items=("15",))
+            section_blocks.update(direct_item15)
+            if "15" not in section_blocks:
+                indexed_item15 = extract_indexed_section_blocks(raw_html, items=("15",))
+                section_blocks.update(indexed_item15)
     section_blocks = merge_section_blocks(section_blocks)
     reference_audit = {}
     if not args.no_follow_references:
@@ -1696,6 +3567,7 @@ def main(argv: list[str] | None = None) -> int:
         except (ValueError, RuntimeError, OSError) as exc:
             print(f"Error resolving incorporated report: {exc}", file=sys.stderr)
             return 2
+    section_blocks = resolve_section_footnotes(section_blocks)
     clean_text = html_to_clean_text(raw_html)
     year = args.year or filename_year or infer_year(raw_html + "\n" + clean_text, source)
 
@@ -1709,7 +3581,11 @@ def main(argv: list[str] | None = None) -> int:
             max_chars=args.max_chars,
         )
     else:
-        sections = extract_sections(clean_text, items=args.items)
+        sections = extract_sections(clean_text, items=requested_items)
+        if should_auto_include_item15_from_sections(sections, requested_items):
+            if "15" not in active_items:
+                active_items.append("15")
+            sections = extract_sections(clean_text, items=active_items)
         records = build_records(
             sections=sections,
             year=year,
@@ -1719,7 +3595,7 @@ def main(argv: list[str] | None = None) -> int:
             min_chars=args.min_chars,
         )
 
-    missing = [item for item in args.items if item not in sections]
+    missing = [item for item in active_items if item not in sections]
     if missing:
         print(f"Warning: could not find Item(s): {', '.join(missing)}", file=sys.stderr)
 

@@ -6,10 +6,13 @@ from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from sec_disclosure.extraction.sec_10k_extractor import (
+    BlockSegment,
     FilingBlock,
+    build_sentence_records,
     build_records,
     build_records_from_section_blocks,
     discover_10k_filing,
+    extract_indexed_section_blocks,
     extract_item15_toc_section_blocks,
     extract_section_blocks,
     extract_sections,
@@ -17,6 +20,8 @@ from sec_disclosure.extraction.sec_10k_extractor import (
     html_to_clean_text,
     html_to_structure_events,
     infer_company_year_from_filename,
+    is_boilerplate_or_nav,
+    is_bullet_marker_only,
     is_subheader_block,
     merge_continued_blocks,
     make_chunk_id,
@@ -25,8 +30,12 @@ from sec_disclosure.extraction.sec_10k_extractor import (
     parse_args,
     report_outline,
     referenced_section_ranges,
+    resolve_section_footnotes,
     section_blocks_to_text,
+    sentence_units_from_block,
     should_drop_line,
+    split_extraction_sentence_units,
+    starts_with_bullet,
 )
 from pathlib import Path
 
@@ -66,8 +75,97 @@ class ExtractorTests(unittest.TestCase):
 
         self.assertEqual(args.ticker, "NVDA")
         self.assertEqual(args.year, "2024")
+        self.assertEqual(args.items, ("1", "1A", "7", "8"))
         self.assertEqual(args.out_dir, "data/raw")
         self.assertIsNone(args.source)
+
+    def test_cli_default_items_do_not_include_item15_without_reference_pointer(self):
+        lines = [
+            "Item 1. Business", "We manufacture memory products.",
+            "Item 1A. Risk Factors", "Demand may decrease unexpectedly.",
+            "Item 1B. Unresolved Staff Comments", "None.",
+            "Item 7. Management's Discussion and Analysis", "Revenue increased this year.",
+            "Item 7A. Market Risk", "Interest rates may change.",
+            "Item 8. Financial Statements", "These statements include our subsidiaries.",
+            "Item 9. Changes in Accountants", "None.",
+            "Item 15. Exhibits", "The exhibits are listed here.",
+            "Item 16. Form 10-K Summary", "None.",
+        ]
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "mu-20240829.htm"
+            source.write_text("".join(f"<div>{line}</div>" for line in lines), encoding="utf-8")
+
+            with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                result = main([str(source), "--out-dir", str(root / "output")])
+
+            self.assertEqual(result, 0)
+            output = root / "output" / "mu" / "2024"
+            records = json.loads((output / "2024_chunks.json").read_text())
+            self.assertEqual({record["item"] for record in records}, {"1", "1A", "7", "8"})
+            self.assertFalse((output / "2024_item_15.txt").exists())
+
+    def test_cli_auto_includes_item15_when_item8_points_to_financial_statements(self):
+        lines = [
+            "Item 1. Business", "We manufacture memory products.",
+            "Item 1A. Risk Factors", "Demand may decrease unexpectedly.",
+            "Item 1B. Unresolved Staff Comments", "None.",
+            "Item 7. Management's Discussion and Analysis", "Revenue increased this year.",
+            "Item 7A. Market Risk", "Interest rates may change.",
+            "Item 8. Financial Statements",
+            "The information required by this Item is set forth in our Consolidated Financial Statements "
+            "and Notes thereto included in this Annual Report on Form 10-K.",
+            "Item 9. Changes in Accountants", "None.",
+            "Item 15. Exhibits", "The financial statement schedules are listed in Part IV.",
+            "Item 16. Form 10-K Summary", "None.",
+        ]
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "nvda-20240128.htm"
+            source.write_text("".join(f"<div>{line}</div>" for line in lines), encoding="utf-8")
+
+            with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                result = main([str(source), "--out-dir", str(root / "output")])
+
+            self.assertEqual(result, 0)
+            output = root / "output" / "nvda" / "2024"
+            records = json.loads((output / "2024_chunks.json").read_text())
+            self.assertIn("15", {record["item"] for record in records})
+            self.assertTrue((output / "2024_item_15.txt").exists())
+
+    def test_cli_can_disable_item15_toc_extraction(self):
+        lines = [
+            "Item 1. Business", "We manufacture memory products.",
+            "Item 1A. Risk Factors", "Demand may decrease unexpectedly.",
+            "Item 1B. Unresolved Staff Comments", "None.",
+            "Item 7. Management's Discussion and Analysis", "Revenue increased this year.",
+            "Item 7A. Market Risk", "Interest rates may change.",
+            "Item 8. Financial Statements",
+            "The information required by this Item is set forth in our Consolidated Financial Statements "
+            "and Notes thereto included in this Annual Report on Form 10-K.",
+            "Item 9. Changes in Accountants", "None.",
+            "Item 15. Exhibits", "The financial statement schedules are listed in Part IV.",
+            "Signatures", "Signed by the registrant.",
+        ]
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "jpm-20251231.htm"
+            source.write_text("".join(f"<div>{line}</div>" for line in lines), encoding="utf-8")
+
+            with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()), patch(
+                "sec_disclosure.extraction.sec_10k_extractor.extract_item15_toc_section_blocks",
+                return_value=None,
+            ) as item15_parser:
+                result = main([str(source), "--out-dir", str(root / "output")])
+
+            self.assertEqual(result, 0)
+            item15_parser.assert_called_once()
+            output = root / "output" / "jpm" / "2025"
+            records = json.loads((output / "2025_chunks.json").read_text())
+            self.assertTrue(any(
+                record["item"] == "15" and "financial statement schedules" in record["text"]
+                for record in records
+            ))
 
     def test_cli_selected_items_exclude_item15_in_both_extraction_paths(self):
         lines = [
@@ -154,6 +252,33 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual(records[0]["text"], "Revenue is recognized when control transfers to the customer.")
         self.assertEqual(records[1]["text"], "Income taxes: We estimate taxes payable in multiple jurisdictions.")
 
+    def test_inline_superscript_footnotes_are_resolved_in_prose(self):
+        html = """
+        <html><body>
+          <div>Item 1. Business</div>
+          <div>
+            <span>We had 85,100</span>
+            <span style="font-size:5.2pt;position:relative;top:-2.8pt;vertical-align:baseline">1</span>
+            <span> people at year end.</span>
+          </div>
+          <div>Additional workforce discussion.</div>
+          <div><span style="font-size:8pt">1 Employee headcount includes subsidiaries.</span></div>
+          <div>Item 1A. Risk Factors</div>
+        </body></html>
+        """
+
+        sections = extract_section_blocks(html_to_blocks(html), items=("1",))
+        sections = resolve_section_footnotes(sections)
+        records = build_records_from_section_blocks(
+            sections, year="2025", company="intc", source="sample", max_chars=1800,
+        )
+
+        self.assertEqual(
+            records[0]["text"],
+            "We had 85,100 [footnote 1: Employee headcount includes subsidiaries.] people at year end.",
+        )
+        self.assertNotIn("1 Employee headcount", " ".join(record["text"] for record in records))
+
     def test_cli_omits_footer_from_json_and_txt_in_both_extraction_paths(self):
         lines = [
             "Item 7. Management's Discussion and Analysis", "Critical Accounting Estimates",
@@ -166,7 +291,7 @@ class ExtractorTests(unittest.TestCase):
                 root = Path(temporary)
                 source = root / "mu-20250828.htm"
                 source.write_text("".join(f"<{tag}>{line}</{tag}>" for line in lines), encoding="utf-8")
-                with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                with redirect_stdout(io.StringIO()):
                     self.assertEqual(main([str(source), "--out-dir", str(root / "output"), "--items", "7"]), 0)
                 output = root / "output" / "mu" / "2025"
                 for name in ("2025_chunks.json", "2025_chunks.txt", "2025_item_7.txt"):
@@ -226,9 +351,81 @@ class ExtractorTests(unittest.TestCase):
         self.assertNotIn("https://data.sec.gov/submissions/CIK0000019617-submissions-002.json", fetched_urls)
 
     def test_chunk_id_includes_item_and_resets_per_item(self):
-        self.assertEqual(make_chunk_id("2024", "1", 1), "2024_1_P001")
-        self.assertEqual(make_chunk_id("2024", "1A", 1), "2024_1A_P001")
-        self.assertEqual(make_chunk_id("2024", "7", 12), "2024_7_P012")
+        self.assertEqual(make_chunk_id("nvda", "2024", "1", 1), "nvda_2024_1_P001")
+        self.assertEqual(make_chunk_id("NVDA", "2024", "1A", 1), "nvda_2024_1A_P001")
+        self.assertEqual(make_chunk_id("nvda", "2024", "7", 12), "nvda_2024_7_P012")
+
+    def test_block_records_are_not_split_by_max_chars_and_sentence_records_keep_bullets(self):
+        long_bullet_group = (
+            "The key product offerings are as follows:\n"
+            "▪Series 2. Our first Series 2 products were brought to market in 2024. "
+            "They support notebooks and desktops.\n"
+            "Continuation text for the same bullet remains in the same paragraph group.\n"
+            "▪Series 3. We released initial Series 3 processors in late 2025."
+        )
+        records = build_records_from_section_blocks(
+            {"1": [FilingBlock(1, "div", "Key Products", font_size=12),
+                   FilingBlock(2, "div", long_bullet_group, font_size=9)]},
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=80,
+        )
+
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0]["id"], "intc_2025_1_P001")
+        self.assertEqual(records[0]["text"], long_bullet_group)
+
+        sentence_records = build_sentence_records(records)
+        self.assertEqual([record["id"] for record in sentence_records], [
+            "intc_2025_1_P001_S001",
+            "intc_2025_1_P001_S002",
+            "intc_2025_1_P001_S003",
+        ])
+        self.assertEqual([record["chunk_id"] for record in sentence_records], ["intc_2025_1_P001"] * 3)
+        self.assertEqual([record["bullet_level"] for record in sentence_records], [None, 1, 1])
+        self.assertEqual(sentence_records[1]["text"], (
+            "▪Series 2. Our first Series 2 products were brought to market in 2024. "
+            "They support notebooks and desktops. Continuation text for the same bullet remains in the same paragraph group."
+        ))
+
+        styled_records = build_records_from_section_blocks(
+            {"1": [FilingBlock(1, "div", "Key Products", font_size=12),
+                   FilingBlock(2, "div", "▪Client CPUs. Top bullet.",
+                               style="margin-bottom:3pt;padding-left:36pt;text-indent:-18pt", font_size=9),
+                   FilingBlock(3, "div", "▪Intel Core Ultra. Parent bullet.",
+                               style="margin-bottom:3pt;padding-left:72pt;text-indent:-18pt", font_size=9),
+                   FilingBlock(4, "div", "▪Series 1. Child bullet.",
+                               style="margin-bottom:3pt;padding-left:108pt;text-indent:-18pt", font_size=9)]},
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=80,
+        )
+        styled_sentences = build_sentence_records(styled_records)
+        self.assertEqual([record["bullet_level"] for record in styled_sentences], [1, 2, 3])
+        self.assertEqual([record["bullet_indent_pt"] for record in styled_sentences], [36.0, 72.0, 108.0])
+
+    def test_html_list_depth_sets_nested_bullet_level(self):
+        html = """
+        <ul>
+          <li><div>• We selected a sample of customer agreements and performed the following procedures:</div>
+            <ul>
+              <li><div>• Obtained and read contract source documents.</div></li>
+            </ul>
+          </li>
+        </ul>
+        """
+
+        blocks = html_to_blocks(html)
+        self.assertEqual([block.list_depth for block in blocks], [1, 2])
+
+        records = build_records_from_section_blocks(
+            {"8": blocks}, "2025", "msft", "sample", 1800,
+        )
+        sentences = build_sentence_records(records)
+        self.assertEqual([record["bullet_level"] for record in sentences], [1, 2])
+        self.assertEqual([record["html_list_depth"] for record in sentences], [1, 2])
 
     def test_extracts_body_items_and_assigns_per_item_ids(self):
         html = """
@@ -276,7 +473,7 @@ class ExtractorTests(unittest.TestCase):
         """
 
         text = html_to_clean_text(html)
-        sections = extract_sections(text)
+        sections = extract_sections(text, items=("1", "1A", "7", "8", "15"))
         records = build_records(sections, year="2024", company="nvda", source="sample", max_chars=500, min_chars=1)
 
         self.assertIn("1", sections)
@@ -287,11 +484,11 @@ class ExtractorTests(unittest.TestCase):
         self.assertNotIn("100", sections["8"])
         self.assertNotIn("10.1", sections["15"])
         self.assertNotIn("Signed by the registrant", sections["15"])
-        self.assertEqual(records[0]["id"], "2024_1_P001")
+        self.assertEqual(records[0]["id"], "nvda_2024_1_P001")
         self.assertEqual(records[0]["company"], "nvda")
         self.assertEqual(
             [record["id"] for record in records],
-            ["2024_1_P001", "2024_1A_P001", "2024_7_P001", "2024_8_P001", "2024_15_P001"],
+            ["nvda_2024_1_P001", "nvda_2024_1A_P001", "nvda_2024_7_P001", "nvda_2024_8_P001", "nvda_2024_15_P001"],
         )
 
     def test_item_15_block_extraction_stops_at_signatures(self):
@@ -320,7 +517,7 @@ class ExtractorTests(unittest.TestCase):
         )
 
         self.assertEqual(len(records), 1)
-        self.assertEqual(records[0]["id"], "2024_15_P001")
+        self.assertEqual(records[0]["id"], "jpm_2024_15_P001")
         self.assertEqual(records[0]["item"], "15")
         self.assertEqual(records[0]["text"], "Financial statement schedules are listed in this item.")
 
@@ -420,6 +617,695 @@ class ExtractorTests(unittest.TestCase):
             "• Third risk item continues onto the next rendered block.",
         )
 
+    def test_standalone_bullet_markers_merge_forward_not_backward(self):
+        blocks = merge_continued_blocks([
+            FilingBlock(1, "div", "The ambitions include:"),
+            FilingBlock(2, "div", "Reinvent productivity."),
+            FilingBlock(3, "div", "•", style="margin-left:36pt"),
+            FilingBlock(4, "div", "Build the intelligent cloud."),
+            FilingBlock(5, "div", "•", style="margin-left:36pt"),
+            FilingBlock(6, "div", "Create more personal computing."),
+            FilingBlock(7, "div", "•", style="margin-left:36pt"),
+        ])
+
+        self.assertEqual([block.text for block in blocks], [
+            "The ambitions include:",
+            "• Reinvent productivity.",
+            "• Build the intelligent cloud.",
+            "• Create more personal computing.",
+        ])
+
+    def test_standalone_bullet_separators_mark_preceding_text(self):
+        blocks = merge_continued_blocks([
+            FilingBlock(1, "div", "The ambitions include:", style="margin-left:0pt"),
+            FilingBlock(2, "div", "Reinvent productivity.", style="margin-left:0pt"),
+            FilingBlock(3, "div", "•", style="margin-left:36pt"),
+            FilingBlock(4, "div", "Build the intelligent cloud.", style="margin-left:0pt"),
+            FilingBlock(5, "div", "•", style="margin-left:36pt"),
+            FilingBlock(6, "div", "Create more personal computing.", style="margin-left:0pt"),
+            FilingBlock(7, "div", "•", style="margin-left:36pt"),
+        ])
+
+        self.assertEqual([block.text for block in blocks], [
+            "The ambitions include:",
+            "• Reinvent productivity.",
+            "• Build the intelligent cloud.",
+            "• Create more personal computing.",
+        ])
+
+    def test_inline_bullets_remain_unchanged_by_separator_logic(self):
+        blocks = merge_continued_blocks([
+            FilingBlock(1, "div", "The risks include:"),
+            FilingBlock(2, "div", "• First risk item;"),
+            FilingBlock(3, "div", "• Second risk item."),
+        ])
+
+        self.assertEqual([block.text for block in blocks], [
+            "The risks include:\n• First risk item;\n• Second risk item.",
+        ])
+
+    def test_marker_without_list_successor_is_discarded(self):
+        blocks = merge_continued_blocks([
+            FilingBlock(1, "div", "•", style="margin-left:36pt"),
+            FilingBlock(2, "div", "Ordinary text after the list."),
+        ])
+
+        self.assertEqual([block.text for block in blocks], [
+            "Ordinary text after the list.",
+        ])
+
+    def test_bullet_label_does_not_absorb_following_normal_paragraph(self):
+        merged = merge_continued_blocks([
+            FilingBlock(1, "div", "• Non-Markets net interest income"),
+            FilingBlock(2, "div", "The following are details for the above non-GAAP financial measures:"),
+            FilingBlock(3, "div", "• Citi's revenues excluding the notable item represent GAAP results less this item."),
+        ])
+
+        self.assertEqual([block.text for block in merged], [
+            "• Non-Markets net interest income",
+            "The following are details for the above non-GAAP financial measures:\n"
+            "• Citi's revenues excluding the notable item represent GAAP results less this item.",
+        ])
+
+    def test_embedded_narrative_after_bullet_label_starts_new_sentence_unit(self):
+        for lead_in in (
+            "The following are details for the above non-GAAP financial measures:",
+            "The measure is discussed below.",
+        ):
+            with self.subTest(lead_in=lead_in):
+                units = split_extraction_sentence_units(
+                    f"• Non-Markets net interest income {lead_in}"
+                )
+
+                self.assertEqual([unit.text for unit in units], [
+                    "• Non-Markets net interest income",
+                    lead_in,
+                ])
+                self.assertEqual([unit.bullet_level for unit in units], [1, None])
+
+    def test_mid_paragraph_bullets_keep_spacing_when_sentence_units_split(self):
+        units = split_extraction_sentence_units(
+            "Citi's non-GAAP measures include the following:\n"
+            "• Non-Markets net interest income The following are details for the above non-GAAP financial measures:"
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "Citi's non-GAAP measures include the following:",
+            "• Non-Markets net interest income",
+            "The following are details for the above non-GAAP financial measures:",
+        ])
+        self.assertEqual([unit.bullet_level for unit in units], [None, 1, None])
+
+    def test_uppercase_initialism_abbreviations_do_not_split_sentence_units(self):
+        units = split_extraction_sentence_units(
+            "J.P. Morgan serves clients globally. P.C. fees changed. U.S.A. operations expanded. CITI, INC. announced results. See v. Smith. Sup. Smith reviewed the filing. S. Corp. filed an update. See Cal. App. 4th 123 for the ruling."
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "J.P. Morgan serves clients globally.",
+            "P.C. fees changed.",
+            "U.S.A. operations expanded.",
+            "CITI, INC. announced results.",
+            "See v. Smith.",
+            "Sup. Smith reviewed the filing.",
+            "S. Corp. filed an update.",
+            "See Cal. App. 4th 123 for the ruling.",
+        ])
+
+    def test_repairs_missing_space_after_heading_like_text(self):
+        units = split_extraction_sentence_units(
+            "Data Center GPUs.Our AMD products grew. Notebook CPUs.Our AMD products expanded."
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "Data Center GPUs.",
+            "Our AMD products grew.",
+            "Notebook CPUs.",
+            "Our AMD products expanded.",
+        ])
+
+    def test_missing_space_repair_skips_urls_emails_and_common_abbreviations(self):
+        units = split_extraction_sentence_units(
+            "Visit www.Example.com.Today for details. Contact team@example.com.Today for help. "
+            "Results for 2024 vs.The prior year improved, etc.The company continued."
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "Visit www.Example.com.Today for details.",
+            "Contact team@example.com.Today for help.",
+            "Results for 2024 vs. The prior year improved, etc. The company continued.",
+        ])
+
+    def test_lowercase_rendered_line_continues_previous_sentence_unit(self):
+        units = split_extraction_sentence_units(
+            "In the proposed rulemaking, the OCC also invited comments on a number of questions, including whether the heightened standards guidelines should\n"
+            "be rescinded. The agencies also requested comments."
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "In the proposed rulemaking, the OCC also invited comments on a number of questions, including whether the heightened standards guidelines should be rescinded.",
+            "The agencies also requested comments.",
+        ])
+
+    def test_wrapped_quoted_note_title_stays_one_sentence(self):
+        units = split_extraction_sentence_units(
+            'Additional information is provided in this Annual Report in "Notes to Consolidated Financial Statements, Note 8.\n'
+            'Segment Information."'
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            'Additional information is provided in this Annual Report in "Notes to Consolidated Financial Statements, Note 8. Segment Information."',
+        ])
+
+    def test_wrapped_quoted_item_title_stays_one_sentence(self):
+        units = split_extraction_sentence_units(
+            'See "Item 1.\n'
+            'Business" for additional information.'
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            'See "Item 1. Business" for additional information.',
+        ])
+
+    def test_plain_note_reference_still_ends_a_sentence(self):
+        units = split_extraction_sentence_units(
+            "See Note 8. Segment information is presented separately."
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "See Note 8.",
+            "Segment information is presented separately.",
+        ])
+
+    def test_plain_item_reference_still_ends_a_sentence(self):
+        units = split_extraction_sentence_units(
+            "See Item 1. Business information is presented separately."
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "See Item 1.",
+            "Business information is presented separately.",
+        ])
+
+    def test_lowercase_segment_continues_previous_sentence_unit(self):
+        block = FilingBlock(
+            1,
+            "merged_text",
+            "In the proposed rulemaking, the OCC also invited comments on a number of questions, including whether the heightened standards guidelines should be rescinded. The proposed rulemaking has not yet been finalized.",
+            segments=(
+                BlockSegment(
+                    "In the proposed rulemaking, the OCC also invited comments on a number of questions, including whether the heightened standards guidelines should"
+                ),
+                BlockSegment("be rescinded. The proposed rulemaking has not yet been finalized."),
+            ),
+        )
+
+        units = sentence_units_from_block(block, [])
+
+        self.assertEqual([unit.text for unit in units], [
+            "In the proposed rulemaking, the OCC also invited comments on a number of questions, including whether the heightened standards guidelines should be rescinded.",
+            "The proposed rulemaking has not yet been finalized.",
+        ])
+
+    def test_non_bullet_segment_after_bullet_starts_new_sentence_unit(self):
+        block = FilingBlock(
+            1,
+            "merged_text",
+            "• Non-Markets net interest income The following are details for the above non-GAAP financial measures:",
+            segments=(
+                BlockSegment("• Non-Markets net interest income", bullet_indent_pt=18.0),
+                BlockSegment("The following are details for the above non-GAAP financial measures:"),
+            ),
+        )
+
+        units = sentence_units_from_block(block, [])
+
+        self.assertEqual([unit.text for unit in units], [
+            "• Non-Markets net interest income",
+            "The following are details for the above non-GAAP financial measures:",
+        ])
+        self.assertEqual([unit.bullet_level for unit in units], [1, None])
+
+    def test_completed_bullet_does_not_absorb_following_segment(self):
+        block = FilingBlock(
+            1,
+            "merged_text",
+            "• Completed bullet. Following ordinary text.",
+            segments=(
+                BlockSegment("• Completed bullet."),
+                BlockSegment("Following ordinary text."),
+            ),
+        )
+
+        units = sentence_units_from_block(block, [])
+
+        self.assertEqual([unit.text for unit in units], [
+            "• Completed bullet.",
+            "Following ordinary text.",
+        ])
+
+    def test_lowercase_segment_continues_previous_bullet_sentence_unit(self):
+        block = FilingBlock(
+            1,
+            "merged_text",
+            "▪we and the DOC entered into an amendment to the DFA.",
+            segments=(
+                BlockSegment("▪we and", bullet_indent_pt=36.0),
+                BlockSegment("the DOC entered into an amendment to the DFA."),
+            ),
+        )
+
+        units = sentence_units_from_block(block, [])
+
+        self.assertEqual([unit.text for unit in units], [
+            "▪we and the DOC entered into an amendment to the DFA.",
+        ])
+        self.assertEqual([unit.bullet_level for unit in units], [1])
+
+    def test_lowercase_the_after_bullet_label_stays_in_same_sentence_unit(self):
+        units = split_extraction_sentence_units(
+            "▪we and the DOC entered into an amendment to the DFA;"
+        )
+
+        self.assertEqual([unit.text for unit in units], [
+            "▪we and the DOC entered into an amendment to the DFA;",
+        ])
+        self.assertEqual([unit.bullet_level for unit in units], [1])
+
+    def test_generic_child_headers_keep_parent_context(self):
+        records = build_records_from_section_blocks(
+            {
+                "1": [
+                    FilingBlock(1, "div", "DCAI"),
+                    FilingBlock(2, "div", "Overview"),
+                    FilingBlock(3, "div", "DCAI delivers workload-optimized data center products."),
+                    FilingBlock(4, "div", "Market Trends"),
+                    FilingBlock(5, "div", "Demand for AI infrastructure increased."),
+                    FilingBlock(6, "div", "Intel Foundry"),
+                    FilingBlock(7, "div", "Overview"),
+                    FilingBlock(8, "div", "Intel Foundry provides manufacturing services."),
+                ]
+            },
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "DCAI > Overview",
+            "DCAI > Market Trends",
+            "Intel Foundry > Overview",
+        ])
+        self.assertEqual(records[0]["section_path"], ["DCAI", "Overview"])
+        self.assertEqual(records[1]["section_path"], ["DCAI", "Market Trends"])
+
+    def test_short_standalone_italic_labels_are_subheaders(self):
+        html = """
+        <html><body>
+          <div>Item 1. Business</div>
+          <div style="font-weight:700">Human capital</div>
+          <div style="font-style:italic">Global workforce</div>
+          <div>JPMorgan Chase employed people globally.</div>
+          <div><span style="font-style:italic">Global workforce</span> includes contractors in some contexts.</div>
+          <div style="font-style:italic">Rewarding and supporting employees</div>
+          <div>The Firm provides market-competitive compensation and benefits programs.</div>
+          <div style="font-weight:700">Risk management</div>
+          <div>Risk management text.</div>
+          <div>Item 1A. Risk Factors</div>
+        </body></html>
+        """
+
+        blocks = html_to_blocks(html)
+        sections = extract_section_blocks(blocks, items=("1",))
+        records = build_records_from_section_blocks(
+            {"1": merge_continued_blocks(sections["1"])},
+            year="2024",
+            company="jpm",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertTrue(is_subheader_block(FilingBlock(1, "div", "Global workforce", italic=True)))
+        self.assertFalse(is_subheader_block(
+            FilingBlock(1, "div", "Global workforce includes contractors", italic=True, mixed_italic=True)
+        ))
+        self.assertEqual(records[0]["item_title"], "Human capital > Global workforce")
+        self.assertEqual(records[0]["text"], "JPMorgan Chase employed people globally.")
+        self.assertEqual(records[1]["item_title"], "Human capital > Global workforce")
+        self.assertEqual(records[1]["text"], "Global workforce includes contractors in some contexts.")
+        self.assertEqual(records[2]["item_title"], "Human capital > Rewarding and supporting employees")
+        self.assertEqual(records[2]["text"], "The Firm provides market-competitive compensation and benefits programs.")
+        self.assertEqual(records[3]["item_title"], "Risk management")
+        self.assertEqual(records[3]["text"], "Risk management text.")
+
+    def test_underlined_heading_style_is_preserved(self):
+        html = """
+        <html><body>
+          <div><span style="font-weight:700; text-decoration: underline">GENERAL</span></div>
+          <div style="text-decoration-line: underline">What We Offer</div>
+          <div><span style="text-decoration: underline">underlined phrase</span> continues in a sentence.</div>
+        </body></html>
+        """
+
+        blocks = html_to_blocks(html)
+
+        self.assertEqual([block.text for block in blocks], [
+            "GENERAL",
+            "What We Offer",
+            "underlined phrase continues in a sentence.",
+        ])
+        self.assertTrue(blocks[0].bold)
+        self.assertTrue(blocks[0].underlined)
+        self.assertTrue(blocks[1].underlined)
+        self.assertTrue(blocks[2].underlined)
+        self.assertTrue(blocks[2].mixed_underlined)
+        self.assertTrue(is_subheader_block(blocks[0]))
+        self.assertTrue(is_subheader_block(blocks[1]))
+        self.assertFalse(is_subheader_block(blocks[2]))
+
+    def test_underlined_all_caps_heading_closes_bold_only_parent(self):
+        records = build_records_from_section_blocks(
+            {
+                "1": [
+                    FilingBlock(1, "div", "Note About Forward-Looking Statements", bold=True, font_size=12),
+                    FilingBlock(2, "div", "This report includes forward-looking statements."),
+                    FilingBlock(3, "div", "GENERAL", bold=True, underlined=True, font_size=10),
+                    FilingBlock(4, "div", "Microsoft is a technology company."),
+                ]
+            },
+            year="2025",
+            company="example",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "Note About Forward-Looking Statements",
+            "GENERAL",
+        ])
+
+    def test_bold_heading_stays_below_underlined_all_caps_anchor(self):
+        records = build_records_from_section_blocks(
+            {
+                "1": [
+                    FilingBlock(1, "div", "GENERAL", bold=True, underlined=True, font_size=10),
+                    FilingBlock(2, "div", "What We Offer", bold=True, font_size=14),
+                    FilingBlock(3, "div", "Microsoft offers technology solutions."),
+                ]
+            },
+            year="2025",
+            company="example",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "GENERAL > What We Offer",
+        ])
+
+    def test_same_size_italic_header_stays_under_bold_parent(self):
+        html = """
+        <html><body>
+          <div>Item 1. Business</div>
+          <div style="font-weight:700;font-size:10pt">Human capital</div>
+          <div style="font-style:italic;font-size:10pt">Global workforce</div>
+          <div>JPMorganChase had employees globally.</div>
+          <div style="font-style:italic;font-size:10pt">Workforce composition</div>
+          <div>The Firm tracks workforce composition.</div>
+          <div style="font-weight:700;font-size:10pt">Risk management</div>
+          <div>Risk management text.</div>
+          <div>Item 1A. Risk Factors</div>
+        </body></html>
+        """
+
+        blocks = html_to_blocks(html)
+        sections = extract_section_blocks(blocks, items=("1",))
+        records = build_records_from_section_blocks(
+            {"1": merge_continued_blocks(sections["1"])},
+            year="2025",
+            company="jpm",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "Human capital > Global workforce",
+            "Human capital > Workforce composition",
+            "Risk management",
+        ])
+
+    def test_bold_italic_header_stays_under_bold_parent(self):
+        html = """
+        <html><body>
+          <div>Item 7. Management's Discussion and Analysis</div>
+          <div style="font-weight:700;font-size:14pt">EXECUTIVE SUMMARY</div>
+          <div>Executive summary lead-in text.</div>
+          <div style="font-weight:700;font-size:12pt">2025 Results Summary</div>
+          <div style="font-weight:700;font-style:italic;font-size:12pt">Citigroup</div>
+          <div>Citigroup reported net income.</div>
+          <div style="font-weight:700;font-style:italic;font-size:12pt">Expenses</div>
+          <div>Expenses increased from the prior year.</div>
+          <div style="font-weight:700;font-size:12pt">Capital</div>
+          <div>Capital ratio text.</div>
+          <div>Item 8. Financial Statements and Supplementary Data</div>
+        </body></html>
+        """
+
+        blocks = html_to_blocks(html)
+        sections = extract_section_blocks(blocks, items=("7",))
+        records = build_records_from_section_blocks(
+            {"7": merge_continued_blocks(sections["7"])},
+            year="2025",
+            company="c",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "EXECUTIVE SUMMARY",
+            "EXECUTIVE SUMMARY > 2025 Results Summary > Citigroup",
+            "EXECUTIVE SUMMARY > 2025 Results Summary > Expenses",
+            "EXECUTIVE SUMMARY > Capital",
+        ])
+
+    def test_same_size_same_style_headers_are_siblings_under_parent(self):
+        html = """
+        <html><body>
+          <div>Item 7. Management's Discussion and Analysis</div>
+          <div style="font-weight:700;font-size:14pt">SEGMENT REVENUES AND INCOME (LOSS)</div>
+          <div style="font-weight:700;font-size:10pt">REVENUES(1)</div>
+          <div>Revenue footnote text.</div>
+          <div style="font-weight:700;font-size:10pt">INCOME</div>
+          <div>Income footnote text.</div>
+          <div style="font-weight:700;font-size:14pt">SERVICES</div>
+          <div>Services narrative text.</div>
+          <div>Item 8. Financial Statements and Supplementary Data</div>
+        </body></html>
+        """
+
+        blocks = html_to_blocks(html)
+        sections = extract_section_blocks(blocks, items=("7",))
+        records = build_records_from_section_blocks(
+            {"7": merge_continued_blocks(sections["7"])},
+            year="2025",
+            company="c",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "SEGMENT REVENUES AND INCOME (LOSS) > REVENUES(1)",
+            "SEGMENT REVENUES AND INCOME (LOSS) > INCOME",
+            "SERVICES",
+        ])
+
+    def test_plain_connector_titles_can_be_same_level_headers(self):
+        html = """
+        <html><body>
+          <div>Item 7. Management's Discussion and Analysis</div>
+          <div>Management's Discussion and Analysis</div>
+          <div>Operating Segment Results</div>
+          <div>Segment results text.</div>
+          <div>Consolidated Results of Operations</div>
+          <div>Consolidated results text.</div>
+          <div>Liquidity and Capital Resources</div>
+          <div>Liquidity text.</div>
+          <div>Critical Accounting Estimates</div>
+          <div>Critical estimate text.</div>
+          <div>Item 8. Financial Statements and Supplementary Data</div>
+        </body></html>
+        """
+
+        self.assertTrue(is_subheader_block(FilingBlock(1, "div", "Management's Discussion and Analysis")))
+        self.assertTrue(is_subheader_block(
+            FilingBlock(1, "div", "Management's Discussion and Analysis of Financial Condition and Results of Operations:")
+        ))
+
+        blocks = html_to_blocks(html)
+        sections = extract_section_blocks(blocks, items=("7",))
+        records = build_records_from_section_blocks(
+            {"7": merge_continued_blocks(sections["7"])},
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "Operating Segment Results",
+            "Consolidated Results of Operations",
+            "Liquidity and Capital Resources",
+            "Critical Accounting Estimates",
+        ])
+
+    def test_font_size_controls_header_hierarchy(self):
+        records = build_records_from_section_blocks(
+            {
+                "1": [
+                    FilingBlock(1, "div", "Availability of Company Information", font_size=14),
+                    FilingBlock(2, "div", "We post filings on our website.", font_size=9),
+                    FilingBlock(3, "div", "Overview", font_size=18),
+                    FilingBlock(4, "div", "Intel designs semiconductor products.", font_size=9),
+                    FilingBlock(5, "div", "DCAI", font_size=12),
+                    FilingBlock(6, "div", "Overview", font_size=10),
+                    FilingBlock(7, "div", "DCAI delivers workload-optimized data center products.", font_size=9),
+                    FilingBlock(8, "div", "Market Trends", font_size=10),
+                    FilingBlock(9, "div", "Demand for AI infrastructure increased.", font_size=9),
+                ]
+            },
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "Availability of Company Information",
+            "Overview",
+            "Overview > DCAI > Overview",
+            "Overview > DCAI > Market Trends",
+        ])
+        self.assertEqual(records[1]["section_path"], ["Overview"])
+        self.assertEqual(records[2]["section_path"], ["Overview", "DCAI", "Overview"])
+
+    def test_product_style_headings_are_detected_as_same_level_headers(self):
+        records = build_records_from_section_blocks(
+            {
+                "1": merge_continued_blocks([
+                    FilingBlock(1, "div", "Our Business", font_size=18),
+                    FilingBlock(2, "div", "Products", font_size=14),
+                    FilingBlock(3, "div", "x86 Architecture and Ecosystem", font_size=12),
+                    FilingBlock(4, "div", "Our x86 architecture remains foundational.", font_size=9),
+                    FilingBlock(5, "div", "xPU and AI Accelerators", font_size=12),
+                    FilingBlock(6, "div", "We develop CPUs, GPUs, NPUs and accelerators.", font_size=9),
+                    FilingBlock(7, "div", "Key Products", font_size=12),
+                    FilingBlock(8, "div", "We derived most revenue from CCG and DCAI.", font_size=9),
+                ])
+            },
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "Our Business > Products > x86 Architecture and Ecosystem",
+            "Our Business > Products > xPU and AI Accelerators",
+            "Our Business > Products > Key Products",
+        ])
+
+    def test_nested_header_without_narrative_gets_empty_table_anchor(self):
+        records = build_records_from_section_blocks(
+            {
+                "1A": [
+                    FilingBlock(1, "div", "Risk Factors", bold=True, font_size=14),
+                    FilingBlock(2, "div", "Credit Risks", bold=True, font_size=11),
+                    FilingBlock(3, "div", "Country Risk", bold=True, font_size=11),
+                    FilingBlock(4, "div", "Country risk discussion.", font_size=9),
+                ]
+            },
+            year="2025",
+            company="c",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "Risk Factors > Credit Risks",
+            "Risk Factors > Country Risk",
+        ])
+        self.assertEqual(records[0]["text"], "")
+        self.assertTrue(records[0]["is_empty_header"])
+        self.assertEqual(records[1]["text"], "Country risk discussion.")
+
+        sentence_records = build_sentence_records(records)
+        self.assertEqual(sentence_records[0]["text"], "")
+        self.assertEqual(sentence_records[0]["chunk_id"], records[0]["id"])
+
+    def test_repeated_item7_header_does_not_erase_active_subsection(self):
+        records = build_records_from_section_blocks(
+            {
+                "7": [
+                    FilingBlock(1, "div", "Management's Discussion and Analysis", bold=True, font_size=14),
+                    FilingBlock(2, "div", "SERVICES", bold=True, font_size=14),
+                    FilingBlock(3, "div", "Services", italic=True, font_size=11),
+                    FilingBlock(4, "div", "Management's Discussion and Analysis", bold=True, font_size=14),
+                    FilingBlock(5, "div", "2025 vs. 2024", bold=True, font_size=11),
+                    FilingBlock(6, "div", "Net income increased.", font_size=9),
+                ]
+            },
+            year="2025",
+            company="c",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual(records[-1]["item_title"], "SERVICES > Services > 2025 vs. 2024")
+        self.assertNotIn("Management's Discussion and Analysis", records[-1]["item_title"])
+
+    def test_all_caps_breaks_same_size_header_ties_without_treating_acronyms_as_caps_headers(self):
+        records = build_records_from_section_blocks(
+            {
+                "1A": [
+                    FilingBlock(1, "div", "RISK FACTORS", font_size=12),
+                    FilingBlock(2, "div", "General risk discussion.", font_size=9),
+                    FilingBlock(3, "div", "Operational Risks", font_size=12),
+                    FilingBlock(4, "div", "Operations may be disrupted.", font_size=9),
+                    FilingBlock(5, "div", "MARKET RISKS", font_size=12),
+                    FilingBlock(6, "div", "Markets may be volatile.", font_size=9),
+                ]
+            },
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in records], [
+            "RISK FACTORS",
+            "RISK FACTORS > Operational Risks",
+            "MARKET RISKS",
+        ])
+        self.assertEqual(records[1]["section_path"], ["RISK FACTORS", "Operational Risks"])
+
+        acronym_records = build_records_from_section_blocks(
+            {
+                "1": [
+                    FilingBlock(1, "div", "DCAI", font_size=12),
+                    FilingBlock(2, "div", "DCAI text.", font_size=9),
+                    FilingBlock(3, "div", "Intel Foundry", font_size=12),
+                    FilingBlock(4, "div", "Foundry text.", font_size=9),
+                ]
+            },
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual([record["item_title"] for record in acronym_records], ["DCAI", "Intel Foundry"])
+
     def test_drops_repeated_financial_statement_headers_before_merging(self):
         html = """
         <html>
@@ -475,8 +1361,8 @@ class ExtractorTests(unittest.TestCase):
             <table>
               <tr><td>Financial:</td></tr>
               <tr><td>Management's discussion and analysis:</td><td>10</td></tr>
-              <tr><td>Introduction</td><td>11</td></tr>
-              <tr><td>Executive Overview</td><td>12</td></tr>
+              <tr><td style="padding-left:18pt">Introduction</td><td>11</td></tr>
+              <tr><td style="padding-left:18pt">Executive Overview</td><td>12</td></tr>
               <tr><td>Firmwide Risk Management</td><td>20</td></tr>
             </table>
             <div style="font-weight:700">Financial</div>
@@ -508,19 +1394,71 @@ class ExtractorTests(unittest.TestCase):
         )
 
         titles_by_text = {record["text"]: record["item_title"] for record in records}
-        self.assertEqual(titles_by_text["Management explains the operating environment."], "Introduction")
-        self.assertEqual(titles_by_text["Net revenue increased from the prior year."], "Executive Overview")
+        self.assertEqual(
+            titles_by_text["Management explains the operating environment."],
+            "Management's discussion and analysis > Introduction",
+        )
+        self.assertEqual(
+            titles_by_text["Net revenue increased from the prior year."],
+            "Management's discussion and analysis > Executive Overview",
+        )
         self.assertEqual(
             titles_by_text["Repeated page headers should not reset the current section."],
-            "Executive Overview",
+            "Management's discussion and analysis > Executive Overview",
         )
         self.assertEqual(
             titles_by_text["Investment banking fees increased, reflecting in CIB: This bold lead-in should remain body text."],
-            "Executive Overview",
+            "Management's discussion and analysis > Executive Overview",
         )
         self.assertEqual(
             titles_by_text["Risk management is embedded in business activities."],
             "Firmwide Risk Management",
+        )
+
+    def test_item_15_toc_bold_difference_does_not_create_hierarchy_without_indent(self):
+        html = """
+        <html>
+          <body>
+            <div>Item 15. Exhibits, Financial Statement Schedules.</div>
+            <div>Table of contents</div>
+            <table>
+              <tr><td>Management's discussion and analysis</td><td>10</td></tr>
+              <tr><td>Executive Overview</td><td>11</td></tr>
+              <tr><td style="font-weight:700">Consolidated Results of Operations</td><td>20</td></tr>
+              <tr><td>Consolidated Balance Sheets and Cash Flows Analysis</td><td>30</td></tr>
+              <tr><td style="padding-left:4.5pt;text-indent:-4.5pt">Explanation and Reconciliation of Non-GAAP Measures</td><td>40</td></tr>
+            </table>
+            <div style="font-weight:700">Consolidated Results of Operations</div>
+            <div>Operations text.</div>
+            <div style="font-weight:700">Consolidated Balance Sheets and Cash Flows Analysis</div>
+            <div style="font-size:12pt;font-weight:700">Consolidated balance sheets analysis</div>
+            <div>Balance sheet text.</div>
+            <div style="font-weight:700">Explanation and Reconciliation of Non-GAAP Measures</div>
+            <div>Non-GAAP text.</div>
+            <div>Item 16. Form 10-K Summary</div>
+          </body>
+        </html>
+        """
+
+        section_blocks = extract_item15_toc_section_blocks(html)
+        self.assertIsNotNone(section_blocks)
+        records = build_records_from_section_blocks(
+            {"15": merge_continued_blocks(section_blocks or [])},
+            year="2024",
+            company="jpm",
+            source="sample",
+            max_chars=500,
+        )
+
+        titles_by_text = {record["text"]: record["item_title"] for record in records}
+        self.assertEqual(titles_by_text["Operations text."], "Consolidated Results of Operations")
+        self.assertEqual(
+            titles_by_text["Balance sheet text."],
+            "Consolidated Balance Sheets and Cash Flows Analysis > Consolidated balance sheets analysis",
+        )
+        self.assertEqual(
+            titles_by_text["Non-GAAP text."],
+            "Explanation and Reconciliation of Non-GAAP Measures",
         )
 
     def test_item_15_ignores_non_narrative_table_of_contents(self):
@@ -580,6 +1518,39 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual(records[1]["item_title"], "Operational")
         self.assertEqual(records[2]["item_title"], "Operational")
 
+    def test_quoted_wrapped_cross_reference_is_not_promoted_to_header(self):
+        previous = FilingBlock(
+            1,
+            "div",
+            "For information on Citi's credit and country risk, see also each respective business's results of operations above and",
+        )
+        current = FilingBlock(
+            2,
+            "div",
+            '"Managing Global Risk-Other Risks-Country Risk" below',
+            bold=True,
+        )
+
+        merged = merge_continued_blocks([previous, current])
+
+        self.assertEqual(len(merged), 1)
+        self.assertEqual(
+            merged[0].text,
+            "For information on Citi's credit and country risk, see also each respective business's "
+            'results of operations above and "Managing Global Risk-Other Risks-Country Risk" below',
+        )
+        self.assertFalse(is_subheader_block(merged[0]))
+
+    def test_quoted_header_after_complete_sentence_stays_separate(self):
+        blocks = [
+            FilingBlock(1, "div", "See the related discussion."),
+            FilingBlock(2, "div", '"Managing Global Risk-Other Risks-Country Risk"', bold=True),
+        ]
+
+        merged = merge_continued_blocks(blocks)
+
+        self.assertEqual([block.text for block in merged], [block.text for block in blocks])
+
     def test_sentence_lead_ins_stay_with_bullets_in_both_html_parsers(self):
         introductions = [
             '<span style="font-weight:700">Total trading-related assets (average and period-end)</span>'
@@ -615,6 +1586,24 @@ class ExtractorTests(unittest.TestCase):
                                      '\n• growth across asset classes; and\n• an increased volume of agreements.')
                     self.assertEqual(records[1]["text"], 'Total deposits increased during the year.')
 
+    def test_standalone_lowercase_o_marks_the_adjacent_list_text(self):
+        blocks = [
+            FilingBlock(1, "div", "Tested management's identification and treatment of contract terms."),
+            FilingBlock(2, "div", "o", style="margin-left:72pt"),
+        ]
+
+        merged = merge_continued_blocks(blocks)
+
+        self.assertEqual([block.text for block in merged], [
+            "• Tested management's identification and treatment of contract terms."
+        ])
+        self.assertEqual(merged[0].segments[0].bullet_indent_pt, 72.0)
+        units = sentence_units_from_block(merged[0], [(36.0, 1)])
+        self.assertEqual(units[0].bullet_level, 2)
+        self.assertEqual(units[0].bullet_indent_pt, 72.0)
+        self.assertTrue(is_bullet_marker_only("o"))
+        self.assertFalse(starts_with_bullet("operating income increased."))
+
     def test_colon_titles_survive_partial_emphasis_and_normal_weight_overrides(self):
         source = ('<div><b>Sources</b> of Revenue:</div>'
                   '<div><span style="font-weight:700">Income Taxes</span>:</div>'
@@ -631,7 +1620,7 @@ class ExtractorTests(unittest.TestCase):
                 for block in blocks[:4]:
                     self.assertTrue(is_subheader_block(block), block.text)
                 self.assertTrue(blocks[0].mixed_bold)
-                self.assertFalse(blocks[1].mixed_bold)  # A plain colon is not narrative text.
+                self.assertFalse(blocks[1].mixed_bold)
                 self.assertTrue(blocks[4].mixed_bold)
                 self.assertFalse(is_subheader_block(blocks[4]))
 
@@ -673,31 +1662,74 @@ class ExtractorTests(unittest.TestCase):
                     {'7': [FilingBlock(1, 'div', text)]}, '2025', 'example', 'sample', 1800)
                 self.assertEqual(records[0]['text'], text)
 
-    def test_period_comparison_labels_keep_the_topic_without_entering_paragraphs(self):
+    def test_period_comparison_labels_become_child_subheaders(self):
         labels = ('Full year 2025 vs. full year 2024', 'FULL YEAR 2031 VS FULL YEAR 2030:',
                   'Fiscal year 2025 compared with fiscal year 2024', '2025 versus 2024',
                   'Fourth quarter 2025 vs. fourth quarter 2024', 'Q1 2025 compared to Q1 2024')
         for label in labels:
-            for tag in ('div', 'h3'):
-                with self.subTest(label=label, tag=tag):
-                    source = ('<div>Item 7. Management Discussion</div>'
-                              '<div style="font-weight:700">Noninterest Income</div>'
-                              '<div>We earn fees from customer services.</div>'
-                              f'<{tag} style="font-weight:700">{label}</{tag}>'
-                              '<div>Deposit-related fees increased this year.</div>'
-                              '<div style="font-weight:700">Noninterest Expense</div>'
-                              f'<{tag} style="font-weight:700">{label}</{tag}>'
-                              '<div>Personnel expense increased this year.</div>'
-                              '<div>Item 7A. Market Risk</div>')
-                    sections = extract_section_blocks(html_to_blocks(source), items=('7',))
-                    records = build_records_from_section_blocks(
-                        {'7': merge_continued_blocks(sections['7'])}, '2025', 'example', 'sample', 1800)
-                    self.assertEqual([r['item_title'] for r in records],
-                                     ['Noninterest Income', 'Noninterest Income', 'Noninterest Expense'])
-                    self.assertEqual([r['text'] for r in records], [
-                        'We earn fees from customer services.', 'Deposit-related fees increased this year.',
-                        'Personnel expense increased this year.'])
-                    self.assertFalse(is_subheader_block(FilingBlock(1, tag, label, bold=True)))
+            with self.subTest(label=label):
+                source = ('<div>Item 7. Management Discussion</div>'
+                          '<div style="font-weight:700">Noninterest Income</div>'
+                          '<div>We earn fees from customer services.</div>'
+                          f'<div>{label}</div>'
+                          '<div>Deposit-related fees increased this year.</div>'
+                          '<div style="font-weight:700">Noninterest Expense</div>'
+                          f'<div>{label}</div>'
+                          '<div>Personnel expense increased this year.</div>'
+                          '<div>Item 7A. Market Risk</div>')
+                sections = extract_section_blocks(html_to_blocks(source), items=('7',))
+                records = build_records_from_section_blocks(
+                    {'7': merge_continued_blocks(sections['7'])}, '2025', 'example', 'sample', 1800)
+                self.assertEqual([r['item_title'] for r in records],
+                                 ['Noninterest Income',
+                                  f'Noninterest Income > {label}',
+                                  f'Noninterest Expense > {label}'])
+                self.assertEqual([r['text'] for r in records], [
+                    'We earn fees from customer services.', 'Deposit-related fees increased this year.',
+                    'Personnel expense increased this year.'])
+                self.assertTrue(is_subheader_block(FilingBlock(1, 'div', label)))
+
+    def test_styled_period_comparison_labels_can_be_subheaders(self):
+        records = build_records_from_section_blocks(
+            {'15': [
+                FilingBlock(1, 'div', 'Consolidated Results of Operations', bold=True, font_size=12),
+                FilingBlock(2, 'div', '2024 compared with 2023', bold=True, font_size=10),
+                FilingBlock(3, 'div', 'Net income increased from the prior year.', font_size=9),
+            ]},
+            '2024', 'jpm', 'sample', 1800)
+        self.assertEqual(records[0]['item_title'],
+                         'Consolidated Results of Operations > 2024 compared with 2023')
+        self.assertEqual(records[0]['section_path'],
+                         ['Consolidated Results of Operations', '2024 compared with 2023'])
+
+    def test_lower_style_heading_stays_under_period_comparison_heading(self):
+        records = build_records_from_section_blocks(
+            {'7': [
+                FilingBlock(1, 'div', 'Reportable Segments', bold=True, font_size=10),
+                FilingBlock(
+                    2,
+                    'div',
+                    'Fiscal Year 2025 Compared with Fiscal Year 2024',
+                    bold=True,
+                    italic=True,
+                    font_size=10,
+                ),
+                FilingBlock(
+                    3,
+                    'div',
+                    'Productivity and Business Processes',
+                    italic=True,
+                    font_size=10,
+                ),
+                FilingBlock(4, 'div', 'Revenue increased.', font_size=9),
+            ]},
+            '2025', 'msft', 'sample', 1800,
+        )
+        self.assertEqual(records[-1]['section_path'], [
+            'Reportable Segments',
+            'Fiscal Year 2025 Compared with Fiscal Year 2024',
+            'Productivity and Business Processes',
+        ])
 
     def test_period_references_in_narrative_and_topic_headings_are_preserved(self):
         sentences = ('Full year 2025 vs. full year 2024 revenue increased.',
@@ -709,6 +1741,302 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual([r['text'] for r in records], list(sentences))
         for title in ('2025 Business Outlook', 'Revenue: 2025 vs. 2024', 'Fiscal Year Results'):
             self.assertTrue(is_subheader_block(FilingBlock(1, 'div', title, bold=True)))
+
+    def test_cross_reference_index_extracts_report_style_sections(self):
+        html = """
+        <html><body>
+          <div>Table of Contents</div>
+          <table>
+            <tr><td>Overview</td><td>3</td></tr>
+            <tr><td>Our Business</td><td>6</td></tr>
+            <tr><td>Risk Factors</td><td>37</td></tr>
+            <tr><td>Management's Discussion and Analysis</td><td>21</td></tr>
+            <tr><td>Financial Statements and Supplemental Details</td><td>56</td></tr>
+            <tr><td>Exhibits</td><td>110</td></tr>
+          </table>
+          <table><tr><td>Overview</td></tr></table>
+          <p>We design processors for customers.</p>
+          <table><tr><td>Our Business</td></tr></table>
+          <p>Our business includes client and data center products.</p>
+          <table><tr><td>Risk Factors</td></tr></table>
+          <p>Demand could decrease unexpectedly.</p>
+          <table><tr><td>Management's Discussion and Analysis</td></tr></table>
+          <p>Revenue increased due to stronger demand.</p>
+          <table>
+            <tr><td>▪CCG revenue decreased due to lower client volume.</td></tr>
+            <tr><td>▪DCAI revenue increased due to higher server demand.</td></tr>
+          </table>
+          <table><tr><td>Financial Statements and Supplemental Details</td></tr></table>
+          <p>The consolidated financial statements include our subsidiaries.</p>
+          <table><tr><td>Notes to Consolidated Financial Statements</td></tr></table>
+          <table><tr><td>Note 1:</td><td>Basis of Presentation</td></tr></table>
+          <p>We prepare our financial statements in accordance with U.S. GAAP.</p>
+          <table><tr><td>Exhibits</td></tr></table>
+          <p>Exhibits are listed in the exhibit index.</p>
+          <table>
+            <tr><td>Form 10-K Cross-Reference Index</td></tr>
+            <tr><td>Item Number</td><td>Item</td><td></td></tr>
+            <tr><td>Item 1.</td><td>Business:</td></tr>
+            <tr><td>General development of business</td><td>Pages 3-21</td></tr>
+            <tr><td>Item 1A.</td><td>Risk Factors</td><td>Pages 37</td></tr>
+            <tr><td>Item 7.</td><td>Management's Discussion and Analysis of Financial Condition and Results of Operations:</td></tr>
+            <tr><td>Results of operations</td><td>Pages 21</td></tr>
+            <tr><td>Critical accounting estimates</td><td>Pages 56</td></tr>
+            <tr><td>Item 8.</td><td>Financial Statements and Supplementary Data</td><td>Pages 56</td></tr>
+            <tr><td>Item 15.</td><td>Exhibits and Financial Statement Schedules</td><td>Pages 110</td></tr>
+          </table>
+        </body></html>
+        """
+
+        sections = extract_indexed_section_blocks(html, items=("1", "1A", "7", "8", "15"))
+        records = build_records_from_section_blocks(
+            {item: merge_continued_blocks(blocks) for item, blocks in sections.items()},
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=500,
+        )
+        by_item = {item: " ".join(record["text"] for record in records if record["item"] == item)
+                   for item in ("1", "1A", "7", "8", "15")}
+
+        self.assertIn("processors", by_item["1"])
+        self.assertNotIn("Revenue increased", by_item["1"])
+        self.assertNotIn("CCG revenue decreased", by_item["1"])
+        self.assertIn("Demand could decrease", by_item["1A"])
+        self.assertIn("Revenue increased", by_item["7"])
+        self.assertIn("▪CCG revenue decreased", by_item["7"])
+        self.assertIn("▪DCAI revenue increased", by_item["7"])
+        self.assertNotIn("U.S. GAAP", by_item["7"])
+        self.assertTrue(any(
+            record["item"] == "7"
+            and record["item_title"].startswith("Management's Discussion and Analysis")
+            and "Revenue increased" in record["text"]
+            for record in records
+        ))
+        self.assertIn("financial statements", by_item["8"])
+        self.assertTrue(any(
+            record["item"] == "8"
+            and record["item_title"].endswith("Note 1: Basis of Presentation")
+            and "U.S. GAAP" in record["text"]
+            for record in records
+        ))
+        self.assertIn("Exhibits are listed", by_item["15"])
+
+    def test_multi_column_toc_item_numbers_extract_by_title(self):
+        html = """
+        <html><body>
+          <table>
+            <tr><td>Table of Contents</td><td>Part</td><td>Item</td><td>Page</td></tr>
+            <tr><td>Business</td><td>I</td><td>1</td><td>5</td></tr>
+            <tr><td>Risk Factors</td><td></td><td>1A</td><td>13</td></tr>
+            <tr><td>Management's Discussion and Analysis of Financial Condition and Results of Operations</td><td>II</td><td>7</td><td>26</td></tr>
+            <tr><td>Financial Statements and Supplementary Data</td><td></td><td>8</td><td>78</td></tr>
+            <tr><td>Exhibits and Financial Statement Schedules</td><td>IV</td><td>15</td><td>156</td></tr>
+          </table>
+          <h1>Business</h1><p>We advise institutional and wealth management clients.</p>
+          <h1>Risk Factors</h1><p>Market conditions may affect our results.</p>
+          <h1>Management's Discussion and Analysis of Financial Condition and Results of Operations</h1>
+          <p>Net revenues increased from the prior year.</p>
+          <h1>Financial Statements and Supplementary Data</h1>
+          <p>The consolidated financial statements are presented below.</p>
+          <h1>Exhibits and Financial Statement Schedules</h1>
+          <p>Financial statement schedules are omitted.</p>
+        </body></html>
+        """
+
+        sections = extract_indexed_section_blocks(html, items=("1", "1A", "7", "8", "15"))
+        records = build_records_from_section_blocks(
+            {item: merge_continued_blocks(blocks) for item, blocks in sections.items()},
+            year="2025",
+            company="ms",
+            source="sample",
+            max_chars=500,
+        )
+
+        self.assertEqual({record["item"] for record in records}, {"1", "1A", "7", "8", "15"})
+        self.assertTrue(any(record["item"] == "7" and "Net revenues increased" in record["text"]
+                            for record in records))
+
+    def test_item7_cross_reference_root_keeps_introductory_sections_and_excludes_other_items(self):
+        html = """
+        <html><body>
+          <table>
+            <tr><td>Overview</td></tr>
+            <tr><td>Management's Discussion and Analysis</td></tr>
+            <tr><td>Properties</td></tr>
+            <tr><td>Quantitative and Qualitative Disclosures About Market Risk</td></tr>
+            <tr><td>Risk Factors</td></tr>
+            <tr><td>Financial Statements and Supplemental Details</td></tr>
+          </table>
+          <div style="font-weight:700;font-size:14pt">Management's Discussion and Analysis</div>
+          <div style="font-weight:700;font-size:11pt">Overview</div>
+          <p>MD&amp;A overview text.</p>
+          <div style="font-weight:700;font-size:11pt">Significant Events and Trends Impacting Results</div>
+          <p>Significant events affected the results.</p>
+          <div style="font-weight:700;font-size:14pt">Operating Segment Results</div>
+          <p>Revenue increased due to stronger demand.</p>
+          <div style="font-weight:700;font-size:14pt">Properties</div>
+          <p>Properties text must not be assigned to Item 7.</p>
+          <div style="font-weight:700;font-size:14pt">Quantitative and Qualitative Disclosures About Market Risk</div>
+          <p>Market risk text must not be assigned to Item 7.</p>
+          <div style="font-weight:700;font-size:11pt">Critical Accounting Estimates</div>
+          <p>Critical estimate text belongs to Item 7.</p>
+          <table>
+            <tr><td>Item Number</td><td>Item</td></tr>
+            <tr><td>Item 7.</td><td>Management's Discussion and Analysis of Financial Condition and Results of Operations:</td></tr>
+            <tr><td>Liquidity and capital resources</td><td>Pages 29-32</td></tr>
+            <tr><td>Critical accounting estimates</td><td>Pages 34-36</td></tr>
+          </table>
+        </body></html>
+        """
+
+        sections = extract_indexed_section_blocks(html, items=("7",))
+        records = build_records_from_section_blocks(
+            {"7": merge_continued_blocks(sections["7"])},
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=500,
+        )
+        text = " ".join(record["text"] for record in records)
+
+        self.assertIn("MD&A overview", text)
+        self.assertIn("Significant events affected", text)
+        self.assertIn("Revenue increased", text)
+        self.assertIn("Critical estimate text", text)
+        self.assertNotIn("Properties text must not", text)
+        self.assertNotIn("Market risk text must not", text)
+        self.assertTrue(any(
+            record["item_title"] == "Management's Discussion and Analysis > Overview"
+            and "MD&A overview" in record["text"]
+            for record in records
+        ))
+        self.assertTrue(any(
+            record["item_title"] == "Operating Segment Results"
+            and "Revenue increased" in record["text"]
+            for record in records
+        ))
+
+    def test_cross_reference_pages_filter_footer_marked_content(self):
+        html = """
+        <html><body>
+          <table>
+            <tr><td>Overview</td></tr>
+            <tr><td>Management's Discussion and Analysis</td></tr>
+            <tr><td>Properties</td></tr>
+            <tr><td>Risk Factors</td></tr>
+          </table>
+          <div style="font-weight:700">Management's Discussion and Analysis</div>
+          <div style="font-weight:700">Overview</div>
+          <p>Overview text on page 18.</p>
+          <footer>MD&amp;A | 18</footer>
+          <div style="font-weight:700">Operating Segment Results</div>
+          <p>Operating results on page 19.</p>
+          <footer>MD&amp;A | 19</footer>
+          <div style="font-weight:700">Properties</div>
+          <p>Properties text should not be assigned to Item 7.</p>
+          <footer>MD&amp;A | 20</footer>
+          <table>
+            <tr><td>Form 10-K Cross-Reference Index</td></tr>
+            <tr><td>Item Number</td><td>Item</td></tr>
+            <tr><td>Item 7.</td><td>Management's Discussion and Analysis of Financial Condition and Results of Operations:</td></tr>
+            <tr><td>Results of operations</td><td>Pages 18-19</td></tr>
+          </table>
+        </body></html>
+        """
+
+        sections = extract_indexed_section_blocks(html, items=("7",))
+        records = build_records_from_section_blocks(
+            {"7": merge_continued_blocks(sections["7"])},
+            year="2025",
+            company="intc",
+            source="sample",
+            max_chars=500,
+        )
+        text = " ".join(record["text"] for record in records)
+
+        self.assertIn("Overview text on page 18", text)
+        self.assertIn("Operating results on page 19", text)
+        self.assertNotIn("Properties text should not", text)
+        self.assertNotIn("MD&A |", text)
+
+    def test_navigation_and_running_folios_are_dropped_from_blocks_and_headers(self):
+        """Ensure repeated page folios and jump links do not become false headers or chunks."""
+        boilerplate_samples = [
+            "Table of Contents",
+            "table of contents",
+            "TABLE OF CONTENTS",
+            "Back to Table of Contents",
+            "Bank of America 28",
+            "29 Bank of America",
+            "Bank of America 30",
+            "41 Bank of America",
+            "Form 10-K",
+            "2024 Form 10-K",
+            "December 2025 Form 10-K",
+            "Page 26",
+            "5",
+        ]
+        for sample in boilerplate_samples:
+            with self.subTest(sample=sample):
+                self.assertTrue(is_boilerplate_or_nav(sample))
+                block = FilingBlock(1, "div", sample, bold=True)
+                self.assertFalse(is_subheader_block(block))
+
+        html = """
+        <html><body>
+          <div style="font-weight:700">Item 1. Business</div>
+          <div style="font-weight:700">Competition</div>
+          <div>We operate in a competitive market.</div>
+          <div style="font-weight:700"><a href="#toc">Table of Contents</a></div>
+          <div style="font-weight:700">5</div>
+          <div style="font-weight:700">December 2025 Form 10-K</div>
+          <div style="font-weight:700">Bank of America 28</div>
+          <div>Within our Investment Management business segment, we advise clients.</div>
+          <div>Item 1A. Risk Factors</div>
+        </body></html>
+        """
+        blocks = html_to_blocks(html)
+        block_texts = [b.text for b in blocks]
+        self.assertNotIn("Table of Contents", block_texts)
+        self.assertNotIn("5", block_texts)
+        self.assertNotIn("December 2025 Form 10-K", block_texts)
+        self.assertNotIn("Bank of America 28", block_texts)
+
+        sections = extract_section_blocks(blocks, items=("1",))
+        records = build_records_from_section_blocks(sections, year="2025", company="ms", source="sample", max_chars=1800)
+        self.assertEqual([r["item_title"] for r in records], ["Competition", "Competition"])
+        self.assertNotIn("Table of Contents", [r["item_title"] for r in records])
+
+    def test_protects_sec_item_and_part_citations_from_sentence_splitting(self):
+        """Ensure Item 1A. and similar references do not break across sentences."""
+        text = (
+            "For more details, see Item 1A. Risk Factors of this Annual Report on Form 10-K. "
+            "Refer also to Part I. for an overview of business risks and Note 16. for accounting details."
+        )
+        units = split_extraction_sentence_units(text)
+        self.assertEqual(len(units), 2)
+        self.assertEqual(
+            units[0].text,
+            "For more details, see Item 1A. Risk Factors of this Annual Report on Form 10-K.",
+        )
+        self.assertEqual(
+            units[1].text,
+            "Refer also to Part I. for an overview of business risks and Note 16. for accounting details.",
+        )
+
+    def test_table_intro_colons_are_not_subheaders(self):
+        """Ensure prose lines ending in colons that introduce tables remain body narrative."""
+        introductions = [
+            "The following table provides items included in All Other category:",
+            "The following table summarizes sales to external customers by geographic regions:",
+            "Property and equipment, net consists of the following:",
+            "Details regarding our loans are as follows:",
+        ]
+        for intro in introductions:
+            with self.subTest(intro=intro):
+                block = FilingBlock(index=1, tag="div", text=intro, bold=True)
+                self.assertFalse(is_subheader_block(block))
 
 
 def incorporated_filing(year):
@@ -896,14 +2224,22 @@ class IncorporatedReportTests(unittest.TestCase):
                     '<div style="font-weight:700">NM - Not meaningful</div>' + label_html +
                     '<div>Our revenue increased in 2031.</div>'
                     '<div>Fees increased due to customer activity.</div>'))
-                with redirect_stdout(io.StringIO()):
-                    self.assertEqual(main(self.arguments(source, root)), 0)
-                records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
-                review = [r for r in records if r['item'] == '7']
-                self.assertEqual([r['item_title'] for r in review], ['Performance', 'Performance'])
-                self.assertEqual([r['text'] for r in review],
-                                 ['Our revenue increased in 2031.', 'Fees increased due to customer activity.'])
-                self.assertTrue(all(r['source'] == str(report) for r in review))
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(main(self.arguments(source, root)), 0)
+            records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
+            review = [r for r in records if r['item'] == '7']
+            expected_title = (
+                'Performance > Full year 2031 vs. full year 2030'
+                if label_html.startswith('<div')
+                else 'Performance'
+            )
+            self.assertEqual([r['item_title'] for r in review], [
+                'Performance > NM - Not meaningful', expected_title, expected_title,
+            ])
+            self.assertEqual([r['text'] for r in review], [
+                '', 'Our revenue increased in 2031.', 'Fees increased due to customer activity.',
+            ])
+            self.assertTrue(all(r['source'] == str(report) for r in review))
 
     def test_period_labels_in_html_headings_do_not_create_outline_sections(self):
         report = ('<h1>Operating Review</h1><h2>Performance</h2>'
