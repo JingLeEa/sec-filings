@@ -15,6 +15,13 @@ from .config import LLMConfig, load_config
 class LLMError(RuntimeError):
     """A request failed, with a message safe to display without credentials."""
 
+    def __init__(self, message: str, *, status_code: int | None = None,
+                 retry_after: float | None = None, retryable: bool | None = None):
+        super().__init__(message)
+        self.status_code = status_code
+        self.retry_after = retry_after
+        self.retryable = retryable
+
 
 @dataclass(frozen=True)
 class CompletionResult:
@@ -55,9 +62,9 @@ def request_completion(prompt: str, *, config: LLMConfig | None = None,
                 **options,
             )
     except APITimeoutError:
-        raise LLMError("SoCLaaS request timed out. Try again or increase --timeout.") from None
+        raise LLMError("SoCLaaS request timed out. Try again or increase --timeout.", retryable=True) from None
     except APIConnectionError:
-        raise LLMError("Cannot connect to SoCLaaS. Check the endpoint and your network connection.") from None
+        raise LLMError("Cannot connect to SoCLaaS. Check the endpoint and your network connection.", retryable=True) from None
     except APIStatusError as error:
         advice = {
             400: "Check the model and request parameters.",
@@ -66,9 +73,19 @@ def request_completion(prompt: str, *, config: LLMConfig | None = None,
             404: "Check SOCLAAS_BASE_URL and SOCLAAS_MODEL.",
             429: "Your rate limit or quota was reached; check the SoCLaaS portal.",
         }.get(error.status_code, "The service could not complete the request; try again later.")
-        raise LLMError(f"SoCLaaS returned HTTP {error.status_code}. {advice}") from None
+        retry_after = None
+        try:
+            value = float(error.response.headers.get("retry-after", ""))
+            if math.isfinite(value) and value >= 0:
+                retry_after = value
+        except (TypeError, ValueError):
+            pass
+        raise LLMError(f"SoCLaaS returned HTTP {error.status_code}. {advice}",
+                       status_code=error.status_code, retry_after=retry_after,
+                       retryable=(error.status_code in (408, 409, 429) or error.status_code >= 500)
+                       and getattr(error, "code", None) != "insufficient_quota") from None
     except APIError:
-        raise LLMError("SoCLaaS returned an unexpected API response.") from None
+        raise LLMError("SoCLaaS returned an unexpected API response.", retryable=True) from None
     choice = response.choices[0] if response.choices else None
     return CompletionResult(
         text=(choice.message.content or "") if choice else "",

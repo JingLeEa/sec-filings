@@ -124,6 +124,7 @@ class ClientTests(unittest.TestCase):
             self.assertIn(str(status), str(error.exception))
             self.assertNotIn(KEY, str(error.exception))
             self.assertEqual(len(requests), 1)
+            self.assertEqual(error.exception.retryable, status in (429, 503))
 
     def test_connection_and_timeout_errors_hide_underlying_details(self):
         for kind in (httpx.ConnectError, httpx.ReadTimeout):
@@ -131,6 +132,24 @@ class ClientTests(unittest.TestCase):
                 raise kind(KEY, request=request)
             with self.subTest(kind=kind), self.assertRaises(client.LLMError) as error:
                 self.request(handler)
+            self.assertNotIn(KEY, str(error.exception))
+            self.assertTrue(error.exception.retryable)
+
+    def test_insufficient_quota_is_permanent_even_when_http_429(self):
+        with self.assertRaises(client.LLMError) as error:
+            self.request(lambda request: httpx.Response(429, json={"error": {
+                "message": KEY, "code": "insufficient_quota"}}))
+        self.assertEqual(error.exception.status_code, 429)
+        self.assertFalse(error.exception.retryable)
+        self.assertNotIn(KEY, str(error.exception))
+
+    def test_rate_limit_exposes_safe_status_and_retry_after_metadata(self):
+        for header, expected in (("12.5", 12.5), ("bad-header", None), ("NaN", None), ("-1", None)):
+            with self.subTest(header=header), self.assertRaises(client.LLMError) as error:
+                self.request(lambda request: httpx.Response(429, headers={"Retry-After": header},
+                                                           json={"error": {"message": KEY}}))
+            self.assertEqual(error.exception.status_code, 429)
+            self.assertEqual(error.exception.retry_after, expected)
             self.assertNotIn(KEY, str(error.exception))
 
     def test_empty_and_truncated_replies_are_errors(self):

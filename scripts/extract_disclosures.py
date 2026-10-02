@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run disclosure grouping on one previously extracted company/year."""
+"""Extract disclosures for one year or several years concurrently."""
 
 from __future__ import annotations
 

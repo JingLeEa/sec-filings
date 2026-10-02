@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1530" viewBox="0 0 1280 1530" role="img" aria-labelledby="title desc">
+<title id="title">Disclosure alignment with LangGraph</title>
+<desc id="desc">Saved disclosures are compared within the same SEC Item. Exact text bypasses the LLM. LangGraph coordinates matching, local tools, verification and bounded correction loops. SQLite checkpoints and the API ledger support resume. Results are exported to two final JSON files: alignments and needs_review.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="#475569"/></marker></defs>
+<style>
+text {font-family:Arial,Helvetica,sans-serif;fill:#172554}
+.title {font-size:30px;font-weight:700}
+.sub {font-size:17px;fill:#475569}
+.heading {font-size:19px;font-weight:700;text-anchor:middle}
+.detail {font-size:15px;fill:#334155;text-anchor:middle}
+.label {font-size:14px;fill:#475569}
+.edge {fill:none;stroke:#475569;stroke-width:2;marker-end:url(#arrow)}
+</style>
+<rect width="1280" height="1530" fill="#f8fafc"/>
+<text x="50" y="60" class="title">Disclosure alignment with LangGraph</text>
+<text x="50" y="93" class="sub">Saved disclosures → same-Item matching → verified links, unmatched disclosures, review queue</text>
+<rect x="395" y="594" width="820" height="650" rx="22" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/>
+<text x="710" y="625" class="sub">LangGraph: sequential jobs and bounded agent loops</text>
+
+<rect x="430" y="130" width="480" height="70" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="670.0" y="159" class="heading">Previous + current year</text>
+<text x="670.0" y="183" class="detail">Saved disclosures and original sentence IDs</text>
+<rect x="430" y="240" width="480" height="70" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="670.0" y="269" class="heading">Validate source evidence</text>
+<text x="670.0" y="293" class="detail">IDs, years, original text, SEC Item</text>
+<rect x="430" y="350" width="480" height="85" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="670.0" y="379" class="heading">Unique identical full text?</text>
+<text x="670.0" y="403" class="detail">Same Item; normalize bullets and whitespace only</text>
+<path d="M670 200 V240" class="edge"/>
+<path d="M670 310 V350" class="edge"/>
+<rect x="50" y="345" width="300" height="110" rx="12" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="2"/>
+<text x="200.0" y="374" class="heading">Save exact links</text>
+<text x="200.0" y="398" class="detail">No matcher or verifier call</text>
+<text x="200.0" y="421" class="detail">Retain extraction warnings</text>
+<path d="M430 390 H350" class="edge"/>
+<text x="375" y="377" class="label">Yes</text>
+<path d="M200 455 V480 H27 V1322 H430" class="edge"/>
+<text x="45" y="1270" class="label">Exact links + original citations</text>
+<rect x="430" y="480" width="480" height="80" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="670.0" y="509" class="heading">Retrieve candidates locally</text>
+<text x="670.0" y="533" class="detail">Same Item, both directions; no API tokens</text>
+<path d="M670 435 V480" class="edge"/>
+<text x="685" y="462" class="label">Remaining disclosures</text>
+<rect x="430" y="660" width="480" height="80" rx="12" fill="#fff" stroke="#60a5fa" stroke-width="2"/>
+<text x="670.0" y="689" class="heading">Matching agent</text>
+<text x="670.0" y="713" class="detail">Model chooses search, context, or proposed links</text>
+<path d="M670 560 V660" class="edge"/>
+<rect x="950" y="660" width="230" height="100" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="1065.0" y="689" class="heading">Local tools</text>
+<text x="1065.0" y="713" class="detail">Search disclosures</text>
+<text x="1065.0" y="736" class="detail">Read original context</text>
+<path d="M910 692 H950" class="edge"/>
+<path d="M1065 760 V785 H925 V716 H910" class="edge"/>
+<rect x="430" y="825" width="480" height="70" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="670.0" y="854" class="heading">Validate and group links</text>
+<text x="670.0" y="878" class="detail">Repeat matching jobs; then plan verification</text>
+<path d="M670 740 V825" class="edge"/>
+<path d="M430 853 H410 V700 H430" class="edge"/>
+<text x="445" y="783" class="label">Invalid proposal:</text>
+<text x="445" y="805" class="label">correct within turn limit</text>
+<rect x="430" y="945" width="480" height="80" rx="12" fill="#fff" stroke="#60a5fa" stroke-width="2"/>
+<text x="670.0" y="974" class="heading">Verification agent</text>
+<text x="670.0" y="998" class="detail">Read original sentences and verify correspondence</text>
+<path d="M670 895 V945" class="edge"/>
+<rect x="950" y="945" width="230" height="100" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="1065.0" y="974" class="heading">Local tools</text>
+<text x="1065.0" y="998" class="detail">Same-Item search</text>
+<text x="1065.0" y="1021" class="detail">Read more evidence</text>
+<path d="M910 977 H950" class="edge"/>
+<path d="M1065 1045 V1069 H925 V1004 H910" class="edge"/>
+<rect x="430" y="1110" width="480" height="105" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="670.0" y="1139" class="heading">Validate and repair</text>
+<text x="670.0" y="1163" class="detail">Keep accepted rows; correct invalid IDs or citations</text>
+<text x="670.0" y="1186" class="detail">Unresolved cases retain review when turns run out</text>
+<path d="M670 1025 V1110" class="edge"/>
+<path d="M430 1158 H410 V985 H430" class="edge"/>
+<text x="440" y="1075" class="label">Targeted corrections</text>
+<text x="440" y="1097" class="label">or next verifier job</text>
+<rect x="50" y="660" width="300" height="210" rx="12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+<text x="200.0" y="689" class="heading">Saved progress</text>
+<text x="200.0" y="713" class="detail">SQLite graph checkpoints</text>
+<text x="200.0" y="736" class="detail">Visible IDs and tool history</text>
+<text x="200.0" y="759" class="detail">Accepted verifier proposals</text>
+<text x="200.0" y="782" class="detail">JSON job checkpoints</text>
+<text x="200.0" y="805" class="detail">API cache and token ledger</text>
+<rect x="50" y="930" width="300" height="125" rx="12" fill="#fff7ed" stroke="#fdba74" stroke-width="2"/>
+<text x="200.0" y="959" class="heading">Resume after interruption</text>
+<text x="200.0" y="983" class="detail">Completed responses are reused</text>
+<text x="200.0" y="1006" class="detail">Uncertain API usage requires</text>
+<text x="200.0" y="1029" class="detail">an explicit retry</text>
+<rect x="430" y="1280" width="480" height="85" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="670.0" y="1309" class="heading">Consolidate and check coverage</text>
+<text x="670.0" y="1333" class="detail">Preserve supported overlapping links and evidence</text>
+<path d="M670 1215 V1280" class="edge"/>
+<path d="M670 1365 V1390 H375 V1410" class="edge"/>
+<path d="M670 1390 H990 V1410" class="edge"/>
+<rect x="50" y="1410" width="650" height="90" rx="12" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="2"/>
+<text x="375.0" y="1439" class="heading">alignments.json</text>
+<text x="375.0" y="1463" class="detail">AI-verified + auto_matched + finalized unmatched</text>
+<text x="375.0" y="1483" class="detail">Unmatched: introduced disclosure / removed disclosure</text>
+<rect x="750" y="1410" width="480" height="90" rx="12" fill="#fff7ed" stroke="#fdba74" stroke-width="2"/>
+<text x="990.0" y="1439" class="heading">needs_review.json</text>
+<text x="990.0" y="1463" class="detail">Unresolved alignment concerns</text>
+<text x="990.0" y="1483" class="detail">Includes provisional unmatched while incomplete</text>
+</svg>
