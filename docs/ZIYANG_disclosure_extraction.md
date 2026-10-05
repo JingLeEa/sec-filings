@@ -11,7 +11,7 @@ a topic label and one of the nine content categories.
 
 Implemented: one-subsection grouping, one-sentence/partial-paragraph selections,
 pre/post extraction filters, shared batch context, boundary reconciliation,
-source validation, parallel year jobs with shared request pacing, optional
+source validation, parallel year jobs and batches with shared request pacing, optional
 fault-tolerant retries/resume, review/audit exports and token accounting. Topic coherence,
 summaries and taxonomy are model judgments; source checks do not certify them.
 No training, human-review UI or change classification is implemented here.
@@ -115,6 +115,8 @@ uses API tokens.
   --ticker amd \
   --years 2023 2024 2025 \
   --workers 3 \
+  --batch-workers 4 \
+  --max-concurrent-requests 8 \
   --output-root data/disclosures_parallel \
   --fault-tolerant \
   --max-retries 3 \
@@ -122,6 +124,10 @@ uses API tokens.
 ```
 
 `--years` selects the filings; `--workers 3` runs up to three year jobs at once.
+`--batch-workers 4` runs up to four extraction batches **within each year**.
+Together they allow up to 12 active batch jobs; `--max-concurrent-requests 8`
+caps simultaneous API calls at eight across the whole invocation. Request starts
+remain spaced by the shared default two-second interval.
 `--fault-tolerant` retries temporary API errors and invalid replies, with up to
 three additional attempts per job. `--retry-backoff 5` starts retry waits at five
 seconds. Recoverable failed extraction batches stay recorded while later batches
@@ -141,6 +147,8 @@ Validate this parallel command first, **without API calls or output writes**:
   --ticker amd \
   --years 2023 2024 2025 \
   --workers 3 \
+  --batch-workers 4 \
+  --max-concurrent-requests 8 \
   --output-root data/disclosures_parallel \
   --fault-tolerant \
   --max-retries 3 \
@@ -149,6 +157,25 @@ Validate this parallel command first, **without API calls or output writes**:
 ```
 
 ### Single-year commands
+
+Run batches concurrently even when extracting just **one year**:
+
+```bash
+.venv/bin/python scripts/extract_disclosures.py \
+  --ticker amd \
+  --year 2024 \
+  --batch-workers 4 \
+  --max-concurrent-requests 4 \
+  --output-dir data/disclosures_parallel/amd/2024 \
+  --fault-tolerant \
+  --max-retries 3 \
+  --retry-backoff 5
+```
+
+Add `--dry-run` to check this command without API calls or output writes.
+This example shares the 2024 output/cache with the multi-year command above;
+run one invocation at a time against that directory. Adjusting worker counts,
+pacing or the shared concurrency cap preserves cached successful work.
 
 Check input validity and planned batches first; these **do not call the API or
 write outputs**:
@@ -179,14 +206,21 @@ calls or output writes. Pass `--disclosures-dir data/disclosures_parallel` to
 alignment afterward. `--year` and `--years` are mutually exclusive;
 `--output-dir` is for a single year, while `--output-root` appends company/year.
 
-`--workers` defaults to 3 and caps concurrent year jobs. Extraction batches and
-boundary checks remain ordered within each year, with independent manifests,
-caches, disclosure IDs and token ledgers. All selected inputs and existing
+`--workers` defaults to 3 and caps concurrent year jobs. `--batch-workers`
+defaults to 1 and caps extraction batches within each year. For a single year,
+only `--batch-workers` controls batch concurrency. The optional
+`--max-concurrent-requests` caps simultaneous API calls across all years and
+batches; without it, worker counts provide the cap. Each year keeps independent
+manifests, caches, disclosure IDs and token ledgers. Batches may finish out of
+order, but final disclosure IDs and rows retain source order. Boundary checks
+wait for all extraction batches to succeed and then run in source order because
+later checks depend on earlier merges. All selected inputs and existing
 manifests are checked before live work starts. Logs are prefixed with the year.
 A failed year does not stop other year jobs. The overall exit is
 `1` if any year fails, `2` if any year remains partial, otherwise `0`.
 
-Multi-year requests share a minimum 2-second interval between starts
+Multi-year runs and single-year runs with `--batch-workers > 1` share a minimum
+2-second interval between API starts
 (`--request-interval`). HTTP 429 triggers a shared 60-second cooldown
 (`--rate-limit-cooldown`), extended by a numeric `Retry-After` header. Without
 `--fault-tolerant`, up to two additional attempts follow HTTP 429
@@ -194,7 +228,8 @@ Multi-year requests share a minimum 2-second interval between starts
 affected year for explicit inspection/retry. Every attempt is
 saved in its year's ledger, including failed attempts with unknown usage.
 This pacing reduces bursts; throughput still depends on the account's request
-and token limits. Increase the interval or reduce workers for lower limits.
+and token limits. Increase the interval or reduce batch/year workers or the
+shared concurrency cap for lower limits.
 These controls apply within this invocation. Separate CLI processes do not
 share a limiter.
 

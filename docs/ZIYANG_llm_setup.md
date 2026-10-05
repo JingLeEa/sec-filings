@@ -100,8 +100,9 @@ response bodies are not printed.
 | Goal | Next document | API usage |
 | --- | --- | --- |
 | Prepare filings and extract disclosures | [Extraction inputs](ZIYANG_disclosure_extraction.md#4-inputs) and [run commands](ZIYANG_disclosure_extraction.md#5-run-and-rerun) | SEC preprocessing uses no LLM; fresh disclosure extraction does |
-| Run 2023, 2024 and 2025 in parallel with fault tolerance | [Complete parallel command, retry flags and resume instructions](ZIYANG_disclosure_extraction.md#parallel-run-with-fault-tolerance) | Fresh work and retries use LLM tokens; successful cached work is reused |
+| Run 2023, 2024 and 2025 and their extraction batches in parallel with fault tolerance | [Complete parallel command, retry flags and resume instructions](ZIYANG_disclosure_extraction.md#parallel-run-with-fault-tolerance) | Fresh work and retries use LLM tokens; successful cached work is reused |
 | Align two completed extraction years | [Alignment inputs](ZIYANG_disclosure_alignment.md#4-inputs) and [run commands](ZIYANG_disclosure_alignment.md#5-run-and-rerun) | Exact matching/retrieval use no LLM; agent calls do |
+| Run matching and verification jobs concurrently | [Parallel alignment command](ZIYANG_disclosure_alignment.md#parallel-alignment) | Uncached jobs use LLM tokens; completed cached jobs are reused |
 | Develop a downstream JSON reader | [Extraction examples](ZIYANG_disclosure_extraction.md#7-example-data-and-downstream-usage) or [alignment examples](ZIYANG_disclosure_alignment.md#7-example-data-and-downstream-usage) | No API key or calls needed |
 | Document another backend stage | [Stage template](backend_stage_template.md) | None |
 

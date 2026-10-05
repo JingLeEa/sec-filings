@@ -1,18 +1,31 @@
-"""Coordinate request starts and rate-limit cooldowns across extraction years."""
+"""Coordinate API concurrency, request starts and cooldowns across workers."""
 
 from __future__ import annotations
 
 import threading
 import time
+from contextlib import contextmanager
 
 
 class RequestPacer:
-    def __init__(self, interval: float, cooldown: float):
+    def __init__(self, interval: float, cooldown: float, max_concurrent: int | None = None):
         self.interval = interval
         self.cooldown = cooldown
         self.condition = threading.Condition()
         self.next_start = 0.0
         self.blocked_until = 0.0
+        self.slots = threading.BoundedSemaphore(max_concurrent) if max_concurrent else None
+
+    @contextmanager
+    def request(self):
+        if self.slots is not None:
+            self.slots.acquire()
+        try:
+            self.acquire()
+            yield
+        finally:
+            if self.slots is not None:
+                self.slots.release()
 
     def acquire(self) -> None:
         with self.condition:

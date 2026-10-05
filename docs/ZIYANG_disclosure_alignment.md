@@ -10,7 +10,7 @@ Inputs come from [disclosure extraction](ZIYANG_disclosure_extraction.md).
 
 Implemented: exact-text routing, local candidate retrieval, LangGraph matching
 and verification agents, bounded automatic repair, supported overlapping links,
-source validation, two final JSON outputs and durable resume state. Both agents use the
+source validation, parallel jobs, two final JSON outputs and durable resume state. Both agents use the
 configured model with different prompts. LangGraph coordinates the workflow; it
 does not train the model or guarantee fewer review cases or faster API calls.
 
@@ -54,8 +54,11 @@ flowchart TD
     J --> L[needs_review.json: unresolved decisions]
 ```
 
-The coordinator runs jobs sequentially; the agent chooses `search`, `context` or
-its final action. LangGraph routes between model, tool and validation nodes.
+The coordinator runs one job at a time by default. `--workers` allows independent
+matching jobs to overlap, then independent verification jobs to overlap. All
+matching jobs finish before grouping and verification begin. Each agent's own
+model/tool/correction turns remain ordered; the agent chooses `search`, `context`
+or its final action. LangGraph routes between model, tool and validation nodes.
 The existing SoCLaaS Chat Completions client uses a JSON action protocol; native
 provider tool calling is not required. Disclosure extraction remains a separate
 Python workflow.
@@ -115,6 +118,44 @@ comparison's hard boundary is the SEC Item.
 ## 5. Run and rerun
 
 Run from the repository root after completing both extraction years.
+
+### Parallel alignment
+
+Run up to **four matching jobs at once**, followed by up to **four verification
+jobs at once**, using the completed extraction runs under `data/disclosures_run2`:
+
+```bash
+.venv/bin/python scripts/align_disclosures.py \
+  --ticker amd \
+  --previous-year 2024 \
+  --current-year 2025 \
+  --disclosures-dir data/disclosures_run2 \
+  --output-dir data/alignments_parallel/amd/2024-2025 \
+  --workers 4 \
+  --request-interval 2 \
+  --max-total-tokens 3000000
+```
+
+Add `--dry-run` to validate inputs without API calls or output writes. For
+2023–2024, change both year flags and the output folder to `2023-2024`.
+For new extraction from the parallel extraction guide, change
+`--disclosures-dir` to `data/disclosures_parallel`. Add `--env-file .env` when
+using a project env file instead of the default SoCLaaS configuration.
+
+`--workers 4` caps simultaneous API calls at four for this comparison, with
+starts spaced by `--request-interval 2`. Available independent jobs and the
+provider's limits determine actual throughput. Each job keeps its own durable
+graph thread and JSON checkpoint; finished jobs are retained if another fails.
+Reports use deterministic job/source ordering despite out-of-order responses.
+Separate CLI processes do not share this invocation's limiter.
+
+Repeat the same command to resume. Changing workers or pacing alone does not
+invalidate cached work. For saved runs created before this implementation change,
+use a fresh output directory as above, or follow the cache revalidation rules
+below. The final outputs remain `alignments.json` and `needs_review.json`.
+
+### Default single-worker commands
+
 Validate inputs and candidate retrieval with **no API calls or output writes**:
 
 ```bash
@@ -136,7 +177,7 @@ For extraction created under the alternative root in the extraction guide, use
 a new alignment output directory:
 
 ```bash
-.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --disclosures-dir data/disclosures_run2 --output-dir data/alignments_run2/amd/2024-2025 --max-total-tokens 3000000
+.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --disclosures-dir data/disclosures_run2 --output-dir data/alignments_parallel/amd/2024-2025 --max-total-tokens 3000000
 ```
 
 For 2023–2024, prepare those two years and change `--previous-year` /
@@ -154,7 +195,8 @@ turn counts, visible evidence and repair state. A saved API response is reused
 if execution stopped before its graph checkpoint. An unsaved response cannot be
 recovered and its token usage is unknown. API keys are not serialized as state.
 
-Only one writer may use an output directory. An awake computer is required for
+Only one CLI invocation may use an output directory; its own workers coordinate
+shared writes. An awake computer is required for
 local execution. Restarting does not grant extra model turns. Raising a run budget
 can continue pending work; exhausting a job's turn limit leaves review results.
 
@@ -170,6 +212,9 @@ Historical cross-Item runs cannot be resumed/imported under the same-Item policy
 | Option | Default / behavior |
 | --- | --- |
 | `--top-k`, `--batch-size` | 5 candidates and 6 current anchors per matching job, scoped to one Item |
+| `--workers` | 1 by default; maximum concurrent jobs/API calls within each matching or verification phase |
+| `--request-interval` | 2 seconds between request starts with multiple workers; otherwise 0 |
+| `--rate-limit-cooldown` | Shared 60-second pause after HTTP 429, extended by numeric `Retry-After` |
 | `--max-steps` | 4 model turns per job, including tool requests and corrections |
 | `--max-requests` | 400 cumulative paid attempts, including prior runs of the same output directory |
 | `--max-new-requests` | Optional limit on new attempts this invocation |
@@ -178,11 +223,15 @@ Historical cross-Item runs cannot be resumed/imported under the same-Item policy
 | `--max-prompt-chars` | 150,000 combined characters; oversized context is not silently truncated |
 | `--retry-failed` | Explicitly acknowledge prior failed/interrupted attempts and allow another paid attempt |
 
-Admission budgeting reserves UTF-8 prompt bytes plus maximum completion tokens;
+Admission budgeting atomically reserves UTF-8 prompt bytes plus maximum completion tokens;
 this is a conservative estimate, not provider billing. Unknown usage from prior
 failures stays unknown. With `--retry-failed`, each acknowledged attempt gets an
 estimate in `unknown_usage_budget_reserve`; `budget_accounted_tokens` includes it
-and reported usage. New failures still stop the run; successful responses missing
+and reported usage. Active calls are tracked in `in_flight_budget_reserve` and
+count against the token cap until their usage is recorded; they do not trigger
+the unknown-usage stop while still running. Request caps include every admitted
+attempt, including retries. New failures stop admission of later jobs while
+already admitted work finishes and checkpoints. Successful responses missing
 usage cannot be acknowledged with that flag. Requests have no automatic client
 retries. Consult `token_usage.json`; do not interpret unknown usage as free.
 

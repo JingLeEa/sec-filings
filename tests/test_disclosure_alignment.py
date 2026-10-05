@@ -2,7 +2,9 @@ import io
 import json
 import shutil
 import sqlite3
+import threading
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import redirect_stderr, redirect_stdout
 from copy import deepcopy
 from pathlib import Path
@@ -18,7 +20,7 @@ from sec_disclosure.agents.alignment_repair import VerificationRepair
 from sec_disclosure.agents.alignment_data import AlignmentData
 from sec_disclosure.agents.alignment_exact import exact_matches, normalize_text
 from sec_disclosure.indexing.disclosure_retrieval import DisclosureIndex
-from sec_disclosure.llm.client import CompletionResult
+from sec_disclosure.llm.client import CompletionResult, LLMError
 from sec_disclosure.llm.config import LLMConfig
 from sec_disclosure.llm.disclosures import digest, write_json
 
@@ -1535,6 +1537,178 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(self.run_cli("--repair-from", str(folder), "--output-dir", str(self.root / "repaired"), "--offline-repair"), (1, 0))
         self.assertFalse((self.root / "repaired").exists())
         self.assertTrue(all(digest(p.read_bytes()) == value for p, value in hashes.items()))
+
+    def parallel_items(self):
+        # Distinct Items create independent real matching and verification jobs.
+        for year in ("2023", "2024"):
+            self.set_fixture_item(year, 2, "3")
+            self.set_fixture_item(year, 3, "8")
+
+    def test_parallel_matching_and_verification_overlap_and_remain_deterministic(self):
+        self.parallel_items()
+        barriers = {role: threading.Barrier(3) for role in ("matching", "verification")}
+        lock, completed_matching = threading.Lock(), set()
+        output = self.root / "alignments/amd/2023-2024"
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            role = "matching" if "anchors" in payload else "verification"
+            if role == "verification":
+                with lock:
+                    self.assertEqual(len(completed_matching), 3)
+                self.assertEqual(len(list((output / "jobs").glob("matching_*.json"))), 3)
+            barriers[role].wait(timeout=5)
+            result = self.response(prompt, **kwargs)
+            if role == "matching":
+                with lock:
+                    completed_matching.update(payload["anchors"])
+            return result
+        flags = ("--workers", "3", "--batch-size", "1", "--request-interval", "0")
+        self.assertEqual(self.run_cli(*flags, response=response), (0, 6))
+        parallel = self.saved_report()
+        self.assertTrue(parallel["run_complete"])
+        self.assertEqual(parallel["counts"], {"ai_verified": 3})
+        self.assertEqual(self.output("token_usage.json")["reported_tokens"]["total_tokens"], 750)
+        self.assertEqual(self.output("token_usage.json")["in_flight_budget_reserve"]["attempt_count"], 0)
+        with sqlite3.connect(output / "graph/checkpoints.sqlite") as connection:
+            self.assertEqual(len(connection.execute("SELECT DISTINCT thread_id FROM checkpoints").fetchall()), 6)
+        # Changing only execution concurrency does not invalidate cached work.
+        self.assertEqual(self.run_cli("--workers", "1", "--batch-size", "1"), (0, 0))
+        serial_output = self.root / "serial"
+        self.assertEqual(self.run_cli("--batch-size", "1", "--output-dir", str(serial_output)), (0, 6))
+        self.assertEqual(parallel["alignments"], module.load_alignment_report(serial_output)["alignments"])
+        self.assertEqual(self.output("matching_proposals.json"), json.loads((serial_output / "matching_proposals.json").read_text()))
+
+    def test_parallel_pause_drains_saved_jobs_and_resumes_without_duplicate_calls(self):
+        self.parallel_items()
+        barrier = threading.Barrier(2)
+        def response(prompt, **kwargs):
+            barrier.wait(timeout=5)
+            return self.response(prompt, **kwargs)
+        flags = ("--workers", "3", "--batch-size", "1", "--request-interval", "0")
+        self.assertEqual(self.run_cli(*flags, "--max-new-requests", "2", response=response), (2, 2))
+        self.assertFalse(self.saved_report()["run_complete"])
+        output = self.root / "alignments/amd/2023-2024"
+        saved = list((output / "jobs").glob("matching_*.json"))
+        self.assertEqual(len(saved), 2)
+        self.assertTrue(all(json.loads(path.read_text())["result"] for path in saved))
+        self.assertEqual(self.output("token_usage.json")["requests_with_unknown_usage"], 0)
+        self.assertEqual(self.run_cli(*flags), (0, 4))
+        self.assertEqual(self.saved_report()["counts"], {"ai_verified": 3})
+        self.assertEqual(len(list((output / "requests").glob("*.json"))), 6)
+
+    def test_parallel_failed_request_retains_other_admitted_work_for_retry(self):
+        self.parallel_items()
+        barrier = threading.Barrier(3)
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            barrier.wait(timeout=5)
+            if payload["anchors"] == ["amd_2024_7_D001"]:
+                raise LLMError("Temporary server failure.", status_code=503, retryable=True)
+            return self.response(prompt, **kwargs)
+        flags = ("--workers", "3", "--batch-size", "1", "--request-interval", "0")
+        self.assertEqual(self.run_cli(*flags, response=response), (1, 3))
+        self.assertFalse(self.saved_report()["run_complete"])
+        output = self.root / "alignments/amd/2023-2024"
+        self.assertEqual(len(list((output / "jobs").glob("matching_*.json"))), 2)
+        self.assertEqual(self.output("token_usage.json")["reported_tokens"]["total_tokens"], 250)
+        self.assertEqual(self.output("token_usage.json")["requests_with_unknown_usage"], 1)
+        self.assertEqual(self.run_cli(*flags, "--retry-failed"), (0, 4))
+        self.assertTrue(self.saved_report()["run_complete"])
+        usage = self.output("token_usage.json")
+        self.assertEqual(usage["reported_tokens"]["total_tokens"], 750)
+        self.assertEqual(usage["unknown_usage_budget_reserve"]["unacknowledged_attempt_count"], 0)
+        self.assertEqual(len(usage["unknown_usage_budget_reserve"]["attempts"]), 1)
+
+    def concurrency_runtime(self, **limits):
+        args = SimpleNamespace(workers=3, request_interval=0, rate_limit_cooldown=0, retry_failed=False,
+            max_new_requests=None, max_requests=100, max_total_tokens=10000, max_steps=4,
+            max_tokens=100, max_prompt_chars=10000, timeout=5)
+        for key, value in limits.items():
+            setattr(args, key, value)
+        return alignment_runtime.Runtime(self.root / "runtime", LLMConfig("https://example.test/v1", "fake-secret", "default"), args)
+
+    def test_parallel_token_budget_reserves_active_calls_without_unknown_usage(self):
+        runtime = self.concurrency_runtime(max_total_tokens=105)
+        entered, release = threading.Event(), threading.Event()
+        def response(*args, **kwargs):
+            entered.set()
+            self.assertTrue(release.wait(timeout=5))
+            return CompletionResult("{}", "test-model", "stop", {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2})
+        with patch.object(alignment_runtime, "request_completion", side_effect=response) as api, redirect_stdout(io.StringIO()), \
+             ThreadPoolExecutor(max_workers=3) as executor:
+            first = executor.submit(runtime.call, "matching", "one", "abc", "xy")
+            try:
+                self.assertTrue(entered.wait(timeout=5))
+                report = runtime.report()
+                self.assertEqual(report["budget_accounted_tokens"], 105)
+                self.assertEqual(report["in_flight_budget_reserve"], {"attempt_count": 1, "estimated_tokens": 105})
+                self.assertEqual(report["unknown_usage_budget_reserve"]["unacknowledged_attempt_count"], 0)
+                others = [executor.submit(runtime.call, "matching", str(i), "different", "xy") for i in (2, 3)]
+                for future in others:
+                    with self.assertRaisesRegex(alignment_runtime.RunLimit, "token budget"):
+                        future.result(timeout=5)
+            finally:
+                release.set()
+            first.result(timeout=5)
+        self.assertEqual(api.call_count, 1)
+        self.assertEqual(runtime.report()["budget_accounted_tokens"], 2)
+        self.assertEqual(runtime.report()["in_flight_budget_reserve"]["attempt_count"], 0)
+
+    def test_parallel_total_request_cap_is_atomic(self):
+        runtime = self.concurrency_runtime(max_requests=1)
+        entered, release = threading.Event(), threading.Event()
+        def response(*args, **kwargs):
+            entered.set()
+            self.assertTrue(release.wait(timeout=5))
+            return CompletionResult("{}", "test-model", "stop", {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2})
+        with patch.object(alignment_runtime, "request_completion", side_effect=response) as api, redirect_stdout(io.StringIO()), \
+             ThreadPoolExecutor(max_workers=3) as executor:
+            first = executor.submit(runtime.call, "matching", "one", "first", "system")
+            try:
+                self.assertTrue(entered.wait(timeout=5))
+                others = [executor.submit(runtime.call, "matching", str(i), str(i), "system") for i in (2, 3)]
+                for future in others:
+                    with self.assertRaisesRegex(alignment_runtime.RunLimit, "request limit"):
+                        future.result(timeout=5)
+            finally:
+                release.set()
+            first.result(timeout=5)
+        self.assertEqual(api.call_count, 1)
+        self.assertEqual(runtime.new_requests, 1)
+
+    def test_parallel_identical_prompts_reuse_one_paid_response(self):
+        runtime = self.concurrency_runtime()
+        barrier = threading.Barrier(3)
+        entered, waiting, release = threading.Event(), threading.Event(), threading.Event()
+        original_wait, wait_count = runtime.condition.wait, 0
+        def wait(*args, **kwargs):
+            nonlocal wait_count
+            wait_count += 1  # Called while holding the shared condition lock.
+            if wait_count == 2:
+                waiting.set()
+            return original_wait(*args, **kwargs)
+        def response(*args, **kwargs):
+            entered.set()
+            self.assertTrue(release.wait(timeout=5))
+            return CompletionResult("{}", "test-model", "stop", {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2})
+        def call(number):
+            barrier.wait(timeout=5)
+            return runtime.call("matching", str(number), "same prompt", "same system")
+        with patch.object(alignment_runtime, "request_completion", side_effect=response) as api, \
+             patch.object(runtime.condition, "wait", side_effect=wait), \
+             redirect_stdout(io.StringIO()), ThreadPoolExecutor(max_workers=3) as executor:
+            futures = [executor.submit(call, number) for number in range(3)]
+            try:
+                self.assertTrue(entered.wait(timeout=5))
+                self.assertTrue(waiting.wait(timeout=5))
+                self.assertEqual(api.call_count, 1)
+            finally:
+                release.set()
+            results = [future.result(timeout=5) for future in futures]
+        self.assertEqual(api.call_count, 1)
+        self.assertEqual(results, [results[0]] * 3)
+        self.assertEqual(len(runtime.requests), 1)
+        self.assertEqual(runtime.report()["budget_accounted_tokens"], 2)
 
 
 if __name__ == "__main__":

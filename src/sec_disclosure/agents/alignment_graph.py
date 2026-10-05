@@ -212,8 +212,10 @@ class AlignmentAgentGraph:
         config = {"configurable": {"thread_id": self.job_id, "checkpoint_ns": ""},
                   "recursion_limit": self.runtime.args.max_steps * 3 + 10}
         with SqliteSaver.from_conn_string(str(directory / "checkpoints.sqlite")) as saver:
-            graph = self.build(saver)
-            snapshot = graph.get_state(config)
+            saver.conn.execute("PRAGMA busy_timeout = 60000")
+            with self.runtime.checkpoint_setup_lock:
+                graph = self.build(saver)
+                snapshot = graph.get_state(config)
             if snapshot.values and snapshot.values["identity"] != identity:
                 raise ValueError("Graph checkpoint does not match this job; use a new output directory or revalidate the cache.")
             try:

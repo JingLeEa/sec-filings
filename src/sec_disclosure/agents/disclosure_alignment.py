@@ -576,6 +576,9 @@ def main(argv=None):
     parser.add_argument("--env-file", type=Path)
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--batch-size", type=int, default=6)
+    parser.add_argument("--workers", type=int, default=1, help="Concurrent jobs within each matching/verification phase (default: 1).")
+    parser.add_argument("--request-interval", type=float, help="Shared seconds between API request starts (default: 2 with multiple workers, otherwise 0).")
+    parser.add_argument("--rate-limit-cooldown", type=float, default=60, help="Shared HTTP 429 cooldown in seconds (default: 60).")
     parser.add_argument("--max-steps", type=int, default=4, help="Agent turns per job, including tool requests/corrections.")
     parser.add_argument("--max-requests", type=int, default=400, help="Total paid requests allowed for this pair, including prior attempts.")
     parser.add_argument("--max-new-requests", type=int, help="Pause after this many NEW requests; rerun to resume.")
@@ -602,9 +605,12 @@ def main(argv=None):
     ticker, years = args.ticker.lower(), (args.previous_year, args.current_year)
     if not re.fullmatch(r"[a-z0-9][a-z0-9.-]*", ticker) or any(not re.fullmatch(r"\d{4}", year) for year in years) or years[0] >= years[1]:
         parser.error("Use a valid ticker and increasing four-digit fiscal years.")
-    limits = (args.top_k, args.batch_size, args.max_steps, args.max_requests, args.max_total_tokens, args.max_tokens, args.max_prompt_chars)
+    limits = (args.top_k, args.batch_size, args.max_steps, args.max_requests, args.max_total_tokens, args.max_tokens, args.max_prompt_chars, args.workers)
     if any(n < 1 for n in limits) or args.max_new_requests is not None and args.max_new_requests < 1 or not math.isfinite(args.timeout) or args.timeout <= 0:
         parser.error("Limits and timeout must be positive.")
+    args.request_interval = args.request_interval if args.request_interval is not None else (2.0 if args.workers > 1 else 0.0)
+    if any(not math.isfinite(value) or value < 0 for value in (args.request_interval, args.rate_limit_cooldown)):
+        parser.error("Request interval and rate-limit cooldown must be finite and nonnegative.")
     output = args.output_dir or args.data_dir / "alignments" / ticker / f"{years[0]}-{years[1]}"
     if args.repair_from and (output.resolve() == args.repair_from.resolve() or args.repair_from.resolve() in output.resolve().parents):
         parser.error("Repair output must be a separate directory outside --repair-from.")
@@ -635,6 +641,8 @@ def main(argv=None):
                           Path(__file__).with_name("alignment_grouping.py"),
                           Path(__file__).with_name("alignment_exact.py"),
                           Path(__file__).parents[1] / "llm/disclosures.py",
+                          Path(__file__).parents[1] / "llm/concurrency.py",
+                          Path(__file__).parents[1] / "llm/request_pacing.py",
                           Path(__file__).parents[1] / "indexing/disclosure_retrieval.py"]
         manifest = {"schema_version": MANIFEST_VERSION, "input_hashes": data.hashes,
                     "orchestration": orchestration_manifest(),

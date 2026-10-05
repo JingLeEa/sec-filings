@@ -9,6 +9,7 @@ import math
 import re
 import sys
 import time
+import threading
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from copy import deepcopy
@@ -21,6 +22,7 @@ from sec_disclosure.annotation.export_table_annotations import CONTENT_LABELS
 from .client import LLMError, request_completion
 from .config import load_config
 from .request_pacing import RequestPacer
+from .concurrency import run_jobs
 from .disclosure_filters import (TABLE_INTRODUCTION_POLICY, TABLE_INTRODUCTION_REASON,
                                  POST_EXTRACTION_FILTER_POLICY, POST_EXTRACTION_REASON,
                                  is_single_sentence_colon)
@@ -674,56 +676,65 @@ def run_year(args, prepared, config, pacer):
         report = save_outputs(output, filing, batches, requests)
         failed_ids = {batch["batch_id"] for batch in report["failed_batches"]}
         new_requests = 0
+        ledger_lock = threading.RLock()
+        stopped = threading.Event()
 
         def send_request(job_id, item, prompt, system_prompt, *, stage, input_hash=None, correction=None):
-            nonlocal new_requests
+            nonlocal new_requests, report
             retry_limit = args.max_retries if args.fault_tolerant else args.rate_limit_retries
             rate_retries = 0
             for retry in range(retry_limit + 1):
-                pacer.acquire()
-                attempt = sum(r["batch_id"] == job_id for r in requests) + 1
-                path = request_dir / f"{job_id}_attempt_{attempt:03d}.json"
-                request = {"batch_id": job_id, "item": item, "stage": stage, "attempt": attempt,
-                           "status": "started", "started_at": datetime.now(timezone.utc).isoformat(),
-                           "prompt_hash": digest(prompt.encode())}
-                if input_hash is not None:
-                    request["input_hash"] = input_hash
-                write_json(path, request)
-                requests.append(request)
-                new_requests += 1
-                log(f"Request {job_id} (Item {item}, attempt {attempt})...")
-                limited = False
-                try:
-                    result = request_completion(prompt, config=config, system_prompt=system_prompt,
-                                                json_mode=True, max_tokens=args.max_tokens, timeout=args.timeout)
-                    request.update(status="completed", result=asdict(result))
-                except LLMError as error:
-                    request.update(status="failed", error=str(error), status_code=error.status_code,
-                                   retryable=error.retryable)
-                    request["retryable"] = retryable_request(request)
-                    limited = error.status_code == 429
-                    if limited and request["retryable"]:
-                        cooldown = pacer.rate_limited(error.retry_after)
-                except Exception as error:
-                    # Keep an unexpected client failure in the ledger without exposing its body.
-                    request.update(status="failed", error=f"Unexpected request error ({type(error).__name__}).",
-                                   retryable=False)
-                # Save every attempt before validation or retry, including unknown usage.
-                write_json(path, request)
-                result_report = save_outputs(output, filing, batches, requests)
-                log(f"Reported cumulative tokens: {result_report['reported_tokens']['total_tokens']:,}; source-validated disclosures: {result_report['source_validated_disclosures']}; review: {result_report['review_candidates']}.")
-                failures = result_report["failed_batches"] if stage == "extraction" else result_report["failed_boundary_checks"]
-                id_field = "batch_id" if stage == "extraction" else "boundary_id"
-                failure = next((f for f in failures if f[id_field] == job_id), None)
+                with ledger_lock:
+                    if stopped.is_set() or args.max_requests is not None and new_requests >= args.max_requests:
+                        return report
+                with pacer.request():
+                    with ledger_lock:
+                        if stopped.is_set() or args.max_requests is not None and new_requests >= args.max_requests:
+                            return report
+                        attempt = sum(r["batch_id"] == job_id for r in requests) + 1
+                        path = request_dir / f"{job_id}_attempt_{attempt:03d}.json"
+                        request = {"batch_id": job_id, "item": item, "stage": stage, "attempt": attempt,
+                                   "status": "started", "started_at": datetime.now(timezone.utc).isoformat(),
+                                   "prompt_hash": digest(prompt.encode())}
+                        if input_hash is not None:
+                            request["input_hash"] = input_hash
+                        write_json(path, request)
+                        requests.append(request)
+                        new_requests += 1
+                        log(f"Request {job_id} (Item {item}, attempt {attempt})...")
+                    limited = False
+                    try:
+                        result = request_completion(prompt, config=config, system_prompt=system_prompt,
+                                                    json_mode=True, max_tokens=args.max_tokens, timeout=args.timeout)
+                        updates = {"status": "completed", "result": asdict(result)}
+                    except LLMError as error:
+                        updates = {"status": "failed", "error": str(error), "status_code": error.status_code,
+                                   "retryable": error.retryable}
+                        updates["retryable"] = retryable_request(updates)
+                        limited = error.status_code == 429
+                        if limited and updates["retryable"]:
+                            cooldown = pacer.rate_limited(error.retry_after)
+                    except Exception as error:
+                        updates = {"status": "failed", "error": f"Unexpected request error ({type(error).__name__}).",
+                                   "retryable": False}
+                with ledger_lock:
+                    request.update(updates)
+                    write_json(path, request)
+                    report = result_report = save_outputs(output, filing, batches, requests)
+                    log(f"Reported cumulative tokens: {result_report['reported_tokens']['total_tokens']:,}; source-validated disclosures: {result_report['source_validated_disclosures']}; review: {result_report['review_candidates']}.")
+                    budget_reached = args.max_requests is not None and new_requests >= args.max_requests
+                    failures = result_report["failed_batches"] if stage == "extraction" else result_report["failed_boundary_checks"]
+                    id_field = "batch_id" if stage == "extraction" else "boundary_id"
+                    failure = next((f for f in failures if f[id_field] == job_id), None)
+                    if failure is not None and not retryable_request(request):
+                        stopped.set()
                 if failure is None:
                     return result_report
                 log(f"{job_id} failed: {failure['error']}")
-                budget_reached = args.max_requests is not None and new_requests >= args.max_requests
-                recoverable = retryable_request(request)
-                retry_allowed = recoverable and (args.fault_tolerant or limited)
+                retry_allowed = retryable_request(request) and (args.fault_tolerant or limited)
                 if limited and rate_retries >= args.rate_limit_retries:
                     retry_allowed = False
-                if not retry_allowed or retry == retry_limit or budget_reached:
+                if not retry_allowed or retry == retry_limit or budget_reached or stopped.is_set():
                     return result_report
                 if limited:
                     rate_retries += 1
@@ -735,26 +746,36 @@ def run_year(args, prepared, config, pacer):
                     log(f"Retry {retry + 1}/{retry_limit} for {job_id} in {delay:g}s; previous attempt preserved.")
                     time.sleep(delay)
 
-        for batch in batches:
-            history = [r for r in requests if r["batch_id"] == batch["id"]]
-            if history and batch["id"] not in failed_ids:
-                continue
-            if history and not args.retry_failed:
-                if not args.fault_tolerant or not retryable_request(history[-1]):
-                    raise ValueError(f"{batch['id']} failed previously. Review token_usage.json; --retry-failed authorizes an additional request.")
-            if args.max_requests is not None and new_requests >= args.max_requests:
-                break
-            prompt = make_prompt(filing, batch)
-            if history:
-                failure = next(f for f in report["failed_batches"] if f["batch_id"] == batch["id"])
-                prompt = extraction_retry_prompt(filing, batch, failure["error"])
-            report = send_request(batch["id"], batch["item"], prompt, SYSTEM_PROMPT, stage="extraction",
-                                  correction=lambda error: extraction_retry_prompt(filing, batch, error))
-            if any(failure["batch_id"] == batch["id"] for failure in report["failed_batches"]):
-                if args.fault_tolerant and retryable_request(requests[-1]):
+        def process_batch(batch):
+            with ledger_lock:
+                if stopped.is_set() or args.max_requests is not None and new_requests >= args.max_requests:
+                    return
+                history = [r for r in requests if r["batch_id"] == batch["id"]]
+                if history and batch["id"] not in failed_ids:
+                    return
+                if history and not args.retry_failed:
+                    if not args.fault_tolerant or not retryable_request(history[-1]):
+                        stopped.set()
+                        raise ValueError(f"{batch['id']} failed previously. Review token_usage.json; --retry-failed authorizes an additional request.")
+                prompt = make_prompt(filing, batch)
+                if history:
+                    failure = next(f for f in report["failed_batches"] if f["batch_id"] == batch["id"])
+                    prompt = extraction_retry_prompt(filing, batch, failure["error"])
+            result_report = send_request(batch["id"], batch["item"], prompt, SYSTEM_PROMPT, stage="extraction",
+                                         correction=lambda error: extraction_retry_prompt(filing, batch, error))
+            if any(failure["batch_id"] == batch["id"] for failure in result_report["failed_batches"]):
+                with ledger_lock:
+                    latest = next(r for r in reversed(requests) if r["batch_id"] == batch["id"])
+                if args.fault_tolerant and retryable_request(latest):
                     log(f"{batch['id']} retries exhausted; retaining failure and continuing later extraction batches.")
-                    continue
+                    return
+                stopped.set()
                 raise ValueError("Batch failed validation or API request. Saved response and token usage; see token_usage.json.")
+
+        log(f"Extraction batch workers: {args.batch_workers}; boundary checks run in source order.")
+        run_jobs(batches, process_batch, lambda batch, result: None, args.batch_workers)
+        # All admitted batch requests have drained; boundary dependencies are now stable.
+        report = save_outputs(output, filing, batches, requests)
         while not report["pending_batches"] and not report["failed_batches"]:
             if args.max_requests is not None and new_requests >= args.max_requests:
                 break
@@ -798,6 +819,8 @@ def main(argv: list[str] | None = None) -> int:
     years.add_argument("--year", help="Extract one four-digit fiscal year.")
     years.add_argument("--years", nargs="+", help="Extract several fiscal years concurrently, each with its own outputs/cache.")
     parser.add_argument("--workers", type=int, default=3, help="Maximum concurrent year jobs with --years (default: 3).")
+    parser.add_argument("--batch-workers", type=int, default=1, help="Concurrent extraction batches per year; boundary checks stay ordered (default: 1).")
+    parser.add_argument("--max-concurrent-requests", type=int, help="Optional API concurrency cap shared by all year and batch workers.")
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     outputs = parser.add_mutually_exclusive_group()
     outputs.add_argument("--output-dir", type=Path, help="Complete output path for --year; cannot be used with --years.")
@@ -810,8 +833,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--fault-tolerant", action="store_true", help="Retry temporary API/response failures and continue later extraction batches after recoverable failures; resume them on rerun.")
     parser.add_argument("--max-retries", type=int, default=3, help="Maximum additional attempts per job with --fault-tolerant (default: 3).")
     parser.add_argument("--retry-backoff", type=float, default=5, help="Initial seconds between fault-tolerant retries; doubles up to 60 seconds (default: 5).")
-    parser.add_argument("--request-interval", type=float, help="Minimum seconds between request starts across all years (default: 2 with --years, 0 with --year).")
-    parser.add_argument("--rate-limit-retries", type=int, help="Additional attempts after HTTP 429 (default: --max-retries with --fault-tolerant, otherwise 2 with --years or 0 with --year).")
+    parser.add_argument("--request-interval", type=float, help="Shared seconds between request starts (default: 2 with --years or parallel batches, otherwise 0).")
+    parser.add_argument("--rate-limit-retries", type=int, help="Additional attempts after HTTP 429 (default: --max-retries with --fault-tolerant, otherwise 2 with --years or parallel batches, else 0).")
     parser.add_argument("--rate-limit-cooldown", type=float, default=60, help="Shared pause after HTTP 429, extended by Retry-After when supplied (default: 60 seconds).")
     parser.add_argument("--retry-failed", action="store_true", help="Allow another paid attempt for failed extraction or boundary checks from a previous invocation; all attempts stay in the usage ledger.")
     parser.add_argument("--dry-run", action="store_true", help="Validate all inputs and show batch sizes without API calls or output writes.")
@@ -826,9 +849,9 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("Use --output-root with --years; --output-dir is for a single --year.")
     if args.max_tokens < 1 or not math.isfinite(args.timeout) or args.timeout <= 0 or (args.max_requests is not None and args.max_requests < 1):
         parser.error("Token, timeout and request limits must be positive.")
-    args.request_interval = args.request_interval if args.request_interval is not None else (2.0 if args.years else 0.0)
-    args.rate_limit_retries = args.rate_limit_retries if args.rate_limit_retries is not None else (args.max_retries if args.fault_tolerant else (2 if args.years else 0))
-    if args.workers < 1 or min(args.rate_limit_retries, args.max_retries) < 0:
+    args.request_interval = args.request_interval if args.request_interval is not None else (2.0 if args.years or args.batch_workers > 1 else 0.0)
+    args.rate_limit_retries = args.rate_limit_retries if args.rate_limit_retries is not None else (args.max_retries if args.fault_tolerant else (2 if args.years or args.batch_workers > 1 else 0))
+    if min(args.workers, args.batch_workers) < 1 or args.max_concurrent_requests is not None and args.max_concurrent_requests < 1 or min(args.rate_limit_retries, args.max_retries) < 0:
         parser.error("Workers must be positive and retry limits must be nonnegative.")
     if any(not math.isfinite(value) or value < 0 for value in (args.request_interval, args.rate_limit_cooldown, args.retry_backoff)):
         parser.error("Request interval, rate-limit cooldown and retry backoff must be finite and nonnegative.")
@@ -843,7 +866,7 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, ValueError, KeyError, TypeError, LLMError) as error:
         print(f"Disclosure extraction error: {error}", file=sys.stderr)
         return 1
-    pacer = RequestPacer(args.request_interval, args.rate_limit_cooldown)
+    pacer = RequestPacer(args.request_interval, args.rate_limit_cooldown, args.max_concurrent_requests)
     if len(jobs) == 1:
         return run_year(*jobs[0], config, pacer)
     if args.dry_run:

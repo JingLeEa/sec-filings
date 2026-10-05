@@ -388,6 +388,133 @@ class ParallelExtractionTests(TestCase):
         path = self.root / "disclosures/amd/2023/requests/batch_001_attempt_001.json"
         self.assertNotIn("fake-key", path.read_text())
 
+    def test_batches_within_one_year_overlap_and_keep_source_order(self):
+        barrier = threading.Barrier(2, timeout=5)
+        finished_second = threading.Event()
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            barrier.wait()
+            if payload["item"] == "7":
+                self.assertTrue(finished_second.wait(5))
+            else:
+                finished_second.set()
+            return self.response(prompt, **kwargs)
+
+        self.assertEqual(self.run_cli("--batch-workers", "2", responder=response, years=("2023",))[:2], (0, 2))
+        document = json.loads((self.root / "disclosures/amd/2023/disclosures.json").read_text())
+        self.assertEqual([row["item"] for row in document["disclosures"]], ["7", "8"])
+        self.assertEqual(self.usage("2023")["reported_tokens"]["total_tokens"], 250)
+        self.assertEqual(self.run_cli("--batch-workers", "2", years=("2023",))[:2], (0, 0))
+
+    def test_single_year_parallel_batches_default_to_shared_pacing_and_429_retries(self):
+        counts, lock = Counter(), threading.Lock()
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            with lock:
+                counts[payload["item"]] += 1
+                attempt = counts[payload["item"]]
+            if payload["item"] == "7" and attempt <= 2:
+                raise LLMError("SoCLaaS returned HTTP 429.", status_code=429)
+            return self.response(prompt, **kwargs)
+        with patch.object(disclosures, "load_config", return_value=LLMConfig(
+                "https://example.test/v1", "fake-key", "default")), \
+             patch.object(disclosures, "RequestPacer", wraps=request_pacing.RequestPacer) as pacer, \
+             patch.object(request_pacing.RequestPacer, "acquire"), \
+             patch.object(disclosures, "request_completion", side_effect=response) as api, \
+             redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            status = disclosures.main(["--ticker", "amd", "--year", "2023", "--data-dir", str(self.root),
+                                       "--batch-workers", "2", "--rate-limit-cooldown", "0"])
+        self.assertEqual(status, 0)
+        self.assertEqual(api.call_count, 4)
+        self.assertEqual(pacer.call_args.args, (2.0, 0.0, None))
+        self.assertEqual(self.usage("2023")["requests_with_unknown_usage"], 2)
+        self.assertEqual(self.usage("2023")["reported_tokens"]["total_tokens"], 250)
+
+    def test_parallel_batch_request_cap_is_atomic_with_retries(self):
+        self.split_filings(6)
+
+        def response(prompt, **kwargs):
+            raise LLMError("SoCLaaS returned HTTP 503.", status_code=503)
+
+        options = ("--batch-workers", "4", "--batch-chars", "1000", "--max-requests", "3",
+                   "--fault-tolerant", "--retry-backoff", "0")
+        self.assertEqual(self.run_cli(*options, responder=response, years=("2023",))[:2], (1, 3))
+        usage = self.usage("2023")
+        self.assertEqual(usage["attempted_requests"], 3)
+        self.assertEqual(usage["requests_with_unknown_usage"], 3)
+        self.assertFalse(usage["run_complete"])
+
+    def test_parallel_batch_failures_recover_without_losing_other_results(self):
+        barrier = threading.Barrier(2, timeout=5)
+        counts = Counter()
+        lock = threading.Lock()
+
+        def response(prompt, **kwargs):
+            payload, _ = json.JSONDecoder().raw_decode(prompt)
+            with lock:
+                counts[payload["item"]] += 1
+                attempt = counts[payload["item"]]
+            result = self.response(prompt, **kwargs)
+            if attempt == 1:
+                barrier.wait()
+                if payload["item"] == "7":
+                    return CompletionResult("invalid JSON", result.model, "stop", result.usage)
+                raise LLMError("SoCLaaS request timed out.", retryable=True)
+            return result
+
+        options = ("--batch-workers", "2", "--fault-tolerant", "--retry-backoff", "0")
+        self.assertEqual(self.run_cli(*options, responder=response, years=("2023",))[:2], (0, 4))
+        self.assertEqual(self.usage("2023")["reported_tokens"]["total_tokens"], 375)
+        self.assertEqual(self.usage("2023")["requests_with_unknown_usage"], 1)
+
+    def test_global_api_cap_applies_across_years_and_parallel_batches(self):
+        active = peak = 0
+        lock = threading.Lock()
+        barrier = threading.Barrier(2, timeout=5)
+
+        def response(prompt, **kwargs):
+            nonlocal active, peak
+            with lock:
+                active += 1
+                peak = max(peak, active)
+            try:
+                barrier.wait()
+                return self.response(prompt, **kwargs)
+            finally:
+                with lock:
+                    active -= 1
+
+        options = ("--batch-workers", "2", "--max-concurrent-requests", "2")
+        self.assertEqual(self.run_cli(*options, responder=response)[:2], (0, 6))
+        self.assertEqual(peak, 2)
+
+    def test_parallel_extraction_finishes_before_sequential_boundaries(self):
+        self.split_filings(3)
+        seen = set()
+        lock = threading.Lock()
+        barrier = threading.Barrier(3, timeout=5)
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            if payload.get("task") == "check_disclosure_boundary":
+                self.assertEqual(seen, {1, 2, 3})
+            else:
+                with lock:
+                    seen.add(payload["paragraphs"][0]["sentences"][0][0])
+                barrier.wait()
+            return self.response(prompt, **kwargs)
+
+        options = ("--batch-workers", "3", "--batch-chars", "1000")
+        self.assertEqual(self.run_cli(*options, responder=response, years=("2023",))[:2], (0, 5))
+        self.assertTrue(self.usage("2023")["run_complete"])
+
+    def test_invalid_batch_worker_and_global_cap_are_rejected(self):
+        for options in (("--batch-workers", "0"), ("--max-concurrent-requests", "0")):
+            with self.subTest(options=options), self.assertRaises(SystemExit) as error:
+                self.run_cli(*options)
+            self.assertEqual(error.exception.code, 2)
+
 
 class RequestPacingTests(TestCase):
     def test_shared_interval_and_provider_cooldown_delay_subsequent_starts(self):
