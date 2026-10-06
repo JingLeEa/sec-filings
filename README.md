@@ -13,6 +13,7 @@ The current implementation focuses on the preprocessing and benchmark dataset wo
 - Compare consecutive-year disclosures and remove unchanged sentences.
 - Handle manually verified section title mappings.
 - Export narrative and table annotation files for human review.
+- Extract verified HTML and XBRL metrics, export API values, and merge yearly metric files.
 - Convert older annotation IDs after extraction logic changes.
 - Add original paragraph context back into annotation CSVs.
 
@@ -23,6 +24,7 @@ src/sec_disclosure/
 ├── extraction/      # implemented SEC filing and Item extraction
 ├── comparison/      # implemented lexical and table comparison
 ├── annotation/      # implemented annotation export, ID conversion, context tools
+├── table_extraction/ # implemented HTML, XBRL, and API metric extraction
 ├── pipelines/       # implemented end-to-end runner
 ├── agents/          # planned agentic workflow
 ├── llm/             # planned shared LLM client and prompts
@@ -81,11 +83,33 @@ python3 scripts/run_disclosure_pipeline.py \
   --current-year 2025
 ```
 
+## Table and Metric Extraction
+
+Run the API metrics pipeline for FY2023–FY2025, optionally merging the yearly files:
+
+```bash
+export SEC_API_KEY="your-sec-api-key"
+python3 scripts/run_api_metrics_batch.py --ticker INTC --company Intel --merge
+```
+
+For untagged quantitative HTML tables:
+
+```bash
+python3 scripts/extract_html_metrics.py --ticker WFC --company WellsFargo --year 2025
+```
+
+Both commands use `SEC_USER_AGENT` set above. See the usage and schema guides below for offline inputs, source verification, and output paths.
+
 ## Documentation
 
 - [Pipeline Usage](docs/pipeline_usage.md): detailed extraction, comparison, ID conversion, paragraph context, and table commands.
 - [Current Text Preprocessing Flow](docs/current_text_preprocessing_flow.md): current extraction, chunking, sentence splitting, bullet handling, and ID behavior.
 - [Disclosure Annotation Export](docs/disclosure_annotation_export.md): detailed guide for exporting narrative comparison rows to Google Sheets.
+
+- [Table Extraction Usage](docs/table_extraction_usage.md): HTML tables, API metrics, batch runs, and yearly merges.
+- [API Metrics JSON](docs/API_EXTRACTION_TABLE_OUTPUT_METRICS_GUIDE.md): yearly metric schema and verification fields.
+- [HTML Metrics](docs/HTML_METRICS_GUIDE.md): verified filing selection and untagged quantitative tables.
+- [Merged API Metrics](docs/MERGED_API_METRICS_GUIDE.md): concept grouping and conflicting comparative values.
 
 ## Development
 
@@ -95,4 +119,4 @@ Run the test suite:
 PYTHONPATH=src python3 -m unittest discover -s tests
 ```
 
-Generated files are written under `data/`, which is ignored by Git.
+Generated files are written under `data/` or `tests/for_table_development/`, both ignored by Git.
