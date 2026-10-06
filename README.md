@@ -15,6 +15,7 @@ The current implementation focuses on the preprocessing and benchmark dataset wo
 - Export narrative and table annotation files for human review.
 - Convert older annotation IDs after extraction logic changes.
 - Add original paragraph context back into annotation CSVs.
+- Evaluate saved change-taxonomy predictions against sentence annotations, with conditional scores and explicit coverage diagnostics.
 
 ## Project Layout
 
@@ -27,7 +28,7 @@ src/sec_disclosure/
 ├── agents/          # planned agentic workflow
 ├── llm/             # planned shared LLM client and prompts
 ├── indexing/        # planned embeddings/vector search
-├── evaluation/      # planned benchmark evaluation
+├── evaluation/      # implemented change-taxonomy benchmark evaluation
 └── utils/           # planned shared utilities
 
 scripts/             # command-line entry points
@@ -81,11 +82,33 @@ python3 scripts/run_disclosure_pipeline.py \
   --current-year 2025
 ```
 
+Evaluate change-taxonomy results for any company, for example Micron (`MU`):
+
+```bash
+python3 scripts/evaluate_change_taxonomy.py --ticker MU
+```
+
+The command prefers `data/annotation/mu.csv`, or discovers a matching CSV using
+its company label and source-ID ticker prefixes. It supports `Company = Micron`
+with `MU_...` sentence IDs. Use `--company "Micron Technology"` if the display
+name cannot be associated with MU through its IDs. Every run rereads the inputs
+and regenerates the Markdown report. There is no default company; with a sole
+annotation CSV, running without arguments infers its ticker. Use `--ticker AMD`
+or `--ticker NVDA` to select those companies when multiple benchmarks exist.
+
+Results are read from `data/alignments/<ticker>/*/alignments_result.json`; reports
+are saved to `data/evaluation/<ticker>/`. The evaluator verifies SEC filing
+identities before matching sentence pairs, so filing-year annotation columns
+can be matched to fiscal-year result folders.
+Open `data/evaluation/<ticker>/evaluation_report.md` (or the HTML version) for a readable report with
+coverage calculations, alignment counts, class scores and evaluation limitations.
+
 ## Documentation
 
 - [Pipeline Usage](docs/pipeline_usage.md): detailed extraction, comparison, ID conversion, paragraph context, and table commands.
 - [Current Text Preprocessing Flow](docs/current_text_preprocessing_flow.md): current extraction, chunking, sentence splitting, bullet handling, and ID behavior.
 - [Disclosure Annotation Export](docs/disclosure_annotation_export.md): detailed guide for exporting narrative comparison rows to Google Sheets.
+- [Change Taxonomy Evaluation](docs/change_taxonomy_evaluation.md): pairing rules, filing identity matching, metrics, exclusions, and evaluation commands.
 
 ## Development
 
