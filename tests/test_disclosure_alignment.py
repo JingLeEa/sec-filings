@@ -138,6 +138,98 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(set(usage["by_agent"]), {"matching", "verification"})
         self.assertEqual(usage["extraction_tokens_by_year"]["2023"]["total_tokens"], 15)
 
+    def test_unlimited_api_retries_recover_rate_limits_and_keep_unknown_usage_reserves(self):
+        attempts = 0
+
+        def response(prompt, **kwargs):
+            nonlocal attempts
+            attempts += 1
+            if attempts <= 8:
+                status = 503 if attempts <= 4 else 429
+                raise LLMError("Temporary API failure.", status_code=status, retryable=True)
+            return self.response(prompt, **kwargs)
+
+        options = ("--fault-tolerant", "--max-retries", "-1", "--retry-backoff", "2", "--rate-limit-cooldown", "0")
+        with patch.object(alignment_runtime.time, "sleep") as sleep:
+            self.assertEqual(self.run_cli(*options, response=response), (0, 10))
+        self.assertEqual([call.args[0] for call in sleep.call_args_list], [2, 4, 8, 16])
+        usage = self.output("token_usage.json")
+        self.assertEqual(usage["requests_with_unknown_usage"], 8)
+        self.assertFalse(usage["usage_complete"])
+        self.assertEqual(len(usage["unknown_usage_budget_reserve"]["attempts"]), 8)
+        self.assertEqual(usage["unknown_usage_budget_reserve"]["unacknowledged_attempt_count"], 0)
+        self.assertEqual(usage["reported_tokens"]["total_tokens"], 250)
+        self.assertGreater(usage["budget_accounted_tokens"], 250)
+        self.assertEqual(self.run_cli(*options), (0, 0))
+
+    def test_runtime_resume_caches_latest_attempt_after_three_digits(self):
+        runtime = self.concurrency_runtime(fault_tolerant=True, max_retries=-1)
+        result = CompletionResult("{}", "test-model", "stop",
+                                  {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2})
+        with patch.object(alignment_runtime, "request_completion", return_value=result), redirect_stdout(io.StringIO()):
+            runtime.call("matching", "job", "prompt", "system")
+        completed = runtime.requests[0]
+        key = completed["request_hash"]
+        (runtime.directory / f"{key}_attempt_001.json").unlink()
+        completed["attempt"] = 1000
+        write_json(runtime.directory / f"{key}_attempt_1000.json", completed)
+        failed = {**completed, "attempt": 999, "status": "failed", "retryable": True,
+                  "error": "Temporary API failure.", "status_code": 503}
+        failed.pop("result")
+        write_json(runtime.directory / f"{key}_attempt_999.json", failed)
+        resumed = self.concurrency_runtime(fault_tolerant=True, max_retries=-1)
+        with patch.object(alignment_runtime, "request_completion") as api:
+            self.assertEqual(resumed.call("matching", "job", "prompt", "system"), completed["result"])
+            api.assert_not_called()
+
+    def test_fault_tolerant_api_retries_are_bounded_and_resume_automatically(self):
+        def response(prompt, **kwargs):
+            raise LLMError("Temporary API failure.", status_code=503, retryable=True)
+
+        options = ("--fault-tolerant", "--max-retries", "1", "--retry-backoff", "0")
+        self.assertEqual(self.run_cli(*options, response=response), (1, 2))
+        self.assertFalse(self.saved_report()["run_complete"])
+        self.assertEqual(self.run_cli(*options), (0, 2))
+        self.assertTrue(self.saved_report()["run_complete"])
+        self.assertEqual(len(self.output("token_usage.json")["unknown_usage_budget_reserve"]["attempts"]), 2)
+
+    def test_unlimited_api_retries_stop_at_request_and_token_caps(self):
+        def response(prompt, **kwargs):
+            raise LLMError("Temporary API failure.", status_code=503, retryable=True)
+
+        options = ("--fault-tolerant", "--max-retries", "-1", "--retry-backoff", "0")
+        self.assertEqual(self.run_cli(*options, "--max-new-requests", "3", response=response), (2, 3))
+        self.assertEqual(self.run_cli(*options, "--max-requests", "4", response=response), (2, 1))
+        reserve = self.output("token_usage.json")["unknown_usage_budget_reserve"]["estimated_tokens"]
+        self.assertEqual(self.run_cli(*options, "--max-total-tokens", str(reserve), response=response), (2, 0))
+        self.assertEqual(self.run_cli(*options, "--max-requests", "-1", "--max-total-tokens", "-1"), (0, 2))
+
+    def test_unlimited_api_retries_do_not_retry_permanent_errors(self):
+        for status in (401, 403, 429):
+            def response(prompt, **kwargs):
+                raise LLMError("Permanent API failure.", status_code=status, retryable=False)
+
+            with self.subTest(status=status):
+                self.assertEqual(self.run_cli("--fault-tolerant", "--max-retries", "-1", "--retry-backoff", "0",
+                                              "--output-dir", str(self.root / f"permanent_{status}"), response=response), (1, 1))
+
+    def test_fault_tolerance_keeps_successful_missing_usage_unacknowledged(self):
+        def response(prompt, **kwargs):
+            result = self.response(prompt, **kwargs)
+            return CompletionResult(result.text, result.model, result.finish_reason, None)
+
+        self.assertEqual(self.run_cli("--fault-tolerant", "--max-retries", "-1", response=response), (2, 1))
+        usage = self.output("token_usage.json")
+        self.assertEqual(usage["unknown_usage_budget_reserve"]["unacknowledged_attempt_count"], 1)
+        self.assertEqual(usage["unknown_usage_budget_reserve"]["attempts"], [])
+
+    def test_retry_and_unlimited_budget_options_validate_before_requests(self):
+        for options in (("--max-retries", "-2"), ("--max-requests", "-2"), ("--max-total-tokens", "0"),
+                        ("--retry-backoff", "-1"), ("--retry-backoff", "nan")):
+            with self.subTest(options=options), self.assertRaises(SystemExit):
+                self.run_cli(*options)
+        self.assertFalse((self.root / "alignments").exists())
+
     def test_model_selects_search_and_context_then_finishes(self):
         def response(prompt, **kwargs):
             p = json.loads(prompt)

@@ -50,6 +50,9 @@ class DisclosureTests(unittest.TestCase):
 
     def response(self, prompt, **kwargs):
         document, _ = json.JSONDecoder().raw_decode(prompt)
+        if document.get("task") == "consolidate_subsection":
+            return CompletionResult('{"merges":[],"relationships":[]}', "provider-model", "stop",
+                                    {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125})
         ids = [number for row in document["paragraphs"] for number, _ in row["sentences"]]
         return CompletionResult(json.dumps({"disclosures": [self.proposal(ids)], "excluded": []}),
                                 "provider-model", "stop",
@@ -502,11 +505,12 @@ class DisclosureTests(unittest.TestCase):
         self.assertFalse(report["run_complete"])
         self.assertEqual(report["pending_boundary_checks"], ["boundary_001"])
         self.assertEqual(report["review_candidates"], 2)
-        self.assertEqual(self.run_command(*options, responder=self.boundary_response), (0, 1))
+        self.assertEqual(self.run_command(*options, responder=self.boundary_response), (0, 2))
         self.assertEqual(self.run_command(*options, responder=self.boundary_response), (0, 0))
         report = self.read_output("token_usage.json")
-        self.assertEqual(report["reported_tokens"]["total_tokens"], 500)
+        self.assertEqual(report["reported_tokens"]["total_tokens"], 625)
         self.assertEqual(report["by_stage"]["boundary_check"]["requests"], 1)
+        self.assertEqual(report["by_stage"]["consolidation"]["requests"], 1)
         self.assertEqual(report["review_candidates"], 0)
         disclosures = self.read_output("disclosures.json")["disclosures"]
         self.assertEqual(len(disclosures), 3)
@@ -573,7 +577,7 @@ class DisclosureTests(unittest.TestCase):
     def test_unresolved_boundary_keeps_candidates_with_precise_reason(self):
         self.split_fixture()
         responder = lambda prompt, **kwargs: self.boundary_response(prompt, unresolved=True, **kwargs)
-        self.assertEqual(self.run_command("--batch-chars", "1000", responder=responder), (0, 4))
+        self.assertEqual(self.run_command("--batch-chars", "1000", responder=responder), (0, 5))
         report = self.read_output("token_usage.json")
         self.assertTrue(report["run_complete"])
         self.assertEqual(report["unresolved_boundary_groups"], 2)
@@ -622,9 +626,9 @@ class DisclosureTests(unittest.TestCase):
         self.assertEqual(report["coverage"]["disclosure_source_units"], 6)
         self.assertEqual(report["review_candidates"], 2)
         self.assertEqual(self.run_command(*options, responder=self.boundary_response), (1, 0))
-        self.assertEqual(self.run_command(*options, "--retry-failed", responder=self.boundary_response), (0, 1))
+        self.assertEqual(self.run_command(*options, "--retry-failed", responder=self.boundary_response), (0, 2))
         report = self.read_output("token_usage.json")
-        self.assertEqual(report["reported_tokens"]["total_tokens"], 625)
+        self.assertEqual(report["reported_tokens"]["total_tokens"], 750)
         self.assertEqual(report["by_stage"]["boundary_check"]["requests"], 2)
 
     def test_truncated_boundary_response_is_not_accepted_even_if_json_is_valid(self):
@@ -687,7 +691,7 @@ class DisclosureTests(unittest.TestCase):
     def test_stale_boundary_cache_does_not_validate_changed_proposals(self):
         self.split_fixture()
         options = ("--batch-chars", "1000")
-        self.assertEqual(self.run_command(*options, responder=self.boundary_response), (0, 4))
+        self.assertEqual(self.run_command(*options, responder=self.boundary_response), (0, 5))
         cache = self.root / "disclosures/amd/2024/requests/batch_001_attempt_001.json"
         saved = json.loads(cache.read_text())
         result = json.loads(saved["result"]["text"])
@@ -696,7 +700,7 @@ class DisclosureTests(unittest.TestCase):
         cache.write_text(json.dumps(saved))
         self.assertEqual(self.run_command(*options, responder=self.boundary_response), (1, 0))
         self.assertIn("differs", self.read_output("token_usage.json")["failed_boundary_checks"][0]["error"])
-        self.assertEqual(self.run_command(*options, "--retry-failed", responder=self.boundary_response), (0, 1))
+        self.assertEqual(self.run_command(*options, "--retry-failed", responder=self.boundary_response), (0, 2))
 
     def test_oversized_boundary_is_not_silently_approved_or_sent_unbounded(self):
         self.split_fixture()

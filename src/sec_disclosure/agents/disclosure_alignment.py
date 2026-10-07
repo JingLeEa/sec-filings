@@ -16,6 +16,7 @@ from pathlib import Path
 from sec_disclosure.llm.client import LLMError
 from sec_disclosure.llm.config import load_config
 from sec_disclosure.llm.disclosures import SOURCE_UNIT_POLICY, digest, write_json
+from sec_disclosure.llm.request_pacing import RequestPacer
 from .alignment_data import AlignmentData
 from .alignment_exact import EXACT_POLICY, accepted_status, exact_matches
 from .alignment_prompts import MATCHING_PROMPT, VERIFICATION_PROMPT
@@ -564,7 +565,7 @@ def write_alignment_reports(output, report, usage):
     (output / "alignments.md").write_text("\n".join(lines), encoding="utf-8")
 
 
-def main(argv=None):
+def main(argv=None, *, request_pacer: RequestPacer | None = None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ticker", required=True)
     parser.add_argument("--previous-year", required=True)
@@ -580,12 +581,15 @@ def main(argv=None):
     parser.add_argument("--request-interval", type=float, help="Shared seconds between API request starts (default: 2 with multiple workers, otherwise 0).")
     parser.add_argument("--rate-limit-cooldown", type=float, default=60, help="Shared HTTP 429 cooldown in seconds (default: 60).")
     parser.add_argument("--max-steps", type=int, default=4, help="Agent turns per job, including tool requests/corrections.")
-    parser.add_argument("--max-requests", type=int, default=400, help="Total paid requests allowed for this pair, including prior attempts.")
+    parser.add_argument("--max-requests", type=int, default=400, help="Total paid requests allowed for this pair, including prior attempts; -1 removes the cap.")
     parser.add_argument("--max-new-requests", type=int, help="Pause after this many NEW requests; rerun to resume.")
-    parser.add_argument("--max-total-tokens", type=int, default=1500000)
+    parser.add_argument("--max-total-tokens", type=int, default=1500000, help="Total alignment token budget; -1 removes the cap (default: 1500000).")
     parser.add_argument("--max-tokens", type=int, default=6000, help="Maximum completion tokens per request.")
     parser.add_argument("--max-prompt-chars", type=int, default=150000)
-    parser.add_argument("--timeout", type=float, default=180)
+    parser.add_argument("--timeout", type=float, default=180, help="Total deadline in seconds for each API attempt, including response reads (default: 180).")
+    parser.add_argument("--fault-tolerant", action="store_true", help="Automatically retry temporary API failures and resume recoverable failed/interrupted requests.")
+    parser.add_argument("--max-retries", type=int, default=10, help="Additional attempts per API call with --fault-tolerant; -1 allows unlimited retries (default: 10).")
+    parser.add_argument("--retry-backoff", type=float, default=5, help="Initial retry delay in seconds; doubles up to 60 seconds. HTTP 429 uses the shared cooldown (default: 5).")
     parser.add_argument("--retry-failed", action="store_true",
                         help="Retry prior failures; reserve estimated tokens for their unknown usage within the total cap.")
     parser.add_argument("--repair-from", type=Path, help="Reuse a saved run's matching and verifier responses in a separate output directory.")
@@ -605,12 +609,15 @@ def main(argv=None):
     ticker, years = args.ticker.lower(), (args.previous_year, args.current_year)
     if not re.fullmatch(r"[a-z0-9][a-z0-9.-]*", ticker) or any(not re.fullmatch(r"\d{4}", year) for year in years) or years[0] >= years[1]:
         parser.error("Use a valid ticker and increasing four-digit fiscal years.")
-    limits = (args.top_k, args.batch_size, args.max_steps, args.max_requests, args.max_total_tokens, args.max_tokens, args.max_prompt_chars, args.workers)
-    if any(n < 1 for n in limits) or args.max_new_requests is not None and args.max_new_requests < 1 or not math.isfinite(args.timeout) or args.timeout <= 0:
-        parser.error("Limits and timeout must be positive.")
+    limits = (args.top_k, args.batch_size, args.max_steps, args.max_tokens, args.max_prompt_chars, args.workers)
+    if (any(n < 1 for n in limits) or any(n != -1 and n < 1 for n in (args.max_requests, args.max_total_tokens))
+            or args.max_new_requests is not None and args.max_new_requests < 1 or not math.isfinite(args.timeout) or args.timeout <= 0):
+        parser.error("Limits and timeout must be positive; request/token caps also accept -1 for unlimited.")
+    if args.max_retries < -1:
+        parser.error("--max-retries must be nonnegative or -1 for unlimited.")
     args.request_interval = args.request_interval if args.request_interval is not None else (2.0 if args.workers > 1 else 0.0)
-    if any(not math.isfinite(value) or value < 0 for value in (args.request_interval, args.rate_limit_cooldown)):
-        parser.error("Request interval and rate-limit cooldown must be finite and nonnegative.")
+    if any(not math.isfinite(value) or value < 0 for value in (args.request_interval, args.rate_limit_cooldown, args.retry_backoff)):
+        parser.error("Request interval, rate-limit cooldown and retry backoff must be finite and nonnegative.")
     output = args.output_dir or args.data_dir / "alignments" / ticker / f"{years[0]}-{years[1]}"
     if args.repair_from and (output.resolve() == args.repair_from.resolve() or args.repair_from.resolve() in output.resolve().parents):
         parser.error("Repair output must be a separate directory outside --repair-from.")
@@ -673,7 +680,7 @@ def main(argv=None):
                 print("Archived previous job decisions; replaying cached responses through current validation. Token ledger retained.", flush=True)
         write_json(manifest_path, manifest)
         write_json(output / "automatic_matches.json", {"policy": manifest["exact_matching_policy"], "alignments": automatic})
-        runtime = Runtime(output, config, args)
+        runtime = Runtime(output, config, args, request_pacer=request_pacer)
         if source:
             runtime.source_usage = source.usage
             candidates, matches, groups = source.candidates, source.matches, source.groups

@@ -13,6 +13,7 @@ from collections import Counter
 from copy import deepcopy
 
 from sec_disclosure.annotation.export_table_annotations import CONTENT_LABELS
+from .response_retries import review_fallback_matches
 
 
 BOUNDARY_POLICY = "neighbor_context_and_boundary_check_v1"
@@ -185,10 +186,12 @@ def _merge(nodes, group, check):
 
 
 def reconcile_boundaries(filing, batches, original_nodes, requests, *, extraction_complete):
-    """Replay checks in order, stopping at the first unfinished/invalid check.
+    """Replay checks in order, stopping at the first unfinished/failed check.
 
     Each next prompt uses the result of earlier merges. An exact input hash stops
     stale cached approvals being applied to changed proposals or evidence.
+    Exhausted model corrections retain original candidates with review warnings
+    and let later checks proceed without applying the invalid response.
     """
     nodes = {node["id"]: deepcopy(node) for node in original_nodes}
     audit, halted = [], not extraction_complete
@@ -239,10 +242,16 @@ def reconcile_boundaries(filing, batches, original_nodes, requests, *, extractio
                     check.update(status="completed", groups=groups)
             except (ValueError, KeyError, TypeError) as error:
                 check.update(status="failed", error=str(error))
-            if check["status"] != "completed":
+                if history and review_fallback_matches(history[-1], check["input_hash"]):
+                    check.update(status="needs_review", decision="original_candidates_preserved",
+                                 fallback=history[-1]["review_fallback"])
+            if check["status"] not in ("completed", "needs_review"):
                 halted = True
         if check["status"] != "completed":
             for node in candidates.values():
-                node["checks"][spec["id"]] = {"boundary_id": spec["id"], "status": check["status"],
-                                                "reason": check.get("error", "Awaiting boundary check.")}
+                node["checks"][spec["id"]] = {"boundary_id": spec["id"],
+                    "status": "unresolved" if check["status"] == "needs_review" else check["status"],
+                    "reason": ("Correction retries exhausted; original candidate preserved. " if check["status"] == "needs_review" else "")
+                              + check.get("error", "Awaiting boundary check."),
+                    "input_hash": check.get("input_hash")}
     return sorted(nodes.values(), key=lambda node: min(node["proposal"]["unit_ids"])), audit

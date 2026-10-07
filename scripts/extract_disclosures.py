@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract disclosures for one year or several years concurrently."""
+"""Extract disclosures for one or several years, optionally followed by alignment."""
 
 from __future__ import annotations
 

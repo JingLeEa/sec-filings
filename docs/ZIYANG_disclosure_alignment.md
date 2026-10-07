@@ -7,6 +7,13 @@
 Link saved disclosures for the same company across two fiscal years, within the
 same SEC Item. The output supports a future downstream change-analysis stage.
 Inputs come from [disclosure extraction](ZIYANG_disclosure_extraction.md).
+The extraction pipeline now consolidates candidates across all batches in each
+split subsection before alignment. It preserves source sentences and exports
+within-subsection relationship links. Year-to-year alignment consumes those
+final disclosures; it does not perform or rewrite extraction consolidation.
+When upgrading an existing extraction cache, use a new alignment output root
+because consolidated disclosure inputs and IDs may change. Cache revalidation
+does not bypass changed input hashes.
 
 Implemented: exact-text routing, local candidate retrieval, LangGraph matching
 and verification agents, bounded automatic repair, supported overlapping links,
@@ -54,7 +61,7 @@ flowchart TD
     J --> L[needs_review.json: unresolved decisions]
 ```
 
-The coordinator runs one job at a time by default. `--workers` allows independent
+The standalone coordinator runs one job at a time by default. `--workers` allows independent
 matching jobs to overlap, then independent verification jobs to overlap. All
 matching jobs finish before grouping and verification begin. Each agent's own
 model/tool/correction turns remain ordered; the agent chooses `search`, `context`
@@ -118,6 +125,23 @@ comparison's hard boundary is the SEC Item.
 ## 5. Run and rerun
 
 Run from the repository root after completing both extraction years.
+
+To extract and then align automatically, use `extract_disclosures.py --years
+2023 2024 2025 --align`; see the [combined command](ZIYANG_disclosure_extraction.md#extract-and-align-with-one-command).
+The extraction runner waits for every selected year to complete and forwards
+its disclosure output root and shared retry settings to alignment.
+The combined command also inherits extraction's effective API concurrency:
+3 active years × 10 batches per year gives up to 30 alignment workers per pair,
+reduced by any smaller `--max-concurrent-requests` cap. Adjacent pairs run
+concurrently, with up to 3 active comparisons (`--alignment-pair-workers`).
+Thus 2023–2024 and 2024–2025 both start after extraction, sharing 30 simultaneous
+API requests in total by default. The shared limiter also coordinates request
+starts and HTTP 429 cooldowns across pairs. Each pair retains its own output
+directory, cache, request budget and token budget; a stopped pair does not cancel
+the others. Request logs include the pair's output-directory name.
+No `--alignment-workers` flag is needed unless an explicit per-pair override is
+wanted. Use `--alignment-pair-workers 1` for sequential comparisons. An explicit
+`--max-concurrent-requests` sets the combined API cap, subject to available jobs.
 
 ### Parallel alignment
 
@@ -216,24 +240,35 @@ Historical cross-Item runs cannot be resumed/imported under the same-Item policy
 | `--request-interval` | 2 seconds between request starts with multiple workers; otherwise 0 |
 | `--rate-limit-cooldown` | Shared 60-second pause after HTTP 429, extended by numeric `Retry-After` |
 | `--max-steps` | 4 model turns per job, including tool requests and corrections |
-| `--max-requests` | 400 cumulative paid attempts, including prior runs of the same output directory |
+| `--max-requests` | 400 cumulative paid attempts, including prior runs of the same output directory; `-1` removes the cap |
 | `--max-new-requests` | Optional limit on new attempts this invocation |
-| `--max-total-tokens` | 1,500,000 by default; sample command explicitly raises it to 3,000,000 |
-| `--max-tokens`, `--timeout` | 6,000 completion tokens; 180 seconds per call |
+| `--max-total-tokens` | 1,500,000 by default; `-1` removes the cap |
+| `--max-tokens`, `--timeout` | 6,000 completion tokens; 180-second total deadline per API attempt, including response reads |
 | `--max-prompt-chars` | 150,000 combined characters; oversized context is not silently truncated |
 | `--retry-failed` | Explicitly acknowledge prior failed/interrupted attempts and allow another paid attempt |
+| `--fault-tolerant` | Automatically retry recoverable API failures and resume recoverable failed/interrupted requests |
+| `--max-retries` | 10 additional attempts per API call with `--fault-tolerant`; `-1` allows unlimited retries |
+| `--retry-backoff` | 5 seconds initially, doubling up to 60; HTTP 429 uses the shared cooldown |
 
 Admission budgeting atomically reserves UTF-8 prompt bytes plus maximum completion tokens;
 this is a conservative estimate, not provider billing. Unknown usage from prior
-failures stays unknown. With `--retry-failed`, each acknowledged attempt gets an
+failures stays unknown. With `--retry-failed` or `--fault-tolerant`, each acknowledged attempt gets an
 estimate in `unknown_usage_budget_reserve`; `budget_accounted_tokens` includes it
 and reported usage. Active calls are tracked in `in_flight_budget_reserve` and
 count against the token cap until their usage is recorded; they do not trigger
 the unknown-usage stop while still running. Request caps include every admitted
-attempt, including retries. New failures stop admission of later jobs while
-already admitted work finishes and checkpoints. Successful responses missing
-usage cannot be acknowledged with that flag. Requests have no automatic client
-retries. Consult `token_usage.json`; do not interpret unknown usage as free.
+attempt, including retries. Without fault tolerance, new failures stop admission
+of later jobs while already admitted work finishes and checkpoints. With fault
+tolerance, temporary API errors retry within the configured limits; permanent
+authentication, configuration and exhausted-quota errors still stop the run.
+Successful responses missing usage cannot be acknowledged with either flag.
+The underlying API client has no hidden retries; the runtime records each attempt.
+The total deadline includes waiting for headers and reading the entire response;
+partial response data does not reset it. Expiry cancels the HTTP operation and
+closes its client before the runtime handles the retryable failure. Each retry
+gets a fresh deadline; pacing and retry backoff are outside that deadline.
+API retries do not consume agent turns; schema/evidence corrections still count
+toward `--max-steps`. Consult `token_usage.json`; do not interpret unknown usage as free.
 
 ### Optional saved-run operations
 
