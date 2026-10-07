@@ -14,7 +14,7 @@ from sec_disclosure.llm.disclosures import digest, write_json
 from .materiality_runtime import unique_object
 
 
-GRAPH_POLICY = "langgraph_materiality_v2"
+GRAPH_POLICY = "langgraph_materiality_v3"
 
 
 class MaterialityState(TypedDict):
@@ -28,9 +28,10 @@ class MaterialityState(TypedDict):
 
 
 class MaterialityAgentGraph:
-    def __init__(self, runtime, job_id, system, payload, validate):
+    def __init__(self, runtime, job_id, system, payload, validate, *, role="materiality"):
         self.runtime, self.job_id = runtime, job_id
         self.system, self.payload, self.validate = system, payload, validate
+        self.role = role
 
     def persist(self, state):
         write_json(self.runtime.output / "traces" / f"{self.job_id}.json", state["trace"])
@@ -54,6 +55,7 @@ class MaterialityAgentGraph:
                 self.job_id,
                 json.dumps(request, ensure_ascii=False, separators=(",", ":")),
                 self.system,
+                role=self.role,
             )
             if response["finish_reason"] != "stop":
                 raise ValueError("Response did not finish normally.")
@@ -115,7 +117,7 @@ class MaterialityAgentGraph:
         builder.add_conditional_edges("validate", self.next_turn, routes)
         builder.add_edge("finish", END)
         builder.add_edge("exhausted", END)
-        return builder.compile(checkpointer=checkpointer, name="materiality")
+        return builder.compile(checkpointer=checkpointer, name=self.role)
 
     def run(self):
         identity = digest(json.dumps({

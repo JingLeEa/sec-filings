@@ -123,6 +123,19 @@ class MaterialityTests(unittest.TestCase):
     def saved(self):
         return json.loads((self.output / "alignments.json").read_text())
 
+    def test_prompt_contains_substantive_decision_boundaries(self):
+        prompt = " ".join(module.MATERIALITY_PROMPT.split())
+        for phrase in (
+            "business activity, product, service, market, or strategy",
+            "routine updates that do not substantively change the disclosure",
+            "Judge substance, magnitude, and company-specific consequences",
+            "Do not classify a change as material solely",
+        ):
+            self.assertIn(phrase, prompt)
+        verifier_prompt = " ".join(module.MATERIALITY_VERIFICATION_PROMPT.split())
+        self.assertIn("Review every supplied low-confidence materiality decision", verifier_prompt)
+        self.assertIn("It is valid to retain Uncertain", verifier_prompt)
+
     def test_classifies_final_rows_and_leaves_review_file_untouched(self):
         document = self.saved()
         document["alignments"][1]["change_analysis"] = {
@@ -157,6 +170,63 @@ class MaterialityTests(unittest.TestCase):
             json.loads((self.output / "materiality/summary.json").read_text())["reported_tokens"],
             reported_tokens,
         )
+
+    def test_single_workflow_verifies_low_confidence_rows_and_resumes(self):
+        rows = [self.row(number) for number in range(1, 4)]
+        write_json(self.output / "alignments.json", self.document(rows))
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            verifier = "MATERIALITY VERIFIER" in kwargs["system_prompt"]
+            classifications = []
+            for row in payload["rows"]:
+                number = int(row["match_id"][-4:])
+                if verifier and number == 1:
+                    analysis = {
+                        "materiality": "No", "materiality_score": 0.2,
+                        "confidence_score": 0.9, "reason": "The verifier resolved the change.",
+                        "key_change": "Non-substantive wording change",
+                    }
+                elif number in {1, 2}:
+                    analysis = {
+                        "materiality": "Uncertain", "materiality_score": 0.55,
+                        "confidence_score": 0.4, "reason": "The evidence remains incomplete.",
+                        "key_change": "Unclear operating change",
+                    }
+                else:
+                    analysis = {
+                        "materiality": "Yes", "materiality_score": 0.8,
+                        "confidence_score": 0.9, "reason": "The evidence supports materiality.",
+                        "key_change": "Expanded operating exposure",
+                    }
+                classifications.append({"match_id": row["match_id"], **analysis})
+            action = "verify_materiality" if verifier else "classify_materiality"
+            return CompletionResult(
+                json.dumps({"action": action, "classifications": classifications}),
+                "test-model", "stop",
+                {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125},
+            )
+
+        self.assertEqual(self.run_cli("--max-new-requests", "1", response=response), (2, 1))
+        paused = json.loads((self.output / "materiality/summary.json").read_text())
+        self.assertTrue(paused["classification_complete"])
+        self.assertFalse(paused["complete"])
+        self.assertEqual(paused["verification"]["pending_rows"], 2)
+        self.assertEqual(self.run_cli(response=response), (0, 1))
+        saved = self.saved()["alignments"]
+        self.assertEqual(saved[0][module.MATERIALITY_FIELD]["materiality"], "No")
+        self.assertEqual(saved[0][module.MATERIALITY_FIELD]["confidence_score"], 0.9)
+        self.assertEqual(saved[1][module.MATERIALITY_FIELD]["materiality"], "Uncertain")
+        ledger = json.loads((self.output / "materiality/verifications.json").read_text())
+        self.assertEqual(len(ledger["records"]), 2)
+        self.assertTrue(ledger["records"][0]["changed"])
+        self.assertFalse(ledger["records"][1]["changed"])
+        summary = json.loads((self.output / "materiality/summary.json").read_text())
+        self.assertTrue(summary["complete"])
+        self.assertEqual(summary["verification"]["verified_rows"], 2)
+        self.assertEqual(summary["verification"]["low_confidence_rows"], 1)
+        self.assertEqual(summary["verification"]["pending_rows"], 0)
+        self.assertEqual(self.run_cli(response=response), (0, 0))
 
     def test_pause_and_resume_writes_only_completed_batches(self):
         rows = [self.row(number) for number in range(1, 4)]
@@ -250,7 +320,7 @@ class MaterialityTests(unittest.TestCase):
         }
         write_json(self.output / "alignments.json", self.document(rows))
 
-        self.assertEqual(self.run_cli(), (0, 0))
+        self.assertEqual(self.run_cli("--skip-verification"), (0, 0))
         first, second, third = [row[module.MATERIALITY_FIELD] for row in self.saved()["alignments"]]
         self.assertEqual((first["materiality_score"], first["confidence_score"]), (0.86, 0.86))
         self.assertEqual(second["materiality_score"], 0.1)

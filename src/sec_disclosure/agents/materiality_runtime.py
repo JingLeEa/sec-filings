@@ -100,7 +100,7 @@ class MaterialityRuntime:
         report["timing"] = self.timing_report()
         return report
 
-    def call(self, job_id: str, prompt: str, system: str):
+    def call(self, job_id: str, prompt: str, system: str, *, role="materiality"):
         spec = {
             "prompt": prompt,
             "system_prompt": system,
@@ -136,9 +136,9 @@ class MaterialityRuntime:
         record = {
             "request_hash": key,
             "job_id": job_id,
-            "item": "materiality",
+            "item": role,
             "stage": "materiality",
-            "agent": "materiality",
+            "agent": role,
             "attempt": attempt,
             "status": "started",
             "started_at": datetime.now(timezone.utc).isoformat(),
@@ -148,7 +148,8 @@ class MaterialityRuntime:
         write_json(path, record)
         self.requests.append(record)
         self.new_requests += 1
-        print(f"{job_id}: materiality request {self.new_requests}", flush=True)
+        role_label = role.replace("_", " ")
+        print(f"{job_id}: {role_label} request {self.new_requests}", flush=True)
         request_started = perf_counter()
         try:
             response = request_completion(

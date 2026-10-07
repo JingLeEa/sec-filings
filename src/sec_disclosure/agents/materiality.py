@@ -19,7 +19,7 @@ from sec_disclosure.llm.disclosures import digest, write_json
 
 from .alignment_runtime import RunLimit
 from .materiality_graph import GRAPH_POLICY, MaterialityAgentGraph
-from .materiality_prompts import MATERIALITY_PROMPT
+from .materiality_prompts import MATERIALITY_PROMPT, MATERIALITY_VERIFICATION_PROMPT
 from .materiality_runtime import MaterialityRuntime
 
 
@@ -163,11 +163,11 @@ def normalize_saved_analysis(value, *, context="materiality_analysis"):
     return validate_analysis(migrated, context=context), True
 
 
-def validate_action(action, expected_ids):
+def validate_action(action, expected_ids, *, expected_action="classify_materiality"):
     if not isinstance(action, dict) or set(action) != {"action", "classifications"}:
         raise ValueError("Response must contain exactly action and classifications.")
-    if action["action"] != "classify_materiality" or not isinstance(action["classifications"], list):
-        raise ValueError("Expected action:classify_materiality with a classifications list.")
+    if action["action"] != expected_action or not isinstance(action["classifications"], list):
+        raise ValueError(f"Expected action:{expected_action} with a classifications list.")
     if len(action["classifications"]) != len(expected_ids):
         raise ValueError("Return exactly one classification for every supplied match_id.")
     results = []
@@ -182,6 +182,93 @@ def validate_action(action, expected_ids):
         )
         results.append({"match_id": expected_id, **analysis})
     return results
+
+
+def new_verification_ledger(classification_run_id, threshold):
+    return {
+        "schema_version": "1",
+        "classification_run_id": classification_run_id,
+        "verification_threshold": threshold,
+        "records": [],
+    }
+
+
+def load_verification_ledger(path, classification_run_id, threshold):
+    if not path.exists():
+        return new_verification_ledger(classification_run_id, threshold)
+    value = json.loads(path.read_text())
+    if not isinstance(value, dict):
+        raise ValueError("Materiality verification ledger must be a JSON object.")
+    if value.get("classification_run_id") != classification_run_id:
+        return new_verification_ledger(classification_run_id, threshold)
+    records = value.get("records")
+    if not isinstance(records, list):
+        raise ValueError("Materiality verification ledger records must be a list.")
+    normalized = new_verification_ledger(classification_run_id, threshold)
+    seen = set()
+    for index, record in enumerate(records, 1):
+        expected = {
+            "match_id", "job_id", "source_hash", "trigger_threshold", "initial_analysis",
+            "final_analysis", "changed",
+        }
+        if not isinstance(record, dict) or set(record) != expected:
+            raise ValueError(f"Materiality verification record {index} has an invalid schema.")
+        match_id = record["match_id"]
+        if not isinstance(match_id, str) or not match_id or match_id in seen:
+            raise ValueError("Materiality verification records must have unique match_id values.")
+        seen.add(match_id)
+        initial = validate_analysis(
+            record["initial_analysis"], context=f"verification[{index}].initial_analysis"
+        )
+        final = validate_analysis(
+            record["final_analysis"], context=f"verification[{index}].final_analysis"
+        )
+        trigger = record["trigger_threshold"]
+        if type(trigger) not in {int, float} or not math.isfinite(trigger) or not 0 <= trigger <= 1:
+            raise ValueError("Verification trigger_threshold must be a number from 0 to 1.")
+        if not isinstance(record["job_id"], str) or not record["job_id"]:
+            raise ValueError("Verification job_id must be a nonempty string.")
+        if not isinstance(record["source_hash"], str) or not record["source_hash"]:
+            raise ValueError("Verification source_hash must be a nonempty string.")
+        if type(record["changed"]) is not bool or record["changed"] != (initial != final):
+            raise ValueError("Verification changed must describe the initial and final analyses.")
+        normalized["records"].append({
+            "match_id": match_id,
+            "job_id": record["job_id"],
+            "source_hash": record["source_hash"],
+            "trigger_threshold": float(trigger),
+            "initial_analysis": initial,
+            "final_analysis": final,
+            "changed": record["changed"],
+        })
+    return normalized
+
+
+def verification_plan(rows, ledger, threshold, *, enabled=True):
+    by_id = {row["match_id"]: row for row in rows}
+    verified = {
+        record["match_id"] for record in ledger["records"]
+        if record["match_id"] in by_id
+        and by_id[record["match_id"]].get(MATERIALITY_FIELD) == record["final_analysis"]
+        and record["source_hash"] == digest(json.dumps(
+            decision_view(by_id[record["match_id"]]), sort_keys=True, ensure_ascii=False
+        ).encode())
+    }
+    low_confidence = [
+        row for row in rows
+        if MATERIALITY_FIELD in row
+        and row[MATERIALITY_FIELD]["confidence_score"] < threshold
+    ]
+    pending = [row for row in low_confidence if row["match_id"] not in verified] if enabled else []
+    stats = {
+        "enabled": enabled,
+        "threshold": threshold,
+        "verified_rows": len(verified),
+        "low_confidence_rows": len(low_confidence),
+        "pending_rows": len(pending),
+        "complete": not pending,
+    }
+    return pending, stats
 
 
 def decision_view(row):
@@ -252,10 +339,20 @@ def load_document(path, *, validate_materiality=True):
 
 
 def write_summary(
-        output, rows, runtime=None, *, error=None, classification_run_id=None, run_state=None):
+        output, rows, runtime=None, *, error=None, classification_run_id=None,
+        run_state=None, verification=None):
     labels = Counter(
         row[MATERIALITY_FIELD]["materiality"] for row in rows if MATERIALITY_FIELD in row
     )
+    classification_complete = sum(labels.values()) == len(rows)
+    verification = verification or {
+        "enabled": True,
+        "threshold": MIN_CONFIDENCE,
+        "verified_rows": 0,
+        "low_confidence_rows": 0,
+        "pending_rows": 0,
+        "complete": classification_complete,
+    }
     summary = {
         "graph_policy": GRAPH_POLICY,
         "alignment_rows": len(rows),
@@ -266,7 +363,9 @@ def write_summary(
             "materiality_threshold": MATERIALITY_THRESHOLD,
             "minimum_confidence": MIN_CONFIDENCE,
         },
-        "complete": sum(labels.values()) == len(rows),
+        "classification_complete": classification_complete,
+        "verification": verification,
+        "complete": classification_complete and verification["complete"],
         "error": error,
         "timing": (
             dict(run_state["timing"])
@@ -298,6 +397,9 @@ def main(argv=None):
     parser.add_argument("--alignment-dir", type=Path)
     parser.add_argument("--env-file", type=Path)
     parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--verification-batch-size", type=int, default=4)
+    parser.add_argument("--verification-threshold", type=float, default=MIN_CONFIDENCE)
+    parser.add_argument("--skip-verification", action="store_true")
     parser.add_argument("--max-steps", type=int, default=3)
     parser.add_argument("--max-requests", type=int, default=200)
     parser.add_argument("--max-new-requests", type=int)
@@ -318,11 +420,13 @@ def main(argv=None):
             or any(not re.fullmatch(r"\d{4}", year) for year in years)
             or years[0] >= years[1]):
         parser.error("Use a valid ticker and increasing four-digit fiscal years.")
-    limits = (args.batch_size, args.max_steps, args.max_requests, args.max_total_tokens,
-              args.max_tokens, args.max_prompt_chars)
+    limits = (args.batch_size, args.verification_batch_size, args.max_steps,
+              args.max_requests, args.max_total_tokens, args.max_tokens, args.max_prompt_chars)
     if (any(value < 1 for value in limits)
             or args.max_new_requests is not None and args.max_new_requests < 1
-            or not math.isfinite(args.timeout) or args.timeout <= 0):
+            or not math.isfinite(args.timeout) or args.timeout <= 0
+            or not math.isfinite(args.verification_threshold)
+            or not 0 <= args.verification_threshold <= 1):
         parser.error("Limits and timeout must be positive.")
 
     alignment_dir = args.alignment_dir or args.data_dir / "alignments" / ticker / f"{years[0]}-{years[1]}"
@@ -331,6 +435,8 @@ def main(argv=None):
     runtime = None
     classification_run_id = None
     run_state = None
+    verification_ledger = None
+    verification_stats = None
     document, error, exit_code = None, None, 0
     try:
         document, migrated_count = load_document(path, validate_materiality=not args.reclassify)
@@ -376,7 +482,18 @@ def main(argv=None):
             else:
                 run_state = new_run_state(classification_run_id)
             write_json(run_state_path, run_state)
-        if not pending:
+        verification_path = output / "verifications.json"
+        verification_ledger = load_verification_ledger(
+            verification_path, classification_run_id, args.verification_threshold
+        )
+        write_json(verification_path, verification_ledger)
+        verification_pending, verification_stats = verification_plan(
+            rows,
+            verification_ledger,
+            args.verification_threshold,
+            enabled=not args.skip_verification,
+        )
+        if not pending and not verification_pending:
             update_run_timing(run_state, complete=True)
             write_json(run_state_path, run_state)
             summary = write_summary(
@@ -384,9 +501,13 @@ def main(argv=None):
                 rows,
                 classification_run_id=classification_run_id,
                 run_state=run_state,
+                verification=verification_stats,
             )
             print(f"Materiality already complete for {len(rows)} alignment rows: {summary['counts']}.", flush=True)
             return 0
+        run_state["timing"]["completed_at"] = None
+        run_state["timing"]["wall_clock_seconds"] = None
+        write_json(run_state_path, run_state)
 
         config = load_config(args.env_file)
         implementation = [Path(__file__), Path(__file__).with_name("materiality_graph.py"),
@@ -396,7 +517,7 @@ def main(argv=None):
             [decision_view(row) for row in rows], sort_keys=True, ensure_ascii=False
         ).encode())
         write_json(output / "manifest.json", {
-            "schema_version": "2",
+            "schema_version": "3",
             "source_alignment_hash": source_hash,
             "company": ticker,
             "previous_year": years[0],
@@ -406,11 +527,13 @@ def main(argv=None):
             "scoring_policy": {
                 "materiality_threshold": MATERIALITY_THRESHOLD,
                 "minimum_confidence": MIN_CONFIDENCE,
+                "verification_threshold": args.verification_threshold,
             },
             "base_url": config.base_url,
             "model": config.model,
             "settings": {key: getattr(args, key) for key in
-                         ("batch_size", "max_steps", "max_tokens", "max_prompt_chars")},
+                         ("batch_size", "verification_batch_size", "max_steps",
+                          "max_tokens", "max_prompt_chars", "skip_verification")},
             "implementation_hashes": {file.name: digest(file.read_bytes()) for file in implementation},
         })
         runtime = MaterialityRuntime(output, config, args, classification_run_id)
@@ -453,14 +576,109 @@ def main(argv=None):
             write_json(path, document)
             update_run_timing(run_state, runtime)
             write_json(run_state_path, run_state)
+            _, verification_stats = verification_plan(
+                rows,
+                verification_ledger,
+                args.verification_threshold,
+                enabled=not args.skip_verification,
+            )
             write_summary(
                 output,
                 rows,
                 runtime,
                 classification_run_id=classification_run_id,
                 run_state=run_state,
+                verification=verification_stats,
             )
 
+        verification_pending, verification_stats = verification_plan(
+            rows,
+            verification_ledger,
+            args.verification_threshold,
+            enabled=not args.skip_verification,
+        )
+        for group in batches(verification_pending, args.verification_batch_size):
+            payload = {
+                "company": ticker,
+                "previous_year": years[0],
+                "current_year": years[1],
+                "rows": [
+                    {**evidence_view(row), "initial_analysis": row[MATERIALITY_FIELD]}
+                    for row in group
+                ],
+            }
+            expected_ids = [row["match_id"] for row in group]
+            identity_hash = digest(json.dumps({
+                "payload": payload,
+                "system": MATERIALITY_VERIFICATION_PROMPT,
+                "max_steps": args.max_steps,
+                "classification_run_id": classification_run_id,
+                "verification_threshold": args.verification_threshold,
+            }, sort_keys=True, ensure_ascii=False).encode())[:16]
+            job_id = f"materiality_verifier_{identity_hash}"
+            graph = MaterialityAgentGraph(
+                runtime,
+                job_id,
+                MATERIALITY_VERIFICATION_PROMPT,
+                payload,
+                lambda action, ids=expected_ids: validate_action(
+                    action, ids, expected_action="verify_materiality"
+                ),
+                role="materiality_verifier",
+            )
+            result = graph.run()
+            by_id = {row["match_id"]: row for row in result}
+            records = {record["match_id"]: record for record in verification_ledger["records"]}
+            for row in group:
+                initial = dict(row[MATERIALITY_FIELD])
+                classified = by_id[row["match_id"]]
+                final = {key: classified[key] for key in ANALYSIS_FIELD_ORDER}
+                records[row["match_id"]] = {
+                    "match_id": row["match_id"],
+                    "job_id": job_id,
+                    "source_hash": digest(json.dumps(
+                        decision_view(row), sort_keys=True, ensure_ascii=False
+                    ).encode()),
+                    "trigger_threshold": args.verification_threshold,
+                    "initial_analysis": initial,
+                    "final_analysis": final,
+                    "changed": initial != final,
+                }
+            verification_ledger["verification_threshold"] = args.verification_threshold
+            verification_ledger["records"] = [records[key] for key in sorted(records)]
+            write_json(verification_path, verification_ledger)
+            for row in group:
+                row[MATERIALITY_FIELD] = dict(records[row["match_id"]]["final_analysis"])
+            write_json(output / "jobs" / f"{job_id}.json", {
+                "job_id": job_id,
+                "match_ids": expected_ids,
+                "initial_classifications": [records[key]["initial_analysis"] for key in expected_ids],
+                "final_classifications": result,
+            })
+            write_json(path, document)
+            update_run_timing(run_state, runtime)
+            write_json(run_state_path, run_state)
+            _, verification_stats = verification_plan(
+                rows,
+                verification_ledger,
+                args.verification_threshold,
+                enabled=True,
+            )
+            write_summary(
+                output,
+                rows,
+                runtime,
+                classification_run_id=classification_run_id,
+                run_state=run_state,
+                verification=verification_stats,
+            )
+
+        _, verification_stats = verification_plan(
+            rows,
+            verification_ledger,
+            args.verification_threshold,
+            enabled=not args.skip_verification,
+        )
         update_run_timing(run_state, runtime, complete=True)
         write_json(run_state_path, run_state)
         summary = write_summary(
@@ -469,9 +687,11 @@ def main(argv=None):
             runtime,
             classification_run_id=classification_run_id,
             run_state=run_state,
+            verification=verification_stats,
         )
         print(
             f"Materiality complete for {summary['classified_rows']} alignment rows: {summary['counts']}; "
+            f"verified {verification_stats['verified_rows']} low-confidence rows; "
             f"reported tokens {runtime.report()['reported_tokens']['total_tokens']:,}.",
             flush=True,
         )
@@ -481,6 +701,13 @@ def main(argv=None):
         error, exit_code = str(exc), 1
     finally:
         if document is not None and error:
+            if verification_ledger is not None:
+                _, verification_stats = verification_plan(
+                    document["alignments"],
+                    verification_ledger,
+                    args.verification_threshold,
+                    enabled=not args.skip_verification,
+                )
             update_run_timing(run_state, runtime)
             if run_state is not None:
                 write_json(output / "run_state.json", run_state)
@@ -491,6 +718,7 @@ def main(argv=None):
                 error=error,
                 classification_run_id=classification_run_id,
                 run_state=run_state,
+                verification=verification_stats,
             )
     if error:
         print(f"Materiality stopped: {error}", file=sys.stderr)

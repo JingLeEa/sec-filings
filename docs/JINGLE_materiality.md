@@ -19,13 +19,20 @@ only, `current_only` means a newly introduced disclosure and `previous_only` mea
 a removed disclosure. Introduction or removal is evidence of change, but does not
 automatically make the change material.
 
+The prompt applies an explicit substantive-change rubric across business,
+strategy, risk, operations, third-party dependencies, regulation, technology,
+finance, and human capital. Pure wording, formatting, reordering, terminology,
+boilerplate, and non-substantive routine updates are generally non-material.
+Categories, introduced or removed text, and numerical updates are never automatic
+labels; the decision must consider magnitude and company-specific consequences.
+
 ## 2. Code and workflow
 
 | Code | Responsibility |
 | --- | --- |
 | [`scripts/classify_materiality.py`](../scripts/classify_materiality.py) | CLI entry point |
 | [`agents/materiality.py`](../src/sec_disclosure/agents/materiality.py) | Input validation, batching, deterministic exact matches and in-place output updates |
-| [`agents/materiality_graph.py`](../src/sec_disclosure/agents/materiality_graph.py) | LangGraph model/validation loop and SQLite checkpoints |
+| [`agents/materiality_graph.py`](../src/sec_disclosure/agents/materiality_graph.py) | Shared LangGraph model/validation loop for classifier and verifier jobs |
 | [`agents/materiality_runtime.py`](../src/sec_disclosure/agents/materiality_runtime.py) | API request cache, token limits and usage ledger |
 | [`agents/materiality_prompts.py`](../src/sec_disclosure/agents/materiality_prompts.py) | Evidence and output contract for the materiality agent |
 
@@ -34,6 +41,15 @@ Exact-text `auto_matched` rows are assigned `No` locally with materiality streng
 sent in bounded batches to the materiality agent. Python validates exact IDs, row
 coverage, labels, scores, reasons and key changes. Invalid responses receive
 bounded correction turns.
+
+After all first-pass classifications are saved, the same CLI automatically routes
+rows with `confidence_score < 0.60` to an independent materiality verifier. The
+verifier receives the alignment evidence and tentative analysis, may confirm or
+replace it, and must obey the same score-to-label rules. A verifier may retain
+`Uncertain` when the evidence remains inadequate; the durable verification ledger
+prevents that row from looping on later resumes. Use `--verification-threshold`
+to change the routing threshold, `--verification-batch-size` to change verifier
+batching, or `--skip-verification` for a classifier-only diagnostic run.
 
 The model receives selected source sentences, alignment explanations and
 disclosure metadata. A completed `change_analysis` is included when available,
@@ -139,6 +155,7 @@ Runtime artifacts are stored under the comparison's `materiality/` directory:
 | --- | --- |
 | `manifest.json` | Source-row fingerprint, model, settings and implementation hashes |
 | `run_state.json` | Active reclassification run identifier used for cache isolation and resume |
+| `verifications.json` | Initial and final analyses for rows routed to the verifier |
 | `requests/` | Durable request/response ledger with per-request completion time and duration; API keys are not stored |
 | `graph/checkpoints.sqlite` | Per-batch LangGraph checkpoints |
 | `traces/` and `jobs/` | Validation history and completed classifications |
@@ -156,7 +173,49 @@ requests, 750,000 total budgeted tokens, 4,000 completion tokens, 150,000 prompt
 characters and 180 seconds per request. `--retry-failed` explicitly permits a
 new paid attempt after a failed or interrupted request with unknown usage.
 
-## 5. Safety and downstream behavior
+## 5. Troubleshooting and tuning
+
+Completed batches are durable. Unless a completely fresh classification is
+intended, rerun without `--reclassify`; the workflow skips completed rows and
+continues the classifier or verifier stage that still has pending work.
+
+| Symptom | Recommended change | Why |
+| --- | --- | --- |
+| `exhausted its validation turns without a valid classification` for a `materiality_...` job | Resume with `--batch-size 4`, then `1` if necessary | A smaller classifier batch reduces omissions and output-schema mistakes and creates a new job identity without erasing completed rows |
+| The same validation error occurs for a `materiality_verifier_...` job | Lower `--verification-batch-size` from `4` to `2` or `1` | This changes only verifier batching |
+| A response is truncated or has `finish_reason` other than `stop` | Reduce the relevant batch size first; increase `--max-tokens` only when the smaller response still needs more output space | Smaller batches reduce both prompt and response size without broadly increasing token allowance |
+| `Invocation request limit reached` | Rerun normally without `--max-new-requests`, or set it to a larger per-invocation pilot value | This is an intentional pause, not an API failure |
+| `Total materiality request limit reached` | Raise `--max-requests` after checking `token_usage.json` | The active run has reached its cumulative request cap |
+| `Materiality token budget cannot accommodate the next request` | Raise `--max-total-tokens` deliberately, or reduce batch size if prompt size is the cause | Admission control stops before making an unaffordable request |
+| `context exceeds max_prompt_chars` | Reduce batch size; raise `--max-prompt-chars` only if the provider supports the larger context | The limit protects against oversized prompts |
+| API timeout | Increase `--timeout` and resume | Completed prior requests remain cached |
+| An API request is recorded as failed or interrupted with unknown usage | Inspect `requests/`, then use `--retry-failed` to authorize another paid attempt | `--retry-failed` acknowledges possible unreported usage |
+| Too many or too few rows are routed to the verifier | Adjust `--verification-threshold`; `0.60` matches `Uncertain`, while `0.80` also reviews lower-confidence `Yes` and `No` results | Routing uses strict `confidence_score < threshold` |
+
+For example, if an eight-row classifier job repeatedly omits one `match_id`,
+resume the existing run with:
+
+```bash
+.venv/bin/python scripts/classify_materiality.py \
+  --ticker amd \
+  --previous-year 2024 \
+  --current-year 2025 \
+  --env-file .env \
+  --batch-size 4
+```
+
+Do not add `--reclassify`: that would discard every completed materiality result.
+Do not add `--retry-failed` when the request completed and only its content failed
+validation. Repeating the identical batch and step settings may revisit the same
+exhausted checkpoint; changing the relevant batch size creates a new job.
+
+`--max-steps` controls correction turns per job. Increase it only when traces show
+that responses are progressively approaching a valid result. Repeated identical
+omissions usually benefit more from a smaller batch. `--skip-verification` is for
+classifier-only diagnostics; normal production runs should leave verification
+enabled.
+
+## 6. Safety and downstream behavior
 
 The input must be a completed canonical `alignments.json` partition containing
 only `ai_verified`, `auto_matched`, and `unmatched` rows. The CLI rejects partial
