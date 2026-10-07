@@ -14,8 +14,10 @@ source validation, two final JSON outputs and durable resume state. Both agents 
 configured model with different prompts. LangGraph coordinates the workflow; it
 does not train the model or guarantee fewer review cases or faster API calls.
 
-Not implemented: lexical/semantic/LLM change classification, materiality scoring,
-and a human-in-the-loop review interface. `change_analysis` is a placeholder.
+Not implemented here: lexical/semantic/LLM change classification and a
+human-in-the-loop review interface. `change_analysis` is a placeholder.
+Alignment-level materiality is implemented as the separate downstream stage
+documented in [JINGLE_materiality.md](JINGLE_materiality.md).
 
 ## 2. Code and workflow
 
