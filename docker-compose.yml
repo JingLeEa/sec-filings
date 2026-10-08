@@ -1,0 +1,35 @@
+# Local Postgres + pgvector for the SEC disclosure project.
+#
+#   docker compose up -d      start the database (first run downloads the image)
+#   docker compose ps         check it is "healthy"
+#   docker compose down       stop it (data is kept)
+#   docker compose down -v    stop it AND delete all data (fresh start)
+#
+# Credentials come from .env if present, otherwise the defaults below are used.
+# These defaults are for a local-only database; do not reuse them anywhere public.
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: sec_disclosure_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sec}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sec_local_pw}
+      POSTGRES_DB: ${POSTGRES_DB:-sec_disclosure}
+    ports:
+      # host:container. Only your own computer can reach it (127.0.0.1). Change POSTGRES_PORT in .env if 5432 is already used.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Named volume: the data survives restarts and "docker compose down".
+      - sec_pgdata:/var/lib/postgresql/data
+      # Every *.sql file here runs ONCE, the first time the volume is created.
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sec} -d ${POSTGRES_DB:-sec_disclosure}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  sec_pgdata:
