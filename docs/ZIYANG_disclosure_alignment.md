@@ -157,7 +157,7 @@ jobs at once**, using the completed extraction runs under `data/disclosures_run2
   --output-dir data/alignments_parallel/amd/2024-2025 \
   --workers 4 \
   --request-interval 2 \
-  --max-total-tokens 3000000
+  --max-total-tokens 30000000
 ```
 
 Add `--dry-run` to validate inputs without API calls or output writes. For
@@ -189,19 +189,19 @@ Validate inputs and candidate retrieval with **no API calls or output writes**:
 Run alignment; **uncached agent calls use API tokens**:
 
 ```bash
-.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --max-total-tokens 3000000
+.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --max-total-tokens 30000000
 ```
 
 Default destination: **`data/alignments/amd/2024-2025/`**. LangGraph and exact-text
 routing are already enabled by the code. Use `--output-dir` only when you want
-to override this destination. The 3,000,000-token example is a cap, not a
+to override this destination. The 30,000,000-token example is a cap, not a
 prediction or guarantee that a run will finish.
 
 For extraction created under the alternative root in the extraction guide, use
 a new alignment output directory:
 
 ```bash
-.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --disclosures-dir data/disclosures_run2 --output-dir data/alignments_parallel/amd/2024-2025 --max-total-tokens 3000000
+.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --disclosures-dir data/disclosures_run2 --output-dir data/alignments_parallel/amd/2024-2025 --max-total-tokens 30000000
 ```
 
 For 2023–2024, prepare those two years and change `--previous-year` /
@@ -242,7 +242,7 @@ Historical cross-Item runs cannot be resumed/imported under the same-Item policy
 | `--max-steps` | 4 model turns per job, including tool requests and corrections |
 | `--max-requests` | 400 cumulative paid attempts, including prior runs of the same output directory; `-1` removes the cap |
 | `--max-new-requests` | Optional limit on new attempts this invocation |
-| `--max-total-tokens` | 1,500,000 by default; `-1` removes the cap |
+| `--max-total-tokens` | 30,000,000 per year pair by default; `-1` removes the cap |
 | `--max-tokens`, `--timeout` | 6,000 completion tokens; 180-second total deadline per API attempt, including response reads |
 | `--max-prompt-chars` | 150,000 combined characters; oversized context is not silently truncated |
 | `--retry-failed` | Explicitly acknowledge prior failed/interrupted attempts and allow another paid attempt |
@@ -512,7 +512,7 @@ To rerun from those local inputs, choose a fresh output directory. This can make
 paid API calls and produce different decisions:
 
 ```bash
-.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --disclosures-dir data/disclosures_run2 --output-dir data/alignments_fixture_rerun/amd/2024-2025 --max-total-tokens 3000000
+.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --disclosures-dir data/disclosures_run2 --output-dir data/alignments_fixture_rerun/amd/2024-2025 --max-total-tokens 30000000
 ```
 
 For 2023–2024, use `--previous-year 2023 --current-year 2024` and a separate

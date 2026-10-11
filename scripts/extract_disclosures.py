@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract disclosures for one or several years, optionally followed by alignment."""
+"""Extract disclosures, optionally followed by concurrent PostgreSQL storage and alignment."""
 
 from __future__ import annotations
 

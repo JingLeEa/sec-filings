@@ -1,4 +1,4 @@
-"""Extract traceable disclosures with per-year token accounting, optionally followed by alignment."""
+"""Extract traceable disclosures, optionally followed by concurrent PostgreSQL storage and alignment."""
 
 from __future__ import annotations
 
@@ -1051,6 +1051,71 @@ def align_years(args, selected_years):
     return 1 if 1 in results.values() else 2 if 2 in results.values() else 0
 
 
+def store_years(args, completed_jobs):
+    from sec_disclosure.storage.disclosures import DisclosureStorageError, store_disclosures
+
+    results = {}
+    for job_args, prepared in completed_jobs:
+        try:
+            result = store_disclosures(prepared[2], args.ticker, int(job_args.year),
+                                      env_file=args.env_file, require_complete=True, replace=True)
+            results[job_args.year] = 0
+            print(f"[{job_args.year}] PostgreSQL: {result.stored} disclosures stored "
+                  f"({result.accepted} accepted, {result.review} review candidates).", flush=True)
+        except (OSError, ValueError, KeyError, TypeError, DisclosureStorageError) as error:
+            results[job_args.year] = 1
+            print(f"[{job_args.year}] PostgreSQL storage error: {error}", file=sys.stderr)
+        except Exception as error:
+            results[job_args.year] = 1
+            print(f"[{job_args.year}] PostgreSQL storage error ({type(error).__name__}); "
+                  "saved extraction JSON is available for retry.", file=sys.stderr)
+    print("PostgreSQL exit codes: " + json.dumps(results), flush=True)
+    return 1 if 1 in results.values() else 0
+
+
+def after_extraction(args, jobs, results):
+    """Drain independent persistence/alignment stages and report every failure."""
+    code = 1 if 1 in results.values() else 2 if 2 in results.values() else 0
+    completed_jobs = [(job_args, prepared) for job_args, prepared in jobs if results[job_args.year] == 0]
+    stages = []
+    if args.store_postgres:
+        if completed_jobs:
+            stages.append(("postgres", lambda: store_years(args, completed_jobs)))
+        skipped = [year for year, result in results.items() if result != 0]
+        if skipped:
+            print("PostgreSQL skipped incomplete extraction years: " + ", ".join(skipped), flush=True)
+    if args.align:
+        if code != 0:
+            print("Alignment skipped: all selected extraction years must complete. Rerun the same command to resume.", flush=True)
+        else:
+            stages.append(("alignment", lambda: align_years(args, list(results))))
+    if not stages:
+        return code
+    if len(stages) > 1:
+        print("Storing completed disclosures in PostgreSQL while alignment runs from saved JSON.", flush=True)
+    stage_results = {}
+
+    def run_stage(stage):
+        name, work = stage
+        try:
+            return work()
+        except Exception as error:
+            print(f"{name} stage error ({type(error).__name__}); other stages continue.", file=sys.stderr)
+            return 1
+
+    run_jobs(stages, run_stage, lambda stage, result: stage_results.update({stage[0]: result}), len(stages))
+    print("Post-extraction exit codes: " + json.dumps(stage_results), flush=True)
+    codes = [code, *stage_results.values()]
+    return 1 if 1 in codes else 2 if 2 in codes else 0
+
+
+def planned_storage(args, jobs):
+    if args.store_postgres:
+        print("Planned PostgreSQL disclosure imports after completed extraction: "
+              + ", ".join(str(prepared[2]) for _, prepared in jobs)
+              + ". No database access in this dry run.", flush=True)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ticker", required=True)
@@ -1081,6 +1146,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--rate-limit-cooldown", type=float, default=60, help="Shared pause after HTTP 429, extended by Retry-After when supplied (default: 60 seconds).")
     parser.add_argument("--retry-failed", action="store_true", help="Allow another paid attempt for failed extraction or failed/review boundary and consolidation checks from a previous invocation; all attempts stay in the usage ledger.")
     parser.add_argument("--dry-run", action="store_true", help="Validate all inputs and show batch sizes without API calls or output writes.")
+    parser.add_argument("--store-postgres", action="store_true",
+                        help="Import completed disclosure years into PostgreSQL; runs alongside --align and waits for both stages. Uses --env-file or repository .env for database settings.")
     alignment = parser.add_argument_group("alignment after extraction")
     alignment.add_argument("--align", action="store_true", help="After all selected years complete, align adjacent selected years concurrently; requires at least two --years.")
     alignment.add_argument("--alignment-workers", type=int, help="Override concurrent alignment jobs per pair; defaults to extraction's effective API concurrency and respects --max-concurrent-requests.")
@@ -1089,7 +1156,7 @@ def main(argv: list[str] | None = None) -> int:
     alignment.add_argument("--alignment-max-steps", type=int, default=4, help="Alignment agent turns per job, including corrections (default: 4).")
     alignment.add_argument("--alignment-max-requests", type=int, default=400, help="Cumulative alignment attempts per pair; -1 removes the cap (default: 400).")
     alignment.add_argument("--alignment-max-new-requests", type=int, help="Pause alignment after this many new attempts per pair in this invocation.")
-    alignment.add_argument("--alignment-max-total-tokens", type=int, default=1500000, help="Alignment token budget per pair; -1 removes the cap (default: 1500000).")
+    alignment.add_argument("--alignment-max-total-tokens", type=int, default=30000000, help="Alignment token budget per pair; -1 removes the cap (default: 30000000).")
     alignment.add_argument("--alignment-revalidate-cache", action="store_true", help="Replay saved alignment responses through current validation after implementation-only changes.")
     args = parser.parse_args(argv)
     args.ticker = args.ticker.lower()
@@ -1140,7 +1207,11 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     pacer = RequestPacer(args.request_interval, args.rate_limit_cooldown, args.max_concurrent_requests)
     if len(jobs) == 1:
-        return run_year(*jobs[0], config, pacer)
+        code = run_year(*jobs[0], config, pacer)
+        if args.dry_run:
+            planned_storage(args, jobs)
+            return code
+        return after_extraction(args, jobs, {selected_years[0]: code})
     print(f"Running {len(jobs)} years with up to {workers} concurrent year jobs, "
           f"{args.batch_workers} batch workers per year ({batch_capacity} concurrent extraction batches); "
           f"up to {api_capacity} simultaneous API requests; shared request interval {args.request_interval:g}s.", flush=True)
@@ -1150,6 +1221,7 @@ def main(argv: list[str] | None = None) -> int:
               f"{args.alignment_api_capacity} simultaneous API requests total.", flush=True)
     if args.dry_run:
         code = max(run_year(job_args, prepared, config, pacer) for job_args, prepared in jobs)
+        planned_storage(args, jobs)
         if args.align:
             years = sorted(selected_years)
             print("Planned alignments after extraction: " + ", ".join(f"{previous}-{current}" for previous, current in zip(years, years[1:])), flush=True)
@@ -1169,13 +1241,7 @@ def main(argv: list[str] | None = None) -> int:
             label = {0: "complete", 1: "failed", 2: "partial"}[results[year]]
             print(f"[{year}] Year job {label}.", flush=True)
     print("Year exit codes: " + json.dumps({year: results[year] for year in selected_years}), flush=True)
-    code = 1 if 1 in results.values() else 2 if 2 in results.values() else 0
-    if args.align:
-        if code != 0:
-            print("Alignment skipped: all selected extraction years must complete. Rerun the same command to resume.", flush=True)
-        else:
-            return align_years(args, selected_years)
-    return code
+    return after_extraction(args, jobs, results)
 
 
 if __name__ == "__main__":

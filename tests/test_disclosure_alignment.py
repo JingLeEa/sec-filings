@@ -134,6 +134,7 @@ class AlignmentTests(unittest.TestCase):
             self.assertEqual(self.unmatched_rows(side), [])
         self.assertEqual(self.run_cli(), (0, 0))
         usage = self.output("token_usage.json")
+        self.assertEqual(usage["limits"]["max_total_tokens"], 30000000)
         self.assertEqual(usage["reported_tokens"]["total_tokens"], 250)
         self.assertEqual(set(usage["by_agent"]), {"matching", "verification"})
         self.assertEqual(usage["extraction_tokens_by_year"]["2023"]["total_tokens"], 15)

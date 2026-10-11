@@ -63,6 +63,7 @@ class DisclosureTests(unittest.TestCase):
     def test_validate_report(self):
         good = {"schema_version": "3", "company": "amd", "fiscal_year": "2025"}
         self.assertEqual(disclosures.validate_report(good, "disclosures.json", "amd", 2025), [])
+        self.assertEqual(disclosures.validate_report(dict(good, schema_version="4"), "disclosures.json", "amd", 2025), [])
         self.assertEqual(len(disclosures.validate_report(dict(good, schema_version="2"), "disclosures.json", "amd", 2025)), 1)
 
 

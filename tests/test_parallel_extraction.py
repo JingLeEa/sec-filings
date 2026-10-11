@@ -445,6 +445,9 @@ class ParallelExtractionTests(TestCase):
         with patch.object(disclosure_alignment, "main", side_effect=pause_first) as align:
             self.assertEqual(self.run_cli("--align")[:2], (2, 6))
             self.assertEqual(align.call_count, 2)
+            for call in align.call_args_list:
+                arguments = call.args[0]
+                self.assertEqual(arguments[arguments.index("--max-total-tokens") + 1], "30000000")
         with patch.object(disclosure_alignment, "main", return_value=0) as align:
             self.assertEqual(self.run_cli("--align", "--env-file", "test.env", "--alignment-workers", "4",
                                           "--alignment-max-new-requests", "2", "--alignment-revalidate-cache",
@@ -456,6 +459,91 @@ class ParallelExtractionTests(TestCase):
                 self.assertEqual(arguments[arguments.index(flag) + 1], value)
             for flag in ("--retry-failed", "--fault-tolerant", "--revalidate-cache"):
                 self.assertIn(flag, arguments)
+
+    def test_postgres_storage_overlaps_alignment_and_reuses_custom_outputs_on_resume(self):
+        from sec_disclosure.agents import disclosure_alignment
+        from sec_disclosure.storage import disclosures as storage
+
+        output_root = self.root / "custom_disclosures"
+        overlap = threading.Barrier(2, timeout=5)
+        uploads = []
+
+        def store(folder, company, year, **kwargs):
+            self.assertTrue(json.loads((folder / "token_usage.json").read_text())["run_complete"])
+            self.assertEqual(folder, output_root / "amd" / str(year))
+            self.assertEqual(company, "amd")
+            self.assertEqual(kwargs, {"env_file": Path("test.env"), "require_complete": True, "replace": True})
+            uploads.append(year)
+            if year == 2023:
+                overlap.wait()
+            return SimpleNamespace(stored=2, accepted=2, review=0)
+
+        def align(arguments, **kwargs):
+            if arguments[arguments.index("--previous-year") + 1] == "2023":
+                overlap.wait()
+            return 0
+
+        options = ("--store-postgres", "--align", "--output-root", str(output_root), "--env-file", "test.env")
+        with patch.object(storage, "store_disclosures", side_effect=store), \
+             patch.object(disclosure_alignment, "main", side_effect=align):
+            self.assertEqual(self.run_cli(*options)[:2], (0, 6))
+            self.assertEqual(self.run_cli(*options)[:2], (0, 0))
+        self.assertCountEqual(uploads, [2023, 2024, 2025] * 2)
+
+    def test_postgres_failure_keeps_alignment_and_other_year_imports_running(self):
+        from sec_disclosure.agents import disclosure_alignment
+        from sec_disclosure.storage import disclosures as storage
+
+        uploads = []
+
+        def store(folder, company, year, **kwargs):
+            uploads.append(year)
+            if year == 2023:
+                raise storage.DisclosureStorageError("Database unavailable")
+            return SimpleNamespace(stored=2, accepted=2, review=0)
+
+        with patch.object(storage, "store_disclosures", side_effect=store), \
+             patch.object(disclosure_alignment, "main", return_value=2) as align:
+            code, _, _, output = self.run_cli("--store-postgres", "--align")
+        self.assertEqual(code, 1)
+        self.assertCountEqual(uploads, [2023, 2024, 2025])
+        self.assertEqual(align.call_count, 2)
+        self.assertIn('"postgres": 1', output)
+        self.assertIn('"alignment": 2', output)
+
+    def test_postgres_skips_incomplete_years_and_dry_run_never_accesses_database(self):
+        from sec_disclosure.agents import disclosure_alignment
+        from sec_disclosure.storage import disclosures as storage
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            if payload["fiscal_year"] == "2024":
+                raise LLMError("Unauthorized.", status_code=401, retryable=False)
+            return self.response(prompt, **kwargs)
+
+        with patch.object(storage, "store_disclosures", return_value=SimpleNamespace(stored=2, accepted=2, review=0)) as store, \
+             patch.object(disclosure_alignment, "main") as align:
+            self.assertEqual(self.run_cli("--store-postgres", "--align", "--dry-run")[:2], (0, 0))
+            store.assert_not_called()
+            self.assertEqual(self.run_cli("--store-postgres", "--align", responder=response)[:2], (1, 5))
+            self.assertCountEqual([call.args[2] for call in store.call_args_list], [2023, 2025])
+            align.assert_not_called()
+
+    def test_single_year_postgres_import_uses_exact_output_dir(self):
+        from sec_disclosure.storage import disclosures as storage
+
+        folder = self.root / "one_year"
+        with patch.object(disclosures, "load_config", return_value=LLMConfig("https://example.test/v1", "fake-key", "default")), \
+             patch.object(disclosures, "request_completion", side_effect=self.response), \
+             patch.object(storage, "store_disclosures", return_value=SimpleNamespace(stored=2, accepted=2, review=0)) as store, \
+             redirect_stdout(io.StringIO()):
+            arguments = ["--ticker", "amd", "--year", "2023", "--data-dir", str(self.root),
+                         "--output-dir", str(folder), "--store-postgres"]
+            self.assertEqual(disclosures.main(arguments), 0)
+            self.assertEqual(store.call_args.args, (folder, "amd", 2023))
+            store.reset_mock()
+            self.assertEqual(disclosures.main([*arguments, "--dry-run"]), 0)
+            store.assert_not_called()
 
     def test_alignment_failure_is_reported_while_other_pairs_continue(self):
         from sec_disclosure.agents import disclosure_alignment

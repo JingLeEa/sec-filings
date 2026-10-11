@@ -138,6 +138,8 @@ After the raw filing inputs exist, extraction and alignment can run together:
   --batch-workers 10 \
   --max-concurrent-requests 30 \
   --output-root data/disclosures_parallel \
+  --env-file .env \
+  --store-postgres \
   --align \
   --alignment-output-root data/alignments_parallel \
   --fault-tolerant \
@@ -153,6 +155,44 @@ pause skips alignment. An alignment failure or pause is reported while other
 independent pairs continue; the command returns a failure or partial exit code
 after all comparisons finish or checkpoint.
 Rerun the same command to resume both stages using saved successful work.
+
+With `--store-postgres`, completed disclosures are also imported into the local
+PostgreSQL database while alignment runs. Start Docker Desktop and run
+`docker compose up -d db` first; install `requirements.txt` to include psycopg.
+Storage uses `--env-file` for `POSTGRES_*` or `DATABASE_URL` settings, falling
+back to the repository `.env` when no file was selected. Exported settings take
+priority. The default database is `sec_disclosure` at `localhost:5432`.
+
+The importer reads each actual extraction output folder, including custom
+`--output-root` and single-year `--output-dir` paths. It stores both accepted
+disclosures and review candidates, supports extraction schemas `"3"` and `"4"`,
+and refreshes the selected company/year's disclosure rows in one transaction.
+Obsolete IDs from an earlier extraction snapshot are removed from that filing;
+other filings and alignment tables are unchanged. Source evidence, validation
+metadata and related-disclosure links are preserved in the existing JSON columns.
+API requests, token ledgers and intermediate audit files remain on disk.
+
+Only complete extraction years are imported. If one year fails or remains partial,
+completed years can still be stored, while alignment waits for all selected years.
+A storage failure does not stop alignment or imports for other completed years.
+The command waits for both stages, reports their exit codes, and returns `1` if
+either fails or `2` if extraction/alignment remains partial. `--dry-run` describes
+the planned imports without connecting to PostgreSQL. Single-year extraction can
+also use `--store-postgres` without alignment. Omitting the flag keeps the JSON-only
+extraction workflow.
+
+Retry just the database import after fixing a connection problem, without making
+LLM requests:
+
+```bash
+.venv/bin/python scripts/load_disclosures_to_postgres.py \
+  --company amd --year 2025 \
+  --disclosures-dir data/disclosures_parallel \
+  --env-file .env --replace
+```
+
+`--replace` requires `token_usage.json` to confirm that extraction is complete.
+For a nonstandard single-year folder, pass `--output-dir PATH` instead of a root.
 
 The disclosure root is forwarded to alignment automatically. The default
 alignment output root is `data/alignments` (under `--data-dir`); the example uses
@@ -191,8 +231,11 @@ exhausted-quota errors still stop the affected stage.
 Alignment's schema/evidence correction turns remain separately bounded by
 `--alignment-max-steps` (default 4).
 
-Alignment retains its defaults of 400 cumulative requests and 1,500,000 tokens
-per pair. To remove those caps too, add:
+Alignment retains its defaults of 400 cumulative requests and 30,000,000 tokens
+per pair. When resuming alignment outputs after a code change, add
+`--alignment-revalidate-cache` to replay saved API responses through the updated
+implementation; the inputs, model and other saved alignment settings must match.
+To remove those caps too, add:
 
 ```text
 --alignment-max-requests -1 --alignment-max-total-tokens -1
@@ -307,9 +350,10 @@ complete output path for one year.
 This uses the normal SoCLaaS configuration and writes separate year directories:
 `data/disclosures_parallel/amd/2023/`, `2024/` and `2025/`. Add `--env-file .env`
 if using a project env file. Add `--dry-run` to validate all years without API
-calls or output writes. Add `--align` to run alignment afterward automatically,
-or pass `--disclosures-dir data/disclosures_parallel` to the separate alignment
-command. `--year` and `--years` are mutually exclusive;
+calls or output writes. Add `--store-postgres` to import completed disclosures;
+combine it with `--align` to run storage and alignment concurrently afterward.
+For the separate alignment command, pass
+`--disclosures-dir data/disclosures_parallel`. `--year` and `--years` are mutually exclusive;
 `--output-dir` is for a single year, while `--output-root` appends company/year.
 
 `--workers` defaults to 3 and caps concurrent year jobs. `--batch-workers`

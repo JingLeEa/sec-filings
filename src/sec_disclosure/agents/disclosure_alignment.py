@@ -583,7 +583,7 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
     parser.add_argument("--max-steps", type=int, default=4, help="Agent turns per job, including tool requests/corrections.")
     parser.add_argument("--max-requests", type=int, default=400, help="Total paid requests allowed for this pair, including prior attempts; -1 removes the cap.")
     parser.add_argument("--max-new-requests", type=int, help="Pause after this many NEW requests; rerun to resume.")
-    parser.add_argument("--max-total-tokens", type=int, default=1500000, help="Total alignment token budget; -1 removes the cap (default: 1500000).")
+    parser.add_argument("--max-total-tokens", type=int, default=30000000, help="Total alignment token budget per year pair; -1 removes the cap (default: 30000000).")
     parser.add_argument("--max-tokens", type=int, default=6000, help="Maximum completion tokens per request.")
     parser.add_argument("--max-prompt-chars", type=int, default=150000)
     parser.add_argument("--timeout", type=float, default=180, help="Total deadline in seconds for each API attempt, including response reads (default: 180).")
