@@ -1034,7 +1034,7 @@ def align_years(args, selected_years):
         if args.alignment_revalidate_cache:
             arguments.append("--revalidate-cache")
         print(f"Aligning {args.ticker.upper()} {previous}–{current} with up to {args.alignment_workers} "
-              "concurrent matching/verification jobs after completed extraction.", flush=True)
+              "concurrent matching/verification/change-analysis jobs after completed extraction.", flush=True)
         try:
             return disclosure_alignment.main(arguments, request_pacer=pacer)
         except Exception as error:
@@ -1123,7 +1123,7 @@ def main(argv: list[str] | None = None) -> int:
     years.add_argument("--year", help="Extract one four-digit fiscal year.")
     years.add_argument("--years", nargs="+", help="Extract several fiscal years concurrently, each with its own outputs/cache.")
     parser.add_argument("--workers", type=int, default=3, help="Maximum concurrent year jobs with --years (default: 3).")
-    parser.add_argument("--batch-workers", type=int, help="Concurrent extraction/consolidation jobs per year; boundary checks stay ordered (default: 10 with --years, 1 with --year).")
+    parser.add_argument("--batch-workers", type=int, help="Concurrent extraction/consolidation jobs per year; boundary checks stay ordered (default: 6 with --years, 1 with --year).")
     parser.add_argument("--max-concurrent-requests", type=int, help="Optional API concurrency cap across extraction workers and, with --align, all alignment pairs combined.")
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     outputs = parser.add_mutually_exclusive_group()
@@ -1149,18 +1149,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--store-postgres", action="store_true",
                         help="Import completed disclosure years into PostgreSQL; runs alongside --align and waits for both stages. Uses --env-file or repository .env for database settings.")
     alignment = parser.add_argument_group("alignment after extraction")
-    alignment.add_argument("--align", action="store_true", help="After all selected years complete, align adjacent selected years concurrently; requires at least two --years.")
+    alignment.add_argument("--align", action="store_true", help="After all selected years complete, align adjacent selected years and classify finalized changes; requires at least two --years.")
     alignment.add_argument("--alignment-workers", type=int, help="Override concurrent alignment jobs per pair; defaults to extraction's effective API concurrency and respects --max-concurrent-requests.")
     alignment.add_argument("--alignment-pair-workers", type=int, default=3, help="Concurrent adjacent-year comparisons, sharing one API concurrency cap; use 1 for sequential comparisons (default: 3).")
     alignment.add_argument("--alignment-output-root", type=Path, help="Alignment output root; writes ROOT/TICKER/PREVIOUS-CURRENT (default: DATA_DIR/alignments).")
     alignment.add_argument("--alignment-max-steps", type=int, default=4, help="Alignment agent turns per job, including corrections (default: 4).")
-    alignment.add_argument("--alignment-max-requests", type=int, default=400, help="Cumulative alignment attempts per pair; -1 removes the cap (default: 400).")
-    alignment.add_argument("--alignment-max-new-requests", type=int, help="Pause alignment after this many new attempts per pair in this invocation.")
-    alignment.add_argument("--alignment-max-total-tokens", type=int, default=30000000, help="Alignment token budget per pair; -1 removes the cap (default: 30000000).")
+    alignment.add_argument("--alignment-max-requests", type=int, default=400, help="Cumulative alignment and change-analysis attempts per pair; -1 removes the cap (default: 400).")
+    alignment.add_argument("--alignment-max-new-requests", type=int, help="Pause alignment/change analysis after this many new attempts per pair in this invocation.")
+    alignment.add_argument("--alignment-max-total-tokens", type=int, default=30000000, help="Alignment and change-analysis token budget per pair; -1 removes the cap (default: 30000000).")
     alignment.add_argument("--alignment-revalidate-cache", action="store_true", help="Replay saved alignment responses through current validation after implementation-only changes.")
     args = parser.parse_args(argv)
     args.ticker = args.ticker.lower()
-    args.batch_workers = args.batch_workers if args.batch_workers is not None else (10 if args.years else 1)
+    args.batch_workers = args.batch_workers if args.batch_workers is not None else (6 if args.years else 1)
     selected_years = args.years or [args.year]
     if not re.fullmatch(r"[a-z0-9][a-z0-9.-]*", args.ticker) or any(not re.fullmatch(r"\d{4}", year) for year in selected_years):
         parser.error("Supply a valid ticker and four-digit fiscal years.")

@@ -84,6 +84,8 @@ def consolidate_alignments(decisions, data):
             result.extend(originals)
             continue
         merged = deepcopy(originals[0])
+        # A new group must be analyzed as a whole, not inherit one member's result.
+        merged.pop("change_analysis", None)
         flags = sorted({flag for row in originals for flag in row["review_reasons"]} - {CONFLICT})
         if any(data.records[key]["extraction_status"] == "needs_review" for key in before + after):
             flags = sorted(set(flags) | {"input_extraction_needs_review"})

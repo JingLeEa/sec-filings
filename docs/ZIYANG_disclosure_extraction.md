@@ -135,10 +135,9 @@ After the raw filing inputs exist, extraction and alignment can run together:
   --ticker amd \
   --years 2023 2024 2025 \
   --workers 3 \
-  --batch-workers 10 \
-  --max-concurrent-requests 30 \
+  --batch-workers 6 \
+  --max-concurrent-requests 18 \
   --output-root data/disclosures_parallel \
-  --env-file .env \
   --store-postgres \
   --align \
   --alignment-output-root data/alignments_parallel \
@@ -197,11 +196,12 @@ For a nonstandard single-year folder, pass `--output-dir PATH` instead of a root
 The disclosure root is forwarded to alignment automatically. The default
 alignment output root is `data/alignments` (under `--data-dir`); the example uses
 `data/alignments_parallel/amd/{2023-2024,2024-2025}/`.
-The stages share the env file, completion limit, timeout, request interval,
+Without `--env-file`, exported SoCLaaS variables or the default SoCLaaS configuration supply the LLM settings.
+The stages share those settings, completion limit, timeout, request interval,
 HTTP 429 cooldown, fault tolerance and retry settings. Extraction concurrency
 uses `--workers`, `--batch-workers` and `--max-concurrent-requests`; alignment
 automatically inherits the same effective API concurrency. In this example, both
-stages allow up to 30 simultaneous requests **in total**, including all alignment
+stages allow up to 18 simultaneous requests **in total**, including all alignment
 pairs combined. The inherited worker count per pair is
 `min(selected years, --workers) × --batch-workers`, reduced by any smaller
 `--max-concurrent-requests` cap. `--alignment-workers` remains an optional
@@ -261,8 +261,8 @@ uses API tokens.
   --ticker amd \
   --years 2023 2024 2025 \
   --workers 3 \
-  --batch-workers 10 \
-  --max-concurrent-requests 30 \
+  --batch-workers 6 \
+  --max-concurrent-requests 18 \
   --output-root data/disclosures_parallel \
   --fault-tolerant \
   --max-retries 10 \
@@ -270,9 +270,9 @@ uses API tokens.
 ```
 
 `--years` selects the filings; `--workers 3` runs up to three year jobs at once.
-`--batch-workers 10` runs up to ten extraction batches **within each year**.
-Together they allow up to 30 active batch jobs; `--max-concurrent-requests 30`
-allows up to 30 simultaneous API calls across the whole invocation. Request starts
+`--batch-workers 6` runs up to six extraction batches **within each year**.
+Together they allow up to 18 active batch jobs; `--max-concurrent-requests 18`
+allows up to 18 simultaneous API calls across the whole invocation. Request starts
 remain spaced by the shared default two-second interval.
 `--fault-tolerant` retries temporary API errors up to 10 times and corrects invalid
 replies up to 3 times. API waits start at five seconds (`--retry-backoff 5`);
@@ -295,8 +295,8 @@ Validate this parallel command first, **without API calls or output writes**:
   --ticker amd \
   --years 2023 2024 2025 \
   --workers 3 \
-  --batch-workers 10 \
-  --max-concurrent-requests 30 \
+  --batch-workers 6 \
+  --max-concurrent-requests 18 \
   --output-root data/disclosures_parallel \
   --fault-tolerant \
   --max-retries 10 \
@@ -357,8 +357,8 @@ For the separate alignment command, pass
 `--output-dir` is for a single year, while `--output-root` appends company/year.
 
 `--workers` defaults to 3 and caps concurrent year jobs. `--batch-workers`
-defaults to 10 with `--years` and 1 with `--year`, and caps extraction batches
-within each year. Three years therefore allow up to 30 simultaneous extraction
+defaults to 6 with `--years` and 1 with `--year`, and caps extraction batches
+within each year. Three years therefore allow up to 18 simultaneous extraction
 batches by default. Startup logs show both the batch capacity and the effective
 API concurrency cap, including any smaller `--max-concurrent-requests` override.
 For a single year,
@@ -464,8 +464,8 @@ content and summaries:
 
 ```bash
 .venv/bin/python scripts/extract_disclosures.py \
-  --ticker amd --years 2023 2024 2025 --env-file .env \
-  --workers 3 --batch-workers 10 --max-concurrent-requests 30 \
+  --ticker amd --years 2023 2024 2025 \
+  --workers 3 --batch-workers 6 --max-concurrent-requests 18 \
   --fault-tolerant --max-retries 10 --align \
   --alignment-output-root data/alignments_consolidated
 ```

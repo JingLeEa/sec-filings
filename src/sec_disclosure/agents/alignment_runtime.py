@@ -77,7 +77,7 @@ class Runtime:
             report["new_requests_this_invocation"] = self.new_requests
             report["limits"] = {key: getattr(self.args, key) for key in
                                 ("max_requests", "max_total_tokens", "max_steps", "max_tokens", "max_prompt_chars")}
-            report["notes"].append("Alignment tokens only; input extraction usage is reported separately. Token admission reserves UTF-8 prompt bytes plus the maximum completion as a conservative estimate, not a provider tokenizer guarantee.")
+            report["notes"].append("Alignment and change-analysis tokens; input extraction usage is reported separately. Token admission reserves UTF-8 prompt bytes plus the maximum completion as a conservative estimate, not a provider tokenizer guarantee.")
             report["unknown_usage_budget_reserve"] = self.unknown_budget()
             report["in_flight_budget_reserve"] = {"estimated_tokens": sum(self.in_flight.values()),
                                                    "attempt_count": len(self.in_flight)}
@@ -91,10 +91,12 @@ class Runtime:
                 report["notes"].append("Repair run: reported_tokens and limits cover new correction requests only. Source-run usage is historical and is not added again.")
             return report
 
-    def call(self, role: str, job_id: str, prompt: str, system: str) -> dict:
+    def call(self, role: str, job_id: str, prompt: str, system: str, *, max_tokens: int | None = None) -> dict:
         for retry in count():
             try:
-                return self._call_once(role, job_id, prompt, system)
+                if max_tokens is None:
+                    return self._call_once(role, job_id, prompt, system)
+                return self._call_once(role, job_id, prompt, system, max_tokens=max_tokens)
             except LLMError as error:
                 recoverable = retryable_request({"status": "failed", "error": str(error),
                                                 "status_code": error.status_code, "retryable": error.retryable})
@@ -108,9 +110,12 @@ class Runtime:
                     print(f"[{self.output.name}] {job_id}: retry {retry + 1}/{retry_label} in {delay:g}s; previous attempt preserved.", flush=True)
                     time.sleep(delay)
 
-    def _call_once(self, role: str, job_id: str, prompt: str, system: str) -> dict:
+    def _call_once(self, role: str, job_id: str, prompt: str, system: str, *, max_tokens: int | None = None) -> dict:
+        completion_limit = self.args.max_tokens if max_tokens is None else min(self.args.max_tokens, max_tokens)
+        if completion_limit < 1:
+            raise ValueError("Completion token limit must be positive.")
         spec = {"prompt": prompt, "system_prompt": system, "model": self.config.model,
-                "base_url": self.config.base_url, "max_tokens": self.args.max_tokens}
+                "base_url": self.config.base_url, "max_tokens": completion_limit}
         key = digest(json.dumps(spec, sort_keys=True).encode())
 
         def cached():
@@ -134,12 +139,12 @@ class Runtime:
                     raise RunLimit("Invocation request limit reached; resume to continue.")
                 usage = self.report()
                 if self.args.max_requests != -1 and len(self.requests) >= self.args.max_requests:
-                    raise RunLimit("Total alignment request limit reached.")
+                    raise RunLimit("Total alignment/change-analysis request limit reached.")
                 if usage["unknown_usage_budget_reserve"]["unacknowledged_attempt_count"]:
                     raise RunLimit("An API attempt has unknown usage; inspect it before increasing the budget or retrying.")
-                reservation = len((system + prompt).encode()) + self.args.max_tokens
+                reservation = len((system + prompt).encode()) + completion_limit
                 if self.args.max_total_tokens != -1 and usage["budget_accounted_tokens"] + reservation > self.args.max_total_tokens:
-                    raise RunLimit("Alignment token budget cannot accommodate the next request.")
+                    raise RunLimit("Alignment/change-analysis token budget cannot accommodate the next request.")
                 if len(system + prompt) > self.args.max_prompt_chars:
                     raise ValueError("Agent context exceeds max_prompt_chars; retained for review.")
                 attempt = len(history) + 1
@@ -155,7 +160,7 @@ class Runtime:
             updates = {}
             try:
                 response = request_completion(prompt, config=self.config, system_prompt=system,
-                                              json_mode=True, max_tokens=self.args.max_tokens, timeout=self.args.timeout)
+                                              json_mode=True, max_tokens=completion_limit, timeout=self.args.timeout)
                 updates = {"status": "completed", "result": asdict(response)}
             except Exception as error:
                 updates = {"status": "failed", "error": type(error).__name__}
@@ -182,6 +187,14 @@ class Runtime:
         from .alignment_graph import AlignmentAgentGraph
 
         runner = AlignmentAgentGraph(self, role, job_id, system, payload, data, visible, validate=validate)
+        result = runner.run()
+        visible.update(runner.visible)
+        return result
+
+    def classification(self, job_id, system, payload, data, visible, repair):
+        from .alignment_graph import AlignmentAgentGraph
+
+        runner = AlignmentAgentGraph(self, "change_analysis", job_id, system, payload, data, visible, repair=repair)
         result = runner.run()
         visible.update(runner.visible)
         return result

@@ -1,4 +1,4 @@
-"""Align two years of saved disclosures with bounded matching and verification agents."""
+"""Align saved disclosures, then classify finalized changes with LLM or logic."""
 
 from __future__ import annotations
 
@@ -25,6 +25,7 @@ from .alignment_graph import orchestration_manifest
 from .alignment_workflow import AlignmentWorkflow
 from .alignment_repair import ProposalError, RepairSource, VerificationRepair
 from .alignment_grouping import ASSIGNMENT_POLICY, GROUPING_POLICY, consolidate_alignments, grouping_summary, supported_match
+from .change_analysis import empty_change_analysis, compact_change_analysis, run_change_analysis, change_summary
 
 
 MANIFEST_VERSION = "1"
@@ -381,6 +382,14 @@ def regroup_saved_report(output, data, *, extraction_policy_only=False):
                                                                      if len(indices) > 1 and key not in conflicts))
     report["grouping_summary"] = grouping_summary(report["alignments"])
     refresh_report_statuses(report)
+    old_rows = {row["match_id"]: row for row in original["alignments"]}
+    without_analysis = lambda row: {key: value for key, value in row.items() if key != "change_analysis"}
+    for row in report["alignments"]:
+        old = old_rows.get(row["match_id"])
+        if old is not None and without_analysis(row) != without_analysis(old):
+            row["change_analysis"] = empty_change_analysis()
+    if "change_analysis_summary" in report:
+        report["change_analysis_summary"] = change_summary(report)
     if report == original and not any((output / name).exists() for name in LEGACY_RESULT_FILES):
         return report
     usage = json.loads((output / "token_usage.json").read_text())
@@ -437,11 +446,6 @@ def regroup_saved_report(output, data, *, extraction_policy_only=False):
     return report
 
 
-def empty_change_analysis():
-    return {"status": "not_started", "lexical": None, "semantic": None,
-            "llm": None, "final_taxonomy": None}
-
-
 def refresh_report_statuses(report):
     """Classify supported single-sided decisions after global checks, including legacy reports.
 
@@ -490,14 +494,14 @@ def refresh_report_statuses(report):
     report["counts"] = dict(Counter(row["status"] for row in report["alignments"]))
 
 
-def write_alignment_json_reports(output, report):
+def write_alignment_json_reports(output, report, *, preserve_change_analysis=True):
     """Partition all decisions into exactly two final result files, without model calls."""
     refresh_report_statuses(report)
     unknown = set(report["counts"]) - {"auto_matched", "ai_verified", "unmatched", "needs_review"}
     if unknown:
         raise ValueError(f"Cannot export unknown alignment statuses: {sorted(unknown)}.")
     previous_path = output / "alignments.json"
-    if previous_path.exists():
+    if previous_path.exists() and preserve_change_analysis:
         previous = {row["match_id"]: row for row in load_alignment_report(output)["alignments"]}
         def without_analysis(row):
             decision = {key: value for key, value in row.items() if key != "change_analysis"}
@@ -521,6 +525,8 @@ def write_alignment_json_reports(output, report):
             if (old and row["change_analysis"] == empty_change_analysis()
                     and without_analysis(row) == without_analysis(old) and "change_analysis" in old):
                 row["change_analysis"] = deepcopy(old["change_analysis"])
+    for row in report["alignments"]:
+        row["change_analysis"] = compact_change_analysis(row["change_analysis"])
     for filename, statuses in (("alignments.json", list(FINAL_ALIGNMENT_STATUSES)),
                                ("needs_review.json", ["needs_review"])):
         rows = [row for row in report["alignments"] if row["status"] in statuses]
@@ -539,13 +545,13 @@ def write_alignment_json_reports(output, report):
             path.rename(archive / path.name)
 
 
-def write_alignment_reports(output, report, usage):
+def write_alignment_reports(output, report, usage, *, preserve_change_analysis=True):
     """Render saved alignment decisions without making model calls or revalidating them."""
-    write_alignment_json_reports(output, report)
+    write_alignment_json_reports(output, report, preserve_change_analysis=preserve_change_analysis)
     counts = Counter(report["counts"])
     lines = [f"# {report['company'].upper()} {report['previous_year']}–{report['current_year']} disclosure alignment", "", report["note"], "",
              f"Run complete: {report['run_complete']}. Auto-matched: {counts['auto_matched']}; AI-verified: {counts['ai_verified']}; unmatched: {counts['unmatched']}; needs review: {counts['needs_review']}.", "",
-             f"Alignment API tokens: {usage['reported_tokens']['total_tokens']:,}. Unknown-usage requests: {usage['requests_with_unknown_usage']}.", ""]
+             f"Alignment and change-analysis API tokens: {usage['reported_tokens']['total_tokens']:,}. Unknown-usage requests: {usage['requests_with_unknown_usage']}.", ""]
     for row in report["alignments"]:
         lines.extend([f"## {row['match_id']}", "", f"**{row['relationship']} · {row['status']}**", "",
                       "Previous: " + (", ".join(row["previous_ids"]) or "No counterpart found"), "",
@@ -559,10 +565,56 @@ def write_alignment_reports(output, report, usage):
             identifiers = [source["match_id"] for source in sources if "match_id" in source]
             lines.extend([f"Grouped from {len(sources)} supported proposals with a shared disclosure. " +
                           ("Original match IDs: " + ", ".join(identifiers) + "." if identifiers else ""), ""])
+        analysis = row["change_analysis"]
+        if analysis["status"] != "not_started":
+            lines.extend([f"Change analysis: {analysis['status']} · {analysis['llm'] or 'No label'}.", ""])
         for evidence in row["evidence"]:
             for sentence in evidence["sentences"]:
                 lines.extend([f"**{sentence['sentence_id']}**", "", sentence["text"], ""])
     (output / "alignments.md").write_text("\n".join(lines), encoding="utf-8")
+
+
+def run_change_stage(output, report, data, runtime):
+    """Save classification progress independently of alignment completion/status."""
+    error, code = None, 0
+
+    def persist():
+        usage = runtime.report()
+        usage.update(run_complete=report["run_complete"], company=data.ticker,
+                     previous_year=data.years[0], current_year=data.years[1],
+                     extraction_tokens_by_year=data.extraction_usage)
+        usage["change_analysis_complete"] = report["change_analysis_summary"]["complete"]
+        write_alignment_reports(output, report, usage, preserve_change_analysis=False)
+        write_json(output / "token_usage.json", usage)
+
+    try:
+        run_change_analysis(report, data, runtime, persist)
+    except RunLimit as exc:
+        error, code = str(exc), 2
+    except (OSError, sqlite3.Error, ValueError, KeyError, TypeError, RuntimeError, LLMError) as exc:
+        error, code = str(exc), 1
+    finally:
+        report["change_analysis_summary"] = change_summary(report, error)
+        persist()
+    if error:
+        print(f"Change analysis stopped: {error}", file=sys.stderr)
+    print(f"Change analysis saved: {report['change_analysis_summary']['by_status']}; "
+          f"taxonomies {report['change_analysis_summary']['taxonomy_counts']}.", flush=True)
+    return code
+
+
+def analyze_saved_alignments(output, data, args, request_pacer=None):
+    report = load_alignment_report(output)
+    manifest = json.loads((output / "manifest.json").read_text())
+    if (report.get("comparison_scope") != "same_item" or not report["run_complete"]
+            or (report["company"], report["previous_year"], report["current_year"]) != (data.ticker, *data.years)):
+        raise ValueError("Change-analysis-only requires a completed same-Item alignment for this company/year pair.")
+    canonical = lambda values: {str(Path(key).resolve()): value for key, value in values.items()}
+    if canonical(manifest["input_hashes"]) != canonical(data.hashes):
+        raise ValueError("Saved alignment inputs have changed; cannot analyze stale evidence.")
+    config = load_config(args.env_file) if any(row["status"] == "ai_verified" for row in report["alignments"]) else None
+    runtime = Runtime(output, config, args, request_pacer=request_pacer)
+    return run_change_stage(output, report, data, runtime)
 
 
 def main(argv=None, *, request_pacer: RequestPacer | None = None):
@@ -577,13 +629,13 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
     parser.add_argument("--env-file", type=Path)
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--batch-size", type=int, default=6)
-    parser.add_argument("--workers", type=int, default=1, help="Concurrent jobs within each matching/verification phase (default: 1).")
+    parser.add_argument("--workers", type=int, default=1, help="Concurrent jobs within each matching, verification and change-analysis phase (default: 1).")
     parser.add_argument("--request-interval", type=float, help="Shared seconds between API request starts (default: 2 with multiple workers, otherwise 0).")
     parser.add_argument("--rate-limit-cooldown", type=float, default=60, help="Shared HTTP 429 cooldown in seconds (default: 60).")
     parser.add_argument("--max-steps", type=int, default=4, help="Agent turns per job, including tool requests/corrections.")
-    parser.add_argument("--max-requests", type=int, default=400, help="Total paid requests allowed for this pair, including prior attempts; -1 removes the cap.")
+    parser.add_argument("--max-requests", type=int, default=400, help="Total paid alignment and change-analysis requests for this pair, including prior attempts; -1 removes the cap.")
     parser.add_argument("--max-new-requests", type=int, help="Pause after this many NEW requests; rerun to resume.")
-    parser.add_argument("--max-total-tokens", type=int, default=30000000, help="Total alignment token budget per year pair; -1 removes the cap (default: 30000000).")
+    parser.add_argument("--max-total-tokens", type=int, default=30000000, help="Total alignment and change-analysis token budget per year pair; -1 removes the cap (default: 30000000).")
     parser.add_argument("--max-tokens", type=int, default=6000, help="Maximum completion tokens per request.")
     parser.add_argument("--max-prompt-chars", type=int, default=150000)
     parser.add_argument("--timeout", type=float, default=180, help="Total deadline in seconds for each API attempt, including response reads (default: 180).")
@@ -599,6 +651,8 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
     parser.add_argument("--regroup-only", action="store_true", help="Consolidate supported overlaps in saved same-Item reports; archive reports and make no API calls.")
     parser.add_argument("--refresh-extraction-policy", action="store_true",
                         help="Apply the current source-selection review policy to saved same-Item reports, without API calls or changing historical extraction files.")
+    parser.add_argument("--skip-change-analysis", action="store_true", help="Run alignment only; normal completed runs automatically classify changes afterward.")
+    parser.add_argument("--change-analysis-only", action="store_true", help="Classify a completed saved alignment without rerunning matching/verification; AI-verified rows use paid LLM requests.")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     if (args.regroup_only or args.refresh_extraction_policy) and (args.repair_from or args.offline_repair or args.revalidate_cache or args.dry_run
@@ -606,6 +660,9 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
         parser.error("Choose one offline report refresh; do not combine it with repair, cache revalidation, or --dry-run.")
     if args.offline_repair and not args.repair_from:
         parser.error("--offline-repair requires --repair-from.")
+    if args.change_analysis_only and (args.skip_change_analysis or args.regroup_only or args.refresh_extraction_policy
+                                     or args.repair_from or args.offline_repair or args.revalidate_cache or args.dry_run):
+        parser.error("--change-analysis-only cannot be combined with alignment/repair/report-refresh modes or --dry-run.")
     ticker, years = args.ticker.lower(), (args.previous_year, args.current_year)
     if not re.fullmatch(r"[a-z0-9][a-z0-9.-]*", ticker) or any(not re.fullmatch(r"\d{4}", year) for year in years) or years[0] >= years[1]:
         parser.error("Use a valid ticker and increasing four-digit fiscal years.")
@@ -626,6 +683,8 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
     complete, error, exit_code = False, None, 0
     try:
         data = AlignmentData(args.data_dir, ticker, years, disclosures_dir=args.disclosures_dir)
+        if args.change_analysis_only:
+            return analyze_saved_alignments(output, data, args, request_pacer)
         if args.regroup_only or args.refresh_extraction_policy:
             report = regroup_saved_report(output, data, extraction_policy_only=args.refresh_extraction_policy)
             print(f"Refreshed {output}: {report['counts']}; 0 additional API requests or tokens.", flush=True)
@@ -647,6 +706,7 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
                           Path(__file__).with_name("alignment_workflow.py"),
                           Path(__file__).with_name("alignment_grouping.py"),
                           Path(__file__).with_name("alignment_exact.py"),
+                          Path(__file__).with_name("change_analysis.py"),
                           Path(__file__).parents[1] / "llm/disclosures.py",
                           Path(__file__).parents[1] / "llm/concurrency.py",
                           Path(__file__).parents[1] / "llm/request_pacing.py",
@@ -706,6 +766,8 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
             print(f"Saved {output}: {report['counts']}; reported alignment tokens {runtime.report()['reported_tokens']['total_tokens']:,}.", flush=True)
     if error:
         print(f"Alignment stopped: {error}", file=sys.stderr)
+    if runtime is not None and complete and not error and not args.skip_change_analysis and not args.offline_repair:
+        exit_code = run_change_stage(output, report, data, runtime)
     return exit_code
 
 

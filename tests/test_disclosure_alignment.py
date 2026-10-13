@@ -19,6 +19,10 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 from sec_disclosure.agents.alignment_repair import VerificationRepair
 from sec_disclosure.agents.alignment_data import AlignmentData
 from sec_disclosure.agents.alignment_exact import exact_matches, normalize_text
+from sec_disclosure.agents.change_analysis import (
+    ChangeRepair, analysis_jobs, classifier_records, compact_change_analysis,
+    selected_records, validate_change_action,
+)
 from sec_disclosure.indexing.disclosure_retrieval import DisclosureIndex
 from sec_disclosure.llm.client import CompletionResult, LLMError
 from sec_disclosure.llm.config import LLMConfig
@@ -74,11 +78,14 @@ class AlignmentTests(unittest.TestCase):
                     row["item"] = item
             write_json(path, document)
 
-    def run_cli(self, *args, response=None):
+    def run_cli(self, *args, response=None, change_analysis=False):
+        # These tests exercise alignment independently; change-stage integration
+        # tests explicitly enable the normal automatic downstream behavior.
+        mode = [] if change_analysis else ["--skip-change-analysis"]
         with patch.object(module, "load_config", return_value=LLMConfig("https://example.test/v1", "fake-secret", "default")), \
              patch.object(alignment_runtime, "request_completion", side_effect=response or self.response) as api, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
-            status = module.main(["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), *args])
+            status = module.main(["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), *mode, *args])
         return status, api.call_count
 
     def response(self, prompt, **kwargs):
@@ -86,6 +93,9 @@ class AlignmentTests(unittest.TestCase):
         if "anchors" in payload:
             result = {"action": "propose", "matches": [{"current_id": key, "previous_ids": [key.replace("2024", "2023")],
                                                         "rationale": "Same specific reported topic."} for key in payload["anchors"]]}
+        elif payload.get("change_analysis"):
+            result = {"action": "classify", "analyses": [{"match_id": row["match_id"], "llm": "Modified"}
+                                                        for row in payload["alignments"]]}
         else:
             records = {r["disclosure_id"]: r for r in payload["records"]}
             result = {"action": "finalize", "alignments": []}
@@ -138,6 +148,385 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(usage["reported_tokens"]["total_tokens"], 250)
         self.assertEqual(set(usage["by_agent"]), {"matching", "verification"})
         self.assertEqual(usage["extraction_tokens_by_year"]["2023"]["total_tokens"], 15)
+
+    def test_default_run_classifies_ai_verified_after_alignment_and_caches_results(self):
+        observed = []
+        completion_limits = []
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            completion_limits.append((bool(payload.get("change_analysis")), kwargs["max_tokens"]))
+            if payload.get("change_analysis"):
+                report = self.saved_report()
+                self.assertTrue(report["run_complete"])
+                self.assertEqual(report["counts"], {"ai_verified": 3})
+                for record in payload["records"]:
+                    self.assertEqual(record["content"], self.data().records[record["disclosure_id"]]["content"])
+                    self.assertEqual(set(record), {"disclosure_id", "fiscal_year", "item", "content"})
+                observed.extend(row["match_id"] for row in payload["alignments"])
+            return self.response(prompt, **kwargs)
+
+        self.assertEqual(self.run_cli(response=response, change_analysis=True), (0, 3))
+        report = self.saved_report()
+        self.assertEqual(len(observed), 3)
+        self.assertEqual(completion_limits, [(False, 6000), (False, 6000), (True, 1024)])
+        self.assertTrue(report["change_analysis_summary"]["complete"])
+        self.assertEqual(report["change_analysis_summary"]["taxonomy_counts"], {"Modified": 3})
+        for row in report["alignments"]:
+            analysis = row["change_analysis"]
+            self.assertEqual(analysis, {"status": "completed", "lexical": None, "semantic": None,
+                                        "llm": "Modified", "final_taxonomy": None})
+        usage = self.output("token_usage.json")
+        self.assertEqual(usage["reported_tokens"]["total_tokens"], 375)
+        self.assertEqual(set(usage["by_agent"]), {"matching", "verification", "change_analysis"})
+        self.assertTrue(usage["change_analysis_complete"])
+        self.assertEqual(self.run_cli(change_analysis=True), (0, 0))
+        self.assertEqual(self.saved_report()["alignments"], report["alignments"])
+
+    def test_mixed_status_change_routing_uses_llm_only_for_ai_verified(self):
+        self.make_exact(1)
+        classified = []
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            if payload.get("change_analysis"):
+                classified.extend(payload["alignments"])
+            result = self.response(prompt, **kwargs)
+            action = json.loads(result.text)
+            for match in action.get("matches", []):
+                if match["current_id"].endswith("D003"):
+                    match["previous_ids"] = []
+            return CompletionResult(json.dumps(action), result.model, result.finish_reason, result.usage)
+
+        self.assertEqual(self.run_cli(response=response, change_analysis=True), (0, 3))
+        report = self.saved_report()
+        self.assertEqual(report["counts"], {"auto_matched": 1, "ai_verified": 1, "unmatched": 2})
+        self.assertEqual(len(classified), 1)
+        self.assertTrue(classified[0]["previous_ids"][0].endswith("D002"))
+        for row in report["alignments"]:
+            analysis = row["change_analysis"]
+            expected = "Modified" if row["status"] == "ai_verified" else "Unchanged" if row["status"] == "auto_matched" else "Removed" if row["previous_ids"] else "New"
+            self.assertEqual(analysis, {"status": "completed", "lexical": None, "semantic": None,
+                                        "llm": expected, "final_taxonomy": None})
+        self.assertEqual(report["change_analysis_summary"]["taxonomy_counts"],
+                         {"Unchanged": 1, "Modified": 1, "Removed": 1, "New": 1})
+
+    def test_change_analysis_only_backfills_without_realigning_and_rejects_stale_sources(self):
+        self.assertEqual(self.run_cli(), (0, 2))
+        output = self.root / "alignments/amd/2023-2024"
+        before = {name: (output / name).read_bytes() for name in
+                  ("manifest.json", "matching_proposals.json", "proposed_groups.json", "candidate_matches.json")}
+        self.assertEqual(self.run_cli("--change-analysis-only", change_analysis=True), (0, 1))
+        self.assertEqual(before, {name: (output / name).read_bytes() for name in before})
+        self.assertEqual(self.run_cli("--change-analysis-only", change_analysis=True), (0, 0))
+        with patch.object(module, "load_config", return_value=LLMConfig("https://example.test/v1", "fake-secret", "other-model")), \
+             patch.object(alignment_runtime, "request_completion", side_effect=self.response) as api, \
+             redirect_stdout(io.StringIO()):
+            self.assertEqual(module.analyze_saved_alignments(output, self.data(), self.change_args()), 0)
+        self.assertEqual(api.call_count, 1)
+        self.set_fixture_text("2024", 1, ["Revenue changed again.", "Full policy source text."])
+        self.assertEqual(self.run_cli("--change-analysis-only", change_analysis=True), (1, 0))
+
+    def change_args(self):
+        return SimpleNamespace(**vars(self.concurrency_runtime().args), env_file=None)
+
+    def test_change_budget_pause_preserves_completed_alignment_and_resumes(self):
+        self.assertEqual(self.run_cli("--max-new-requests", "2", change_analysis=True), (2, 2))
+        report = self.saved_report()
+        self.assertTrue(report["run_complete"])
+        self.assertEqual(report["counts"], {"ai_verified": 3})
+        self.assertFalse(report["change_analysis_summary"]["complete"])
+        self.assertEqual(report["change_analysis_summary"]["by_status"], {"not_started": 3})
+        self.assertEqual(self.run_cli(change_analysis=True), (0, 1))
+        self.assertTrue(self.saved_report()["change_analysis_summary"]["complete"])
+
+    def test_change_correction_sends_only_invalid_group_and_preserves_valid_labels(self):
+        calls, original_labels = [], {}
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            result = self.response(prompt, **kwargs)
+            if not payload.get("change_analysis"):
+                return result
+            calls.append(payload)
+            action = json.loads(result.text)
+            if len(calls) == 1:
+                action["analyses"][0]["llm"] = "Expanded"
+                original_labels.update({entry["match_id"]: entry["llm"] for entry in action["analyses"][:-1]})
+                action["analyses"][-1]["llm"] = "New"
+            else:
+                self.assertEqual(len(payload["alignments"]), 1)
+                row = payload["alignments"][0]
+                self.assertNotIn(row["match_id"], original_labels)
+                self.assertEqual(set(payload["input_hashes"]), {row["match_id"]})
+                self.assertEqual(set(payload["validation_errors"]), {row["match_id"]})
+                members = set(row["previous_ids"] + row["current_ids"])
+                self.assertEqual({record["disclosure_id"] for record in payload["records"]}, members)
+                for record in payload["records"]:
+                    self.assertEqual(record["content"], self.data().records[record["disclosure_id"]]["content"])
+                # Extra entries cannot replace an accepted label or add foreign results.
+                action["analyses"].extend({"match_id": key, "llm": "Reduced"} for key in original_labels)
+                action["analyses"].append({"match_id": "foreign", "llm": "Reduced"})
+            return CompletionResult(json.dumps(action), result.model, result.finish_reason, result.usage)
+
+        self.assertEqual(self.run_cli(response=response, change_analysis=True), (0, 4))
+        self.assertEqual(len(calls), 2)
+        labels = {row["match_id"]: row["change_analysis"]["llm"] for row in self.saved_report()["alignments"]}
+        for key, label in original_labels.items():
+            self.assertEqual(labels[key], label)
+        self.assertEqual(self.saved_report()["change_analysis_summary"]["taxonomy_counts"], {"Expanded": 1, "Modified": 2})
+
+    def test_change_partial_labels_survive_budget_pause_without_repeating_first_batch(self):
+        calls, accepted = [], {}
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            result = self.response(prompt, **kwargs)
+            if payload.get("change_analysis"):
+                calls.append(payload)
+                if len(calls) == 1:
+                    action = json.loads(result.text)
+                    action["analyses"][0]["llm"] = "Expanded"
+                    accepted.update({entry["match_id"]: entry["llm"] for entry in action["analyses"][:-1]})
+                    action["analyses"][-1]["llm"] = "New"
+                    return CompletionResult(json.dumps(action), result.model, result.finish_reason, result.usage)
+                self.assertEqual(len(payload["alignments"]), 1)
+                self.assertNotIn(payload["alignments"][0]["match_id"], accepted)
+            return result
+
+        self.assertEqual(self.run_cli("--max-new-requests", "3", response=response, change_analysis=True), (2, 3))
+        self.assertTrue(self.saved_report()["run_complete"])
+        self.assertFalse(self.saved_report()["change_analysis_summary"]["complete"])
+        self.assertEqual(self.run_cli(response=response, change_analysis=True), (0, 1))
+        self.assertEqual(len(calls), 2)
+        labels = {row["match_id"]: row["change_analysis"]["llm"] for row in self.saved_report()["alignments"]}
+        self.assertEqual({key: labels[key] for key in accepted}, accepted)
+        self.assertEqual(self.run_cli(change_analysis=True), (0, 0))
+
+    def test_change_exhausted_corrections_keep_valid_labels(self):
+        def response(prompt, **kwargs):
+            result = self.response(prompt, **kwargs)
+            action = json.loads(result.text)
+            if "analyses" in action:
+                action["analyses"][-1]["llm"] = "New"
+            return CompletionResult(json.dumps(action), result.model, result.finish_reason, result.usage)
+
+        self.assertEqual(self.run_cli("--max-steps", "1", response=response, change_analysis=True), (0, 3))
+        report = self.saved_report()
+        self.assertEqual(report["change_analysis_summary"]["by_status"], {"completed": 2, "needs_review": 1})
+        self.assertEqual(report["change_analysis_summary"]["taxonomy_counts"], {"Modified": 2})
+        self.assertTrue(all(row["status"] == "ai_verified" for row in report["alignments"]))
+
+    def test_change_completion_limit_respects_lower_explicit_maximum(self):
+        limits = []
+
+        def response(prompt, **kwargs):
+            limits.append(kwargs["max_tokens"])
+            return self.response(prompt, **kwargs)
+
+        self.assertEqual(self.run_cli("--max-tokens", "512", response=response, change_analysis=True), (0, 3))
+        self.assertEqual(limits, [512, 512, 512])
+
+    def test_change_batches_twelve_groups_preserving_full_text_and_item_scope(self):
+        records, rows = {}, []
+        for number in range(26):
+            before, after = f"previous_{number}", f"current_{number}"
+            item = "7" if number < 25 else "8"
+            rows.append({"match_id": f"match_{number}", "previous_ids": [before], "current_ids": [after]})
+            for key, year in ((before, "2023"), (after, "2024")):
+                records[key] = {"disclosure_id": key, "fiscal_year": year, "item": item, "content": f"{key}: complete source text."}
+        data = SimpleNamespace(records=records, item_for=lambda keys: records[next(iter(keys))]["item"])
+        jobs = list(analysis_jobs(rows, data))
+        self.assertEqual([len(batch) for batch in jobs], [12, 12, 1, 1])
+        self.assertEqual([row for batch in jobs for row in batch], rows)
+        for batch in jobs:
+            content = classifier_records(batch, data)
+            self.assertEqual(len({record["item"] for record in content}), 1)
+            self.assertEqual(content, [records[key] for key in sorted({key for row in batch for key in row["previous_ids"] + row["current_ids"]})])
+
+    def test_change_batch_size_target_keeps_large_split_group_intact(self):
+        data = self.data()
+        before, x, y = "amd_2023_7_D001", "amd_2024_7_D001", "amd_2024_7_D002"
+        data.records[before]["content"] = "Complete long source text. " * 2000
+        rows = [{"match_id": "large_split", "previous_ids": [before], "current_ids": [x, y]},
+                {"match_id": "small", "previous_ids": ["amd_2023_7_D003"], "current_ids": ["amd_2024_7_D003"]}]
+        jobs = list(analysis_jobs(rows, data))
+        self.assertEqual(jobs, [[rows[0]], [rows[1]]])
+        content = classifier_records(jobs[0], data)
+        self.assertEqual({record["disclosure_id"] for record in content}, {before, x, y})
+        self.assertEqual(next(record["content"] for record in content if record["disclosure_id"] == before), data.records[before]["content"])
+
+    def test_change_partial_repair_quarantines_duplicates_and_missing_labels(self):
+        rows = [{"match_id": key} for key in ("good", "duplicate", "missing", "uncertain")]
+        repair = ChangeRepair(rows)
+        repair.receive({"action": "classify", "analyses": [
+            {"match_id": "good", "llm": "Expanded"}, {"match_id": "uncertain", "llm": None},
+            {"match_id": "duplicate", "llm": "Modified"}, {"match_id": "duplicate", "llm": "Reduced"},
+        ]}, set())
+        resumed = ChangeRepair(rows)
+        resumed.restore(repair.snapshot())
+        self.assertEqual(resumed.accepted, {"good": "Expanded", "uncertain": None})
+        self.assertEqual(resumed.pending, {"duplicate", "missing"})
+        resumed.receive({"action": "classify", "analyses": [
+            {"match_id": "duplicate", "llm": "Modified"}, {"match_id": "missing", "llm": "Reworded"},
+        ]}, set())
+        self.assertFalse(resumed.pending)
+        self.assertEqual(resumed.results(), [{"match_id": "good", "llm": "Expanded"},
+            {"match_id": "duplicate", "llm": "Modified"}, {"match_id": "missing", "llm": "Reworded"},
+            {"match_id": "uncertain", "llm": None}])
+
+    def test_invalid_change_taxonomy_keeps_alignment_and_withholds_final_label(self):
+        def response(prompt, **kwargs):
+            result = self.response(prompt, **kwargs)
+            action = json.loads(result.text)
+            for analysis in action.get("analyses", []):
+                analysis["llm"] = "New"
+            return CompletionResult(json.dumps(action), result.model, result.finish_reason, result.usage)
+
+        self.assertEqual(self.run_cli("--max-steps", "1", response=response, change_analysis=True), (0, 3))
+        report = self.saved_report()
+        self.assertEqual(report["counts"], {"ai_verified": 3})
+        for row in report["alignments"]:
+            self.assertEqual(row["change_analysis"]["status"], "needs_review")
+            self.assertIsNone(row["change_analysis"]["final_taxonomy"])
+        self.assertEqual(self.run_cli("--max-steps", "1", change_analysis=True), (0, 0))
+
+    def test_alignment_review_rows_are_not_sent_for_change_analysis(self):
+        self.assertEqual(self.run_cli("--max-steps", "1", response=self.invalid_citation_response,
+                                     change_analysis=True), (0, 3))
+        for row in self.output("needs_review.json")["alignments"]:
+            self.assertEqual(row["change_analysis"], module.empty_change_analysis())
+        self.assertEqual(self.output("token_usage.json")["by_agent"]["change_analysis"]["requests"], 1)
+
+    def test_changed_model_budget_pause_does_not_restore_stale_taxonomy(self):
+        self.assertEqual(self.run_cli(change_analysis=True), (0, 3))
+        output = self.root / "alignments/amd/2023-2024"
+        original_hashes = set((output / "change_analysis_cache").glob("*.json"))
+        args = self.change_args()
+        args.max_total_tokens = 1
+        with patch.object(module, "load_config", return_value=LLMConfig("https://example.test/v1", "fake-secret", "other-model")), \
+             patch.object(alignment_runtime, "request_completion", side_effect=AssertionError("Budget must block new call")), \
+             redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            self.assertEqual(module.analyze_saved_alignments(output, self.data(), args), 2)
+        self.assertEqual(original_hashes, set((output / "change_analysis_cache").glob("*.json")))
+        for row in self.saved_report()["alignments"]:
+            self.assertEqual(row["change_analysis"]["status"], "not_started")
+            self.assertIsNone(row["change_analysis"]["final_taxonomy"])
+            self.assertIsNone(row["change_analysis"]["llm"])
+
+    def test_change_labels_reject_foreign_missing_duplicate_or_unknown_results(self):
+        rows = [{"match_id": "test_M0001"}]
+        action = {"action": "classify", "analyses": [{"match_id": "test_M0001", "llm": "Modified"}]}
+        self.assertEqual(validate_change_action(action, rows), action["analyses"])
+        variants = []
+        for entry in ({"match_id": "other_match", "llm": "Modified"},
+                      {"match_id": "test_M0001"}, {"match_id": "test_M0001", "llm": "New"},
+                      {"match_id": "test_M0001", "llm": ["Modified"]}):
+            variants.append({"action": "classify", "analyses": [entry]})
+        variants.extend(({"action": "classify", "analyses": []},
+                         {"action": "classify", "analyses": action["analyses"] * 2}))
+        for invalid in variants:
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                validate_change_action(invalid, rows)
+
+    def test_legacy_change_analysis_converts_to_the_exact_five_field_format(self):
+        expected = {"status": "completed", "lexical": None, "semantic": None,
+                    "llm": "Removed", "final_taxonomy": None}
+        old = {"status": "completed", "lexical": None, "semantic": None, "llm": None,
+               "final_taxonomy": "Removed", "method": "logic", "policy": "old", "input_sha256": "old",
+               "logic": {"rule": "removed_disclosure", "explanation": "Old detail"}}
+        self.assertEqual(compact_change_analysis(old), expected)
+        old.update(llm={"taxonomy": "Modified", "evidence": [], "explanation": "Old explanation"}, final_taxonomy="Modified")
+        expected["llm"] = "Modified"
+        self.assertEqual(compact_change_analysis(old), expected)
+
+    def test_change_analysis_uses_final_consolidated_split_group(self):
+        observed = []
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            completion = self.response(prompt, **kwargs)
+            if payload.get("change_analysis"):
+                observed.extend(payload["alignments"])
+            elif "proposed_groups" in payload:
+                action = json.loads(completion.text)
+                extra = deepcopy(action["alignments"][0])
+                extra["current_ids"] = action["alignments"][1]["current_ids"]
+                extra["evidence"] = [extra["evidence"][0], action["alignments"][1]["evidence"][1]]
+                action["alignments"][1]["current_ids"] = []
+                action["alignments"][1]["evidence"] = action["alignments"][1]["evidence"][:1]
+                action["alignments"].append(extra)
+                return CompletionResult(json.dumps(action), completion.model, completion.finish_reason, completion.usage)
+            return completion
+
+        self.assertEqual(self.run_cli(response=response, change_analysis=True), (0, 3))
+        split = next(row for row in observed if row["relationship"] == "one_to_many")
+        self.assertEqual(len(split["previous_ids"]), 1)
+        self.assertEqual(len(split["current_ids"]), 2)
+        self.assertEqual(len(observed), 2)
+        saved = next(row for row in self.saved_report()["alignments"] if row["match_id"] == split["match_id"])
+        self.assertEqual(saved["change_analysis"]["llm"], "Modified")
+        self.assertEqual(len(saved["evidence"]), 3)
+
+    def test_uncertain_llm_change_returns_null_without_extra_fields(self):
+        def response(prompt, **kwargs):
+            result = self.response(prompt, **kwargs)
+            action = json.loads(result.text)
+            for entry in action.get("analyses", []):
+                entry["llm"] = None
+            return CompletionResult(json.dumps(action), result.model, result.finish_reason, result.usage)
+
+        self.assertEqual(self.run_cli(response=response, change_analysis=True), (0, 3))
+        for row in self.saved_report()["alignments"]:
+            self.assertEqual(row["status"], "ai_verified")
+            self.assertEqual(row["change_analysis"]["status"], "needs_review")
+            self.assertIsNone(row["change_analysis"]["final_taxonomy"])
+            self.assertIsNone(row["change_analysis"]["llm"])
+            self.assertEqual(set(row["change_analysis"]), set(module.empty_change_analysis()))
+        self.assertEqual(self.run_cli(change_analysis=True), (0, 0))
+
+    def test_change_api_failure_preserves_alignment_and_retry_uses_cached_work(self):
+        def response(prompt, **kwargs):
+            if json.loads(prompt).get("change_analysis"):
+                raise LLMError("Classifier service unavailable.")
+            return self.response(prompt, **kwargs)
+
+        self.assertEqual(self.run_cli(response=response, change_analysis=True), (1, 3))
+        report = self.saved_report()
+        self.assertTrue(report["run_complete"])
+        self.assertEqual(report["counts"], {"ai_verified": 3})
+        self.assertFalse(report["change_analysis_summary"]["complete"])
+        self.assertEqual(self.run_cli("--retry-failed", change_analysis=True), (0, 1))
+        self.assertTrue(self.saved_report()["change_analysis_summary"]["complete"])
+
+    def test_regrouping_clears_analysis_inherited_from_only_one_member(self):
+        before, x, y = "amd_2023_7_D001", "amd_2024_7_D001", "amd_2024_7_D002"
+        rows = [self.supported_decision([before], [x]), self.supported_decision([before], [y])]
+        for row in rows:
+            row["change_analysis"] = {**module.empty_change_analysis(), "status": "completed", "final_taxonomy": "Modified"}
+        grouped = module.consolidate_alignments(rows, self.data())
+        self.assertEqual(len(grouped), 1)
+        self.assertNotIn("change_analysis", grouped[0])
+
+    def test_change_classifier_cannot_search_outside_the_finalized_groups(self):
+        attempts = 0
+
+        def response(prompt, **kwargs):
+            nonlocal attempts
+            payload = json.loads(prompt)
+            if payload.get("change_analysis"):
+                attempts += 1
+                if attempts == 1:
+                    return CompletionResult(json.dumps({"action": "search", "queries": [{"year": "2023", "query": "other topics"}]}),
+                                            "test-model", "stop", {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125})
+                self.assertIn("validation_error", payload["history"][-1])
+            return self.response(prompt, **kwargs)
+
+        self.assertEqual(self.run_cli(response=response, change_analysis=True), (0, 4))
+        self.assertEqual(attempts, 2)
+        self.assertEqual(self.saved_report()["change_analysis_summary"]["taxonomy_counts"], {"Modified": 3})
+        trace = next((self.root / "alignments/amd/2023-2024/traces").glob("change_analysis_*.json"))
+        self.assertTrue(all("observation" not in step for step in json.loads(trace.read_text())))
 
     def test_unlimited_api_retries_recover_rate_limits_and_keep_unknown_usage_reserves(self):
         attempts = 0
@@ -415,8 +804,8 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(self.run_cli(), (0, 2))
         output = self.root / "alignments/amd/2023-2024"
         report = self.saved_report()
-        analysis = {"status": "completed", "lexical": {"test_score": 0.8}, "semantic": None,
-                    "llm": None, "final_taxonomy": ["test_label"]}
+        analysis = {"status": "completed", "lexical": None, "semantic": None,
+                    "llm": "Modified", "final_taxonomy": None}
         report["alignments"][0]["change_analysis"] = deepcopy(analysis)
         module.write_alignment_json_reports(output, report)
         self.assertEqual(self.run_cli(), (0, 0))
@@ -436,7 +825,7 @@ class AlignmentTests(unittest.TestCase):
         report = self.saved_report()
         row = next(row for row in report["alignments"] if row["status"] == "needs_review")
         match_id = row["match_id"]
-        analysis = {**module.empty_change_analysis(), "status": "completed", "lexical": {"score": 0.5}}
+        analysis = {**module.empty_change_analysis(), "status": "completed", "llm": "Modified"}
         row["change_analysis"] = analysis
         module.write_alignment_json_reports(output, report)
         self.assertEqual(self.run_cli("--max-steps", "1", response=self.invalid_citation_response), (0, 0))
@@ -456,7 +845,7 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(report["counts"], {"unmatched": 6})
         row = report["alignments"][0]
         match_id = row["match_id"]
-        analysis = {**module.empty_change_analysis(), "status": "completed", "lexical": {"score": 0.5}}
+        analysis = {**module.empty_change_analysis(), "status": "completed", "llm": "Modified"}
         row["change_analysis"] = analysis
         module.write_alignment_json_reports(output, report)
         self.assertEqual(self.run_cli(response=response), (0, 0))
@@ -468,7 +857,7 @@ class AlignmentTests(unittest.TestCase):
         output = self.root / "alignments/amd/2023-2024"
         report = self.saved_report()
         report["schema_version"] = "7"
-        analysis = {**module.empty_change_analysis(), "status": "completed", "lexical": {"score": 0.5}}
+        analysis = {**module.empty_change_analysis(), "status": "completed", "llm": "Modified"}
         report["alignments"][0]["change_analysis"] = analysis
         write_json(output / "alignments.json", report)
         legacy = {}
@@ -1521,6 +1910,10 @@ class AlignmentTests(unittest.TestCase):
         report = self.saved_report()
         self.assertEqual(report["counts"], {"auto_matched": 3})
         self.assertEqual(report["coverage"]["pending_disclosure_ids"], [])
+        self.assertEqual(report["change_analysis_summary"]["taxonomy_counts"], {"Unchanged": 3})
+        for row in report["alignments"]:
+            self.assertEqual(row["change_analysis"]["llm"], "Unchanged")
+            self.assertIsNone(row["change_analysis"]["final_taxonomy"])
         self.assertEqual(self.output("token_usage.json")["reported_tokens"]["total_tokens"], 0)
         self.assertEqual(self.output("proposed_groups.json"), [])
         self.assertEqual(self.run_cli(), (0, 0))

@@ -5,7 +5,7 @@
 ## 1. Purpose and implementation status
 
 Link saved disclosures for the same company across two fiscal years, within the
-same SEC Item. The output supports a future downstream change-analysis stage.
+same SEC Item, then classify changes after the alignment is finalized.
 Inputs come from [disclosure extraction](ZIYANG_disclosure_extraction.md).
 The extraction pipeline now consolidates candidates across all batches in each
 split subsection before alignment. It preserves source sentences and exports
@@ -17,12 +17,15 @@ does not bypass changed input hashes.
 
 Implemented: exact-text routing, local candidate retrieval, LangGraph matching
 and verification agents, bounded automatic repair, supported overlapping links,
-source validation, parallel jobs, two final JSON outputs and durable resume state. Both agents use the
+source validation, parallel jobs, two final JSON outputs, durable resume state,
+and downstream change taxonomy. Matching, verification and change-analysis roles use the
 configured model with different prompts. LangGraph coordinates the workflow; it
 does not train the model or guarantee fewer review cases or faster API calls.
 
-Not implemented: lexical/semantic/LLM change classification, materiality scoring,
-and a human-in-the-loop review interface. `change_analysis` is a placeholder.
+LLM change classification runs only for `ai_verified` rows. `auto_matched` and
+validated `unmatched` rows use deterministic logic. `needs_review` alignment rows
+are deferred. Separate lexical/embedding scores, materiality scoring and a
+human-in-the-loop review interface are not implemented.
 
 ## 2. Code and workflow
 
@@ -39,6 +42,7 @@ and a human-in-the-loop review interface. `change_analysis` is a placeholder.
 | [`agents/alignment_prompts.py`](../src/sec_disclosure/agents/alignment_prompts.py) | Matching and verification prompts |
 | [`agents/alignment_repair.py`](../src/sec_disclosure/agents/alignment_repair.py) | Incremental verifier repair and saved-run import |
 | [`agents/alignment_grouping.py`](../src/sec_disclosure/agents/alignment_grouping.py) | Consolidate supported splits/merges, preserve original links and check conflicts |
+| [`agents/change_analysis.py`](../src/sec_disclosure/agents/change_analysis.py) | Finalized-group change classification, logical routing, citations and resumable results |
 
 ```mermaid
 flowchart TD
@@ -59,6 +63,8 @@ flowchart TD
     D --> J
     J --> K[alignments.json: AI-verified, automatic and unmatched]
     J --> L[needs_review.json: unresolved decisions]
+    K --> M[Change analysis: LLM for AI-verified; logic for exact and unmatched]
+    M --> N[Update change_analysis in the same final JSON files]
 ```
 
 The standalone coordinator runs one job at a time by default. `--workers` allows independent
@@ -131,10 +137,10 @@ To extract and then align automatically, use `extract_disclosures.py --years
 The extraction runner waits for every selected year to complete and forwards
 its disclosure output root and shared retry settings to alignment.
 The combined command also inherits extraction's effective API concurrency:
-3 active years × 10 batches per year gives up to 30 alignment workers per pair,
+3 active years × 6 batches per year gives up to 18 alignment workers per pair,
 reduced by any smaller `--max-concurrent-requests` cap. Adjacent pairs run
 concurrently, with up to 3 active comparisons (`--alignment-pair-workers`).
-Thus 2023–2024 and 2024–2025 both start after extraction, sharing 30 simultaneous
+Thus 2023–2024 and 2024–2025 both start after extraction, sharing 18 simultaneous
 API requests in total by default. The shared limiter also coordinates request
 starts and HTTP 429 cooldowns across pairs. Each pair retains its own output
 directory, cache, request budget and token budget; a stopped pair does not cancel
@@ -386,7 +392,7 @@ and empty strings are meaningful values, not missing/null fields.
 | `metadata_repairs` | optional array<string> | Review fields repaired locally, e.g. `needs_review`, `review_reason` |
 | `validation_errors` | optional array<object> | Unresolved proposal diagnostics: event references and exact error records |
 | `grouping` | optional object | String `method` and `source_alignments[]` preserving original IDs, relationships, evidence, status and optional repair/exact metadata |
-| `change_analysis` | object | Required placeholder described below |
+| `change_analysis` | object | Required downstream result described below |
 
 `evidence` contains selected citations, not necessarily all original disclosure
 text. To analyze complete selected content, join each side's IDs to the original
@@ -403,6 +409,8 @@ assignment; an empty side alone is insufficient. Its limitations remain in
 contradictions or unfinished jobs. Missing review metadata alone preserves a
 proposed link; it does not certify it as accepted.
 
+### Change analysis
+
 Every row initially has this **complete object**, not a calculated result:
 
 ```json
@@ -415,22 +423,101 @@ Every row initially has this **complete object**, not a calculated result:
 }
 ```
 
-Inside `change_analysis`, all five fields are required. `status` is currently the
-string `not_started`; the other fields are nullable and initially null. Their
-future result schemas/status values are not implemented. Do not assume exact
-matches have already been classified as unchanged. `unmatched_type` identifies
-introduced/removed disclosures within the saved comparison; it is separate from
-the future change-analysis taxonomy. `change_type` is not emitted by this workflow.
+All five fields remain required. Normal completed CLI runs now fill this object
+automatically **after verification, grouping and global assignment checks**.
+Alignment status and change-analysis status are independent; a classification
+failure does not undo a verified correspondence.
 
-A downstream classifier should load all decisions with
-`load_alignment_report(output)`, update a finalized row's `change_analysis` by
-`match_id`, then write the two files with
-`write_alignment_json_reports(output, report)`. Both helpers make no API calls;
-the writer produces no Markdown. The loader also accepts older combined reports.
-Cached regeneration preserves analysis only when the match ID and remaining row
-are unchanged. IDs are not stable across fresh model runs; keep the run/company/
-year context. Consolidation can leave ID gaps and preserves original identifiers
-in `grouping.source_alignments`.
+| Alignment status | Analysis method | `llm` label |
+| --- | --- | --- |
+| `auto_matched` | Logic, after checking the exact full-text proof | `Unchanged` |
+| `unmatched`, current-only | Logic | `New` |
+| `unmatched`, previous-only | Logic | `Removed` |
+| `ai_verified` | LLM, comparing the complete finalized group | `Expanded`, `Reduced`, `Modified`, `Reworded` or `Unchanged` |
+| `needs_review` | Deferred; no change-analysis call | null |
+
+Every exported `change_analysis` contains **exactly five fields**. Labels computed
+by logic and by the model both use the `llm` field:
+
+```json
+{
+  "status": "completed",
+  "lexical": null,
+  "semantic": null,
+  "llm": "Removed",
+  "final_taxonomy": null
+}
+```
+
+`lexical`, `semantic` and `final_taxonomy` always remain null. `llm` is a single
+label string, or null while pending/under review. `status` is `not_started`,
+`completed` or `needs_review`. No method, fingerprint, explanation or citation
+object is added inside this result.
+
+`New`/`Removed` describe the saved comparison's disclosure coverage, not filing-wide
+absence or the start/end of a real-world event. Qualifications remain on the
+alignment row in `unmatched_notes`. Exact equality uses the existing normalization
+policy. The existing alignment evidence and source validation remain in place.
+
+The classifier reads complete selected original content for the finalized group.
+Each disclosure is sent once per job, without duplicating its text as a summary,
+content and sentence array. It compares splits/merges as one group. `Modified`
+covers altered existing figures, dates, outcomes, factual status, risks or policies,
+and mixed additions/removals. `Expanded`/`Reduced` cover substantive additions or
+removals with retained assertions unchanged. `Reworded` preserves meaning with
+changed wording; `Unchanged` allows formatting/grouping/order differences.
+
+The model returns only a match ID and label per group. It does not generate
+explanations, citations or review flags for change analysis. Valid labels are saved
+even when other entries are invalid or missing. Bounded correction requests contain
+only unresolved groups and their source content; foreign or already resolved IDs
+are ignored, and duplicate/invalid entries remain unresolved. A null label or
+exhausted corrections leaves `status: needs_review` and `llm: null`, without
+changing alignment status. The classifier does not rematch disclosures.
+
+Fingerprints and completed labels are stored internally under
+`change_analysis_cache/`, bound to original sources, finalized decisions and the
+model/prompt/settings. They are not part of exported `change_analysis`.
+
+The report's `change_analysis_summary` contains eligibility, method/status and
+taxonomy counts, deferred alignment-review counts, completion and operational error
+information. `run_complete` continues to describe alignment; use the summary's
+`complete` and `by_status` for change-analysis progress and review cases.
+
+Change jobs use the same `--workers`, pacing, request ledger and token/request
+limits as alignment. Up to **12 whole groups** from one SEC Item share a job, with
+a **48,000-character source-record target**; a group larger than that target stays
+intact. The label-only completion limit is sized to the supplied IDs, with at least
+1,024 tokens of room unless `--max-tokens` is lower, and never exceeds that flag.
+Matching and verification keep their configured completion limits. Startup logs
+show pending group count, batch count and configured/usable workers.
+`token_usage.json` totals include both stages, with classifier usage under
+`by_agent.change_analysis`. A budget/API interruption saves finished results and
+checkpoints accepted labels within unfinished batches; rerun to resume only their
+remaining corrections. A cached result is reused only for unchanged
+source/row/prompt/model/settings fingerprints.
+
+To classify an existing completed saved alignment without rerunning matching or
+verification:
+
+```bash
+.venv/bin/python scripts/align_disclosures.py \
+  --ticker amd --previous-year 2024 --current-year 2025 \
+  --output-dir data/alignments/amd/2024-2025 --change-analysis-only
+```
+
+Provide the original `--data-dir` and `--disclosures-dir` when nondefault paths
+were used. The saved manifest must match the current source inputs. Add
+`--skip-change-analysis` to a normal run for alignment only. `--dry-run`,
+`--regroup-only`, `--refresh-extraction-policy` and `--offline-repair` do not invoke
+the classifier. Regrouping or a changed alignment decision invalidates its analysis.
+Historical fixtures may still contain the initial null object until backfilled.
+
+`load_alignment_report(output)` reads both final files; the JSON writer remains
+a local operation. Cached regeneration preserves analysis only when the match ID
+and remaining row are unchanged. IDs are not stable across fresh model runs;
+keep the run/company/year context. Consolidation can leave ID gaps and preserves
+original identifiers in `grouping.source_alignments`.
 
 ### Supporting files
 
