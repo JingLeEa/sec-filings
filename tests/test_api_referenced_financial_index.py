@@ -176,7 +176,7 @@ class CachedMeiTests(unittest.TestCase):
             with redirect_stdout(out), redirect_stderr(err), \
                     patch.object(pipeline.api, 'fetch_xbrl_json', side_effect=AssertionError('No paid API requests')):
                 code = pipeline.main(['--filing', str(filing_path), '--xbrl-json', str(response_path),
-                                      '--company', 'MEI', '--year', '2025', '--offline', '--output-dir', tmp])
+                                      '--company', 'MEI', '--year', '2025', '--offline', '--output-dir', tmp, '--no-db'])
             self.assertEqual(code, 0, out.getvalue() + err.getvalue())
             paths = list(Path(tmp).iterdir())
             self.assertEqual([p.name for p in paths], ['mei_2025_api_metrics_with_values.json'])

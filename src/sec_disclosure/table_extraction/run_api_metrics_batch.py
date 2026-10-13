@@ -6,7 +6,8 @@
 
 Uses the existing single-year pipeline, SEC_USER_AGENT and SEC_API_KEY.
 Only yearly metrics JSON files are written to the company output folder.
-Existing regular output files are kept and skipped, without revalidation.
+Yearly exports are saved to PostgreSQL by default. Existing output files are kept
+and imported without downloading again. Use --no-db for the file-only workflow.
 Failures are reported per year; other years are still attempted.
 Add --merge to also combine all yearly outputs by concept after a complete batch.
 """
@@ -42,11 +43,12 @@ def main(argv=None):
                         help='Optional fiscal years; defaults to 2023 2024 2025')
     parser.add_argument('--items', nargs='+', type=str.upper, choices=pipeline.export.membership.SUPPORTED_ITEMS,
                         default=list(pipeline.export.membership.SUPPORTED_ITEMS))
-    parser.add_argument('--output-dir', type=Path, help='Defaults to tests/for_table_development/<company>/')
+    parser.add_argument('--output-dir', type=Path, help='Defaults to data/table_output/<company>/')
     parser.add_argument('--user-agent', help='SEC contact name/email; otherwise uses SEC_USER_AGENT')
     parser.add_argument('--sec-cache', type=Path, help='Override the existing SEC/API download cache directory')
     parser.add_argument('--taxonomy-cache', type=Path, help='Override the official taxonomy cache directory')
     parser.add_argument('--merge', action='store_true', help='Also write one merged JSON by concept after all years are available')
+    parser.add_argument('--no-db', action='store_true', help='Write JSON only; skip PostgreSQL storage')
     args = parser.parse_args(argv)
 
     source_value = (args.ticker or args.cik).strip()
@@ -56,10 +58,13 @@ def main(argv=None):
         source_value = source_value.upper()
     label = args.company or source_value
     slug = pipeline.api.slug(label)
-    output = (args.output_dir or Path('tests/for_table_development') / slug).expanduser()
+    output = (args.output_dir or Path('data/table_output') / slug).expanduser()
     years = sorted(set(args.years))
     common = ['--ticker' if args.ticker else '--cik', source_value,
-              '--company', label, '--output-dir', str(output), '--items', *args.items]
+              '--company', label, '--output-dir', str(output)]
+    if args.no_db:
+        common.append('--no-db')
+    common += ['--items', *args.items]
     for option, value in (('--user-agent', args.user_agent), ('--sec-cache', args.sec_cache),
                           ('--taxonomy-cache', args.taxonomy_cache)):
         if value is not None:
@@ -70,8 +75,14 @@ def main(argv=None):
         target = output / f'{slug}_{year}_api_metrics_with_values.json'
         print(f'\nFY{year} ({index}/{len(years)}) — {label}', flush=True)
         if target.is_file() and not target.is_symlink():
-            print(f'Existing output kept (not revalidated): {target}', flush=True)
-            results.append((year, 'existing', target))
+            try:
+                if not args.no_db:
+                    pipeline.database.load_export(target, label, year, expected_cik=args.cik)
+                print(f'Existing output kept{ " (not revalidated)" if args.no_db else " and saved to PostgreSQL"}: {target}', flush=True)
+                results.append((year, 'existing', target))
+            except (ValueError, OSError, KeyError, TypeError, pipeline.database.DatabaseSaveError) as exc:
+                print(f'FY{year} database save failed: {exc}. Existing JSON kept: {target}', file=sys.stderr, flush=True)
+                results.append((year, 'failed', target))
             continue
         try:
             code = pipeline.main([*common, '--year', str(year)])
@@ -94,6 +105,10 @@ def main(argv=None):
         return 1
     if args.merge:
         from sec_disclosure.table_extraction import merge_api_metrics
+        merged_target = output / merge_api_metrics.merged_filename(label, years)
+        if merged_target.is_file() and not merged_target.is_symlink():
+            print(f'Existing merged output kept (not revalidated): {merged_target}')
+            return 0
         return merge_api_metrics.main(['--company', label, '--years', *map(str, years), '--input-dir', str(output)])
     return 0
 

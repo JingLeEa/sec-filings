@@ -6,8 +6,9 @@
 Default Items: 1, 1A, 7, 8. Live mode uses SEC_USER_AGENT and SEC_API_KEY.
 Use --filing and --xbrl-json together to reuse saved inputs without an API key.
 Each run writes only <company>_<year>_api_metrics_with_values.json;
-existing exports are not replaced.
-Default output folder: tests/for_table_development/<company>/, shared by all years.
+existing exports are not replaced. Yearly exports are saved to PostgreSQL by default.
+Use --no-db for file-only extraction. Reruns import an existing export without downloads.
+Default output folder: data/table_output/<company>/, shared by all years.
 Downloads are cached separately under data/sec_cache/; checks run in memory.
 """
 from __future__ import annotations
@@ -21,6 +22,7 @@ from sec_disclosure.comparison import compare_html_tables as sec
 from sec_disclosure.table_extraction import export_api_metrics as export
 from sec_disclosure.table_extraction import extract_item8_xbrl_api as api
 from sec_disclosure.table_extraction import api_filing_metadata as metadata
+from sec_disclosure.table_extraction import load_xbrl_to_postgres as database
 
 
 def check_output(output, filename):
@@ -92,6 +94,7 @@ def live_inputs(args):
 
 
 def main(argv=None):
+    database.load_environment()
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument('--ticker', help='SEC ticker, e.g. INTC')
@@ -105,11 +108,12 @@ def main(argv=None):
     identity.add_argument('--accession', help='Select a live original 10-K, or supply provenance for a saved raw response')
     parser.add_argument('--items', nargs='+', type=str.upper, choices=export.membership.SUPPORTED_ITEMS,
                         default=list(export.membership.SUPPORTED_ITEMS))
-    parser.add_argument('--output-dir', type=Path, help='Output folder; defaults to tests/for_table_development/<company>, shared by all years')
+    parser.add_argument('--output-dir', type=Path, help='Output folder; defaults to data/table_output/<company>, shared by all years')
     parser.add_argument('--user-agent', default=os.environ.get('SEC_USER_AGENT', ''), help='SEC contact name/email; defaults to SEC_USER_AGENT')
     parser.add_argument('--sec-cache', type=Path, default=Path('data/sec_cache'), help='Internal SEC and API download cache, separate from the output folder')
     parser.add_argument('--taxonomy-cache', type=Path, default=Path('data/taxonomy_cache'))
     parser.add_argument('--offline', action='store_true', help='Require saved inputs and the cached official taxonomy; no downloads')
+    parser.add_argument('--no-db', action='store_true', help='Write JSON only; skip PostgreSQL storage')
     args = parser.parse_args(argv)
     try:
         if not 1900 <= args.year <= 2200:
@@ -123,8 +127,15 @@ def main(argv=None):
         items = export.membership.normalize_items(args.items)
         label = args.company or args.ticker or args.cik or args.filing.stem
         filename = f'{api.slug(label)}_{args.year}_api_metrics_with_values.json'
-        output = (args.output_dir or Path('tests/for_table_development') / api.slug(label)).expanduser()
+        output = (args.output_dir or Path('data/table_output') / api.slug(label)).expanduser()
+        target = output / filename
+        if not args.no_db and target.is_file() and not target.is_symlink():
+            database.load_export(target, label, args.year, expected_cik=args.cik)
+            print(f'Existing export kept and saved to PostgreSQL: {target}')
+            return 0
         check_output(output, filename)  # Fail before network requests or paid API calls.
+        if not args.no_db:
+            database.prepare_database()
         if args.filing:
             filing, response = args.filing.expanduser(), args.xbrl_json.expanduser()
             parameters = api.request_parameters(args.filing_url, args.accession) if args.filing_url or args.accession else None
@@ -144,9 +155,11 @@ def main(argv=None):
         print('3/3 Checking Item membership and exporting official metrics, values and source labels...', flush=True)
         if export.main(command, metrics_filename=filename) != 0:
             return 1
+        if not args.no_db:
+            database.load_export(target, label, args.year, expected_cik=args.cik)
         print(f'Pipeline complete. Final output: {output / filename}')
         return 0
-    except (ValueError, OSError, KeyError, TypeError) as exc:
+    except (ValueError, OSError, KeyError, TypeError, database.DatabaseSaveError) as exc:
         print(f'Error: {exc}', file=sys.stderr)
         return 1
 

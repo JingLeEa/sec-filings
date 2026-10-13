@@ -12,14 +12,52 @@ from sec_disclosure.table_extraction import run_api_metrics_batch as batch
 from sec_disclosure.table_extraction import merge_api_metrics
 
 
-def run(args):
+def run(args, *, save_to_db=False):
     stdout, stderr = io.StringIO(), io.StringIO()
     with redirect_stdout(stdout), redirect_stderr(stderr):
-        code = batch.main(args)
+        code = batch.main(args if save_to_db else [*args, '--no-db'])
     return code, stdout.getvalue() + stderr.getvalue()
 
 
 class BatchPipelineTests(unittest.TestCase):
+    def test_rerun_imports_yearly_files_and_preserves_existing_merged_export(self):
+        with TemporaryDirectory() as tmp:
+            for year in batch.DEFAULT_YEARS:
+                (Path(tmp) / f'intel_{year}_api_metrics_with_values.json').write_text('existing export')
+            merged = Path(tmp) / 'intel_2023_2025_merged_api_metrics_with_values.json'
+            merged.write_text('keep merged bytes')
+            with patch.object(batch.pipeline.database, 'load_export') as save, \
+                    patch.object(merge_api_metrics, 'main', side_effect=AssertionError('Do not overwrite merged export')):
+                code, log = run(['--ticker', 'INTC', '--company', 'Intel', '--output-dir', tmp, '--merge'], save_to_db=True)
+            self.assertEqual(code, 0, log)
+            self.assertEqual(save.call_count, 3)
+            self.assertEqual(merged.read_text(), 'keep merged bytes')
+
+    def test_default_imports_existing_years_without_paid_calls_and_then_merges(self):
+        with TemporaryDirectory() as tmp:
+            for year in batch.DEFAULT_YEARS:
+                (Path(tmp) / f'intel_{year}_api_metrics_with_values.json').write_text('existing export')
+            with patch.object(batch.pipeline.database, 'load_export') as save, \
+                    patch.object(batch.pipeline, 'main', side_effect=AssertionError('No extraction')), \
+                    patch.object(merge_api_metrics, 'main', return_value=0) as merge:
+                code, log = run(['--ticker', 'INTC', '--company', 'Intel', '--output-dir', tmp, '--merge'], save_to_db=True)
+            self.assertEqual(code, 0, log)
+            self.assertEqual([call.args[2] for call in save.call_args_list], [2023, 2024, 2025])
+            merge.assert_called_once()
+
+    def test_existing_export_database_failure_is_reported_and_blocks_merge(self):
+        with TemporaryDirectory() as tmp:
+            for year in batch.DEFAULT_YEARS:
+                (Path(tmp) / f'intel_{year}_api_metrics_with_values.json').write_text('existing export')
+            with patch.object(batch.pipeline.database, 'load_export',
+                              side_effect=[None, batch.pipeline.database.DatabaseSaveError('DB unavailable'), None]), \
+                    patch.object(merge_api_metrics, 'main') as merge:
+                code, log = run(['--ticker', 'INTC', '--company', 'Intel', '--output-dir', tmp, '--merge'], save_to_db=True)
+            self.assertEqual(code, 1, log)
+            self.assertIn('FY2024: failed', log)
+            self.assertIn('FY2025: existing', log)
+            merge.assert_not_called()
+
     def test_ticker_alone_uses_three_default_years_and_shared_company_folder(self):
         with patch.object(batch.pipeline, 'main', return_value=0) as single, \
                 patch.object(Path, 'is_file', return_value=False):
@@ -29,7 +67,7 @@ class BatchPipelineTests(unittest.TestCase):
         self.assertEqual([args[args.index('--year') + 1] for args in commands], ['2023', '2024', '2025'])
         for args in commands:
             self.assertEqual(args[args.index('--ticker') + 1], 'INTC')
-            self.assertEqual(args[args.index('--output-dir') + 1], 'tests/for_table_development/intc')
+            self.assertEqual(args[args.index('--output-dir') + 1], 'data/table_output/intc')
             self.assertEqual(args[args.index('--items') + 1:args.index('--year')], ['1', '1A', '7', '8'])
 
     def test_options_forwarded_and_duplicate_years_run_once(self):
@@ -130,7 +168,7 @@ class BatchPipelineTests(unittest.TestCase):
     def test_three_cached_intel_years_preserve_metric_data_and_write_only_three_outputs(self):
         baselines = {}
         for year in batch.DEFAULT_YEARS:
-            path = Path(f'tests/for_table_development/intel/intel_{year}_api_metrics_with_values.json')
+            path = Path(f'data/table_output/intel/intel_{year}_api_metrics_with_values.json')
             if not path.is_file():
                 self.skipTest(f'Missing baseline: {path}')
             baselines[year] = json.loads(path.read_text())

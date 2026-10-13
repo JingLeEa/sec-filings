@@ -2,7 +2,7 @@
 """Extract untagged financial HTML table metrics for Items 1, 1A and 7.
 
 python3 extract_html_metrics.py --ticker INTC --company Intel --year 2025
-python3 extract_html_metrics.py --api-metrics tests/for_table_development/intel/intel_2025_api_metrics_with_values.json --company Intel --year 2025 --offline
+python3 extract_html_metrics.py --api-metrics data/table_output/intel/intel_2025_api_metrics_with_values.json --company Intel --year 2025 --offline
 
 No sec-api.io request or API key is needed. --api-metrics only locates and
 hash-verifies the original filing already used by that export; amounts come
@@ -41,7 +41,7 @@ def main(argv=None):
     parser.add_argument('--company', help='Folder/filename label, e.g. Intel')
     parser.add_argument('--items', nargs='+', choices=html_metrics.ITEMS, type=str.upper, default=list(html_metrics.ITEMS))
     parser.add_argument('--filing-url', help='Original SEC URL provenance for --filing')
-    parser.add_argument('--output-dir', type=Path, help='Defaults to tests/for_table_development/<company>/')
+    parser.add_argument('--output-dir', type=Path, help='Defaults to data/table_output/<company>/')
     parser.add_argument('--sec-cache', type=Path, default=Path('data/sec_cache'))
     parser.add_argument('--user-agent', default=os.environ.get('SEC_USER_AGENT', ''))
     parser.add_argument('--offline', action='store_true')
@@ -59,7 +59,7 @@ def main(argv=None):
             raise ValueError('--offline requires --filing or --api-metrics.')
         label = args.company or args.ticker or args.cik or (args.filing or args.api_metrics).stem
         slug = sec.slug(label)
-        output = (args.output_dir or Path('tests/for_table_development') / slug).expanduser()
+        output = (args.output_dir or Path('data/table_output') / slug).expanduser()
         target = output / f'{slug}_{args.year}_html_metrics_with_values.json'
         if target.exists() or target.is_symlink():
             raise ValueError(f'Output already exists: {target}. Use a different --output-dir.')

@@ -15,7 +15,7 @@ classification summary.
 
 ```bash
 python3 scripts/extract_html_metrics.py \
-  --api-metrics tests/for_table_development/intel/intel_2025_api_metrics_with_values.json \
+  --api-metrics data/table_output/intel/intel_2025_api_metrics_with_values.json \
   --company Intel --year 2025 --offline
 ```
 
@@ -83,7 +83,7 @@ An existing final output is preserved.
 The default output is:
 
 ```text
-tests/for_table_development/intel/intel_2025_html_metrics_with_values.json
+data/table_output/intel/intel_2025_html_metrics_with_values.json
 ```
 
 Use `--items 7` for a subset of the supported Items. Use a different

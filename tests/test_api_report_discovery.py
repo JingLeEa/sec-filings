@@ -97,7 +97,7 @@ class ReportDiscoveryTests(unittest.TestCase):
                   redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO())):
                 code = runner.main(['--filing', str(source), '--xbrl-json', str(response), '--year', '2023',
                                     '--output-dir', str(output), '--taxonomy-cache', str(tax),
-                                    '--sec-cache', str(cache), '--offline'])
+                                    '--sec-cache', str(cache), '--offline', '--no-db'])
             self.assertEqual(code, 0)
             filename = 'primary_2023_api_metrics_with_values.json'
             self.assertEqual([p.name for p in output.iterdir()], [filename])

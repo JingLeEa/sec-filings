@@ -12,7 +12,7 @@ python3 scripts/extract_html_metrics.py --ticker WFC --company WellsFargo --year
 ```
 
 This uses `SEC_USER_AGENT` and writes only
-`tests/for_table_development/wellsfargo/wellsfargo_2025_html_metrics_with_values.json`.
+`data/table_output/wellsfargo/wellsfargo_2025_html_metrics_with_values.json`.
 It shares the API pipeline's SEC selection and verified incorporated-report
 handling, supports `--cik` and `--accession`, and does not call sec-api.io.
 Only financial/quantitative table records are exported. Narrative/review table
@@ -75,18 +75,27 @@ label; `--ticker INTC` alone uses the `intc` folder. A CIK can be supplied inste
 of a ticker. The batch uses the existing `SEC_USER_AGENT` and `SEC_API_KEY`
 environment variables and the same API extraction pipeline for each year.
 
+Start PostgreSQL first with `docker compose up -d`. By default each yearly export
+is also saved to the Docker database. Missing XBRL tables are installed automatically.
+Connection settings use `DATABASE_URL` or `POSTGRES_*` from the shell/repository
+`.env`; see [XBRL database schema](XBRL_DATABASE_SCHEMA.md). Add `--no-db` for
+file-only extraction.
+
 With `--company Intel`, the three outputs are:
 
 ```text
-tests/for_table_development/intel/intel_2023_api_metrics_with_values.json
-tests/for_table_development/intel/intel_2024_api_metrics_with_values.json
-tests/for_table_development/intel/intel_2025_api_metrics_with_values.json
+data/table_output/intel/intel_2023_api_metrics_with_values.json
+data/table_output/intel/intel_2024_api_metrics_with_values.json
+data/table_output/intel/intel_2025_api_metrics_with_values.json
 ```
 
-Years run sequentially. Existing regular output files are kept and skipped
-without revalidation; a failed year is reported and later years are still
+Years run sequentially. Existing regular output files are kept and imported into
+PostgreSQL after checking their structure and original cached sources, without
+new API calls. With `--no-db`, existing exports are skipped without revalidation.
+A failed extraction or database save is reported and later years are still
 attempted. The command exits nonzero if any attempted year fails, making a
-partial run visible. Rerunning attempts only the missing outputs. To create
+partial run visible. Rerunning creates missing outputs and retries database saves.
+The JSON is kept if the database save fails. To create
 fresh exports, select a new `--output-dir`. The console shows a per-year summary;
 no batch report or other extra output JSON is created. Optional `--years 2024 2025`
 overrides the default years, and `--items 7 8` narrows the requested Items.
@@ -106,9 +115,11 @@ python3 scripts/merge_api_metrics.py --company Intel
 ```
 
 The merged file is
-`tests/for_table_development/intel/intel_2023_2025_merged_api_metrics_with_values.json`.
+`data/table_output/intel/intel_2023_2025_merged_api_metrics_with_values.json`.
 The original yearly files are preserved. Existing merged files are also
-protected; use the merger's `--output path/to/new.json` to write a new copy.
+protected; the batch keeps an existing merged file without revalidation. Use the
+standalone merger's `--output path/to/new.json` to write a new copy. The database
+stores original yearly records; the merged JSON remains a derived output.
 The merger requires every requested year and matching issuer/Item selection;
 an incomplete batch does not produce a merged result.
 
@@ -142,16 +153,17 @@ This checks API facts against Items **1, 1A, 7 and 8**, adds official US-GAAP
 labels and definitions, and writes **only one output file per run** by default:
 
 ```text
-tests/for_table_development/micron/micron_2023_api_metrics_with_values.json
+data/table_output/micron/micron_2023_api_metrics_with_values.json
 ```
 
 The filename is `<company>_<year>_api_metrics_with_values.json`, using the
 lowercase output label supplied by `--company` (or the ticker/CIK/input stem
 when omitted). For Intel FY2023 it is `intel_2023_api_metrics_with_values.json`.
-All years for a company share `tests/for_table_development/<company>/`; the year
+All years for a company share `data/table_output/<company>/`; the year
 stays in each filename. Use the same `--company` label across runs to keep them
 together. The JSON structure is unchanged. Existing files are preserved, and a
-run targeting an existing filename stops before any downloads or API calls.
+run targeting an existing filename imports that file into PostgreSQL without
+downloads or API calls. With `--no-db`, an existing filename remains an error.
 
 Membership checks and export validation still run in memory. The existing
 `metrics[]` and `value[]` structure, dimensions and source labels are retained.

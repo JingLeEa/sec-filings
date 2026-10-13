@@ -2,7 +2,7 @@
 
 This guide describes the current API pipeline output for Items **1, 1A, 7 and 8**.
 The schema remains `api-metrics-1.0` through exporter `1.11.0`. Examples use the
-[Intel FY2023 output](../tests/for_table_development/intel/intel_2023_api_metrics_with_values.json).
+[Intel FY2023 output](../data/table_output/intel/intel_2023_api_metrics_with_values.json).
 
 The pipeline names its final file `<company>_<year>_api_metrics_with_values.json`,
 for example `intel_2023_api_metrics_with_values.json`. Earlier outputs named
@@ -12,7 +12,7 @@ still uses that generic name when called directly.
 Each company has one folder, with a separate file for each filing year:
 
 ```text
-tests/for_table_development/intel/
+data/table_output/intel/
 ├── intel_2023_api_metrics_with_values.json
 ├── intel_2024_api_metrics_with_values.json
 └── intel_2025_api_metrics_with_values.json
@@ -21,6 +21,11 @@ tests/for_table_development/intel/
 Use the same `--company` label across runs. The pipeline preserves existing
 files and refuses to overwrite the same company/year filename. Use a different
 `--output-dir` for an alternative Item selection for that company and year.
+
+The single-year and batch pipeline commands also save each yearly export to
+PostgreSQL by default. Start the Docker database with `docker compose up -d`.
+Reruns import existing files without another API request. Use `--no-db` for
+file-only extraction; see [XBRL database schema](XBRL_DATABASE_SCHEMA.md).
 
 Share this guide together with the JSON when asking a teammate or AI to explain
 the data. The JSON supplies the actual company figures; this guide explains

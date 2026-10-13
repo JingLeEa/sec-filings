@@ -29,14 +29,53 @@ def setup(root):
     return filing, response, output, common, data, payload
 
 
-def run(args):
+def run(args, *, save_to_db=False):
     stdout, stderr = io.StringIO(), io.StringIO()
     with redirect_stdout(stdout), redirect_stderr(stderr):
-        code = runner.main(args)
+        code = runner.main(args if save_to_db else [*args, '--no-db'])
     return code, stdout.getvalue() + stderr.getvalue()
 
 
 class OneShotPipelineTests(unittest.TestCase):
+    def test_default_saves_export_to_postgres_after_extraction(self):
+        with TemporaryDirectory() as tmp:
+            filing, response, output, common, _, _ = setup(Path(tmp))
+            with patch.object(runner.database, 'prepare_database') as prepare, \
+                    patch.object(runner.database, 'load_export') as save:
+                code, log = run(['--filing', str(filing), '--xbrl-json', str(response),
+                                 '--company', 'Intel', '--offline', *common], save_to_db=True)
+            self.assertEqual(code, 0, log)
+            prepare.assert_called_once_with()
+            save.assert_called_once_with(output / 'intel_2023_api_metrics_with_values.json',
+                                         'Intel', 2023, expected_cik=None)
+
+    def test_database_failure_keeps_json_and_retry_imports_without_extraction(self):
+        with TemporaryDirectory() as tmp:
+            filing, response, output, common, _, _ = setup(Path(tmp))
+            args = ['--filing', str(filing), '--xbrl-json', str(response), '--company', 'Intel', '--offline', *common]
+            with patch.object(runner.database, 'prepare_database'), \
+                    patch.object(runner.database, 'load_export', side_effect=runner.database.DatabaseSaveError('DB unavailable')):
+                code, log = run(args, save_to_db=True)
+            self.assertEqual(code, 1, log)
+            target = output / 'intel_2023_api_metrics_with_values.json'
+            original = target.read_bytes()
+            with patch.object(runner.database, 'load_export') as save, \
+                    patch.object(runner.export, 'main', side_effect=AssertionError('Do not extract twice')):
+                code, log = run(args, save_to_db=True)
+            self.assertEqual(code, 0, log)
+            save.assert_called_once()
+            self.assertEqual(target.read_bytes(), original)
+
+    def test_database_is_checked_before_paid_api_calls(self):
+        with TemporaryDirectory() as tmp:
+            with patch.object(runner.database, 'prepare_database',
+                              side_effect=runner.database.DatabaseSaveError('DB unavailable')), \
+                    patch.object(runner, 'live_inputs', side_effect=AssertionError('No paid calls')):
+                code, log = run(['--ticker', 'INTC', '--year', '2023', '--output-dir', tmp], save_to_db=True)
+            self.assertEqual(code, 1, log)
+            self.assertIn('DB unavailable', log)
+            self.assertFalse(list(Path(tmp).glob('*.json')))
+
     def test_empty_export_is_an_error_and_writes_no_deliverable(self):
         with TemporaryDirectory() as tmp:
             filing, response, output, common, _, _ = setup(Path(tmp))

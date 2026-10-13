@@ -89,6 +89,7 @@ Run the API metrics pipeline for FY2023–FY2025, optionally merging the yearly 
 
 ```bash
 export SEC_API_KEY="your-sec-api-key"
+docker compose up -d
 python3 scripts/run_api_metrics_batch.py --ticker INTC --company Intel --merge
 ```
 
@@ -98,7 +99,9 @@ For untagged quantitative HTML tables:
 python3 scripts/extract_html_metrics.py --ticker WFC --company WellsFargo --year 2025
 ```
 
-Both commands use `SEC_USER_AGENT` set above. See the usage and schema guides below for offline inputs, source verification, and output paths.
+Both commands use `SEC_USER_AGENT` set above. The API command also saves yearly
+XBRL exports to PostgreSQL by default; use `--no-db` for file-only extraction.
+See the usage and schema guides below for offline inputs, source verification, and output paths.
 
 ## Documentation
 
@@ -110,6 +113,7 @@ Both commands use `SEC_USER_AGENT` set above. See the usage and schema guides be
 - [API Metrics JSON](docs/API_EXTRACTION_TABLE_OUTPUT_METRICS_GUIDE.md): yearly metric schema and verification fields.
 - [HTML Metrics](docs/HTML_METRICS_GUIDE.md): verified filing selection and untagged quantitative tables.
 - [Merged API Metrics](docs/MERGED_API_METRICS_GUIDE.md): concept grouping and conflicting comparative values.
+- [XBRL Database Schema](docs/XBRL_DATABASE_SCHEMA.md): PostgreSQL tables for yearly API/XBRL metrics, values and source evidence.
 
 ## Development
 
@@ -119,4 +123,4 @@ Run the test suite:
 PYTHONPATH=src python3 -m unittest discover -s tests
 ```
 
-Generated files are written under `data/` or `tests/for_table_development/`, both ignored by Git.
+Generated files are written under `data/`, which is ignored by Git. Table metrics default to `data/table_output/<company>/`.

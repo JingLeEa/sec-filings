@@ -81,7 +81,7 @@ def cached_test(company, year, document):
             report = result['verification']['documents']['report1']
             self.assertEqual(report['boundary_evidence']['items'], ['8'])
             self.assertTrue(all(r['item'] != '8' for r in report['incorporated_sections']))
-        baseline = Path('tests/for_table_development') / company / filename
+        baseline = Path('data/table_output') / company / filename
         if baseline.exists():
             old = json.loads(baseline.read_text())
             self.assertEqual(result['metrics'], old['metrics'])

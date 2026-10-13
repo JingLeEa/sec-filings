@@ -1,7 +1,7 @@
 # Guide to the merged API metrics JSON
 
 This guide explains the output of [merge_api_metrics.py](../scripts/merge_api_metrics.py),
-using the [merged Intel FY2023–FY2025 file](../tests/for_table_development/intel/intel_2023_2025_merged_api_metrics_with_values.json).
+using the [merged Intel FY2023–FY2025 file](../data/table_output/intel/intel_2023_2025_merged_api_metrics_with_values.json).
 It describes schema `api-metrics-merged-1.0`, merger version `1.1.0`.
 For the original yearly format, see the [single-year API metrics guide](API_EXTRACTION_TABLE_OUTPUT_METRICS_GUIDE.md).
 
@@ -272,7 +272,7 @@ import json
 from pathlib import Path
 
 path = Path(
-    "tests/for_table_development/intel/"
+    "data/table_output/intel/"
     "intel_2023_2025_merged_api_metrics_with_values.json"
 )
 data = json.loads(path.read_text(encoding="utf-8"))

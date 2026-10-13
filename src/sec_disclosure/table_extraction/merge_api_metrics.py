@@ -3,7 +3,7 @@
 
     python3 merge_api_metrics.py --company Intel
 
-Defaults to FY2023–FY2025 under tests/for_table_development/<company>/.
+Defaults to FY2023–FY2025 under data/table_output/<company>/.
 No downloads or API calls. Original yearly files are never overwritten.
 """
 from __future__ import annotations
@@ -199,15 +199,20 @@ def merge_documents(inputs):
     }
 
 
+def merged_filename(company, years):
+    years = sorted(set(years))
+    year_label = (f'{years[0]}_{years[-1]}' if len(years) > 1 and years == list(range(years[0], years[-1] + 1))
+                  else '_'.join(map(str, years)))
+    return f'{slug(company)}_{year_label}_merged_api_metrics_with_values.json'
+
+
 def merge_company(company, years=DEFAULT_YEARS, input_dir=None, output=None):
     years = sorted(set(years))
     if not years or any(not isinstance(y, int) or not 1900 <= y <= 2200 for y in years):
         raise ValueError('Provide valid four-digit fiscal years')
     label = slug(company)
-    folder = Path(input_dir or Path('tests/for_table_development') / label).expanduser()
-    year_label = (f'{years[0]}_{years[-1]}' if len(years) > 1 and years == list(range(years[0], years[-1] + 1))
-                  else '_'.join(map(str, years)))
-    target = Path(output or folder / f'{label}_{year_label}_merged_api_metrics_with_values.json').expanduser()
+    folder = Path(input_dir or Path('data/table_output') / label).expanduser()
+    target = Path(output or folder / merged_filename(company, years)).expanduser()
     if target.exists() or target.is_symlink():
         raise ValueError(f'Merged output already exists: {target}. Use --output for a new file.')
     inputs = []
@@ -237,7 +242,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--company', required=True, help='Existing company folder/filename label, e.g. Intel or INTC')
     parser.add_argument('--years', nargs='+', type=int, default=DEFAULT_YEARS)
-    parser.add_argument('--input-dir', type=Path, help='Override the company folder containing the yearly exports')
+    parser.add_argument('--input-dir', type=Path, help='Override data/table_output/<company>/ containing the yearly exports')
     parser.add_argument('--output', type=Path, help='Optional new merged JSON path; existing files are preserved')
     args = parser.parse_args(argv)
     try:
