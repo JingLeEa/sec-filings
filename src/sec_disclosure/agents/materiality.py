@@ -8,9 +8,11 @@ import math
 import re
 import sqlite3
 import sys
-from collections import Counter
+from collections import Counter, deque
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from datetime import datetime, timezone
 from pathlib import Path
+from threading import RLock
 from uuid import uuid4
 
 from sec_disclosure.llm.client import LLMError
@@ -18,9 +20,13 @@ from sec_disclosure.llm.config import load_config
 from sec_disclosure.llm.disclosures import digest, write_json
 
 from .alignment_runtime import RunLimit
-from .materiality_graph import GRAPH_POLICY, MaterialityAgentGraph
+from .materiality_graph import (
+    GRAPH_POLICY,
+    MaterialityAgentGraph,
+    MaterialityValidationExhausted,
+)
 from .materiality_prompts import MATERIALITY_PROMPT, MATERIALITY_VERIFICATION_PROMPT
-from .materiality_runtime import MaterialityRuntime
+from .materiality_runtime import MaterialityRequestTimedOut, MaterialityRuntime
 
 
 MATERIALITY_FIELD = "materiality_analysis"
@@ -309,6 +315,55 @@ def batches(rows, size):
         yield rows[index:index + size]
 
 
+def process_adaptive_batches(rows, size, process, *, stage, concurrency=1):
+    """Process batches concurrently, splitting invalid or timed-out groups."""
+    queue = deque(batches(rows, size))
+
+    def handle_failure(group, error):
+        if len(group) == 1:
+            raise error
+        midpoint = (len(group) + 1) // 2
+        smaller = [group[:midpoint], group[midpoint:]]
+        reason = (
+            "timed out; rerouting"
+            if isinstance(error, MaterialityRequestTimedOut)
+            else "exhausted validation; retrying"
+        )
+        print(
+            f"{stage} batch of {len(group)} rows {reason} automatically as "
+            f"{len(smaller[0])} and {len(smaller[1])} rows.",
+            flush=True,
+        )
+        return smaller
+
+    if concurrency == 1:
+        while queue:
+            group = queue.popleft()
+            try:
+                process(group)
+            except (MaterialityValidationExhausted, MaterialityRequestTimedOut) as error:
+                queue.extendleft(reversed(handle_failure(group, error)))
+        return
+
+    with ThreadPoolExecutor(max_workers=concurrency, thread_name_prefix="materiality") as pool:
+        active = {}
+        while queue or active:
+            while queue and len(active) < concurrency:
+                group = queue.popleft()
+                active[pool.submit(process, group)] = group
+            completed, _ = wait(active, return_when=FIRST_COMPLETED)
+            for future in completed:
+                group = active.pop(future)
+                try:
+                    future.result()
+                except (MaterialityValidationExhausted, MaterialityRequestTimedOut) as error:
+                    queue.extendleft(reversed(handle_failure(group, error)))
+                except Exception:
+                    for pending in active:
+                        pending.cancel()
+                    raise
+
+
 def load_document(path, *, validate_materiality=True):
     document = json.loads(path.read_text())
     if not isinstance(document, dict):
@@ -400,6 +455,12 @@ def main(argv=None):
     parser.add_argument("--verification-batch-size", type=int, default=4)
     parser.add_argument("--verification-threshold", type=float, default=MIN_CONFIDENCE)
     parser.add_argument("--skip-verification", action="store_true")
+    parser.add_argument(
+        "--concurrency",
+        type=int,
+        default=1,
+        help="Materiality batches processed concurrently within each stage.",
+    )
     parser.add_argument("--max-steps", type=int, default=3)
     parser.add_argument("--max-requests", type=int, default=200)
     parser.add_argument("--max-new-requests", type=int)
@@ -407,6 +468,21 @@ def main(argv=None):
     parser.add_argument("--max-tokens", type=int, default=4000)
     parser.add_argument("--max-prompt-chars", type=int, default=150000)
     parser.add_argument("--timeout", type=float, default=180)
+    parser.add_argument(
+        "--retry-timeout",
+        type=float,
+        default=300,
+        help="Timeout for one automatic retry of a timed-out single-row batch.",
+    )
+    parser.add_argument(
+        "--timeout-recovery",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "Reserve timeout usage, split timed-out multi-row batches, and retry a "
+            "single-row batch once; disable with --no-timeout-recovery."
+        ),
+    )
     parser.add_argument("--retry-failed", action="store_true")
     parser.add_argument(
         "--reclassify",
@@ -420,11 +496,12 @@ def main(argv=None):
             or any(not re.fullmatch(r"\d{4}", year) for year in years)
             or years[0] >= years[1]):
         parser.error("Use a valid ticker and increasing four-digit fiscal years.")
-    limits = (args.batch_size, args.verification_batch_size, args.max_steps,
+    limits = (args.batch_size, args.verification_batch_size, args.concurrency, args.max_steps,
               args.max_requests, args.max_total_tokens, args.max_tokens, args.max_prompt_chars)
     if (any(value < 1 for value in limits)
             or args.max_new_requests is not None and args.max_new_requests < 1
             or not math.isfinite(args.timeout) or args.timeout <= 0
+            or not math.isfinite(args.retry_timeout) or args.retry_timeout <= 0
             or not math.isfinite(args.verification_threshold)
             or not 0 <= args.verification_threshold <= 1):
         parser.error("Limits and timeout must be positive.")
@@ -533,12 +610,15 @@ def main(argv=None):
             "model": config.model,
             "settings": {key: getattr(args, key) for key in
                          ("batch_size", "verification_batch_size", "max_steps",
-                          "max_tokens", "max_prompt_chars", "skip_verification")},
+                          "max_tokens", "max_prompt_chars", "skip_verification",
+                          "timeout_recovery", "retry_timeout", "concurrency")},
             "implementation_hashes": {file.name: digest(file.read_bytes()) for file in implementation},
         })
         runtime = MaterialityRuntime(output, config, args, classification_run_id)
+        state_lock = RLock()
 
-        for group in batches(pending, args.batch_size):
+        def classify_group(group):
+            nonlocal verification_stats
             payload = {
                 "company": ticker,
                 "previous_year": years[0],
@@ -562,34 +642,43 @@ def main(argv=None):
             )
             result = graph.run()
             by_id = {row["match_id"]: row for row in result}
-            for row in group:
-                classified = by_id[row["match_id"]]
-                row[MATERIALITY_FIELD] = {
-                    key: classified[key]
-                    for key in ANALYSIS_FIELD_ORDER
-                }
             write_json(output / "jobs" / f"{job_id}.json", {
                 "job_id": job_id,
                 "match_ids": expected_ids,
                 "classifications": result,
             })
-            write_json(path, document)
-            update_run_timing(run_state, runtime)
-            write_json(run_state_path, run_state)
-            _, verification_stats = verification_plan(
-                rows,
-                verification_ledger,
-                args.verification_threshold,
-                enabled=not args.skip_verification,
-            )
-            write_summary(
-                output,
-                rows,
-                runtime,
-                classification_run_id=classification_run_id,
-                run_state=run_state,
-                verification=verification_stats,
-            )
+            with state_lock:
+                for row in group:
+                    classified = by_id[row["match_id"]]
+                    row[MATERIALITY_FIELD] = {
+                        key: classified[key]
+                        for key in ANALYSIS_FIELD_ORDER
+                    }
+                write_json(path, document)
+                update_run_timing(run_state, runtime)
+                write_json(run_state_path, run_state)
+                _, verification_stats = verification_plan(
+                    rows,
+                    verification_ledger,
+                    args.verification_threshold,
+                    enabled=not args.skip_verification,
+                )
+                write_summary(
+                    output,
+                    rows,
+                    runtime,
+                    classification_run_id=classification_run_id,
+                    run_state=run_state,
+                    verification=verification_stats,
+                )
+
+        process_adaptive_batches(
+            pending,
+            args.batch_size,
+            classify_group,
+            stage="Materiality classifier",
+            concurrency=args.concurrency,
+        )
 
         verification_pending, verification_stats = verification_plan(
             rows,
@@ -597,7 +686,8 @@ def main(argv=None):
             args.verification_threshold,
             enabled=not args.skip_verification,
         )
-        for group in batches(verification_pending, args.verification_batch_size):
+        def verify_group(group):
+            nonlocal verification_stats
             payload = {
                 "company": ticker,
                 "previous_year": years[0],
@@ -628,50 +718,63 @@ def main(argv=None):
             )
             result = graph.run()
             by_id = {row["match_id"]: row for row in result}
-            records = {record["match_id"]: record for record in verification_ledger["records"]}
-            for row in group:
-                initial = dict(row[MATERIALITY_FIELD])
-                classified = by_id[row["match_id"]]
-                final = {key: classified[key] for key in ANALYSIS_FIELD_ORDER}
-                records[row["match_id"]] = {
-                    "match_id": row["match_id"],
-                    "job_id": job_id,
-                    "source_hash": digest(json.dumps(
-                        decision_view(row), sort_keys=True, ensure_ascii=False
-                    ).encode()),
-                    "trigger_threshold": args.verification_threshold,
-                    "initial_analysis": initial,
-                    "final_analysis": final,
-                    "changed": initial != final,
+            with state_lock:
+                records = {
+                    record["match_id"]: record for record in verification_ledger["records"]
                 }
-            verification_ledger["verification_threshold"] = args.verification_threshold
-            verification_ledger["records"] = [records[key] for key in sorted(records)]
-            write_json(verification_path, verification_ledger)
-            for row in group:
-                row[MATERIALITY_FIELD] = dict(records[row["match_id"]]["final_analysis"])
-            write_json(output / "jobs" / f"{job_id}.json", {
-                "job_id": job_id,
-                "match_ids": expected_ids,
-                "initial_classifications": [records[key]["initial_analysis"] for key in expected_ids],
-                "final_classifications": result,
-            })
-            write_json(path, document)
-            update_run_timing(run_state, runtime)
-            write_json(run_state_path, run_state)
-            _, verification_stats = verification_plan(
-                rows,
-                verification_ledger,
-                args.verification_threshold,
-                enabled=True,
-            )
-            write_summary(
-                output,
-                rows,
-                runtime,
-                classification_run_id=classification_run_id,
-                run_state=run_state,
-                verification=verification_stats,
-            )
+                for row in group:
+                    initial = dict(row[MATERIALITY_FIELD])
+                    classified = by_id[row["match_id"]]
+                    final = {key: classified[key] for key in ANALYSIS_FIELD_ORDER}
+                    records[row["match_id"]] = {
+                        "match_id": row["match_id"],
+                        "job_id": job_id,
+                        "source_hash": digest(json.dumps(
+                            decision_view(row), sort_keys=True, ensure_ascii=False
+                        ).encode()),
+                        "trigger_threshold": args.verification_threshold,
+                        "initial_analysis": initial,
+                        "final_analysis": final,
+                        "changed": initial != final,
+                    }
+                verification_ledger["verification_threshold"] = args.verification_threshold
+                verification_ledger["records"] = [records[key] for key in sorted(records)]
+                write_json(verification_path, verification_ledger)
+                for row in group:
+                    row[MATERIALITY_FIELD] = dict(records[row["match_id"]]["final_analysis"])
+                write_json(output / "jobs" / f"{job_id}.json", {
+                    "job_id": job_id,
+                    "match_ids": expected_ids,
+                    "initial_classifications": [
+                        records[key]["initial_analysis"] for key in expected_ids
+                    ],
+                    "final_classifications": result,
+                })
+                write_json(path, document)
+                update_run_timing(run_state, runtime)
+                write_json(run_state_path, run_state)
+                _, verification_stats = verification_plan(
+                    rows,
+                    verification_ledger,
+                    args.verification_threshold,
+                    enabled=True,
+                )
+                write_summary(
+                    output,
+                    rows,
+                    runtime,
+                    classification_run_id=classification_run_id,
+                    run_state=run_state,
+                    verification=verification_stats,
+                )
+
+        process_adaptive_batches(
+            verification_pending,
+            args.verification_batch_size,
+            verify_group,
+            stage="Materiality verifier",
+            concurrency=args.concurrency,
+        )
 
         _, verification_stats = verification_plan(
             rows,

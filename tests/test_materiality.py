@@ -2,6 +2,7 @@ import io
 import json
 import subprocess
 import sys
+import threading
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
@@ -10,7 +11,7 @@ from unittest.mock import patch
 
 from sec_disclosure.agents import materiality as module
 from sec_disclosure.agents import materiality_runtime
-from sec_disclosure.llm.client import CompletionResult
+from sec_disclosure.llm.client import CompletionResult, LLMError
 from sec_disclosure.llm.config import LLMConfig
 from sec_disclosure.llm.disclosures import write_json
 
@@ -235,6 +236,137 @@ class MaterialityTests(unittest.TestCase):
         self.assertEqual(sum(module.MATERIALITY_FIELD in row for row in self.saved()["alignments"]), 1)
         self.assertEqual(self.run_cli("--batch-size", "1"), (0, 2))
         self.assertTrue(all(module.MATERIALITY_FIELD in row for row in self.saved()["alignments"]))
+
+    def test_validation_exhaustion_automatically_splits_classifier_batch(self):
+        rows = [self.row(number) for number in range(1, 9)]
+        write_json(self.output / "alignments.json", self.document(rows))
+
+        def response(prompt, **kwargs):
+            result = self.response(prompt, **kwargs)
+            payload = json.loads(prompt)
+            if len(payload["rows"]) <= 4:
+                return result
+            action = json.loads(result.text)
+            action["classifications"].pop()
+            return CompletionResult(
+                json.dumps(action), "test-model", "stop",
+                {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125},
+            )
+
+        self.assertEqual(self.run_cli(
+            "--batch-size", "8", "--max-steps", "1", "--skip-verification",
+            response=response,
+        ), (0, 3))
+        self.assertTrue(all(
+            module.MATERIALITY_FIELD in row for row in self.saved()["alignments"]
+        ))
+
+    def test_validation_exhaustion_automatically_splits_verifier_batch(self):
+        rows = [self.row(number) for number in range(1, 5)]
+        write_json(self.output / "alignments.json", self.document(rows))
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            verifier = "MATERIALITY VERIFIER" in kwargs["system_prompt"]
+            classifications = []
+            for row in payload["rows"]:
+                analysis = (
+                    {
+                        "materiality": "No", "materiality_score": 0.2,
+                        "confidence_score": 0.9, "reason": "The verifier resolved the change.",
+                        "key_change": "Non-substantive wording change",
+                    }
+                    if verifier else
+                    {
+                        "materiality": "Uncertain", "materiality_score": 0.5,
+                        "confidence_score": 0.4, "reason": "The evidence remains incomplete.",
+                        "key_change": "Unclear operating change",
+                    }
+                )
+                classifications.append({"match_id": row["match_id"], **analysis})
+            if verifier and len(payload["rows"]) > 2:
+                classifications.pop()
+            action = "verify_materiality" if verifier else "classify_materiality"
+            return CompletionResult(
+                json.dumps({"action": action, "classifications": classifications}),
+                "test-model", "stop",
+                {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125},
+            )
+
+        self.assertEqual(self.run_cli(
+            "--batch-size", "4", "--verification-batch-size", "4", "--max-steps", "1",
+            response=response,
+        ), (0, 4))
+        self.assertTrue(all(
+            row[module.MATERIALITY_FIELD]["materiality"] == "No"
+            for row in self.saved()["alignments"]
+        ))
+        ledger = json.loads((self.output / "materiality/verifications.json").read_text())
+        self.assertEqual(len(ledger["records"]), 4)
+
+    def test_timeout_automatically_splits_and_reserves_unknown_usage(self):
+        rows = [self.row(number) for number in range(1, 9)]
+        write_json(self.output / "alignments.json", self.document(rows))
+        observed_timeouts = []
+
+        def response(prompt, **kwargs):
+            observed_timeouts.append(kwargs["timeout"])
+            if len(json.loads(prompt)["rows"]) > 4:
+                raise LLMError("SoCLaaS request timed out. Try again or increase --timeout.",
+                               retryable=True)
+            return self.response(prompt, **kwargs)
+
+        self.assertEqual(self.run_cli(
+            "--batch-size", "8", "--concurrency", "2", "--skip-verification",
+            response=response,
+        ), (0, 3))
+        self.assertEqual(observed_timeouts.count(180), 3)
+        self.assertEqual(observed_timeouts.count(300), 0)
+        self.assertTrue(all(
+            module.MATERIALITY_FIELD in row for row in self.saved()["alignments"]
+        ))
+        usage = json.loads((self.output / "materiality/token_usage.json").read_text())
+        reserve = usage["unknown_usage_budget_reserve"]
+        self.assertEqual(usage["requests_with_unknown_usage"], 1)
+        self.assertEqual(reserve["unacknowledged_attempt_count"], 0)
+        self.assertEqual(len(reserve["attempts"]), 1)
+        self.assertGreater(reserve["estimated_tokens"], 0)
+
+    def test_concurrency_runs_independent_batches_in_parallel(self):
+        rows = [self.row(number) for number in range(1, 9)]
+        write_json(self.output / "alignments.json", self.document(rows))
+        started = threading.Barrier(2, timeout=5)
+
+        def response(prompt, **kwargs):
+            started.wait()
+            return self.response(prompt, **kwargs)
+
+        self.assertEqual(self.run_cli(
+            "--batch-size", "4", "--concurrency", "2", "--skip-verification",
+            response=response,
+        ), (0, 2))
+        self.assertTrue(all(
+            module.MATERIALITY_FIELD in row for row in self.saved()["alignments"]
+        ))
+        usage = json.loads((self.output / "materiality/token_usage.json").read_text())
+        self.assertEqual(usage["limits"]["concurrency"], 2)
+        self.assertEqual(usage["requests_with_unknown_usage"], 0)
+
+    def test_single_row_timeout_requires_explicit_retry(self):
+        write_json(self.output / "alignments.json", self.document([self.row(1)]))
+        observed_timeouts = []
+
+        def timeout(*args, **kwargs):
+            observed_timeouts.append(kwargs["timeout"])
+            raise LLMError("SoCLaaS request timed out. Try again or increase --timeout.",
+                           retryable=True)
+
+        self.assertEqual(self.run_cli("--skip-verification", response=timeout), (1, 2))
+        self.assertEqual(observed_timeouts, [180, 300])
+        self.assertEqual(self.run_cli("--skip-verification", response=timeout), (1, 0))
+        self.assertEqual(self.run_cli(
+            "--skip-verification", "--retry-failed", "--timeout", "300"
+        ), (0, 1))
 
     def test_reclassify_starts_fresh_run_and_resumes_without_flag(self):
         rows = [self.row(number) for number in range(1, 4)]

@@ -40,7 +40,9 @@ Exact-text `auto_matched` rows are assigned `No` locally with materiality streng
 `0.0` and confidence `1.0` and consume no API tokens. Other finalized rows are
 sent in bounded batches to the materiality agent. Python validates exact IDs, row
 coverage, labels, scores, reasons and key changes. Invalid responses receive
-bounded correction turns.
+bounded correction turns. If a multi-row job exhausts those turns, the workflow
+automatically divides it into smaller jobs until each group succeeds or a
+single-row job proves unrecoverable.
 
 After all first-pass classifications are saved, the same CLI automatically routes
 rows with `confidence_score < 0.60` to an independent materiality verifier. The
@@ -131,6 +133,19 @@ are skipped, completed API responses are cached, and an interrupted graph resume
 from `materiality/graph/checkpoints.sqlite`. Use `--max-new-requests 1` for a
 one-request pilot, then remove it to continue.
 
+Batch-size recovery is automatic. A validation-exhausted classifier or verifier
+batch is divided in half recursively, for example `8 -> 4 -> 2 -> 1`. Each smaller
+payload has a new job identity, so it does not return to the exhausted checkpoint.
+Successful split groups are saved immediately. The CLI stops only if a one-row job
+still cannot produce a valid result or another run limit or API error occurs.
+
+API-bound batches can run concurrently within the classifier and verifier stages.
+The default `--concurrency 1` preserves sequential behavior; `--concurrency 2` is
+the recommended faster setting. Request admission and token reservations are
+atomic, and completed workers enter a short synchronized commit section before
+updating shared JSON artifacts. Classification still finishes before verification
+begins.
+
 Use `--reclassify` to discard all saved `materiality_analysis` values and start a
 genuinely fresh model run. The stage assigns the run a new identifier so prior API
 responses and graph checkpoints cannot be replayed as new classifications:
@@ -157,7 +172,7 @@ Runtime artifacts are stored under the comparison's `materiality/` directory:
 | `run_state.json` | Active reclassification run identifier used for cache isolation and resume |
 | `verifications.json` | Initial and final analyses for rows routed to the verifier |
 | `requests/` | Durable request/response ledger with per-request completion time and duration; API keys are not stored |
-| `graph/checkpoints.sqlite` | Per-batch LangGraph checkpoints |
+| `graph/checkpoints.sqlite` or `graph/<job_id>.sqlite` | Per-batch LangGraph checkpoints; parallel mode isolates active jobs in separate databases |
 | `traces/` and `jobs/` | Validation history and completed classifications |
 | `token_usage.json` | Provider-reported materiality token usage |
 | `summary.json` | Classification counts, progress, token usage and run timing |
@@ -168,10 +183,15 @@ includes pauses between invocations; cumulative API time sums only model request
 durations. Timing fields are `null` for runs completed before timing was added
 because their exact duration cannot be reconstructed reliably.
 
-Default limits are 8 rows per batch, 3 model turns per batch, 200 cumulative
-requests, 750,000 total budgeted tokens, 4,000 completion tokens, 150,000 prompt
-characters and 180 seconds per request. `--retry-failed` explicitly permits a
-new paid attempt after a failed or interrupted request with unknown usage.
+Default limits are 8 rows per batch, 1 concurrent batch, 3 model turns per batch,
+200 cumulative requests, 750,000 total budgeted tokens, 4,000 completion tokens,
+150,000 prompt characters, a 180-second initial timeout and a 300-second
+single-row retry timeout. Timeout recovery is enabled by default: a timed-out
+multi-row request is divided immediately, while a timed-out single-row request is
+retried once at the longer limit. Every timed-out attempt's unknown usage is
+conservatively reserved against the token budget. `--retry-failed` explicitly
+permits another paid attempt after automatic recovery is exhausted or another
+request fails.
 
 ## 5. Troubleshooting and tuning
 
@@ -181,39 +201,69 @@ continues the classifier or verifier stage that still has pending work.
 
 | Symptom | Recommended change | Why |
 | --- | --- | --- |
-| `exhausted its validation turns without a valid classification` for a `materiality_...` job | Resume with `--batch-size 4`, then `1` if necessary | A smaller classifier batch reduces omissions and output-schema mistakes and creates a new job identity without erasing completed rows |
-| The same validation error occurs for a `materiality_verifier_...` job | Lower `--verification-batch-size` from `4` to `2` or `1` | This changes only verifier batching |
-| A response is truncated or has `finish_reason` other than `stop` | Reduce the relevant batch size first; increase `--max-tokens` only when the smaller response still needs more output space | Smaller batches reduce both prompt and response size without broadly increasing token allowance |
+| A multi-row classifier or verifier job exhausts validation | No manual batch change is required | The workflow automatically divides the failed group and retries smaller jobs |
+| A one-row job exhausts validation | Inspect its trace and evidence; increase `--max-steps` only if responses are improving | A singleton cannot be divided further and may contain malformed or unusually difficult evidence |
+| A response is truncated or has `finish_reason` other than `stop` | Allow automatic splitting first; increase `--max-tokens` only if a one-row response still needs more output space | Smaller payloads reduce both prompt and response size without broadly increasing token allowance |
 | `Invocation request limit reached` | Rerun normally without `--max-new-requests`, or set it to a larger per-invocation pilot value | This is an intentional pause, not an API failure |
 | `Total materiality request limit reached` | Raise `--max-requests` after checking `token_usage.json` | The active run has reached its cumulative request cap |
 | `Materiality token budget cannot accommodate the next request` | Raise `--max-total-tokens` deliberately, or reduce batch size if prompt size is the cause | Admission control stops before making an unaffordable request |
 | `context exceeds max_prompt_chars` | Reduce batch size; raise `--max-prompt-chars` only if the provider supports the larger context | The limit protects against oversized prompts |
-| API timeout | Increase `--timeout` and resume | Completed prior requests remain cached |
-| An API request is recorded as failed or interrupted with unknown usage | Inspect `requests/`, then use `--retry-failed` to authorize another paid attempt | `--retry-failed` acknowledges possible unreported usage |
+| A multi-row request times out | No manual change is normally required | The workflow reserves its estimated maximum usage and immediately reroutes the rows through smaller batches |
+| A one-row request times out once | No manual change is normally required | A singleton cannot be divided, so it is retried once with `--retry-timeout` (300 seconds by default) |
+| A one-row request times out at both limits | Resume with `--retry-failed --timeout 300`, or choose a larger explicit timeout | Automatic recovery is exhausted; explicit retry acknowledges both prior attempts' possible unreported usage |
+| A non-timeout API request is recorded as failed or interrupted with unknown usage | Inspect `requests/`, then use `--retry-failed` to authorize another paid attempt | Connection, quota and service errors are not improved by splitting the payload |
 | Too many or too few rows are routed to the verifier | Adjust `--verification-threshold`; `0.60` matches `Uncertain`, while `0.80` also reviews lower-confidence `Yes` and `No` results | Routing uses strict `confidence_score < threshold` |
 
-For example, if an eight-row classifier job repeatedly omits one `match_id`,
-resume the existing run with:
+For example, if an eight-row classifier job repeatedly omits one `match_id`, the
+same invocation now continues with output similar to:
+
+```text
+Materiality classifier batch of 8 rows exhausted validation; retrying automatically as 4 and 4 rows.
+```
+
+A multi-row timeout produces an adaptive splitting message:
+
+```text
+Materiality classifier batch of 8 rows timed out; rerouting automatically as 4 and 4 rows.
+```
+
+A single-row timeout instead produces an explicit escalation message:
+
+```text
+materiality_...: request timed out after 180s; retrying once with 300s.
+```
+
+Timed-out attempts are retained in `requests/`; none is treated as free. Use
+`--no-timeout-recovery` to restore stop-on-first-timeout behavior for diagnostics
+or strict manual cost control.
+
+For a faster production run using the conservative concurrency setting:
 
 ```bash
 .venv/bin/python scripts/classify_materiality.py \
-  --ticker amd \
+  --ticker nvda \
   --previous-year 2024 \
   --current-year 2025 \
   --env-file .env \
-  --batch-size 4
+  --batch-size 8 \
+  --verification-batch-size 4 \
+  --concurrency 2 \
+  --timeout 180 \
+  --retry-timeout 300
 ```
 
+Start above concurrency `2` only after confirming that the provider's rate limits
+and the configured token budget can accommodate the additional in-flight calls.
+
 Do not add `--reclassify`: that would discard every completed materiality result.
-Do not add `--retry-failed` when the request completed and only its content failed
-validation. Repeating the identical batch and step settings may revisit the same
-exhausted checkpoint; changing the relevant batch size creates a new job.
+Do not add `--retry-failed` when a request completed and only its content failed
+validation. The adaptive jobs are new payloads and do not represent retries of a
+failed API call.
 
 `--max-steps` controls correction turns per job. Increase it only when traces show
-that responses are progressively approaching a valid result. Repeated identical
-omissions usually benefit more from a smaller batch. `--skip-verification` is for
-classifier-only diagnostics; normal production runs should leave verification
-enabled.
+that responses are progressively approaching a valid result. Automatic splitting
+handles repeated omissions. `--skip-verification` is for classifier-only
+diagnostics; normal production runs should leave verification enabled.
 
 ## 6. Safety and downstream behavior
 

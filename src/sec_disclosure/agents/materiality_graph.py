@@ -14,7 +14,11 @@ from sec_disclosure.llm.disclosures import digest, write_json
 from .materiality_runtime import unique_object
 
 
-GRAPH_POLICY = "langgraph_materiality_v3"
+GRAPH_POLICY = "langgraph_materiality_v7"
+
+
+class MaterialityValidationExhausted(ValueError):
+    """Raised when a job uses every correction turn without valid output."""
 
 
 class MaterialityState(TypedDict):
@@ -56,6 +60,7 @@ class MaterialityAgentGraph:
                 json.dumps(request, ensure_ascii=False, separators=(",", ":")),
                 self.system,
                 role=self.role,
+                retry_timeout=len(self.payload.get("rows", [])) == 1,
             )
             if response["finish_reason"] != "stop":
                 raise ValueError("Response did not finish normally.")
@@ -99,7 +104,9 @@ class MaterialityAgentGraph:
         return {"result": state["result"]}
 
     def exhausted(self, state):
-        raise ValueError(f"{self.job_id} exhausted its validation turns without a valid classification.")
+        raise MaterialityValidationExhausted(
+            f"{self.job_id} exhausted its validation turns without a valid classification."
+        )
 
     def build(self, checkpointer):
         builder = StateGraph(MaterialityState)
@@ -140,7 +147,12 @@ class MaterialityAgentGraph:
             "configurable": {"thread_id": self.job_id, "checkpoint_ns": ""},
             "recursion_limit": self.runtime.args.max_steps * 3 + 5,
         }
-        with SqliteSaver.from_conn_string(str(directory / "checkpoints.sqlite")) as saver:
+        database = (
+            directory / "checkpoints.sqlite"
+            if self.runtime.args.concurrency == 1
+            else directory / f"{self.job_id}.sqlite"
+        )
+        with SqliteSaver.from_conn_string(str(database)) as saver:
             graph = self.build(saver)
             snapshot = graph.get_state(config)
             if snapshot.values and snapshot.values["identity"] != identity:
