@@ -1,4 +1,4 @@
-"""Extract traceable disclosures, optionally followed by concurrent PostgreSQL storage and alignment."""
+"""Extract traceable disclosures, store completed years, and optionally align them."""
 
 from __future__ import annotations
 
@@ -1026,6 +1026,8 @@ def align_years(args, selected_years):
             arguments.extend(["--output-dir", str(args.alignment_output_root / args.ticker / f"{previous}-{current}")])
         if args.env_file is not None:
             arguments.extend(["--env-file", str(args.env_file)])
+        if not args.store_postgres:
+            arguments.append("--no-store-postgres")
         for flag in ("fault_tolerant", "retry_failed"):
             if getattr(args, flag):
                 arguments.append("--" + flag.replace("_", "-"))
@@ -1034,7 +1036,8 @@ def align_years(args, selected_years):
         if args.alignment_revalidate_cache:
             arguments.append("--revalidate-cache")
         print(f"Aligning {args.ticker.upper()} {previous}–{current} with up to {args.alignment_workers} "
-              "concurrent matching/verification/change-analysis jobs after completed extraction.", flush=True)
+              "concurrent matching/verification/change-analysis jobs "
+              f"(shared API limit: {args.alignment_api_capacity} across all pairs).", flush=True)
         try:
             return disclosure_alignment.main(arguments, request_pacer=pacer)
         except Exception as error:
@@ -1146,12 +1149,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--rate-limit-cooldown", type=float, default=60, help="Shared pause after HTTP 429, extended by Retry-After when supplied (default: 60 seconds).")
     parser.add_argument("--retry-failed", action="store_true", help="Allow another paid attempt for failed extraction or failed/review boundary and consolidation checks from a previous invocation; all attempts stay in the usage ledger.")
     parser.add_argument("--dry-run", action="store_true", help="Validate all inputs and show batch sizes without API calls or output writes.")
-    parser.add_argument("--store-postgres", action="store_true",
-                        help="Import completed disclosure years into PostgreSQL; runs alongside --align and waits for both stages. Uses --env-file or repository .env for database settings.")
+    parser.add_argument("--store-postgres", action=argparse.BooleanOptionalAction, default=True,
+                        help="Save completed disclosures and downstream alignment reports to PostgreSQL (default: enabled); --no-store-postgres keeps files only. Uses --env-file or repository .env for database settings.")
     alignment = parser.add_argument_group("alignment after extraction")
     alignment.add_argument("--align", action="store_true", help="After all selected years complete, align adjacent selected years and classify finalized changes; requires at least two --years.")
-    alignment.add_argument("--alignment-workers", type=int, help="Override concurrent alignment jobs per pair; defaults to extraction's effective API concurrency and respects --max-concurrent-requests.")
-    alignment.add_argument("--alignment-pair-workers", type=int, default=3, help="Concurrent adjacent-year comparisons, sharing one API concurrency cap; use 1 for sequential comparisons (default: 3).")
+    alignment.add_argument("--alignment-workers", type=int, default=9, help="Concurrent alignment jobs per pair, independent of extraction workers (default: 9); respects --max-concurrent-requests.")
+    alignment.add_argument("--alignment-pair-workers", type=int, default=2, help="Concurrent adjacent-year comparisons, sharing one API concurrency cap; use 1 for sequential comparisons (default: 2).")
     alignment.add_argument("--alignment-output-root", type=Path, help="Alignment output root; writes ROOT/TICKER/PREVIOUS-CURRENT (default: DATA_DIR/alignments).")
     alignment.add_argument("--alignment-max-steps", type=int, default=4, help="Alignment agent turns per job, including corrections (default: 4).")
     alignment.add_argument("--alignment-max-requests", type=int, default=400, help="Cumulative alignment and change-analysis attempts per pair; -1 removes the cap (default: 400).")
@@ -1170,7 +1173,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("Use --output-root with --years; --output-dir is for a single --year.")
     if args.align and len(selected_years) < 2:
         parser.error("--align requires at least two fiscal years selected with --years.")
-    if (args.alignment_workers is not None and args.alignment_workers < 1) or args.alignment_pair_workers < 1 or args.alignment_max_steps < 1 or any(
+    if args.alignment_workers < 1 or args.alignment_pair_workers < 1 or args.alignment_max_steps < 1 or any(
             value != -1 and value < 1 for value in (args.alignment_max_requests, args.alignment_max_total_tokens)
     ) or args.alignment_max_new_requests is not None and args.alignment_max_new_requests < 1:
         parser.error("Alignment limits must be positive; request/token caps also accept -1 for unlimited.")
@@ -1187,13 +1190,11 @@ def main(argv: list[str] | None = None) -> int:
     workers = min(args.workers, len(selected_years))
     batch_capacity = workers * args.batch_workers
     api_capacity = min(batch_capacity, args.max_concurrent_requests or batch_capacity)
-    if args.alignment_workers is None:
-        args.alignment_workers = api_capacity
-    elif args.max_concurrent_requests is not None:
+    if args.max_concurrent_requests is not None:
         args.alignment_workers = min(args.alignment_workers, args.max_concurrent_requests)
     args.alignment_pair_workers = min(args.alignment_pair_workers, max(1, len(selected_years) - 1))
-    args.alignment_api_capacity = min(args.max_concurrent_requests or args.alignment_workers,
-                                      args.alignment_workers * args.alignment_pair_workers)
+    alignment_capacity = args.alignment_workers * args.alignment_pair_workers
+    args.alignment_api_capacity = min(args.max_concurrent_requests or alignment_capacity, alignment_capacity)
     try:
         config = None if args.dry_run else load_config(args.env_file)
         jobs = []

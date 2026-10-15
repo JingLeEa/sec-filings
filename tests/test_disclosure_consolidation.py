@@ -81,7 +81,7 @@ class ConsolidationTests(TestCase):
              redirect_stdout(output), redirect_stderr(output):
             code = disclosures.main(["--ticker", "amd", *year_options, "--data-dir", str(self.root),
                                      "--batch-chars", "1000", "--request-interval", "0",
-                                     "--rate-limit-cooldown", "0", "--response-retry-backoff", "0", *extra])
+                                     "--rate-limit-cooldown", "0", "--response-retry-backoff", "0", "--no-store-postgres", *extra])
         self.last_output = output.getvalue()
         return code, api.call_count
 

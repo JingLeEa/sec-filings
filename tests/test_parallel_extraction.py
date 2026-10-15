@@ -67,8 +67,9 @@ class ParallelExtractionTests(TestCase):
             (folder / f"{year}_chunks.json").write_text(json.dumps(paragraphs))
             (folder / f"{year}_chunk_sentences.json").write_text(json.dumps(sentences))
 
-    def run_cli(self, *extra, responder=None, years=("2023", "2024", "2025"), batch_workers=1):
+    def run_cli(self, *extra, responder=None, years=("2023", "2024", "2025"), batch_workers=1, store_postgres=False):
         batch_options = [] if batch_workers is None else ["--batch-workers", str(batch_workers)]
+        storage_options = [] if store_postgres or "--store-postgres" in extra else ["--no-store-postgres"]
         output = io.StringIO()
         with patch.object(disclosures, "load_config", return_value=LLMConfig(
                 "https://example.test/v1", "fake-key", "default")) as config, \
@@ -77,8 +78,30 @@ class ParallelExtractionTests(TestCase):
             code = disclosures.main(["--ticker", "amd", "--years", *years,
                                      "--data-dir", str(self.root), "--request-interval", "0",
                                      "--rate-limit-cooldown", "0", "--response-retry-backoff", "0",
-                                     *batch_options, *extra])
+                                     *batch_options, *storage_options, *extra])
         return code, api.call_count, config.call_count, output.getvalue()
+
+    def test_default_stores_completed_disclosures_and_enables_alignment_storage(self):
+        from sec_disclosure.agents import disclosure_alignment
+        from sec_disclosure.storage import disclosures as storage
+
+        with patch.object(storage, "store_disclosures", return_value=SimpleNamespace(stored=2, accepted=2, review=0)) as store, \
+             patch.object(disclosure_alignment, "main", return_value=0) as align:
+            self.assertEqual(self.run_cli("--align", store_postgres=True)[:2], (0, 6))
+            self.assertCountEqual([call.args[2] for call in store.call_args_list], [2023, 2024, 2025])
+            self.assertEqual(align.call_count, 2)
+            for call in align.call_args_list:
+                self.assertNotIn("--no-store-postgres", call.args[0])
+
+    def test_file_only_option_is_forwarded_to_alignment_and_skips_disclosure_storage(self):
+        from sec_disclosure.agents import disclosure_alignment
+        from sec_disclosure.storage import disclosures as storage
+
+        with patch.object(storage, "store_disclosures") as store, \
+             patch.object(disclosure_alignment, "main", return_value=0) as align:
+            self.assertEqual(self.run_cli("--align", "--no-store-postgres", store_postgres=True)[:2], (0, 6))
+            store.assert_not_called()
+            self.assertTrue(all("--no-store-postgres" in call.args[0] for call in align.call_args_list))
 
     def usage(self, year):
         return json.loads((self.root / "disclosures/amd" / year / "token_usage.json").read_text())
@@ -592,6 +615,7 @@ class ParallelExtractionTests(TestCase):
                 all_attempted, pool_full, release = threading.Event(), threading.Event(), threading.Event()
                 both_pairs = threading.Barrier(2, timeout=5)
                 attempted = active = peak = 0
+                active_by_pair, peak_by_pair = Counter(), Counter()
                 runtimes = []
                 folder = self.root / ("explicit_cap" if cap_options else "default_cap")
 
@@ -601,16 +625,19 @@ class ParallelExtractionTests(TestCase):
                         nonlocal attempted
                         with lock:
                             attempted += 1
-                            if attempted == 60:
+                            if attempted == 18:
                                 all_attempted.set()
                         with super().request():
                             yield
 
                 def response(*args, **kwargs):
                     nonlocal active, peak
+                    pair = args[0].split(":", 1)[0]
                     with lock:
                         active += 1
                         peak = max(peak, active)
+                        active_by_pair[pair] += 1
+                        peak_by_pair[pair] = max(peak_by_pair[pair], active_by_pair[pair])
                         if active == expected_cap:
                             pool_full.set()
                     try:
@@ -620,11 +647,14 @@ class ParallelExtractionTests(TestCase):
                     finally:
                         with lock:
                             active -= 1
+                            active_by_pair[pair] -= 1
 
                 def align(arguments, *, request_pacer):
                     previous = arguments[arguments.index("--previous-year") + 1]
                     current = arguments[arguments.index("--current-year") + 1]
-                    args = SimpleNamespace(workers=30, request_interval=0, rate_limit_cooldown=0,
+                    workers = int(arguments[arguments.index("--workers") + 1])
+                    self.assertEqual(workers, 9)
+                    args = SimpleNamespace(workers=workers, request_interval=0, rate_limit_cooldown=0,
                         retry_failed=False, max_new_requests=None, max_requests=100, max_total_tokens=10000,
                         max_steps=4, max_tokens=100, max_prompt_chars=10000, timeout=5)
                     runtime = alignment_runtime.Runtime(folder / f"{previous}-{current}",
@@ -632,8 +662,8 @@ class ParallelExtractionTests(TestCase):
                     with lock:
                         runtimes.append(runtime)
                     both_pairs.wait()
-                    with ThreadPoolExecutor(max_workers=30) as executor:
-                        futures = [executor.submit(runtime.call, "matching", f"job_{i}", str(i), "system")
+                    with ThreadPoolExecutor(max_workers=workers) as executor:
+                        futures = [executor.submit(runtime.call, "matching", f"job_{i}", f"{previous}-{current}:{i}", "system")
                                    for i in range(30)]
                         for future in futures:
                             future.result(timeout=5)
@@ -655,27 +685,32 @@ class ParallelExtractionTests(TestCase):
                     self.assertEqual(future.result(timeout=5)[:2], (0, 0))
                     self.assertEqual(api.call_count, 60)
                 self.assertEqual((peak, active), (expected_cap, 0))
+                self.assertEqual(len(peak_by_pair), 2)
+                self.assertTrue(all(value <= 9 for value in peak_by_pair.values()))
+                if not cap_options:
+                    self.assertEqual(dict(peak_by_pair), {"2023-2024": 9, "2024-2025": 9})
                 self.assertIs(runtimes[0].pacer, runtimes[1].pacer)
                 for runtime in runtimes:
                     self.assertEqual(len(runtime.requests), 30)
                     self.assertEqual(runtime.report()["reported_tokens"]["total_tokens"], 60)
                     self.assertTrue(all(r["status"] == "completed" for r in runtime.requests))
 
-    def test_alignment_inherits_extraction_concurrency_and_honors_shared_cap(self):
+    def test_alignment_defaults_are_independent_of_extraction_and_honor_shared_cap(self):
         from sec_disclosure.agents import disclosure_alignment
 
         cases = [
-            ((), ("2023", "2024", "2025"), 18),
-            (("--workers", "2"), ("2023", "2024", "2025"), 12),
-            (("--workers", "10"), ("2023", "2024"), 12),
-            (("--max-concurrent-requests", "5"), ("2023", "2024", "2025"), 5),
-            (("--max-concurrent-requests", "20"), ("2023", "2024", "2025"), 18),
-            (("--max-concurrent-requests", "60"), ("2023", "2024", "2025"), 18),
-            (("--batch-workers", "4"), ("2023", "2024", "2025"), 12),
-            (("--alignment-workers", "2"), ("2023", "2024", "2025"), 2),
-            (("--alignment-workers", "20", "--max-concurrent-requests", "5"), ("2023", "2024", "2025"), 5),
+            ((), ("2023", "2024", "2025"), 9, 18),
+            (("--workers", "2"), ("2023", "2024", "2025"), 9, 18),
+            (("--workers", "10"), ("2023", "2024"), 9, 9),
+            (("--max-concurrent-requests", "5"), ("2023", "2024", "2025"), 5, 5),
+            (("--max-concurrent-requests", "20"), ("2023", "2024", "2025"), 9, 18),
+            (("--max-concurrent-requests", "60"), ("2023", "2024", "2025"), 9, 18),
+            (("--batch-workers", "4"), ("2023", "2024", "2025"), 9, 18),
+            (("--alignment-workers", "2"), ("2023", "2024", "2025"), 2, 4),
+            (("--alignment-workers", "20", "--max-concurrent-requests", "5"), ("2023", "2024", "2025"), 5, 5),
+            (("--alignment-pair-workers", "1"), ("2023", "2024", "2025"), 9, 9),
         ]
-        for options, years, expected in cases:
+        for options, years, expected, expected_cap in cases:
             with self.subTest(options=options, years=years), \
                  patch.object(disclosures, "run_year", return_value=0), \
                  patch.object(disclosure_alignment, "main", return_value=0) as align:
@@ -683,6 +718,7 @@ class ParallelExtractionTests(TestCase):
                 self.assertEqual((code, calls), (0, 0))
                 self.assertEqual(align.call_count, len(years) - 1)
                 self.assertIn(f"Alignment will use up to {expected} concurrent jobs per pair", output)
+                self.assertIn(f"{expected_cap} simultaneous API requests total", output)
                 for call in align.call_args_list:
                     arguments = call.args[0]
                     self.assertEqual(arguments[arguments.index("--workers") + 1], str(expected))
@@ -690,13 +726,15 @@ class ParallelExtractionTests(TestCase):
                     self.assertIs(align.call_args_list[0].kwargs["request_pacer"],
                                   align.call_args_list[1].kwargs["request_pacer"])
 
-    def test_dry_run_shows_inherited_alignment_concurrency_without_calls_or_outputs(self):
+    def test_dry_run_shows_three_by_six_extraction_and_two_by_nine_alignment(self):
         from sec_disclosure.agents import disclosure_alignment
 
         with patch.object(disclosure_alignment, "main") as align:
             code, calls, _, output = self.run_cli("--align", "--dry-run", batch_workers=None)
             self.assertEqual((code, calls), (0, 0))
-            self.assertIn("Alignment will use up to 18 concurrent jobs per pair", output)
+            self.assertIn("3 concurrent year jobs, 6 batch workers per year (18 concurrent extraction batches)", output)
+            self.assertIn("Alignment will use up to 9 concurrent jobs per pair across up to 2 parallel pairs", output)
+            self.assertIn("18 simultaneous API requests total", output)
             align.assert_not_called()
             self.assertFalse((self.root / "disclosures").exists())
 
@@ -905,7 +943,7 @@ class ParallelExtractionTests(TestCase):
              patch.object(disclosures, "request_completion", side_effect=response) as api, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             status = disclosures.main(["--ticker", "amd", "--year", "2023", "--data-dir", str(self.root),
-                                       "--batch-workers", "2", "--rate-limit-cooldown", "0"])
+                                       "--batch-workers", "2", "--rate-limit-cooldown", "0", "--no-store-postgres"])
         self.assertEqual(status, 0)
         self.assertEqual(api.call_count, 4)
         self.assertEqual(pacer.call_args.args, (2.0, 0.0, None))

@@ -132,21 +132,67 @@ comparison's hard boundary is the SEC Item.
 
 Run from the repository root after completing both extraction years.
 
+### Automatic PostgreSQL storage
+
+Successful alignment commands automatically save their final `alignments.json`
+and `needs_review.json` records into `alignment_runs`, `alignments` and
+`alignment_members`. This includes comparisons started with
+`extract_disclosures.py --align`, which also stores completed extraction years
+by default. Start Docker Desktop and run `docker compose up -d db` first. The
+database needs `db/init/02_disclosures_alignments.sql` applied; fresh Docker
+volumes run it automatically.
+
+Storage runs after alignment and requested change analysis finish successfully,
+including completed report-refresh and change-analysis-only commands. It preserves
+final change labels, source evidence, grouping and review decisions. Partial,
+paused and failed runs keep their JSON without replacing a completed database
+snapshot. Each comparison is replaced in one transaction; retries reuse its run
+key and do not create duplicate decision/member rows. Other comparisons are unchanged.
+
+Database settings use `POSTGRES_*` or `DATABASE_URL` from `--env-file`, falling
+back to the repository `.env`; exported variables take priority. Custom alignment
+output directories are imported directly. `--store-postgres` explicitly enables
+the default; `--no-store-postgres` selects file-only behavior. Extraction forwards
+the file-only choice to downstream alignment. Dry runs never access PostgreSQL.
+
+A database failure returns exit code `1` while keeping the saved JSON and model
+cache. Retry storage directly without alignment, change-analysis or LLM requests:
+
+```bash
+.venv/bin/python scripts/load_alignments_to_postgres.py \
+  --company amd --previous-year 2024 --current-year 2025 \
+  --dir data/alignments_parallel/amd/2024-2025 \
+  --env-file .env
+```
+
+Use `--dry-run` on that importer to validate the completed snapshot without a
+database connection. Its validation requires both final files to describe the
+same completed comparison.
+
+Storage integration checks use a disposable Docker database:
+
+```bash
+SEC_ALIGNMENT_DB_INTEGRATION=1 PYTHONPATH=tests:src .venv/bin/python -m unittest test_alignment_storage
+```
+
+These tests cover both automatic stages, cached reruns and rollback after a late
+member insert failure. They do not alter the project's main database.
+
 To extract and then align automatically, use `extract_disclosures.py --years
 2023 2024 2025 --align`; see the [combined command](ZIYANG_disclosure_extraction.md#extract-and-align-with-one-command).
 The extraction runner waits for every selected year to complete and forwards
 its disclosure output root and shared retry settings to alignment.
-The combined command also inherits extraction's effective API concurrency:
-3 active years × 6 batches per year gives up to 18 alignment workers per pair,
-reduced by any smaller `--max-concurrent-requests` cap. Adjacent pairs run
-concurrently, with up to 3 active comparisons (`--alignment-pair-workers`).
-Thus 2023–2024 and 2024–2025 both start after extraction, sharing 18 simultaneous
-API requests in total by default. The shared limiter also coordinates request
+The combined command defaults to **2 concurrent comparisons × 9 workers per
+comparison**, independently of extraction's **3 years × 6 batch workers**.
+Thus 2023–2024 and 2024–2025 both start after extraction, each with at most 9
+matching/verification/change-analysis workers and up to 18 simultaneous API
+requests in total. A smaller `--max-concurrent-requests` cap is still honored.
+The shared limiter also coordinates request
 starts and HTTP 429 cooldowns across pairs. Each pair retains its own output
 directory, cache, request budget and token budget; a stopped pair does not cancel
 the others. Request logs include the pair's output-directory name.
-No `--alignment-workers` flag is needed unless an explicit per-pair override is
-wanted. Use `--alignment-pair-workers 1` for sequential comparisons. An explicit
+No `--alignment-workers` flag is needed unless overriding the default of 9 per
+pair. `--alignment-pair-workers` defaults to 2; use 1 for sequential comparisons. An explicit
 `--max-concurrent-requests` sets the combined API cap, subject to available jobs.
 
 ### Parallel alignment
@@ -538,6 +584,14 @@ to the alignment total. Repair source usage is reported separately. No monetary
 estimate is provided without verified account/model billing rates.
 
 ## 7. Example data and downstream usage
+
+Use `scripts/export_downstream_data.py --company amd --years 2024 2025
+--stage alignments --output-dir data/downstream` to build downstream alignment JSON
+by joining runs, decisions, members, disclosures and filings. It includes change
+analysis, evidence, grouping and full previous/current disclosure content. Both
+extraction years must be loaded. See the [joined export commands and Python API](ZIYANG_disclosure_extraction.md#export-joined-data-from-postgresql)
+for the output contract and combined exports. The exporter uses the normalized
+records directly and requires no stored copy of the original JSON files.
 
 The newest completed AMD alignment runs are saved under
 `tests/fixtures/alignments/amd/{2023-2024,2024-2025}/`, with two final JSON files

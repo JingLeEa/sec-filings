@@ -78,15 +78,64 @@ class AlignmentTests(unittest.TestCase):
                     row["item"] = item
             write_json(path, document)
 
-    def run_cli(self, *args, response=None, change_analysis=False):
+    def run_cli(self, *args, response=None, change_analysis=False, store_postgres=False):
         # These tests exercise alignment independently; change-stage integration
         # tests explicitly enable the normal automatic downstream behavior.
         mode = [] if change_analysis else ["--skip-change-analysis"]
+        if not store_postgres:
+            mode.append("--no-store-postgres")
         with patch.object(module, "load_config", return_value=LLMConfig("https://example.test/v1", "fake-secret", "default")), \
              patch.object(alignment_runtime, "request_completion", side_effect=response or self.response) as api, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             status = module.main(["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), *mode, *args])
         return status, api.call_count
+
+    def test_completed_run_saves_final_change_analysis_by_default_and_retry_uses_cache(self):
+        output = self.root / "custom_alignment"
+        imports = []
+
+        def store(folder, ticker, previous, current, **kwargs):
+            self.assertEqual((folder, ticker, previous, current), (output, "amd", 2023, 2024))
+            self.assertEqual(kwargs, {"env_file": Path("database.env"), "require_complete": True})
+            report = module.load_alignment_report(folder)
+            self.assertTrue(report["run_complete"])
+            self.assertTrue(report["change_analysis_summary"]["complete"])
+            imports.append(report)
+            return SimpleNamespace(stored=3, finalized=3, review=0, members=6)
+
+        with patch.object(module, "store_alignments", side_effect=store):
+            status, calls = self.run_cli("--output-dir", str(output), "--env-file", "database.env",
+                                         change_analysis=True, store_postgres=True)
+            self.assertEqual(status, 0)
+            self.assertGreater(calls, 0)
+            self.assertEqual(self.run_cli("--output-dir", str(output), "--env-file", "database.env",
+                                          change_analysis=True, store_postgres=True), (0, 0))
+        self.assertEqual(len(imports), 2)
+
+    def test_database_failure_returns_error_keeps_json_and_retries_without_model_calls(self):
+        with patch.object(module, "store_alignments", side_effect=module.AlignmentStorageError("Database unavailable")):
+            self.assertEqual(self.run_cli(store_postgres=True)[0], 1)
+        saved = (self.root / "alignments/amd/2023-2024/alignments.json").read_bytes()
+        with patch.object(module, "store_alignments", return_value=SimpleNamespace(stored=3, finalized=3, review=0, members=6)) as store:
+            self.assertEqual(self.run_cli(store_postgres=True), (0, 0))
+            store.assert_called_once()
+        self.assertEqual((self.root / "alignments/amd/2023-2024/alignments.json").read_bytes(), saved)
+
+    def test_partial_change_stage_and_dry_run_do_not_replace_database_snapshot(self):
+        with patch.object(module, "store_alignments") as store:
+            self.assertEqual(self.run_cli("--dry-run", store_postgres=True), (0, 0))
+            self.assertEqual(self.run_cli("--max-new-requests", "1", store_postgres=True)[0], 2)
+            self.assertEqual(self.run_cli("--max-new-requests", "1", change_analysis=True, store_postgres=True)[0], 2)
+            self.assertTrue(self.saved_report()["run_complete"])
+            store.assert_not_called()
+
+    def test_change_analysis_only_and_report_refresh_save_successful_updates(self):
+        self.assertEqual(self.run_cli()[0], 0)
+        with patch.object(module, "store_alignments", return_value=SimpleNamespace(stored=3, finalized=3, review=0, members=6)) as store:
+            self.assertEqual(self.run_cli("--change-analysis-only", change_analysis=True, store_postgres=True)[0], 0)
+            self.assertEqual(self.run_cli("--regroup-only", store_postgres=True), (0, 0))
+            self.assertEqual(self.run_cli("--refresh-extraction-policy", store_postgres=True), (0, 0))
+            self.assertEqual(store.call_count, 3)
 
     def response(self, prompt, **kwargs):
         payload = json.loads(prompt)
@@ -1091,7 +1140,7 @@ class AlignmentTests(unittest.TestCase):
              patch.object(alignment_runtime, "request_completion", side_effect=AssertionError("No API calls allowed")), \
              redirect_stdout(io.StringIO()):
             argv = ["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root),
-                    "--refresh-extraction-policy"]
+                    "--refresh-extraction-policy", "--no-store-postgres"]
             self.assertEqual(module.main(argv), 0)
             refreshed = {p: p.read_bytes() for p in output.rglob("*") if p.is_file()}
             self.assertEqual(module.main(argv), 0)
@@ -1259,7 +1308,7 @@ class AlignmentTests(unittest.TestCase):
              patch.object(alignment_runtime, "request_completion", side_effect=AssertionError("No API calls")), \
              redirect_stdout(io.StringIO()):
             argv = ["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024",
-                    "--data-dir", str(self.root), "--regroup-only"]
+                    "--data-dir", str(self.root), "--regroup-only", "--no-store-postgres"]
             self.assertEqual(module.main(argv), 0)
             snapshot = {p: p.read_bytes() for p in output.rglob("*") if p.is_file()}
             self.assertEqual(module.main(argv), 0)
@@ -1334,7 +1383,7 @@ class AlignmentTests(unittest.TestCase):
         original = (output / "alignments.json").read_bytes()
         protected = {p: p.read_bytes() for p in output.rglob("*.json") if p.parent.name in {"jobs", "requests", "traces"}
                      or p.name in {"token_usage.json", "manifest.json"}}
-        argv = ["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), "--regroup-only"]
+        argv = ["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), "--regroup-only", "--no-store-postgres"]
         with patch.object(module, "load_config", side_effect=AssertionError("Must not read API config")), \
              patch.object(alignment_runtime, "request_completion", side_effect=AssertionError("Must not call API")), \
              redirect_stdout(io.StringIO()):
@@ -1906,7 +1955,7 @@ class AlignmentTests(unittest.TestCase):
         with patch.object(module, "load_config", side_effect=AssertionError("No API config needed")), \
              patch.object(alignment_runtime, "request_completion", side_effect=AssertionError("No API needed")):
             with redirect_stdout(io.StringIO()):
-                self.assertEqual(module.main(["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root)]), 0)
+                self.assertEqual(module.main(["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), "--no-store-postgres"]), 0)
         report = self.saved_report()
         self.assertEqual(report["counts"], {"auto_matched": 3})
         self.assertEqual(report["coverage"]["pending_disclosure_ids"], [])

@@ -138,7 +138,6 @@ After the raw filing inputs exist, extraction and alignment can run together:
   --batch-workers 6 \
   --max-concurrent-requests 18 \
   --output-root data/disclosures_parallel \
-  --store-postgres \
   --align \
   --alignment-output-root data/alignments_parallel \
   --fault-tolerant \
@@ -155,8 +154,8 @@ independent pairs continue; the command returns a failure or partial exit code
 after all comparisons finish or checkpoint.
 Rerun the same command to resume both stages using saved successful work.
 
-With `--store-postgres`, completed disclosures are also imported into the local
-PostgreSQL database while alignment runs. Start Docker Desktop and run
+Completed disclosures and successful alignment comparisons are automatically
+imported into the local PostgreSQL database. Start Docker Desktop and run
 `docker compose up -d db` first; install `requirements.txt` to include psycopg.
 Storage uses `--env-file` for `POSTGRES_*` or `DATABASE_URL` settings, falling
 back to the repository `.env` when no file was selected. Exported settings take
@@ -166,8 +165,10 @@ The importer reads each actual extraction output folder, including custom
 `--output-root` and single-year `--output-dir` paths. It stores both accepted
 disclosures and review candidates, supports extraction schemas `"3"` and `"4"`,
 and refreshes the selected company/year's disclosure rows in one transaction.
-Obsolete IDs from an earlier extraction snapshot are removed from that filing;
-other filings and alignment tables are unchanged. Source evidence, validation
+Obsolete IDs from an earlier extraction snapshot are removed from that filing.
+The extraction importer only changes that filing's disclosures; the alignment
+stage separately replaces its selected comparison's decisions and members after
+alignment and requested change analysis finish successfully. Source evidence, validation
 metadata and related-disclosure links are preserved in the existing JSON columns.
 API requests, token ledgers and intermediate audit files remain on disk.
 
@@ -176,9 +177,11 @@ completed years can still be stored, while alignment waits for all selected year
 A storage failure does not stop alignment or imports for other completed years.
 The command waits for both stages, reports their exit codes, and returns `1` if
 either fails or `2` if extraction/alignment remains partial. `--dry-run` describes
-the planned imports without connecting to PostgreSQL. Single-year extraction can
-also use `--store-postgres` without alignment. Omitting the flag keeps the JSON-only
-extraction workflow.
+the planned imports without connecting to PostgreSQL. Single-year extraction also
+stores its completed disclosures automatically. `--store-postgres` remains accepted
+as an explicit enable flag. Use `--no-store-postgres` to keep JSON files only; the
+combined command forwards this choice to alignment. Partial or failed alignment/
+change-analysis runs keep their JSON without replacing a completed database snapshot.
 
 Retry just the database import after fixing a connection problem, without making
 LLM requests:
@@ -191,6 +194,9 @@ LLM requests:
 ```
 
 `--replace` requires `token_usage.json` to confirm that extraction is complete.
+For an alignment database retry, use `scripts/load_alignments_to_postgres.py`
+with the company, year pair, exact `--dir` and optional `--env-file`; see the
+[alignment guide](ZIYANG_disclosure_alignment.md#automatic-postgresql-storage).
 For a nonstandard single-year folder, pass `--output-dir PATH` instead of a root.
 
 The disclosure root is forwarded to alignment automatically. The default
@@ -200,19 +206,20 @@ Without `--env-file`, exported SoCLaaS variables or the default SoCLaaS configur
 The stages share those settings, completion limit, timeout, request interval,
 HTTP 429 cooldown, fault tolerance and retry settings. Extraction concurrency
 uses `--workers`, `--batch-workers` and `--max-concurrent-requests`; alignment
-automatically inherits the same effective API concurrency. In this example, both
-stages allow up to 18 simultaneous requests **in total**, including all alignment
-pairs combined. The inherited worker count per pair is
-`min(selected years, --workers) × --batch-workers`, reduced by any smaller
-`--max-concurrent-requests` cap. `--alignment-workers` remains an optional
-override, also limited by `--max-concurrent-requests`.
-`--alignment-pair-workers` defaults to 3 concurrent comparisons, or fewer when
-fewer pairs are selected; use `--alignment-pair-workers 1` for sequential pairs.
+has independent defaults: **2 concurrent year pairs × 9 workers per pair**.
+Extraction remains **3 concurrent years × 6 batch workers per year**. For the
+three-year example, each stage allows up to 18 simultaneous API requests in total.
+Matching, verification and change analysis all use the pair's 9 workers.
+`--alignment-workers` overrides workers per pair; `--alignment-pair-workers`
+overrides concurrent comparisons (default: 2, or fewer when fewer pairs are
+selected). Use `--alignment-pair-workers 1` for sequential pairs. Changing
+extraction workers or batch workers does not change alignment workers.
 All pairs share one API limiter, request-start interval and HTTP 429 cooldown.
 Without an explicit `--max-concurrent-requests`, their shared request cap equals
-the per-pair alignment worker count. An explicit cap can allow more total calls,
-subject to the number of active pairs and their workers. Each pair can use the
-available shared slots; they are not divided into fixed allocations. Outputs,
+the number of active pairs multiplied by workers per pair (18 by default).
+A smaller explicit cap reduces simultaneous calls and, if necessary, the
+per-pair worker count. Each pair has at most 9 workers by default; when only
+one of the two pairs is busy, it still uses at most 9 API requests. Outputs,
 request/token budgets, caches and retry accounting remain separate per pair.
 Startup logs show the pair capacity, per-pair workers and shared API request cap.
 
@@ -350,7 +357,7 @@ complete output path for one year.
 This uses the normal SoCLaaS configuration and writes separate year directories:
 `data/disclosures_parallel/amd/2023/`, `2024/` and `2025/`. Add `--env-file .env`
 if using a project env file. Add `--dry-run` to validate all years without API
-calls or output writes. Add `--store-postgres` to import completed disclosures;
+calls or output writes. Completed disclosures are imported into PostgreSQL by default;
 combine it with `--align` to run storage and alignment concurrently afterward.
 For the separate alignment command, pass
 `--disclosures-dir data/disclosures_parallel`. `--year` and `--years` are mutually exclusive;
@@ -620,6 +627,91 @@ keep the company/year/run context with them. `run_complete` is in
 not imply the run has finished.
 
 ## 7. Example data and downstream usage
+
+### Export joined data from PostgreSQL
+
+Run the dedicated downstream exporter from the repository root:
+
+```bash
+.venv/bin/python scripts/export_downstream_data.py \
+  --company amd --years 2023 2024 2025 \
+  --output-dir data/downstream --env-file .env
+```
+
+The exporter builds JSON by joining the existing normalized tables:
+
+- `filings` + `disclosures` provide each year's accepted and review disclosures.
+- `alignment_runs` + `alignments` + `alignment_members` + `disclosures` + `filings`
+  provide each comparison's decisions and full previous/current disclosure records.
+
+It writes:
+
+```text
+data/downstream/disclosures/amd/{2023,2024,2025}/
+  disclosures.json
+  review_candidates.json
+data/downstream/alignments/amd/{2023-2024,2024-2025}/
+  alignments.json
+  needs_review.json
+```
+
+No whole JSON files are stored in the database for this exporter. It works with
+existing normalized imports and does not read the original local files. Direct
+SQL changes to the records appear in the next export. It uses one read-only,
+repeatable-read transaction and the same `POSTGRES_*` / `DATABASE_URL` settings as
+the importers. No new table or migration is required.
+
+The output keeps the fields needed for downstream analysis:
+
+- Disclosure IDs, company/year, Item/section/topic, summary, full text, taxonomy,
+  review status, source paragraphs/sentences, verification and extra record fields
+  such as related-disclosure links.
+- Alignment IDs, status/relationship, matching/review reasons, unmatched details,
+  evidence, grouping, validation errors, change analysis and extra record fields.
+- `previous_ids` / `current_ids` and `previous_disclosures` / `current_disclosures`.
+  Each nested disclosure includes its full text, sources, verification and review
+  status from the disclosure tables, plus alignment-time metadata and extraction
+  status from the member table. Non-null alignment metadata takes precedence;
+  otherwise the disclosure's metadata is retained.
+
+Each envelope has `export_schema_version: "1"`, identity fields and a count.
+Alignment envelopes also have the stored `source_schema_version`, completion,
+comparison scope, note and derived status counts. Original policies, input hashes,
+API usage and other file-only headers are omitted. Records and member IDs are
+sorted by ID; original array ordering and formatting are not part of this export.
+
+Use `--stage disclosures` if only extraction data is loaded. `--stage alignments`
+exports only adjacent selected year pairs; both years' disclosures must be loaded
+as well. Missing runs, incomplete comparisons and missing/cross-filing members
+produce an error before any files are written, rather than dropping data through
+an inner join. A loaded filing or completed comparison with zero records exports
+empty arrays. The exporter cannot infer extraction completion from a filing row;
+use the pipeline's successful import as the completion signal.
+
+The default destination is `data/downstream`. Identical existing exports are
+reused; different files require `--overwrite` or another destination.
+
+For direct Python use, install the project with `pip install -e .` or set
+`PYTHONPATH=src`, then read the joined report objects without writing files:
+
+```python
+from sec_disclosure.storage.exports import get_disclosure_reports, get_alignment_reports
+
+reports = get_disclosure_reports("amd", 2025)
+accepted = reports["disclosures.json"]["disclosures"]
+review = reports["review_candidates.json"]["disclosures"]
+
+reports = get_alignment_reports("amd", 2024, 2025)
+aligned = reports["alignments.json"]["alignments"]
+previous_text = aligned[0]["previous_disclosures"][0]["content"]
+change_analysis = aligned[0]["change_analysis"]
+alignment_review = reports["needs_review.json"]["alignments"]
+```
+
+Both functions accept `env_file=Path("custom.env")`. The dedicated script also
+exposes them for downstream imports.
+
+### Local example runs
 
 The newest completed local AMD extraction runs are:
 

@@ -17,6 +17,7 @@ from sec_disclosure.llm.client import LLMError
 from sec_disclosure.llm.config import load_config
 from sec_disclosure.llm.disclosures import SOURCE_UNIT_POLICY, digest, write_json
 from sec_disclosure.llm.request_pacing import RequestPacer
+from sec_disclosure.storage.alignments import AlignmentStorageError, store_alignments
 from .alignment_data import AlignmentData
 from .alignment_exact import EXACT_POLICY, accepted_status, exact_matches
 from .alignment_prompts import MATCHING_PROMPT, VERIFICATION_PROMPT
@@ -617,6 +618,23 @@ def analyze_saved_alignments(output, data, args, request_pacer=None):
     return run_change_stage(output, report, data, runtime)
 
 
+def store_completed_run(args, output, ticker, years, code, *, complete=True):
+    """Persist finalized reports after all requested stages succeed."""
+    if code != 0 or not complete or not args.store_postgres:
+        return code
+    try:
+        result = store_alignments(output, ticker, int(years[0]), int(years[1]),
+                                  env_file=args.env_file, require_complete=True)
+        print(f"PostgreSQL: {result.stored} alignments ({result.finalized} finalized, {result.review} needs review), "
+              f"{result.members} member rows stored for {ticker} {years[0]}–{years[1]}.", flush=True)
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, AlignmentStorageError) as error:
+        print(f"Alignment PostgreSQL storage error: {error}. Saved reports: {output}", file=sys.stderr)
+    except Exception as error:
+        print(f"Alignment PostgreSQL storage error ({type(error).__name__}). Saved reports: {output}", file=sys.stderr)
+    return 1
+
+
 def main(argv=None, *, request_pacer: RequestPacer | None = None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ticker", required=True)
@@ -627,6 +645,8 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
                         help="Alternative disclosure root containing ticker/year directories; raw evidence still comes from --data-dir/raw.")
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--env-file", type=Path)
+    parser.add_argument("--store-postgres", action=argparse.BooleanOptionalAction, default=True,
+                        help="Save completed alignment/change-analysis reports to PostgreSQL (default: enabled); --no-store-postgres keeps files only.")
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--batch-size", type=int, default=6)
     parser.add_argument("--workers", type=int, default=1, help="Concurrent jobs within each matching, verification and change-analysis phase (default: 1).")
@@ -684,11 +704,12 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
     try:
         data = AlignmentData(args.data_dir, ticker, years, disclosures_dir=args.disclosures_dir)
         if args.change_analysis_only:
-            return analyze_saved_alignments(output, data, args, request_pacer)
+            code = analyze_saved_alignments(output, data, args, request_pacer)
+            return store_completed_run(args, output, ticker, years, code)
         if args.regroup_only or args.refresh_extraction_policy:
             report = regroup_saved_report(output, data, extraction_policy_only=args.refresh_extraction_policy)
             print(f"Refreshed {output}: {report['counts']}; 0 additional API requests or tokens.", flush=True)
-            return 0
+            return store_completed_run(args, output, ticker, years, 0, complete=report["run_complete"])
         source = RepairSource(args.repair_from, data) if args.repair_from else None
         automatic = source.automatic if source else exact_matches(data)
         exact_ids = {key for row in automatic for key in row["previous_ids"] + row["current_ids"]}
@@ -768,7 +789,7 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
         print(f"Alignment stopped: {error}", file=sys.stderr)
     if runtime is not None and complete and not error and not args.skip_change_analysis and not args.offline_repair:
         exit_code = run_change_stage(output, report, data, runtime)
-    return exit_code
+    return store_completed_run(args, output, ticker, years, exit_code, complete=complete and error is None)
 
 
 def checkpoint_decisions(output):

@@ -64,7 +64,7 @@ class DisclosureTests(unittest.TestCase):
         with patch.object(module, "load_config", return_value=LLMConfig("https://example.test/v1", "fake-key", "default")), \
              patch.object(module, "request_completion", side_effect=responder or self.response) as request, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
-            status = module.main(["--ticker", "amd", "--year", "2024", "--data-dir", str(self.root), *extra])
+            status = module.main(["--ticker", "amd", "--year", "2024", "--data-dir", str(self.root), "--no-store-postgres", *extra])
         return status, request.call_count
 
     def read_output(self, name):
