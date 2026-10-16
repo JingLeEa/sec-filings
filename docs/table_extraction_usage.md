@@ -2,6 +2,49 @@
 
 Run commands from the repository root after installing the dependencies. Set `SEC_USER_AGENT` for SEC requests and `SEC_API_KEY` for sec-api.io requests.
 
+## Export existing XBRL data from Docker
+
+Use the dedicated exporter to read data that is already in PostgreSQL:
+
+```bash
+docker compose up -d
+python3 scripts/export_xbrl_from_postgres.py --list
+python3 scripts/export_xbrl_from_postgres.py --company Intel --year 2025
+python3 scripts/export_xbrl_from_postgres.py --company Intel --year 2025 --format csv
+```
+
+No SEC User-Agent, API key, original JSON file or source cache is needed. Connection
+settings use the loader's `DATABASE_URL` or `POSTGRES_*` from the shell/repository
+`.env`, defaulting to the local Docker database. The exporter uses a read-only
+transaction and does not create tables or modify stored data.
+
+`--company` is the label used when loading, such as `Intel`, not necessarily the
+ticker. `--year` selects the source filing year; all comparative periods remain.
+If several snapshots match, the command requires an explicit selection:
+
+```bash
+python3 scripts/export_xbrl_from_postgres.py --list --company Intel --year 2025
+python3 scripts/export_xbrl_from_postgres.py --extraction-id 123 --format csv --output data/intel_values.csv
+```
+
+By default, files go to `data/table_output/<company>/db_exports/` and include the
+filing year and extraction ID in the filename. Existing files are never overwritten;
+use `--output PATH` for another destination.
+
+JSON reconstructs the yearly `api-metrics-1.0` structure, including metadata,
+`metrics[]`, `value[]`, source evidence and unknown properties. Amounts use their
+stored decimal text; nil, zero, dimensions, accuracy types and array order are
+preserved. This reconstructs stored records, not the original file bytes: object
+key order/formatting can differ, and optional source fields may appear as null.
+The original verification metadata is retained; source caches are not rechecked.
+
+CSV contains one row per value with its concept, label, period, unit, status and
+snapshot identity. `dimensions`, `items` and `source_labels` are JSON inside cells,
+so several source occurrences do not multiply financial amounts. Accuracy cells
+also use JSON: blank means absent, `null` means explicitly null, and `"-6"` retains
+a string type. Source row/column labels stay in `source_labels`; the database
+does not store printed table layouts. JSON remains the full-fidelity stored export.
+
 ## HTML 10-K tables to nested JSON
 
 For a separate export of **untagged financial/quantitative HTML cells in Items

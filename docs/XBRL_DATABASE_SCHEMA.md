@@ -11,6 +11,12 @@ The single-year and batch API extraction commands save each yearly JSON to
 PostgreSQL automatically, while keeping the export in `data/table_output/<company>/`.
 Use `--no-db` on those commands for file-only extraction.
 
+To retrieve existing records, use
+[`scripts/export_xbrl_from_postgres.py`](../scripts/export_xbrl_from_postgres.py).
+It lists snapshots and exports one selected snapshot as JSON or one-value-per-row
+CSV, without API calls or database writes. See
+[export commands and output details](table_extraction_usage.md#export-existing-xbrl-data-from-docker).
+
 ## Relationships
 
 ```mermaid
