@@ -89,7 +89,8 @@ COMMON_ABBREVIATIONS = (
     "etc.",
     "vs.",
 )
-SINGLE_LETTER_ABBREVIATION_RE = re.compile(r"\b[A-Za-z]\.(?=\s+[A-Z0-9])")
+SINGLE_LETTER_ABBREVIATION_RE = re.compile(r"(?<!-)\b[A-Za-z]\.(?=\s+[A-Z0-9])")
+ITEM_REFERENCE_RE = re.compile(r"\bItem\s+(?P<item>\d{1,2}[A-Z]?)\.", re.IGNORECASE)
 MISSING_SPACE_AFTER_PERIOD_RE = re.compile(r"([A-Za-z]{2,}\.)([A-Z][a-z])")
 PROTECTED_INLINE_SPAN_RE = re.compile(
     r"(?:https?://|ftp://|www\.)[^\s]+|"
@@ -135,8 +136,8 @@ NAV_AND_FOLIO_PATTERN = re.compile(
     r"\d{4}\s+form\s+10-k|"
     r"(?:december|january|february|march|april|may|june|july|august|september|october|november)\s+\d{4}\s+form\s+10-k|"
     r"(?:page\s+)?\d{1,4}|"
-    r"[a-z0-9\s,\.\-]{1,35}\s+\d{1,4}|"
-    r"\d{1,4}\s+[a-z0-9\s,\.\-]{1,35}"
+    r"[a-z0-9\s,\.\-]{1,35}\s+(?!(?:19|20)\d{2}$)\d{1,4}|"
+    r"(?!(?:19|20)\d{2}\s)\d{1,4}\s+[a-z0-9\s,\.\-]{1,35}"
     r")$",
     re.IGNORECASE,
 )
@@ -238,6 +239,12 @@ class BlockSegment:
     bullet_indent_pt: float | None = None
     continues_previous_bullet: bool = False
     list_depth: int | None = None
+
+
+def preserve_whitespace_after_text(parts: list[str]) -> None:
+    """Keep one separator after existing text; ignore leading or repeated whitespace."""
+    if parts and parts[-1] and not parts[-1][-1].isspace():
+        parts.append(" ")
 
 
 class FilingTextExtractor(HTMLParser):
@@ -411,6 +418,10 @@ class FilingBlockExtractor(HTMLParser):
             return
         data = html.unescape(data).replace("\xa0", " ")
         if not data.strip():
+            if self.block_stack:
+                parts = self.block_stack[-1]["parts"]
+                assert isinstance(parts, list)
+                preserve_whitespace_after_text(parts)
             return
         if is_superscript_footnote_marker(data, self.style_stack):
             data = footnote_marker_text(data)
@@ -614,6 +625,12 @@ class FilingStructureExtractor(HTMLParser):
             return
         data = html.unescape(data).replace("\xa0", " ")
         if not data.strip():
+            if self.table_depth and self.current_cell_parts is not None:
+                preserve_whitespace_after_text(self.current_cell_parts)
+            elif self.block_stack:
+                parts = self.block_stack[-1]["parts"]
+                assert isinstance(parts, list)
+                preserve_whitespace_after_text(parts)
             return
         if is_superscript_footnote_marker(data, self.style_stack):
             data = footnote_marker_text(data)
@@ -1003,8 +1020,29 @@ def load_filing_from_sec_api(args: argparse.Namespace) -> tuple[str, str, str]:
     return html_text, source_url, company
 
 
+def table_item_heading_text(event: FilingStructureEvent) -> str:
+    """Return an Item heading carried by a compact layout table."""
+    if event.kind != "table":
+        return ""
+    if len(event.rows) == 1:
+        heading = parse_item_heading(event.text)
+        return event.text if heading and heading[1] else ""
+
+    nonempty_rows = [[cell for cell in row if cell.strip()] for row in event.rows]
+    nonempty_rows = [row for row in nonempty_rows if row]
+    if len(nonempty_rows) != 2 or len(nonempty_rows[0]) != 1 or len(nonempty_rows[1]) != 1:
+        return ""
+    heading_text = nonempty_rows[0][0]
+    heading = parse_item_heading(heading_text)
+    if not heading or not heading[1]:
+        return ""
+    if report_title_key(nonempty_rows[1][0]) != "table of contents":
+        return ""
+    return heading_text
+
+
 def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) -> list[FilingBlock]:
-    """Recover single-row Item labels without retaining financial table data.
+    """Recover compact layout-table Item labels without retaining table data.
 
     Keep the existing block stream/indices for filings whose Item labels are
     already outside tables. Only switch streams when a table adds an Item.
@@ -1012,8 +1050,10 @@ def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) 
     existing = {heading[0] for block in blocks if (heading := parse_item_heading(block.text))}
     events = html_to_structure_events(html_text)
     table_items = {
-        heading[0] for event in events if event.kind == "table" and len(event.rows) == 1
-        if (heading := parse_item_heading(event.text)) and heading[1]
+        heading[0]
+        for event in events
+        if (heading_text := table_item_heading_text(event))
+        if (heading := parse_item_heading(heading_text))
     }
     if not table_items - existing:
         return blocks
@@ -1022,9 +1062,10 @@ def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) 
         if should_drop_line(event.text) or is_boilerplate_or_nav(event.text):
             continue
         if event.kind == "table":
-            if len(event.rows) != 1 or not parse_item_heading(event.text):
+            heading_text = table_item_heading_text(event)
+            if not heading_text:
                 continue
-            result.append(FilingBlock(event.index, "div", event.text, bold=True))
+            result.append(FilingBlock(event.index, "div", heading_text, bold=True))
         else:
             result.append(FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
                                       mixed_bold=event.mixed_bold, italic=event.italic,
@@ -2742,12 +2783,17 @@ def split_extraction_sentences(text: str) -> list[str]:
 
 
 def protect_sentence_periods(text: str) -> str:
-    protected = re.sub(
-        r'\b(Item\s+\d+[A-Z]?|Part\s+[IVXLCDM]+|Note\s+\d+[A-Z]?)\.',
-        rf"\1{PERIOD_TOKEN}",
-        text,
-        flags=re.IGNORECASE,
-    )
+    def protect_item_title_reference(match: re.Match[str]) -> str:
+        item = match.group("item").upper()
+        title = ITEM_TITLES.get(item)
+        if not title or len(title.split()) < 2:
+            return match.group(0)
+        following = match.string[match.end():]
+        if not re.match(rf"\s+{re.escape(title)}\b", following, re.IGNORECASE):
+            return match.group(0)
+        return f"{match.group(0)[:-1]}{PERIOD_TOKEN}"
+
+    protected = ITEM_REFERENCE_RE.sub(protect_item_title_reference, text)
     for abbreviation in COMMON_ABBREVIATIONS:
         protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
     protected = WRAPPED_REFERENCE_TITLE_RE.sub(

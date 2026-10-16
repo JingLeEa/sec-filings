@@ -23,11 +23,13 @@ from sec_disclosure.extraction.sec_10k_extractor import (
     is_boilerplate_or_nav,
     is_bullet_marker_only,
     is_subheader_block,
+    item_blocks_with_layout_headings,
     merge_continued_blocks,
     make_chunk_id,
     main,
     normalize_source,
     parse_args,
+    parse_item_heading,
     report_outline,
     referenced_section_ranges,
     resolve_section_footnotes,
@@ -104,6 +106,72 @@ class ExtractorTests(unittest.TestCase):
             records = json.loads((output / "2024_chunks.json").read_text())
             self.assertEqual({record["item"] for record in records}, {"1", "1A", "7", "8"})
             self.assertFalse((output / "2024_item_15.txt").exists())
+
+    def test_item8_heading_in_two_row_layout_table_is_recovered(self):
+        html = """
+        <html><body>
+          <div>Item 7A. Quantitative and Qualitative Disclosures about Market Risk</div>
+          <table>
+            <tr><td>Item 8. Financial Statements and Supplementary Data</td></tr>
+            <tr><td>Table of Contents</td></tr>
+          </table>
+          <div>Report of Independent Registered Public Accounting Firm</div>
+          <div>We audited the accompanying consolidated financial statements.</div>
+          <div>Item 9. Changes in and Disagreements with Accountants</div>
+        </body></html>
+        """
+
+        blocks = item_blocks_with_layout_headings(html, html_to_blocks(html))
+        headings = [parse_item_heading(block.text) for block in blocks if parse_item_heading(block.text)]
+        sections = extract_section_blocks(blocks, items=("8",))
+
+        self.assertIn(("8", "Financial Statements and Supplementary Data"), headings)
+        self.assertIn("8", sections)
+        self.assertEqual(
+            [block.text for block in sections["8"]],
+            [
+                "Report of Independent Registered Public Accounting Firm",
+                "We audited the accompanying consolidated financial statements.",
+            ],
+        )
+
+    def test_whitespace_only_inline_nodes_preserve_one_separator(self):
+        html = """
+        <div><span>NOTE 5</span><span>  </span><span>Outstanding Loans</span></div>
+        <div><span>Outstand</span><span>ing</span></div>
+        """
+
+        self.assertEqual(
+            [block.text for block in html_to_blocks(html)],
+            ["NOTE 5 Outstanding Loans", "Outstanding"],
+        )
+        self.assertEqual(
+            [event.text for event in html_to_structure_events(html) if event.kind != "table"],
+            ["NOTE 5 Outstanding Loans", "Outstanding"],
+        )
+
+    def test_block_indentation_is_not_emitted_as_text(self):
+        html = """
+        <div>
+          <p>First paragraph.</p>
+          <p>Second paragraph.</p>
+        </div>
+        """
+
+        self.assertEqual([block.text for block in html_to_blocks(html)], ["First paragraph.", "Second paragraph."])
+        self.assertEqual(
+            [event.text for event in html_to_structure_events(html) if event.kind != "table"],
+            ["First paragraph.", "Second paragraph."],
+        )
+
+    def test_whitespace_only_node_inside_table_cell_preserves_one_separator(self):
+        html = """
+        <table><tr><td><span>NOTE 5</span><span>  </span><span>Outstanding Loans</span></td></tr></table>
+        """
+
+        table = next(event for event in html_to_structure_events(html) if event.kind == "table")
+
+        self.assertEqual(table.rows, (("NOTE 5 Outstanding Loans",),))
 
     def test_cli_auto_includes_item15_when_item8_points_to_financial_statements(self):
         lines = [
@@ -2224,22 +2292,22 @@ class IncorporatedReportTests(unittest.TestCase):
                     '<div style="font-weight:700">NM - Not meaningful</div>' + label_html +
                     '<div>Our revenue increased in 2031.</div>'
                     '<div>Fees increased due to customer activity.</div>'))
-            with redirect_stdout(io.StringIO()):
-                self.assertEqual(main(self.arguments(source, root)), 0)
-            records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
-            review = [r for r in records if r['item'] == '7']
-            expected_title = (
-                'Performance > Full year 2031 vs. full year 2030'
-                if label_html.startswith('<div')
-                else 'Performance'
-            )
-            self.assertEqual([r['item_title'] for r in review], [
-                'Performance > NM - Not meaningful', expected_title, expected_title,
-            ])
-            self.assertEqual([r['text'] for r in review], [
-                '', 'Our revenue increased in 2031.', 'Fees increased due to customer activity.',
-            ])
-            self.assertTrue(all(r['source'] == str(report) for r in review))
+                with redirect_stdout(io.StringIO()):
+                    self.assertEqual(main(self.arguments(source, root)), 0)
+                records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
+                review = [r for r in records if r['item'] == '7']
+                expected_title = (
+                    'Performance > Full year 2031 vs. full year 2030'
+                    if label_html.startswith('<div')
+                    else 'Performance'
+                )
+                self.assertEqual([r['item_title'] for r in review], [
+                    'Performance > NM - Not meaningful', expected_title, expected_title,
+                ])
+                self.assertEqual([r['text'] for r in review], [
+                    '', 'Our revenue increased in 2031.', 'Fees increased due to customer activity.',
+                ])
+                self.assertTrue(all(r['source'] == str(report) for r in review))
 
     def test_period_labels_in_html_headings_do_not_create_outline_sections(self):
         report = ('<h1>Operating Review</h1><h2>Performance</h2>'
