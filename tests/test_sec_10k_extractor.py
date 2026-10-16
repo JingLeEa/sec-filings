@@ -98,10 +98,11 @@ class ExtractorTests(unittest.TestCase):
             source = root / "mu-20240829.htm"
             source.write_text("".join(f"<div>{line}</div>" for line in lines), encoding="utf-8")
 
-            with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            with redirect_stdout(io.StringIO()) as stdout, redirect_stderr(io.StringIO()):
                 result = main([str(source), "--out-dir", str(root / "output")])
 
             self.assertEqual(result, 0)
+            self.assertIn("Sentence/chunk text match: OK (", stdout.getvalue())
             output = root / "output" / "mu" / "2024"
             records = json.loads((output / "2024_chunks.json").read_text())
             self.assertEqual({record["item"] for record in records}, {"1", "1A", "7", "8"})
@@ -454,7 +455,7 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual([record["bullet_level"] for record in sentence_records], [None, 1, 1])
         self.assertEqual(sentence_records[1]["text"], (
             "▪Series 2. Our first Series 2 products were brought to market in 2024. "
-            "They support notebooks and desktops. Continuation text for the same bullet remains in the same paragraph group."
+            "They support notebooks and desktops.\nContinuation text for the same bullet remains in the same paragraph group."
         ))
 
         styled_records = build_records_from_section_blocks(
@@ -494,6 +495,81 @@ class ExtractorTests(unittest.TestCase):
         sentences = build_sentence_records(records)
         self.assertEqual([record["bullet_level"] for record in sentences], [1, 2])
         self.assertEqual([record["html_list_depth"] for record in sentences], [1, 2])
+
+    def test_sentence_records_use_exact_chunk_spacing_and_keep_bullet_metadata(self):
+        for chunk_text, sentence_text in (
+            ("Realized gains were recorded on a trade-date basis.",
+             "Realized gains were recorded on a trade- date basis."),
+            ("• First item.\nContinued on next line.",
+             "• First item. Continued on next line."),
+        ):
+            with self.subTest(chunk_text=chunk_text):
+                records = build_records_from_section_blocks(
+                    {"8": [FilingBlock(1, "div", chunk_text)]},
+                    "2023", "bac", "filing.htm", 1800,
+                )
+                records[0]["_sentence_units"] = [{
+                    "text": sentence_text,
+                    "bullet_level": 1,
+                    "bullet_indent_pt": 18.0,
+                }]
+
+                sentences = build_sentence_records(records)
+
+                self.assertEqual([sentence["text"] for sentence in sentences], [chunk_text])
+                self.assertEqual(sentences[0]["bullet_level"], 1)
+                self.assertEqual(sentences[0]["bullet_indent_pt"], 18.0)
+
+    def test_sentence_records_resegment_when_words_or_numbers_differ(self):
+        records = build_records_from_section_blocks(
+            {"8": [FilingBlock(1, "div", "Revenue increased in 2025. Costs fell.")]},
+            "2023", "bac", "filing.htm", 1800,
+        )
+        records[0]["_sentence_units"] = [{"text": "Revenue increased in 2024."}]
+
+        sentences = build_sentence_records(records)
+
+        self.assertEqual([sentence["text"] for sentence in sentences], [
+            "Revenue increased in 2025.", "Costs fell.",
+        ])
+
+    def test_sentence_records_do_not_match_part_of_a_longer_number(self):
+        records = build_records_from_section_blocks(
+            {"8": [FilingBlock(1, "div", "Revenue in 20240. Costs fell.")]},
+            "2023", "bac", "filing.htm", 1800,
+        )
+        records[0]["_sentence_units"] = [{"text": "Revenue in 2024"}]
+
+        sentences = build_sentence_records(records)
+
+        self.assertEqual([sentence["text"] for sentence in sentences], [
+            "Revenue in 20240.", "Costs fell.",
+        ])
+
+    def test_sentence_records_resegment_ambiguous_formatting_match(self):
+        records = build_records_from_section_blocks(
+            {"8": [FilingBlock(1, "div", "Trade-date. Trade-date.")]},
+            "2023", "bac", "filing.htm", 1800,
+        )
+        records[0]["_sentence_units"] = [{"text": "Trade- date."}]
+
+        sentences = build_sentence_records(records)
+
+        self.assertEqual([sentence["text"] for sentence in sentences], [
+            "Trade-date.", "Trade-date.",
+        ])
+
+    def test_sentence_records_keep_whole_chunk_if_resegmentation_changes_typography(self):
+        chunk_text = "Revenue “grew” in 2025."
+        records = build_records_from_section_blocks(
+            {"8": [FilingBlock(1, "div", chunk_text)]},
+            "2023", "bac", "filing.htm", 1800,
+        )
+        records[0]["_sentence_units"] = [{"text": "Revenue grew in 2024."}]
+
+        sentences = build_sentence_records(records)
+
+        self.assertEqual([sentence["text"] for sentence in sentences], [chunk_text])
 
     def test_extracts_body_items_and_assigns_per_item_ids(self):
         html = """
@@ -894,6 +970,42 @@ class ExtractorTests(unittest.TestCase):
             "In the proposed rulemaking, the OCC also invited comments on a number of questions, including whether the heightened standards guidelines should be rescinded.",
             "The proposed rulemaking has not yet been finalized.",
         ])
+
+    def test_hyphenated_segment_continuation_matches_chunk_text(self):
+        for first, second in (
+            ("Realized gains and losses are recorded on a trade-", "date basis."),
+            ("Mortgage loans include (VA)-", "guaranteed loans."),
+        ):
+            with self.subTest(first=first):
+                block = FilingBlock(
+                    1,
+                    "merged_text",
+                    first + second,
+                    segments=(BlockSegment(first), BlockSegment(second)),
+                )
+                records = build_records_from_section_blocks(
+                    {"8": [block]}, "2023", "bac", "filing.htm", 1000,
+                )
+                sentences = build_sentence_records(records)
+
+                self.assertEqual([sentence["text"] for sentence in sentences], [block.text])
+                self.assertIn(sentences[0]["text"], records[0]["text"])
+
+    def test_hyphenated_bullet_continuation_matches_chunk_text(self):
+        block = FilingBlock(
+            1,
+            "merged_text",
+            "• trade-date basis.",
+            segments=(
+                BlockSegment("• trade-", bullet_indent_pt=18.0),
+                BlockSegment("date basis.", continues_previous_bullet=True),
+            ),
+        )
+
+        units = sentence_units_from_block(block, [])
+
+        self.assertEqual([unit.text for unit in units], [block.text])
+        self.assertEqual(units[0].bullet_level, 1)
 
     def test_non_bullet_segment_after_bullet_starts_new_sentence_unit(self):
         block = FilingBlock(

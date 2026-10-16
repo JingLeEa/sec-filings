@@ -3021,6 +3021,7 @@ def sentence_units_from_block(block: FilingBlock, indent_stack: list[tuple[float
             bullet_level = segment_level if segment_level is not None else unit.bullet_level
             bullet_indent_pt = segment.bullet_indent_pt if segment.bullet_indent_pt is not None else unit.bullet_indent_pt
             current_unit = SentenceUnit(unit.text, bullet_level, bullet_indent_pt, unit.starts_new_context)
+            separator = "" if not segment_units and units and units[-1].text.endswith("-") else " "
             if (
                 bullet_level is None
                 and units
@@ -3033,13 +3034,13 @@ def sentence_units_from_block(block: FilingBlock, indent_stack: list[tuple[float
                 )
             ):
                 units[-1] = SentenceUnit(
-                    f"{units[-1].text} {unit.text}",
+                    f"{units[-1].text}{separator}{unit.text}",
                     units[-1].bullet_level,
                     units[-1].bullet_indent_pt,
                 )
             elif should_continue_previous_sentence_unit(units, current_unit):
                 units[-1] = SentenceUnit(
-                    f"{units[-1].text} {current_unit.text}",
+                    f"{units[-1].text}{separator}{current_unit.text}",
                     units[-1].bullet_level,
                     units[-1].bullet_indent_pt,
                     units[-1].starts_new_context,
@@ -3420,6 +3421,64 @@ def is_repeated_item_root_header(
     return report_title_key(block.text) == report_title_key(ITEM_TITLES[item])
 
 
+def matching_chunk_text(sentence: str, chunk_text: str) -> str | None:
+    sentence = sentence.strip()
+    parts = re.findall(r"\s+|[^\s-]+|-", sentence)
+    if not parts:
+        return None
+    pattern_parts: list[str] = []
+    for index, part in enumerate(parts):
+        if part == "-":
+            pattern_parts.append(r"\s*-\s*")
+        elif part.isspace():
+            beside_hyphen = (
+                (index > 0 and parts[index - 1] == "-")
+                or (index + 1 < len(parts) and parts[index + 1] == "-")
+            )
+            pattern_parts.append(r"\s*" if beside_hyphen else r"\s+")
+        else:
+            pattern_parts.append(re.escape(part))
+    pattern = "".join(pattern_parts)
+    if sentence[0].isalnum():
+        pattern = r"(?<!\w)" + pattern
+    if sentence[-1].isalnum():
+        pattern += r"(?!\w)"
+    matches = list(re.finditer(pattern, chunk_text))
+    return matches[0].group() if len(matches) == 1 else None
+
+
+def is_exact_chunk_span(sentence: str, chunk_text: str) -> bool:
+    if not sentence:
+        return True
+    for match in re.finditer(re.escape(sentence), chunk_text):
+        before = chunk_text[match.start() - 1] if match.start() else ""
+        after = chunk_text[match.end()] if match.end() < len(chunk_text) else ""
+        if (not sentence[0].isalnum() or not before.isalnum()) and (
+            not sentence[-1].isalnum() or not after.isalnum()
+        ):
+            return True
+    return False
+
+
+def reconcile_sentence_units(units: list[SentenceUnit], chunk_text: str) -> list[SentenceUnit]:
+    corrected: list[SentenceUnit] = []
+    for unit in units:
+        if is_exact_chunk_span(unit.text, chunk_text):
+            corrected.append(unit)
+            continue
+        matched = matching_chunk_text(unit.text, chunk_text)
+        if matched is None:
+            break
+        corrected.append(replace(unit, text=matched))
+    else:
+        return corrected
+
+    fallback = split_extraction_sentence_units(chunk_text)
+    if fallback and all(is_exact_chunk_span(unit.text, chunk_text) for unit in fallback):
+        return fallback
+    return [SentenceUnit(chunk_text)] if chunk_text else []
+
+
 def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     sentence_records: list[dict[str, Any]] = []
     for record in records:
@@ -3430,6 +3489,7 @@ def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]
             if isinstance(raw_units, list)
             else split_extraction_sentence_units(str(record.get("text", "")))
         )
+        units = reconcile_sentence_units(units, str(record.get("text", "")))
         if not units:
             sentence_records.append(
                 {
@@ -3476,7 +3536,7 @@ def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]
     return sentence_records
 
 
-def write_outputs(records: list[dict[str, Any]], sections: dict[str, str], out_dir: Path, year: str) -> None:
+def write_outputs(records: list[dict[str, Any]], sections: dict[str, str], out_dir: Path, year: str) -> tuple[int, int]:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     public_records = [{key: value for key, value in record.items() if not key.startswith("_")} for record in records]
@@ -3489,6 +3549,12 @@ def write_outputs(records: list[dict[str, Any]], sections: dict[str, str], out_d
     (out_dir / f"{year}_chunks.txt").write_text("\n".join(txt_lines).strip() + "\n", encoding="utf-8")
 
     sentence_records = build_sentence_records(records)
+    chunk_text_by_id = {str(record["id"]): str(record["text"]) for record in records}
+    mismatches = sum(
+        sentence["chunk_id"] not in chunk_text_by_id
+        or sentence["text"] not in chunk_text_by_id[sentence["chunk_id"]]
+        for sentence in sentence_records
+    )
     (out_dir / f"{year}_chunk_sentences.json").write_text(
         json.dumps(sentence_records, indent=2, ensure_ascii=False), encoding="utf-8",
     )
@@ -3504,6 +3570,7 @@ def write_outputs(records: list[dict[str, Any]], sections: dict[str, str], out_d
     for item, section_text in sections.items():
         safe_item = item.lower().replace("a", "a")
         (out_dir / f"{year}_item_{safe_item}.txt").write_text(section_text + "\n", encoding="utf-8")
+    return len(sentence_records), mismatches
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -3649,7 +3716,7 @@ def main(argv: list[str] | None = None) -> int:
         if record["item"] in reference_audit:
             record["source"] = reference_audit[record["item"]]["source"]
     output_dir = Path(args.out_dir) / company / year
-    write_outputs(records, sections, output_dir, year)
+    sentence_count, mismatch_count = write_outputs(records, sections, output_dir, year)
     (output_dir / f"{year}_sources.json").write_text(json.dumps(
         {"primary_source": source, "referenced_items": reference_audit}, indent=2, ensure_ascii=False,
     ) + "\n", encoding="utf-8")
@@ -3660,12 +3727,16 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Output dir: {output_dir}")
     print(f"Sections extracted: {', '.join(sections) if sections else 'none'}")
     print(f"Chunks written: {len(records)}")
+    if mismatch_count:
+        print(f"Sentence/chunk text match: FAIL ({mismatch_count} of {sentence_count} sentences)")
+    else:
+        print(f"Sentence/chunk text match: OK ({sentence_count} sentences checked)")
     for item, reference in reference_audit.items():
         print(f"Item {item}: {reference['document_type']} {reference['source']}")
         if reference["excluded_sections"]:
             print("  Excluded subsections assigned to other requested Items: " + ", ".join(
                 section["title"] for section in reference["excluded_sections"]))
-    return 0 if sections else 1
+    return 2 if mismatch_count else 0 if sections else 1
 
 
 if __name__ == "__main__":
