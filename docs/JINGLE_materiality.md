@@ -140,11 +140,10 @@ Successful split groups are saved immediately. The CLI stops only if a one-row j
 still cannot produce a valid result or another run limit or API error occurs.
 
 API-bound batches can run concurrently within the classifier and verifier stages.
-The default `--concurrency 1` preserves sequential behavior; `--concurrency 2` is
-the recommended faster setting. Request admission and token reservations are
-atomic, and completed workers enter a short synchronized commit section before
-updating shared JSON artifacts. Classification still finishes before verification
-begins.
+The default `--concurrency 2` runs two batches in parallel; `--concurrency 1`
+restores sequential behavior. Request admission and token reservations are atomic,
+and completed workers enter a short synchronized commit section before updating
+shared JSON artifacts. Classification still finishes before verification begins.
 
 Use `--reclassify` to discard all saved `materiality_analysis` values and start a
 genuinely fresh model run. The stage assigns the run a new identifier so prior API
@@ -183,7 +182,7 @@ includes pauses between invocations; cumulative API time sums only model request
 durations. Timing fields are `null` for runs completed before timing was added
 because their exact duration cannot be reconstructed reliably.
 
-Default limits are 8 rows per batch, 1 concurrent batch, 3 model turns per batch,
+Default limits are 8 rows per batch, 2 concurrent batches, 3 model turns per batch,
 200 cumulative requests, 750,000 total budgeted tokens, 4,000 completion tokens,
 150,000 prompt characters, a 180-second initial timeout and a 300-second
 single-row retry timeout. Timeout recovery is enabled by default: a timed-out

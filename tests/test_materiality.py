@@ -342,7 +342,7 @@ class MaterialityTests(unittest.TestCase):
             return self.response(prompt, **kwargs)
 
         self.assertEqual(self.run_cli(
-            "--batch-size", "4", "--concurrency", "2", "--skip-verification",
+            "--batch-size", "4", "--skip-verification",
             response=response,
         ), (0, 2))
         self.assertTrue(all(

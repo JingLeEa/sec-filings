@@ -315,7 +315,7 @@ def batches(rows, size):
         yield rows[index:index + size]
 
 
-def process_adaptive_batches(rows, size, process, *, stage, concurrency=1):
+def process_adaptive_batches(rows, size, process, *, stage, concurrency=2):
     """Process batches concurrently, splitting invalid or timed-out groups."""
     queue = deque(batches(rows, size))
 
@@ -458,7 +458,7 @@ def main(argv=None):
     parser.add_argument(
         "--concurrency",
         type=int,
-        default=1,
+        default=2,
         help="Materiality batches processed concurrently within each stage.",
     )
     parser.add_argument("--max-steps", type=int, default=3)
