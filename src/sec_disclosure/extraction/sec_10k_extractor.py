@@ -49,12 +49,18 @@ ITEM_TITLES = {
     "15": "Exhibits and Financial Statement Schedules",
 }
 ITEM_7_ROOT_KEY = "management s discussion and analysis"
+FINANCIAL_REPORT_START_KEYS = {
+    "management s report on internal control over financial reporting",
+    "report of independent registered public accounting firm",
+}
+FINANCIAL_REPORT_FALLBACK_KEYS = {"notes to consolidated financial statements"}
 ITEM_7_EXCLUDED_SECTION_KEYS = {
     "financial statements and supplemental details",
     "financial statements and supplementary data",
     "properties",
     "quantitative and qualitative disclosures about market risk",
 }
+FINANCIAL_REPORT_END_KEYS = {"glossary of terms and acronyms"}
 
 BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
 SENTENCE_BULLET_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
@@ -89,7 +95,8 @@ COMMON_ABBREVIATIONS = (
     "etc.",
     "vs.",
 )
-SINGLE_LETTER_ABBREVIATION_RE = re.compile(r"\b[A-Za-z]\.(?=\s+[A-Z0-9])")
+SINGLE_LETTER_ABBREVIATION_RE = re.compile(r"(?<!-)\b[A-Za-z]\.(?=\s+[A-Z0-9])")
+ITEM_REFERENCE_RE = re.compile(r"\bItem\s+(?P<item>\d{1,2}[A-Z]?)\.", re.IGNORECASE)
 MISSING_SPACE_AFTER_PERIOD_RE = re.compile(r"([A-Za-z]{2,}\.)([A-Z][a-z])")
 PROTECTED_INLINE_SPAN_RE = re.compile(
     r"(?:https?://|ftp://|www\.)[^\s]+|"
@@ -135,8 +142,8 @@ NAV_AND_FOLIO_PATTERN = re.compile(
     r"\d{4}\s+form\s+10-k|"
     r"(?:december|january|february|march|april|may|june|july|august|september|october|november)\s+\d{4}\s+form\s+10-k|"
     r"(?:page\s+)?\d{1,4}|"
-    r"[a-z0-9\s,\.\-]{1,35}\s+\d{1,4}|"
-    r"\d{1,4}\s+[a-z0-9\s,\.\-]{1,35}"
+    r"[a-z0-9\s,\.\-]{1,35}\s+(?!(?:19|20)\d{2}$)\d{1,4}|"
+    r"(?!(?:19|20)\d{2}\s)\d{1,4}\s+[a-z0-9\s,\.\-]{1,35}"
     r")$",
     re.IGNORECASE,
 )
@@ -150,6 +157,8 @@ TABLE_INTRO_PATTERNS = re.compile(
 def is_boilerplate_or_nav(text: str) -> bool:
     cleaned = text.strip()
     if not cleaned:
+        return True
+    if re.fullmatch(r"page\s+\d{1,4}\s+not\s+used", cleaned, re.IGNORECASE):
         return True
     return bool(NAV_AND_FOLIO_PATTERN.match(cleaned))
 
@@ -238,6 +247,12 @@ class BlockSegment:
     bullet_indent_pt: float | None = None
     continues_previous_bullet: bool = False
     list_depth: int | None = None
+
+
+def preserve_whitespace_after_text(parts: list[str]) -> None:
+    """Keep one separator after existing text; ignore leading or repeated whitespace."""
+    if parts and parts[-1] and not parts[-1][-1].isspace():
+        parts.append(" ")
 
 
 class FilingTextExtractor(HTMLParser):
@@ -411,6 +426,10 @@ class FilingBlockExtractor(HTMLParser):
             return
         data = html.unescape(data).replace("\xa0", " ")
         if not data.strip():
+            if self.block_stack:
+                parts = self.block_stack[-1]["parts"]
+                assert isinstance(parts, list)
+                preserve_whitespace_after_text(parts)
             return
         if is_superscript_footnote_marker(data, self.style_stack):
             data = footnote_marker_text(data)
@@ -614,6 +633,12 @@ class FilingStructureExtractor(HTMLParser):
             return
         data = html.unescape(data).replace("\xa0", " ")
         if not data.strip():
+            if self.table_depth and self.current_cell_parts is not None:
+                preserve_whitespace_after_text(self.current_cell_parts)
+            elif self.block_stack:
+                parts = self.block_stack[-1]["parts"]
+                assert isinstance(parts, list)
+                preserve_whitespace_after_text(parts)
             return
         if is_superscript_footnote_marker(data, self.style_stack):
             data = footnote_marker_text(data)
@@ -1003,8 +1028,29 @@ def load_filing_from_sec_api(args: argparse.Namespace) -> tuple[str, str, str]:
     return html_text, source_url, company
 
 
+def table_item_heading_text(event: FilingStructureEvent) -> str:
+    """Return an Item heading carried by a compact layout table."""
+    if event.kind != "table":
+        return ""
+    if len(event.rows) == 1:
+        heading = parse_item_heading(event.text)
+        return event.text if heading and heading[1] else ""
+
+    nonempty_rows = [[cell for cell in row if cell.strip()] for row in event.rows]
+    nonempty_rows = [row for row in nonempty_rows if row]
+    if len(nonempty_rows) != 2 or len(nonempty_rows[0]) != 1 or len(nonempty_rows[1]) != 1:
+        return ""
+    heading_text = nonempty_rows[0][0]
+    heading = parse_item_heading(heading_text)
+    if not heading or not heading[1]:
+        return ""
+    if report_title_key(nonempty_rows[1][0]) != "table of contents":
+        return ""
+    return heading_text
+
+
 def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) -> list[FilingBlock]:
-    """Recover single-row Item labels without retaining financial table data.
+    """Recover compact layout-table Item labels without retaining table data.
 
     Keep the existing block stream/indices for filings whose Item labels are
     already outside tables. Only switch streams when a table adds an Item.
@@ -1012,8 +1058,10 @@ def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) 
     existing = {heading[0] for block in blocks if (heading := parse_item_heading(block.text))}
     events = html_to_structure_events(html_text)
     table_items = {
-        heading[0] for event in events if event.kind == "table" and len(event.rows) == 1
-        if (heading := parse_item_heading(event.text)) and heading[1]
+        heading[0]
+        for event in events
+        if (heading_text := table_item_heading_text(event))
+        if (heading := parse_item_heading(heading_text))
     }
     if not table_items - existing:
         return blocks
@@ -1022,9 +1070,10 @@ def item_blocks_with_layout_headings(html_text: str, blocks: list[FilingBlock]) 
         if should_drop_line(event.text) or is_boilerplate_or_nav(event.text):
             continue
         if event.kind == "table":
-            if len(event.rows) != 1 or not parse_item_heading(event.text):
+            heading_text = table_item_heading_text(event)
+            if not heading_text:
                 continue
-            result.append(FilingBlock(event.index, "div", event.text, bold=True))
+            result.append(FilingBlock(event.index, "div", heading_text, bold=True))
         else:
             result.append(FilingBlock(event.index, event.kind, event.text, style=event.style, bold=event.bold,
                                       mixed_bold=event.mixed_bold, italic=event.italic,
@@ -1272,7 +1321,9 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
         for node in nodes
         for position in range(node["start"] + 1, node.get("heading_end", node["start"] + 1))
     }
-    page_by_position = event_page_numbers(events) if allowed_pages is not None else {}
+    page_markers = validated_page_markers(events) if allowed_pages is not None else []
+    page_by_position = event_page_numbers(events, page_markers) if allowed_pages is not None else {}
+    marker_positions = {position for position, _ in page_markers}
     blocks = []
     for position, event in enumerate(events):
         if not any(node["start"] <= position < node["end"] for node in ranges):
@@ -1285,7 +1336,7 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                 continue
         if position in heading_continuations:
             continue
-        if page_marker_from_text(event.text) is not None:
+        if position in marker_positions or page_marker_from_text(event.text) is not None:
             continue
         if is_boilerplate_or_nav(event.text):
             continue
@@ -1908,20 +1959,50 @@ def page_marker_from_text(text: str) -> int | None:
     return int(match.group(1))
 
 
-def event_page_numbers(events: list[FilingStructureEvent]) -> dict[int, int]:
-    """Map structure-event positions to printed pages using footer markers.
-
-    A footer appears after the content it belongs to. Therefore, events up to
-    and including ``MD&A | 18`` are assigned to page 18, and events after it
-    are assigned to the next discovered marker's page. Positions after the
-    final marker remain unmapped and are retained by callers as a conservative
-    fallback.
-    """
-    markers = [
+def validated_page_markers(events: list[FilingStructureEvent]) -> list[tuple[int, int]]:
+    """Accept bare folios only when a consistent sequence spans the filing."""
+    labeled = [
         (position, page)
         for position, event in enumerate(events)
         if (page := page_marker_from_text(event.text)) is not None
     ]
+    if labeled:
+        return labeled
+
+    candidates = [
+        (position, int(event.text.strip()), (event.kind, event.font_size))
+        for position, event in enumerate(events)
+        if event.kind in {"div", "p"}
+        and not event.bold and not event.mixed_bold
+        and re.fullmatch(r"\s*\d{1,4}\s*", event.text)
+    ]
+    longest: list[tuple[int, int, tuple[str, float | None]]] = []
+    run: list[tuple[int, int, tuple[str, float | None]]] = []
+    for candidate in candidates:
+        if run and (candidate[1] != run[-1][1] + 1 or candidate[2] != run[-1][2]):
+            if len(run) > len(longest):
+                longest = run
+            run = []
+        run.append(candidate)
+    if len(run) > len(longest):
+        longest = run
+
+    if (len(longest) < 20 or len(longest) * 5 < len(candidates) * 4
+            or longest[-1][0] - longest[0][0] < len(events) // 2):
+        return []
+    return [(position, page) for position, page, _ in longest]
+
+
+def event_page_numbers(
+    events: list[FilingStructureEvent], markers: list[tuple[int, int]] | None = None,
+) -> dict[int, int]:
+    """Map structure-event positions to printed pages using validated folios.
+
+    A folio appears after the content it belongs to. Events through the marker
+    are assigned to that page; positions after the last marker remain unmapped.
+    """
+    if markers is None:
+        markers = validated_page_markers(events)
     if not markers:
         return {}
 
@@ -2366,6 +2447,101 @@ def merge_section_blocks(section_blocks: dict[str, list[FilingBlock]]) -> dict[s
     return {item: merge_continued_blocks(blocks) for item, blocks in section_blocks.items()}
 
 
+def is_financial_report_heading(block: FilingBlock, keys: set[str]) -> bool:
+    return (
+        report_title_key(block.text) in keys
+        and (
+            block.tag in {"toc_header", "h1", "h2", "h3", "h4", "h5", "h6"}
+            or (block.bold and not block.mixed_bold)
+            or (block.underlined and not block.mixed_underlined)
+        )
+    )
+
+
+def financial_report_boundary(blocks: list[FilingBlock]) -> int | None:
+    primary = next((index for index, block in enumerate(blocks)
+                    if is_financial_report_heading(block, FINANCIAL_REPORT_START_KEYS)), None)
+    if primary is not None:
+        return primary
+    return next((index for index, block in enumerate(blocks)
+                 if is_financial_report_heading(block, FINANCIAL_REPORT_FALLBACK_KEYS)), None)
+
+
+def assign_embedded_report_blocks(
+    section_blocks: dict[str, list[FilingBlock]],
+    source: str,
+    reference_audit: dict,
+    *,
+    include_overlaps: bool = False,
+) -> dict[str, list[FilingBlock]]:
+    """Keep one owner for a report embedded after an Item 15 exhibit index."""
+    assigned = dict(section_blocks)
+    item7, item8, item15 = (assigned.get(item, []) for item in ("7", "8", "15"))
+    if include_overlaps or not all((item7, item8, item15)):
+        return assigned
+    item_sources = {reference_audit.get(item, {}).get("source", source) for item in ("7", "8", "15")}
+    if len(item_sources) != 1 or not item15_reference_trigger(section_reference_text(item8)):
+        return assigned
+
+    start = financial_report_boundary(item15)
+    if start is None:
+        return assigned
+
+    def identity(block: FilingBlock) -> tuple[int, str]:
+        return block.index, re.sub(r"\s+", " ", normalize_typography(block.text)).strip().casefold()
+
+    item7_blocks = {identity(block) for block in item7}
+    # An ordinary repeated heading must not reassign an entire Item 15 section.
+    if sum(identity(block) in item7_blocks for block in item15[:start]) < 10:
+        return assigned
+
+    cutoff = next((index for index, block in enumerate(item7)
+                   if is_financial_report_heading(block, FINANCIAL_REPORT_START_KEYS)), None)
+    if cutoff is None:
+        cutoff = next((index for index, block in enumerate(item7)
+                       if block.index >= item15[start].index
+                       and is_financial_report_heading(block, FINANCIAL_REPORT_FALLBACK_KEYS)), None)
+    if cutoff is not None:
+        assigned["7"] = item7[:cutoff]
+
+    mdna_start = next((index for index, block in enumerate(item15[:start])
+                       if is_item7_root_title(block.text)), None)
+    exhibits_end = mdna_start if mdna_start is not None else start
+    if mdna_start is not None:
+        report_start = next((index for index, block in enumerate(item15[:mdna_start])
+                             if report_title_key(block.text) == "financial"), None)
+        if report_start is not None:
+            exhibits_end = report_start
+    end = next((index for index in range(start + 1, len(item15))
+                if report_title_key(item15[index].text) in FINANCIAL_REPORT_END_KEYS
+                or is_terminal_section_heading(item15[index].text)), len(item15))
+    assigned["8"] = item15[start:end]
+    assigned["15"] = [block for block in item15[:exhibits_end] if identity(block) not in item7_blocks]
+    return assigned
+
+
+def deduplicate_shared_source_blocks(
+    section_blocks: dict[str, list[FilingBlock]], source: str, reference_audit: dict,
+) -> dict[str, list[FilingBlock]]:
+    """Remove repeated source blocks from later items without matching their headings."""
+    seen: set[tuple[str, int, str]] = set()
+    result = dict(section_blocks)
+    for item in ITEM_OUTPUT_ORDER:
+        blocks = section_blocks.get(item)
+        if not blocks:
+            continue
+        item_source = reference_audit.get(item, {}).get("source", source)
+        unique = []
+        for block in blocks:
+            key = (item_source, block.index, re.sub(r"\s+", " ", normalize_typography(block.text)).strip())
+            if key in seen:
+                continue
+            seen.add(key)
+            unique.append(block)
+        result[item] = unique
+    return result
+
+
 def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
     merged: list[FilingBlock] = []
     pending: FilingBlock | None = None
@@ -2742,12 +2918,17 @@ def split_extraction_sentences(text: str) -> list[str]:
 
 
 def protect_sentence_periods(text: str) -> str:
-    protected = re.sub(
-        r'\b(Item\s+\d+[A-Z]?|Part\s+[IVXLCDM]+|Note\s+\d+[A-Z]?)\.',
-        rf"\1{PERIOD_TOKEN}",
-        text,
-        flags=re.IGNORECASE,
-    )
+    def protect_item_title_reference(match: re.Match[str]) -> str:
+        item = match.group("item").upper()
+        title = ITEM_TITLES.get(item)
+        if not title or len(title.split()) < 2:
+            return match.group(0)
+        following = match.string[match.end():]
+        if not re.match(rf"\s+{re.escape(title)}\b", following, re.IGNORECASE):
+            return match.group(0)
+        return f"{match.group(0)[:-1]}{PERIOD_TOKEN}"
+
+    protected = ITEM_REFERENCE_RE.sub(protect_item_title_reference, text)
     for abbreviation in COMMON_ABBREVIATIONS:
         protected = protected.replace(abbreviation, abbreviation.replace(".", PERIOD_TOKEN))
     protected = WRAPPED_REFERENCE_TITLE_RE.sub(
@@ -2975,6 +3156,7 @@ def sentence_units_from_block(block: FilingBlock, indent_stack: list[tuple[float
             bullet_level = segment_level if segment_level is not None else unit.bullet_level
             bullet_indent_pt = segment.bullet_indent_pt if segment.bullet_indent_pt is not None else unit.bullet_indent_pt
             current_unit = SentenceUnit(unit.text, bullet_level, bullet_indent_pt, unit.starts_new_context)
+            separator = "" if not segment_units and units and units[-1].text.endswith("-") else " "
             if (
                 bullet_level is None
                 and units
@@ -2987,13 +3169,13 @@ def sentence_units_from_block(block: FilingBlock, indent_stack: list[tuple[float
                 )
             ):
                 units[-1] = SentenceUnit(
-                    f"{units[-1].text} {unit.text}",
+                    f"{units[-1].text}{separator}{unit.text}",
                     units[-1].bullet_level,
                     units[-1].bullet_indent_pt,
                 )
             elif should_continue_previous_sentence_unit(units, current_unit):
                 units[-1] = SentenceUnit(
-                    f"{units[-1].text} {current_unit.text}",
+                    f"{units[-1].text}{separator}{current_unit.text}",
                     units[-1].bullet_level,
                     units[-1].bullet_indent_pt,
                     units[-1].starts_new_context,
@@ -3374,6 +3556,64 @@ def is_repeated_item_root_header(
     return report_title_key(block.text) == report_title_key(ITEM_TITLES[item])
 
 
+def matching_chunk_text(sentence: str, chunk_text: str) -> str | None:
+    sentence = sentence.strip()
+    parts = re.findall(r"\s+|[^\s-]+|-", sentence)
+    if not parts:
+        return None
+    pattern_parts: list[str] = []
+    for index, part in enumerate(parts):
+        if part == "-":
+            pattern_parts.append(r"\s*-\s*")
+        elif part.isspace():
+            beside_hyphen = (
+                (index > 0 and parts[index - 1] == "-")
+                or (index + 1 < len(parts) and parts[index + 1] == "-")
+            )
+            pattern_parts.append(r"\s*" if beside_hyphen else r"\s+")
+        else:
+            pattern_parts.append(re.escape(part))
+    pattern = "".join(pattern_parts)
+    if sentence[0].isalnum():
+        pattern = r"(?<!\w)" + pattern
+    if sentence[-1].isalnum():
+        pattern += r"(?!\w)"
+    matches = list(re.finditer(pattern, chunk_text))
+    return matches[0].group() if len(matches) == 1 else None
+
+
+def is_exact_chunk_span(sentence: str, chunk_text: str) -> bool:
+    if not sentence:
+        return True
+    for match in re.finditer(re.escape(sentence), chunk_text):
+        before = chunk_text[match.start() - 1] if match.start() else ""
+        after = chunk_text[match.end()] if match.end() < len(chunk_text) else ""
+        if (not sentence[0].isalnum() or not before.isalnum()) and (
+            not sentence[-1].isalnum() or not after.isalnum()
+        ):
+            return True
+    return False
+
+
+def reconcile_sentence_units(units: list[SentenceUnit], chunk_text: str) -> list[SentenceUnit]:
+    corrected: list[SentenceUnit] = []
+    for unit in units:
+        if is_exact_chunk_span(unit.text, chunk_text):
+            corrected.append(unit)
+            continue
+        matched = matching_chunk_text(unit.text, chunk_text)
+        if matched is None:
+            break
+        corrected.append(replace(unit, text=matched))
+    else:
+        return corrected
+
+    fallback = split_extraction_sentence_units(chunk_text)
+    if fallback and all(is_exact_chunk_span(unit.text, chunk_text) for unit in fallback):
+        return fallback
+    return [SentenceUnit(chunk_text)] if chunk_text else []
+
+
 def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     sentence_records: list[dict[str, Any]] = []
     for record in records:
@@ -3384,6 +3624,7 @@ def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]
             if isinstance(raw_units, list)
             else split_extraction_sentence_units(str(record.get("text", "")))
         )
+        units = reconcile_sentence_units(units, str(record.get("text", "")))
         if not units:
             sentence_records.append(
                 {
@@ -3430,7 +3671,7 @@ def build_sentence_records(records: list[dict[str, Any]]) -> list[dict[str, Any]
     return sentence_records
 
 
-def write_outputs(records: list[dict[str, Any]], sections: dict[str, str], out_dir: Path, year: str) -> None:
+def write_outputs(records: list[dict[str, Any]], sections: dict[str, str], out_dir: Path, year: str) -> tuple[int, int]:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     public_records = [{key: value for key, value in record.items() if not key.startswith("_")} for record in records]
@@ -3443,6 +3684,12 @@ def write_outputs(records: list[dict[str, Any]], sections: dict[str, str], out_d
     (out_dir / f"{year}_chunks.txt").write_text("\n".join(txt_lines).strip() + "\n", encoding="utf-8")
 
     sentence_records = build_sentence_records(records)
+    chunk_text_by_id = {str(record["id"]): str(record["text"]) for record in records}
+    mismatches = sum(
+        sentence["chunk_id"] not in chunk_text_by_id
+        or sentence["text"] not in chunk_text_by_id[sentence["chunk_id"]]
+        for sentence in sentence_records
+    )
     (out_dir / f"{year}_chunk_sentences.json").write_text(
         json.dumps(sentence_records, indent=2, ensure_ascii=False), encoding="utf-8",
     )
@@ -3458,6 +3705,7 @@ def write_outputs(records: list[dict[str, Any]], sections: dict[str, str], out_d
     for item, section_text in sections.items():
         safe_item = item.lower().replace("a", "a")
         (out_dir / f"{year}_item_{safe_item}.txt").write_text(section_text + "\n", encoding="utf-8")
+    return len(sentence_records), mismatches
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -3557,6 +3805,9 @@ def main(argv: list[str] | None = None) -> int:
             if "15" not in section_blocks:
                 indexed_item15 = extract_indexed_section_blocks(raw_html, items=("15",))
                 section_blocks.update(indexed_item15)
+    section_blocks = assign_embedded_report_blocks(
+        section_blocks, source, {}, include_overlaps=args.include_reference_overlaps,
+    )
     section_blocks = merge_section_blocks(section_blocks)
     reference_audit = {}
     if not args.no_follow_references:
@@ -3567,6 +3818,11 @@ def main(argv: list[str] | None = None) -> int:
         except (ValueError, RuntimeError, OSError) as exc:
             print(f"Error resolving incorporated report: {exc}", file=sys.stderr)
             return 2
+    section_blocks = assign_embedded_report_blocks(
+        section_blocks, source, reference_audit, include_overlaps=args.include_reference_overlaps,
+    )
+    if not args.include_reference_overlaps:
+        section_blocks = deduplicate_shared_source_blocks(section_blocks, source, reference_audit)
     section_blocks = resolve_section_footnotes(section_blocks)
     clean_text = html_to_clean_text(raw_html)
     year = args.year or filename_year or infer_year(raw_html + "\n" + clean_text, source)
@@ -3603,7 +3859,7 @@ def main(argv: list[str] | None = None) -> int:
         if record["item"] in reference_audit:
             record["source"] = reference_audit[record["item"]]["source"]
     output_dir = Path(args.out_dir) / company / year
-    write_outputs(records, sections, output_dir, year)
+    sentence_count, mismatch_count = write_outputs(records, sections, output_dir, year)
     (output_dir / f"{year}_sources.json").write_text(json.dumps(
         {"primary_source": source, "referenced_items": reference_audit}, indent=2, ensure_ascii=False,
     ) + "\n", encoding="utf-8")
@@ -3614,12 +3870,16 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Output dir: {output_dir}")
     print(f"Sections extracted: {', '.join(sections) if sections else 'none'}")
     print(f"Chunks written: {len(records)}")
+    if mismatch_count:
+        print(f"Sentence/chunk text match: FAIL ({mismatch_count} of {sentence_count} sentences)")
+    else:
+        print(f"Sentence/chunk text match: OK ({sentence_count} sentences checked)")
     for item, reference in reference_audit.items():
         print(f"Item {item}: {reference['document_type']} {reference['source']}")
         if reference["excluded_sections"]:
             print("  Excluded subsections assigned to other requested Items: " + ", ".join(
                 section["title"] for section in reference["excluded_sections"]))
-    return 0 if sections else 1
+    return 2 if mismatch_count else 0 if sections else 1
 
 
 if __name__ == "__main__":
