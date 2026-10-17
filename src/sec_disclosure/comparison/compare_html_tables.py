@@ -226,7 +226,7 @@ def primitive_blocks(root) -> list[Any]:
 def bold_block(node) -> bool:
     return node.tag in {'h1', 'h2', 'h3', 'h4', 'h5', 'h6'} or any(
         e.tag in {'b', 'strong'} or re.search(r'font-weight\s*:\s*(?:bold|[6-9]00)', e.get('style', ''), re.I)
-        for e in node.iter()
+        for e in node.iter() if isinstance(e.tag, str)
     )
 
 
@@ -604,6 +604,10 @@ def document_fiscal_year(data: bytes) -> int | None:
     root = html.fromstring(data, parser=html.HTMLParser(encoding='utf-8', no_network=True))
     values = set()
     for e in root.iter():
+        # lxml includes comments/processing instructions in iteration; their
+        # .get('name', '') can return None rather than the supplied default.
+        if not isinstance(e.tag, str):
+            continue
         if e.get('name', '').split(':')[-1].lower() == 'documentfiscalyearfocus':
             value = text(e)
             if re.fullmatch(r'\d{4}', value):

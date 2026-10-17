@@ -13,8 +13,9 @@ Read [YUVIKA_database_docker_setup.md](YUVIKA_database_docker_setup.md) first fo
 | `filings`, `chunks`, `sentences`, `sentence_embeddings` | Text preprocessing output | `scripts/load_to_postgres.py` |
 | `disclosures` | Extracted disclosures (`disclosures.json` and `review_candidates.json`, schema "3") | `scripts/load_disclosures_to_postgres.py` |
 | `alignment_runs`, `alignments`, `alignment_members` | Alignment results (`alignments.json` and `needs_review.json`, schema "8") | `scripts/load_alignments_to_postgres.py` |
+| `disclosure_embeddings` | Vectors for whole disclosures (content, summary, section), from the semantic-retrieval embedding cache | `scripts/load_disclosure_embeddings.py` |
 
-The last two rows are for Zi Yang's stages and are described in section 2. The `example_items` table in the templates is only a demo; do not create it on the shared database.
+The `disclosures` and alignment rows are for Zi Yang's stages and are described in section 2; `disclosure_embeddings` is described in section 3. The `example_items` table in the templates is only a demo; do not create it on the shared database.
 
 ## 2. Loading the disclosure and alignment tables (Zi Yang)
 
@@ -97,11 +98,39 @@ Type `\q` to leave.
 - The disclosure loader was written from the field list in the extraction guide and tested only on a small made-up file that follows it, because the real `disclosures.json` files are not in the repo. **Please run it once on a real file and tell me if anything fails**; the most likely problems are a taxonomy label that is not one of the nine, or a missing field.
 - Not stored as columns yet: the link between a disclosure and its source sentences (`sources[]` is kept as JSON). It can become a table once the shape of `sources` is confirmed.
 
-## 3. Adding your own table (template)
+## 3. Embeddings (Aarav)
+
+Semantic retrieval embeds whole extracted disclosures, not single sentences, using `bge-m3` (1024 dimensions) through SoCLaaS. It embeds three texts per disclosure: the original `content`, the generated `summary` and the `section` name. The vectors stay in the on-disk cache that code already writes (`data/embeddings`, one file per model and text). This stage only copies them into the database; it creates no embeddings and makes no API calls.
+
+Order: load the disclosures first (section 2, step 3), then:
+
+```bash
+# once, on an existing database
+docker compose exec -T db psql -U sec -d sec_disclosure < db/init/03_disclosure_embeddings.sql
+
+.venv/bin/python scripts/load_disclosure_embeddings.py --company amd --year 2025
+```
+
+Options: `--embeddings-cache PATH` (default `data/embeddings`), `--model NAME` (default `bge-m3`, must exist in `embedding_models`), `--fields content summary section` to load only some. It prints how many vectors were loaded and how many texts were not in the cache for each field. Missing ones are normal, for example a disclosure with an empty summary is never embedded. A vector whose length differs from the model's registered size stops the load.
+
+**`disclosure_embeddings`**: key (`disclosure_id`, `model_id`, `field`); `field` is `content`, `summary` or `section`; `embedding` is `vector(1024)`; a cosine-distance search index exists for the `content` vectors. Deleting a disclosure deletes its vectors. Example, the closest disclosures to one disclosure by content:
+
+```sql
+SELECT e.disclosure_id, e.embedding <=> q.embedding AS distance
+FROM disclosure_embeddings e
+CROSS JOIN (SELECT embedding FROM disclosure_embeddings
+            WHERE disclosure_id = 'amd_2025_1A_D001' AND field = 'content') q
+WHERE e.field = 'content'
+ORDER BY distance LIMIT 5;
+```
+
+Tested with made-up vectors in the right format and size, not real `bge-m3` output. The older `sentence_embeddings` table (one vector per sentence) is kept but unused until the team decides sentence-level vectors are needed.
+
+## 4. Adding your own table (template)
 
 You need three things: a SQL file that creates the table, a small script that loads your JSON, and a short note in your docs.
 
-1. **Create the table.** Copy `db/templates/TEMPLATE_new_table.sql` to `db/init/03_<your_stage>.sql`. Rename `example_items` and change the columns to match your JSON (one column per field you will filter on; everything else can go in the `extra` JSON column). Keep `IF NOT EXISTS` so it is safe to run twice.
+1. **Create the table.** Copy `db/templates/TEMPLATE_new_table.sql` to `db/init/04_<your_stage>.sql`. Rename `example_items` and change the columns to match your JSON (one column per field you will filter on; everything else can go in the `extra` JSON column). Keep `IF NOT EXISTS` so it is safe to run twice.
 2. **Apply it** to your running database with the command in section 2, step 1 (using your file name).
 3. **Copy the loader.** Copy `scripts/templates/TEMPLATE_load_table.py` to `scripts/load_<your_stage>_to_postgres.py`. Change three things marked `CHANGE`: the table name, the list of known fields, and `record_row()` / `UPSERT` so they match your columns.
 4. **Try it.** Run it with `--dry-run` first, then without. Run it twice: the row count should not change, which means reruns do not create duplicates. Check with `SELECT count(*) FROM your_table;`.

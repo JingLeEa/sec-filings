@@ -856,17 +856,21 @@ class AlignmentTests(unittest.TestCase):
         analysis = {"status": "completed", "lexical": None, "semantic": None,
                     "llm": "Modified", "final_taxonomy": None}
         report["alignments"][0]["change_analysis"] = deepcopy(analysis)
+        report["alignments"][0]["materiality_analysis"] = deepcopy(materiality)
         module.write_alignment_json_reports(output, report)
         self.assertEqual(self.run_cli(), (0, 0))
         saved = self.saved_report()
         self.assertEqual(saved["alignments"][0]["change_analysis"], analysis)
+        self.assertEqual(saved["alignments"][0]["materiality_analysis"], materiality)
         self.assertEqual(self.output("alignments.json")["alignments"][0]["change_analysis"], analysis)
         self.assertEqual(saved["alignments"][1]["change_analysis"], module.empty_change_analysis())
         row = saved["alignments"][0]
         row.pop("change_analysis")
+        row.pop("materiality_analysis")
         row["explanation"] = "A changed alignment decision must be classified again."
         module.write_alignment_json_reports(output, saved)
         self.assertEqual(self.output("alignments.json")["alignments"][0]["change_analysis"], module.empty_change_analysis())
+        self.assertNotIn("materiality_analysis", self.output("alignments.json")["alignments"][0])
 
     def test_review_change_analysis_survives_cached_rerun(self):
         self.assertEqual(self.run_cli("--max-steps", "1", response=self.invalid_citation_response), (0, 2))

@@ -2,13 +2,16 @@
 
 **Maintainer:** YUVIKA — contact YUVIKA for database and Docker questions.
 
+> Note: this is my first time using Docker. Everything here was tested on macOS with Docker Desktop; Windows and Linux are untested. If something looks wrong or could be done better, please tell me.
+
 ## 1. Purpose and implementation status
 
 Give the text side of the project one local place to store and query its data: a
 PostgreSQL database with the pgvector extension, started with one Docker command.
 It stores the paragraph and sentence records written by
-[text preprocessing](current_text_preprocessing_flow.md) and, optionally, the
-sentence embeddings produced by the semantic retrieval stage. Downstream stages
+[text preprocessing](current_text_preprocessing_flow.md), and, through the loaders described in
+[how to add a table](YUVIKA_how_to_add_a_table.md), the extracted disclosures, alignment results and
+disclosure embeddings of the later stages. Downstream stages
 (alignment, change detection, the UI) can read from it instead of reading JSON files.
 
 Implemented:
@@ -17,16 +20,17 @@ Implemented:
 - Schema version 1 (`db/init/01_schema.sql`): `filings`, `chunks`, `sentences`,
   `embedding_models`, `sentence_embeddings`, a `sentence_context` view and `schema_info`.
 - `scripts/load_to_postgres.py`: loads one company and fiscal year, idempotently.
-- Optional load of embeddings from the on-disk embedding cache into pgvector.
+- Optional load of sentence-level embeddings from the on-disk cache (`--embeddings-cache`). The team currently embeds whole disclosures instead, which use `scripts/load_disclosure_embeddings.py`.
 - Example queries (`db/example_queries.sql`) and offline tests.
+- Tables and loaders for extracted disclosures, alignment results and disclosure embeddings, plus a template for adding more: see [how to add a table](YUVIKA_how_to_add_a_table.md).
 
-Not implemented (planned): tables for extracted disclosures and alignment results
-(those are still JSON files, see [alignment](ZIYANG_disclosure_alignment.md)); table
-(XBRL) data; splitting over-long sentences into several embedding parts (the table
-supports it through `part_index`, the loader only writes part 0); any use of the
-SoC GPU server or a hosted database. The professor confirmed a fully local setup is sufficient.
+Not implemented (planned): financial table (XBRL) data, which belongs to the table side of the project;
+any use of the SoC GPU server or a hosted database. The professor confirmed a fully local setup is sufficient.
+Embeddings are stored at the level the semantic-retrieval stage uses, whole extracted disclosures
+(`disclosure_embeddings`). The team agreed not to embed single sentences for now, so `sentence_embeddings`
+is kept but unused.
 
-Verification note: tested on macOS with Docker Desktop (Docker 29.8.2, Compose v5.5.1), Python 3.14.5 and the pgvector/pgvector:pg16 image. docker compose up -d reached the healthy state, the init script created the six tables, and the UnitedHealth 2024 and 2025 test files loaded (855 and 930 sentences). Embedding loading was tested only with synthetic vectors, not real bge-m3 output.
+Verification: tested on macOS with Docker Desktop (Docker 29.8.2, Compose v5.5.1), Python 3.14.5 and the `pgvector/pgvector:pg16` image. `docker compose up -d` reached the healthy state, the init script created the tables, and the UnitedHealth 2024 and 2025 test files loaded (855 and 930 sentences). Embedding loading was tested only with made-up vectors, not real `bge-m3` output.
 
 ## 2. Code and workflow
 
@@ -80,7 +84,7 @@ No API key is needed for anything in this guide.
 | --- | --- | --- | --- |
 | `data/raw/<company>/<year>/<year>_chunks.json` | `scripts/extract_filings.py` | Array of chunk objects, see section 6 | Required |
 | `data/raw/<company>/<year>/<year>_chunk_sentences.json` | `scripts/extract_filings.py` | Array of sentence objects whose `chunk_id` exists in the chunks file | Required |
-| `data/embeddings/<sha256>.json` | Semantic retrieval (`llm/embeddings.py` on the `semantic-retrieval` branch) | JSON list of floats, 1024 long for `bge-m3`. File name is `sha256("<model>\0<sentence text>")` | Optional |
+| `data/embeddings/<sha256>.json` | Embedding cache of the semantic-retrieval stage | JSON list of floats, 1024 long for `bge-m3`. File name is `sha256("<model>\0<text>")`. That stage embeds whole disclosures (content, summary, section), so these are read by `scripts/load_disclosure_embeddings.py`, not by this loader | Optional |
 
 The loader stops with an error if chunk or sentence IDs repeat, or if a sentence points
 to a chunk that is not in the chunks file. Both input files must come from the same
@@ -200,7 +204,7 @@ a new field does not break the loader or require a migration.
 **`embedding_models`**: `model_id`, `name` (unique, e.g. `bge-m3`), `dimension`, `notes`.
 The row for `bge-m3` (1024 dimensions) is created by the init script.
 
-**`sentence_embeddings`** (zero or more rows per sentence)
+**`sentence_embeddings`** (zero or more rows per sentence). Unused for now: the team agreed to embed whole disclosures only, see `disclosure_embeddings` in the how-to page. Kept in case sentence-level vectors are needed later.
 
 | Column | Type | Nullable | Meaning |
 | --- | --- | --- | --- |
@@ -279,9 +283,9 @@ exits with status 0.
 Known limitations:
 
 - Local only: one database on one computer. Teammates each run their own copy; there is no shared server yet.
-- Passwords in the defaults are for local use. The Docker port is published on the host; keep it off public networks.
-- Disclosures, alignments and tables are not in the database yet.
-- Over-long sentences: the longest sentence in the fixtures is 1,345 characters. The original always stays intact in `sentences`; splitting for the model's token limit is meant to happen when embedding, with each piece stored as another `part_index`. The loader does not do this yet.
+- The default password is for local use only. The database port is bound to 127.0.0.1, so only your own computer can connect.
+- Financial (XBRL) table data is not in the database yet; that belongs to the table side of the project.
+- Over-long sentences: the longest sentence in the fixtures is 1,345 characters, and the original always stays intact in `sentences`. Because embeddings are now made per disclosure, no sentence splitting is needed for now; if sentence-level vectors are ever needed, `sentence_embeddings.part_index` supports embedding long sentences in parts.
 - `section_path` and IDs depend on the extractor version. Reload with `--replace` after extractor changes.
 - Preprocessing observations from the fixtures (not caused by the database): about 240 replacement characters (�) appear in each UnitedHealth sentence file, where curly quotes were lost from the locally saved HTML; and Item 7 for UnitedHealth is not extracted by the extractor on `main` (the earlier version extracted it). Check against the SEC-downloaded HTML before relying on these filings.
 - Structural validation only: the loader checks that records are consistent and loaded, not that the extraction is correct.

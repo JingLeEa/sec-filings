@@ -505,7 +505,8 @@ def write_alignment_json_reports(output, report, *, preserve_change_analysis=Tru
     if previous_path.exists() and preserve_change_analysis:
         previous = {row["match_id"]: row for row in load_alignment_report(output)["alignments"]}
         def without_analysis(row):
-            decision = {key: value for key, value in row.items() if key != "change_analysis"}
+            decision = {key: value for key, value in row.items()
+                        if key not in {"change_analysis", "materiality_analysis"}}
             # Cached jobs write partial reports before the final completion check.
             # Moving a supported absence decision between the two files must
             # not erase analysis when its underlying decision is unchanged.
@@ -521,10 +522,11 @@ def write_alignment_json_reports(output, report, *, preserve_change_analysis=Tru
             return decision
         for row in report["alignments"]:
             old = previous.get(row["match_id"])
+            same_decision = old is not None and without_analysis(row) == without_analysis(old)
             # Cached alignment reruns must not erase later classification work.
             # A changed group, evidence or decision must not inherit stale labels.
-            if (old and row["change_analysis"] == empty_change_analysis()
-                    and without_analysis(row) == without_analysis(old) and "change_analysis" in old):
+            if (same_decision and row["change_analysis"] == empty_change_analysis()
+                    and "change_analysis" in old):
                 row["change_analysis"] = deepcopy(old["change_analysis"])
     for row in report["alignments"]:
         row["change_analysis"] = compact_change_analysis(row["change_analysis"])
