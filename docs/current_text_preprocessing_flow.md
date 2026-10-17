@@ -35,14 +35,22 @@ The extractor accepts two input modes.
 SEC API mode:
 
 ```bash
-python3 scripts/extract_filings.py --ticker NVDA --year 2024
+python3 scripts/extract_filings.py \
+  --ticker NVDA \
+  --year 2024 \
+  --user-agent "Your Name you@example.com"
 ```
 
 Direct source mode:
 
 ```bash
-python3 scripts/extract_filings.py "https://www.sec.gov/Archives/edgar/data/.../.../nvda-20240128.htm" --year 2024
+python3 scripts/extract_filings.py \
+  "https://www.sec.gov/Archives/edgar/data/.../.../nvda-20240128.htm" \
+  --year 2024 \
+  --user-agent "Your Name you@example.com"
 ```
+
+Replace the example user agent with your name and a reachable email address. You can also set `SEC_USER_AGENT` in your shell instead of passing `--user-agent`; the extractor does not load `.env` automatically.
 
 In SEC API mode, the code:
 
@@ -98,7 +106,11 @@ Item 15 can enter the extraction in two ways:
 1. Explicitly request it:
 
 ```bash
-python3 scripts/extract_filings.py --ticker JPM --year 2025 --items 1 1A 7 8 15
+python3 scripts/extract_filings.py \
+  --ticker JPM \
+  --year 2025 \
+  --items 1 1A 7 8 15 \
+  --user-agent "Your Name you@example.com"
 ```
 
 2. Let the extractor auto-include it when Item 7 or Item 8 looks like a pointer to Item 15, financial statements, notes, or glossary material.
@@ -910,7 +922,9 @@ The page-range flow is:
 1. Read the page numbers from the cross-reference index, including ranges such
    as `Pages 18-29`.
 2. Scan the HTML structure events for footer-style printed-page markers such as
-   `MD&A | 18`, `MD&A | 19`, or `Image | MD&A | 18`.
+   `MD&A | 18`, `MD&A | 19`, or `Image | MD&A | 18`. If none exist, accept bare
+   page numbers only when they form a long, consistently styled, consecutive
+   sequence spanning much of the filing.
 3. Assign the events before each footer marker to that marker's page. A footer
    is treated as appearing after the content on its printed page.
 4. Keep only events whose inferred page is included in the Item's referenced
@@ -923,18 +937,18 @@ exclusions. For example, Item 7 can still stop before Properties or Item 7A
 even when the page ranges overlap because the section boundary logic is applied
 after page filtering.
 
-Footer markers are removed from the extracted text. A bare number is not treated
-as a page marker because it could be a table value, year, or other narrative
-number. If the filing does not expose usable footer-style markers in its HTML,
-the extractor keeps the existing heading-based fallback rather than silently
-dropping content.
+Validated page markers are removed from the extracted text. Isolated bare
+numbers are not treated as page markers because they could be table values,
+years, or narrative numbers. If neither labeled footers nor a reliable bare
+page sequence is available, the extractor keeps the heading-based fallback
+rather than silently dropping content.
 
 This means page-based extraction is best understood as:
 
 ```text
 cross-reference page range
         +
-HTML footer page markers
+validated HTML page markers
         +
 heading hierarchy and Item boundaries
         -> selected narrative blocks
@@ -969,6 +983,27 @@ If a referenced report is detected:
 If there are overlapping referenced sections and `--include-reference-overlaps` is not used:
 
 - A subsection assigned to a more specific requested Item is excluded from the broader Item.
+
+### Shared-source deduplication
+
+Before chunk records are built, the extractor resolves overlapping Item blocks:
+
+1. If Items 7, 8, and 15 come from the same source, Item 8 points into the
+   financial report, and Item 15 substantially repeats Item 7 before a
+   financial-report heading, the embedded report is assigned to one Item at a
+   time. Item 7 ends before the financial-report section, Item 8 receives that
+   section, and Item 15 keeps its non-overlapping exhibit material. The
+   boundary must be a heading, not an ordinary sentence mentioning financial
+   statements.
+2. It then removes a block from a later Item only when the source, original
+   block position, and normalized text match a block already kept. Items are
+   checked in output order: `1`, `1A`, `7`, `8`, `15`.
+
+This is source-block deduplication, not a global search for identical
+paragraphs. The same wording at a different source position, or in a different
+referenced report, is retained. Different text at the same position is also
+retained. `--include-reference-overlaps` disables both overlap reassignment and
+this final shared-source deduplication.
 
 For referenced reports:
 

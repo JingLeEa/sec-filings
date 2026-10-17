@@ -8,10 +8,15 @@ from unittest.mock import patch
 from sec_disclosure.extraction.sec_10k_extractor import (
     BlockSegment,
     FilingBlock,
+    FilingStructureEvent,
+    assign_embedded_report_blocks,
+    deduplicate_shared_source_blocks,
+    item7_root_range,
     build_sentence_records,
     build_records,
     build_records_from_section_blocks,
     discover_10k_filing,
+    event_page_numbers,
     extract_indexed_section_blocks,
     extract_item15_toc_section_blocks,
     extract_section_blocks,
@@ -23,24 +28,242 @@ from sec_disclosure.extraction.sec_10k_extractor import (
     is_boilerplate_or_nav,
     is_bullet_marker_only,
     is_subheader_block,
+    item_blocks_with_layout_headings,
     merge_continued_blocks,
     make_chunk_id,
     main,
     normalize_source,
     parse_args,
+    parse_item_heading,
     report_outline,
     referenced_section_ranges,
+    referenced_report_blocks,
     resolve_section_footnotes,
     section_blocks_to_text,
     sentence_units_from_block,
     should_drop_line,
     split_extraction_sentence_units,
     starts_with_bullet,
+    validated_page_markers,
 )
 from pathlib import Path
 
 
 class ExtractorTests(unittest.TestCase):
+    def test_item7_root_range_does_not_stop_at_financial_report_heading_alone(self):
+        events = [
+            FilingStructureEvent(index=0, kind="div", text="Management's discussion and analysis"),
+            FilingStructureEvent(index=1, kind="div", text="Operating discussion."),
+            FilingStructureEvent(index=2, kind="div", text="Report of Independent Registered Public Accounting Firm"),
+            FilingStructureEvent(index=3, kind="div", text="This remains part of the selected range."),
+        ]
+        nodes = [
+            {"key": "management s discussion and analysis", "start": 0, "end": len(events), "level": 0},
+            {"key": "report of independent registered public accounting firm", "start": 2,
+             "end": len(events), "level": 1},
+        ]
+
+        self.assertEqual(item7_root_range(nodes, events, events[0].text)[0]["end"], len(events))
+
+    def test_embedded_report_blocks_have_one_item_owner(self):
+        block = lambda index, text: FilingBlock(index=index, tag="div", text=text)
+        mdna = [block(index, f"MD&A discussion {index}.") for index in range(10, 22)]
+        item7 = [block(9, "Management's discussion and analysis"), *mdna,
+                 FilingBlock(index=30, tag="div", text="Management's report on internal control over financial reporting", bold=True),
+                 block(31, "Consolidated financial statements.")]
+        item15 = [block(1, "(a) Filed herewith."), block(2, "Financial"),
+                  block(3, "Three-Year Summary of Consolidated Financial Highlights"),
+                  block(9, "Management's discussion and analysis"), *mdna,
+                  FilingBlock(index=30, tag="toc_header", text="Management's Report on Internal Control Over Financial Reporting"),
+                  block(31, "Consolidated financial statements."),
+                  block(32, "Glossary of Terms and Acronyms"), block(33, "Signatures")]
+        sections = {"7": item7, "8": [block(4, "The consolidated financial statements appear on pages 20-40.")],
+                    "15": item15}
+
+        assigned = assign_embedded_report_blocks(sections, "filing.htm", {})
+
+        self.assertEqual(assigned["7"], item7[:-2])
+        self.assertEqual(assigned["8"], item15[-4:-2])
+        self.assertEqual(assigned["15"], item15[:1])
+        self.assertEqual(sections["15"], item15)
+        records = build_records_from_section_blocks(
+            {item: merge_continued_blocks(blocks) for item, blocks in assigned.items()},
+            year="2024", company="jpm", source="filing.htm", max_chars=500,
+        )
+        sentences = build_sentence_records(records)
+        chunks = {record["id"]: record for record in records}
+        self.assertTrue(all(sentence["text"] in chunks[sentence["chunk_id"]]["text"]
+                            for sentence in sentences))
+
+    def test_embedded_report_assignment_requires_same_source_and_item8_pointer(self):
+        block = lambda index, text: FilingBlock(index=index, tag="div", text=text)
+        mdna = [block(index, f"MD&A discussion {index}.") for index in range(10, 22)]
+        sections = {"7": [block(9, "Management's discussion and analysis"), *mdna,
+                          FilingBlock(index=30, tag="div", text="Report of Independent Registered Public Accounting Firm", bold=True),
+                          block(31, "This remains in Item 7 without a confirmed pointer.")],
+                    "8": [block(4, "The financial statements appear on pages 20-40.")],
+                    "15": [block(1, "Exhibit index"), block(9, "Management's discussion and analysis"),
+                           *mdna, FilingBlock(index=30, tag="toc_header", text="Report of Independent Registered Public Accounting Firm"),
+                           block(31, "Consolidated financial statements.")]}
+
+        cross_source = assign_embedded_report_blocks(
+            sections, "filing.htm", {"7": {"source": "incorporated-report.htm"}},
+        )
+        substantive_item8 = assign_embedded_report_blocks(
+            {**sections, "8": [block(4, "Revenue increased this year.")]}, "filing.htm", {},
+        )
+
+        self.assertEqual(cross_source["15"], sections["15"])
+        self.assertEqual(cross_source["7"], sections["7"])
+        self.assertEqual(substantive_item8["15"], sections["15"])
+        self.assertEqual(substantive_item8["7"], sections["7"])
+
+    def test_embedded_report_uses_shared_notes_heading_as_fallback(self):
+        block = lambda index, text: FilingBlock(index=index, tag="div", text=text)
+        mdna = [block(index, f"MD&A discussion {index}.") for index in range(10, 22)]
+        notes = FilingBlock(index=30, tag="div", text="Notes to Consolidated Financial Statements", bold=True)
+        item7 = [block(9, "Management's discussion and analysis"), *mdna,
+                 block(29, "Notes to Consolidated Financial Statements"), notes,
+                 block(31, "Accounting policies are described here.")]
+        item15 = [block(1, "(a) Filed herewith."), block(2, "Financial"),
+                  block(9, "Management's discussion and analysis"), *mdna, notes,
+                  block(31, "Accounting policies are described here."),
+                  block(32, "Glossary of Terms and Acronyms")]
+
+        assigned = assign_embedded_report_blocks(
+            {"7": item7, "8": [block(4, "The financial statements appear on pages 20-40.")],
+             "15": item15}, "filing.htm", {},
+        )
+
+        self.assertEqual(assigned["7"], item7[:14])
+        self.assertEqual(assigned["8"], item15[-3:-1])
+        self.assertEqual(assigned["15"], item15[:1])
+
+    def test_notes_plain_text_does_not_cut_item7(self):
+        block = lambda index, text: FilingBlock(index=index, tag="div", text=text)
+        mdna = [block(index, f"MD&A discussion {index}.") for index in range(10, 22)]
+        item7 = [block(9, "Management's discussion and analysis"), *mdna,
+                 block(30, "Notes to Consolidated Financial Statements"),
+                 block(31, "The discussion continues.")]
+        item15 = [block(1, "Exhibits"), block(9, "Management's discussion and analysis"),
+                  *mdna, FilingBlock(index=30, tag="toc_header", text="Notes to Consolidated Financial Statements"),
+                  block(31, "The financial notes begin here.")]
+
+        assigned = assign_embedded_report_blocks(
+            {"7": item7, "8": [block(4, "The financial statements appear on pages 20-40.")],
+             "15": item15}, "filing.htm", {},
+        )
+
+        self.assertEqual(assigned["7"], item7)
+        self.assertEqual(assigned["8"], item15[-2:])
+
+    def test_audit_report_plain_text_does_not_cut_item7(self):
+        block = lambda index, text: FilingBlock(index=index, tag="div", text=text)
+        mdna = [block(index, f"MD&A discussion {index}.") for index in range(10, 22)]
+        item7 = [block(9, "Management's discussion and analysis"), *mdna,
+                 block(30, "Report of Independent Registered Public Accounting Firm"),
+                 block(31, "The discussion continues.")]
+        item15 = [block(1, "Exhibits"), block(9, "Management's discussion and analysis"),
+                  *mdna, FilingBlock(index=30, tag="toc_header", text="Report of Independent Registered Public Accounting Firm"),
+                  block(31, "The financial report begins here.")]
+
+        assigned = assign_embedded_report_blocks(
+            {"7": item7, "8": [block(4, "The financial statements appear on pages 20-40.")],
+             "15": item15}, "filing.htm", {},
+        )
+
+        self.assertEqual(assigned["7"], item7)
+        self.assertEqual(assigned["8"], item15[-2:])
+
+        plain_item15 = [*item15[:-2], block(30, "Report of Independent Registered Public Accounting Firm"),
+                        item15[-1]]
+        unconfirmed = assign_embedded_report_blocks(
+            {"7": item7, "8": [block(4, "The financial statements appear on pages 20-40.")],
+             "15": plain_item15}, "filing.htm", {},
+        )
+        self.assertEqual(unconfirmed["7"], item7)
+        self.assertEqual(unconfirmed["15"], plain_item15)
+
+    def test_embedded_report_prefers_audit_heading_to_earlier_notes_heading(self):
+        block = lambda index, text: FilingBlock(index=index, tag="div", text=text)
+        mdna = [block(index, f"MD&A discussion {index}.") for index in range(10, 22)]
+        notes = block(25, "Notes to Consolidated Financial Statements")
+        audit = FilingBlock(index=30, tag="div", text="Report of Independent Registered Public Accounting Firm", bold=True)
+        item7 = [block(9, "Management's discussion and analysis"), *mdna, notes, audit,
+                 block(31, "Audited financial statements.")]
+        item15 = [block(1, "Exhibits"), block(9, "Management's discussion and analysis"),
+                  *mdna, notes, audit, block(31, "Audited financial statements.")]
+
+        assigned = assign_embedded_report_blocks(
+            {"7": item7, "8": [block(4, "The financial statements appear on pages 20-40.")],
+             "15": item15}, "filing.htm", {},
+        )
+
+        self.assertEqual(assigned["7"], item7[:-2])
+        self.assertEqual(assigned["8"], item15[-2:])
+
+    def test_shared_source_block_dedup_preserves_other_sources_and_distinct_text(self):
+        block = lambda index, text: FilingBlock(index=index, tag="div", text=text)
+        repeated = block(30, "The same paragraph appears in two selected items.")
+        sections = {
+            "7": [block(9, "MD&A"), repeated],
+            "8": [block(30, "Different text from the same source position.")],
+            "15": [block(29, "Different heading hierarchy"), repeated, block(31, "Unique exhibit text.")],
+        }
+
+        deduplicated = deduplicate_shared_source_blocks(sections, "filing.htm", {})
+        separate_source = deduplicate_shared_source_blocks(
+            sections, "filing.htm", {"15": {"source": "incorporated-report.htm"}},
+        )
+
+        self.assertEqual(deduplicated["15"], [sections["15"][0], sections["15"][2]])
+        self.assertEqual(deduplicated["8"], sections["8"])
+        self.assertEqual(separate_source["15"], sections["15"])
+        self.assertEqual(sections["15"], [sections["15"][0], repeated, sections["15"][2]])
+
+    def test_cli_assigns_embedded_report_before_chunking(self):
+        block = lambda index, text: FilingBlock(index=index, tag="div", text=text)
+        mdna = [block(index, f"Operating discussion {index}.") for index in range(10, 22)]
+        item7 = [block(9, "Management's discussion and analysis"), *mdna,
+                 FilingBlock(index=30, tag="div", text="Management's report on internal control over financial reporting", bold=True),
+                 block(31, "The audited statements present the firm's position.")]
+        item15 = [block(1, "(a) Filed herewith."), block(2, "Financial"),
+                  block(9, "Management's discussion and analysis"), *mdna,
+                  FilingBlock(index=30, tag="toc_header", text="Management's Report on Internal Control Over Financial Reporting"),
+                  block(31, "The audited statements present the firm's position."),
+                  block(32, "Glossary of Terms and Acronyms")]
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "jpm-20241231.htm"
+            source.write_text(
+                "<div>Item 7. Management's Discussion and Analysis</div>"
+                "<div>See the annual report.</div>"
+                "<div>Item 8. Financial Statements</div>"
+                "<div>The financial statements appear on pages 20-40.</div>"
+                "<div>Item 9. Changes in Accountants</div>",
+                encoding="utf-8",
+            )
+            with patch("sec_disclosure.extraction.sec_10k_extractor.extract_indexed_section_blocks",
+                       return_value={"7": item7}), patch(
+                           "sec_disclosure.extraction.sec_10k_extractor.extract_item15_toc_section_blocks",
+                           return_value=item15,
+                       ), redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                code = main([str(source), "--out-dir", str(root / "output"), "--no-follow-references"])
+
+            self.assertEqual(code, 0)
+            output = root / "output" / "jpm" / "2024"
+            chunks = json.loads((output / "2024_chunks.json").read_text())
+            sentences = json.loads((output / "2024_chunk_sentences.json").read_text())
+            by_item = {item: " ".join(row["text"] for row in chunks if row["item"] == item)
+                       for item in ("7", "8", "15")}
+            self.assertIn("Operating discussion 10.", by_item["7"])
+            self.assertNotIn("Operating discussion 10.", by_item["15"])
+            self.assertIn("audited statements", by_item["8"])
+            self.assertNotIn("audited statements", by_item["7"])
+            self.assertIn("Filed herewith", by_item["15"])
+            parents = {row["id"]: row for row in chunks}
+            self.assertTrue(all(row["text"] in parents[row["chunk_id"]]["text"] for row in sentences))
+
     def test_normalizes_sec_ix_viewer_url(self):
         source = "https://www.sec.gov/ix?doc=/Archives/edgar/data/0001045810/000104581023000017/nvda-20230129.htm"
 
@@ -96,14 +319,81 @@ class ExtractorTests(unittest.TestCase):
             source = root / "mu-20240829.htm"
             source.write_text("".join(f"<div>{line}</div>" for line in lines), encoding="utf-8")
 
-            with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            with redirect_stdout(io.StringIO()) as stdout, redirect_stderr(io.StringIO()):
                 result = main([str(source), "--out-dir", str(root / "output")])
 
             self.assertEqual(result, 0)
+            self.assertIn("Sentence/chunk text match: OK (", stdout.getvalue())
             output = root / "output" / "mu" / "2024"
             records = json.loads((output / "2024_chunks.json").read_text())
             self.assertEqual({record["item"] for record in records}, {"1", "1A", "7", "8"})
             self.assertFalse((output / "2024_item_15.txt").exists())
+
+    def test_item8_heading_in_two_row_layout_table_is_recovered(self):
+        html = """
+        <html><body>
+          <div>Item 7A. Quantitative and Qualitative Disclosures about Market Risk</div>
+          <table>
+            <tr><td>Item 8. Financial Statements and Supplementary Data</td></tr>
+            <tr><td>Table of Contents</td></tr>
+          </table>
+          <div>Report of Independent Registered Public Accounting Firm</div>
+          <div>We audited the accompanying consolidated financial statements.</div>
+          <div>Item 9. Changes in and Disagreements with Accountants</div>
+        </body></html>
+        """
+
+        blocks = item_blocks_with_layout_headings(html, html_to_blocks(html))
+        headings = [parse_item_heading(block.text) for block in blocks if parse_item_heading(block.text)]
+        sections = extract_section_blocks(blocks, items=("8",))
+
+        self.assertIn(("8", "Financial Statements and Supplementary Data"), headings)
+        self.assertIn("8", sections)
+        self.assertEqual(
+            [block.text for block in sections["8"]],
+            [
+                "Report of Independent Registered Public Accounting Firm",
+                "We audited the accompanying consolidated financial statements.",
+            ],
+        )
+
+    def test_whitespace_only_inline_nodes_preserve_one_separator(self):
+        html = """
+        <div><span>NOTE 5</span><span>  </span><span>Outstanding Loans</span></div>
+        <div><span>Outstand</span><span>ing</span></div>
+        """
+
+        self.assertEqual(
+            [block.text for block in html_to_blocks(html)],
+            ["NOTE 5 Outstanding Loans", "Outstanding"],
+        )
+        self.assertEqual(
+            [event.text for event in html_to_structure_events(html) if event.kind != "table"],
+            ["NOTE 5 Outstanding Loans", "Outstanding"],
+        )
+
+    def test_block_indentation_is_not_emitted_as_text(self):
+        html = """
+        <div>
+          <p>First paragraph.</p>
+          <p>Second paragraph.</p>
+        </div>
+        """
+
+        self.assertEqual([block.text for block in html_to_blocks(html)], ["First paragraph.", "Second paragraph."])
+        self.assertEqual(
+            [event.text for event in html_to_structure_events(html) if event.kind != "table"],
+            ["First paragraph.", "Second paragraph."],
+        )
+
+    def test_whitespace_only_node_inside_table_cell_preserves_one_separator(self):
+        html = """
+        <table><tr><td><span>NOTE 5</span><span>  </span><span>Outstanding Loans</span></td></tr></table>
+        """
+
+        table = next(event for event in html_to_structure_events(html) if event.kind == "table")
+
+        self.assertEqual(table.rows, (("NOTE 5 Outstanding Loans",),))
 
     def test_cli_auto_includes_item15_when_item8_points_to_financial_statements(self):
         lines = [
@@ -386,7 +676,7 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual([record["bullet_level"] for record in sentence_records], [None, 1, 1])
         self.assertEqual(sentence_records[1]["text"], (
             "▪Series 2. Our first Series 2 products were brought to market in 2024. "
-            "They support notebooks and desktops. Continuation text for the same bullet remains in the same paragraph group."
+            "They support notebooks and desktops.\nContinuation text for the same bullet remains in the same paragraph group."
         ))
 
         styled_records = build_records_from_section_blocks(
@@ -426,6 +716,81 @@ class ExtractorTests(unittest.TestCase):
         sentences = build_sentence_records(records)
         self.assertEqual([record["bullet_level"] for record in sentences], [1, 2])
         self.assertEqual([record["html_list_depth"] for record in sentences], [1, 2])
+
+    def test_sentence_records_use_exact_chunk_spacing_and_keep_bullet_metadata(self):
+        for chunk_text, sentence_text in (
+            ("Realized gains were recorded on a trade-date basis.",
+             "Realized gains were recorded on a trade- date basis."),
+            ("• First item.\nContinued on next line.",
+             "• First item. Continued on next line."),
+        ):
+            with self.subTest(chunk_text=chunk_text):
+                records = build_records_from_section_blocks(
+                    {"8": [FilingBlock(1, "div", chunk_text)]},
+                    "2023", "bac", "filing.htm", 1800,
+                )
+                records[0]["_sentence_units"] = [{
+                    "text": sentence_text,
+                    "bullet_level": 1,
+                    "bullet_indent_pt": 18.0,
+                }]
+
+                sentences = build_sentence_records(records)
+
+                self.assertEqual([sentence["text"] for sentence in sentences], [chunk_text])
+                self.assertEqual(sentences[0]["bullet_level"], 1)
+                self.assertEqual(sentences[0]["bullet_indent_pt"], 18.0)
+
+    def test_sentence_records_resegment_when_words_or_numbers_differ(self):
+        records = build_records_from_section_blocks(
+            {"8": [FilingBlock(1, "div", "Revenue increased in 2025. Costs fell.")]},
+            "2023", "bac", "filing.htm", 1800,
+        )
+        records[0]["_sentence_units"] = [{"text": "Revenue increased in 2024."}]
+
+        sentences = build_sentence_records(records)
+
+        self.assertEqual([sentence["text"] for sentence in sentences], [
+            "Revenue increased in 2025.", "Costs fell.",
+        ])
+
+    def test_sentence_records_do_not_match_part_of_a_longer_number(self):
+        records = build_records_from_section_blocks(
+            {"8": [FilingBlock(1, "div", "Revenue in 20240. Costs fell.")]},
+            "2023", "bac", "filing.htm", 1800,
+        )
+        records[0]["_sentence_units"] = [{"text": "Revenue in 2024"}]
+
+        sentences = build_sentence_records(records)
+
+        self.assertEqual([sentence["text"] for sentence in sentences], [
+            "Revenue in 20240.", "Costs fell.",
+        ])
+
+    def test_sentence_records_resegment_ambiguous_formatting_match(self):
+        records = build_records_from_section_blocks(
+            {"8": [FilingBlock(1, "div", "Trade-date. Trade-date.")]},
+            "2023", "bac", "filing.htm", 1800,
+        )
+        records[0]["_sentence_units"] = [{"text": "Trade- date."}]
+
+        sentences = build_sentence_records(records)
+
+        self.assertEqual([sentence["text"] for sentence in sentences], [
+            "Trade-date.", "Trade-date.",
+        ])
+
+    def test_sentence_records_keep_whole_chunk_if_resegmentation_changes_typography(self):
+        chunk_text = "Revenue “grew” in 2025."
+        records = build_records_from_section_blocks(
+            {"8": [FilingBlock(1, "div", chunk_text)]},
+            "2023", "bac", "filing.htm", 1800,
+        )
+        records[0]["_sentence_units"] = [{"text": "Revenue grew in 2024."}]
+
+        sentences = build_sentence_records(records)
+
+        self.assertEqual([sentence["text"] for sentence in sentences], [chunk_text])
 
     def test_extracts_body_items_and_assigns_per_item_ids(self):
         html = """
@@ -826,6 +1191,42 @@ class ExtractorTests(unittest.TestCase):
             "In the proposed rulemaking, the OCC also invited comments on a number of questions, including whether the heightened standards guidelines should be rescinded.",
             "The proposed rulemaking has not yet been finalized.",
         ])
+
+    def test_hyphenated_segment_continuation_matches_chunk_text(self):
+        for first, second in (
+            ("Realized gains and losses are recorded on a trade-", "date basis."),
+            ("Mortgage loans include (VA)-", "guaranteed loans."),
+        ):
+            with self.subTest(first=first):
+                block = FilingBlock(
+                    1,
+                    "merged_text",
+                    first + second,
+                    segments=(BlockSegment(first), BlockSegment(second)),
+                )
+                records = build_records_from_section_blocks(
+                    {"8": [block]}, "2023", "bac", "filing.htm", 1000,
+                )
+                sentences = build_sentence_records(records)
+
+                self.assertEqual([sentence["text"] for sentence in sentences], [block.text])
+                self.assertIn(sentences[0]["text"], records[0]["text"])
+
+    def test_hyphenated_bullet_continuation_matches_chunk_text(self):
+        block = FilingBlock(
+            1,
+            "merged_text",
+            "• trade-date basis.",
+            segments=(
+                BlockSegment("• trade-", bullet_indent_pt=18.0),
+                BlockSegment("date basis.", continues_previous_bullet=True),
+            ),
+        )
+
+        units = sentence_units_from_block(block, [])
+
+        self.assertEqual([unit.text for unit in units], [block.text])
+        self.assertEqual(units[0].bullet_level, 1)
 
     def test_non_bullet_segment_after_bullet_starts_new_sentence_unit(self):
         block = FilingBlock(
@@ -1960,6 +2361,35 @@ class ExtractorTests(unittest.TestCase):
         self.assertNotIn("Properties text should not", text)
         self.assertNotIn("MD&A |", text)
 
+    def test_bare_page_sequence_filters_indexed_content(self):
+        events = [FilingStructureEvent(index=0, kind="h1", text="Risk Factors", bold=True)]
+        for page in range(1, 26):
+            events.append(FilingStructureEvent(index=len(events), kind="div", text=f"Content on page {page}."))
+            events.append(FilingStructureEvent(index=len(events), kind="div", text=str(page), font_size=10.0))
+        node = {"title": "Risk Factors", "key": "risk factors", "start": 0, "end": len(events),
+                "level": 0, "heading_end": 1}
+
+        self.assertEqual(len(validated_page_markers(events)), 25)
+        pages = event_page_numbers(events)
+        self.assertEqual(pages[events[-1].index], 25)
+        selected = referenced_report_blocks(events, [node], [node], [], allowed_pages={3, 4})
+        text = " ".join(block.text for block in selected)
+        self.assertIn("Content on page 3.", text)
+        self.assertIn("Content on page 4.", text)
+        self.assertNotIn("Content on page 5.", text)
+        self.assertFalse(any(block.text in {"3", "4"} for block in selected))
+
+    def test_isolated_bare_numbers_do_not_become_page_markers(self):
+        events = [FilingStructureEvent(index=index, kind="div", text=f"Narrative {index}.")
+                  for index in range(100)]
+        events.extend(FilingStructureEvent(index=100 + index, kind="div", text=str(index + 1), font_size=10.0)
+                      for index in range(25))
+        events.extend(FilingStructureEvent(index=125 + index, kind="div", text=f"More narrative {index}.")
+                      for index in range(100))
+
+        self.assertEqual(validated_page_markers(events), [])
+        self.assertEqual(event_page_numbers(events), {})
+
     def test_navigation_and_running_folios_are_dropped_from_blocks_and_headers(self):
         """Ensure repeated page folios and jump links do not become false headers or chunks."""
         boilerplate_samples = [
@@ -1975,6 +2405,7 @@ class ExtractorTests(unittest.TestCase):
             "2024 Form 10-K",
             "December 2025 Form 10-K",
             "Page 26",
+            "page 44 not used",
             "5",
         ]
         for sample in boilerplate_samples:
@@ -2224,22 +2655,22 @@ class IncorporatedReportTests(unittest.TestCase):
                     '<div style="font-weight:700">NM - Not meaningful</div>' + label_html +
                     '<div>Our revenue increased in 2031.</div>'
                     '<div>Fees increased due to customer activity.</div>'))
-            with redirect_stdout(io.StringIO()):
-                self.assertEqual(main(self.arguments(source, root)), 0)
-            records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
-            review = [r for r in records if r['item'] == '7']
-            expected_title = (
-                'Performance > Full year 2031 vs. full year 2030'
-                if label_html.startswith('<div')
-                else 'Performance'
-            )
-            self.assertEqual([r['item_title'] for r in review], [
-                'Performance > NM - Not meaningful', expected_title, expected_title,
-            ])
-            self.assertEqual([r['text'] for r in review], [
-                '', 'Our revenue increased in 2031.', 'Fees increased due to customer activity.',
-            ])
-            self.assertTrue(all(r['source'] == str(report) for r in review))
+                with redirect_stdout(io.StringIO()):
+                    self.assertEqual(main(self.arguments(source, root)), 0)
+                records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
+                review = [r for r in records if r['item'] == '7']
+                expected_title = (
+                    'Performance > Full year 2031 vs. full year 2030'
+                    if label_html.startswith('<div')
+                    else 'Performance'
+                )
+                self.assertEqual([r['item_title'] for r in review], [
+                    'Performance > NM - Not meaningful', expected_title, expected_title,
+                ])
+                self.assertEqual([r['text'] for r in review], [
+                    '', 'Our revenue increased in 2031.', 'Fees increased due to customer activity.',
+                ])
+                self.assertTrue(all(r['source'] == str(report) for r in review))
 
     def test_period_labels_in_html_headings_do_not_create_outline_sections(self):
         report = ('<h1>Operating Review</h1><h2>Performance</h2>'
