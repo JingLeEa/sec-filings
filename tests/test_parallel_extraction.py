@@ -76,6 +76,7 @@ class ParallelExtractionTests(TestCase):
              patch.object(disclosures, "request_completion", side_effect=responder or self.response) as api, \
              redirect_stdout(output), redirect_stderr(output):
             code = disclosures.main(["--ticker", "amd", "--years", *years,
+                                     "--input-source", "files",
                                      "--data-dir", str(self.root), "--request-interval", "0",
                                      "--rate-limit-cooldown", "0", "--response-retry-backoff", "0",
                                      *batch_options, *storage_options, *extra])
@@ -566,7 +567,7 @@ class ParallelExtractionTests(TestCase):
              patch.object(storage, "store_disclosures", return_value=SimpleNamespace(stored=2, accepted=2, review=0)) as store, \
              redirect_stdout(io.StringIO()):
             arguments = ["--ticker", "amd", "--year", "2023", "--data-dir", str(self.root),
-                         "--output-dir", str(folder), "--store-postgres"]
+                         "--output-dir", str(folder), "--store-postgres", "--input-source", "files"]
             self.assertEqual(disclosures.main(arguments), 0)
             self.assertEqual(store.call_args.args, (folder, "amd", 2023))
             store.reset_mock()
@@ -943,7 +944,8 @@ class ParallelExtractionTests(TestCase):
              patch.object(disclosures, "request_completion", side_effect=response) as api, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             status = disclosures.main(["--ticker", "amd", "--year", "2023", "--data-dir", str(self.root),
-                                       "--batch-workers", "2", "--rate-limit-cooldown", "0", "--no-store-postgres"])
+                                       "--batch-workers", "2", "--rate-limit-cooldown", "0", "--no-store-postgres",
+                                       "--input-source", "files"])
         self.assertEqual(status, 0)
         self.assertEqual(api.call_count, 4)
         self.assertEqual(pacer.call_args.args, (2.0, 0.0, None))

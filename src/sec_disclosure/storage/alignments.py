@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .disclosures import ROOT, connection_arguments
+from .pipeline_snapshots import ALIGNMENT_FILES, folder_documents, publish
 
 
 SUPPORTED_SCHEMA = "8"
@@ -184,6 +185,8 @@ def store_alignments(folder: Path, company: str, previous: int, current: int, *,
             member_count = cur.fetchone()[0]
             if stored != len(alignment_rows) or member_count != len(members):
                 raise ValueError("Imported alignment snapshot has inconsistent row counts")
+            publish(cur, company, "alignments", previous, current,
+                    folder_documents(folder, ALIGNMENT_FILES, include_change_cache=True))
     except Exception as error:
         raise AlignmentStorageError(f"PostgreSQL alignment import failed ({type(error).__name__}). "
             "Check that the database is running, the tables exist and POSTGRES_* or DATABASE_URL settings are correct. "

@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from dotenv import dotenv_values
+from .pipeline_snapshots import DISCLOSURE_FILES, folder_documents, publish
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -146,6 +147,7 @@ def store_disclosures(folder: Path, company: str, year: int, *, env_file: Path |
             stored = cur.fetchone()[0]
             if replace and stored != sum(len(records) for _, records in loaded):
                 raise ValueError("Imported disclosure snapshot has an inconsistent row count")
+            publish(cur, company, "disclosures", year, year, folder_documents(folder, DISCLOSURE_FILES))
     except Exception as error:
         # Driver errors can include a DSN or credentials; keep them out of logs.
         raise DisclosureStorageError(f"PostgreSQL disclosure import failed ({type(error).__name__}). "

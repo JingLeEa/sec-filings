@@ -44,6 +44,18 @@ class DisclosureTests(unittest.TestCase):
         return module.load_filing(self.input_dir / "2024_chunks.json",
                                   self.input_dir / "2024_chunk_sentences.json", "amd", "2024")
 
+    def test_postgres_inputs_work_without_any_local_preprocessing_files(self):
+        from sec_disclosure.storage import pipeline_snapshots as snapshots
+        documents = snapshots.folder_documents(self.input_dir, ['2024_chunks.json', '2024_chunk_sentences.json'])
+        for path in self.input_dir.glob('*.json'):
+            path.unlink()
+        key = ('raw', '2024', '2024')
+        with patch.object(snapshots, 'read_snapshots', return_value={key: {'documents': documents}}) as read:
+            self.assertEqual(self.run_command('--input-source', 'postgres')[0], 0)
+        read.assert_called_once()
+        self.assertTrue(self.read_output('token_usage.json')['run_complete'])
+        self.assertFalse(any(self.input_dir.glob('*.json')))
+
     def proposal(self, ids, taxonomy="Financial & Capital Resources"):
         return {"topic": "Operating results", "summary": "Results improved in 2024.", "taxonomy": taxonomy,
                 "unit_ids": ids, "review_reason": ""}
@@ -64,7 +76,8 @@ class DisclosureTests(unittest.TestCase):
         with patch.object(module, "load_config", return_value=LLMConfig("https://example.test/v1", "fake-key", "default")), \
              patch.object(module, "request_completion", side_effect=responder or self.response) as request, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
-            status = module.main(["--ticker", "amd", "--year", "2024", "--data-dir", str(self.root), "--no-store-postgres", *extra])
+            status = module.main(["--ticker", "amd", "--year", "2024", "--data-dir", str(self.root),
+                                  "--no-store-postgres", "--input-source", "files", *extra])
         return status, request.call_count
 
     def read_output(self, name):

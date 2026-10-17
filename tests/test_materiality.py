@@ -14,6 +14,7 @@ from sec_disclosure.agents import materiality_runtime
 from sec_disclosure.llm.client import CompletionResult, LLMError
 from sec_disclosure.llm.config import LLMConfig
 from sec_disclosure.llm.disclosures import write_json
+from sec_disclosure.llm.request_pacing import RequestPacer
 
 
 class MaterialityTests(unittest.TestCase):
@@ -110,19 +111,32 @@ class MaterialityTests(unittest.TestCase):
             {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125},
         )
 
-    def run_cli(self, *args, response=None):
+    def run_cli(self, *args, response=None, request_pacer=None):
         with patch.object(module, "load_config", return_value=LLMConfig(
                 "https://example.test/v1", "fake-secret", "test-model")), \
              patch.object(materiality_runtime, "request_completion", side_effect=response or self.response) as api, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             status = module.main([
                 "--ticker", "amd", "--previous-year", "2023", "--current-year", "2024",
-                "--data-dir", str(self.root), *args,
-            ])
+                "--data-dir", str(self.root), "--input-source", "files", "--request-interval", "0",
+                "--rate-limit-cooldown", "0", *args,
+            ], request_pacer=request_pacer)
         return status, api.call_count
 
     def saved(self):
         return json.loads((self.output / "alignments.json").read_text())
+
+    def test_materiality_reads_postgres_when_local_alignment_input_does_not_exist(self):
+        from sec_disclosure.storage import pipeline_snapshots as snapshots
+        document = self.document([self.row(1, status='auto_matched')])
+        (self.output / 'alignments.json').unlink()
+        snapshot = {'documents': {'alignments.json': {'payload': document},
+                                  'needs_review.json': {'payload': {'sentinel': 'from database'}},
+                                  'manifest.json': {'payload': {}}}}
+        with patch.object(snapshots, 'alignment_snapshot', return_value=snapshot) as read:
+            self.assertEqual(self.run_cli('--input-source', 'postgres'), (0, 0))
+        read.assert_called_once_with('amd', '2023', '2024', env_file=None)
+        self.assertEqual(self.saved()['alignments'][0][module.MATERIALITY_FIELD]['materiality'], 'No')
 
     def test_prompt_contains_substantive_decision_boundaries(self):
         prompt = " ".join(module.MATERIALITY_PROMPT.split())
@@ -342,7 +356,7 @@ class MaterialityTests(unittest.TestCase):
             return self.response(prompt, **kwargs)
 
         self.assertEqual(self.run_cli(
-            "--batch-size", "4", "--skip-verification",
+            "--batch-size", "4", "--concurrency", "2", "--skip-verification",
             response=response,
         ), (0, 2))
         self.assertTrue(all(
@@ -351,6 +365,67 @@ class MaterialityTests(unittest.TestCase):
         usage = json.loads((self.output / "materiality/token_usage.json").read_text())
         self.assertEqual(usage["limits"]["concurrency"], 2)
         self.assertEqual(usage["requests_with_unknown_usage"], 0)
+
+    def test_nine_materiality_batches_really_overlap_by_default(self):
+        rows = [self.row(number) for number in range(1, 10)]
+        write_json(self.output / "alignments.json", self.document(rows))
+        started = threading.Barrier(9, timeout=5)
+
+        def response(prompt, **kwargs):
+            started.wait()
+            return self.response(prompt, **kwargs)
+
+        self.assertEqual(self.run_cli(
+            "--batch-size", "1", "--skip-verification", response=response,
+        ), (0, 9))
+        usage = json.loads((self.output / "materiality/token_usage.json").read_text())
+        self.assertEqual(usage["limits"]["concurrency"], 9)
+        self.assertTrue(all(module.MATERIALITY_FIELD in row for row in self.saved()["alignments"]))
+
+    def test_rate_limit_retries_use_the_injected_pacer_and_preserve_both_attempts(self):
+        write_json(self.output / "alignments.json", self.document([self.row(1)]))
+        pacer = RequestPacer(0, 0, 18)
+        calls = 0
+
+        def response(prompt, **kwargs):
+            nonlocal calls
+            calls += 1
+            if calls == 1:
+                raise LLMError("HTTP 429", status_code=429, retry_after=120, retryable=True)
+            return self.response(prompt, **kwargs)
+
+        with patch.object(pacer, "rate_limited", return_value=120) as cooldown:
+            self.assertEqual(self.run_cli("--skip-verification", response=response,
+                                          request_pacer=pacer), (0, 2))
+        cooldown.assert_called_once_with(120)
+        records = [json.loads(file.read_text()) for file in
+                   sorted((self.output / "materiality/requests").glob("*.json"))]
+        self.assertEqual([record["status"] for record in records], ["failed", "completed"])
+        self.assertEqual(records[0]["status_code"], 429)
+        self.assertEqual(records[0]["retry_after"], 120)
+        usage = json.loads((self.output / "materiality/token_usage.json").read_text())
+        self.assertEqual(usage["unknown_usage_budget_reserve"]["unacknowledged_attempt_count"], 0)
+        self.assertGreater(usage["unknown_usage_budget_reserve"]["estimated_tokens"], 0)
+        self.assertEqual(self.run_cli("--skip-verification"), (0, 0))
+
+    def test_rate_limit_retry_exhaustion_stops_and_can_resume(self):
+        write_json(self.output / "alignments.json", self.document([self.row(1)]))
+        error = LLMError("HTTP 429", status_code=429, retryable=True)
+        self.assertEqual(self.run_cli("--skip-verification", "--rate-limit-retries", "1",
+                                      response=error), (1, 2))
+        self.assertEqual(self.run_cli("--skip-verification"), (0, 1))
+
+    def test_permanent_quota_failure_is_not_retried(self):
+        write_json(self.output / "alignments.json", self.document([self.row(1)]))
+        error = LLMError("Insufficient quota", status_code=429, retryable=False)
+        self.assertEqual(self.run_cli("--skip-verification", response=error), (1, 1))
+        self.assertEqual(self.run_cli("--skip-verification"), (1, 0))
+
+    def test_rate_limit_controls_reject_invalid_values(self):
+        for flag, value in (("--request-interval", "-1"), ("--request-interval", "nan"),
+                            ("--rate-limit-cooldown", "-1"), ("--rate-limit-retries", "-2")):
+            with self.subTest(flag=flag, value=value), self.assertRaises(SystemExit):
+                self.run_cli(flag, value)
 
     def test_single_row_timeout_requires_explicit_retry(self):
         write_json(self.output / "alignments.json", self.document([self.row(1)]))
@@ -417,6 +492,7 @@ class MaterialityTests(unittest.TestCase):
             status = module.main([
                 "--ticker", "amd", "--previous-year", "2023", "--current-year", "2024",
                 "--data-dir", str(self.root),
+                "--input-source", "files",
             ])
         self.assertEqual(status, 0)
         self.assertEqual(self.saved()["alignments"][0][module.MATERIALITY_FIELD], module.EXACT_TEXT_ANALYSIS)

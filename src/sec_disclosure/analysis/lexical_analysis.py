@@ -63,3 +63,30 @@ def compute_lexical_metrics(prev_text: str, curr_text: str) -> dict:
             "added_tokens_sample": [],
             "removed_tokens_sample": prev_tokens[:20],
         }
+
+    if not prev_tokens and not curr_tokens:
+        cosine = sequence_ratio = length_ratio = 1.0
+        label = "Unchanged"
+    else:
+        vectors = TfidfVectorizer(tokenizer=tokenize, token_pattern=None,
+                                  lowercase=False).fit_transform([prev_text, curr_text])
+        cosine = float(cosine_similarity(vectors[0], vectors[1])[0, 0])
+        sequence_ratio = SequenceMatcher(None, prev_tokens, curr_tokens, autojunk=False).ratio()
+        length_ratio = len_curr / len_prev
+        label = "Unchanged" if prev_tokens == curr_tokens else classify_change(
+            sequence_ratio, cosine, length_ratio)
+
+    added, removed = [], []
+    for operation, before_start, before_end, after_start, after_end in SequenceMatcher(
+            None, prev_tokens, curr_tokens, autojunk=False).get_opcodes():
+        if operation in {"insert", "replace"}:
+            added.extend(curr_tokens[after_start:after_end])
+        if operation in {"delete", "replace"}:
+            removed.extend(prev_tokens[before_start:before_end])
+    return {
+        "method": "tfidf_difflib_hybrid", "change_taxonomy": label,
+        "cosine_similarity": round(cosine, 6),
+        "sequence_match_ratio": round(sequence_ratio, 6),
+        "length_ratio": round(length_ratio, 6), "word_count_delta": len_curr - len_prev,
+        "added_tokens_sample": added[:20], "removed_tokens_sample": removed[:20],
+    }

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import json
 import math
 import re
@@ -18,6 +19,7 @@ from uuid import uuid4
 from sec_disclosure.llm.client import LLMError
 from sec_disclosure.llm.config import load_config
 from sec_disclosure.llm.disclosures import digest, write_json
+from sec_disclosure.llm.request_pacing import RequestPacer
 
 from .alignment_runtime import RunLimit
 from .materiality_graph import (
@@ -364,8 +366,8 @@ def process_adaptive_batches(rows, size, process, *, stage, concurrency=2):
                     raise
 
 
-def load_document(path, *, validate_materiality=True):
-    document = json.loads(path.read_text())
+def load_document(path, *, validate_materiality=True, document=None):
+    document = json.loads(path.read_text()) if document is None else deepcopy(document)
     if not isinstance(document, dict):
         raise ValueError("alignments.json must contain a JSON object.")
     if not document.get("run_complete"):
@@ -443,7 +445,7 @@ def write_summary(
     return summary
 
 
-def main(argv=None):
+def main(argv=None, *, request_pacer: RequestPacer | None = None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ticker", required=True)
     parser.add_argument("--previous-year", required=True)
@@ -451,6 +453,8 @@ def main(argv=None):
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     parser.add_argument("--alignment-dir", type=Path)
     parser.add_argument("--env-file", type=Path)
+    parser.add_argument("--input-source", choices=("files", "postgres"), default="postgres",
+                        help="Read finalized alignments from PostgreSQL or legacy local JSON.")
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--verification-batch-size", type=int, default=4)
     parser.add_argument("--verification-threshold", type=float, default=MIN_CONFIDENCE)
@@ -458,9 +462,15 @@ def main(argv=None):
     parser.add_argument(
         "--concurrency",
         type=int,
-        default=2,
-        help="Materiality batches processed concurrently within each stage.",
+        default=9,
+        help="Materiality batches processed concurrently within each stage (default: 9).",
     )
+    parser.add_argument("--request-interval", type=float,
+                        help="Seconds between API request starts (default: 2 with parallel batches, otherwise 0).")
+    parser.add_argument("--rate-limit-cooldown", type=float, default=60,
+                        help="Shared HTTP 429 cooldown, extended by Retry-After (default: 60 seconds).")
+    parser.add_argument("--rate-limit-retries", type=int, default=10,
+                        help="Additional attempts after temporary HTTP 429; -1 allows unlimited retries (default: 10).")
     parser.add_argument("--max-steps", type=int, default=3)
     parser.add_argument("--max-requests", type=int, default=200)
     parser.add_argument("--max-new-requests", type=int)
@@ -490,6 +500,11 @@ def main(argv=None):
         help="Discard saved materiality and start a fresh model run; resume later without this flag.",
     )
     args = parser.parse_args(argv)
+    args.request_interval = args.request_interval if args.request_interval is not None else (2.0 if args.concurrency > 1 else 0.0)
+    if (args.rate_limit_retries < -1
+            or any(not math.isfinite(value) or value < 0 for value in
+                   (args.request_interval, args.rate_limit_cooldown))):
+        parser.error("Rate-limit retries must be nonnegative or -1; request interval and cooldown must be finite and nonnegative.")
 
     ticker, years = args.ticker.lower(), (args.previous_year, args.current_year)
     if (not re.fullmatch(r"[a-z0-9][a-z0-9.-]*", ticker)
@@ -516,11 +531,19 @@ def main(argv=None):
     verification_stats = None
     document, error, exit_code = None, None, 0
     try:
-        document, migrated_count = load_document(path, validate_materiality=not args.reclassify)
+        database_document = None
+        if args.input_source == 'postgres':
+            from sec_disclosure.storage.pipeline_snapshots import alignment_snapshot, alignment_output
+            snapshot = alignment_snapshot(ticker, *years, env_file=args.env_file)
+            database_document = alignment_output(snapshot, alignment_dir)
+        document, migrated_count = load_document(path, validate_materiality=not args.reclassify,
+                                                 document=database_document)
         identity = (document.get("company"), str(document.get("previous_year")), str(document.get("current_year")))
         if identity != (ticker, *years):
             raise ValueError("alignments.json belongs to a different company or year comparison.")
         rows = document["alignments"]
+        if database_document is not None:
+            write_json(path, document)
 
         changed = bool(migrated_count)
         run_state_path = output / "run_state.json"
@@ -611,10 +634,12 @@ def main(argv=None):
             "settings": {key: getattr(args, key) for key in
                          ("batch_size", "verification_batch_size", "max_steps",
                           "max_tokens", "max_prompt_chars", "skip_verification",
-                          "timeout_recovery", "retry_timeout", "concurrency")},
+                          "timeout_recovery", "retry_timeout", "concurrency",
+                          "request_interval", "rate_limit_cooldown", "rate_limit_retries")},
             "implementation_hashes": {file.name: digest(file.read_bytes()) for file in implementation},
         })
-        runtime = MaterialityRuntime(output, config, args, classification_run_id)
+        runtime = MaterialityRuntime(output, config, args, classification_run_id,
+                                    request_pacer=request_pacer)
         state_lock = RLock()
 
         def classify_group(group):

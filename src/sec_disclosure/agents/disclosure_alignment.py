@@ -328,12 +328,14 @@ def apply_extraction_policy_to_alignments(decisions, data):
     return rows
 
 
-def load_alignment_report(output):
+def load_alignment_report(output, *, documents=None):
     """Read all decisions from the two final files, or a legacy combined report."""
-    report = json.loads((output / "alignments.json").read_text())
+    report = (deepcopy(documents['alignments.json']['payload']) if documents is not None
+              else json.loads((output / "alignments.json").read_text()))
     if "included_statuses" not in report:
         return report
-    review = json.loads((output / "needs_review.json").read_text())
+    review = (deepcopy(documents['needs_review.json']['payload']) if documents is not None
+              else json.loads((output / "needs_review.json").read_text()))
     identity = ("schema_version", "company", "comparison_scope", "previous_year", "current_year",
                 "run_complete", "error", "overall_counts")
     if any(report[key] != review[key] for key in identity):
@@ -528,6 +530,8 @@ def write_alignment_json_reports(output, report, *, preserve_change_analysis=Tru
             if (same_decision and row["change_analysis"] == empty_change_analysis()
                     and "change_analysis" in old):
                 row["change_analysis"] = deepcopy(old["change_analysis"])
+            if same_decision and "materiality_analysis" not in row and "materiality_analysis" in old:
+                row["materiality_analysis"] = deepcopy(old["materiality_analysis"])
     for row in report["alignments"]:
         row["change_analysis"] = compact_change_analysis(row["change_analysis"])
     for filename, statuses in (("alignments.json", list(FINAL_ALIGNMENT_STATUSES)),
@@ -607,8 +611,15 @@ def run_change_stage(output, report, data, runtime):
 
 
 def analyze_saved_alignments(output, data, args, request_pacer=None):
-    report = load_alignment_report(output)
-    manifest = json.loads((output / "manifest.json").read_text())
+    documents = None
+    if getattr(args, 'input_source', 'files') == 'postgres':
+        from sec_disclosure.storage.pipeline_snapshots import alignment_snapshot, alignment_output
+        snapshot = alignment_snapshot(data.ticker, *data.years, env_file=args.env_file)
+        alignment_output(snapshot, output)
+        documents = snapshot['documents']
+    report = load_alignment_report(output, documents=documents)
+    manifest = (documents['manifest.json']['payload'] if documents is not None
+                else json.loads((output / "manifest.json").read_text()))
     if (report.get("comparison_scope") != "same_item" or not report["run_complete"]
             or (report["company"], report["previous_year"], report["current_year"]) != (data.ticker, *data.years)):
         raise ValueError("Change-analysis-only requires a completed same-Item alignment for this company/year pair.")
@@ -655,7 +666,7 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
     parser.add_argument("--request-interval", type=float, help="Shared seconds between API request starts (default: 2 with multiple workers, otherwise 0).")
     parser.add_argument("--rate-limit-cooldown", type=float, default=60, help="Shared HTTP 429 cooldown in seconds (default: 60).")
     parser.add_argument("--max-steps", type=int, default=4, help="Agent turns per job, including tool requests/corrections.")
-    parser.add_argument("--max-requests", type=int, default=400, help="Total paid alignment and change-analysis requests for this pair, including prior attempts; -1 removes the cap.")
+    parser.add_argument("--max-requests", type=int, default=-1, help="Total paid alignment and change-analysis requests for this pair, including prior attempts; default: -1 (no request cap). Set a positive value to impose a cap.")
     parser.add_argument("--max-new-requests", type=int, help="Pause after this many NEW requests; rerun to resume.")
     parser.add_argument("--max-total-tokens", type=int, default=30000000, help="Total alignment and change-analysis token budget per year pair; -1 removes the cap (default: 30000000).")
     parser.add_argument("--max-tokens", type=int, default=6000, help="Maximum completion tokens per request.")
@@ -676,6 +687,8 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
     parser.add_argument("--skip-change-analysis", action="store_true", help="Run alignment only; normal completed runs automatically classify changes afterward.")
     parser.add_argument("--change-analysis-only", action="store_true", help="Classify a completed saved alignment without rerunning matching/verification; AI-verified rows use paid LLM requests.")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--input-source", choices=("files", "postgres"), default="postgres",
+                        help="Read upstream evidence and change-analysis inputs from PostgreSQL or legacy files.")
     args = parser.parse_args(argv)
     if (args.regroup_only or args.refresh_extraction_policy) and (args.repair_from or args.offline_repair or args.revalidate_cache or args.dry_run
                                                               or args.regroup_only and args.refresh_extraction_policy):
@@ -704,7 +717,8 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
     candidates, matches, groups, decisions, automatic = {}, [], [], [], []
     complete, error, exit_code = False, None, 0
     try:
-        data = AlignmentData(args.data_dir, ticker, years, disclosures_dir=args.disclosures_dir)
+        data = AlignmentData(args.data_dir, ticker, years, disclosures_dir=args.disclosures_dir,
+                             input_source=args.input_source, env_file=args.env_file)
         if args.change_analysis_only:
             code = analyze_saved_alignments(output, data, args, request_pacer)
             return store_completed_run(args, output, ticker, years, code)
@@ -749,8 +763,14 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
             if previous_manifest.get("comparison_scope") != "same_item":
                 raise ValueError("This saved run predates same-Item-only comparison. Start a fresh run with a new --output-dir; legacy cross-Item jobs cannot be resumed or revalidated under this scope.")
             if previous_manifest != manifest:
-                unchanged = lambda value: {key: item for key, item in value.items() if key not in {"implementation_hashes", "orchestration"}}
-                if not args.revalidate_cache or unchanged(previous_manifest) != unchanged(manifest):
+                def unchanged(value):
+                    comparable = {key: item for key, item in value.items()
+                                  if key not in {"implementation_hashes", "orchestration"}}
+                    comparable['input_hashes'] = {str(Path(key).resolve()): item
+                                                  for key, item in value['input_hashes'].items()}
+                    return comparable
+                revalidate = args.revalidate_cache or args.input_source == 'postgres'
+                if not revalidate or unchanged(previous_manifest) != unchanged(manifest):
                     raise ValueError("Inputs, implementation, prompts or model changed. Use a new --output-dir, or --revalidate-cache for implementation-only changes with unchanged inputs/settings.")
                 archive = output / "archives" / digest(manifest_path.read_bytes())[:16]
                 if archive.exists():

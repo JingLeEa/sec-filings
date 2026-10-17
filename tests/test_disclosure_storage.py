@@ -68,7 +68,8 @@ class DisclosureStorageTests(unittest.TestCase):
         delete = next(call for call in self.cursor.execute.call_args_list if call.args[0].startswith("DELETE"))
         self.assertIn("filing_id = %s", delete.args[0])
         self.assertEqual(delete.args[1], (7, [r["disclosure_id"] for r in self.records]))
-        self.assertFalse(any("alignments" in call.args[0] for call in self.cursor.execute.call_args_list))
+        self.assertFalse(any(statement in call.args[0] for call in self.cursor.execute.call_args_list
+                             for statement in ("INSERT INTO alignments", "UPDATE alignments", "DELETE FROM alignments")))
 
     def test_partial_snapshot_and_duplicate_records_are_rejected_before_database_access(self):
         self.write_reports(complete=False)
@@ -86,6 +87,12 @@ class DisclosureStorageTests(unittest.TestCase):
         self.assertNotIn("private-database-secret", str(error.exception))
         self.assertIs(self.connection.__exit__.call_args.args[0], RuntimeError)
         self.assertFalse(any(call.args[0].startswith("DELETE") for call in self.cursor.execute.call_args_list))
+
+    def test_snapshot_failure_rolls_back_normalized_records_in_the_same_transaction(self):
+        with patch.object(storage, 'publish', side_effect=RuntimeError('snapshot write failed')):
+            with self.assertRaises(storage.DisclosureStorageError):
+                self.store(replace=True)
+        self.assertIs(self.connection.__exit__.call_args.args[0], RuntimeError)
 
     def test_cross_filing_id_is_rejected_before_it_can_overwrite_another_filing(self):
         self.records[0]["disclosure_id"] = "mu_2025_1A_D001"

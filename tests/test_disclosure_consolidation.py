@@ -80,6 +80,7 @@ class ConsolidationTests(TestCase):
              patch.object(disclosures, "request_completion", side_effect=responder or self.response) as api, \
              redirect_stdout(output), redirect_stderr(output):
             code = disclosures.main(["--ticker", "amd", *year_options, "--data-dir", str(self.root),
+                                     "--input-source", "files",
                                      "--batch-chars", "1000", "--request-interval", "0",
                                      "--rate-limit-cooldown", "0", "--response-retry-backoff", "0", "--no-store-postgres", *extra])
         self.last_output = output.getvalue()

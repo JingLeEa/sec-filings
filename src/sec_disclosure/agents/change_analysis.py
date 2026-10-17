@@ -38,12 +38,21 @@ def compact_change_analysis(analysis):
         label = analysis.get("final_taxonomy")
     if not isinstance(label, str) or label not in CHANGE_TAXONOMY:
         label = None
-    if status not in {"not_started", "completed", "needs_review"}:
+    if status in {"semantic_done", "in_progress"}:
+        status = "in_progress"
+    if status not in {"not_started", "in_progress", "completed", "needs_review"}:
         status = "not_started"
     if status == "completed" and label is None:
         status = "needs_review"
-    return {**empty_change_analysis(), "status": status,
-            "llm": label if status == "completed" else None}
+    lexical = analysis.get("lexical")
+    semantic = analysis.get("semantic")
+    enriched = isinstance(lexical, dict) or isinstance(semantic, dict)
+    final = analysis.get("final_taxonomy")
+    return {"status": status,
+            "lexical": deepcopy(lexical) if isinstance(lexical, dict) else None,
+            "semantic": deepcopy(semantic) if isinstance(semantic, dict) else None,
+            "llm": label if status == "completed" else None,
+            "final_taxonomy": final if enriched and isinstance(final, str) and final in CHANGE_TAXONOMY else None}
 
 
 def selected_records(row, data):
@@ -62,7 +71,8 @@ def selected_records(row, data):
 
 def analysis_identity(row, data, runtime):
     identity = {"policy": CHANGE_POLICY,
-                "alignment": {key: value for key, value in row.items() if key != "change_analysis"},
+                "alignment": {key: value for key, value in row.items()
+                              if key not in {"change_analysis", "materiality_analysis"}},
                 "records": selected_records(row, data)}
     if row["status"] == "ai_verified":
         if runtime.config is None:

@@ -1,8 +1,15 @@
 """Offline tests for scripts/load_to_postgres.py (no database needed)."""
 import hashlib
 import importlib.util
+import io
+import json
+import sys
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from types import SimpleNamespace
+from unittest.mock import MagicMock, patch
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "load_to_postgres.py"
 spec = importlib.util.spec_from_file_location("load_to_postgres", SCRIPT)
@@ -55,6 +62,29 @@ class LoaderTests(unittest.TestCase):
 
     def test_vector_literal(self):
         self.assertEqual(loader.vector_literal([1, 0.5]), "[1.0,0.5]")
+
+    def test_sync_preserves_filing_and_limits_pruning_to_selected_raw_ids(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            chunks, sentences = root / "chunks.json", root / "sentences.json"
+            chunks.write_text(json.dumps([CHUNK]))
+            sentences.write_text(json.dumps([SENTENCE]))
+            conn, cur = MagicMock(), MagicMock()
+            conn.__enter__.return_value = conn
+            cur.__enter__.return_value = cur
+            conn.cursor.return_value = cur
+            cur.fetchone.side_effect = [(7,), (1,), (1,)]
+            driver = SimpleNamespace(connect=MagicMock(return_value=conn))
+            with patch.dict(sys.modules, {"psycopg": driver}), redirect_stdout(io.StringIO()):
+                self.assertEqual(loader.main(["--company", "unh", "--year", "2025", "--sync",
+                                              "--chunks", str(chunks), "--sentences", str(sentences)]), 0)
+            deletes = [call.args for call in cur.execute.call_args_list if call.args[0].startswith("DELETE")]
+            self.assertEqual(len(deletes), 2)
+            self.assertTrue(all("filing_id = %s" in query for query, _ in deletes))
+            self.assertFalse(any("DELETE FROM filings" in query for query, _ in deletes))
+            self.assertEqual(deletes[0][1], (7, [SENTENCE["id"]]))
+            self.assertEqual(deletes[1][1], (7, [CHUNK["id"]]))
+            self.assertEqual(conn.__exit__.call_args.args, (None, None, None))
 
 
 if __name__ == "__main__":

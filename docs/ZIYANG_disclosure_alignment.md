@@ -112,6 +112,15 @@ offline tests make no API calls. Normal agent requests use paid tokens.
 
 For AMD 2024–2025, both extraction runs must be complete:
 
+The default `--input-source postgres` reads raw evidence, disclosure records,
+completion status and audit metadata directly from `pipeline_stage_snapshots` in
+Docker PostgreSQL. No local input JSON is required. New stage saves publish this
+metadata transactionally with normalized results. For older saved runs, import it
+once with `scripts/import_pipeline_snapshots.py`; see the
+[full pipeline guide](ZIYANG_full_pipeline.md).
+
+The following paths apply only to explicit `--input-source files` legacy runs:
+
 | Location | Required files |
 | --- | --- |
 | `data/raw/amd/2024/` and `data/raw/amd/2025/` | Each year's `YEAR_chunks.json` and `YEAR_chunk_sentences.json` |
@@ -153,7 +162,9 @@ Database settings use `POSTGRES_*` or `DATABASE_URL` from `--env-file`, falling
 back to the repository `.env`; exported variables take priority. Custom alignment
 output directories are imported directly. `--store-postgres` explicitly enables
 the default; `--no-store-postgres` selects file-only behavior. Extraction forwards
-the file-only choice to downstream alignment. Dry runs never access PostgreSQL.
+the write choice to downstream alignment. Use `--input-source files` as well for
+a fully file-based workflow. Dry runs may read PostgreSQL inputs but never write
+to the database or call models.
 
 A database failure returns exit code `1` while keeping the saved JSON and model
 cache. Retry storage directly without alignment, change-analysis or LLM requests:
@@ -292,7 +303,7 @@ Historical cross-Item runs cannot be resumed/imported under the same-Item policy
 | `--request-interval` | 2 seconds between request starts with multiple workers; otherwise 0 |
 | `--rate-limit-cooldown` | Shared 60-second pause after HTTP 429, extended by numeric `Retry-After` |
 | `--max-steps` | 4 model turns per job, including tool requests and corrections |
-| `--max-requests` | 400 cumulative paid attempts, including prior runs of the same output directory; `-1` removes the cap |
+| `--max-requests` | No request cap by default (`-1`); a positive value caps cumulative paid attempts, including prior runs of the same output directory |
 | `--max-new-requests` | Optional limit on new attempts this invocation |
 | `--max-total-tokens` | 30,000,000 per year pair by default; `-1` removes the cap |
 | `--max-tokens`, `--timeout` | 6,000 completion tokens; 180-second total deadline per API attempt, including response reads |

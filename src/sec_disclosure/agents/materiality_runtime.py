@@ -5,12 +5,14 @@ from __future__ import annotations
 import json
 from dataclasses import asdict
 from datetime import datetime, timezone
+from itertools import count
 from pathlib import Path
 from threading import RLock
 from time import perf_counter
 
 from sec_disclosure.llm.client import LLMError, request_completion
 from sec_disclosure.llm.disclosures import digest, usage_report, write_json
+from sec_disclosure.llm.request_pacing import RequestPacer
 
 from .alignment_runtime import RunLimit
 
@@ -23,6 +25,10 @@ def is_timeout_error(error):
     return isinstance(error, LLMError) and "timed out" in str(error).lower()
 
 
+def retryable_rate_limit(record):
+    return record.get("status_code") == 429 and record.get("retryable") is not False
+
+
 def unique_object(pairs):
     result = {}
     for key, value in pairs:
@@ -33,7 +39,8 @@ def unique_object(pairs):
 
 
 class MaterialityRuntime:
-    def __init__(self, output: Path, config, args, classification_run_id=None):
+    def __init__(self, output: Path, config, args, classification_run_id=None, *,
+                 request_pacer: RequestPacer | None = None):
         self.output, self.config, self.args = output, config, args
         self.classification_run_id = classification_run_id
         self.lock = RLock()
@@ -46,12 +53,16 @@ class MaterialityRuntime:
             if request.get("classification_run_id") == classification_run_id
         ]
         self.new_requests = 0
+        self.rate_limit_retries = args.rate_limit_retries
+        self.pacer = request_pacer if request_pacer is not None else RequestPacer(
+            args.request_interval, args.rate_limit_cooldown, args.concurrency)
         self.retry_acknowledged = {
             (request["request_hash"], request["attempt"])
             for request in self.requests
             if (
                 args.retry_failed and request["status"] in {"failed", "started"}
                 or args.timeout_recovery and request.get("failure_kind") == "timeout"
+                or self.rate_limit_retries != 0 and retryable_rate_limit(request)
             )
         }
 
@@ -126,7 +137,8 @@ class MaterialityRuntime:
             report["limits"] = {
                 key: getattr(self.args, key)
                 for key in ("max_requests", "max_total_tokens", "max_steps", "max_tokens",
-                            "max_prompt_chars", "concurrency", "timeout", "retry_timeout")
+                            "max_prompt_chars", "concurrency", "timeout", "retry_timeout",
+                            "request_interval", "rate_limit_cooldown", "rate_limit_retries")
             }
             report["notes"].append(
                 "Materiality-stage tokens only. Admission reserves UTF-8 prompt bytes plus the maximum completion."
@@ -149,6 +161,20 @@ class MaterialityRuntime:
 
     def call(self, job_id: str, prompt: str, system: str, *, role="materiality",
              retry_timeout=False):
+        for retry in count():
+            try:
+                return self._call_once(job_id, prompt, system, role=role,
+                                       retry_timeout=retry_timeout)
+            except LLMError as error:
+                if (error.status_code != 429 or error.retryable is False
+                        or retry == self.rate_limit_retries):
+                    raise
+                limit = "unlimited" if self.rate_limit_retries == -1 else str(self.rate_limit_retries)
+                print(f"[{self.output.parent.name}] {job_id}: HTTP 429 saved; shared cooldown "
+                      f"before retry {retry + 1}/{limit}.", flush=True)
+
+    def _call_once(self, job_id: str, prompt: str, system: str, *, role="materiality",
+                   retry_timeout=False):
         spec = {
             "prompt": prompt,
             "system_prompt": system,
@@ -161,115 +187,127 @@ class MaterialityRuntime:
         key = digest(json.dumps(spec, sort_keys=True).encode())
         with self.lock:
             history = [record for record in self.requests if record["request_hash"] == key]
-            timeout_history = [
-                record for record in history if record.get("failure_kind") == "timeout"
-            ]
             if history and history[-1]["status"] == "completed":
                 return history[-1]["result"]
-            if (history and history[-1].get("failure_kind") == "timeout"
-                    and self.args.timeout_recovery and not self.args.retry_failed
-                    and (not retry_timeout or len(timeout_history) >= 2)):
-                raise MaterialityRequestTimedOut(
-                    "The materiality request timed out; applying adaptive batch recovery."
-                )
-            if history and not self.args.retry_failed:
-                if not (history[-1].get("failure_kind") == "timeout"
-                        and self.args.timeout_recovery and retry_timeout
-                        and len(timeout_history) == 1):
-                    raise RuntimeError(
-                        "An earlier materiality API attempt failed or was interrupted; inspect requests "
-                        "and use --retry-failed to allow another paid attempt."
+        with self.pacer.request():
+            with self.lock:
+                history = [record for record in self.requests if record["request_hash"] == key]
+                timeout_history = [
+                    record for record in history if record.get("failure_kind") == "timeout"
+                ]
+                if history and history[-1]["status"] == "completed":
+                    return history[-1]["result"]
+                if (history and history[-1].get("failure_kind") == "timeout"
+                        and self.args.timeout_recovery and not self.args.retry_failed
+                        and (not retry_timeout or len(timeout_history) >= 2)):
+                    raise MaterialityRequestTimedOut(
+                        "The materiality request timed out; applying adaptive batch recovery."
                     )
-            if (self.args.max_new_requests is not None
-                    and self.new_requests >= self.args.max_new_requests):
-                raise RunLimit("Invocation request limit reached; resume to continue.")
-            usage = self.report()
-            if len(self.requests) >= self.args.max_requests:
-                raise RunLimit("Total materiality request limit reached.")
-            if usage["unknown_usage_budget_reserve"]["unacknowledged_attempt_count"]:
-                raise RunLimit("A materiality API attempt has unknown usage; inspect it before retrying.")
-            reservation = len((system + prompt).encode()) + self.args.max_tokens
-            if usage["budget_accounted_tokens"] + reservation > self.args.max_total_tokens:
-                raise RunLimit("Materiality token budget cannot accommodate the next request.")
-            if len(system + prompt) > self.args.max_prompt_chars:
-                raise ValueError("Materiality agent context exceeds max_prompt_chars.")
+                if (history and not self.args.retry_failed
+                        and not (self.rate_limit_retries != 0 and retryable_rate_limit(history[-1]))):
+                    if not (history[-1].get("failure_kind") == "timeout"
+                            and self.args.timeout_recovery and retry_timeout
+                            and len(timeout_history) == 1):
+                        raise RuntimeError(
+                            "An earlier materiality API attempt failed or was interrupted; inspect requests "
+                            "and use --retry-failed to allow another paid attempt."
+                        )
+                if (self.args.max_new_requests is not None
+                        and self.new_requests >= self.args.max_new_requests):
+                    raise RunLimit("Invocation request limit reached; resume to continue.")
+                usage = self.report()
+                if len(self.requests) >= self.args.max_requests:
+                    raise RunLimit("Total materiality request limit reached.")
+                if usage["unknown_usage_budget_reserve"]["unacknowledged_attempt_count"]:
+                    raise RunLimit("A materiality API attempt has unknown usage; inspect it before retrying.")
+                reservation = len((system + prompt).encode()) + self.args.max_tokens
+                if usage["budget_accounted_tokens"] + reservation > self.args.max_total_tokens:
+                    raise RunLimit("Materiality token budget cannot accommodate the next request.")
+                if len(system + prompt) > self.args.max_prompt_chars:
+                    raise ValueError("Materiality agent context exceeds max_prompt_chars.")
 
-            attempt = len(history) + 1
-            request_timeout = (
-                max(self.args.timeout, self.args.retry_timeout)
-                if timeout_history and retry_timeout and not self.args.retry_failed
-                else self.args.timeout
-            )
-            record = {
-                "request_hash": key,
-                "job_id": job_id,
-                "item": role,
-                "stage": "materiality",
-                "agent": role,
-                "attempt": attempt,
-                "status": "started",
-                "started_at": datetime.now(timezone.utc).isoformat(),
-                "timeout_seconds": request_timeout,
-                **spec,
-            }
-            path = self.directory / f"{key}_attempt_{attempt:03d}.json"
-            write_json(path, record)
-            self.requests.append(record)
-            self.new_requests += 1
-            self.in_flight.add((key, attempt))
-            request_number = self.new_requests
-        role_label = role.replace("_", " ")
-        print(
-            f"{job_id}: {role_label} request {request_number} "
-            f"(timeout {request_timeout:g}s)",
-            flush=True,
-        )
-        request_started = perf_counter()
-        deferred_error = None
-        retry_with_longer_timeout = False
-        try:
-            response = request_completion(
-                prompt,
-                config=self.config,
-                system_prompt=system,
-                json_mode=True,
-                max_tokens=self.args.max_tokens,
-                timeout=request_timeout,
-            )
-            with self.lock:
-                record.update(status="completed", result=asdict(response))
-        except Exception as error:
-            timed_out = is_timeout_error(error)
-            with self.lock:
-                record.update(
-                    status="failed",
-                    error=type(error).__name__,
-                    error_message=str(error),
-                    failure_kind="timeout" if timed_out else "api_error",
+                attempt = len(history) + 1
+                request_timeout = (
+                    max(self.args.timeout, self.args.retry_timeout)
+                    if timeout_history and retry_timeout and not self.args.retry_failed
+                    else self.args.timeout
                 )
-                if timed_out and self.args.timeout_recovery:
-                    retry_with_longer_timeout = (
-                        retry_timeout and not self.args.retry_failed and len(timeout_history) == 0
-                    )
-                    record["recovery"] = (
-                        "retry_single_row_with_longer_timeout"
-                        if retry_with_longer_timeout else "split_batch"
-                    )
-                    self.retry_acknowledged.add((key, attempt))
-            if timed_out and self.args.timeout_recovery:
-                if not retry_with_longer_timeout:
-                    deferred_error = MaterialityRequestTimedOut(
-                        "Materiality request timed out; applying adaptive batch recovery."
-                    )
-            else:
-                deferred_error = error
-        finally:
-            with self.lock:
-                self.in_flight.discard((key, attempt))
-                record["completed_at"] = datetime.now(timezone.utc).isoformat()
-                record["elapsed_seconds"] = round(perf_counter() - request_started, 3)
+                record = {
+                    "request_hash": key,
+                    "job_id": job_id,
+                    "item": role,
+                    "stage": "materiality",
+                    "agent": role,
+                    "attempt": attempt,
+                    "status": "started",
+                    "started_at": datetime.now(timezone.utc).isoformat(),
+                    "timeout_seconds": request_timeout,
+                    **spec,
+                }
+                path = self.directory / f"{key}_attempt_{attempt:03d}.json"
                 write_json(path, record)
-                write_json(self.output / "token_usage.json", self.report())
+                self.requests.append(record)
+                self.new_requests += 1
+                self.in_flight.add((key, attempt))
+                request_number = self.new_requests
+            role_label = role.replace("_", " ")
+            print(
+                f"{job_id}: {role_label} request {request_number} "
+                f"(timeout {request_timeout:g}s)",
+                flush=True,
+            )
+            request_started = perf_counter()
+            deferred_error = None
+            retry_with_longer_timeout = False
+            try:
+                response = request_completion(
+                    prompt,
+                    config=self.config,
+                    system_prompt=system,
+                    json_mode=True,
+                    max_tokens=self.args.max_tokens,
+                    timeout=request_timeout,
+                )
+                with self.lock:
+                    record.update(status="completed", result=asdict(response))
+            except Exception as error:
+                timed_out = is_timeout_error(error)
+                with self.lock:
+                    record.update(
+                        status="failed",
+                        error=type(error).__name__,
+                        error_message=str(error),
+                        failure_kind="timeout" if timed_out else "api_error",
+                    )
+                    if isinstance(error, LLMError):
+                        record.update(status_code=error.status_code, retryable=error.retryable,
+                                      retry_after=error.retry_after)
+                        if self.rate_limit_retries != 0 and retryable_rate_limit(record):
+                            self.pacer.rate_limited(error.retry_after)
+                            self.retry_acknowledged.add((key, attempt))
+                    if timed_out and self.args.timeout_recovery:
+                        retry_with_longer_timeout = (
+                            retry_timeout and not self.args.retry_failed and len(timeout_history) == 0
+                        )
+                        record["recovery"] = (
+                            "retry_single_row_with_longer_timeout"
+                            if retry_with_longer_timeout else "split_batch"
+                        )
+                        self.retry_acknowledged.add((key, attempt))
+                if timed_out and self.args.timeout_recovery:
+                    if not retry_with_longer_timeout:
+                        deferred_error = MaterialityRequestTimedOut(
+                            "Materiality request timed out; applying adaptive batch recovery."
+                        )
+                else:
+                    deferred_error = error
+            finally:
+                with self.lock:
+                    self.in_flight.discard((key, attempt))
+                    record["completed_at"] = datetime.now(timezone.utc).isoformat()
+                    record["elapsed_seconds"] = round(perf_counter() - request_started, 3)
+                    write_json(path, record)
+                    write_json(self.output / "token_usage.json", self.report())
         if retry_with_longer_timeout:
             print(
                 f"{job_id}: request timed out after {request_timeout:g}s; retrying once with "

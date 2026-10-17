@@ -61,6 +61,68 @@ class AlignmentTests(unittest.TestCase):
     def data(self):
         return AlignmentData(self.root, "amd", ("2023", "2024"))
 
+    def database_inputs(self):
+        from sec_disclosure.storage.pipeline_snapshots import DISCLOSURE_FILES, folder_documents
+        snapshots = {}
+        for year in ('2023', '2024'):
+            for kind, names in (('raw', [f'{year}_chunks.json', f'{year}_chunk_sentences.json']),
+                                ('disclosures', DISCLOSURE_FILES)):
+                snapshots[(kind, year, year)] = {'documents': folder_documents(
+                    self.root / kind / 'amd' / year, names)}
+        return snapshots
+
+    def test_postgres_alignment_evidence_requires_no_local_input_files(self):
+        from sec_disclosure.storage import pipeline_snapshots as snapshots
+        expected = self.data()
+        database = self.database_inputs()
+        shutil.rmtree(self.root / 'raw')
+        shutil.rmtree(self.root / 'disclosures')
+        with patch.object(snapshots, 'read_snapshots', return_value=database), \
+             patch.object(Path, 'read_bytes', side_effect=AssertionError('No file inputs allowed')):
+            actual = AlignmentData(self.root, 'amd', ('2023', '2024'), input_source='postgres')
+        self.assertEqual(actual.records, expected.records)
+        canonical = lambda values: {str(Path(key).resolve()): value for key, value in values.items()}
+        self.assertEqual(canonical(actual.hashes), canonical(expected.hashes))
+        self.assertEqual(actual.extraction_usage, expected.extraction_usage)
+
+    def test_postgres_failure_never_falls_back_to_existing_local_inputs(self):
+        from sec_disclosure.storage import pipeline_snapshots as snapshots
+        with patch.object(snapshots, 'read_snapshots', side_effect=snapshots.PipelineInputError('Database unavailable')):
+            with self.assertRaisesRegex(ValueError, 'Database unavailable'):
+                AlignmentData(self.root, 'amd', ('2023', '2024'), input_source='postgres')
+
+    def test_normal_alignment_uses_database_inputs_for_cached_and_new_outputs(self):
+        from sec_disclosure.storage import pipeline_snapshots as snapshots
+        code, calls = self.run_cli()
+        self.assertEqual(code, 0)
+        database = self.database_inputs()
+        shutil.rmtree(self.root / 'raw')
+        shutil.rmtree(self.root / 'disclosures')
+        with patch.object(snapshots, 'read_snapshots', return_value=database):
+            self.assertEqual(self.run_cli('--input-source', 'postgres'), (0, 0))
+            self.assertEqual(self.run_cli('--input-source', 'postgres', '--output-dir', str(self.root / 'new-output')),
+                             (0, calls))
+
+    def test_postgres_change_analysis_reads_completed_alignment_and_cache_from_database(self):
+        from sec_disclosure.storage import pipeline_snapshots as snapshots
+        self.assertEqual(self.run_cli(change_analysis=True)[0], 0)
+        database = self.database_inputs()
+        folder = self.root / 'alignments/amd/2023-2024'
+        database[('alignments', '2023', '2024')] = {'documents': snapshots.folder_documents(
+            folder, snapshots.ALIGNMENT_FILES, include_change_cache=True)}
+        destination = self.root / 'fresh-worker'
+
+        def read(company, scopes, **kwargs):
+            return {tuple(map(str, key)): database[tuple(map(str, key))] for key in scopes}
+
+        with patch.object(snapshots, 'read_snapshots', side_effect=read):
+            self.assertEqual(self.run_cli('--input-source', 'postgres', '--data-dir', str(destination),
+                                          '--change-analysis-only', change_analysis=True), (0, 0))
+        self.assertFalse((destination / 'raw').exists())
+        self.assertFalse((destination / 'disclosures').exists())
+        report = module.load_alignment_report(destination / 'alignments/amd/2023-2024')
+        self.assertTrue(all(row['change_analysis']['status'] == 'completed' for row in report['alignments']))
+
     def set_fixture_item(self, year, number, item):
         """Change authoritative Item metadata while preserving the fixture's source IDs."""
         raw = self.root / "raw/amd" / year
@@ -87,7 +149,8 @@ class AlignmentTests(unittest.TestCase):
         with patch.object(module, "load_config", return_value=LLMConfig("https://example.test/v1", "fake-secret", "default")), \
              patch.object(alignment_runtime, "request_completion", side_effect=response or self.response) as api, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
-            status = module.main(["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), *mode, *args])
+            status = module.main(["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024",
+                                  "--data-dir", str(self.root), "--input-source", "files", *mode, *args])
         return status, api.call_count
 
     def test_completed_run_saves_final_change_analysis_by_default_and_retry_uses_cache(self):
@@ -643,6 +706,15 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(self.run_cli(*options, "--max-total-tokens", str(reserve), response=response), (2, 0))
         self.assertEqual(self.run_cli(*options, "--max-requests", "-1", "--max-total-tokens", "-1"), (0, 2))
 
+    def test_alignment_default_removes_request_cap_when_resuming_a_capped_run(self):
+        self.assertEqual(self.run_cli("--max-requests", "1"), (2, 1))
+        self.assertEqual(self.output("token_usage.json")["limits"]["max_requests"], 1)
+        self.assertEqual(self.run_cli(), (0, 1))
+        usage = self.output("token_usage.json")
+        self.assertTrue(usage["run_complete"])
+        self.assertEqual(usage["limits"]["max_requests"], -1)
+        self.assertEqual(usage["limits"]["max_total_tokens"], 30000000)
+
     def test_unlimited_api_retries_do_not_retry_permanent_errors(self):
         for status in (401, 403, 429):
             def response(prompt, **kwargs):
@@ -855,6 +927,8 @@ class AlignmentTests(unittest.TestCase):
         report = self.saved_report()
         analysis = {"status": "completed", "lexical": None, "semantic": None,
                     "llm": "Modified", "final_taxonomy": None}
+        materiality = {"materiality": "No", "materiality_score": 0.1,
+                       "confidence_score": 0.9, "reason": "Routine update.", "key_change": "Routine update"}
         report["alignments"][0]["change_analysis"] = deepcopy(analysis)
         report["alignments"][0]["materiality_analysis"] = deepcopy(materiality)
         module.write_alignment_json_reports(output, report)
@@ -871,6 +945,18 @@ class AlignmentTests(unittest.TestCase):
         module.write_alignment_json_reports(output, saved)
         self.assertEqual(self.output("alignments.json")["alignments"][0]["change_analysis"], module.empty_change_analysis())
         self.assertNotIn("materiality_analysis", self.output("alignments.json")["alignments"][0])
+
+    def test_cached_alignment_rerun_preserves_lexical_semantic_and_final_taxonomy(self):
+        self.assertEqual(self.run_cli(), (0, 2))
+        output = self.root / "alignments/amd/2023-2024"
+        report = self.saved_report()
+        analysis = {"status": "completed", "lexical": {"change_taxonomy": "Expanded"},
+                    "semantic": {"label": "Modified", "score": 0.8},
+                    "llm": "Expanded", "final_taxonomy": "Expanded"}
+        report["alignments"][0]["change_analysis"] = deepcopy(analysis)
+        module.write_alignment_json_reports(output, report)
+        self.assertEqual(self.run_cli(), (0, 0))
+        self.assertEqual(self.saved_report()["alignments"][0]["change_analysis"], analysis)
 
     def test_review_change_analysis_survives_cached_rerun(self):
         self.assertEqual(self.run_cli("--max-steps", "1", response=self.invalid_citation_response), (0, 2))
@@ -1143,7 +1229,7 @@ class AlignmentTests(unittest.TestCase):
         with patch.object(module, "load_config", side_effect=AssertionError("No API config needed")), \
              patch.object(alignment_runtime, "request_completion", side_effect=AssertionError("No API calls allowed")), \
              redirect_stdout(io.StringIO()):
-            argv = ["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root),
+            argv = ["--input-source", "files", "--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root),
                     "--refresh-extraction-policy", "--no-store-postgres"]
             self.assertEqual(module.main(argv), 0)
             refreshed = {p: p.read_bytes() for p in output.rglob("*") if p.is_file()}
@@ -1311,7 +1397,7 @@ class AlignmentTests(unittest.TestCase):
         with patch.object(module, "load_config", side_effect=AssertionError("No API configuration needed")), \
              patch.object(alignment_runtime, "request_completion", side_effect=AssertionError("No API calls")), \
              redirect_stdout(io.StringIO()):
-            argv = ["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024",
+            argv = ["--input-source", "files", "--ticker", "amd", "--previous-year", "2023", "--current-year", "2024",
                     "--data-dir", str(self.root), "--regroup-only", "--no-store-postgres"]
             self.assertEqual(module.main(argv), 0)
             snapshot = {p: p.read_bytes() for p in output.rglob("*") if p.is_file()}
@@ -1387,7 +1473,7 @@ class AlignmentTests(unittest.TestCase):
         original = (output / "alignments.json").read_bytes()
         protected = {p: p.read_bytes() for p in output.rglob("*.json") if p.parent.name in {"jobs", "requests", "traces"}
                      or p.name in {"token_usage.json", "manifest.json"}}
-        argv = ["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), "--regroup-only", "--no-store-postgres"]
+        argv = ["--input-source", "files", "--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), "--regroup-only", "--no-store-postgres"]
         with patch.object(module, "load_config", side_effect=AssertionError("Must not read API config")), \
              patch.object(alignment_runtime, "request_completion", side_effect=AssertionError("Must not call API")), \
              redirect_stdout(io.StringIO()):
@@ -1959,7 +2045,7 @@ class AlignmentTests(unittest.TestCase):
         with patch.object(module, "load_config", side_effect=AssertionError("No API config needed")), \
              patch.object(alignment_runtime, "request_completion", side_effect=AssertionError("No API needed")):
             with redirect_stdout(io.StringIO()):
-                self.assertEqual(module.main(["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), "--no-store-postgres"]), 0)
+                self.assertEqual(module.main(["--ticker", "amd", "--previous-year", "2023", "--current-year", "2024", "--data-dir", str(self.root), "--no-store-postgres", "--input-source", "files"]), 0)
         report = self.saved_report()
         self.assertEqual(report["counts"], {"auto_matched": 3})
         self.assertEqual(report["coverage"]["pending_disclosure_ids"], [])

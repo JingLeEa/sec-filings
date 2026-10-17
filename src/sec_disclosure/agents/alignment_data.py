@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
 
 from sec_disclosure.indexing.disclosure_retrieval import DisclosureIndex
@@ -10,10 +11,21 @@ from sec_disclosure.llm.disclosures import apply_source_unit_policy, digest, nor
 
 
 class AlignmentData:
-    def __init__(self, data_dir: Path, ticker: str, years: tuple[str, str], *, disclosures_dir: Path | None = None):
+    def __init__(self, data_dir: Path, ticker: str, years: tuple[str, str], *, disclosures_dir: Path | None = None,
+                 input_source="files", env_file=None):
         self.ticker, self.years = ticker, years
+        self.input_source = input_source
         self.records, self.paragraphs, self.audit, self.hashes = {}, {}, {}, {}
         self.extraction_usage = {}
+        self._database_documents = {}
+        if input_source == 'postgres':
+            from sec_disclosure.storage.pipeline_snapshots import read_snapshots
+            scopes = [(kind, year, year) for year in years for kind in ('raw', 'disclosures')]
+            snapshots = read_snapshots(ticker, scopes, env_file=env_file)
+            for year in years:
+                for kind, folder in (('raw', data_dir / 'raw'), ('disclosures', disclosures_dir or data_dir / 'disclosures')):
+                    for name, entry in snapshots[(kind, year, year)]['documents'].items():
+                        self._database_documents[str(folder / ticker / year / name)] = entry
         for year in years:
             root = (disclosures_dir or data_dir / "disclosures") / ticker / year
             raw = data_dir / "raw" / ticker / year
@@ -36,7 +48,10 @@ class AlignmentData:
                 # The saved grouping must refer to these exact raw files.
                 for name, expected in document["input_hashes"].items():
                     current = raw / Path(name).name
-                    if not current.is_file() or digest(current.read_bytes()) != expected:
+                    entry = self._database_documents.get(str(current))
+                    actual = entry['sha256'] if entry is not None else (
+                        digest(current.read_bytes()) if input_source == 'files' and current.is_file() else None)
+                    if actual != expected:
                         raise ValueError(f"Stale extraction evidence for {year}: {current.name}.")
                 for disclosure in document["disclosures"]:
                     self.check_metadata(disclosure, year)
@@ -89,6 +104,13 @@ class AlignmentData:
         self.index, self.audit_index = DisclosureIndex(self.records), DisclosureIndex(self.audit)
 
     def read(self, path: Path):
+        if self.input_source == 'postgres':
+            from sec_disclosure.storage.pipeline_snapshots import PipelineInputError
+            entry = self._database_documents.get(str(path))
+            if entry is None:
+                raise PipelineInputError(f'Missing PostgreSQL alignment input: {path.name}')
+            self.hashes[entry['source_path']] = entry['sha256']
+            return deepcopy(entry['payload'])
         value = path.read_bytes()
         self.hashes[str(path)] = digest(value)
         return json.loads(value)

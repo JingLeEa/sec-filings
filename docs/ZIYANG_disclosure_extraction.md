@@ -34,7 +34,7 @@ Use [backend_stage_template.md](backend_stage_template.md) for other stages.
 
 ```mermaid
 flowchart TD
-    A[Raw paragraph and sentence JSON] --> B[Validate IDs and filter source paragraphs]
+    A[PostgreSQL raw paragraph and sentence snapshot] --> B[Validate IDs and filter source paragraphs]
     B --> C[Batch one subsection with neighbor context]
     C --> D[LLM proposes topics and source IDs]
     D --> E[Validate proposals and assemble original text]
@@ -45,8 +45,13 @@ flowchart TD
     G --> I[Exclusion, boundary, consolidation and relationship audits]
 ```
 
-`disclosures.py` writes all extraction outputs. The model returns integer evidence
-references; Python retrieves the original text from input files. A disclosure
+`disclosures.py` writes all extraction outputs. The default `--input-source postgres`
+reads preprocessing evidence directly from Docker PostgreSQL; no local input JSON
+is required. Use `--input-source files` for the legacy file workflow. Completed
+saves include the audit metadata needed for database-backed alignment; see the
+[full pipeline guide](ZIYANG_full_pipeline.md) for existing-run migration.
+The model returns integer evidence references; Python retrieves the original text
+from the loaded source records. A disclosure
 stays in one SEC Item and one detected subsection (`item_title` path). Parent and
 child paths differ; the validator rejects cross-subsection selections.
 The workflow above runs separately for every selected year. `--years` overlaps
@@ -260,7 +265,8 @@ extraction has generated its outputs.
 ### Parallel run with fault tolerance
 
 Use this command to extract **2023, 2024 and 2025 concurrently with automatic
-recovery**. All three years' raw input files must already exist. Live extraction
+recovery**. All three years' preprocessing must already be saved in PostgreSQL
+(or use `--input-source files` with existing raw input JSON). Live extraction
 uses API tokens.
 
 ```bash

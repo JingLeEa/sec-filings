@@ -164,10 +164,15 @@ class Filing:
     input_hashes: dict[str, str]
 
 
-def load_filing(chunks_path: Path, sentences_path: Path, company: str, year: str) -> Filing:
-    chunks_bytes, sentences_bytes = chunks_path.read_bytes(), sentences_path.read_bytes()
-    paragraphs = json.loads(chunks_bytes)
-    sentences = json.loads(sentences_bytes)
+def load_filing(chunks_path: Path, sentences_path: Path, company: str, year: str, *, documents=None) -> Filing:
+    if documents is None:
+        chunks_bytes, sentences_bytes = chunks_path.read_bytes(), sentences_path.read_bytes()
+        paragraphs, sentences = json.loads(chunks_bytes), json.loads(sentences_bytes)
+        input_hashes = {str(chunks_path): digest(chunks_bytes), str(sentences_path): digest(sentences_bytes)}
+    else:
+        chunks, units_document = documents[chunks_path.name], documents[sentences_path.name]
+        paragraphs, sentences = chunks['payload'], units_document['payload']
+        input_hashes = {entry['source_path']: entry['sha256'] for entry in (chunks, units_document)}
     if not isinstance(paragraphs, list) or not isinstance(sentences, list) or not paragraphs:
         raise ValueError("Expected nonempty paragraph and sentence JSON arrays.")
     parents, ids, units, by_parent, filtered = {}, set(), {}, defaultdict(list), []
@@ -224,7 +229,7 @@ def load_filing(chunks_path: Path, sentences_path: Path, company: str, year: str
                          "section": paragraph["item_title"],
                          "sentences": [[number, units[number]["text"]] for number in selected]})
     return Filing(company, year, parents, units, rows, filtered,
-                  {str(chunks_path): digest(chunks_bytes), str(sentences_path): digest(sentences_bytes)})
+                  input_hashes)
 
 
 def make_batches(filing: Filing, max_chars: int = 16000) -> list[dict]:
@@ -646,7 +651,13 @@ def prepare_year(args, config):
     """Validate each year's inputs and saved manifest before any year starts."""
     root = args.data_dir / "raw" / args.ticker / args.year
     output = args.output_dir or (args.output_root or args.data_dir / "disclosures") / args.ticker / args.year
-    filing = load_filing(root / f"{args.year}_chunks.json", root / f"{args.year}_chunk_sentences.json", args.ticker, args.year)
+    documents = None
+    if getattr(args, 'input_source', 'files') == 'postgres':
+        from sec_disclosure.storage.pipeline_snapshots import read_snapshots
+        key = ('raw', args.year, args.year)
+        documents = read_snapshots(args.ticker, [key], env_file=args.env_file)[key]['documents']
+    filing = load_filing(root / f"{args.year}_chunks.json", root / f"{args.year}_chunk_sentences.json",
+                         args.ticker, args.year, documents=documents)
     batches = make_batches(filing, args.batch_chars)
     manifest = None
     if not args.dry_run:
@@ -1013,6 +1024,7 @@ def align_years(args, selected_years):
             "--ticker", args.ticker, "--previous-year", previous, "--current-year", current,
             "--data-dir", str(args.data_dir),
             "--disclosures-dir", str(args.output_root or args.data_dir / "disclosures"),
+            "--input-source", args.input_source,
             "--workers", str(args.alignment_workers),
             "--max-steps", str(args.alignment_max_steps),
             "--max-requests", str(args.alignment_max_requests),
@@ -1129,6 +1141,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--batch-workers", type=int, help="Concurrent extraction/consolidation jobs per year; boundary checks stay ordered (default: 6 with --years, 1 with --year).")
     parser.add_argument("--max-concurrent-requests", type=int, help="Optional API concurrency cap across extraction workers and, with --align, all alignment pairs combined.")
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
+    parser.add_argument("--input-source", choices=("files", "postgres"), default="postgres",
+                        help="Read preprocessing inputs from PostgreSQL (default) or explicitly select legacy local files.")
     outputs = parser.add_mutually_exclusive_group()
     outputs.add_argument("--output-dir", type=Path, help="Complete output path for --year; cannot be used with --years.")
     outputs.add_argument("--output-root", type=Path, help="Disclosure output root; writes ROOT/TICKER/YEAR for every selected year.")

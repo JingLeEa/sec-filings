@@ -31,6 +31,9 @@ from pathlib import Path
 from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from sec_disclosure.storage.pipeline_snapshots import file_document, publish
 
 CHUNK_KNOWN = {
     "id", "company", "year", "item", "item_default_title", "item_title",
@@ -213,6 +216,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--form-type", default="10-K")
     parser.add_argument("--replace", action="store_true",
                         help="Delete this filing's existing rows first (use after the extractor changed and IDs moved)")
+    parser.add_argument("--sync", action="store_true",
+                        help="Remove obsolete chunks/sentences for this filing while preserving its filing row and downstream disclosures")
     parser.add_argument("--embeddings-cache", help="Folder of cached embeddings (default location used by the pipeline: data/embeddings)")
     parser.add_argument("--embedding-model", default="bge-m3", help="Model name to read from the cache (default: bge-m3)")
     parser.add_argument("--dry-run", action="store_true", help="Check the input files only; do not touch the database")
@@ -260,6 +265,11 @@ def main(argv: list[str] | None = None) -> int:
             cur.execute(UPSERT_FILING, {"company": args.company, "fiscal_year": args.year,
                                         "form_type": args.form_type, "source": source})
             filing_id = cur.fetchone()[0]
+            if args.sync:
+                cur.execute("DELETE FROM sentences WHERE filing_id = %s AND NOT (sentence_id = ANY(%s::text[]))",
+                            (filing_id, [s["id"] for s in sentences]))
+                cur.execute("DELETE FROM chunks WHERE filing_id = %s AND NOT (chunk_id = ANY(%s::text[]))",
+                            (filing_id, [c["id"] for c in chunks]))
             cur.executemany(UPSERT_CHUNK, [chunk_row(c, filing_id) for c in chunks])
             cur.executemany(UPSERT_SENTENCE, [sentence_row(s, filing_id) for s in sentences])
             if args.embeddings_cache:
@@ -269,6 +279,15 @@ def main(argv: list[str] | None = None) -> int:
             n_chunks = cur.fetchone()[0]
             cur.execute("SELECT count(*) FROM sentences WHERE filing_id = %s", (filing_id,))
             n_sentences = cur.fetchone()[0]
+            if args.sync and (n_chunks != len(chunks) or n_sentences != len(sentences)):
+                raise ValueError("Snapshot counts disagree; PostgreSQL transaction rolled back")
+            documents = {}
+            for input_path, filename in ((chunks_path, f"{args.year}_chunks.json"),
+                                         (sentences_path, f"{args.year}_chunk_sentences.json")):
+                entry = file_document(input_path)
+                entry['source_path'] = str(input_path.with_name(filename).resolve())
+                documents[filename] = entry
+            publish(cur, args.company, "raw", args.year, args.year, documents)
     print(f"Done. {args.company} {args.year} (filing_id {filing_id}): {n_chunks} chunks, {n_sentences} sentences in the database.")
     if n_chunks != len(chunks) or n_sentences != len(sentences):
         print("WARNING: the database holds rows from an earlier load that are no longer in the files. "
