@@ -5,19 +5,27 @@
 ## 1. Purpose and implementation status
 
 Link saved disclosures for the same company across two fiscal years, within the
-same SEC Item. The output supports a future downstream change-analysis stage.
+same SEC Item, then classify changes after the alignment is finalized.
 Inputs come from [disclosure extraction](ZIYANG_disclosure_extraction.md).
+The extraction pipeline now consolidates candidates across all batches in each
+split subsection before alignment. It preserves source sentences and exports
+within-subsection relationship links. Year-to-year alignment consumes those
+final disclosures; it does not perform or rewrite extraction consolidation.
+When upgrading an existing extraction cache, use a new alignment output root
+because consolidated disclosure inputs and IDs may change. Cache revalidation
+does not bypass changed input hashes.
 
 Implemented: exact-text routing, local candidate retrieval, LangGraph matching
 and verification agents, bounded automatic repair, supported overlapping links,
-source validation, two final JSON outputs and durable resume state. Both agents use the
+source validation, parallel jobs, two final JSON outputs, durable resume state,
+and downstream change taxonomy. Matching, verification and change-analysis roles use the
 configured model with different prompts. LangGraph coordinates the workflow; it
 does not train the model or guarantee fewer review cases or faster API calls.
 
-Not implemented here: lexical/semantic/LLM change classification and a
-human-in-the-loop review interface. `change_analysis` is a placeholder.
-Alignment-level materiality is implemented as the separate downstream stage
-documented in [JINGLE_materiality.md](JINGLE_materiality.md).
+LLM change classification runs only for `ai_verified` rows. `auto_matched` and
+validated `unmatched` rows use deterministic logic. `needs_review` alignment rows
+are deferred. Separate lexical/embedding scores, materiality scoring and a
+human-in-the-loop review interface are not implemented.
 
 ## 2. Code and workflow
 
@@ -34,6 +42,7 @@ documented in [JINGLE_materiality.md](JINGLE_materiality.md).
 | [`agents/alignment_prompts.py`](../src/sec_disclosure/agents/alignment_prompts.py) | Matching and verification prompts |
 | [`agents/alignment_repair.py`](../src/sec_disclosure/agents/alignment_repair.py) | Incremental verifier repair and saved-run import |
 | [`agents/alignment_grouping.py`](../src/sec_disclosure/agents/alignment_grouping.py) | Consolidate supported splits/merges, preserve original links and check conflicts |
+| [`agents/change_analysis.py`](../src/sec_disclosure/agents/change_analysis.py) | Finalized-group change classification, logical routing, citations and resumable results |
 
 ```mermaid
 flowchart TD
@@ -54,10 +63,15 @@ flowchart TD
     D --> J
     J --> K[alignments.json: AI-verified, automatic and unmatched]
     J --> L[needs_review.json: unresolved decisions]
+    K --> M[Change analysis: LLM for AI-verified; logic for exact and unmatched]
+    M --> N[Update change_analysis in the same final JSON files]
 ```
 
-The coordinator runs jobs sequentially; the agent chooses `search`, `context` or
-its final action. LangGraph routes between model, tool and validation nodes.
+The standalone coordinator runs one job at a time by default. `--workers` allows independent
+matching jobs to overlap, then independent verification jobs to overlap. All
+matching jobs finish before grouping and verification begin. Each agent's own
+model/tool/correction turns remain ordered; the agent chooses `search`, `context`
+or its final action. LangGraph routes between model, tool and validation nodes.
 The existing SoCLaaS Chat Completions client uses a JSON action protocol; native
 provider tool calling is not required. Disclosure extraction remains a separate
 Python workflow.
@@ -117,6 +131,107 @@ comparison's hard boundary is the SEC Item.
 ## 5. Run and rerun
 
 Run from the repository root after completing both extraction years.
+
+### Automatic PostgreSQL storage
+
+Successful alignment commands automatically save their final `alignments.json`
+and `needs_review.json` records into `alignment_runs`, `alignments` and
+`alignment_members`. This includes comparisons started with
+`extract_disclosures.py --align`, which also stores completed extraction years
+by default. Start Docker Desktop and run `docker compose up -d db` first. The
+database needs `db/init/02_disclosures_alignments.sql` applied; fresh Docker
+volumes run it automatically.
+
+Storage runs after alignment and requested change analysis finish successfully,
+including completed report-refresh and change-analysis-only commands. It preserves
+final change labels, source evidence, grouping and review decisions. Partial,
+paused and failed runs keep their JSON without replacing a completed database
+snapshot. Each comparison is replaced in one transaction; retries reuse its run
+key and do not create duplicate decision/member rows. Other comparisons are unchanged.
+
+Database settings use `POSTGRES_*` or `DATABASE_URL` from `--env-file`, falling
+back to the repository `.env`; exported variables take priority. Custom alignment
+output directories are imported directly. `--store-postgres` explicitly enables
+the default; `--no-store-postgres` selects file-only behavior. Extraction forwards
+the file-only choice to downstream alignment. Dry runs never access PostgreSQL.
+
+A database failure returns exit code `1` while keeping the saved JSON and model
+cache. Retry storage directly without alignment, change-analysis or LLM requests:
+
+```bash
+.venv/bin/python scripts/load_alignments_to_postgres.py \
+  --company amd --previous-year 2024 --current-year 2025 \
+  --dir data/alignments_parallel/amd/2024-2025 \
+  --env-file .env
+```
+
+Use `--dry-run` on that importer to validate the completed snapshot without a
+database connection. Its validation requires both final files to describe the
+same completed comparison.
+
+Storage integration checks use a disposable Docker database:
+
+```bash
+SEC_ALIGNMENT_DB_INTEGRATION=1 PYTHONPATH=tests:src .venv/bin/python -m unittest test_alignment_storage
+```
+
+These tests cover both automatic stages, cached reruns and rollback after a late
+member insert failure. They do not alter the project's main database.
+
+To extract and then align automatically, use `extract_disclosures.py --years
+2023 2024 2025 --align`; see the [combined command](ZIYANG_disclosure_extraction.md#extract-and-align-with-one-command).
+The extraction runner waits for every selected year to complete and forwards
+its disclosure output root and shared retry settings to alignment.
+The combined command defaults to **2 concurrent comparisons × 9 workers per
+comparison**, independently of extraction's **3 years × 6 batch workers**.
+Thus 2023–2024 and 2024–2025 both start after extraction, each with at most 9
+matching/verification/change-analysis workers and up to 18 simultaneous API
+requests in total. A smaller `--max-concurrent-requests` cap is still honored.
+The shared limiter also coordinates request
+starts and HTTP 429 cooldowns across pairs. Each pair retains its own output
+directory, cache, request budget and token budget; a stopped pair does not cancel
+the others. Request logs include the pair's output-directory name.
+No `--alignment-workers` flag is needed unless overriding the default of 9 per
+pair. `--alignment-pair-workers` defaults to 2; use 1 for sequential comparisons. An explicit
+`--max-concurrent-requests` sets the combined API cap, subject to available jobs.
+
+### Parallel alignment
+
+Run up to **four matching jobs at once**, followed by up to **four verification
+jobs at once**, using the completed extraction runs under `data/disclosures_run2`:
+
+```bash
+.venv/bin/python scripts/align_disclosures.py \
+  --ticker amd \
+  --previous-year 2024 \
+  --current-year 2025 \
+  --disclosures-dir data/disclosures_run2 \
+  --output-dir data/alignments_parallel/amd/2024-2025 \
+  --workers 4 \
+  --request-interval 2 \
+  --max-total-tokens 30000000
+```
+
+Add `--dry-run` to validate inputs without API calls or output writes. For
+2023–2024, change both year flags and the output folder to `2023-2024`.
+For new extraction from the parallel extraction guide, change
+`--disclosures-dir` to `data/disclosures_parallel`. Add `--env-file .env` when
+using a project env file instead of the default SoCLaaS configuration.
+
+`--workers 4` caps simultaneous API calls at four for this comparison, with
+starts spaced by `--request-interval 2`. Available independent jobs and the
+provider's limits determine actual throughput. Each job keeps its own durable
+graph thread and JSON checkpoint; finished jobs are retained if another fails.
+Reports use deterministic job/source ordering despite out-of-order responses.
+Separate CLI processes do not share this invocation's limiter.
+
+Repeat the same command to resume. Changing workers or pacing alone does not
+invalidate cached work. For saved runs created before this implementation change,
+use a fresh output directory as above, or follow the cache revalidation rules
+below. The final outputs remain `alignments.json` and `needs_review.json`.
+
+### Default single-worker commands
+
 Validate inputs and candidate retrieval with **no API calls or output writes**:
 
 ```bash
@@ -126,19 +241,19 @@ Validate inputs and candidate retrieval with **no API calls or output writes**:
 Run alignment; **uncached agent calls use API tokens**:
 
 ```bash
-.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --max-total-tokens 3000000
+.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --max-total-tokens 30000000
 ```
 
 Default destination: **`data/alignments/amd/2024-2025/`**. LangGraph and exact-text
 routing are already enabled by the code. Use `--output-dir` only when you want
-to override this destination. The 3,000,000-token example is a cap, not a
+to override this destination. The 30,000,000-token example is a cap, not a
 prediction or guarantee that a run will finish.
 
 For extraction created under the alternative root in the extraction guide, use
 a new alignment output directory:
 
 ```bash
-.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --disclosures-dir data/disclosures_run2 --output-dir data/alignments_run2/amd/2024-2025 --max-total-tokens 3000000
+.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --disclosures-dir data/disclosures_run2 --output-dir data/alignments_parallel/amd/2024-2025 --max-total-tokens 30000000
 ```
 
 For 2023–2024, prepare those two years and change `--previous-year` /
@@ -156,7 +271,8 @@ turn counts, visible evidence and repair state. A saved API response is reused
 if execution stopped before its graph checkpoint. An unsaved response cannot be
 recovered and its token usage is unknown. API keys are not serialized as state.
 
-Only one writer may use an output directory. An awake computer is required for
+Only one CLI invocation may use an output directory; its own workers coordinate
+shared writes. An awake computer is required for
 local execution. Restarting does not grant extra model turns. Raising a run budget
 can continue pending work; exhausting a job's turn limit leaves review results.
 
@@ -172,21 +288,39 @@ Historical cross-Item runs cannot be resumed/imported under the same-Item policy
 | Option | Default / behavior |
 | --- | --- |
 | `--top-k`, `--batch-size` | 5 candidates and 6 current anchors per matching job, scoped to one Item |
+| `--workers` | 1 by default; maximum concurrent jobs/API calls within each matching or verification phase |
+| `--request-interval` | 2 seconds between request starts with multiple workers; otherwise 0 |
+| `--rate-limit-cooldown` | Shared 60-second pause after HTTP 429, extended by numeric `Retry-After` |
 | `--max-steps` | 4 model turns per job, including tool requests and corrections |
-| `--max-requests` | 400 cumulative paid attempts, including prior runs of the same output directory |
+| `--max-requests` | 400 cumulative paid attempts, including prior runs of the same output directory; `-1` removes the cap |
 | `--max-new-requests` | Optional limit on new attempts this invocation |
-| `--max-total-tokens` | 1,500,000 by default; sample command explicitly raises it to 3,000,000 |
-| `--max-tokens`, `--timeout` | 6,000 completion tokens; 180 seconds per call |
+| `--max-total-tokens` | 30,000,000 per year pair by default; `-1` removes the cap |
+| `--max-tokens`, `--timeout` | 6,000 completion tokens; 180-second total deadline per API attempt, including response reads |
 | `--max-prompt-chars` | 150,000 combined characters; oversized context is not silently truncated |
 | `--retry-failed` | Explicitly acknowledge prior failed/interrupted attempts and allow another paid attempt |
+| `--fault-tolerant` | Automatically retry recoverable API failures and resume recoverable failed/interrupted requests |
+| `--max-retries` | 10 additional attempts per API call with `--fault-tolerant`; `-1` allows unlimited retries |
+| `--retry-backoff` | 5 seconds initially, doubling up to 60; HTTP 429 uses the shared cooldown |
 
-Admission budgeting reserves UTF-8 prompt bytes plus maximum completion tokens;
+Admission budgeting atomically reserves UTF-8 prompt bytes plus maximum completion tokens;
 this is a conservative estimate, not provider billing. Unknown usage from prior
-failures stays unknown. With `--retry-failed`, each acknowledged attempt gets an
+failures stays unknown. With `--retry-failed` or `--fault-tolerant`, each acknowledged attempt gets an
 estimate in `unknown_usage_budget_reserve`; `budget_accounted_tokens` includes it
-and reported usage. New failures still stop the run; successful responses missing
-usage cannot be acknowledged with that flag. Requests have no automatic client
-retries. Consult `token_usage.json`; do not interpret unknown usage as free.
+and reported usage. Active calls are tracked in `in_flight_budget_reserve` and
+count against the token cap until their usage is recorded; they do not trigger
+the unknown-usage stop while still running. Request caps include every admitted
+attempt, including retries. Without fault tolerance, new failures stop admission
+of later jobs while already admitted work finishes and checkpoints. With fault
+tolerance, temporary API errors retry within the configured limits; permanent
+authentication, configuration and exhausted-quota errors still stop the run.
+Successful responses missing usage cannot be acknowledged with either flag.
+The underlying API client has no hidden retries; the runtime records each attempt.
+The total deadline includes waiting for headers and reading the entire response;
+partial response data does not reset it. Expiry cancels the HTTP operation and
+closes its client before the runtime handles the retryable failure. Each retry
+gets a fresh deadline; pacing and retry backoff are outside that deadline.
+API retries do not consume agent turns; schema/evidence corrections still count
+toward `--max-steps`. Consult `token_usage.json`; do not interpret unknown usage as free.
 
 ### Optional saved-run operations
 
@@ -304,7 +438,7 @@ and empty strings are meaningful values, not missing/null fields.
 | `metadata_repairs` | optional array<string> | Review fields repaired locally, e.g. `needs_review`, `review_reason` |
 | `validation_errors` | optional array<object> | Unresolved proposal diagnostics: event references and exact error records |
 | `grouping` | optional object | String `method` and `source_alignments[]` preserving original IDs, relationships, evidence, status and optional repair/exact metadata |
-| `change_analysis` | object | Required placeholder described below |
+| `change_analysis` | object | Required downstream result described below |
 
 `evidence` contains selected citations, not necessarily all original disclosure
 text. To analyze complete selected content, join each side's IDs to the original
@@ -321,6 +455,8 @@ assignment; an empty side alone is insufficient. Its limitations remain in
 contradictions or unfinished jobs. Missing review metadata alone preserves a
 proposed link; it does not certify it as accepted.
 
+### Change analysis
+
 Every row initially has this **complete object**, not a calculated result:
 
 ```json
@@ -333,22 +469,101 @@ Every row initially has this **complete object**, not a calculated result:
 }
 ```
 
-Inside `change_analysis`, all five fields are required. `status` is currently the
-string `not_started`; the other fields are nullable and initially null. Their
-future result schemas/status values are not implemented. Do not assume exact
-matches have already been classified as unchanged. `unmatched_type` identifies
-introduced/removed disclosures within the saved comparison; it is separate from
-the future change-analysis taxonomy. `change_type` is not emitted by this workflow.
+All five fields remain required. Normal completed CLI runs now fill this object
+automatically **after verification, grouping and global assignment checks**.
+Alignment status and change-analysis status are independent; a classification
+failure does not undo a verified correspondence.
 
-A downstream classifier should load all decisions with
-`load_alignment_report(output)`, update a finalized row's `change_analysis` by
-`match_id`, then write the two files with
-`write_alignment_json_reports(output, report)`. Both helpers make no API calls;
-the writer produces no Markdown. The loader also accepts older combined reports.
-Cached regeneration preserves analysis only when the match ID and remaining row
-are unchanged. IDs are not stable across fresh model runs; keep the run/company/
-year context. Consolidation can leave ID gaps and preserves original identifiers
-in `grouping.source_alignments`.
+| Alignment status | Analysis method | `llm` label |
+| --- | --- | --- |
+| `auto_matched` | Logic, after checking the exact full-text proof | `Unchanged` |
+| `unmatched`, current-only | Logic | `New` |
+| `unmatched`, previous-only | Logic | `Removed` |
+| `ai_verified` | LLM, comparing the complete finalized group | `Expanded`, `Reduced`, `Modified`, `Reworded` or `Unchanged` |
+| `needs_review` | Deferred; no change-analysis call | null |
+
+Every exported `change_analysis` contains **exactly five fields**. Labels computed
+by logic and by the model both use the `llm` field:
+
+```json
+{
+  "status": "completed",
+  "lexical": null,
+  "semantic": null,
+  "llm": "Removed",
+  "final_taxonomy": null
+}
+```
+
+`lexical`, `semantic` and `final_taxonomy` always remain null. `llm` is a single
+label string, or null while pending/under review. `status` is `not_started`,
+`completed` or `needs_review`. No method, fingerprint, explanation or citation
+object is added inside this result.
+
+`New`/`Removed` describe the saved comparison's disclosure coverage, not filing-wide
+absence or the start/end of a real-world event. Qualifications remain on the
+alignment row in `unmatched_notes`. Exact equality uses the existing normalization
+policy. The existing alignment evidence and source validation remain in place.
+
+The classifier reads complete selected original content for the finalized group.
+Each disclosure is sent once per job, without duplicating its text as a summary,
+content and sentence array. It compares splits/merges as one group. `Modified`
+covers altered existing figures, dates, outcomes, factual status, risks or policies,
+and mixed additions/removals. `Expanded`/`Reduced` cover substantive additions or
+removals with retained assertions unchanged. `Reworded` preserves meaning with
+changed wording; `Unchanged` allows formatting/grouping/order differences.
+
+The model returns only a match ID and label per group. It does not generate
+explanations, citations or review flags for change analysis. Valid labels are saved
+even when other entries are invalid or missing. Bounded correction requests contain
+only unresolved groups and their source content; foreign or already resolved IDs
+are ignored, and duplicate/invalid entries remain unresolved. A null label or
+exhausted corrections leaves `status: needs_review` and `llm: null`, without
+changing alignment status. The classifier does not rematch disclosures.
+
+Fingerprints and completed labels are stored internally under
+`change_analysis_cache/`, bound to original sources, finalized decisions and the
+model/prompt/settings. They are not part of exported `change_analysis`.
+
+The report's `change_analysis_summary` contains eligibility, method/status and
+taxonomy counts, deferred alignment-review counts, completion and operational error
+information. `run_complete` continues to describe alignment; use the summary's
+`complete` and `by_status` for change-analysis progress and review cases.
+
+Change jobs use the same `--workers`, pacing, request ledger and token/request
+limits as alignment. Up to **12 whole groups** from one SEC Item share a job, with
+a **48,000-character source-record target**; a group larger than that target stays
+intact. The label-only completion limit is sized to the supplied IDs, with at least
+1,024 tokens of room unless `--max-tokens` is lower, and never exceeds that flag.
+Matching and verification keep their configured completion limits. Startup logs
+show pending group count, batch count and configured/usable workers.
+`token_usage.json` totals include both stages, with classifier usage under
+`by_agent.change_analysis`. A budget/API interruption saves finished results and
+checkpoints accepted labels within unfinished batches; rerun to resume only their
+remaining corrections. A cached result is reused only for unchanged
+source/row/prompt/model/settings fingerprints.
+
+To classify an existing completed saved alignment without rerunning matching or
+verification:
+
+```bash
+.venv/bin/python scripts/align_disclosures.py \
+  --ticker amd --previous-year 2024 --current-year 2025 \
+  --output-dir data/alignments/amd/2024-2025 --change-analysis-only
+```
+
+Provide the original `--data-dir` and `--disclosures-dir` when nondefault paths
+were used. The saved manifest must match the current source inputs. Add
+`--skip-change-analysis` to a normal run for alignment only. `--dry-run`,
+`--regroup-only`, `--refresh-extraction-policy` and `--offline-repair` do not invoke
+the classifier. Regrouping or a changed alignment decision invalidates its analysis.
+Historical fixtures may still contain the initial null object until backfilled.
+
+`load_alignment_report(output)` reads both final files; the JSON writer remains
+a local operation. Cached regeneration preserves analysis only when the match ID
+and remaining row are unchanged. IDs are not stable across fresh model runs;
+keep the run/company/year context. Consolidation can leave ID gaps and preserves
+original identifiers in `grouping.source_alignments`.
 
 ### Supporting files
 
@@ -369,6 +584,14 @@ to the alignment total. Repair source usage is reported separately. No monetary
 estimate is provided without verified account/model billing rates.
 
 ## 7. Example data and downstream usage
+
+Use `scripts/export_downstream_data.py --company amd --years 2024 2025
+--stage alignments --output-dir data/downstream` to build downstream alignment JSON
+by joining runs, decisions, members, disclosures and filings. It includes change
+analysis, evidence, grouping and full previous/current disclosure content. Both
+extraction years must be loaded. See the [joined export commands and Python API](ZIYANG_disclosure_extraction.md#export-joined-data-from-postgresql)
+for the output contract and combined exports. The exporter uses the normalized
+records directly and requires no stored copy of the original JSON files.
 
 The newest completed AMD alignment runs are saved under
 `tests/fixtures/alignments/amd/{2023-2024,2024-2025}/`, with two final JSON files
@@ -430,7 +653,7 @@ To rerun from those local inputs, choose a fresh output directory. This can make
 paid API calls and produce different decisions:
 
 ```bash
-.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --disclosures-dir data/disclosures_run2 --output-dir data/alignments_fixture_rerun/amd/2024-2025 --max-total-tokens 3000000
+.venv/bin/python scripts/align_disclosures.py --ticker amd --previous-year 2024 --current-year 2025 --env-file .env --disclosures-dir data/disclosures_run2 --output-dir data/alignments_fixture_rerun/amd/2024-2025 --max-total-tokens 30000000
 ```
 
 For 2023–2024, use `--previous-year 2023 --current-year 2024` and a separate

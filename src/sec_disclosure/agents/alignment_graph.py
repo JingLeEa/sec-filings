@@ -90,8 +90,12 @@ class AlignmentAgentGraph:
                    "history": state["history"] if self.repair is not None else state["trace"]}
         action, error = None, None
         try:
+            options = {}
+            if self.role == "change_analysis":
+                from .change_analysis import completion_budget
+                options["max_tokens"] = completion_budget(request["alignments"], self.runtime.args.max_tokens)
             response = self.runtime.call(self.role, self.job_id,
-                json.dumps(request, ensure_ascii=False, separators=(",", ":")), self.system)
+                json.dumps(request, ensure_ascii=False, separators=(",", ":")), self.system, **options)
             if response["finish_reason"] != "stop":
                 raise ValueError("Response did not finish normally.")
             action = json.loads(response["text"], object_pairs_hook=unique_object)
@@ -106,13 +110,17 @@ class AlignmentAgentGraph:
     def route_action(self, state):
         if state["action_error"] is not None:
             return "invalid_action"
-        if state["action"].get("action") in {"search", "context"}:
+        # Classification has the entire finalized group already. Keep its
+        # evidence scope fixed rather than exposing unrelated search results.
+        if self.role != "change_analysis" and state["action"].get("action") in {"search", "context"}:
             return "tools"
         return "validate"
 
     def record_error(self, state, message):
         instruction = ("Correct the action/schema or evidence references." if self.repair is not None else
                        "Correct the action/schema/evidence references, or finish with needs_review.")
+        if self.role == "change_analysis":
+            instruction = "Correct the match_id/llm label, or return llm:null when uncertain."
         entry = {"validation_error": message[:500], "instruction": instruction}
         state["trace"].append(entry)
         if self.repair is not None:
@@ -159,7 +167,8 @@ class AlignmentAgentGraph:
             else:
                 self.repair.receive(state["action"], set(state["visible"]))
                 state["repair"] = self.repair.snapshot()
-                entry = {"action": state["action"], "pending_disclosure_ids": sorted(self.repair.pending)}
+                pending_field = "pending_match_ids" if self.role == "change_analysis" else "pending_disclosure_ids"
+                entry = {"action": state["action"], pending_field: sorted(self.repair.pending)}
                 state["history"] = []
         except (ValueError, KeyError, TypeError) as exc:
             return self.record_error(state, str(exc))
@@ -197,7 +206,7 @@ class AlignmentAgentGraph:
         return builder.compile(checkpointer=checkpointer, name=f"alignment_{self.role}")
 
     def run(self):
-        scope = self.visible | (self.repair.required if self.repair is not None else set())
+        scope = self.visible | (self.repair.required if self.repair is not None and self.role != "change_analysis" else set())
         if self.data.item_for(scope) != self.payload["item"]:
             raise ValueError("Agent evidence must stay within the comparison job's SEC Item.")
         identity = digest(json.dumps({"role": self.role, "payload": self.payload, "system": self.system,
@@ -212,8 +221,10 @@ class AlignmentAgentGraph:
         config = {"configurable": {"thread_id": self.job_id, "checkpoint_ns": ""},
                   "recursion_limit": self.runtime.args.max_steps * 3 + 10}
         with SqliteSaver.from_conn_string(str(directory / "checkpoints.sqlite")) as saver:
-            graph = self.build(saver)
-            snapshot = graph.get_state(config)
+            saver.conn.execute("PRAGMA busy_timeout = 60000")
+            with self.runtime.checkpoint_setup_lock:
+                graph = self.build(saver)
+                snapshot = graph.get_state(config)
             if snapshot.values and snapshot.values["identity"] != identity:
                 raise ValueError("Graph checkpoint does not match this job; use a new output directory or revalidate the cache.")
             try:

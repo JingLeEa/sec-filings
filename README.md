@@ -105,6 +105,7 @@ See the usage and schema guides below for offline inputs, source verification, a
 
 ## Documentation
 
+- [Downstream JSON from PostgreSQL](docs/ZIYANG_disclosure_extraction.md#export-joined-data-from-postgresql): join normalized disclosure and alignment tables into JSON or read them directly from Python.
 - [Pipeline Usage](docs/pipeline_usage.md): detailed extraction, comparison, ID conversion, paragraph context, and table commands.
 - [Current Text Preprocessing Flow](docs/current_text_preprocessing_flow.md): current extraction, chunking, sentence splitting, bullet handling, and ID behavior.
 - [Disclosure Annotation Export](docs/disclosure_annotation_export.md): detailed guide for exporting narrative comparison rows to Google Sheets.

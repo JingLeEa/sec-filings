@@ -2,9 +2,11 @@ import io
 import json
 import threading
 from collections import Counter
-from contextlib import redirect_stderr, redirect_stdout
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager, redirect_stderr, redirect_stdout
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from types import SimpleNamespace
 from unittest import TestCase
 from unittest.mock import patch
 
@@ -34,6 +36,9 @@ class ParallelExtractionTests(TestCase):
 
     def response(self, prompt, **kwargs):
         payload, _ = json.JSONDecoder().raw_decode(prompt)
+        if payload.get("task") == "consolidate_subsection":
+            return CompletionResult('{"merges":[],"relationships":[]}', "test-model", "stop",
+                                    {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125})
         if payload.get("task") == "check_disclosure_boundary":
             groups = [{"candidate_ids": [candidate["candidate_id"]], "resolved": True,
                        "reason": "This is a complete independent topic."}
@@ -62,7 +67,9 @@ class ParallelExtractionTests(TestCase):
             (folder / f"{year}_chunks.json").write_text(json.dumps(paragraphs))
             (folder / f"{year}_chunk_sentences.json").write_text(json.dumps(sentences))
 
-    def run_cli(self, *extra, responder=None, years=("2023", "2024", "2025")):
+    def run_cli(self, *extra, responder=None, years=("2023", "2024", "2025"), batch_workers=1, store_postgres=False):
+        batch_options = [] if batch_workers is None else ["--batch-workers", str(batch_workers)]
+        storage_options = [] if store_postgres or "--store-postgres" in extra else ["--no-store-postgres"]
         output = io.StringIO()
         with patch.object(disclosures, "load_config", return_value=LLMConfig(
                 "https://example.test/v1", "fake-key", "default")) as config, \
@@ -70,8 +77,31 @@ class ParallelExtractionTests(TestCase):
              redirect_stdout(output), redirect_stderr(output):
             code = disclosures.main(["--ticker", "amd", "--years", *years,
                                      "--data-dir", str(self.root), "--request-interval", "0",
-                                     "--rate-limit-cooldown", "0", *extra])
+                                     "--rate-limit-cooldown", "0", "--response-retry-backoff", "0",
+                                     *batch_options, *storage_options, *extra])
         return code, api.call_count, config.call_count, output.getvalue()
+
+    def test_default_stores_completed_disclosures_and_enables_alignment_storage(self):
+        from sec_disclosure.agents import disclosure_alignment
+        from sec_disclosure.storage import disclosures as storage
+
+        with patch.object(storage, "store_disclosures", return_value=SimpleNamespace(stored=2, accepted=2, review=0)) as store, \
+             patch.object(disclosure_alignment, "main", return_value=0) as align:
+            self.assertEqual(self.run_cli("--align", store_postgres=True)[:2], (0, 6))
+            self.assertCountEqual([call.args[2] for call in store.call_args_list], [2023, 2024, 2025])
+            self.assertEqual(align.call_count, 2)
+            for call in align.call_args_list:
+                self.assertNotIn("--no-store-postgres", call.args[0])
+
+    def test_file_only_option_is_forwarded_to_alignment_and_skips_disclosure_storage(self):
+        from sec_disclosure.agents import disclosure_alignment
+        from sec_disclosure.storage import disclosures as storage
+
+        with patch.object(storage, "store_disclosures") as store, \
+             patch.object(disclosure_alignment, "main", return_value=0) as align:
+            self.assertEqual(self.run_cli("--align", "--no-store-postgres", store_postgres=True)[:2], (0, 6))
+            store.assert_not_called()
+            self.assertTrue(all("--no-store-postgres" in call.args[0] for call in align.call_args_list))
 
     def usage(self, year):
         return json.loads((self.root / "disclosures/amd" / year / "token_usage.json").read_text())
@@ -102,6 +132,50 @@ class ParallelExtractionTests(TestCase):
                 self.assertEqual(row["sources"][0]["source_url"], f"https://example.test/{year}.htm")
         self.assertEqual(self.run_cli()[:2], (0, 0))
 
+    def test_default_three_years_run_six_batches_each_with_eighteen_overlapping_requests(self):
+        self.split_filings(11)
+        barrier = threading.Barrier(18, timeout=10)
+        lock = threading.Lock()
+        active, peaks, started = Counter(), Counter(), Counter()
+        peak_total = 0
+
+        def response(prompt, **kwargs):
+            nonlocal peak_total
+            payload = json.loads(prompt)
+            year = payload["fiscal_year"]
+            if payload.get("task") in ("check_disclosure_boundary", "consolidate_subsection"):
+                self.assertEqual(started[year], 11)
+                return self.response(prompt, **kwargs)
+            with lock:
+                started[year] += 1
+                first_wave = started[year] <= 6
+                active[year] += 1
+                peaks[year] = max(peaks[year], active[year])
+                peak_total = max(peak_total, sum(active.values()))
+            try:
+                if first_wave:
+                    barrier.wait()
+                return self.response(prompt, **kwargs)
+            finally:
+                with lock:
+                    active[year] -= 1
+
+        code, calls, _, output = self.run_cli("--batch-chars", "1000", responder=response, batch_workers=None)
+        self.assertEqual((code, calls), (0, 66))
+        self.assertEqual(peaks, {"2023": 6, "2024": 6, "2025": 6})
+        self.assertEqual(peak_total, 18)
+        self.assertIn("6 batch workers per year (18 concurrent extraction batches)", output)
+        self.assertIn("up to 18 simultaneous API requests", output)
+        self.assertTrue(all(self.usage(year)["run_complete"] for year in ("2023", "2024", "2025")))
+        self.assertEqual(self.run_cli("--batch-chars", "1000", batch_workers=None)[:2], (0, 0))
+
+    def test_startup_reports_a_smaller_shared_api_cap_without_output_writes(self):
+        code, calls, _, output = self.run_cli("--max-concurrent-requests", "8", "--dry-run", batch_workers=None)
+        self.assertEqual((code, calls), (0, 0))
+        self.assertIn("18 concurrent extraction batches", output)
+        self.assertIn("up to 8 simultaneous API requests", output)
+        self.assertFalse((self.root / "disclosures").exists())
+
     def test_request_cap_is_per_year_and_resume_keeps_usage(self):
         self.assertEqual(self.run_cli("--max-requests", "1")[:2], (2, 3))
         for year in ("2023", "2024", "2025"):
@@ -118,6 +192,9 @@ class ParallelExtractionTests(TestCase):
         def response(prompt, **kwargs):
             payload = json.loads(prompt)
             year = payload["fiscal_year"]
+            if payload.get("task") == "consolidate_subsection":
+                self.assertEqual(extracted[year], 2)
+                return self.response(prompt, **kwargs)
             if payload.get("task") == "check_disclosure_boundary":
                 self.assertEqual(extracted[year], 2)
                 groups = [{"candidate_ids": [candidate["candidate_id"]], "resolved": True,
@@ -129,7 +206,7 @@ class ParallelExtractionTests(TestCase):
                 extracted[year] += 1
             return self.response(prompt, **kwargs)
 
-        self.assertEqual(self.run_cli("--batch-chars", "1000", responder=response)[:2], (0, 9))
+        self.assertEqual(self.run_cli("--batch-chars", "1000", responder=response)[:2], (0, 12))
         for year in ("2023", "2024", "2025"):
             self.assertTrue(self.usage(year)["run_complete"])
             self.assertEqual(self.usage(year)["by_stage"]["boundary_check"]["requests"], 1)
@@ -254,6 +331,424 @@ class ParallelExtractionTests(TestCase):
         self.assertEqual(self.usage("2023")["requests_with_unknown_usage"], 2)
         self.assertEqual(self.usage("2023")["reported_tokens"]["total_tokens"], 250)
 
+    def test_unlimited_retries_recover_beyond_default_limit_and_cap_backoff(self):
+        attempts = 0
+
+        def response(prompt, **kwargs):
+            nonlocal attempts
+            attempts += 1
+            if attempts <= 8:
+                raise LLMError("Temporary server failure.", status_code=503, retryable=True)
+            return self.response(prompt, **kwargs)
+
+        with patch.object(disclosures.time, "sleep") as sleep:
+            self.assertEqual(self.run_cli("--fault-tolerant", "--max-retries", "-1", "--retry-backoff", "2",
+                                          responder=response, years=("2023",))[:2], (0, 10))
+        self.assertEqual([call.args[0] for call in sleep.call_args_list], [2, 4, 8, 16, 32, 60, 60, 60])
+        self.assertEqual(self.usage("2023")["requests_with_unknown_usage"], 8)
+        self.assertEqual(self.run_cli("--fault-tolerant", "--max-retries", "-1", years=("2023",))[:2], (0, 0))
+
+    def test_resume_uses_latest_attempt_after_attempt_numbers_exceed_three_digits(self):
+        self.assertEqual(self.run_cli(years=("2023",))[:2], (0, 2))
+        directory = self.root / "disclosures/amd/2023/requests"
+        path = directory / "batch_001_attempt_001.json"
+        completed = json.loads(path.read_text())
+        path.unlink()
+        completed["attempt"] = 1000
+        (directory / "batch_001_attempt_1000.json").write_text(json.dumps(completed))
+        failed = {**completed, "attempt": 999, "status": "failed", "retryable": True,
+                  "error": "Temporary API failure.", "status_code": 503}
+        failed.pop("result")
+        (directory / "batch_001_attempt_999.json").write_text(json.dumps(failed))
+        self.assertEqual(self.run_cli("--fault-tolerant", "--max-retries", "-1", years=("2023",))[:2], (0, 0))
+        self.assertTrue(self.usage("2023")["run_complete"])
+
+    def test_unlimited_api_retries_and_custom_boundary_correction_limit(self):
+        self.split_filings()
+        attempts = Counter()
+
+        def response(prompt, **kwargs):
+            payload, _ = json.JSONDecoder().raw_decode(prompt)
+            if payload.get("task") == "consolidate_subsection":
+                return self.response(prompt, **kwargs)
+            boundary = payload.get("task") == "check_disclosure_boundary"
+            key = "boundary" if boundary else payload["paragraphs"][0]["sentences"][0][0]
+            attempts[key] += 1
+            if attempts[key] <= 5:
+                if not boundary:
+                    raise LLMError("Rate limited.", status_code=429, retryable=True)
+                return CompletionResult("not JSON", "test-model", "stop",
+                                        {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125})
+            return self.response(prompt, **kwargs)
+
+        options = ("--fault-tolerant", "--max-retries", "-1", "--max-response-retries", "5",
+                   "--retry-backoff", "0", "--batch-chars", "1000")
+        self.assertEqual(self.run_cli(*options, responder=response, years=("2023",))[:2], (0, 19))
+        self.assertTrue(self.usage("2023")["run_complete"])
+        self.assertEqual(self.usage("2023")["requests_with_unknown_usage"], 10)
+
+    def test_unlimited_retries_still_obey_request_and_explicit_rate_limit_caps(self):
+        def response(prompt, **kwargs):
+            raise LLMError("Rate limited.", status_code=429, retryable=True)
+
+        options = ("--fault-tolerant", "--max-retries", "-1", "--retry-backoff", "0")
+        self.assertEqual(self.run_cli(*options, "--max-requests", "2", responder=response, years=("2023",))[:2], (1, 2))
+        self.assertEqual(self.run_cli(*options, "--rate-limit-retries", "0", responder=response, years=("2024",))[:2], (1, 2))
+
+    def test_extract_then_align_uses_completed_years_custom_roots_and_cached_resume(self):
+        from sec_disclosure.agents import alignment_runtime, disclosure_alignment
+
+        output_root = self.root / "custom_disclosures"
+        alignment_root = self.root / "custom_alignments"
+        pairs = []
+        both_pairs = threading.Barrier(2, timeout=5)
+
+        def response(prompt, **kwargs):
+            # Every extraction year must finish before the first alignment call.
+            for year in ("2023", "2024", "2025"):
+                usage = json.loads((output_root / "amd" / year / "token_usage.json").read_text())
+                self.assertTrue(usage["run_complete"])
+            payload = json.loads(prompt)
+            if "anchors" in payload:
+                previous, current = payload["previous_year"], payload["current_year"]
+                pairs.append((previous, current))
+                both_pairs.wait()
+                body = {"action": "propose", "matches": [
+                    {"current_id": key, "previous_ids": [key.replace(current, previous)],
+                     "rationale": "Same reported result."} for key in payload["anchors"]]}
+            elif payload.get("change_analysis"):
+                body = {"action": "classify", "analyses": [{"match_id": group["match_id"], "llm": "Modified"}
+                                                          for group in payload["alignments"]]}
+            else:
+                records = {row["disclosure_id"]: row for row in payload["records"]}
+                body = {"action": "finalize", "alignments": [
+                    {"previous_ids": group["previous_ids"], "current_ids": group["current_ids"],
+                     "explanation": "Both discuss the reported result.", "needs_review": False, "review_reason": "",
+                     "evidence": [{"disclosure_id": key, "sentence_ids": [records[key]["sentences"][0]["sentence_id"]]}
+                                  for key in group["previous_ids"] + group["current_ids"]]}
+                    for group in payload["proposed_groups"]]}
+            return CompletionResult(json.dumps(body), "test-model", "stop",
+                                    {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125})
+
+        options = ("--align", "--output-root", str(output_root), "--alignment-output-root", str(alignment_root),
+                   "--fault-tolerant", "--max-retries", "-1", "--alignment-max-requests", "-1",
+                   "--alignment-max-total-tokens", "-1")
+        with patch.object(disclosure_alignment, "load_config", return_value=LLMConfig("https://example.test/v1", "fake-key", "default")), \
+             patch.object(alignment_runtime, "request_completion", side_effect=response) as api:
+            self.assertEqual(self.run_cli(*options, years=("2025", "2023", "2024"))[:2], (0, 6))
+            self.assertEqual(api.call_count, 6)
+            self.assertCountEqual(pairs, [("2023", "2024"), ("2024", "2025")])
+            for pair in ("2023-2024", "2024-2025"):
+                report = json.loads((alignment_root / "amd" / pair / "alignments.json").read_text())
+                self.assertTrue(report["run_complete"])
+                self.assertEqual(report["counts"], {"ai_verified": 1, "auto_matched": 1})
+                self.assertEqual(report["change_analysis_summary"]["taxonomy_counts"], {"Modified": 1, "Unchanged": 1})
+                self.assertTrue(report["change_analysis_summary"]["complete"])
+            self.assertEqual(self.run_cli(*options, years=("2025", "2023", "2024"))[:2], (0, 0))
+            self.assertEqual(api.call_count, 6)
+
+    def test_alignment_waits_on_partial_or_failed_extraction_and_dry_run_is_read_only(self):
+        from sec_disclosure.agents import disclosure_alignment
+
+        with patch.object(disclosure_alignment, "main") as align:
+            code, calls, _, output = self.run_cli("--align", "--dry-run")
+            self.assertEqual((code, calls), (0, 0))
+            self.assertIn("2023-2024, 2024-2025", output)
+            self.assertFalse((self.root / "disclosures").exists())
+            self.assertEqual(self.run_cli("--align", "--max-requests", "1")[:2], (2, 3))
+
+            def response(prompt, **kwargs):
+                raise LLMError("Unauthorized.", status_code=401, retryable=False)
+
+            self.assertEqual(self.run_cli("--align", responder=response)[:2], (1, 3))
+            align.assert_not_called()
+
+    def test_alignment_pause_propagates_while_other_pairs_continue(self):
+        from sec_disclosure.agents import disclosure_alignment
+
+        def pause_first(arguments, **kwargs):
+            previous = arguments[arguments.index("--previous-year") + 1]
+            return 2 if previous == "2023" else 0
+
+        with patch.object(disclosure_alignment, "main", side_effect=pause_first) as align:
+            self.assertEqual(self.run_cli("--align")[:2], (2, 6))
+            self.assertEqual(align.call_count, 2)
+            for call in align.call_args_list:
+                arguments = call.args[0]
+                self.assertEqual(arguments[arguments.index("--max-total-tokens") + 1], "30000000")
+        with patch.object(disclosure_alignment, "main", return_value=0) as align:
+            self.assertEqual(self.run_cli("--align", "--env-file", "test.env", "--alignment-workers", "4",
+                                          "--alignment-max-new-requests", "2", "--alignment-revalidate-cache",
+                                          "--retry-failed", "--fault-tolerant", "--max-retries", "-1")[:2], (0, 0))
+            self.assertEqual(align.call_count, 2)
+            arguments = align.call_args_list[0].args[0]
+            for flag, value in (("--env-file", "test.env"), ("--workers", "4"), ("--max-new-requests", "2"),
+                                ("--max-retries", "-1")):
+                self.assertEqual(arguments[arguments.index(flag) + 1], value)
+            for flag in ("--retry-failed", "--fault-tolerant", "--revalidate-cache"):
+                self.assertIn(flag, arguments)
+
+    def test_postgres_storage_overlaps_alignment_and_reuses_custom_outputs_on_resume(self):
+        from sec_disclosure.agents import disclosure_alignment
+        from sec_disclosure.storage import disclosures as storage
+
+        output_root = self.root / "custom_disclosures"
+        overlap = threading.Barrier(2, timeout=5)
+        uploads = []
+
+        def store(folder, company, year, **kwargs):
+            self.assertTrue(json.loads((folder / "token_usage.json").read_text())["run_complete"])
+            self.assertEqual(folder, output_root / "amd" / str(year))
+            self.assertEqual(company, "amd")
+            self.assertEqual(kwargs, {"env_file": Path("test.env"), "require_complete": True, "replace": True})
+            uploads.append(year)
+            if year == 2023:
+                overlap.wait()
+            return SimpleNamespace(stored=2, accepted=2, review=0)
+
+        def align(arguments, **kwargs):
+            if arguments[arguments.index("--previous-year") + 1] == "2023":
+                overlap.wait()
+            return 0
+
+        options = ("--store-postgres", "--align", "--output-root", str(output_root), "--env-file", "test.env")
+        with patch.object(storage, "store_disclosures", side_effect=store), \
+             patch.object(disclosure_alignment, "main", side_effect=align):
+            self.assertEqual(self.run_cli(*options)[:2], (0, 6))
+            self.assertEqual(self.run_cli(*options)[:2], (0, 0))
+        self.assertCountEqual(uploads, [2023, 2024, 2025] * 2)
+
+    def test_postgres_failure_keeps_alignment_and_other_year_imports_running(self):
+        from sec_disclosure.agents import disclosure_alignment
+        from sec_disclosure.storage import disclosures as storage
+
+        uploads = []
+
+        def store(folder, company, year, **kwargs):
+            uploads.append(year)
+            if year == 2023:
+                raise storage.DisclosureStorageError("Database unavailable")
+            return SimpleNamespace(stored=2, accepted=2, review=0)
+
+        with patch.object(storage, "store_disclosures", side_effect=store), \
+             patch.object(disclosure_alignment, "main", return_value=2) as align:
+            code, _, _, output = self.run_cli("--store-postgres", "--align")
+        self.assertEqual(code, 1)
+        self.assertCountEqual(uploads, [2023, 2024, 2025])
+        self.assertEqual(align.call_count, 2)
+        self.assertIn('"postgres": 1', output)
+        self.assertIn('"alignment": 2', output)
+
+    def test_postgres_skips_incomplete_years_and_dry_run_never_accesses_database(self):
+        from sec_disclosure.agents import disclosure_alignment
+        from sec_disclosure.storage import disclosures as storage
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            if payload["fiscal_year"] == "2024":
+                raise LLMError("Unauthorized.", status_code=401, retryable=False)
+            return self.response(prompt, **kwargs)
+
+        with patch.object(storage, "store_disclosures", return_value=SimpleNamespace(stored=2, accepted=2, review=0)) as store, \
+             patch.object(disclosure_alignment, "main") as align:
+            self.assertEqual(self.run_cli("--store-postgres", "--align", "--dry-run")[:2], (0, 0))
+            store.assert_not_called()
+            self.assertEqual(self.run_cli("--store-postgres", "--align", responder=response)[:2], (1, 5))
+            self.assertCountEqual([call.args[2] for call in store.call_args_list], [2023, 2025])
+            align.assert_not_called()
+
+    def test_single_year_postgres_import_uses_exact_output_dir(self):
+        from sec_disclosure.storage import disclosures as storage
+
+        folder = self.root / "one_year"
+        with patch.object(disclosures, "load_config", return_value=LLMConfig("https://example.test/v1", "fake-key", "default")), \
+             patch.object(disclosures, "request_completion", side_effect=self.response), \
+             patch.object(storage, "store_disclosures", return_value=SimpleNamespace(stored=2, accepted=2, review=0)) as store, \
+             redirect_stdout(io.StringIO()):
+            arguments = ["--ticker", "amd", "--year", "2023", "--data-dir", str(self.root),
+                         "--output-dir", str(folder), "--store-postgres"]
+            self.assertEqual(disclosures.main(arguments), 0)
+            self.assertEqual(store.call_args.args, (folder, "amd", 2023))
+            store.reset_mock()
+            self.assertEqual(disclosures.main([*arguments, "--dry-run"]), 0)
+            store.assert_not_called()
+
+    def test_alignment_failure_is_reported_while_other_pairs_continue(self):
+        from sec_disclosure.agents import disclosure_alignment
+
+        def fail_first(arguments, **kwargs):
+            previous = arguments[arguments.index("--previous-year") + 1]
+            if previous == "2023":
+                raise RuntimeError("Unexpected pair failure.")
+            return 2
+
+        with patch.object(disclosure_alignment, "main", side_effect=fail_first) as align:
+            code, calls, _, output = self.run_cli("--align")
+        self.assertEqual((code, calls), (1, 6))
+        self.assertEqual(align.call_count, 2)
+        self.assertIn('Alignment exit codes: {"2023-2024": 1, "2024-2025": 2}', output)
+
+    def test_alignment_pair_workers_can_select_sequential_comparisons(self):
+        from sec_disclosure.agents import disclosure_alignment
+
+        pairs = []
+
+        def align(arguments, **kwargs):
+            previous = arguments[arguments.index("--previous-year") + 1]
+            current = arguments[arguments.index("--current-year") + 1]
+            pairs.append((previous, current))
+            return 0
+
+        with patch.object(disclosure_alignment, "main", side_effect=align):
+            code, calls, _, output = self.run_cli("--align", "--alignment-pair-workers", "1",
+                                                years=("2025", "2023", "2024"))
+        self.assertEqual((code, calls), (0, 6))
+        self.assertEqual(pairs, [("2023", "2024"), ("2024", "2025")])
+        self.assertIn("across up to 1 parallel pairs", output)
+
+    def test_parallel_alignment_pairs_share_one_api_cap_and_separate_ledgers(self):
+        from sec_disclosure.agents import alignment_runtime, disclosure_alignment
+
+        for cap_options, expected_cap in (((), 18), (("--max-concurrent-requests", "12"), 12)):
+            with self.subTest(cap_options=cap_options):
+                lock = threading.Lock()
+                all_attempted, pool_full, release = threading.Event(), threading.Event(), threading.Event()
+                both_pairs = threading.Barrier(2, timeout=5)
+                attempted = active = peak = 0
+                active_by_pair, peak_by_pair = Counter(), Counter()
+                runtimes = []
+                folder = self.root / ("explicit_cap" if cap_options else "default_cap")
+
+                class TrackingPacer(request_pacing.RequestPacer):
+                    @contextmanager
+                    def request(pacer):
+                        nonlocal attempted
+                        with lock:
+                            attempted += 1
+                            if attempted == 18:
+                                all_attempted.set()
+                        with super().request():
+                            yield
+
+                def response(*args, **kwargs):
+                    nonlocal active, peak
+                    pair = args[0].split(":", 1)[0]
+                    with lock:
+                        active += 1
+                        peak = max(peak, active)
+                        active_by_pair[pair] += 1
+                        peak_by_pair[pair] = max(peak_by_pair[pair], active_by_pair[pair])
+                        if active == expected_cap:
+                            pool_full.set()
+                    try:
+                        self.assertTrue(release.wait(timeout=5))
+                        return CompletionResult("{}", "test-model", "stop",
+                                                {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2})
+                    finally:
+                        with lock:
+                            active -= 1
+                            active_by_pair[pair] -= 1
+
+                def align(arguments, *, request_pacer):
+                    previous = arguments[arguments.index("--previous-year") + 1]
+                    current = arguments[arguments.index("--current-year") + 1]
+                    workers = int(arguments[arguments.index("--workers") + 1])
+                    self.assertEqual(workers, 9)
+                    args = SimpleNamespace(workers=workers, request_interval=0, rate_limit_cooldown=0,
+                        retry_failed=False, max_new_requests=None, max_requests=100, max_total_tokens=10000,
+                        max_steps=4, max_tokens=100, max_prompt_chars=10000, timeout=5)
+                    runtime = alignment_runtime.Runtime(folder / f"{previous}-{current}",
+                        LLMConfig("https://example.test/v1", "fake-key", "default"), args, request_pacer=request_pacer)
+                    with lock:
+                        runtimes.append(runtime)
+                    both_pairs.wait()
+                    with ThreadPoolExecutor(max_workers=workers) as executor:
+                        futures = [executor.submit(runtime.call, "matching", f"job_{i}", f"{previous}-{current}:{i}", "system")
+                                   for i in range(30)]
+                        for future in futures:
+                            future.result(timeout=5)
+                    return 0
+
+                with patch.object(disclosures, "run_year", return_value=0), \
+                     patch.object(disclosures, "RequestPacer", TrackingPacer), \
+                     patch.object(disclosure_alignment, "main", side_effect=align), \
+                     patch.object(alignment_runtime, "request_completion", side_effect=response) as api, \
+                     ThreadPoolExecutor(max_workers=1) as coordinator:
+                    future = coordinator.submit(self.run_cli, "--align", *cap_options, batch_workers=None)
+                    try:
+                        self.assertTrue(all_attempted.wait(timeout=5))
+                        self.assertTrue(pool_full.wait(timeout=5))
+                        self.assertEqual(api.call_count, expected_cap)
+                        self.assertEqual(active, expected_cap)
+                    finally:
+                        release.set()
+                    self.assertEqual(future.result(timeout=5)[:2], (0, 0))
+                    self.assertEqual(api.call_count, 60)
+                self.assertEqual((peak, active), (expected_cap, 0))
+                self.assertEqual(len(peak_by_pair), 2)
+                self.assertTrue(all(value <= 9 for value in peak_by_pair.values()))
+                if not cap_options:
+                    self.assertEqual(dict(peak_by_pair), {"2023-2024": 9, "2024-2025": 9})
+                self.assertIs(runtimes[0].pacer, runtimes[1].pacer)
+                for runtime in runtimes:
+                    self.assertEqual(len(runtime.requests), 30)
+                    self.assertEqual(runtime.report()["reported_tokens"]["total_tokens"], 60)
+                    self.assertTrue(all(r["status"] == "completed" for r in runtime.requests))
+
+    def test_alignment_defaults_are_independent_of_extraction_and_honor_shared_cap(self):
+        from sec_disclosure.agents import disclosure_alignment
+
+        cases = [
+            ((), ("2023", "2024", "2025"), 9, 18),
+            (("--workers", "2"), ("2023", "2024", "2025"), 9, 18),
+            (("--workers", "10"), ("2023", "2024"), 9, 9),
+            (("--max-concurrent-requests", "5"), ("2023", "2024", "2025"), 5, 5),
+            (("--max-concurrent-requests", "20"), ("2023", "2024", "2025"), 9, 18),
+            (("--max-concurrent-requests", "60"), ("2023", "2024", "2025"), 9, 18),
+            (("--batch-workers", "4"), ("2023", "2024", "2025"), 9, 18),
+            (("--alignment-workers", "2"), ("2023", "2024", "2025"), 2, 4),
+            (("--alignment-workers", "20", "--max-concurrent-requests", "5"), ("2023", "2024", "2025"), 5, 5),
+            (("--alignment-pair-workers", "1"), ("2023", "2024", "2025"), 9, 9),
+        ]
+        for options, years, expected, expected_cap in cases:
+            with self.subTest(options=options, years=years), \
+                 patch.object(disclosures, "run_year", return_value=0), \
+                 patch.object(disclosure_alignment, "main", return_value=0) as align:
+                code, calls, _, output = self.run_cli("--align", *options, years=years, batch_workers=None)
+                self.assertEqual((code, calls), (0, 0))
+                self.assertEqual(align.call_count, len(years) - 1)
+                self.assertIn(f"Alignment will use up to {expected} concurrent jobs per pair", output)
+                self.assertIn(f"{expected_cap} simultaneous API requests total", output)
+                for call in align.call_args_list:
+                    arguments = call.args[0]
+                    self.assertEqual(arguments[arguments.index("--workers") + 1], str(expected))
+                if align.call_count == 2:
+                    self.assertIs(align.call_args_list[0].kwargs["request_pacer"],
+                                  align.call_args_list[1].kwargs["request_pacer"])
+
+    def test_dry_run_shows_three_by_six_extraction_and_two_by_nine_alignment(self):
+        from sec_disclosure.agents import disclosure_alignment
+
+        with patch.object(disclosure_alignment, "main") as align:
+            code, calls, _, output = self.run_cli("--align", "--dry-run", batch_workers=None)
+            self.assertEqual((code, calls), (0, 0))
+            self.assertIn("3 concurrent year jobs, 6 batch workers per year (18 concurrent extraction batches)", output)
+            self.assertIn("Alignment will use up to 9 concurrent jobs per pair across up to 2 parallel pairs", output)
+            self.assertIn("18 simultaneous API requests total", output)
+            align.assert_not_called()
+            self.assertFalse((self.root / "disclosures").exists())
+
+    def test_alignment_and_unlimited_retry_options_validate_before_extraction(self):
+        for extra, years in ((("--align",), ("2023",)), (("--max-retries", "-2"), ("2023", "2024")),
+                             (("--rate-limit-retries", "-2"), ("2023", "2024")),
+                             (("--align", "--alignment-workers", "0"), ("2023", "2024")),
+                             (("--align", "--alignment-pair-workers", "0"), ("2023", "2024")),
+                             (("--align", "--alignment-max-requests", "-2"), ("2023", "2024")),
+                             (("--align", "--alignment-max-total-tokens", "0"), ("2023", "2024"))):
+            with self.subTest(extra=extra), self.assertRaises(SystemExit):
+                self.run_cli(*extra, years=years)
+        self.assertFalse((self.root / "disclosures").exists())
+
     def test_fault_tolerant_corrects_malformed_and_truncated_responses(self):
         attempts = Counter()
         prompts = []
@@ -277,16 +772,17 @@ class ParallelExtractionTests(TestCase):
         self.assertEqual(self.usage("2023")["reported_tokens"]["total_tokens"], 500)
         self.assertEqual(self.usage("2023")["requests_with_unknown_usage"], 0)
 
-    def test_exhausted_batch_continues_later_batches_and_resumes_only_failure(self):
+    def test_default_three_corrections_then_continues_later_batches_and_resumes_only_failure(self):
         def response(prompt, **kwargs):
             payload, _ = json.JSONDecoder().raw_decode(prompt)
             result = self.response(prompt, **kwargs)
             return CompletionResult("not JSON", result.model, "stop", result.usage) if payload["item"] == "7" else result
 
-        options = ("--fault-tolerant", "--max-retries", "1", "--retry-backoff", "0")
+        options = ("--fault-tolerant", "--retry-backoff", "0")
         code, calls, _, output = self.run_cli(*options, responder=response, years=("2023",))
-        self.assertEqual((code, calls), (1, 3))
+        self.assertEqual((code, calls), (1, 5))
         self.assertIn("continuing later extraction batches", output)
+        self.assertIn("Correction retry 3/3", output)
         usage = self.usage("2023")
         self.assertFalse(usage["run_complete"])
         self.assertEqual(usage["pending_batches"], [])
@@ -294,8 +790,31 @@ class ParallelExtractionTests(TestCase):
         document = json.loads((self.root / "disclosures/amd/2023/disclosures.json").read_text())
         self.assertEqual([row["item"] for row in document["disclosures"]], ["8"])
         self.assertEqual(self.run_cli(*options, years=("2023",))[:2], (0, 1))
-        self.assertEqual(self.usage("2023")["reported_tokens"]["total_tokens"], 500)
+        self.assertEqual(self.usage("2023")["reported_tokens"]["total_tokens"], 750)
         self.assertEqual(self.run_cli(*options, years=("2023",))[:2], (0, 0))
+
+    def test_ten_api_retries_then_moves_on_with_parallel_batches(self):
+        attempts = Counter()
+        lock = threading.Lock()
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            with lock:
+                attempts[payload["item"]] += 1
+            if payload["item"] == "7":
+                raise LLMError("Temporary API failure.", status_code=503, retryable=True)
+            return self.response(prompt, **kwargs)
+
+        options = ("--fault-tolerant", "--max-retries", "10", "--retry-backoff", "0", "--batch-workers", "2")
+        code, calls, _, output = self.run_cli(*options, responder=response, years=("2023",))
+        self.assertEqual((code, calls), (1, 12))
+        self.assertEqual(attempts, {"7": 11, "8": 1})
+        self.assertIn("continuing later extraction batches", output)
+        usage = self.usage("2023")
+        self.assertEqual(usage["pending_batches"], [])
+        self.assertEqual([batch["batch_id"] for batch in usage["failed_batches"]], ["batch_001"])
+        self.assertEqual(usage["requests_with_unknown_usage"], 11)
+        self.assertEqual(self.run_cli(*options, years=("2023",))[:2], (0, 1))
 
     def test_fault_tolerant_recovers_boundary_json_and_keeps_order(self):
         self.split_filings(3)
@@ -314,7 +833,7 @@ class ParallelExtractionTests(TestCase):
             return result
 
         options = ("--fault-tolerant", "--retry-backoff", "0", "--batch-chars", "1000")
-        self.assertEqual(self.run_cli(*options, responder=response)[:2], (0, 18))
+        self.assertEqual(self.run_cli(*options, responder=response)[:2], (0, 21))
         self.assertTrue(all(self.usage(year)["run_complete"] for year in ("2023", "2024", "2025")))
 
     def test_exhausted_boundary_waits_and_resumes_its_dependent_checks(self):
@@ -332,8 +851,8 @@ class ParallelExtractionTests(TestCase):
         self.assertFalse(usage["run_complete"])
         self.assertEqual([f["boundary_id"] for f in usage["failed_boundary_checks"]], ["boundary_001"])
         self.assertEqual(usage["pending_boundary_checks"], ["boundary_002"])
-        self.assertEqual(self.run_cli(*options, years=("2023",))[:2], (0, 2))
-        self.assertEqual(self.usage("2023")["attempted_requests"], 6)
+        self.assertEqual(self.run_cli(*options, years=("2023",))[:2], (0, 3))
+        self.assertEqual(self.usage("2023")["attempted_requests"], 7)
         self.assertEqual(self.usage("2023")["requests_with_unknown_usage"], 1)
 
     def test_fault_tolerant_respects_request_cap_during_retries(self):
@@ -387,6 +906,133 @@ class ParallelExtractionTests(TestCase):
         self.assertEqual(self.usage("2023")["requests_with_unknown_usage"], 1)
         path = self.root / "disclosures/amd/2023/requests/batch_001_attempt_001.json"
         self.assertNotIn("fake-key", path.read_text())
+
+    def test_batches_within_one_year_overlap_and_keep_source_order(self):
+        barrier = threading.Barrier(2, timeout=5)
+        finished_second = threading.Event()
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            barrier.wait()
+            if payload["item"] == "7":
+                self.assertTrue(finished_second.wait(5))
+            else:
+                finished_second.set()
+            return self.response(prompt, **kwargs)
+
+        self.assertEqual(self.run_cli("--batch-workers", "2", responder=response, years=("2023",))[:2], (0, 2))
+        document = json.loads((self.root / "disclosures/amd/2023/disclosures.json").read_text())
+        self.assertEqual([row["item"] for row in document["disclosures"]], ["7", "8"])
+        self.assertEqual(self.usage("2023")["reported_tokens"]["total_tokens"], 250)
+        self.assertEqual(self.run_cli("--batch-workers", "2", years=("2023",))[:2], (0, 0))
+
+    def test_single_year_parallel_batches_default_to_shared_pacing_and_429_retries(self):
+        counts, lock = Counter(), threading.Lock()
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            with lock:
+                counts[payload["item"]] += 1
+                attempt = counts[payload["item"]]
+            if payload["item"] == "7" and attempt <= 2:
+                raise LLMError("SoCLaaS returned HTTP 429.", status_code=429)
+            return self.response(prompt, **kwargs)
+        with patch.object(disclosures, "load_config", return_value=LLMConfig(
+                "https://example.test/v1", "fake-key", "default")), \
+             patch.object(disclosures, "RequestPacer", wraps=request_pacing.RequestPacer) as pacer, \
+             patch.object(request_pacing.RequestPacer, "acquire"), \
+             patch.object(disclosures, "request_completion", side_effect=response) as api, \
+             redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            status = disclosures.main(["--ticker", "amd", "--year", "2023", "--data-dir", str(self.root),
+                                       "--batch-workers", "2", "--rate-limit-cooldown", "0", "--no-store-postgres"])
+        self.assertEqual(status, 0)
+        self.assertEqual(api.call_count, 4)
+        self.assertEqual(pacer.call_args.args, (2.0, 0.0, None))
+        self.assertEqual(self.usage("2023")["requests_with_unknown_usage"], 2)
+        self.assertEqual(self.usage("2023")["reported_tokens"]["total_tokens"], 250)
+
+    def test_parallel_batch_request_cap_is_atomic_with_retries(self):
+        self.split_filings(6)
+
+        def response(prompt, **kwargs):
+            raise LLMError("SoCLaaS returned HTTP 503.", status_code=503)
+
+        options = ("--batch-workers", "4", "--batch-chars", "1000", "--max-requests", "3",
+                   "--fault-tolerant", "--retry-backoff", "0")
+        self.assertEqual(self.run_cli(*options, responder=response, years=("2023",))[:2], (1, 3))
+        usage = self.usage("2023")
+        self.assertEqual(usage["attempted_requests"], 3)
+        self.assertEqual(usage["requests_with_unknown_usage"], 3)
+        self.assertFalse(usage["run_complete"])
+
+    def test_parallel_batch_failures_recover_without_losing_other_results(self):
+        barrier = threading.Barrier(2, timeout=5)
+        counts = Counter()
+        lock = threading.Lock()
+
+        def response(prompt, **kwargs):
+            payload, _ = json.JSONDecoder().raw_decode(prompt)
+            with lock:
+                counts[payload["item"]] += 1
+                attempt = counts[payload["item"]]
+            result = self.response(prompt, **kwargs)
+            if attempt == 1:
+                barrier.wait()
+                if payload["item"] == "7":
+                    return CompletionResult("invalid JSON", result.model, "stop", result.usage)
+                raise LLMError("SoCLaaS request timed out.", retryable=True)
+            return result
+
+        options = ("--batch-workers", "2", "--fault-tolerant", "--retry-backoff", "0")
+        self.assertEqual(self.run_cli(*options, responder=response, years=("2023",))[:2], (0, 4))
+        self.assertEqual(self.usage("2023")["reported_tokens"]["total_tokens"], 375)
+        self.assertEqual(self.usage("2023")["requests_with_unknown_usage"], 1)
+
+    def test_global_api_cap_applies_across_years_and_parallel_batches(self):
+        active = peak = 0
+        lock = threading.Lock()
+        barrier = threading.Barrier(2, timeout=5)
+
+        def response(prompt, **kwargs):
+            nonlocal active, peak
+            with lock:
+                active += 1
+                peak = max(peak, active)
+            try:
+                barrier.wait()
+                return self.response(prompt, **kwargs)
+            finally:
+                with lock:
+                    active -= 1
+
+        options = ("--batch-workers", "2", "--max-concurrent-requests", "2")
+        self.assertEqual(self.run_cli(*options, responder=response)[:2], (0, 6))
+        self.assertEqual(peak, 2)
+
+    def test_parallel_extraction_finishes_before_sequential_boundaries(self):
+        self.split_filings(3)
+        seen = set()
+        lock = threading.Lock()
+        barrier = threading.Barrier(3, timeout=5)
+
+        def response(prompt, **kwargs):
+            payload = json.loads(prompt)
+            if payload.get("task") in ("check_disclosure_boundary", "consolidate_subsection"):
+                self.assertEqual(seen, {1, 2, 3})
+            else:
+                with lock:
+                    seen.add(payload["paragraphs"][0]["sentences"][0][0])
+                barrier.wait()
+            return self.response(prompt, **kwargs)
+
+        options = ("--batch-workers", "3", "--batch-chars", "1000")
+        self.assertEqual(self.run_cli(*options, responder=response, years=("2023",))[:2], (0, 6))
+        self.assertTrue(self.usage("2023")["run_complete"])
+
+    def test_invalid_batch_worker_and_global_cap_are_rejected(self):
+        for options in (("--batch-workers", "0"), ("--max-concurrent-requests", "0")):
+            with self.subTest(options=options), self.assertRaises(SystemExit) as error:
+                self.run_cli(*options)
+            self.assertEqual(error.exception.code, 2)
 
 
 class RequestPacingTests(TestCase):

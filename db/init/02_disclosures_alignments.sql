@@ -3,7 +3,7 @@
 --   docker compose exec -T db psql -U sec -d sec_disclosure < db/init/02_disclosures_alignments.sql
 -- (Files in db/init only run automatically when the Docker volume is first created.)
 
--- One row per extracted disclosure (disclosures.json and review_candidates.json, extraction schema "3").
+-- One row per extracted disclosure (disclosures.json and review_candidates.json, extraction schemas "3" and "4").
 CREATE TABLE IF NOT EXISTS disclosures (
     disclosure_id TEXT PRIMARY KEY,                    -- e.g. amd_2024_1A_D061
     filing_id     BIGINT NOT NULL REFERENCES filings(filing_id) ON DELETE CASCADE,

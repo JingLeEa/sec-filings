@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the matching/verification workflow on two saved disclosure years."""
+"""Align two saved disclosure years and store successful results in PostgreSQL."""
 
 import sys
 from pathlib import Path

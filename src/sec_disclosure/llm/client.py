@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import asyncio
 import math
 from dataclasses import dataclass
 from typing import Any
 
-from openai import APIConnectionError, APIError, APIStatusError, APITimeoutError, OpenAI
+from openai import APIConnectionError, APIError, APIStatusError, APITimeoutError, AsyncOpenAI
 from openai.types.chat import ChatCompletionMessageParam
 
 from .config import LLMConfig, load_config
@@ -31,6 +32,19 @@ class CompletionResult:
     usage: dict[str, Any] | None
 
 
+async def _request_with_deadline(settings, messages, max_tokens, timeout, options):
+    async def send():
+        async with AsyncOpenAI(api_key=settings.api_key, base_url=settings.base_url,
+                               timeout=timeout, max_retries=0) as client:
+            return await client.chat.completions.create(
+                model=settings.model, messages=messages, max_tokens=max_tokens, **options,
+            )
+
+    # Cancel the actual HTTP operation, including reading the entire response.
+    # A timed-out thread would keep its request alive and exceed worker limits.
+    return await asyncio.wait_for(send(), timeout=timeout)
+
+
 def request_completion(prompt: str, *, config: LLMConfig | None = None,
                        max_tokens: int = 256, timeout: float = 60.0,
                        system_prompt: str | None = None,
@@ -39,6 +53,7 @@ def request_completion(prompt: str, *, config: LLMConfig | None = None,
 
     Callers performing batch work must save this result before parsing the text,
     so a failed parse never hides tokens already consumed. No automatic retries.
+    timeout bounds the entire API attempt, even when partial response data arrives.
     """
     if not prompt.strip():
         raise ValueError("Prompt must not be empty.")
@@ -53,14 +68,9 @@ def request_completion(prompt: str, *, config: LLMConfig | None = None,
     messages.append({"role": "user", "content": prompt})
     options: dict[str, Any] = {"response_format": {"type": "json_object"}} if json_mode else {}
     try:
-        with OpenAI(api_key=settings.api_key, base_url=settings.base_url,
-                    timeout=timeout, max_retries=0) as client:
-            response = client.chat.completions.create(
-                model=settings.model,
-                messages=messages,
-                max_tokens=max_tokens,
-                **options,
-            )
+        response = asyncio.run(_request_with_deadline(settings, messages, max_tokens, timeout, options))
+    except asyncio.TimeoutError:
+        raise LLMError(f"SoCLaaS request exceeded the {timeout:g}-second total deadline.", retryable=True) from None
     except APITimeoutError:
         raise LLMError("SoCLaaS request timed out. Try again or increase --timeout.", retryable=True) from None
     except APIConnectionError:

@@ -1,4 +1,4 @@
-"""Group extracted filings into traceable disclosures, with per-year token accounting."""
+"""Extract traceable disclosures, store completed years, and optionally align them."""
 
 from __future__ import annotations
 
@@ -9,11 +9,13 @@ import math
 import re
 import sys
 import time
+import threading
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from copy import deepcopy
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+from itertools import count
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +23,7 @@ from sec_disclosure.annotation.export_table_annotations import CONTENT_LABELS
 from .client import LLMError, request_completion
 from .config import load_config
 from .request_pacing import RequestPacer
+from .concurrency import run_jobs
 from .disclosure_filters import (TABLE_INTRODUCTION_POLICY, TABLE_INTRODUCTION_REASON,
                                  POST_EXTRACTION_FILTER_POLICY, POST_EXTRACTION_REASON,
                                  is_single_sentence_colon)
@@ -28,9 +31,12 @@ from .disclosure_boundaries import (BOUNDARY_POLICY, BOUNDARY_SYSTEM_PROMPT,
                                    CONTEXT_CHARS_PER_SIDE, CONTEXT_PARAGRAPHS,
                                    MAX_BOUNDARY_PROMPT_CHARS, attach_context,
                                    boundary_specs, reconcile_boundaries)
+from .disclosure_consolidation import (CONSOLIDATION_POLICY, CONSOLIDATION_SYSTEM_PROMPT,
+                                      MAX_CONSOLIDATION_PROMPT_CHARS, reconcile_consolidation)
+from .response_retries import RESPONSE_RETRY_POLICY, correction_context, response_hash
 
 
-VERSION = "3"
+VERSION = "4"
 EXTRACTION_SCOPE = "single_subsection"
 ITEMS = ("1", "1A", "7", "8", "15")
 SOURCE_UNIT_POLICY = {"minimum_source_units": 1,
@@ -372,6 +378,10 @@ def assemble_disclosure(filing: Filing, proposal: dict, batch: dict) -> dict:
                 "unresolved": "boundary_context_unresolved"}.get(check["status"])
         if flag:
             flags.append(flag)
+    consolidation_checks = batch.get("consolidation_checks", [])
+    for check in consolidation_checks:
+        if check["status"] in ("pending", "failed", "needs_review"):
+            flags.append("consolidation_" + check["status"])
     combined = "\n\n".join(content)
     if re.search(r"following table|table below|were as follows|are as follows", combined, re.I):
         flags.append("possible_missing_table_context")
@@ -388,7 +398,8 @@ def assemble_disclosure(filing: Filing, proposal: dict, batch: dict) -> dict:
                              "review_reasons": list(dict.fromkeys(flags)),
                              "model_review_reason": proposal.get("review_reason", ""),
                              "boundary_checks": boundary_checks,
-                             "semantic_review": "Topic focus, summary and taxonomy are LLM-proposed; not independently human-verified"}}
+                             "consolidation_checks": consolidation_checks,
+                             "semantic_review": "Topic focus, summary, taxonomy, merges and relationships are LLM-proposed; not independently human-verified"}}
 
 
 def usage_report(requests: list[dict], total_batches: int) -> dict:
@@ -436,7 +447,8 @@ def usage_report(requests: list[dict], total_batches: int) -> dict:
                       "No currency estimate: no verified account/model billing rates were supplied."]}
 
 
-def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: list[dict]) -> dict:
+def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: list[dict], *,
+                 consolidation_max_prompt_chars=MAX_CONSOLIDATION_PROMPT_CHARS) -> dict:
     disclosures, exclusions, failed, pending = [], list(filing.filtered), [], []
     unassigned, invalid, nodes = [], [], []
     attempts = defaultdict(list)
@@ -493,17 +505,25 @@ def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: li
         accounted.update(filing.units[number]["id"] for number in allowed)
     nodes, boundary_audit = reconcile_boundaries(filing, batches, nodes, requests,
                                                 extraction_complete=not pending and not failed)
+    pending_boundaries = [c["id"] for c in boundary_audit if c["status"] == "pending"]
+    failed_boundaries = [{"boundary_id": c["id"], "item": c["item"], "error": c["error"]}
+                         for c in boundary_audit if c["status"] == "failed"]
+    nodes, consolidation_audit, raw_relationships = reconcile_consolidation(
+        filing, batches, nodes, requests,
+        ready=not (pending or failed or pending_boundaries or failed_boundaries),
+        max_prompt_chars=consolidation_max_prompt_chars)
     unassigned_parents = {row["paragraph_id"] for row in unassigned}
     for node in nodes:
         batch = {"item": node["item"], "section": node["section"], "boundary_paragraphs": [],
-                 "boundary_checks": list(node["checks"].values())}
+                 "boundary_checks": list(node["checks"].values()),
+                 "consolidation_checks": node.get("consolidation_checks", [])}
         disclosure = assemble_disclosure(filing, node["proposal"], batch)
         if any(source["paragraph_id"] in unassigned_parents for source in disclosure["sources"]):
             disclosure["verification"]["review_reasons"].append("unassigned_context_in_source_paragraph")
         disclosure["verification"] = apply_source_unit_policy(disclosure["verification"])
         disclosure["verification"]["extraction_batch_ids"] = node["batch_ids"]
         disclosure["verification"]["source_proposal_ids"] = node["source_proposal_ids"]
-        # Filter the final selected evidence after boundary merges, before IDs
+        # Filter the final selected evidence after all merges, before IDs
         # and accepted/review output routing. The parent can have more sentences.
         if is_single_sentence_colon(disclosure["content"], disclosure["verification"]["source_unit_count"]):
             source = disclosure["sources"][0]
@@ -518,9 +538,30 @@ def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: li
         item_counts[node["item"]] += 1
         disclosure_id = f"{filing.company}_{filing.year}_{node['item']}_D{item_counts[node['item']]:03d}"
         disclosures.append({"disclosure_id": disclosure_id, **disclosure})
-    pending_boundaries = [c["id"] for c in boundary_audit if c["status"] == "pending"]
-    failed_boundaries = [{"boundary_id": c["id"], "item": c["item"], "error": c["error"]}
-                         for c in boundary_audit if c["status"] == "failed"]
+    # Resolve links through both boundary and consolidation merges to final IDs.
+    final_ids = {source_id: d["disclosure_id"] for d in disclosures
+                 for source_id in d["verification"]["source_proposal_ids"]}
+    relationships, seen_links = [], set()
+    for link in raw_relationships:
+        endpoints = [list(dict.fromkeys(final_ids[key] for key in group if key in final_ids))
+                     for group in link["source_proposal_groups"]]
+        if any(not group for group in endpoints):  # A final deterministic filter removed an endpoint.
+            continue
+        ids = list(dict.fromkeys(key for group in endpoints for key in group))
+        key = tuple(sorted(ids))
+        if len(ids) < 2 or key in seen_links:
+            continue
+        seen_links.add(key)
+        relationships.append({"relationship_id": f"{filing.company}_{filing.year}_R{len(relationships) + 1:03d}",
+                              **link, "disclosure_ids": ids})
+    for disclosure in disclosures:
+        disclosure["related_disclosures"] = [
+            {"relationship_id": link["relationship_id"], "reason": link["reason"],
+             "disclosure_ids": [key for key in link["disclosure_ids"] if key != disclosure["disclosure_id"]]}
+            for link in relationships if disclosure["disclosure_id"] in link["disclosure_ids"]]
+    pending_consolidations = [c["id"] for c in consolidation_audit if c["status"] == "pending"]
+    failed_consolidations = [{"consolidation_id": c["id"], "item": c["item"], "error": c["error"]}
+                            for c in consolidation_audit if c["status"] == "failed"]
     accepted = [d for d in disclosures if d["verification"]["status"] == "source_validated"]
     review = [d for d in disclosures if d["verification"]["status"] == "needs_review"]
     coverage = {"input_sentence_records": len(filing.units),
@@ -537,11 +578,19 @@ def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: li
     report.update({"company": filing.company, "fiscal_year": filing.year,
                    "extraction_scope": EXTRACTION_SCOPE,
                    "boundary_policy": BOUNDARY_POLICY,
+                   "consolidation_policy": CONSOLIDATION_POLICY,
+                   "response_retry_policy": RESPONSE_RETRY_POLICY,
                    "table_introduction_policy": TABLE_INTRODUCTION_POLICY,
                    "post_extraction_filter_policy": POST_EXTRACTION_FILTER_POLICY,
-                   "run_complete": not pending and not failed and not pending_boundaries and not failed_boundaries,
+                   "run_complete": not (pending or failed or pending_boundaries or failed_boundaries
+                                        or pending_consolidations or failed_consolidations),
                    "planned_boundary_checks": len(boundary_audit),
                    "pending_boundary_checks": pending_boundaries, "failed_boundary_checks": failed_boundaries,
+                   "review_boundary_checks": [c["id"] for c in boundary_audit if c["status"] == "needs_review"],
+                   "planned_consolidations": len(consolidation_audit),
+                   "pending_consolidations": pending_consolidations, "failed_consolidations": failed_consolidations,
+                   "review_consolidations": [c["id"] for c in consolidation_audit if c["status"] == "needs_review"],
+                   "disclosure_relationships": len(relationships),
                    "unresolved_boundary_groups": sum(not g["resolved"] for c in boundary_audit for g in c.get("groups", [])),
                    "source_validated_disclosures": len(accepted), "review_candidates": len(review),
                    "invalid_proposals": len(invalid),
@@ -549,6 +598,7 @@ def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: li
     common = {"schema_version": VERSION, "company": filing.company, "fiscal_year": filing.year,
               "extraction_scope": EXTRACTION_SCOPE,
               "boundary_policy": BOUNDARY_POLICY,
+              "consolidation_policy": CONSOLIDATION_POLICY,
               "table_introduction_policy": TABLE_INTRODUCTION_POLICY,
               "post_extraction_filter_policy": POST_EXTRACTION_FILTER_POLICY,
               "input_hashes": filing.input_hashes,
@@ -559,6 +609,8 @@ def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: li
     write_json(output / "unassigned_sources.json", {**common, "sources": unassigned})
     write_json(output / "invalid_proposals.json", {**common, "proposals": invalid})
     write_json(output / "boundary_checks.json", {**common, "boundaries": boundary_audit})
+    write_json(output / "consolidation.json", {**common, "subsections": consolidation_audit})
+    write_json(output / "disclosure_relationships.json", {**common, "relationships": relationships})
     write_json(output / "token_usage.json", report)
     lines = [f"# {filing.company.upper()} {filing.year} disclosure candidates", "",
              "Source validation checks provenance and structure. Summaries and taxonomy need semantic review.", ""]
@@ -576,6 +628,8 @@ def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: li
                           f"**Verification:** {disclosure['verification']['status']}", ""])
             if disclosure["verification"]["review_reasons"]:
                 lines.extend(["Review: " + "; ".join(disclosure["verification"]["review_reasons"]), ""])
+            for link in disclosure["related_disclosures"]:
+                lines.extend(["Related: " + ", ".join(link["disclosure_ids"]) + ". " + link["reason"], ""])
             for source in disclosure["sources"]:
                 ids = ", ".join(sentence["sentence_id"] for sentence in source["sentences"])
                 lines.extend([f"**{source['paragraph_id']}** ({source['selection']}; {ids})", "",
@@ -606,14 +660,20 @@ def prepare_year(args, config):
                     "system_prompt_hash": digest(SYSTEM_PROMPT.encode()),
                     "boundary_policy": BOUNDARY_POLICY,
                     "boundary_system_prompt_hash": digest(BOUNDARY_SYSTEM_PROMPT.encode()),
+                    "consolidation_policy": CONSOLIDATION_POLICY,
+                    "consolidation_system_prompt_hash": digest(CONSOLIDATION_SYSTEM_PROMPT.encode()),
                     "context_paragraphs_per_side": CONTEXT_PARAGRAPHS,
                     "context_chars_per_side": CONTEXT_CHARS_PER_SIDE,
                     "max_boundary_prompt_chars": MAX_BOUNDARY_PROMPT_CHARS,
                     "batches": [{"id": batch["id"], "item": batch["item"],
                                  "prompt_hash": digest(make_prompt(filing, batch).encode())} for batch in batches]}
         manifest_path = output / "manifest.json"
-        if manifest_path.exists() and json.loads(manifest_path.read_text()) != manifest:
-            raise ValueError(f"{args.year}: Inputs, model, or batching changed. Choose a new --output-dir or --output-root to keep token accounting separate.")
+        if manifest_path.exists():
+            previous = json.loads(manifest_path.read_text())
+            legacy = {key: value for key, value in manifest.items() if not key.startswith("consolidation_")}
+            legacy["version"] = "3"
+            if previous != manifest and previous != legacy:
+                raise ValueError(f"{args.year}: Inputs, model, or batching changed. Choose a new --output-dir or --output-root to keep token accounting separate.")
     return filing, batches, output, manifest
 
 
@@ -632,25 +692,39 @@ def retryable_request(request):
             or "timed out" in message or "Cannot connect" in message)
 
 
-def extraction_retry_prompt(filing, batch, error):
+def extraction_retry_prompt(filing, batch, error, previous_response=""):
     allowed_ids = [number for row in batch["rows"] for number, _ in row["sentences"]]
-    return (make_prompt(filing, batch)
-            + "\nCorrect the previous failed response. Validation error: " + error[:1000]
-            + ". Return ONLY the required JSON object with disclosures and excluded arrays. "
+    instruction = ("Return ONLY the required JSON object with disclosures and excluded arrays. "
             "Keep metadata concise. In each sentences pair [ID, TEXT], ID is the source unit ID to copy. "
             "DO NOT number paragraphs or restart IDs at 1. Account for each exact allowed ID once: "
             + json.dumps(allowed_ids) + ".")
+    return correction_context(make_prompt(filing, batch), previous_response, error, instruction)
 
 
-def boundary_retry_prompt(check, error):
+def boundary_retry_prompt(check, error, previous_response=""):
     prompt = json.dumps(check["input"], ensure_ascii=False, separators=(",", ":"))
-    correction = ("\nCorrect the previous response. Validation error: " + error[:1000]
-                  + " Return ONLY a JSON object with the single top-level key groups, whose value is an ARRAY. "
+    instruction = ("Return ONLY a JSON object with the single top-level key groups, whose value is an ARRAY. "
                   "Every group must include candidate_ids (array), resolved (boolean), and reason (nonempty string). "
                   "For a singleton, omit topic, summary and taxonomy. For a merge, include ALL three metadata fields "
-                  "as well as reason; use one allowed taxonomy. Keep metadata concise. Return every candidate ID exactly once: "
+                  "as well as reason; use one allowed taxonomy. A group with resolved=false MUST contain exactly ONE candidate ID. "
+                  "resolved=false means the candidate needs review, NOT that a pair should not merge. "
+                  "If A and B should remain separate, return two groups, for example "
+                  '{"groups":[{"candidate_ids":["A"],"resolved":false,"reason":"Review A separately"},'
+                  '{"candidate_ids":["B"],"resolved":false,"reason":"Review B separately"}]}. '
+                  "Use actual supplied IDs instead of A and B. Complete independent candidates can have resolved=true. "
+                  "Keep metadata concise. Return every candidate ID exactly once: "
                   + json.dumps(check["candidate_ids"]) + ".")
-    return prompt + correction if len(prompt) + len(correction) + len(BOUNDARY_SYSTEM_PROMPT) <= MAX_BOUNDARY_PROMPT_CHARS else prompt
+    return correction_context(prompt, previous_response, error, instruction,
+                              max_chars=MAX_BOUNDARY_PROMPT_CHARS, system=BOUNDARY_SYSTEM_PROMPT)
+
+
+def consolidation_retry_prompt(check, error, max_prompt_chars, previous_response=""):
+    prompt = json.dumps(check["input"], ensure_ascii=False, separators=(",", ":"))
+    instruction = ("Return ONLY the required merges and relationships arrays. Use supplied candidate IDs; "
+                  "merges must not overlap, and each group must have at least two distinct IDs. "
+                  "Keep metadata concise. Unmentioned candidates remain unchanged.")
+    return correction_context(prompt, previous_response, error, instruction,
+                              max_chars=max_prompt_chars, system=CONSOLIDATION_SYSTEM_PROMPT)
 
 
 def run_year(args, prepared, config, pacer):
@@ -659,107 +733,203 @@ def run_year(args, prepared, config, pacer):
     def log(message):
         print(f"[{args.year}] {message}", flush=True)
 
+    def save():
+        return save_outputs(output, filing, batches, requests,
+                            consolidation_max_prompt_chars=args.consolidation_max_prompt_chars)
+
     try:
         log(f"{args.ticker.upper()}: {len(filing.paragraphs)} chunks; {len(filing.units)} sentence records; {len(filing.filtered)} filtered; {len(batches)} batches.")
         log("Batches per Item: " + json.dumps(dict(Counter(batch["item"] for batch in batches))))
         log(f"Planned boundary checks: {len(boundary_specs(batches))}; neighboring context is read-only.")
+        log("Whole-subsection consolidation follows boundary checks; nonadjacent batches are reviewed together.")
         if args.dry_run:
             log(f"Extraction prompt characters including instructions/context: {sum(len(SYSTEM_PROMPT) + len(make_prompt(filing, batch)) for batch in batches):,}. Boundary prompts depend on extracted candidates. Actual tokens are reported after API requests.")
             return 0
         manifest_path = output / "manifest.json"
+        if manifest_path.exists() and json.loads(manifest_path.read_text()) != manifest:
+            # prepare_year already verified an exact version-3 extraction cache.
+            archive = output / "manifest.pre_consolidation.json"
+            if not archive.exists():
+                write_json(archive, json.loads(manifest_path.read_text()))
+            log("Upgrading extraction cache for consolidation; saved extraction/boundary requests are reused.")
         write_json(manifest_path, manifest)
         request_dir = output / "requests"
         request_dir.mkdir(exist_ok=True)
         requests = [json.loads(path.read_text()) for path in sorted(request_dir.glob("*.json"))]
-        report = save_outputs(output, filing, batches, requests)
+        requests.sort(key=lambda record: (record["batch_id"], record["attempt"]))
+        report = save()
         failed_ids = {batch["batch_id"] for batch in report["failed_batches"]}
         new_requests = 0
+        ledger_lock = threading.RLock()
+        stopped = threading.Event()
 
-        def send_request(job_id, item, prompt, system_prompt, *, stage, input_hash=None, correction=None):
-            nonlocal new_requests
+        def send_request(job_id, item, prompt, system_prompt, *, stage, input_hash=None, correction=None,
+                         resumed_correction=False, resume_error=None):
+            nonlocal new_requests, report
             retry_limit = args.max_retries if args.fault_tolerant else args.rate_limit_retries
-            rate_retries = 0
-            for retry in range(retry_limit + 1):
-                pacer.acquire()
-                attempt = sum(r["batch_id"] == job_id for r in requests) + 1
-                path = request_dir / f"{job_id}_attempt_{attempt:03d}.json"
-                request = {"batch_id": job_id, "item": item, "stage": stage, "attempt": attempt,
-                           "status": "started", "started_at": datetime.now(timezone.utc).isoformat(),
-                           "prompt_hash": digest(prompt.encode())}
-                if input_hash is not None:
-                    request["input_hash"] = input_hash
-                write_json(path, request)
-                requests.append(request)
-                new_requests += 1
-                log(f"Request {job_id} (Item {item}, attempt {attempt})...")
-                limited = False
+            rate_retries = api_retries = 0
+            model_retries = int(resumed_correction)
+
+            def preserve_for_review(request, path, error):
+                nonlocal report
+                if stage in ("boundary_check", "consolidation"):
+                    request["review_fallback"] = {"policy": RESPONSE_RETRY_POLICY,
+                        "response_hash": response_hash(request["result"]["text"]),
+                        "validation_error": error, "correction_retries": model_retries,
+                        "reason": "Model correction exhausted; original candidates retained for review."}
+                    with ledger_lock:
+                        write_json(path, request)
+                        report = save()
+                    log(f"{job_id}: preserving original disclosures as needs_review and continuing.")
+                return report
+
+            if resume_error is not None:
+                with ledger_lock:
+                    previous = next((r for r in reversed(requests) if r["batch_id"] == job_id
+                                     and isinstance(r.get("result", {}).get("text"), str)), None)
+                can_preserve = (args.fault_tolerant and resumed_correction and previous is not None
+                                and previous.get("input_hash") == input_hash)
+                if can_preserve and args.max_response_retries == 0:
+                    model_retries = 0
+                    return preserve_for_review(previous, request_dir / f"{job_id}_attempt_{previous['attempt']:03d}.json", resume_error)
                 try:
-                    result = request_completion(prompt, config=config, system_prompt=system_prompt,
-                                                json_mode=True, max_tokens=args.max_tokens, timeout=args.timeout)
-                    request.update(status="completed", result=asdict(result))
-                except LLMError as error:
-                    request.update(status="failed", error=str(error), status_code=error.status_code,
-                                   retryable=error.retryable)
-                    request["retryable"] = retryable_request(request)
-                    limited = error.status_code == 429
-                    if limited and request["retryable"]:
-                        cooldown = pacer.rate_limited(error.retry_after)
-                except Exception as error:
-                    # Keep an unexpected client failure in the ledger without exposing its body.
-                    request.update(status="failed", error=f"Unexpected request error ({type(error).__name__}).",
-                                   retryable=False)
-                # Save every attempt before validation or retry, including unknown usage.
-                write_json(path, request)
-                result_report = save_outputs(output, filing, batches, requests)
-                log(f"Reported cumulative tokens: {result_report['reported_tokens']['total_tokens']:,}; source-validated disclosures: {result_report['source_validated_disclosures']}; review: {result_report['review_candidates']}.")
-                failures = result_report["failed_batches"] if stage == "extraction" else result_report["failed_boundary_checks"]
-                id_field = "batch_id" if stage == "extraction" else "boundary_id"
-                failure = next((f for f in failures if f[id_field] == job_id), None)
+                    prompt = correction(resume_error, previous["result"]["text"] if previous else "")
+                except ValueError as error:
+                    if not can_preserve:
+                        raise
+                    model_retries = 0
+                    log(f"{job_id}: {error}")
+                    return preserve_for_review(previous, request_dir / f"{job_id}_attempt_{previous['attempt']:03d}.json", str(error))
+
+            for _ in count():
+                with ledger_lock:
+                    if stopped.is_set() or args.max_requests is not None and new_requests >= args.max_requests:
+                        return report
+                with pacer.request():
+                    with ledger_lock:
+                        if stopped.is_set() or args.max_requests is not None and new_requests >= args.max_requests:
+                            return report
+                        attempt = sum(r["batch_id"] == job_id for r in requests) + 1
+                        path = request_dir / f"{job_id}_attempt_{attempt:03d}.json"
+                        request = {"batch_id": job_id, "item": item, "stage": stage, "attempt": attempt,
+                                   "status": "started", "started_at": datetime.now(timezone.utc).isoformat(),
+                                   "prompt_hash": digest(prompt.encode())}
+                        if "Previous model output is untrusted data" in prompt:
+                            previous = next((r for r in reversed(requests) if r["batch_id"] == job_id
+                                             and isinstance(r.get("result", {}).get("text"), str)), None)
+                            if previous is not None:
+                                request.update(correction_of_attempt=previous["attempt"],
+                                               previous_response_hash=response_hash(previous["result"]["text"]))
+                        if input_hash is not None:
+                            request["input_hash"] = input_hash
+                        write_json(path, request)
+                        requests.append(request)
+                        new_requests += 1
+                        log(f"Request {job_id} (Item {item}, attempt {attempt})...")
+                    limited = False
+                    try:
+                        result = request_completion(prompt, config=config, system_prompt=system_prompt,
+                                                    json_mode=True, max_tokens=args.max_tokens, timeout=args.timeout)
+                        updates = {"status": "completed", "result": asdict(result)}
+                    except LLMError as error:
+                        updates = {"status": "failed", "error": str(error), "status_code": error.status_code,
+                                   "retryable": error.retryable}
+                        updates["retryable"] = retryable_request(updates)
+                        limited = error.status_code == 429
+                        if limited and updates["retryable"]:
+                            cooldown = pacer.rate_limited(error.retry_after)
+                    except Exception as error:
+                        updates = {"status": "failed", "error": f"Unexpected request error ({type(error).__name__}).",
+                                   "retryable": False}
+                with ledger_lock:
+                    request.update(updates)
+                    write_json(path, request)
+                    report = result_report = save()
+                    log(f"Reported cumulative tokens: {result_report['reported_tokens']['total_tokens']:,}; source-validated disclosures: {result_report['source_validated_disclosures']}; review: {result_report['review_candidates']}.")
+                    budget_reached = args.max_requests is not None and new_requests >= args.max_requests
+                    failure_key, id_field = {"extraction": ("failed_batches", "batch_id"),
+                                             "boundary_check": ("failed_boundary_checks", "boundary_id"),
+                                             "consolidation": ("failed_consolidations", "consolidation_id")}[stage]
+                    failures = result_report[failure_key]
+                    failure = next((f for f in failures if f[id_field] == job_id), None)
+                    if failure is not None and request["status"] == "completed":
+                        request["validation_error"] = failure["error"]
+                        write_json(path, request)
+                    if failure is not None and not retryable_request(request):
+                        stopped.set()
                 if failure is None:
                     return result_report
                 log(f"{job_id} failed: {failure['error']}")
-                budget_reached = args.max_requests is not None and new_requests >= args.max_requests
-                recoverable = retryable_request(request)
-                retry_allowed = recoverable and (args.fault_tolerant or limited)
-                if limited and rate_retries >= args.rate_limit_retries:
+                if request["status"] == "completed" and args.fault_tolerant:
+                    if model_retries >= args.max_response_retries:
+                        return preserve_for_review(request, path, failure["error"])
+                    if budget_reached or stopped.is_set():
+                        return result_report
+                    try:
+                        prompt = correction(failure["error"], request["result"]["text"])
+                    except ValueError as error:
+                        log(f"{job_id}: {error}")
+                        return preserve_for_review(request, path, str(error))
+                    delay = min(args.response_retry_backoff * (2 ** min(model_retries, 16)), 5)
+                    model_retries += 1
+                    log(f"Correction retry {model_retries}/{args.max_response_retries} for {job_id} in {delay:g}s; latest response included.")
+                    time.sleep(delay)
+                    continue
+                retry_allowed = retryable_request(request) and (args.fault_tolerant or limited)
+                if limited and args.rate_limit_retries != -1 and rate_retries >= args.rate_limit_retries:
                     retry_allowed = False
-                if not retry_allowed or retry == retry_limit or budget_reached:
+                if (not retry_allowed or retry_limit != -1 and api_retries >= retry_limit
+                        or budget_reached or stopped.is_set()):
                     return result_report
+                retry_label = "unlimited" if retry_limit == -1 else str(retry_limit)
+                api_retries += 1
                 if limited:
                     rate_retries += 1
-                    log(f"HTTP 429 saved; shared cooldown {cooldown:g}s before retry {retry + 1}/{retry_limit}.")
+                    log(f"HTTP 429 saved; shared cooldown {cooldown:g}s before retry {api_retries}/{retry_label}.")
                 else:
-                    delay = min(args.retry_backoff * (2 ** min(retry, 16)), 60)
-                    if request["status"] == "completed" and correction is not None:
-                        prompt = correction(failure["error"])
-                    log(f"Retry {retry + 1}/{retry_limit} for {job_id} in {delay:g}s; previous attempt preserved.")
+                    delay = min(args.retry_backoff * (2 ** min(api_retries - 1, 16)), 60)
+                    log(f"Retry {api_retries}/{retry_label} for {job_id} in {delay:g}s; previous attempt preserved.")
                     time.sleep(delay)
 
-        for batch in batches:
-            history = [r for r in requests if r["batch_id"] == batch["id"]]
-            if history and batch["id"] not in failed_ids:
-                continue
-            if history and not args.retry_failed:
-                if not args.fault_tolerant or not retryable_request(history[-1]):
-                    raise ValueError(f"{batch['id']} failed previously. Review token_usage.json; --retry-failed authorizes an additional request.")
-            if args.max_requests is not None and new_requests >= args.max_requests:
-                break
-            prompt = make_prompt(filing, batch)
-            if history:
-                failure = next(f for f in report["failed_batches"] if f["batch_id"] == batch["id"])
-                prompt = extraction_retry_prompt(filing, batch, failure["error"])
-            report = send_request(batch["id"], batch["item"], prompt, SYSTEM_PROMPT, stage="extraction",
-                                  correction=lambda error: extraction_retry_prompt(filing, batch, error))
-            if any(failure["batch_id"] == batch["id"] for failure in report["failed_batches"]):
-                if args.fault_tolerant and retryable_request(requests[-1]):
+        def process_batch(batch):
+            with ledger_lock:
+                if stopped.is_set() or args.max_requests is not None and new_requests >= args.max_requests:
+                    return
+                history = [r for r in requests if r["batch_id"] == batch["id"]]
+                if history and batch["id"] not in failed_ids:
+                    return
+                if history and not args.retry_failed:
+                    if not args.fault_tolerant or not retryable_request(history[-1]):
+                        stopped.set()
+                        raise ValueError(f"{batch['id']} failed previously. Review token_usage.json; --retry-failed authorizes an additional request.")
+                prompt = make_prompt(filing, batch)
+                resume_error = None
+                if history:
+                    failure = next(f for f in report["failed_batches"] if f["batch_id"] == batch["id"])
+                    resume_error = failure["error"]
+            result_report = send_request(batch["id"], batch["item"], prompt, SYSTEM_PROMPT, stage="extraction",
+                correction=lambda error, previous: extraction_retry_prompt(filing, batch, error, previous),
+                resumed_correction=bool(history and history[-1]["status"] == "completed"), resume_error=resume_error)
+            if any(failure["batch_id"] == batch["id"] for failure in result_report["failed_batches"]):
+                with ledger_lock:
+                    latest = next(r for r in reversed(requests) if r["batch_id"] == batch["id"])
+                if args.fault_tolerant and retryable_request(latest):
                     log(f"{batch['id']} retries exhausted; retaining failure and continuing later extraction batches.")
-                    continue
+                    return
+                stopped.set()
                 raise ValueError("Batch failed validation or API request. Saved response and token usage; see token_usage.json.")
+
+        log(f"Extraction batch workers: {args.batch_workers}; boundary checks run in source order.")
+        run_jobs(batches, process_batch, lambda batch, result: None, args.batch_workers)
+        # All admitted batch requests have drained; boundary dependencies are now stable.
+        report = save()
+        reviewed_this_run = set()
         while not report["pending_batches"] and not report["failed_batches"]:
             if args.max_requests is not None and new_requests >= args.max_requests:
                 break
             checks = json.loads((output / "boundary_checks.json").read_text())["boundaries"]
-            check = next((c for c in checks if c["status"] != "completed"), None)
+            check = next((c for c in checks if c["status"] not in ("completed", "needs_review")
+                          or args.retry_failed and c["status"] == "needs_review" and c["id"] not in reviewed_this_run), None)
             if check is None:
                 break
             prompt = json.dumps(check["input"], ensure_ascii=False, separators=(",", ":"))
@@ -769,26 +939,184 @@ def run_year(args, prepared, config, pacer):
             if history:
                 if not args.retry_failed and (not args.fault_tolerant or not retryable_request(history[-1])):
                     raise ValueError(f"{check['id']} failed previously: {check.get('error')}. Use --retry-failed for another attempt.")
-                prompt = boundary_retry_prompt(check, check.get("error", "Incomplete check."))
             report = send_request(check["id"], check["item"], prompt, BOUNDARY_SYSTEM_PROMPT,
                                   stage="boundary_check", input_hash=check["input_hash"],
-                                  correction=lambda error: boundary_retry_prompt(check, error))
-            if report["failed_boundary_checks"]:
+                                  correction=lambda error, previous: boundary_retry_prompt(check, error, previous),
+                                  resumed_correction=bool(history and history[-1]["status"] == "completed"),
+                                  resume_error=check.get("error", "Incomplete check.") if history else None)
+            if check["id"] in report["review_boundary_checks"]:
+                # This invocation attempted the job; explicit retry does not loop forever on its fallback.
+                reviewed_this_run.add(check["id"])
+            if any(f["boundary_id"] == check["id"] for f in report["failed_boundary_checks"]):
                 if args.fault_tolerant:
                     log(f"{check['id']} remains failed; dependent boundary checks will wait for a successful resume.")
                     break
                 raise ValueError("Boundary check failed; evidence and usage preserved. See boundary_checks.json and token_usage.json.")
-        report = save_outputs(output, filing, batches, requests)
+        report = save()
+        if not (report["pending_batches"] or report["failed_batches"]
+                or report["pending_boundary_checks"] or report["failed_boundary_checks"]):
+            checks = json.loads((output / "consolidation.json").read_text())["subsections"]
+
+            def process_consolidation(check):
+                if check["status"] == "completed" or check["status"] == "needs_review" and not args.retry_failed:
+                    return
+                prompt = json.dumps(check["input"], ensure_ascii=False, separators=(",", ":"))
+                if len(prompt) + len(CONSOLIDATION_SYSTEM_PROMPT) > args.consolidation_max_prompt_chars:
+                    log(f"{check['id']}: {check['error']}")
+                    return
+                with ledger_lock:
+                    history = [r for r in requests if r["batch_id"] == check["id"]]
+                if history:
+                    if not args.retry_failed and (not args.fault_tolerant or not retryable_request(history[-1])):
+                        log(f"{check['id']} failed previously: {check.get('error')}. Use --retry-failed for another attempt.")
+                        return
+                result_report = send_request(
+                    check["id"], check["item"], prompt, CONSOLIDATION_SYSTEM_PROMPT,
+                    stage="consolidation", input_hash=check["input_hash"],
+                    correction=lambda error, previous: consolidation_retry_prompt(check, error, args.consolidation_max_prompt_chars, previous),
+                    resumed_correction=bool(history and history[-1]["status"] == "completed"),
+                    resume_error=check.get("error", "Incomplete check.") if history else None)
+                if any(f["consolidation_id"] == check["id"] for f in result_report["failed_consolidations"]):
+                    log(f"{check['id']} remains failed; preserving candidates and continuing other subsections.")
+
+            log(f"Consolidation workers: {args.batch_workers}; each request includes every candidate in its subsection.")
+            run_jobs(checks, process_consolidation, lambda check, result: None, args.batch_workers)
+        report = save()
         log(f"{'Complete' if report['run_complete'] else 'Partial run saved; rerun to resume'}. Outputs: {output}")
+        if report["review_boundary_checks"] or report["review_consolidations"]:
+            log(f"Preserved for review: {len(report['review_boundary_checks'])} boundary checks; "
+                f"{len(report['review_consolidations'])} subsection consolidations.")
         log(json.dumps(report["reported_tokens"]))
-        if report["failed_batches"] or report["failed_boundary_checks"]:
-            log("Failed jobs: " + json.dumps(report["failed_batches"] + report["failed_boundary_checks"]))
+        failures = report["failed_batches"] + report["failed_boundary_checks"] + report["failed_consolidations"]
+        if failures:
+            log("Failed jobs: " + json.dumps(failures))
             log("Rerun the same command with --fault-tolerant to retry recoverable failures; successful requests are cached.")
             return 1
         return 0 if report["run_complete"] else 2
     except (OSError, ValueError, KeyError, TypeError, LLMError) as error:
         print(f"[{args.year}] Disclosure extraction error: {error}", file=sys.stderr)
         return 1
+
+
+def align_years(args, selected_years):
+    # Import lazily so extraction-only runs do not need the alignment engine.
+    from sec_disclosure.agents import disclosure_alignment
+
+    years = sorted(selected_years)
+    pairs = list(zip(years, years[1:]))
+    pacer = RequestPacer(args.request_interval, args.rate_limit_cooldown, args.alignment_api_capacity)
+    results = {}
+
+    def align_pair(pair):
+        previous, current = pair
+        arguments = [
+            "--ticker", args.ticker, "--previous-year", previous, "--current-year", current,
+            "--data-dir", str(args.data_dir),
+            "--disclosures-dir", str(args.output_root or args.data_dir / "disclosures"),
+            "--workers", str(args.alignment_workers),
+            "--max-steps", str(args.alignment_max_steps),
+            "--max-requests", str(args.alignment_max_requests),
+            "--max-total-tokens", str(args.alignment_max_total_tokens),
+            "--max-tokens", str(args.max_tokens), "--timeout", str(args.timeout),
+            "--request-interval", str(args.request_interval),
+            "--rate-limit-cooldown", str(args.rate_limit_cooldown),
+            "--max-retries", str(args.max_retries), "--retry-backoff", str(args.retry_backoff),
+        ]
+        if args.alignment_output_root is not None:
+            arguments.extend(["--output-dir", str(args.alignment_output_root / args.ticker / f"{previous}-{current}")])
+        if args.env_file is not None:
+            arguments.extend(["--env-file", str(args.env_file)])
+        if not args.store_postgres:
+            arguments.append("--no-store-postgres")
+        for flag in ("fault_tolerant", "retry_failed"):
+            if getattr(args, flag):
+                arguments.append("--" + flag.replace("_", "-"))
+        if args.alignment_max_new_requests is not None:
+            arguments.extend(["--max-new-requests", str(args.alignment_max_new_requests)])
+        if args.alignment_revalidate_cache:
+            arguments.append("--revalidate-cache")
+        print(f"Aligning {args.ticker.upper()} {previous}–{current} with up to {args.alignment_workers} "
+              "concurrent matching/verification/change-analysis jobs "
+              f"(shared API limit: {args.alignment_api_capacity} across all pairs).", flush=True)
+        try:
+            return disclosure_alignment.main(arguments, request_pacer=pacer)
+        except Exception as error:
+            print(f"[{previous}-{current}] Unexpected alignment worker error ({type(error).__name__}); "
+                  "other pairs continue. Inspect saved outputs before resuming.", file=sys.stderr)
+            return 1
+
+    def save_result(pair, code):
+        results[pair] = code
+
+    run_jobs(pairs, align_pair, save_result, args.alignment_pair_workers)
+    print("Alignment exit codes: " + json.dumps({f"{previous}-{current}": results[(previous, current)]
+                                                for previous, current in pairs}), flush=True)
+    return 1 if 1 in results.values() else 2 if 2 in results.values() else 0
+
+
+def store_years(args, completed_jobs):
+    from sec_disclosure.storage.disclosures import DisclosureStorageError, store_disclosures
+
+    results = {}
+    for job_args, prepared in completed_jobs:
+        try:
+            result = store_disclosures(prepared[2], args.ticker, int(job_args.year),
+                                      env_file=args.env_file, require_complete=True, replace=True)
+            results[job_args.year] = 0
+            print(f"[{job_args.year}] PostgreSQL: {result.stored} disclosures stored "
+                  f"({result.accepted} accepted, {result.review} review candidates).", flush=True)
+        except (OSError, ValueError, KeyError, TypeError, DisclosureStorageError) as error:
+            results[job_args.year] = 1
+            print(f"[{job_args.year}] PostgreSQL storage error: {error}", file=sys.stderr)
+        except Exception as error:
+            results[job_args.year] = 1
+            print(f"[{job_args.year}] PostgreSQL storage error ({type(error).__name__}); "
+                  "saved extraction JSON is available for retry.", file=sys.stderr)
+    print("PostgreSQL exit codes: " + json.dumps(results), flush=True)
+    return 1 if 1 in results.values() else 0
+
+
+def after_extraction(args, jobs, results):
+    """Drain independent persistence/alignment stages and report every failure."""
+    code = 1 if 1 in results.values() else 2 if 2 in results.values() else 0
+    completed_jobs = [(job_args, prepared) for job_args, prepared in jobs if results[job_args.year] == 0]
+    stages = []
+    if args.store_postgres:
+        if completed_jobs:
+            stages.append(("postgres", lambda: store_years(args, completed_jobs)))
+        skipped = [year for year, result in results.items() if result != 0]
+        if skipped:
+            print("PostgreSQL skipped incomplete extraction years: " + ", ".join(skipped), flush=True)
+    if args.align:
+        if code != 0:
+            print("Alignment skipped: all selected extraction years must complete. Rerun the same command to resume.", flush=True)
+        else:
+            stages.append(("alignment", lambda: align_years(args, list(results))))
+    if not stages:
+        return code
+    if len(stages) > 1:
+        print("Storing completed disclosures in PostgreSQL while alignment runs from saved JSON.", flush=True)
+    stage_results = {}
+
+    def run_stage(stage):
+        name, work = stage
+        try:
+            return work()
+        except Exception as error:
+            print(f"{name} stage error ({type(error).__name__}); other stages continue.", file=sys.stderr)
+            return 1
+
+    run_jobs(stages, run_stage, lambda stage, result: stage_results.update({stage[0]: result}), len(stages))
+    print("Post-extraction exit codes: " + json.dumps(stage_results), flush=True)
+    codes = [code, *stage_results.values()]
+    return 1 if 1 in codes else 2 if 2 in codes else 0
+
+
+def planned_storage(args, jobs):
+    if args.store_postgres:
+        print("Planned PostgreSQL disclosure imports after completed extraction: "
+              + ", ".join(str(prepared[2]) for _, prepared in jobs)
+              + ". No database access in this dry run.", flush=True)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -798,25 +1126,44 @@ def main(argv: list[str] | None = None) -> int:
     years.add_argument("--year", help="Extract one four-digit fiscal year.")
     years.add_argument("--years", nargs="+", help="Extract several fiscal years concurrently, each with its own outputs/cache.")
     parser.add_argument("--workers", type=int, default=3, help="Maximum concurrent year jobs with --years (default: 3).")
+    parser.add_argument("--batch-workers", type=int, help="Concurrent extraction/consolidation jobs per year; boundary checks stay ordered (default: 6 with --years, 1 with --year).")
+    parser.add_argument("--max-concurrent-requests", type=int, help="Optional API concurrency cap across extraction workers and, with --align, all alignment pairs combined.")
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     outputs = parser.add_mutually_exclusive_group()
     outputs.add_argument("--output-dir", type=Path, help="Complete output path for --year; cannot be used with --years.")
     outputs.add_argument("--output-root", type=Path, help="Disclosure output root; writes ROOT/TICKER/YEAR for every selected year.")
     parser.add_argument("--env-file", type=Path)
     parser.add_argument("--batch-chars", type=int, default=16000)
+    parser.add_argument("--consolidation-max-prompt-chars", type=int, default=MAX_CONSOLIDATION_PROMPT_CHARS,
+                        help="Safety cap for one complete subsection consolidation prompt, including instructions; oversized inputs fail without truncating evidence (default: 150000).")
     parser.add_argument("--max-tokens", type=int, default=6000, help="Maximum completion tokens per API request.")
-    parser.add_argument("--timeout", type=float, default=180)
+    parser.add_argument("--timeout", type=float, default=180, help="Total deadline in seconds for each API attempt, including response reads (default: 180).")
     parser.add_argument("--max-requests", type=int, help="Limit NEW API requests per year in this invocation, including retries; resume later with the same command.")
-    parser.add_argument("--fault-tolerant", action="store_true", help="Retry temporary API/response failures and continue later extraction batches after recoverable failures; resume them on rerun.")
-    parser.add_argument("--max-retries", type=int, default=3, help="Maximum additional attempts per job with --fault-tolerant (default: 3).")
-    parser.add_argument("--retry-backoff", type=float, default=5, help="Initial seconds between fault-tolerant retries; doubles up to 60 seconds (default: 5).")
-    parser.add_argument("--request-interval", type=float, help="Minimum seconds between request starts across all years (default: 2 with --years, 0 with --year).")
-    parser.add_argument("--rate-limit-retries", type=int, help="Additional attempts after HTTP 429 (default: --max-retries with --fault-tolerant, otherwise 2 with --years or 0 with --year).")
+    parser.add_argument("--fault-tolerant", action="store_true", help="Retry temporary API errors and invalid model responses; exhausted model corrections preserve boundary/consolidation candidates for review and continue.")
+    parser.add_argument("--max-retries", type=int, default=10, help="Additional attempts for temporary API failures with --fault-tolerant; -1 allows unlimited API retries (default: 10).")
+    parser.add_argument("--retry-backoff", type=float, default=5, help="Initial seconds between temporary API retries; doubles up to 60 seconds (default: 5).")
+    parser.add_argument("--max-response-retries", type=int, default=3, help="Additional correction attempts for invalid model responses with --fault-tolerant; exhausted boundary/consolidation checks preserve candidates for review and continue (default: 3).")
+    parser.add_argument("--response-retry-backoff", type=float, default=1, help="Initial seconds between model corrections; doubles up to 5 seconds (default: 1, then 2, 4).")
+    parser.add_argument("--request-interval", type=float, help="Shared seconds between request starts (default: 2 with --years or parallel batches, otherwise 0).")
+    parser.add_argument("--rate-limit-retries", type=int, help="Additional attempts after HTTP 429; -1 allows unlimited retries (default: --max-retries with --fault-tolerant, otherwise 2 with --years or parallel batches, else 0).")
     parser.add_argument("--rate-limit-cooldown", type=float, default=60, help="Shared pause after HTTP 429, extended by Retry-After when supplied (default: 60 seconds).")
-    parser.add_argument("--retry-failed", action="store_true", help="Allow another paid attempt for failed extraction or boundary checks from a previous invocation; all attempts stay in the usage ledger.")
+    parser.add_argument("--retry-failed", action="store_true", help="Allow another paid attempt for failed extraction or failed/review boundary and consolidation checks from a previous invocation; all attempts stay in the usage ledger.")
     parser.add_argument("--dry-run", action="store_true", help="Validate all inputs and show batch sizes without API calls or output writes.")
+    parser.add_argument("--store-postgres", action=argparse.BooleanOptionalAction, default=True,
+                        help="Save completed disclosures and downstream alignment reports to PostgreSQL (default: enabled); --no-store-postgres keeps files only. Uses --env-file or repository .env for database settings.")
+    alignment = parser.add_argument_group("alignment after extraction")
+    alignment.add_argument("--align", action="store_true", help="After all selected years complete, align adjacent selected years and classify finalized changes; requires at least two --years.")
+    alignment.add_argument("--alignment-workers", type=int, default=9, help="Concurrent alignment jobs per pair, independent of extraction workers (default: 9); respects --max-concurrent-requests.")
+    alignment.add_argument("--alignment-pair-workers", type=int, default=2, help="Concurrent adjacent-year comparisons, sharing one API concurrency cap; use 1 for sequential comparisons (default: 2).")
+    alignment.add_argument("--alignment-output-root", type=Path, help="Alignment output root; writes ROOT/TICKER/PREVIOUS-CURRENT (default: DATA_DIR/alignments).")
+    alignment.add_argument("--alignment-max-steps", type=int, default=4, help="Alignment agent turns per job, including corrections (default: 4).")
+    alignment.add_argument("--alignment-max-requests", type=int, default=400, help="Cumulative alignment and change-analysis attempts per pair; -1 removes the cap (default: 400).")
+    alignment.add_argument("--alignment-max-new-requests", type=int, help="Pause alignment/change analysis after this many new attempts per pair in this invocation.")
+    alignment.add_argument("--alignment-max-total-tokens", type=int, default=30000000, help="Alignment and change-analysis token budget per pair; -1 removes the cap (default: 30000000).")
+    alignment.add_argument("--alignment-revalidate-cache", action="store_true", help="Replay saved alignment responses through current validation after implementation-only changes.")
     args = parser.parse_args(argv)
     args.ticker = args.ticker.lower()
+    args.batch_workers = args.batch_workers if args.batch_workers is not None else (6 if args.years else 1)
     selected_years = args.years or [args.year]
     if not re.fullmatch(r"[a-z0-9][a-z0-9.-]*", args.ticker) or any(not re.fullmatch(r"\d{4}", year) for year in selected_years):
         parser.error("Supply a valid ticker and four-digit fiscal years.")
@@ -824,14 +1171,30 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("Each fiscal year may be selected only once.")
     if args.years and args.output_dir is not None:
         parser.error("Use --output-root with --years; --output-dir is for a single --year.")
-    if args.max_tokens < 1 or not math.isfinite(args.timeout) or args.timeout <= 0 or (args.max_requests is not None and args.max_requests < 1):
-        parser.error("Token, timeout and request limits must be positive.")
-    args.request_interval = args.request_interval if args.request_interval is not None else (2.0 if args.years else 0.0)
-    args.rate_limit_retries = args.rate_limit_retries if args.rate_limit_retries is not None else (args.max_retries if args.fault_tolerant else (2 if args.years else 0))
-    if args.workers < 1 or min(args.rate_limit_retries, args.max_retries) < 0:
-        parser.error("Workers must be positive and retry limits must be nonnegative.")
-    if any(not math.isfinite(value) or value < 0 for value in (args.request_interval, args.rate_limit_cooldown, args.retry_backoff)):
+    if args.align and len(selected_years) < 2:
+        parser.error("--align requires at least two fiscal years selected with --years.")
+    if args.alignment_workers < 1 or args.alignment_pair_workers < 1 or args.alignment_max_steps < 1 or any(
+            value != -1 and value < 1 for value in (args.alignment_max_requests, args.alignment_max_total_tokens)
+    ) or args.alignment_max_new_requests is not None and args.alignment_max_new_requests < 1:
+        parser.error("Alignment limits must be positive; request/token caps also accept -1 for unlimited.")
+    if args.max_tokens < 1 or args.consolidation_max_prompt_chars < 1 or not math.isfinite(args.timeout) or args.timeout <= 0 or (args.max_requests is not None and args.max_requests < 1):
+        parser.error("Token, timeout, request and prompt-size limits must be positive.")
+    args.request_interval = args.request_interval if args.request_interval is not None else (2.0 if args.years or args.batch_workers > 1 else 0.0)
+    args.rate_limit_retries = args.rate_limit_retries if args.rate_limit_retries is not None else (args.max_retries if args.fault_tolerant else (2 if args.years or args.batch_workers > 1 else 0))
+    if min(args.workers, args.batch_workers) < 1 or args.max_concurrent_requests is not None and args.max_concurrent_requests < 1 or min(args.rate_limit_retries, args.max_retries) < -1:
+        parser.error("Workers must be positive and retry limits must be nonnegative or -1 for unlimited.")
+    if args.max_response_retries < 0:
+        parser.error("Model response retries must be nonnegative.")
+    if any(not math.isfinite(value) or value < 0 for value in (args.request_interval, args.rate_limit_cooldown, args.retry_backoff, args.response_retry_backoff)):
         parser.error("Request interval, rate-limit cooldown and retry backoff must be finite and nonnegative.")
+    workers = min(args.workers, len(selected_years))
+    batch_capacity = workers * args.batch_workers
+    api_capacity = min(batch_capacity, args.max_concurrent_requests or batch_capacity)
+    if args.max_concurrent_requests is not None:
+        args.alignment_workers = min(args.alignment_workers, args.max_concurrent_requests)
+    args.alignment_pair_workers = min(args.alignment_pair_workers, max(1, len(selected_years) - 1))
+    alignment_capacity = args.alignment_workers * args.alignment_pair_workers
+    args.alignment_api_capacity = min(args.max_concurrent_requests or alignment_capacity, alignment_capacity)
     try:
         config = None if args.dry_run else load_config(args.env_file)
         jobs = []
@@ -843,13 +1206,28 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, ValueError, KeyError, TypeError, LLMError) as error:
         print(f"Disclosure extraction error: {error}", file=sys.stderr)
         return 1
-    pacer = RequestPacer(args.request_interval, args.rate_limit_cooldown)
+    pacer = RequestPacer(args.request_interval, args.rate_limit_cooldown, args.max_concurrent_requests)
     if len(jobs) == 1:
-        return run_year(*jobs[0], config, pacer)
+        code = run_year(*jobs[0], config, pacer)
+        if args.dry_run:
+            planned_storage(args, jobs)
+            return code
+        return after_extraction(args, jobs, {selected_years[0]: code})
+    print(f"Running {len(jobs)} years with up to {workers} concurrent year jobs, "
+          f"{args.batch_workers} batch workers per year ({batch_capacity} concurrent extraction batches); "
+          f"up to {api_capacity} simultaneous API requests; shared request interval {args.request_interval:g}s.", flush=True)
+    if args.align:
+        print(f"Alignment will use up to {args.alignment_workers} concurrent jobs per pair across up to "
+              f"{args.alignment_pair_workers} parallel pairs after extraction; up to "
+              f"{args.alignment_api_capacity} simultaneous API requests total.", flush=True)
     if args.dry_run:
-        return max(run_year(job_args, prepared, config, pacer) for job_args, prepared in jobs)
-    workers = min(args.workers, len(jobs))
-    print(f"Running {len(jobs)} years with up to {workers} concurrent jobs; shared request interval {args.request_interval:g}s.", flush=True)
+        code = max(run_year(job_args, prepared, config, pacer) for job_args, prepared in jobs)
+        planned_storage(args, jobs)
+        if args.align:
+            years = sorted(selected_years)
+            print("Planned alignments after extraction: " + ", ".join(f"{previous}-{current}" for previous, current in zip(years, years[1:])), flush=True)
+            print("Alignment source validation will run after extraction completes; no API calls or output writes in this dry run.", flush=True)
+        return code
     results = {}
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {executor.submit(run_year, job_args, prepared, config, pacer): job_args.year
@@ -864,7 +1242,7 @@ def main(argv: list[str] | None = None) -> int:
             label = {0: "complete", 1: "failed", 2: "partial"}[results[year]]
             print(f"[{year}] Year job {label}.", flush=True)
     print("Year exit codes: " + json.dumps({year: results[year] for year in selected_years}), flush=True)
-    return 1 if 1 in results.values() else 2 if 2 in results.values() else 0
+    return after_extraction(args, jobs, results)
 
 
 if __name__ == "__main__":

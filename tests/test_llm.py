@@ -1,15 +1,18 @@
+import asyncio
 import importlib.util
 import io
 import json
 import os
+import time
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 import httpx
-from openai import OpenAI
+from openai import AsyncOpenAI
 
 from sec_disclosure.llm import client
 from sec_disclosure.llm.config import LLMConfig, load_config
@@ -84,17 +87,18 @@ class ClientTests(unittest.TestCase):
     def setUp(self):
         self.config = LLMConfig("https://gateway.example/v1", KEY, "default")
 
-    def request(self, handler):
+    def request(self, handler, *, timeout=10):
         """Run the real SDK against a local mock transport, with dummy credentials."""
-        sdk = OpenAI(api_key=KEY, base_url=self.config.base_url, max_retries=0,
-                     http_client=httpx.Client(transport=httpx.MockTransport(handler)))
-        with patch.object(client, "OpenAI", return_value=sdk) as factory:
-            result = client.complete("Hello", config=self.config, max_tokens=64, timeout=10)
-        self.assertEqual(factory.call_args.kwargs["base_url"], self.config.base_url)
-        self.assertEqual(factory.call_args.kwargs["max_retries"], 0)
-        self.assertEqual(factory.call_args.kwargs["timeout"], 10)
-        self.assertTrue(sdk.is_closed())
-        return result
+        sdk = AsyncOpenAI(api_key=KEY, base_url=self.config.base_url, max_retries=0,
+                          http_client=httpx.AsyncClient(transport=httpx.MockTransport(handler)))
+        with patch.object(client, "AsyncOpenAI", return_value=sdk) as factory:
+            try:
+                return client.complete("Hello", config=self.config, max_tokens=64, timeout=timeout)
+            finally:
+                self.assertEqual(factory.call_args.kwargs["base_url"], self.config.base_url)
+                self.assertEqual(factory.call_args.kwargs["max_retries"], 0)
+                self.assertEqual(factory.call_args.kwargs["timeout"], timeout)
+                self.assertTrue(sdk.is_closed())
 
     def payload(self, text="Connected.", finish_reason="stop"):
         return {"id": "test", "object": "chat.completion", "created": 0,
@@ -161,12 +165,127 @@ class ClientTests(unittest.TestCase):
                 self.request(lambda request: httpx.Response(200, json=payload))
 
     def test_invalid_inputs_never_open_a_client(self):
-        with patch.object(client, "OpenAI") as factory:
+        with patch.object(client, "AsyncOpenAI") as factory:
             for arguments in ({"prompt": " "}, {"max_tokens": 0}, {"timeout": 0},
                               {"timeout": float("nan")}, {"timeout": float("inf")}):
                 with self.subTest(arguments=arguments), self.assertRaises(ValueError):
                     client.complete(**{"prompt": "Hello", "config": self.config, **arguments})
             factory.assert_not_called()
+
+    def test_total_deadline_cancels_a_request_waiting_for_headers(self):
+        cancelled, calls = [], []
+
+        async def handler(request):
+            calls.append(request)
+            try:
+                await asyncio.sleep(2)
+                return httpx.Response(200, json=self.payload())
+            except asyncio.CancelledError:
+                cancelled.append(True)
+                raise
+
+        started = time.monotonic()
+        with self.assertRaisesRegex(client.LLMError, "total deadline") as error:
+            self.request(handler, timeout=0.15)
+        self.assertLess(time.monotonic() - started, 1)
+        self.assertTrue(error.exception.retryable)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(cancelled, [True])
+
+    def test_partial_response_data_does_not_extend_total_deadline(self):
+        payload = json.dumps(self.payload()).encode()
+
+        class TrickleStream(httpx.AsyncByteStream):
+            chunks = 0
+            cancelled = False
+            closed = False
+
+            async def __aiter__(self):
+                try:
+                    for _ in range(200):
+                        await asyncio.sleep(0.01)
+                        self.chunks += 1
+                        yield b" "
+                    yield payload
+                except asyncio.CancelledError:
+                    self.cancelled = True
+                    raise
+
+            async def aclose(self):
+                self.closed = True
+
+        stream = TrickleStream()
+        started = time.monotonic()
+        with self.assertRaisesRegex(client.LLMError, "total deadline"):
+            self.request(lambda request: httpx.Response(200, stream=stream), timeout=0.15)
+        self.assertLess(time.monotonic() - started, 1)
+        self.assertGreater(stream.chunks, 1)
+        self.assertTrue(stream.cancelled)
+        self.assertTrue(stream.closed)
+
+    def test_new_attempt_succeeds_after_deadline_and_previous_client_is_closed(self):
+        clients, calls, cancelled = [], [], []
+
+        async def handler(request):
+            calls.append(request)
+            if len(calls) == 1:
+                try:
+                    await asyncio.sleep(2)
+                except asyncio.CancelledError:
+                    cancelled.append(True)
+                    raise
+            return httpx.Response(200, json=self.payload())
+
+        def factory(**kwargs):
+            sdk = AsyncOpenAI(**kwargs, http_client=httpx.AsyncClient(transport=httpx.MockTransport(handler)))
+            clients.append(sdk)
+            return sdk
+
+        with patch.object(client, "AsyncOpenAI", side_effect=factory):
+            with self.assertRaisesRegex(client.LLMError, "total deadline"):
+                client.complete("Hello", config=self.config, timeout=0.15)
+            self.assertTrue(clients[0].is_closed())
+            self.assertEqual(client.complete("Hello", config=self.config, timeout=1), "Connected.")
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(cancelled, [True])
+        self.assertTrue(all(sdk.is_closed() for sdk in clients))
+
+    def test_deadlines_cancel_parallel_requests_without_leaving_active_operations(self):
+        import threading
+
+        lock = threading.Lock()
+        clients = []
+        active = peak = cancelled = 0
+
+        async def handler(request):
+            nonlocal active, peak, cancelled
+            with lock:
+                active += 1
+                peak = max(peak, active)
+            try:
+                await asyncio.sleep(2)
+                return httpx.Response(200, json=self.payload())
+            except asyncio.CancelledError:
+                with lock:
+                    cancelled += 1
+                raise
+            finally:
+                with lock:
+                    active -= 1
+
+        def factory(**kwargs):
+            sdk = AsyncOpenAI(**kwargs, http_client=httpx.AsyncClient(transport=httpx.MockTransport(handler)))
+            with lock:
+                clients.append(sdk)
+            return sdk
+
+        with patch.object(client, "AsyncOpenAI", side_effect=factory), ThreadPoolExecutor(max_workers=3) as executor:
+            futures = [executor.submit(client.complete, "Hello", config=self.config, timeout=0.3) for _ in range(3)]
+            for future in futures:
+                with self.assertRaisesRegex(client.LLMError, "total deadline"):
+                    future.result(timeout=2)
+        self.assertEqual((peak, active, cancelled), (3, 0, 3))
+        self.assertTrue(all(sdk.is_closed() for sdk in clients))
 
 
 class CommandTests(unittest.TestCase):
@@ -209,9 +328,9 @@ class UsageReportingTests(unittest.TestCase):
                 "usage": {"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150,
                           "completion_tokens_details": {"reasoning_tokens": 20}},
             })
-        sdk = OpenAI(api_key=KEY, base_url="https://gateway.example/v1", max_retries=0,
-                     http_client=httpx.Client(transport=httpx.MockTransport(handler)))
-        with patch.object(client, "OpenAI", return_value=sdk):
+        sdk = AsyncOpenAI(api_key=KEY, base_url="https://gateway.example/v1", max_retries=0,
+                          http_client=httpx.AsyncClient(transport=httpx.MockTransport(handler)))
+        with patch.object(client, "AsyncOpenAI", return_value=sdk):
             result = client.request_completion("Input", config=LLMConfig(
                 "https://gateway.example/v1", KEY, "default"), system_prompt="Return JSON.", json_mode=True)
         self.assertEqual(result.finish_reason, "length")

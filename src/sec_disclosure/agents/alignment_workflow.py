@@ -1,4 +1,4 @@
-"""LangGraph coordinator for sequential, same-Item alignment jobs.
+"""LangGraph coordinator for bounded parallel, same-Item alignment jobs.
 
 Completed jobs remain portable JSON checkpoints. Each active agent has its own
 durable LangGraph thread, so restarting this coordinator skips completed jobs
@@ -16,6 +16,7 @@ from langgraph.graph import END, START, StateGraph
 
 from sec_disclosure.llm.client import LLMError
 from sec_disclosure.llm.disclosures import write_json
+from sec_disclosure.llm.concurrency import run_jobs
 from .alignment_prompts import MATCHING_PROMPT, VERIFICATION_PROMPT
 from .alignment_repair import VerificationRepair
 from .alignment_runtime import RunLimit
@@ -45,9 +46,9 @@ class AlignmentWorkflow:
         self.jobs = [] if source else [chunk for values in by_item.values()
                                       for chunk in self.core.batches(values, args.batch_size)]
 
-    def matching_job(self, state):
-        anchors = self.jobs[state["matching_index"]]
-        job_id = f"matching_{state['matching_index'] + 1:03d}"
+    def run_matching_job(self, index):
+        anchors = self.jobs[index]
+        job_id = f"matching_{index + 1:03d}"
         checkpoint = self.output / "jobs" / f"{job_id}.json"
         if checkpoint.exists():
             saved = json.loads(checkpoint.read_text())
@@ -63,9 +64,24 @@ class AlignmentWorkflow:
             write_json(checkpoint, saved)
         additions = saved["result"] or [{"current_id": key, "previous_ids": [], "rationale": saved["error"],
                                          "matching_failed": True} for key in anchors]
-        matches = state["matches"] + additions
+        return additions
+
+    def matching_job(self, state):
+        matches = state["matches"] + self.run_matching_job(state["matching_index"])
         write_json(self.output / "matching_proposals.json", matches)
         return {"matches": matches, "matching_index": state["matching_index"] + 1}
+
+    def matching_phase(self, state):
+        results = {}
+
+        def consume(index, additions):
+            results[index] = additions
+            write_json(self.output / "matching_proposals.json",
+                       state["matches"] + [row for key in sorted(results) for row in results[key]])
+
+        run_jobs(range(state["matching_index"], len(self.jobs)), self.run_matching_job, consume, self.args.workers)
+        return {"matches": state["matches"] + [row for key in sorted(results) for row in results[key]],
+                "matching_index": len(self.jobs)}
 
     def group_proposals(self, state):
         groups = self.source.groups if self.source else self.core.connected_groups(self.data, state["matches"], self.exact_ids)
@@ -75,8 +91,7 @@ class AlignmentWorkflow:
         write_json(self.output / "proposed_groups.json", groups)
         return {"groups": groups, "verification_plan": plan}
 
-    def verification_job(self, state):
-        planned = state["verification_plan"][state["verification_index"]]
+    def run_verification_job(self, planned, matches):
         job_id, batch = planned["job_id"], planned["groups"]
         checkpoint = self.output / "jobs" / f"{job_id}.json"
         saved = json.loads(checkpoint.read_text()) if checkpoint.exists() else None
@@ -97,7 +112,7 @@ class AlignmentWorkflow:
             payload = {"previous_year": self.data.years[0], "current_year": self.data.years[1], "proposed_groups": batch,
                        "item": item, "required_ids": sorted(required),
                        "records": [self.data.view(key, full=True) for key in sorted(members)],
-                       "matching_rationales": [m for m in state["matches"] if m["current_id"] in required],
+                       "matching_rationales": [m for m in matches if m["current_id"] in required],
                        "automatic_absence_searches": absence_checks}
             if self.automatic:
                 payload["established_exact_links"] = [{"previous_ids": row["previous_ids"], "current_ids": row["current_ids"]}
@@ -117,15 +132,29 @@ class AlignmentWorkflow:
             saved = {"result": result, "error": reason, "groups": batch,
                      "repair_pending": bool(repair.pending) and self.args.offline_repair}
             write_json(checkpoint, saved)
-        self.core.save_report(self.output, self.data, self.candidates, state["matches"], state["groups"],
-                              self.core.checkpoint_decisions(self.output), self.runtime, complete=False)
+        return saved
+
+    def save_progress(self, state):
+        with self.runtime.condition:
+            self.core.save_report(self.output, self.data, self.candidates, state["matches"], state["groups"],
+                                  self.core.checkpoint_decisions(self.output), self.runtime, complete=False)
+
+    def verification_job(self, state):
+        self.run_verification_job(state["verification_plan"][state["verification_index"]], state["matches"])
+        self.save_progress(state)
         return {"verification_index": state["verification_index"] + 1}
 
+    def verification_phase(self, state):
+        run_jobs(state["verification_plan"][state["verification_index"]:],
+                 lambda planned: self.run_verification_job(planned, state["matches"]),
+                 lambda planned, saved: self.save_progress(state), self.args.workers)
+        return {"verification_index": len(state["verification_plan"])}
+
     def route_matching(self, state):
-        return "matching_job" if state["matching_index"] < len(self.jobs) else "group_proposals"
+        return ("matching_phase" if self.args.workers > 1 else "matching_job") if state["matching_index"] < len(self.jobs) else "group_proposals"
 
     def route_verification(self, state):
-        return "verification_job" if state["verification_index"] < len(state["verification_plan"]) else "finish"
+        return ("verification_phase" if self.args.workers > 1 else "verification_job") if state["verification_index"] < len(state["verification_plan"]) else "finish"
 
     def finish(self, state):
         return {"complete": not any(json.loads(p.read_text()).get("repair_pending")
@@ -133,14 +162,16 @@ class AlignmentWorkflow:
 
     def build(self):
         builder = StateGraph(WorkflowState)
-        for name in ("matching_job", "group_proposals", "verification_job", "finish"):
+        for name in ("matching_job", "matching_phase", "group_proposals", "verification_job", "verification_phase", "finish"):
             builder.add_node(name, getattr(self, name))
-        matching_routes = {name: name for name in ("matching_job", "group_proposals")}
-        verification_routes = {name: name for name in ("verification_job", "finish")}
+        matching_routes = {name: name for name in ("matching_job", "matching_phase", "group_proposals")}
+        verification_routes = {name: name for name in ("verification_job", "verification_phase", "finish")}
         builder.add_conditional_edges(START, self.route_matching, matching_routes)
         builder.add_conditional_edges("matching_job", self.route_matching, matching_routes)
+        builder.add_conditional_edges("matching_phase", self.route_matching, matching_routes)
         builder.add_conditional_edges("group_proposals", self.route_verification, verification_routes)
         builder.add_conditional_edges("verification_job", self.route_verification, verification_routes)
+        builder.add_conditional_edges("verification_phase", self.route_verification, verification_routes)
         builder.add_edge("finish", END)
         return builder.compile(name="disclosure_alignment")
 
