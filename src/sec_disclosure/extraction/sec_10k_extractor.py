@@ -49,12 +49,18 @@ ITEM_TITLES = {
     "15": "Exhibits and Financial Statement Schedules",
 }
 ITEM_7_ROOT_KEY = "management s discussion and analysis"
+FINANCIAL_REPORT_START_KEYS = {
+    "management s report on internal control over financial reporting",
+    "report of independent registered public accounting firm",
+}
+FINANCIAL_REPORT_FALLBACK_KEYS = {"notes to consolidated financial statements"}
 ITEM_7_EXCLUDED_SECTION_KEYS = {
     "financial statements and supplemental details",
     "financial statements and supplementary data",
     "properties",
     "quantitative and qualitative disclosures about market risk",
 }
+FINANCIAL_REPORT_END_KEYS = {"glossary of terms and acronyms"}
 
 BULLET_PREFIX_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
 SENTENCE_BULLET_RE = re.compile(r"^\s*(?:[•‣▪▫◦●○]|o(?=\s+[A-Z0-9])|\*\s+|-\s+)")
@@ -151,6 +157,8 @@ TABLE_INTRO_PATTERNS = re.compile(
 def is_boilerplate_or_nav(text: str) -> bool:
     cleaned = text.strip()
     if not cleaned:
+        return True
+    if re.fullmatch(r"page\s+\d{1,4}\s+not\s+used", cleaned, re.IGNORECASE):
         return True
     return bool(NAV_AND_FOLIO_PATTERN.match(cleaned))
 
@@ -1313,7 +1321,9 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
         for node in nodes
         for position in range(node["start"] + 1, node.get("heading_end", node["start"] + 1))
     }
-    page_by_position = event_page_numbers(events) if allowed_pages is not None else {}
+    page_markers = validated_page_markers(events) if allowed_pages is not None else []
+    page_by_position = event_page_numbers(events, page_markers) if allowed_pages is not None else {}
+    marker_positions = {position for position, _ in page_markers}
     blocks = []
     for position, event in enumerate(events):
         if not any(node["start"] <= position < node["end"] for node in ranges):
@@ -1326,7 +1336,7 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                 continue
         if position in heading_continuations:
             continue
-        if page_marker_from_text(event.text) is not None:
+        if position in marker_positions or page_marker_from_text(event.text) is not None:
             continue
         if is_boilerplate_or_nav(event.text):
             continue
@@ -1949,20 +1959,50 @@ def page_marker_from_text(text: str) -> int | None:
     return int(match.group(1))
 
 
-def event_page_numbers(events: list[FilingStructureEvent]) -> dict[int, int]:
-    """Map structure-event positions to printed pages using footer markers.
-
-    A footer appears after the content it belongs to. Therefore, events up to
-    and including ``MD&A | 18`` are assigned to page 18, and events after it
-    are assigned to the next discovered marker's page. Positions after the
-    final marker remain unmapped and are retained by callers as a conservative
-    fallback.
-    """
-    markers = [
+def validated_page_markers(events: list[FilingStructureEvent]) -> list[tuple[int, int]]:
+    """Accept bare folios only when a consistent sequence spans the filing."""
+    labeled = [
         (position, page)
         for position, event in enumerate(events)
         if (page := page_marker_from_text(event.text)) is not None
     ]
+    if labeled:
+        return labeled
+
+    candidates = [
+        (position, int(event.text.strip()), (event.kind, event.font_size))
+        for position, event in enumerate(events)
+        if event.kind in {"div", "p"}
+        and not event.bold and not event.mixed_bold
+        and re.fullmatch(r"\s*\d{1,4}\s*", event.text)
+    ]
+    longest: list[tuple[int, int, tuple[str, float | None]]] = []
+    run: list[tuple[int, int, tuple[str, float | None]]] = []
+    for candidate in candidates:
+        if run and (candidate[1] != run[-1][1] + 1 or candidate[2] != run[-1][2]):
+            if len(run) > len(longest):
+                longest = run
+            run = []
+        run.append(candidate)
+    if len(run) > len(longest):
+        longest = run
+
+    if (len(longest) < 20 or len(longest) * 5 < len(candidates) * 4
+            or longest[-1][0] - longest[0][0] < len(events) // 2):
+        return []
+    return [(position, page) for position, page, _ in longest]
+
+
+def event_page_numbers(
+    events: list[FilingStructureEvent], markers: list[tuple[int, int]] | None = None,
+) -> dict[int, int]:
+    """Map structure-event positions to printed pages using validated folios.
+
+    A folio appears after the content it belongs to. Events through the marker
+    are assigned to that page; positions after the last marker remain unmapped.
+    """
+    if markers is None:
+        markers = validated_page_markers(events)
     if not markers:
         return {}
 
@@ -2405,6 +2445,101 @@ def section_blocks_to_text(section_blocks: dict[str, list[FilingBlock]]) -> dict
 
 def merge_section_blocks(section_blocks: dict[str, list[FilingBlock]]) -> dict[str, list[FilingBlock]]:
     return {item: merge_continued_blocks(blocks) for item, blocks in section_blocks.items()}
+
+
+def is_financial_report_heading(block: FilingBlock, keys: set[str]) -> bool:
+    return (
+        report_title_key(block.text) in keys
+        and (
+            block.tag in {"toc_header", "h1", "h2", "h3", "h4", "h5", "h6"}
+            or (block.bold and not block.mixed_bold)
+            or (block.underlined and not block.mixed_underlined)
+        )
+    )
+
+
+def financial_report_boundary(blocks: list[FilingBlock]) -> int | None:
+    primary = next((index for index, block in enumerate(blocks)
+                    if is_financial_report_heading(block, FINANCIAL_REPORT_START_KEYS)), None)
+    if primary is not None:
+        return primary
+    return next((index for index, block in enumerate(blocks)
+                 if is_financial_report_heading(block, FINANCIAL_REPORT_FALLBACK_KEYS)), None)
+
+
+def assign_embedded_report_blocks(
+    section_blocks: dict[str, list[FilingBlock]],
+    source: str,
+    reference_audit: dict,
+    *,
+    include_overlaps: bool = False,
+) -> dict[str, list[FilingBlock]]:
+    """Keep one owner for a report embedded after an Item 15 exhibit index."""
+    assigned = dict(section_blocks)
+    item7, item8, item15 = (assigned.get(item, []) for item in ("7", "8", "15"))
+    if include_overlaps or not all((item7, item8, item15)):
+        return assigned
+    item_sources = {reference_audit.get(item, {}).get("source", source) for item in ("7", "8", "15")}
+    if len(item_sources) != 1 or not item15_reference_trigger(section_reference_text(item8)):
+        return assigned
+
+    start = financial_report_boundary(item15)
+    if start is None:
+        return assigned
+
+    def identity(block: FilingBlock) -> tuple[int, str]:
+        return block.index, re.sub(r"\s+", " ", normalize_typography(block.text)).strip().casefold()
+
+    item7_blocks = {identity(block) for block in item7}
+    # An ordinary repeated heading must not reassign an entire Item 15 section.
+    if sum(identity(block) in item7_blocks for block in item15[:start]) < 10:
+        return assigned
+
+    cutoff = next((index for index, block in enumerate(item7)
+                   if is_financial_report_heading(block, FINANCIAL_REPORT_START_KEYS)), None)
+    if cutoff is None:
+        cutoff = next((index for index, block in enumerate(item7)
+                       if block.index >= item15[start].index
+                       and is_financial_report_heading(block, FINANCIAL_REPORT_FALLBACK_KEYS)), None)
+    if cutoff is not None:
+        assigned["7"] = item7[:cutoff]
+
+    mdna_start = next((index for index, block in enumerate(item15[:start])
+                       if is_item7_root_title(block.text)), None)
+    exhibits_end = mdna_start if mdna_start is not None else start
+    if mdna_start is not None:
+        report_start = next((index for index, block in enumerate(item15[:mdna_start])
+                             if report_title_key(block.text) == "financial"), None)
+        if report_start is not None:
+            exhibits_end = report_start
+    end = next((index for index in range(start + 1, len(item15))
+                if report_title_key(item15[index].text) in FINANCIAL_REPORT_END_KEYS
+                or is_terminal_section_heading(item15[index].text)), len(item15))
+    assigned["8"] = item15[start:end]
+    assigned["15"] = [block for block in item15[:exhibits_end] if identity(block) not in item7_blocks]
+    return assigned
+
+
+def deduplicate_shared_source_blocks(
+    section_blocks: dict[str, list[FilingBlock]], source: str, reference_audit: dict,
+) -> dict[str, list[FilingBlock]]:
+    """Remove repeated source blocks from later items without matching their headings."""
+    seen: set[tuple[str, int, str]] = set()
+    result = dict(section_blocks)
+    for item in ITEM_OUTPUT_ORDER:
+        blocks = section_blocks.get(item)
+        if not blocks:
+            continue
+        item_source = reference_audit.get(item, {}).get("source", source)
+        unique = []
+        for block in blocks:
+            key = (item_source, block.index, re.sub(r"\s+", " ", normalize_typography(block.text)).strip())
+            if key in seen:
+                continue
+            seen.add(key)
+            unique.append(block)
+        result[item] = unique
+    return result
 
 
 def merge_continued_blocks(blocks: list[FilingBlock]) -> list[FilingBlock]:
@@ -3670,6 +3805,9 @@ def main(argv: list[str] | None = None) -> int:
             if "15" not in section_blocks:
                 indexed_item15 = extract_indexed_section_blocks(raw_html, items=("15",))
                 section_blocks.update(indexed_item15)
+    section_blocks = assign_embedded_report_blocks(
+        section_blocks, source, {}, include_overlaps=args.include_reference_overlaps,
+    )
     section_blocks = merge_section_blocks(section_blocks)
     reference_audit = {}
     if not args.no_follow_references:
@@ -3680,6 +3818,11 @@ def main(argv: list[str] | None = None) -> int:
         except (ValueError, RuntimeError, OSError) as exc:
             print(f"Error resolving incorporated report: {exc}", file=sys.stderr)
             return 2
+    section_blocks = assign_embedded_report_blocks(
+        section_blocks, source, reference_audit, include_overlaps=args.include_reference_overlaps,
+    )
+    if not args.include_reference_overlaps:
+        section_blocks = deduplicate_shared_source_blocks(section_blocks, source, reference_audit)
     section_blocks = resolve_section_footnotes(section_blocks)
     clean_text = html_to_clean_text(raw_html)
     year = args.year or filename_year or infer_year(raw_html + "\n" + clean_text, source)
