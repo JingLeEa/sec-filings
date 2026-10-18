@@ -22,6 +22,9 @@ from sec_disclosure.llm.concurrency import run_jobs
 from sec_disclosure.llm.disclosures import write_json
 from sec_disclosure.llm.request_pacing import RequestPacer
 from sec_disclosure.storage.disclosures import connection_arguments
+from sec_disclosure.pipelines.pipeline_progress import (
+    invocation_lock, read_progress, resumable_entries, stage_signature,
+)
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -75,6 +78,9 @@ def parse_args(argv=None):
                         help="Stop after this stage and its PostgreSQL saves (default: materiality, the full pipeline)")
     parser.add_argument("--from-stage", choices=PHASES, default="preprocessing",
                         help="Start at this stage using PostgreSQL inputs; earlier stages are skipped.")
+    parser.add_argument("--resume", action=argparse.BooleanOptionalAction, default=True,
+                        help="Skip completed pipeline stages using saved progress (default: enabled); "
+                             "--no-resume executes the selected stages again, retaining their internal caches.")
     parser.add_argument("--dry-run", action="store_true", help="Print every command without downloads, model calls or database writes")
     args = parser.parse_args(argv)
     if PHASES.index(args.from_stage) > PHASES.index(args.until):
@@ -109,12 +115,10 @@ def parse_args(argv=None):
                 if value is not None:
                     os.environ.setdefault(name, value)
     args.user_agent = args.user_agent or os.environ.get("SEC_USER_AGENT", "")
-    if args.from_stage == 'preprocessing' and not args.user_agent.strip():
-        parser.error("Set SEC_USER_AGENT in .env or supply --user-agent with your SEC contact.")
     return args
 
 
-def build_stages(args):
+def build_stages(args, *, full=False):
     stages = []
     data = args.data_dir
     disclosures = data / "disclosures"
@@ -169,22 +173,30 @@ def build_stages(args):
         add("materiality", f"save_materiality_{previous}_{current}", "load_alignments_to_postgres.py",
             "--company", args.ticker, "--previous-year", previous, "--current-year", current,
             "--dir", output, *env)
-    return [stage for stage in stages if PHASES.index(args.from_stage) <= PHASES.index(stage.phase) <= PHASES.index(args.until)]
+    return stages if full else [stage for stage in stages
+                               if PHASES.index(args.from_stage) <= PHASES.index(stage.phase) <= PHASES.index(args.until)]
 
 
-def preflight(args):
+def preflight(args, *, stages=None):
+    stages = build_stages(args) if stages is None else stages
+    scripts = {stage.script for stage in stages}
+    downloads = bool(scripts & {"extract_filings.py", "run_api_metrics_batch.py"})
+    llm = bool(scripts & {"extract_disclosures.py", "align_disclosures.py",
+                          "run_aligned_change_analysis.py", "classify_materiality.py"})
     target = PHASES.index(args.until)
-    modules = ["lxml", "psycopg"]
-    if target >= PHASES.index("extraction"):
+    modules = (["lxml"] if downloads else []) + ["psycopg"]
+    if llm:
         modules.extend(("openai", "langgraph"))
-    if target >= PHASES.index("change-analysis"):
+    if "run_aligned_change_analysis.py" in scripts:
         modules.extend(("sklearn", "numpy"))
     for module in modules:
         if importlib.util.find_spec(module) is None:
             raise ValueError("Install requirements.txt into the selected Python environment first.")
-    if target >= PHASES.index("extraction"):
+    if llm:
         load_config(args.env_file)
-    if args.from_stage == 'preprocessing' and not os.environ.get("SEC_API_KEY", "").strip():
+    if downloads and not args.user_agent.strip():
+        raise ValueError("Set SEC_USER_AGENT in .env or supply --user-agent with your SEC contact.")
+    if "run_api_metrics_batch.py" in scripts and not os.environ.get("SEC_API_KEY", "").strip():
         raise ValueError("Set SEC_API_KEY in .env before running API/XBRL table extraction.")
     import psycopg
     try:
@@ -192,7 +204,7 @@ def preflight(args):
             conn.read_only = True
             with conn.cursor() as cur:
                 required = ["filings", "chunks", "sentences"]
-                if args.from_stage != 'preprocessing':
+                if not any(stage.phase == 'preprocessing' for stage in stages):
                     required.append('pipeline_stage_snapshots')
                 if target >= PHASES.index("extraction"):
                     required.append("disclosures")
@@ -226,27 +238,60 @@ class StageStopped(RuntimeError):
 def main(argv=None):
     args = parse_args(argv)
     stages = build_stages(args)
+    all_stages = build_stages(args, full=True)
+    log_dir = args.data_dir / "pipeline_runs" / args.ticker / "-".join(map(str, args.years))
+
+    def progress():
+        try:
+            previous = read_progress(log_dir / "status.json", args.ticker, args.years)
+        except ValueError:
+            if args.resume:
+                raise
+            previous = {}
+        entries = resumable_entries(previous, all_stages, stages, resume=args.resume)
+        pending = [stage for stage in stages if stage.name not in entries]
+        skipped = [stage.name for stage in stages if stage.name in entries]
+        if skipped:
+            print(f"Resume: skipping {len(skipped)} completed stages; "
+                  + (f"next: {pending[0].name}." if pending else "all selected stages are complete."), flush=True)
+        return previous, entries, pending, skipped
+
     if args.dry_run:
-        if any(stage.phase == "alignment" for stage in stages):
+        try:
+            _, entries, pending, _ = progress()
+        except (ValueError, OSError) as error:
+            print(f"Pipeline progress error: {error}", file=sys.stderr)
+            return 1
+        if any(stage.phase == "alignment" for stage in pending):
             print(f"Alignment/change analysis: up to {min(args.alignment_pair_workers, len(args.years) - 1)} "
                   f"parallel pairs x {args.alignment_workers} workers per pair; "
                   f"shared API cap {args.alignment_max_concurrent_requests}.")
-        if any(stage.phase == "materiality" for stage in stages):
+        if any(stage.phase == "materiality" for stage in pending):
             print(f"Materiality: up to {min(args.materiality_pair_workers, len(args.years) - 1)} "
                   f"parallel pairs x {args.materiality_concurrency} workers per pair; "
                   f"shared API cap {args.materiality_max_concurrent_requests}.")
         for number, stage in enumerate(stages, 1):
-            print(f"{number}/{len(stages)} {stage.name}\n  {shlex.join(stage.command)}")
+            if stage.name in entries:
+                print(f"{number}/{len(stages)} {stage.name} [cached; skipped]")
+            else:
+                print(f"{number}/{len(stages)} {stage.name}\n  {shlex.join(stage.command)}")
         return 0
     try:
-        preflight(args)
+        with invocation_lock(log_dir):
+            previous, entries, pending, skipped = progress()
+            if pending:
+                preflight(args, stages=pending)
+            return run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, skipped)
     except (ValueError, OSError) as error:
         print(f"Pipeline preflight failed: {error}", file=sys.stderr)
         return 1
-    log_dir = args.data_dir / "pipeline_runs" / args.ticker / "-".join(map(str, args.years))
-    log_dir.mkdir(parents=True, exist_ok=True)
+
+
+def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, skipped):
+    now = datetime.now(timezone.utc).isoformat()
     state = {"ticker": args.ticker, "years": args.years, "until": args.until,
              "from_stage": args.from_stage, "input_source": "postgres",
+             "resume": args.resume, "skipped_stages": skipped,
              "complete": False, "full_pipeline_complete": False,
              "extraction_concurrency": {"year_workers": min(args.workers, len(args.years)),
                                         "batch_workers_per_year": args.batch_workers,
@@ -257,15 +302,19 @@ def main(argv=None):
              "materiality_concurrency": {"pair_workers": min(args.materiality_pair_workers, len(args.years) - 1),
                                          "workers_per_pair": args.materiality_concurrency,
                                          "max_concurrent_requests": args.materiality_max_concurrent_requests},
-             "started_at": datetime.now(timezone.utc).isoformat(), "stages": []}
+             "started_at": previous.get("started_at", now), "last_invocation_at": now,
+             "stages": [entries[stage.name] for stage in all_stages if stage.name in entries]}
     state_lock = RLock()
     numbers = {stage.name: number for number, stage in enumerate(stages, 1)}
+    write_json(log_dir / "status.json", state)
 
     def run_one(stage, pacer):
-        entry = {"stage": stage.name, "phase": stage.phase, "status": "running"}
+        entry = {"stage": stage.name, "phase": stage.phase, "status": "running",
+                 "command_sha256": stage_signature(stage)}
         with state_lock:
             print(f"\n[{numbers[stage.name]}/{len(stages)}] {stage.name}", flush=True)
-            state["stages"].append(entry)
+            entries[stage.name] = entry
+            state["stages"] = [entries[s.name] for s in all_stages if s.name in entries]
             write_json(log_dir / "status.json", state)
         try:
             code = execute_stage(stage, request_pacer=pacer)
@@ -287,7 +336,7 @@ def main(argv=None):
             run_one(stage, pacer)
 
     try:
-        for phase, members in groupby(stages, key=lambda stage: stage.phase):
+        for phase, members in groupby(pending, key=lambda stage: stage.phase):
             phase_stages = list(members)
             if phase in {"alignment", "change-analysis", "materiality"}:
                 chains = {}

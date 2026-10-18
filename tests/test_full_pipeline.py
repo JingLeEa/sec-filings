@@ -358,6 +358,170 @@ class FullPipelineTests(unittest.TestCase):
         pair_stages = [stage for stage in state["stages"] if stage["phase"] == "alignment"]
         self.assertCountEqual([stage["status"] for stage in pair_stages], ["stopped", "complete"])
 
+    @property
+    def progress_path(self):
+        return self.root / "pipeline_runs/amd/2023-2024-2025/status.json"
+
+    def run_mock_pipeline(self, extra=(), *, effect=None):
+        with patch.object(runner, "preflight"), \
+             patch.object(runner, "execute_stage", side_effect=effect, return_value=0) as execute, \
+             redirect_stdout(io.StringIO()) as output, redirect_stderr(io.StringIO()):
+            code = runner.main(self.arguments + list(extra))
+        return code, [call.args[0].name for call in execute.call_args_list], output.getvalue()
+
+    def test_resume_retries_an_interrupted_save_without_redownloading_completed_text(self):
+        def fail_save(stage, **kwargs):
+            return 1 if stage.name == "save_text_2023" else 0
+
+        self.assertEqual(self.run_mock_pipeline(["--until", "preprocessing"], effect=fail_save)[0], 1)
+        # A killed process may leave "running" instead of "stopped".
+        state = json.loads(self.progress_path.read_text())
+        original_start = state["started_at"]
+        state["stages"][-1]["status"] = "running"
+        state["stages"][-1].pop("exit_code")
+        self.progress_path.write_text(json.dumps(state))
+        code, executed, output = self.run_mock_pipeline(["--until", "preprocessing"])
+        self.assertEqual(code, 0)
+        self.assertNotIn("text_2023", executed)
+        self.assertEqual(executed[0], "save_text_2023")
+        self.assertEqual(len(executed), 6)
+        self.assertIn("skipping 1 completed stages", output)
+        state = json.loads(self.progress_path.read_text())
+        self.assertEqual(len(state["stages"]), 7)
+        self.assertEqual(state["started_at"], original_start)
+
+    def test_resume_only_retries_the_failed_materiality_pair_and_its_save(self):
+        barrier = threading.Barrier(2, timeout=5)
+
+        def fail_one_pair(stage, **kwargs):
+            if stage.script == "classify_materiality.py":
+                barrier.wait()
+                return 2 if stage.comparison[0] == "2023" else 0
+            return 0
+
+        self.assertEqual(self.run_mock_pipeline(effect=fail_one_pair)[0], 2)
+        legacy = json.loads(self.progress_path.read_text())
+        original_start = legacy["started_at"]
+        for entry in legacy["stages"]:
+            entry.pop("command_sha256", None)
+        self.progress_path.write_text(json.dumps(legacy))
+        code, executed, _ = self.run_mock_pipeline()
+        self.assertEqual(code, 0)
+        self.assertEqual(executed, ["materiality_2023_2024", "save_materiality_2023_2024"])
+        state = json.loads(self.progress_path.read_text())
+        self.assertTrue(state["full_pipeline_complete"])
+        self.assertEqual(state["started_at"], original_start)
+        self.assertEqual(len(state["stages"]), 20)
+        self.assertEqual(len(state["skipped_stages"]), 18)
+        self.assertTrue(all(entry["command_sha256"] for entry in state["stages"]))
+
+    def test_resume_extends_until_and_preserves_progress_across_narrower_selections(self):
+        self.assertEqual(self.run_mock_pipeline(["--until", "extraction"])[0], 0)
+        code, executed, _ = self.run_mock_pipeline(["--until", "alignment"])
+        self.assertEqual(code, 0)
+        self.assertCountEqual(executed, ["align_and_save_2023_2024", "align_and_save_2024_2025"])
+        code, executed, _ = self.run_mock_pipeline(["--from-stage", "change-analysis"])
+        self.assertEqual(code, 0)
+        self.assertEqual(len(executed), 10)
+        self.assertTrue(all(not name.startswith(("text_", "align_and_save_")) for name in executed))
+        # Visiting an earlier endpoint must not discard the later completions.
+        self.assertEqual(self.run_mock_pipeline(["--until", "extraction"])[1], [])
+        self.assertEqual(self.run_mock_pipeline()[1], [])
+
+    def test_completed_resume_needs_no_credentials_database_or_stage_calls(self):
+        self.assertEqual(self.run_mock_pipeline()[0], 0)
+        with patch.object(runner, "preflight") as preflight, \
+             patch.object(runner, "execute_stage") as execute, redirect_stdout(io.StringIO()) as output:
+            # SEC_USER_AGENT is absent, and there is no --user-agent argument.
+            self.assertEqual(runner.main(self.arguments[:-2]), 0)
+        preflight.assert_not_called()
+        execute.assert_not_called()
+        self.assertIn("all selected stages are complete", output.getvalue())
+
+    def test_resume_preflight_checks_only_unfinished_stages(self):
+        self.assertEqual(self.run_mock_pipeline(["--until", "change-analysis"])[0], 0)
+        with patch.object(runner, "preflight") as preflight, \
+             patch.object(runner, "execute_stage", return_value=0), redirect_stdout(io.StringIO()):
+            self.assertEqual(runner.main(self.arguments[:-2]), 0)
+        pending = preflight.call_args.kwargs["stages"]
+        self.assertEqual(len(pending), 4)
+        self.assertTrue(all(stage.phase == "materiality" for stage in pending))
+
+    def test_pending_database_save_does_not_require_sec_or_llm_configuration(self):
+        args = runner.parse_args(self.arguments[:-2])
+        stage = next(stage for stage in runner.build_stages(args) if stage.name == "save_materiality_2023_2024")
+        with patch.object(runner, "load_config") as llm, \
+             patch.object(runner, "connection_arguments", return_value={"dbname": "test"}), \
+             patch.object(runner.importlib.util, "find_spec", return_value=object()) as modules, \
+             patch("psycopg.connect") as connect:
+            cursor = connect.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value
+            cursor.fetchall.return_value = []
+            runner.preflight(args, stages=[stage])
+        llm.assert_not_called()
+        self.assertEqual([call.args[0] for call in modules.call_args_list], ["psycopg"])
+
+    def test_changing_embedding_model_reruns_only_enrichment_and_its_dependents(self):
+        self.assertEqual(self.run_mock_pipeline()[0], 0)
+        code, executed, _ = self.run_mock_pipeline(["--embedding-model", "another-model"])
+        self.assertEqual(code, 0)
+        expected = [f"{prefix}_{pair}" for pair in ["2023_2024", "2024_2025"]
+                    for prefix in ["lexical_semantic", "save_changes", "materiality", "save_materiality"]]
+        self.assertCountEqual(executed, expected)
+
+    def test_changing_concurrency_preserves_completed_results(self):
+        self.assertEqual(self.run_mock_pipeline()[0], 0)
+        code, executed, _ = self.run_mock_pipeline([
+            "--workers", "1", "--batch-workers", "2", "--alignment-workers", "3",
+            "--materiality-concurrency", "4", "--user-agent", "Different contact@example.com",
+        ])
+        self.assertEqual(code, 0)
+        self.assertEqual(executed, [])
+
+    def test_no_resume_executes_selected_stages_and_invalidates_later_completions(self):
+        self.assertEqual(self.run_mock_pipeline()[0], 0)
+        code, executed, _ = self.run_mock_pipeline([
+            "--from-stage", "alignment", "--until", "alignment", "--no-resume",
+        ])
+        self.assertEqual(code, 0)
+        self.assertCountEqual(executed, ["align_and_save_2023_2024", "align_and_save_2024_2025"])
+        state = json.loads(self.progress_path.read_text())
+        self.assertEqual(len(state["stages"]), 10)
+        code, executed, _ = self.run_mock_pipeline()
+        self.assertEqual(code, 0)
+        self.assertEqual(len(executed), 10)
+        self.assertFalse(any(name.startswith(("text_", "align_and_save_")) for name in executed))
+
+    def test_resume_dry_run_shows_skips_without_modifying_checkpoint_or_running_work(self):
+        self.assertEqual(self.run_mock_pipeline(["--until", "change-analysis"])[0], 0)
+        before = self.progress_path.read_bytes()
+        code, executed, output = self.run_mock_pipeline(["--dry-run"])
+        self.assertEqual(code, 0)
+        self.assertEqual(executed, [])
+        self.assertEqual(output.count("[cached; skipped]"), 16)
+        self.assertIn("17/20 materiality_2023_2024", output)
+        self.assertEqual(self.progress_path.read_bytes(), before)
+        code, executed, output = self.run_mock_pipeline(["--dry-run", "--no-resume"])
+        self.assertEqual(code, 0)
+        self.assertNotIn("[cached; skipped]", output)
+        self.assertEqual(self.progress_path.read_bytes(), before)
+
+    def test_invalid_progress_does_not_silently_restart_paid_work(self):
+        self.progress_path.parent.mkdir(parents=True)
+        self.progress_path.write_text("{invalid json")
+        code, executed, _ = self.run_mock_pipeline()
+        self.assertEqual(code, 1)
+        self.assertEqual(executed, [])
+        self.assertEqual(self.progress_path.read_text(), "{invalid json")
+        self.assertEqual(self.run_mock_pipeline(["--until", "preprocessing", "--no-resume"])[0], 0)
+
+    def test_two_invocations_cannot_overwrite_the_same_pipeline_checkpoint(self):
+        with runner.invocation_lock(self.progress_path.parent):
+            code, executed, _ = self.run_mock_pipeline()
+        self.assertEqual(code, 1)
+        self.assertEqual(executed, [])
+        self.assertFalse(self.progress_path.exists())
+        self.assertEqual(self.run_mock_pipeline(["--until", "preprocessing"])[0], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

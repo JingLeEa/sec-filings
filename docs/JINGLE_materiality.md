@@ -182,8 +182,8 @@ includes pauses between invocations; cumulative API time sums only model request
 durations. Timing fields are `null` for runs completed before timing was added
 because their exact duration cannot be reconstructed reliably.
 
-Default limits are 8 rows per batch, 2 concurrent batches, 3 model turns per batch,
-200 cumulative requests, 750,000 total budgeted tokens, 4,000 completion tokens,
+Default limits are 8 rows per batch, 9 concurrent batches, 3 model turns per batch,
+200 cumulative requests, 1,500,000 total budgeted tokens per year pair, 4,000 completion tokens,
 150,000 prompt characters, a 180-second initial timeout and a 300-second
 single-row retry timeout. Timeout recovery is enabled by default: a timed-out
 multi-row request is divided immediately, while a timed-out single-row request is

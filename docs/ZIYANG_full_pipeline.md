@@ -115,6 +115,43 @@ When PostgreSQL mode encounters an implementation-only change in an existing
 alignment checkpoint, it archives job decisions and revalidates cached responses.
 Changed evidence, model or run settings still require a separate output directory.
 
+## Resume an interrupted run
+
+Resume is enabled by default. Rerun the same command, for example:
+
+```bash
+.venv/bin/python scripts/run_full_pipeline.py --ticker C --years 2023 2024 2025
+```
+
+The runner reads `data/pipeline_runs/c/2023-2024-2025/status.json` and skips
+completed stages. If it stopped during materiality, it starts at the unfinished
+materiality work and its PostgreSQL save. Each year pair is tracked separately:
+if one pair already finished and saved, only the other pair resumes. An unfinished
+stage uses its existing batch/response caches. Raising the materiality budget or
+changing worker counts preserves completed stages.
+
+The progress file is retained across invocations, including runs with a different
+`--until` or `--from-stage`. For example, rerunning without `--until extraction`
+continues at alignment after a successful extraction-only run. A fully completed
+selection exits without executing stages. Keep the same `--data-dir` to reuse
+this pipeline checkpoint; upstream data still comes from PostgreSQL.
+
+Use `--dry-run` to see completed stages marked `[cached; skipped]` and the commands
+that remain. To deliberately execute selected stages again, use `--no-resume`:
+
+```bash
+.venv/bin/python scripts/run_full_pipeline.py --ticker C --years 2023 2024 2025 \
+  --from-stage materiality --no-resume
+```
+
+This retains internal response caches. It does not request a fresh model
+classification. Forcing an upstream stage to execute again invalidates completion
+markers for its dependent stages, including later stages outside `--until`.
+Changing an output option such as `--embedding-model` also invalidates the affected
+stage and its dependents. Use `--no-resume` when intentionally refreshing source
+data or changing external model/database configuration. One runner at a time may
+update a ticker/year-selection checkpoint.
+
 ## Preview, configuration and progress
 
 Add `--dry-run` to print only the selected commands. It makes no API requests or
@@ -166,6 +203,7 @@ budgets remain enforced per pair.
 | --- | --- |
 | `--data-dir PATH` | Change the root for generated outputs and caches |
 | `--from-stage STAGE` | Skip earlier stages and read saved PostgreSQL inputs; default `preprocessing` |
+| `--resume` / `--no-resume` | Skip completed stages by default, or deliberately execute the selected stages using their internal caches |
 | `--user-agent "Name email@example.com"` | Override the SEC contact |
 | `--workers N` / `--year-workers N` | Concurrent disclosure-extraction years; default `3` |
 | `--batch-workers N` | Extraction/consolidation batch workers per year; default `6` |
@@ -179,11 +217,13 @@ budgets remain enforced per pair.
 | `--embedding-model MODEL` | Select the semantic embedding model; default `bge-m3` |
 
 A failure or request-budget pause stops subsequent stages. Rerun the same
-command to resume using successful stage caches. Progress is recorded in
+command to skip completed stages and resume unfinished work. Progress is recorded in
 `data/pipeline_runs/amd/2023-2024-2025/status.json` for the example above.
 `until` records the requested endpoint; `complete` means that selected run
 finished, and `full_pipeline_complete` is true only when materiality also finished.
 `from_stage` records the starting point and `input_source` is `postgres`.
+`skipped_stages` lists stages reused by the latest invocation; `last_invocation_at`
+records that invocation's start. `started_at` retains the original run start.
 `extraction_concurrency` records the year workers, batch workers per year, and
 shared request cap used by that invocation. `alignment_concurrency` records pair
 workers, workers per pair, and the shared alignment API cap. A running process keeps the settings

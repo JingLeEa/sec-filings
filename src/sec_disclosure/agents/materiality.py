@@ -474,7 +474,8 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
     parser.add_argument("--max-steps", type=int, default=3)
     parser.add_argument("--max-requests", type=int, default=200)
     parser.add_argument("--max-new-requests", type=int)
-    parser.add_argument("--max-total-tokens", type=int, default=750000)
+    parser.add_argument("--max-total-tokens", type=int, default=1_500_000,
+                        help="Total materiality token budget per year pair (default: 1,500,000).")
     parser.add_argument("--max-tokens", type=int, default=4000)
     parser.add_argument("--max-prompt-chars", type=int, default=150000)
     parser.add_argument("--timeout", type=float, default=180)
