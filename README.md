@@ -29,9 +29,11 @@ src/sec_disclosure/
 ├── agents/          # planned agentic workflow
 ├── llm/             # planned shared LLM client and prompts
 ├── indexing/        # planned embeddings/vector search
+├── chatbot/         # natural-language Q&A over disclosure changes in PostgreSQL
 ├── evaluation/      # planned benchmark evaluation
 └── utils/           # planned shared utilities
 
+app/                 # Streamlit chatbot UI
 scripts/             # command-line entry points
 docs/                # detailed workflow notes and annotation guides
 data/                # generated outputs; ignored by Git
@@ -103,9 +105,23 @@ Both commands use `SEC_USER_AGENT` set above. The API command also saves yearly
 XBRL exports to PostgreSQL by default; use `--no-db` for file-only extraction.
 See the usage and schema guides below for offline inputs, source verification, and output paths.
 
+## Disclosure Change Chatbot
+
+Ask questions such as "What are the most material changes in Bank of America's 2024 10-K?" against the
+alignment data in PostgreSQL. With the database running and fixtures loaded:
+
+```bash
+pip install -r app/requirements.txt
+streamlit run app/streamlit_app.py
+PYTHONPATH=src python -m sec_disclosure.chatbot "How many new risk factors did Intel add in 2025?"
+```
+
+See [Disclosure Change Chatbot](docs/AARAV_chatbot.md) for setup, LLM settings and how answers are grounded.
+
 ## Documentation
 
 - [Downstream JSON from PostgreSQL](docs/ZIYANG_disclosure_extraction.md#export-joined-data-from-postgresql): join normalized disclosure and alignment tables into JSON or read them directly from Python.
+- [Disclosure Change Chatbot](docs/AARAV_chatbot.md): natural-language questions over alignment, change and materiality data.
 - [Pipeline Usage](docs/pipeline_usage.md): detailed extraction, comparison, ID conversion, paragraph context, and table commands.
 - [Current Text Preprocessing Flow](docs/current_text_preprocessing_flow.md): current extraction, chunking, sentence splitting, bullet handling, and ID behavior.
 - [Disclosure Annotation Export](docs/disclosure_annotation_export.md): detailed guide for exporting narrative comparison rows to Google Sheets.
