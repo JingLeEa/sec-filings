@@ -16,7 +16,6 @@ The current implementation focuses on the preprocessing and benchmark dataset wo
 - Extract verified HTML and XBRL metrics, export API values, and merge yearly metric files.
 - Convert older annotation IDs after extraction logic changes.
 - Add original paragraph context back into annotation CSVs.
-- Compare same-year disclosures for a target company and peer set with an evidence-citing LLM agent.
 
 ## Project Layout
 
@@ -110,7 +109,6 @@ See the usage and schema guides below for offline inputs, source verification, a
 - [Pipeline Usage](docs/pipeline_usage.md): detailed extraction, comparison, ID conversion, paragraph context, and table commands.
 - [Current Text Preprocessing Flow](docs/current_text_preprocessing_flow.md): current extraction, chunking, sentence splitting, bullet handling, and ID behavior.
 - [Disclosure Annotation Export](docs/disclosure_annotation_export.md): detailed guide for exporting narrative comparison rows to Google Sheets.
-- [Peer Company Comparison Agent](docs/peer_company_comparison_agent.md): run same-year peer disclosure comparisons.
 
 - [Table Extraction Usage](docs/table_extraction_usage.md): HTML tables, API metrics, batch runs, and yearly merges.
 - [API Metrics JSON](docs/API_EXTRACTION_TABLE_OUTPUT_METRICS_GUIDE.md): yearly metric schema and verification fields.
