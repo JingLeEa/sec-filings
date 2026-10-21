@@ -228,3 +228,44 @@ cases and disagreement examples before ranking companies. A reference produced
 in a chat interface must be saved as the actual annotated alignment JSON;
 a benchmark manifest containing only totals cannot be evaluated. Keep the
 original prepared input or manifest separately for provenance.
+
+## Consolidated results
+
+Once the company-year evaluations have produced `agreement.json`, `metrics.json`
+and `report.txt`, regenerate the pooled report with:
+
+```bash
+.venv/bin/python scripts/consolidate_alignment_evaluation.py
+```
+
+This reads `data/evaluation_soclaas`, writes the presentation-ready
+`docs/JINGLE_evaluation_results.md`, and saves machine-readable pooled counts
+to `data/evaluation_soclaas/consolidated_metrics.json`. It sums confusion
+matrices before calculating overall precision, recall and F1; it does not
+average already-rounded company scores. Use `--input-root`, `--report` and
+`--summary-json` to change those locations.
+
+## Change decision experiment
+
+To compare the existing LLM-only taxonomy with a strict majority vote from
+LLM, lexical and semantic on the same `ai_verified` rows, run:
+
+```bash
+.venv/bin/python scripts/evaluate_change_ensemble.py
+```
+
+Two matching labels win. If all three differ, a vote is missing, or the
+majority label is outside the canonical change taxonomy, the decision stays
+with the LLM. By default, the script reads the exact reference and candidate
+file paths recorded in each `data/evaluation_soclaas/*/*/agreement.json`;
+this also handles pairs evaluated from another reference folder. It does not
+modify those source files. It writes the Markdown comparison
+to `docs/JINGLE_change_ensemble_evaluation.md` and machine-readable metrics
+and overridden-row IDs under `data/evaluation_soclaas/change_ensemble`.
+Use `--ticker` or `--year-pair` to restrict the experiment. For a new dataset,
+use `--input-source files` with `--reference-root` and `--candidate-root`.
+Exact-taxonomy and binary substantive-change
+metrics are shown separately because they can favor different policies.
+The command scores the current alignment files and flags any older
+`agreement.json` reports whose LLM confusion counts no longer match them;
+it does not rewrite those earlier reports.
