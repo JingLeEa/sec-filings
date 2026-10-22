@@ -27,9 +27,9 @@ src/sec_disclosure/
 ├── annotation/      # implemented annotation export, ID conversion, context tools
 ├── table_extraction/ # implemented HTML, XBRL, and API metric extraction
 ├── pipelines/       # implemented end-to-end runner
-├── agents/          # planned agentic workflow
-├── llm/             # planned shared LLM client and prompts
-├── indexing/        # planned embeddings/vector search
+├── agents/          # disclosure alignment and peer comparison agents
+├── llm/             # shared LLM client, prompts, and response handling
+├── indexing/        # local TF-IDF disclosure retrieval
 ├── evaluation/      # planned benchmark evaluation
 └── utils/           # planned shared utilities
 
