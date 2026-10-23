@@ -359,9 +359,59 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
         print(f"Pipeline stopped at {error.name} (exit {error.code}). "
               "Saved work is retained. Rerun the same command to resume using stage caches.", file=sys.stderr)
         return error.code
-    state.update(complete=True, full_pipeline_complete=args.until == "materiality",
-                 completed_at=datetime.now(timezone.utc).isoformat())
+
+    # Run synthesis only after the full upstream pipeline succeeds.
+    # Partial runs (for example, --until alignment) do not trigger synthesis.
+    if args.until == "materiality":
+        synthesis_command = [
+            sys.executable,
+            str(ROOT / "synthesis_dev" / "run_from_db.py"),
+            "--company", args.ticker.upper(),
+            "--years", *map(str, args.years),
+        ]
+
+        print("\nRunning final synthesis stage...", flush=True)
+
+        state["synthesis_status"] = "running"
+        write_json(log_dir / "status.json", state)
+
+        try:
+            result = subprocess.run(
+                synthesis_command,
+                cwd=ROOT,
+                check=False,
+            )
+            synthesis_code = result.returncode
+        except OSError as error:
+            print(f"Could not start synthesis: {error}", file=sys.stderr)
+            synthesis_code = 1
+
+        if synthesis_code != 0:
+            state.update(
+                complete=False,
+                full_pipeline_complete=False,
+                synthesis_status="failed",
+            )
+            write_json(log_dir / "status.json", state)
+            print(
+                f"Upstream stages completed, but synthesis failed "
+                f"(exit code {synthesis_code}). Rerun the same command "
+                "to retry synthesis.",
+                file=sys.stderr,
+            )
+            return synthesis_code
+
+        state["synthesis_status"] = "complete"
+
+    state.update(
+        complete=True,
+        full_pipeline_complete=args.until == "materiality",
+        completed_at=datetime.now(timezone.utc).isoformat(),
+    )
     write_json(log_dir / "status.json", state)
-    print(f"\nPipeline completed through {args.until} for {args.ticker.upper()}: "
-          "every completed stage saved to PostgreSQL.", flush=True)
+    print(
+        f"\nPipeline completed through {args.until} for "
+        f"{args.ticker.upper()}: every completed stage saved to PostgreSQL.",
+        flush=True,
+    )
     return 0
