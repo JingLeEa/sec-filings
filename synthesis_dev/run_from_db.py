@@ -101,6 +101,14 @@ def main():
         default=50,
         help="Maximum material changes sent to the agent (default: 50).",
     )
+    parser.add_argument(
+        "--finding-target", type=int, default=None,
+        help="Minimum detailed findings requested; defaults to selected changes.",
+    )
+    parser.add_argument(
+        "--finding-batch-size", type=int, default=10,
+        help="Material changes per synthesis request (default: 10).",
+    )
     args = parser.parse_args()
 
     company = args.company.strip().upper()
@@ -108,7 +116,7 @@ def main():
 
     if len(years) < 2:
         parser.error("Provide at least two distinct years.")
-    if args.limit_per_pair < 1 or args.max_changes < 1:
+    if args.limit_per_pair < 1 or args.max_changes < 1 or args.finding_batch_size < 1:
         parser.error("--limit-per-pair and --max-changes must be positive.")
 
     year_pairs = list(zip(years[:-1], years[1:]))
@@ -217,6 +225,11 @@ def main():
         "years": years,
         "material_changes": material_changes,
         "financial_metrics": financial_metrics,
+        "finding_target": (
+            args.finding_target if args.finding_target is not None
+            else len(material_changes)
+        ),
+        "finding_batch_size": args.finding_batch_size,
     }
 
     print(f"\nCompany: {company}")
@@ -254,6 +267,55 @@ def main():
         for item in selected
     }
 
+    # Deterministic coverage reporting.
+    # A material change is counted as covered when at least one
+    # key finding cites its evidence ID.
+    selected_ids = {
+        str(change["match_id"])
+        for change in selected
+    }
+
+    cited_ids = {
+        str(evidence_id)
+        for finding in result["report"].get("key_findings", [])
+        for evidence_id in finding.get("evidence_ids", [])
+    }
+
+    covered_ids = selected_ids & cited_ids
+    uncited_ids = selected_ids - cited_ids
+
+    coverage_summary = {
+        "selected_material_changes": len(selected_ids),
+        "cited_material_changes": len(covered_ids),
+        "uncited_material_changes": len(uncited_ids),
+        "citation_coverage_pct": round(
+            len(covered_ids) / len(selected_ids) * 100, 2
+        ) if selected_ids else 0.0,
+    }
+
+    coverage_gaps = []
+
+    for change_id in sorted(uncited_ids):
+        source = source_catalog[change_id]
+
+        disclosure_ids = sorted({
+            str(item["disclosure_id"])
+            for item in source["sources"]
+            if item.get("disclosure_id") is not None
+        })
+
+        coverage_gaps.append({
+            "match_id": change_id,
+            "previous_year": source["previous_year"],
+            "current_year": source["current_year"],
+            "taxonomy": source["taxonomy"],
+            "alignment_status": source["alignment_status"],
+            "relationship": source["relationship"],
+            "materiality": source["materiality"],
+            "source_disclosure_ids": disclosure_ids,
+            "reason": "Not cited by any key finding",
+        })
+
     output = {
         "company": company,
         "years": years,
@@ -273,6 +335,8 @@ def main():
         "financial_trends": result["trends"],
         "report": result["report"],
         "validation": result["validation"],
+        "coverage_summary": coverage_summary,
+        "coverage_gaps": coverage_gaps,
         "source_catalog": source_catalog,
         "limitations": [
             "This runner uses existing completed alignment and materiality results "
@@ -280,6 +344,9 @@ def main():
             "Only changes with explicit positive materiality assessments are selected.",
             "Agent validation checks structure and evidence IDs, not independent "
             "factual entailment.",
+            "Citation coverage measures which selected material changes are "
+            "referenced by key findings; it does not independently establish "
+            "that each cited change was fully or accurately analyzed.",
         ],
     }
 
@@ -298,6 +365,8 @@ def main():
     print(result["report"]["executive_summary"])
     print("\n=== VALIDATION ===")
     print(json.dumps(result["validation"], indent=2))
+    print("\n=== DISCLOSURE COVERAGE ===")
+    print(json.dumps(coverage_summary, indent=2))
     print(f"\nSaved report: {output_path}")
 
 

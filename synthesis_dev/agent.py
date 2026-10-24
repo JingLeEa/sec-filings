@@ -9,6 +9,24 @@ from langgraph.graph import StateGraph, START, END
 
 load_dotenv()
 
+CONCEPT_ALIASES = {
+    "revenue": ("revenue", "sales"), "gross_profit": ("grossprofit", "gross profit"),
+    "operating_income": ("operatingincomeloss", "operating income"),
+    "net_income": ("netincomeloss", "net income"),
+    "operating_cash_flow": ("netcashprovidedbyusedinoperatingactivities", "operating cash flow"),
+    "capex": ("paymentstoacquirepropertyplantandequipment", "capital expenditure", "capex"),
+    "current_assets": ("assetscurrent", "current assets"), "current_liabilities": ("liabilitiescurrent", "current liabilities"),
+    "debt": ("debtlongtermandshorttermcombinedamount", "total debt", "debt"),
+    "equity": ("stockholdersequity", "shareholders equity", "stockholders equity"),
+}
+
+def _key(value):
+    return "".join(c.lower() for c in str(value) if c.isalnum())
+
+def _find(records, name):
+    aliases = [_key(x) for x in CONCEPT_ALIASES[name]]
+    return next((r for r in records if any(a in _key(r.get("concept") or r.get("label")) for a in aliases)), None)
+
 
 class SynthesisState(TypedDict, total=False):
     request: dict
@@ -95,14 +113,9 @@ def calculate_trends(state: SynthesisState) -> dict:
 
     # Year-over-year growth for selected annual financial measures.
     growth_concepts = {
-        "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax":
-            "Revenue",
-        "us-gaap:GrossProfit": "Gross profit",
-        "us-gaap:OperatingIncomeLoss": "Operating income",
-        "us-gaap:NetIncomeLoss": "Net income",
-        "us-gaap:NetCashProvidedByUsedInOperatingActivities":
-            "Operating cash flow",
-        "us-gaap:EarningsPerShareDiluted": "Diluted EPS",
+        concept: concept
+        for year_values in values.values()
+        for concept in year_values
     }
 
     years = sorted(values)
@@ -137,24 +150,19 @@ def calculate_trends(state: SynthesisState) -> dict:
                 "old_value": old_value,
                 "new_value": new_value,
                 "growth_pct": round(growth_pct, 2),
+                "formula": "(new_value - old_value) / abs(old_value) * 100",
                 "source_ids": [old["id"], new["id"]],
             })
 
     # Calculate margins, cash-flow ratios and balance-sheet ratios.
     for year in years:
-        revenue = get_value(
-            year,
-            "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
-        )
-        gross_profit = get_value(year, "us-gaap:GrossProfit")
-        operating_income = get_value(year, "us-gaap:OperatingIncomeLoss")
-        net_income = get_value(year, "us-gaap:NetIncomeLoss")
-        operating_cash_flow = get_value(
-            year, "us-gaap:NetCashProvidedByUsedInOperatingActivities"
-        )
-        capex = get_value(
-            year, "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment"
-        )
+        records = list(values[year].values())
+        revenue = _find(records, "revenue")
+        gross_profit = _find(records, "gross_profit")
+        operating_income = _find(records, "operating_income")
+        net_income = _find(records, "net_income")
+        operating_cash_flow = _find(records, "operating_cash_flow")
+        capex = _find(records, "capex")
 
         if revenue and revenue["value"] != 0:
             for record, label, formula in [
@@ -191,8 +199,8 @@ def calculate_trends(state: SynthesisState) -> dict:
                 "operating cash flow / net income",
             ))
 
-        current_assets = get_value(year, "us-gaap:AssetsCurrent")
-        current_liabilities = get_value(year, "us-gaap:LiabilitiesCurrent")
+        current_assets = _find(records, "current_assets")
+        current_liabilities = _find(records, "current_liabilities")
 
         if (
             current_assets
@@ -208,10 +216,8 @@ def calculate_trends(state: SynthesisState) -> dict:
                 "current assets / current liabilities",
             ))
 
-        debt = get_value(
-            year, "us-gaap:DebtLongtermAndShorttermCombinedAmount"
-        )
-        equity = get_value(year, "us-gaap:StockholdersEquity")
+        debt = _find(records, "debt")
+        equity = _find(records, "equity")
 
         if debt and equity and equity["value"] != 0:
             trends.append(make_calculation(
@@ -223,6 +229,13 @@ def calculate_trends(state: SynthesisState) -> dict:
                 "reported combined debt / stockholders' equity",
             ))
 
+    for trend in trends:
+        trend["source_values"] = [
+            {"id": r.get("id"), "value": r.get("value"), "year": r.get("year"),
+             "unit": r.get("unit"), "period_start": r.get("period_start_date"),
+             "period_end": r.get("period_end_date")}
+            for r in metrics if r.get("id") in trend.get("source_ids", [])
+        ]
     return {"trends": trends}
 
 
@@ -256,6 +269,7 @@ def synthesize(state: SynthesisState):
         "material_changes": evidence["material_changes"],
         "financial_metrics": evidence["financial_metrics"],
         "financial_trends": trends,
+        "finding_target": evidence.get("finding_target", len(evidence["material_changes"])),
     }
 
     system_prompt = """
@@ -353,6 +367,11 @@ FINANCIAL ANALYSIS REQUIREMENTS
     Do not omit material changes merely to keep the report short.
     Do not create artificial, repetitive, or unsupported findings.
 
+    Generate at least the supplied finding_target distinct key_findings,
+    unless fewer eligible material changes exist. Never exceed the number
+    of supplied material changes plus distinct financial issues. Process
+    the full input even when it is large; preserve coverage rather than
+    returning only an executive summary.
     Generate as many distinct key_findings as necessary to provide
     comprehensive coverage of the supplied material changes.
 
@@ -412,32 +431,34 @@ Return ONLY a valid JSON object with exactly this structure:
 }
 """
 
-    response = client.chat.completions.create(
-        model=os.environ["SOCLAAS_MODEL"],
-        messages=[
-            {
-                "role": "system",
-                "content": system_prompt,
-            },
-            {
-                "role": "user",
-                "content": json.dumps(prompt),
-            },
-        ],
-        temperature=0,
-    )
+    changes = evidence["material_changes"]
+    batch_size = max(1, int(evidence.get("finding_batch_size", 10)))
+    reports = []
+    for start in range(0, len(changes) or 1, batch_size):
+        batch_prompt = dict(prompt)
+        batch_prompt["material_changes"] = changes[start:start + batch_size]
+        response = client.chat.completions.create(
+            model=os.environ["SOCLAAS_MODEL"],
+            messages=[{"role": "system", "content": system_prompt},
+                      {"role": "user", "content": json.dumps(batch_prompt)}],
+            temperature=0,
+        )
+        content = response.choices[0].message.content
+        if not content:
+            raise ValueError("LLM returned empty content")
+        cleaned = content.strip()
+        if cleaned.startswith("```"):
+            cleaned = cleaned.split("\n", 1)[1]
+            cleaned = cleaned.rsplit("```", 1)[0].strip()
+        reports.append(json.loads(cleaned))
 
-    content = response.choices[0].message.content
-    if not content:
-        raise ValueError("LLM returned empty content")
-
-    # Some models wrap JSON in Markdown fences.
-    cleaned = content.strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.split("\n", 1)[1]
-        cleaned = cleaned.rsplit("```", 1)[0].strip()
-
-    report = json.loads(cleaned)
+    report = {
+        "executive_summary": " ".join(r.get("executive_summary", "") for r in reports),
+        "key_findings": [f for r in reports for f in r.get("key_findings", [])],
+        "longitudinal_analysis": "\n\n".join(r.get("longitudinal_analysis", "") for r in reports),
+        "financial_analysis": "\n\n".join(r.get("financial_analysis", "") for r in reports),
+        "limitations": [x for r in reports for x in r.get("limitations", [])],
+    }
 
     return {"report": report}
 
@@ -507,14 +528,33 @@ def validate_output(state: SynthesisState):
             if ref not in valid_ids:
                 invalid_ids.append(ref)
 
+    target = evidence.get("finding_target", len(evidence["material_changes"]))
+    cited_changes = {
+        str(ref) for finding in report["key_findings"]
+        for ref in finding.get("evidence_ids", [])
+    } & {str(item["id"]) for item in evidence["material_changes"]}
+    uncited_changes = sorted(
+        {str(item["id"]) for item in evidence["material_changes"]} - cited_changes
+    )
+    target_met = len(report["key_findings"]) >= min(
+        int(target), len(evidence["material_changes"])
+    )
+
     return {
         "validation": {
             "valid": (
                 not invalid_ids
                 and not unsupported_findings
+                and not uncited_changes
+                and target_met
             ),
             "invalid_evidence_ids": invalid_ids,
             "findings_without_evidence": unsupported_findings,
+            "finding_target": target,
+            "finding_count": len(report["key_findings"]),
+            "material_change_coverage": len(cited_changes),
+            "uncited_material_change_ids": uncited_changes,
+            "finding_target_met": target_met,
             "note": (
                 "Structural and citation-ID checks only; "
                 "factual entailment requires further validation."

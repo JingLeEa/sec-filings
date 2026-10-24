@@ -1,0 +1,132 @@
+"""Retrieve consolidated annual financial metrics from PostgreSQL."""
+
+from collections import defaultdict
+from decimal import Decimal
+
+from sec_disclosure.storage.disclosures import connection_arguments
+
+
+FINANCIAL_CONCEPTS = {
+    "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+    "us-gaap:OperatingIncomeLoss",
+    "us-gaap:NetIncomeLoss",
+}
+
+
+def fetch_financial_metrics(
+    conn,
+    company: str,
+    years: list[int],
+) -> list[dict]:
+    """Fetch dimension-free annual metrics from each year's own filing.
+
+    Returns the schema expected by synthesis_dev.agent.calculate_trends().
+    Raises an error if more than one eligible value exists for a
+    concept and fiscal year, rather than silently choosing one.
+    """
+    if not years:
+        return []
+
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT
+                source_filing_year,
+                extraction_id,
+                concept,
+                label,
+                amount,
+                unit,
+                period_start_date,
+                period_end_date,
+                dimensions,
+                status
+            FROM xbrl_value_context
+            WHERE UPPER(company) = UPPER(%s)
+              AND source_filing_year = ANY(%s)
+              AND concept = ANY(%s)
+              AND dimensions = '[]'::jsonb
+              AND unit = 'USD'
+              AND concept_period_type = 'duration'
+              AND status = 'reported'
+              AND EXTRACT(YEAR FROM period_end_date)
+                    = source_filing_year
+            ORDER BY
+                source_filing_year,
+                concept,
+                period_end_date
+            """,
+            (company, years, sorted(FINANCIAL_CONCEPTS)),
+        )
+        rows = cur.fetchall()
+
+    # Detect ambiguity before returning records to the agent.
+    grouped = defaultdict(list)
+    for row in rows:
+        source_year, extraction_id, concept = row[:3]
+        grouped[(source_year, concept)].append(row)
+
+    duplicates = {
+        key: len(records)
+        for key, records in grouped.items()
+        if len(records) > 1
+    }
+    if duplicates:
+        raise ValueError(
+            "Multiple eligible annual values found for "
+            f"(filing year, concept): {duplicates}. "
+            "Inspect the records before selecting one."
+        )
+
+    metrics = []
+
+    for row in rows:
+        (
+            source_year,
+            extraction_id,
+            concept,
+            label,
+            amount,
+            unit,
+            period_start,
+            period_end,
+            dimensions,
+            status,
+        ) = row
+
+        if amount is None:
+            continue
+
+        metrics.append({
+            # Unique ID used by calculate_trends and citation validation.
+            "id": (
+                f"xbrl:{company.upper()}:{source_year}:"
+                f"{extraction_id}:{concept}"
+            ),
+            "company": company.upper(),
+            "concept": concept,
+            "label": label,
+            "unit": unit,
+            "year": int(source_year),
+            "value": float(amount),
+            "period_type": "FY",
+            "period_start_date": period_start.isoformat(),
+            "period_end_date": period_end.isoformat(),
+            "source_filing_year": int(source_year),
+            "extraction_id": int(extraction_id),
+            "dimensions": dimensions,
+            "status": status,
+        })
+
+    return metrics
+
+
+def fetch_financial_metrics_from_db(
+    company: str,
+    years: list[int],
+) -> list[dict]:
+    """Open the configured database connection and fetch annual metrics."""
+    import psycopg
+
+    with psycopg.connect(**connection_arguments()) as conn:
+        return fetch_financial_metrics(conn, company, years)
