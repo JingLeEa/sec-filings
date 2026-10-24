@@ -24,7 +24,7 @@ The adjacent-year alignment context describes how each company's own disclosure 
 
 For every peer ticker, return either one or more supported comparisons to supplied candidates, or a no_match entry if candidates were retrieved but none is sufficiently comparable. Omit irrelevant candidates. If that peer has no supplied candidates, return no_match with reason that no candidate was retrieved. Do not claim filing-wide absence. A peer can have multiple relevant disclosure candidates. Cite at least one exact selected sentence from the target and each peer disclosure. Return only JSON in this schema:
 {"comparisons":[{"peer_ticker":"AMD","peer_disclosure_id":"exact ID","relationship":"same_topic|related_topic","comparison":"specific similarities and differences supported by cited text","target_sentence_ids":["exact sentence ID"],"peer_sentence_ids":["exact sentence ID"]}],"no_match":[{"peer_ticker":"INTC","reason":"specific reason, or state no candidate was retrieved"}]}
-Use exact IDs and tickers from the input. A comparison means the candidate is substantively comparable; do not use it as a generic contrast. Return unique peer_disclosure_id entries for each ticker. CRITICAL RULE:
+Use exact IDs and tickers from the input. For every comparison, peer_ticker MUST be copied from the key under peer_candidates that contains peer_disclosure_id; never use the target ticker as peer_ticker. A comparison means the candidate is substantively comparable; do not use it as a generic contrast. Return unique peer_disclosure_id entries for each ticker. CRITICAL RULE:
 - Each peer ticker must appear in EITHER "comparisons" OR "no_match", NEVER BOTH.
 - If a peer ticker has even ONE valid comparison, list it ONLY in "comparisons".
 - Do NOT add a "no_match" entry to explain omitted or rejected candidates for that peer.
@@ -239,6 +239,7 @@ def validate_response(value: dict, target: dict, candidate_map: dict[str, list[d
     candidates = {ticker.upper(): {r["disclosure_id"]: r for r in rows}
                   for ticker, rows in candidate_map.items()}
     comparisons: dict[str, list[dict]] = {ticker: [] for ticker in peer_tickers}
+    repaired_tickers = []
     for row in value["comparisons"]:
         if not isinstance(row, dict):
             raise ValueError("Each comparison must be an object.")
@@ -247,6 +248,16 @@ def validate_response(value: dict, target: dict, candidate_map: dict[str, list[d
             raise ValueError("peer_ticker must be a string.")
         ticker, did = raw_ticker.upper(), row.get("peer_disclosure_id")
         peer = candidates.get(ticker, {}).get(did)
+        if peer is None:
+            # The model occasionally copies the target ticker into peer_ticker
+            # while giving a valid candidate ID. Recover the peer from the
+            # candidate map only when that ID identifies exactly one supplied peer.
+            owners = [(candidate_ticker, peer_row)
+                      for candidate_ticker, candidate_rows in candidates.items()
+                      if (peer_row := candidate_rows.get(did)) is not None]
+            if len(owners) == 1:
+                ticker, peer = owners[0]
+                repaired_tickers.append(f"repaired_peer_ticker:{raw_ticker.upper()}->{ticker}:{did}")
         if peer is None or ticker not in comparisons:
             raise ValueError("Comparison uses an unknown peer or candidate.")
         if any(entry["peer_disclosure_id"] == did for entry in comparisons[ticker]):
@@ -262,19 +273,24 @@ def validate_response(value: dict, target: dict, candidate_map: dict[str, list[d
             visible_ids = {s["sentence_id"] for s in source.get("prompt_sentences", source["sentences"])}
             available = {s["sentence_id"]: s for s in source["sentences"]}
             if (not isinstance(ids, list) or not ids or len(ids) != len(set(ids))
-                    or any(sid not in visible_ids for sid in ids)):
-                raise ValueError(f"{field} must cite unique sentence IDs from its source disclosure.")
+                    or any(sid not in available for sid in ids)):
+                raise ValueError(f"{field} must cite unique sentence IDs that exist in its source disclosure.")
             citations.append({"side": owner, "ticker": target["ticker"] if owner == "target" else ticker,
                               "disclosure_id": target["disclosure_id"] if owner == "target" else did,
-                              "sentences": [available[sid] for sid in ids]})
+                              "sentences": [{**available[sid], "visible_in_prompt": sid in visible_ids}
+                                            for sid in ids]})
         comparisons[ticker].append({"peer_ticker": ticker, "peer_disclosure_id": did,
                                     "peer_topic": peer.get("topic", ""), "peer_summary": peer.get("summary", ""),
                                     "peer_taxonomy": peer.get("taxonomy", ""),
                                     "retrieval_score": peer.get("score", 0),
                                     "relationship": row["relationship"], "comparison": row["comparison"],
                                     "peer_source_status": peer["source_status"], "evidence": citations})
-    no_match = {}
-    for row in value["no_match"]:
+    # Identify tickers that already have non-empty comparisons
+    matched_tickers = {ticker for ticker, rows in comparisons.items() if rows}
+
+    no_match, ignored_no_match = {}, {}
+    unrequested_no_match = []
+    for row in value.get("no_match", []):
         if not isinstance(row, dict):
             raise ValueError("Each no_match decision must be an object.")
         raw_ticker = row.get("peer_ticker")
@@ -282,24 +298,60 @@ def validate_response(value: dict, target: dict, candidate_map: dict[str, list[d
             raise ValueError("peer_ticker must be a string.")
         ticker = raw_ticker.upper()
         reason = row.get("reason")
-        if ticker not in candidates or ticker in no_match or not isinstance(reason, str) or not reason.strip():
+
+        # The model may use no_match to explain ignored candidates even if another
+        # candidate for that peer matched. Preserve a warning instead of failing.
+        if ticker in matched_tickers:
+            ignored_no_match.setdefault(ticker, []).append("ignored_no_match_note_for_peer_with_comparisons")
+            continue
+
+        # no_match is sometimes emitted for peers mentioned in prior context but
+        # not requested for this run. Ignore that extra note; required peers are
+        # still checked by the complete-coverage condition below.
+        if ticker not in candidates:
+            unrequested_no_match.append(f"ignored_no_match_note_for_unrequested_peer:{ticker}")
+            continue
+
+        if ticker in no_match or not isinstance(reason, str) or not reason.strip():
             raise ValueError("Invalid or duplicate no_match decision.")
         no_match[ticker] = reason
-    if set(no_match) & {ticker for ticker, rows in comparisons.items() if rows}:
+
+    if set(no_match) & matched_tickers:
         raise ValueError("A peer ticker cannot have both comparisons and a no_match decision.")
-    if set(no_match) | {ticker for ticker, rows in comparisons.items() if rows} != set(peer_tickers):
+    if set(no_match) | matched_tickers != set(peer_tickers):
         raise ValueError("Agent must return at least one supported comparison or no_match for every peer.")
+
     result = []
     for ticker in peer_tickers:
         if comparisons[ticker]:
-            result.append({"peer_ticker": ticker, "status": "compared", "comparisons": comparisons[ticker],
-                           "rationale": ""})
+            result.append({
+                "peer_ticker": ticker,
+                "status": "compared",
+                "comparisons": comparisons[ticker],
+                "rationale": ""
+            })
         elif not candidates[ticker]:
-            result.append({"peer_ticker": ticker, "status": "no_candidate_retrieved", "comparisons": [],
-                           "rationale": no_match[ticker]})
+            result.append({
+                "peer_ticker": ticker,
+                "status": "no_candidate_retrieved",
+                "comparisons": [],
+                "rationale": no_match[ticker]
+            })
         else:
-            result.append({"peer_ticker": ticker, "status": "no_comparable_candidate", "comparisons": [],
-                           "rationale": no_match[ticker]})
+            result.append({
+                "peer_ticker": ticker,
+                "status": "no_comparable_candidate",
+                "comparisons": [],
+                "rationale": no_match[ticker]
+            })
+    if result and unrequested_no_match:
+        result[0]["agent_warnings"] = unrequested_no_match
+    if result and repaired_tickers:
+        result[0].setdefault("agent_warnings", []).extend(repaired_tickers)
+    for row in result:
+        warnings = ignored_no_match.get(row["peer_ticker"], [])
+        if warnings:
+            row.setdefault("agent_warnings", []).extend(warnings)
     return result
 
 
@@ -466,6 +518,12 @@ def run(args) -> dict:
         if decisions is None:
             write_json(output / "token_usage.json", _summarize_usage(request_dir))
             raise ValueError(f"Agent could not produce a validated result for {target['disclosure_id']}; see validation_errors/.")
+        validation_path = output / "validation_errors" / f"{digest(target['disclosure_id'].encode())}.json"
+        if validation_path.exists():
+            validation_audit = json.loads(validation_path.read_text(encoding="utf-8"))
+            validation_audit.update(resolved=True, resolved_at=datetime.now(timezone.utc).isoformat(),
+                                    resolved_request_hash=request_hash)
+            write_json(validation_path, validation_audit)
         result = {"target_ticker": args.ticker.upper(), "target_disclosure_id": target["disclosure_id"],
                   "item": target["item"], "target_topic": target.get("topic", ""),
                   "target_summary": target.get("summary", ""), "target_source_status": target["source_status"],

@@ -74,12 +74,57 @@ class PeerComparisonTests(unittest.TestCase):
 
     def test_rejects_citation_from_another_disclosure(self):
         target, ranked = self._inputs()
-        with self.assertRaisesRegex(ValueError, "sentence IDs"):
+        with self.assertRaisesRegex(ValueError, "exist in its source disclosure"):
             validate_response({"comparisons": [{
                 "peer_ticker": "BBB", "peer_disclosure_id": self.peer["disclosure_id"],
                 "relationship": "same_topic", "comparison": "Comparison.",
                 "target_sentence_ids": ["b1"], "peer_sentence_ids": ["b1"],
             }], "no_match": []}, target, {"bbb": ranked}, ["bbb"])
+
+    def test_accepts_real_source_sentence_outside_short_prompt_excerpt(self):
+        target, ranked = self._inputs()
+        target["prompt_sentences"] = target["sentences"]
+        peer = ranked[0]
+        peer["sentences"] = [
+            {"sentence_id": "b1", "paragraph_id": "bbb_P1", "source_url": "https://www.sec.gov/bbb",
+             "text": "A sole semiconductor supplier creates risk."},
+            {"sentence_id": "b2", "paragraph_id": "bbb_P2", "source_url": "https://www.sec.gov/bbb",
+             "text": "The supplier dependency may delay product delivery."},
+        ]
+        peer["prompt_sentences"] = [peer["sentences"][0]]
+        result = validate_response({"comparisons": [{
+            "peer_ticker": "BBB", "peer_disclosure_id": peer["disclosure_id"],
+            "relationship": "same_topic", "comparison": "Both describe supplier dependency.",
+            "target_sentence_ids": ["a1"], "peer_sentence_ids": ["b2"],
+        }], "no_match": []}, target, {"bbb": [peer]}, ["bbb"])
+        cited = result[0]["comparisons"][0]["evidence"][1]["sentences"][0]
+        self.assertEqual(cited["text"], "The supplier dependency may delay product delivery.")
+        self.assertFalse(cited["visible_in_prompt"])
+
+    def test_ignores_no_match_notes_for_matched_or_unrequested_peers(self):
+        target, ranked = self._inputs()
+        result = validate_response({"comparisons": [{
+            "peer_ticker": "BBB", "peer_disclosure_id": self.peer["disclosure_id"],
+            "relationship": "same_topic", "comparison": "Both identify one supplier reliance.",
+            "target_sentence_ids": ["a1"], "peer_sentence_ids": ["b1"],
+        }], "no_match": [
+            {"peer_ticker": "BBB", "reason": "Other BBB candidates are not relevant."},
+            {"peer_ticker": "INTC", "reason": "No Intel candidate was retrieved."},
+        ]}, target, {"bbb": ranked}, ["bbb"])
+        self.assertEqual(result[0]["status"], "compared")
+        self.assertIn("ignored_no_match_note_for_peer_with_comparisons", result[0]["agent_warnings"])
+        self.assertIn("ignored_no_match_note_for_unrequested_peer:INTC", result[0]["agent_warnings"])
+
+    def test_repairs_target_ticker_when_candidate_id_uniquely_identifies_peer(self):
+        target, ranked = self._inputs()
+        result = validate_response({"comparisons": [{
+            "peer_ticker": "AAA", "peer_disclosure_id": self.peer["disclosure_id"],
+            "relationship": "same_topic", "comparison": "Both describe supplier dependency.",
+            "target_sentence_ids": ["a1"], "peer_sentence_ids": ["b1"],
+        }], "no_match": []}, target, {"bbb": ranked}, ["bbb"])
+        self.assertEqual(result[0]["status"], "compared")
+        self.assertEqual(result[0]["comparisons"][0]["peer_ticker"], "BBB")
+        self.assertIn("repaired_peer_ticker:AAA->BBB:bbb_2024_1A_D001", result[0]["agent_warnings"])
 
     def test_alignment_trajectory_context_attaches_to_both_members(self):
         targets, ranked = self._inputs()
@@ -166,6 +211,8 @@ class PeerComparisonTests(unittest.TestCase):
         self.assertEqual(report["token_usage"]["total_tokens"], 35)
         errors = list((output / "validation_errors").glob("*.json"))
         self.assertEqual(len(errors), 1)
+        audit = json.loads(errors[0].read_text())
+        self.assertTrue(audit["resolved"])
 
 
 if __name__ == "__main__":
