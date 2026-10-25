@@ -13,10 +13,21 @@ from typing import Iterable
 COMPANY_ALIASES: dict[str, tuple[str, ...]] = {
     "bac": ("bank of america", "bofa", "boa", "bankamerica", "bac"),
     "jpm": ("jpmorgan chase", "jp morgan chase", "jpmorgan", "jp morgan", "j.p. morgan", "chase", "jpmc", "jpm"),
+    "c": ("citigroup", "citibank", "citi"),
+    "gs": ("goldman sachs", "goldman"),
+    "ms": ("morgan stanley",),
     "intc": ("intel corporation", "intel", "intc"),
     "amd": ("advanced micro devices", "amd"),
+    "nvda": ("nvidia", "nvda"),
+    "avgo": ("broadcom", "avgo"),
+    "qcom": ("qualcomm", "qcom"),
+    "mu": ("micron technology", "micron"),
 }
-COMPANY_NAMES = {"bac": "Bank of America", "jpm": "JPMorgan Chase", "intc": "Intel", "amd": "AMD"}
+# Tickers that are also ordinary words or abbreviations: only matched as an upper-case word ("C", "MS").
+SHORT_TICKERS = {"c", "gs", "ms", "mu"}
+COMPANY_NAMES = {"bac": "Bank of America", "jpm": "JPMorgan Chase", "c": "Citigroup", "gs": "Goldman Sachs",
+                 "ms": "Morgan Stanley", "intc": "Intel", "amd": "AMD", "nvda": "NVIDIA", "avgo": "Broadcom",
+                 "qcom": "Qualcomm", "mu": "Micron"}
 
 ITEM_PATTERNS: list[tuple[str, str]] = [
     ("1A", r"\bitem\s*1\s*a\b|\brisk\s+factors?\b"),
@@ -61,8 +72,8 @@ RELATIONSHIP_PATTERNS: list[tuple[str, str]] = [
     ("many_to_one", r"\bmany[\s_-]to[\s_-]one\b|\bmerged?\b|\bconsolidated\b"),
     ("one_to_one", r"\bone[\s_-]to[\s_-]one\b"),
 ]
-MATCH_ID_RE = re.compile(r"\b[a-z]{2,6}_\d{4}_\d{4}_M\d{1,5}\b", re.IGNORECASE)
-DISCLOSURE_ID_RE = re.compile(r"\b[a-z]{2,6}_\d{4}_[0-9A-Z]{1,3}_D\d{2,5}\b")
+MATCH_ID_RE = re.compile(r"\b[a-z]{1,6}_\d{4}_\d{4}_M\d{1,5}\b", re.IGNORECASE)
+DISCLOSURE_ID_RE = re.compile(r"\b[a-z]{1,6}_\d{4}_[0-9A-Z]{1,3}_D\d{2,5}\b")
 YEAR_RE = r"(?:fy\s*)?(20\d{2})"
 NUMBER_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8,
                 "nine": 9, "ten": 10, "fifteen": 15, "twenty": 20}
@@ -122,18 +133,23 @@ def _matches(patterns: Iterable[tuple[str, str]], text: str) -> list[str]:
 
 
 def find_companies(text: str, known: Iterable[str] = ()) -> list[str]:
-    found: list[str] = []
+    """Tickers mentioned in the question, in the order they first appear."""
     lowered = text.lower()
+    first: dict[str, int] = {}
     for ticker, aliases in COMPANY_ALIASES.items():
         for alias in aliases:
             # 'chase' alone is ambiguous inside 'jpmorgan chase' - harmless, same ticker.
-            if re.search(rf"(?<![\w.]){re.escape(alias)}(?:'s)?(?![\w])", lowered):
-                found.append(ticker)
-                break
-    for ticker in known:  # tickers present in the database but missing from the alias table
-        if ticker not in found and re.search(rf"\b{re.escape(ticker.lower())}\b", lowered):
-            found.append(ticker)
-    return found
+            m = re.search(rf"(?<![\w.]){re.escape(alias)}(?:'s)?(?![\w])", lowered)
+            if m:
+                first[ticker] = min(first.get(ticker, m.start()), m.start())
+    for ticker in SHORT_TICKERS | {t.lower() for t in known}:  # tickers typed as tickers
+        if ticker in SHORT_TICKERS or len(ticker) <= 2:
+            m = re.search(rf"(?<![\w.&]){re.escape(ticker.upper())}(?:'s)?(?![\w&])", text)
+        else:
+            m = re.search(rf"\b{re.escape(ticker)}\b", lowered)
+        if m:
+            first[ticker] = min(first.get(ticker, m.start()), m.start())
+    return sorted(first, key=lambda t: (first[t], t))
 
 
 def resolve_years(text: str, runs: Iterable[tuple[int, int]] = ()) -> tuple[int | None, int | None]:

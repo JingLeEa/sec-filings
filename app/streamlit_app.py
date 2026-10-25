@@ -30,6 +30,8 @@ EXAMPLES = [
     "Show me the semantic vs lexical disagreements",
     "Which disclosures were expanded and why?",
     "Summarise the key changes for BAC 2023 to 2024",
+    "Compare NVIDIA and AMD on supply chain risk in 2024",
+    "How does Nvidia compare to its peers on customer demand?",
 ]
 HIDDEN_COLUMNS = {"previous_ids", "current_ids"}
 
@@ -94,6 +96,10 @@ with st.sidebar:
             overview = overview[["company", "period", "alignments", "needs_review"]]
         st.markdown("**Loaded comparisons**")
         st.dataframe(overview, hide_index=True, width="stretch")
+        peer_runs = pd.DataFrame(bot.db.peer_run_overview())
+        if not peer_runs.empty:
+            st.markdown("**Peer-comparison runs**")
+            st.dataframe(peer_runs, hide_index=True, width="stretch")
     except DatabaseError as error:
         st.error(str(error))
     st.markdown("**Try asking**")

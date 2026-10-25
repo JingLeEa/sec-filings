@@ -31,18 +31,30 @@ Data semantics:
   key_change and materiality_reason are its explanation. Summaries are model-generated; previous_excerpt and
   current_excerpt are the original filing sentences.
 - Years are fiscal years of the 10-K (2024 = the FY2024 10-K). Tickers: bac = Bank of America,
-  jpm = JPMorgan Chase, intc = Intel.
+  jpm = JPMorgan Chase, c = Citigroup, gs = Goldman Sachs, ms = Morgan Stanley, intc = Intel, amd = AMD,
+  nvda = NVIDIA, avgo = Broadcom, qcom = Qualcomm, mu = Micron.
+- Peer tables (peer_*) come from a separate peer-comparison agent that compared same-year, same-Item
+  disclosures of two companies. Each peer_comparisons row pairs disclosure_a (company_a) with disclosure_b
+  (company_b); comparison is that agent's model-written analysis; quote_a / quote_b are the original sentences it
+  cited (sentence_ids_a / sentence_ids_b). relationship is same_topic or related_topic. peer_no_match rows are
+  disclosures where the agent found no comparable peer disclosure among its retrieved candidates - not proof the
+  peer never discusses the topic. peer_year_over_year gives each disclosure's own year-over-year change label.
+  Tables named fallback_* are each company's own alignment data, used because no peer comparison matched.
 
 Rules:
 1. Use only facts, numbers and IDs that appear in the evidence pack. Never invent a disclosure, match_id,
    score or quotation. If the evidence is empty or does not answer the question, say so plainly.
-2. Cite match_ids in square brackets after each claim, e.g. [bac_2023_2024_M0107].
-3. Quote filing text only by copying it exactly from previous_excerpt/current_excerpt, inside double quotes.
+2. Cite match_ids in square brackets after each claim, e.g. [bac_2023_2024_M0107]; for peer comparisons cite
+   both disclosure IDs, e.g. [nvda_2024_1A_D012 ↔ amd_2024_1A_D030].
+3. Quote filing text only by copying it exactly from previous_excerpt/current_excerpt or quote_a/quote_b,
+   inside double quotes.
 4. Report counts and scores exactly as given; say "materiality score 0.85" rather than vague words.
 5. Be concise: a 1-2 sentence direct answer first, then supporting bullets or a small table. Mention the scope
    (companies, years, items) the data covers. Note when results were truncated (a row limit) or when
    needs_review rows were excluded from change labels.
-6. Treat materiality and labels as pipeline outputs, not your own judgement; do not give investment advice."""
+6. Treat materiality and labels as pipeline outputs, not your own judgement; do not give investment advice.
+7. For peer questions, say when a peer run is partial or a company pair has no peer run, and when the answer
+   falls back to each company's own alignment data instead of a direct comparison."""
 
 
 def _jsonable(value):
@@ -246,6 +258,9 @@ def offline_answer(question: str, plan: Plan, results: list[QueryResult], notes:
                 parts.append(f"\n**{title}**\n\n" + "\n".join(_card(c) for c in rows))
         return "\n".join(parts)
 
+    if intent == Intent.PEER_COMPARE:
+        return _peer_answer(plan, r, notes)
+
     if intent == Intent.TOPIC:
         rows = r["topic_matches"].rows if "topic_matches" in r else []
         if not rows:
@@ -261,3 +276,63 @@ def offline_answer(question: str, plan: Plan, results: list[QueryResult], notes:
         res = results[-1]
         return (f"Query returned {len(res.rows)} row(s):\n\n" + _table(res.rows[:25], res.columns[:10]))
     return "I could not route this question to a query. Try naming a company, year pair, item or change type."
+
+
+def _yoy_line(disclosure_id: str, yoy: list[dict], year) -> str | None:
+    """'changed: Modified 2023→2024 [match]' for the window ending in the comparison year."""
+    rows = [y for y in yoy if y["disclosure_id"] == disclosure_id and str(y["current_year"]) == str(year)]
+    if not rows:
+        return None
+    y = rows[0]
+    label = y.get("change_type") or "not analysed (needs review)"
+    extra = f", materiality {_score(y['materiality_score'])}" if y.get("materiality_score") is not None else ""
+    return f"{label} {y['previous_year']}→{y['current_year']}{extra} [{y['match_id']}]"
+
+
+def _peer_answer(plan: Plan, r: dict[str, QueryResult], notes: list[str]) -> str:
+    rows = r["peer_comparisons"].rows if "peer_comparisons" in r else []
+    names = " vs ".join(_company(c) for c in plan.filters.companies) or "the named companies"
+    topic = f" on “{plan.topic}”" if plan.topic else ""
+    caveats = [n for n in notes if n.startswith(("peer runs still partial", "no peer-agent run", "no precomputed"))]
+    caveat_text = ("\n\n" + "\n".join(f"_{c[0].upper() + c[1:]}._" for c in caveats)) if caveats else ""
+    if not rows:
+        fallback = r.get("fallback_topic_matches")
+        if fallback is not None:
+            body = ("\n".join(_card(c, why=True) for c in fallback.rows[:10]) if fallback.rows
+                    else "Nothing relevant was found in the alignment data either.")
+            return f"No precomputed peer comparison for {names}{topic}.{caveat_text}\n\n{body}"
+        profile = r.get("fallback_change_profile_by_run")
+        if profile is not None:
+            cols = ["company", "previous_year", "current_year", "alignments", "modified", "new", "removed",
+                    "material_yes", "pct_changed_of_analysed"]
+            return (f"No precomputed peer comparison for {names}.{caveat_text}\n\nEach company's own change profile:"
+                    f"\n\n" + _table(profile.rows, cols))
+        return f"No peer comparison data for {names}.{caveat_text}"
+
+    yoy = r["peer_year_over_year"].rows if "peer_year_over_year" in r else []
+    year = rows[0]["fiscal_year"]
+    lines = [f"**{len(rows)}** precomputed peer comparison(s) for {names}{topic} (FY{year}"
+             + (f", Item {'/'.join(plan.filters.items)}" if plan.filters.items else "") + "):"]
+    for row in rows:
+        lines.append(f"\n- **[{row['disclosure_a']} ↔ {row['disclosure_b']}]** {_company(row['company_a'])} vs "
+                     f"{_company(row['company_b'])} · Item {row['item']} · {row['relationship'].replace('_', ' ')}")
+        if row.get("topic_a") or row.get("topic_b"):
+            lines.append(f"  - Topics: {row.get('topic_a') or '–'} / {row.get('topic_b') or '–'}")
+        lines.append(f"  - Comparison: {row['comparison'][:600]}")
+        for side in ("a", "b"):
+            if row.get(f"quote_{side}"):
+                quote = row[f"quote_{side}"][:300]
+                lines.append(f"  - {_company(row[f'company_{side}'])}: \"{quote}\" "
+                             f"({', '.join(row.get(f'sentence_ids_{side}') or [])})")
+            change = _yoy_line(row[f"disclosure_{side}"], yoy, year)
+            if change:
+                lines.append(f"  - {_company(row[f'company_{side}'])} year-over-year: {change}")
+        if row.get("unseen_citations"):
+            lines.append(f"  - ⚠ {row['unseen_citations']} cited sentence(s) were not shown to the peer agent")
+    no_match = r.get("peer_no_match")
+    if no_match and no_match.rows:
+        lines.append("\nThe agent found **no comparable** peer disclosure for:")
+        for row in no_match.rows:
+            lines.append(f"- [{row['disclosure_a']}] {_company(row['company_a'])} → {_company(row['company_b'])}: "
+                         f"{row.get('topic_a') or ''} — {(row.get('rationale') or '')[:200]}")
+    return "\n".join(lines) + caveat_text

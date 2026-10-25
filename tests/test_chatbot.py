@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import os
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from sec_disclosure.chatbot.engine import _parse_json, strip_reasoning
@@ -13,6 +14,7 @@ from sec_disclosure.chatbot.queries import build_queries, where_clause
 from sec_disclosure.chatbot.retrieval import expand_terms, reciprocal_rank_fusion, tsquery_text
 from sec_disclosure.chatbot.sql_guard import UnsafeSQL, validate_sql
 
+ROOT = Path(__file__).resolve().parents[1]
 RUNS = [("bac", 2023, 2024), ("bac", 2024, 2025), ("intc", 2023, 2024), ("intc", 2024, 2025),
         ("jpm", 2023, 2024), ("jpm", 2024, 2025)]
 
@@ -287,6 +289,111 @@ class ConfigTests(unittest.TestCase):
         settings = self.load()
         self.assertIsNone(settings.config)
         self.assertIn("SOCLAAS_API_KEY", settings.description)
+
+PEER_RUNS = [(c, p, p + 1) for c in ("bac", "jpm", "c", "gs", "ms", "intc", "amd", "nvda", "avgo", "qcom", "mu")
+             for p in (2023, 2024)]
+
+
+class PeerRoutingTests(unittest.TestCase):
+    def test_company_names_short_tickers_and_order(self):
+        from sec_disclosure.chatbot.entities import find_companies
+        self.assertEqual(find_companies("Compare NVIDIA and AMD on export controls"), ["nvda", "amd"])
+        self.assertEqual(find_companies("How do C and MS describe credit risk?"), ["c", "ms"])
+        self.assertEqual(find_companies("Goldman vs Morgan Stanley vs Citi"), ["gs", "ms", "c"])
+        self.assertEqual(find_companies("JPMorgan Chase vs Bank of America"), ["jpm", "bac"])
+        self.assertEqual(find_companies("ms excel, item c, mu of the model"), [])  # lower-case words are not tickers
+        self.assertEqual(find_companies("Item 1A(c) of the filing"), [])
+
+    def test_peer_questions_route_to_peer_comparison(self):
+        cases = [
+            ("Compare NVIDIA and AMD on export controls in 2024", ["nvda", "amd"], "export controls", 2024),
+            ("How do C and MS describe credit risk?", ["c", "ms"], "credit", None),
+            ("What do NVDA and Intel say about supply chain risk?", ["nvda", "intc"], "supply chain", None),
+            ("How does Nvidia compare to its peers on customer concentration?", ["nvda"], "customer concentration", None),
+        ]
+        for question, companies, topic, year in cases:
+            with self.subTest(question=question):
+                plan = plan_question(question, PEER_RUNS)
+                self.assertEqual(plan.intent, Intent.PEER_COMPARE)
+                self.assertEqual(plan.filters.companies, companies)
+                self.assertEqual(plan.topic, topic)
+                self.assertEqual(plan.filters.current_year, year)
+
+    def test_change_statistics_and_other_intents_are_not_peer_questions(self):
+        self.assertEqual(plan_question("Compare the change patterns between BAC and JPM for 2024-2025", PEER_RUNS).intent,
+                         Intent.COMPARE)
+        self.assertEqual(plan_question("Most material changes for NVDA and AMD", PEER_RUNS).intent, Intent.MATERIAL)
+        self.assertEqual(plan_question("How many new risk factors did NVDA and AMD add in 2025?", PEER_RUNS).intent,
+                         Intent.COUNT)
+
+    def test_peer_topic_query_needs_every_word(self):
+        from sec_disclosure.chatbot.peers import topic_tsquery
+        self.assertEqual(topic_tsquery("export controls"), "(export <-> controls) | ((export) & (controls))")
+        self.assertIn("(supply | suppliers | sourcing) & (chain)", topic_tsquery("supply chain"))
+        self.assertIn("emissions", topic_tsquery("climate"))
+        self.assertEqual(topic_tsquery("'); drop table x; --"), "(drop <-> table <-> x) | ((drop) & (table) & (x))")
+
+    def test_pairs_for_one_company_come_from_loaded_runs(self):
+        from sec_disclosure.chatbot.peers import fiscal_year, wanted_pairs
+        runs = [{"target": "nvda", "peers": ["amd", "intc"]}, {"target": "avgo", "peers": ["nvda"]}]
+        self.assertEqual(wanted_pairs(["nvda"], runs), [("nvda", "amd"), ("nvda", "intc"), ("nvda", "avgo")])
+        self.assertEqual(wanted_pairs(["nvda", "amd", "intc"], runs),
+                         [("nvda", "amd"), ("nvda", "intc"), ("amd", "intc")])
+        self.assertEqual(fiscal_year(parse_filters("between 2023 and 2024", RUNS)), 2024)
+
+    def test_grounding_checks_sentence_ids(self):
+        rows = [{"disclosure_a": "nvda_2024_1A_D002", "sentence_ids_a": ["nvda_2024_1A_P003_S001"]}]
+        cleaned, report = check_answer("Demand risk (nvda_2024_1A_P003_S001; nvda_2024_1A_P099_S009).", rows,
+                                       lambda ids: set())
+        self.assertIn("nvda_2024_1A_P003_S001", cleaned)
+        self.assertNotIn("P099_S009", cleaned)
+        self.assertEqual(report.removed_ids, ["nvda_2024_1A_P099_S009"])
+
+
+class PeerLoaderValidationTests(unittest.TestCase):
+    FIXTURE = ROOT / "tests" / "fixtures" / "peer_comparison" / "nvda" / "2024" / "peer_comparison.json"
+
+    def mutate(self, change):
+        import json
+        import tempfile
+        report = json.loads(self.FIXTURE.read_text(encoding="utf-8"))
+        change(report)
+        folder = Path(tempfile.mkdtemp())
+        (folder / "peer_comparison.json").write_text(json.dumps(report), encoding="utf-8")
+        return folder
+
+    def test_fixture_is_valid(self):
+        from sec_disclosure.storage.peer_comparisons import read_report, rows_for
+        report, _ = read_report(self.FIXTURE.parent)
+        targets, results, comparisons = rows_for(report)
+        self.assertEqual(len(targets), report["jobs_completed"])
+        self.assertEqual(len(results), len(targets) * len(report["peers"]))
+        self.assertTrue(all({e["side"] for e in ev} == {"target", "peer"} for _, ev in comparisons))
+
+    def test_invalid_reports_are_rejected_before_any_database_work(self):
+        from sec_disclosure.storage.peer_comparisons import read_report
+
+        def wrong_peer_prefix(r):
+            first = next(res for job in r["comparisons"] for res in job["peer_results"] if res["comparisons"])
+            first["comparisons"][0]["peer_disclosure_id"] = "zzz_2024_1A_D001"
+
+        def status_without_comparisons(r):
+            first = next(res for job in r["comparisons"] for res in job["peer_results"] if res["comparisons"])
+            first["comparisons"] = []
+
+        def missing_peer(r):
+            r["comparisons"][0]["peer_results"] = r["comparisons"][0]["peer_results"][:1]
+
+        def count_mismatch(r):
+            r["jobs_completed"] += 1
+
+        def old_schema(r):
+            r["schema_version"] = "1"
+
+        for change in (wrong_peer_prefix, status_without_comparisons, missing_peer, count_mismatch, old_schema):
+            with self.subTest(change=change.__name__), self.assertRaises(ValueError):
+                read_report(self.mutate(change))
+
 
 if __name__ == "__main__":
     unittest.main()

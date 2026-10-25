@@ -11,8 +11,9 @@ import re
 from dataclasses import dataclass, field
 from typing import Callable, Iterable
 
-MATCH_ID_PATTERN = re.compile(r"\b[a-z]{2,6}_\d{4}_\d{4}_M\d{4,5}\b")
-DISCLOSURE_ID_PATTERN = re.compile(r"\b[a-z]{2,6}_\d{4}_[0-9A-Z]{1,3}_D\d{2,5}\b")
+MATCH_ID_PATTERN = re.compile(r"\b[a-z]{1,6}_\d{4}_\d{4}_M\d{4,5}\b")
+DISCLOSURE_ID_PATTERN = re.compile(r"\b[a-z]{1,6}_\d{4}_[0-9A-Z]{1,3}_D\d{2,5}\b")
+SENTENCE_ID_PATTERN = re.compile(r"\b[a-z]{1,6}_\d{4}_[0-9A-Z]{1,3}_P\d{2,5}_S\d{2,5}\b")
 QUOTE_PATTERN = re.compile(r"[\"“]([^\"”]{40,}?)[\"”]")
 MIN_QUOTE_CHARS = 40
 
@@ -54,6 +55,7 @@ def collect_ids(values: Iterable) -> set[str]:
         if isinstance(value, str):
             found.update(MATCH_ID_PATTERN.findall(value))
             found.update(DISCLOSURE_ID_PATTERN.findall(value))
+            found.update(SENTENCE_ID_PATTERN.findall(value))
         elif isinstance(value, dict):
             for v in value.values():
                 walk(v)
@@ -85,12 +87,13 @@ def check_answer(answer: str, evidence_rows: list[dict],
     """Return the answer with non-existent IDs removed, plus a report of what was checked."""
     report = GroundingReport()
     known = collect_ids(evidence_rows)
-    cited = list(dict.fromkeys(MATCH_ID_PATTERN.findall(answer) + DISCLOSURE_ID_PATTERN.findall(answer)))
+    cited = list(dict.fromkeys(MATCH_ID_PATTERN.findall(answer) + DISCLOSURE_ID_PATTERN.findall(answer)
+                               + SENTENCE_ID_PATTERN.findall(answer)))
     report.cited_match_ids = [c for c in cited if MATCH_ID_PATTERN.fullmatch(c)]
     report.unknown_ids = [c for c in cited if c not in known]
     match_unknown = [c for c in report.unknown_ids if MATCH_ID_PATTERN.fullmatch(c)]
     existing = id_exists(match_unknown) if (id_exists and match_unknown) else set()
-    # Disclosure IDs are only trusted when they come from the evidence (the disclosures table may be empty).
+    # Disclosure and sentence IDs are only trusted when they come from the evidence (their tables may be empty).
     report.removed_ids = [c for c in report.unknown_ids if c not in existing]
     for bad in report.removed_ids:
         answer = re.sub(rf"\[?\b{re.escape(bad)}\b\]?", "[unverified reference removed]", answer)

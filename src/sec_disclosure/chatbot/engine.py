@@ -12,6 +12,7 @@ from ..llm.config import LLMConfig
 from .config import load_chat_config, load_embedding_config
 from .db import Database, DatabaseError, QueryResult
 from .grounding import GroundingReport, check_answer
+from .peers import PeerStore, fallback_filters
 from .planner import Intent, Plan, inherit_context, plan_question, residual_keywords
 from .queries import build_queries, topic_cards
 from .retrieval import Retriever
@@ -146,6 +147,7 @@ class Chatbot:
                 from ..llm.embeddings import make_embedder
                 embedder = make_embedder(config=embed_config)
         self.retriever = Retriever(self.db, embedder)
+        self.peers = PeerStore(self.db)
         self.last_plan: Plan | None = None
 
     def check_llm(self) -> str:
@@ -190,7 +192,9 @@ class Chatbot:
                     plan.intent = Intent.SUMMARY
                     notes.append("no specific query type recognised; showing a summary")
 
-        if plan.intent == Intent.TOPIC:
+        if plan.intent == Intent.PEER_COMPARE:
+            retrieval_method = self._peer_compare(plan, results, notes)
+        elif plan.intent == Intent.TOPIC:
             retrieval = self.retriever.search(plan.topic or question, plan.filters, k=max(plan.filters.limit or 0, 25),
                                               exclude_unchanged=plan.exclude_unchanged)
             retrieval_method = retrieval.method
@@ -211,6 +215,38 @@ class Chatbot:
         return ChatResponse(question=question, answer=answer, intent=plan.intent.value, filters=plan.filters.as_dict(),
                             mode=mode, results=results, retrieval_method=retrieval_method, citations=citations,
                             warnings=warnings, notes=notes, grounding=report)
+
+    def _peer_compare(self, plan: Plan, results: list[QueryResult], notes: list[str]) -> str:
+        """Precomputed peer-agent comparisons first; per-company alignment data only when none match."""
+        lookup = self.peers.lookup(plan.filters, plan.topic)
+        results.extend(lookup.results)
+        notes.extend(lookup.notes)
+        names = lambda pairs: ", ".join(f"{a.upper()}–{b.upper()}" for a, b in pairs)  # noqa: E731
+        if lookup.partial_runs:
+            notes.append("peer runs still partial: " + "; ".join(lookup.partial_runs))
+        if lookup.missing_pairs:
+            notes.append(f"no peer-agent run loaded for {names(lookup.missing_pairs)}"
+                         + (f" in {lookup.fiscal_year}" if lookup.fiscal_year else ""))
+        if lookup.found:
+            return "peer_agent"
+        # Fallback: each company's own alignment data for the same year.
+        reason = (f"no precomputed comparison on '{plan.topic}'" if plan.topic and lookup.covered_pairs
+                  else "no precomputed peer comparison")
+        notes.append(f"{reason}; showing each company's own disclosures from the alignment data instead")
+        fallback = Plan(intent=Intent.TOPIC if plan.topic else Intent.COMPARE, filters=fallback_filters(plan.filters),
+                        topic=plan.topic)
+        if plan.topic:
+            retrieval = self.retriever.search(plan.topic, fallback.filters, k=25, exclude_unchanged=False)
+            notes.extend(retrieval.notes)
+            topic_result = self._run_topic(retrieval, fallback)
+            topic_result.name = "fallback_topic_matches"
+            results.append(topic_result)
+            return f"fallback: {retrieval.method}"
+        for query in build_queries(fallback):
+            result = self.db.query(query.name, query.sql, query.params)
+            result.name = f"fallback_{result.name}"
+            results.append(result)
+        return "fallback: alignment change profiles"
 
     def _run_topic(self, retrieval, plan: Plan) -> QueryResult:
         if not retrieval.hits:

@@ -23,7 +23,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "test_data" / "alignments"
-PERIODS = [(c, p, p + 1) for c in ("bac", "intc", "jpm") for p in (2023, 2024)]
+REQUIRED = [(c, p, p + 1) for c in ("bac", "intc", "jpm") for p in (2023, 2024)]
+PERIODS: list[tuple[str, int, int]] = []   # every loaded run that has a fixture folder (filled below)
+ONLY_FIXTURES = True                        # False when the database also holds non-fixture runs
 
 
 def _database():
@@ -33,11 +35,18 @@ def _database():
         loaded = {(r.company, r.previous_year, r.current_year) for r in db.runs()}
     except Exception as error:  # noqa: BLE001 - any failure means "no database here"
         return None, f"database unavailable ({type(error).__name__})"
-    missing = [p for p in PERIODS if p not in loaded]
+    missing = [p for p in REQUIRED if p not in loaded]
     if missing:
         return None, f"fixture runs not loaded: {missing}"
     if not FIXTURES.is_dir():
         return None, "test_data/alignments missing (check out the test-data branch)"
+    global ONLY_FIXTURES
+    for company, previous, current in sorted(loaded):
+        folder = FIXTURES / company / f"{previous}-{current}"
+        if all((folder / f"{name}.json").is_file() for name in ("alignments", "needs_review")):
+            PERIODS.append((company, previous, current))
+        else:
+            ONLY_FIXTURES = False
     db.ensure_schema()
     return db, ""
 
@@ -77,6 +86,11 @@ def toy_embedding(text: str, dim: int = 1024) -> list[float]:
     return [v / norm for v in vector]
 
 
+def whole_database(test):
+    """Tests whose expected numbers cover every loaded run need the database to hold fixture runs only."""
+    return unittest.skipUnless(ONLY_FIXTURES, "database also holds runs that are not in test_data")(test)
+
+
 @unittest.skipIf(DB is None, SKIP_REASON)
 class ChatbotIntegrationTests(unittest.TestCase):
     @classmethod
@@ -97,11 +111,13 @@ class ChatbotIntegrationTests(unittest.TestCase):
 
     # ------------------------------------------------------------------ data model
 
+    @whole_database
     def test_view_has_one_row_per_fixture_alignment(self):
         rows = DB.query("t", "SELECT count(*) AS n, count(DISTINCT (run_id, match_id)) AS d FROM alignment_changes").rows[0]
         self.assertEqual(rows["n"], len(self.records))
         self.assertEqual(rows["d"], len(self.records))
 
+    @whole_database
     def test_view_labels_match_fixture_json(self):
         db_counts = Counter((r["company"], r["previous_year"], r["change_type"]) for r in DB.query(
             "t", "SELECT company, previous_year, change_type FROM alignment_changes").rows)
@@ -115,6 +131,7 @@ class ChatbotIntegrationTests(unittest.TestCase):
 
     # ------------------------------------------------------------------ the ten example questions
 
+    @whole_database
     def test_every_example_answers_and_cites_only_real_alignments(self):
         from test_chatbot import EXAMPLES
         for question, intent, *_ in EXAMPLES:
@@ -158,12 +175,14 @@ class ChatbotIntegrationTests(unittest.TestCase):
         for row in reply.results[1].rows:
             self.assertTrue(row["previous_excerpt"], "removed disclosures should quote the previous-year text")
 
+    @whole_database
     def test_item_7_distribution(self):
         reply = self.ask("What are the most common types of changes in Item 7?")
         dist = {r["change_type"]: r["n"] for r in reply.results[0].rows}
         expected = Counter(r["change_type"] or "Not analysed (needs review)" for r in self.records if r["item"] == "7")
         self.assertEqual(dist, dict(expected))
 
+    @whole_database
     def test_semantic_lexical_disagreements(self):
         reply = self.ask("Show me the semantic vs lexical disagreements")
         expected = [r for r in self.records if r["analysis_status"] == "completed" and r["semantic"] and r["lexical"]
@@ -171,6 +190,7 @@ class ChatbotIntegrationTests(unittest.TestCase):
         agreement = next(res for res in reply.results if res.name == "agreement_rate").rows[0]
         self.assertEqual(agreement["disagree"], len(expected))
 
+    @whole_database
     def test_low_confidence(self):
         reply = self.ask("Which disclosures have low confidence scores in their materiality assessment?")
         expected = [r for r in self.records if r["confidence"] is not None and r["confidence"] <= 0.8]
@@ -253,6 +273,7 @@ class ChatbotIntegrationTests(unittest.TestCase):
         self.assertEqual(reply.grounding.removed_ids, ["intc_2024_2025_M8888"])
         self.assertTrue(reply.warnings)
 
+    @whole_database
     def test_llm_sql_path_rejects_unsafe_sql_then_runs_corrected_query(self):
         from sec_disclosure.chatbot import Chatbot
         calls = []

@@ -104,11 +104,55 @@ reciprocal rank fusion; the reply says which methods ran (`pgvector:evidence + f
 | semantic vs lexical disagreements | `method_disagreements` | label pairs + agreement rate + examples |
 | summarise key changes for BAC 2023→2024 | `summary` | distribution, by-item, top material, new, removed |
 | tell me about bac_2023_2024_M0107 | `match_detail` | full row incl. original text |
+| compare NVIDIA and AMD on supply chain / how does NVDA compare to its peers on X | `peer_comparison` | peer-agent output first, alignments as fallback (below) |
 | anything else | `custom_sql` | LLM writes a SELECT (offline: keyword search) |
 
 Year convention: years are 10-K fiscal years. "2024 10-K" means `current_year = 2024` (the 2023→2024 run);
 "between 2023 and 2024" sets both years; "since 2023" sets `previous_year`. Short follow-ups
 ("what about JPM?") reuse the previous question's scope.
+
+## Peer comparisons (peer-agent output first)
+
+Questions about how two or more companies disclose the same topic are answered from the peer-comparison
+agent's precomputed output (`agents/peer_comparison.py`, peer-comparison branch) before touching the
+alignments. A lookup is one indexed query (~30 ms on the fixtures, vs ~0.5 s for a full-text search over
+all alignments), and it answers something alignments cannot: alignments compare a company with itself
+across years, the peer agent compares companies with each other in the same year.
+
+Load each agent report after a run:
+
+```bash
+python scripts/load_peer_comparisons_to_postgres.py data/peer_comparison/nvda/2024
+python scripts/load_peer_comparisons_to_postgres.py data/peer_comparison/*/2024 --dry-run   # validate only
+```
+
+Tables (`db/init/07_peer_comparisons.sql`, created automatically): `peer_comparison_runs` (one per target,
+year and peer set; partial runs allowed and flagged), `peer_comparison_targets`, `peer_comparison_results`
+(compared / no_comparable_candidate / no_candidate_retrieved per peer), `peer_comparisons` and
+`peer_comparison_evidence` (cited sentences), plus the `peer_comparison_pairs` view (both companies side by side
+with quotes). Reloading the same target/year/peer set replaces it.
+
+How a peer question is answered:
+
+1. **Coverage** – which loaded runs include the named companies for that fiscal year ("2024 10-K" → 2024).
+   One company plus "peers"/"competitors" means every company it was run against.
+2. **Lookup** – comparisons for each pair in either direction (NVDA→AMD or AMD→NVDA runs both count). With a
+   topic, every word of the topic (or the exact phrase) must appear, so "export controls" does not match
+   "change in control"; single words still use the synonym list.
+3. **No-match decisions** – disclosures where the agent found no comparable peer disclosure are shown as such
+   (not as "the peer never discusses this").
+4. **Year-over-year context** – each compared disclosure's own change label from `alignment_changes`, joined by
+   disclosure ID, so answers can say "AMD modified this in 2024 while NVIDIA left it unchanged".
+5. **Fallback** – when no peer run covers the pair, or nothing matches the topic, the chatbot says so and shows
+   each company's own alignment data for that year (topic search, or change profiles when there is no topic).
+
+Answers cite both disclosure IDs (`[nvda_2024_1A_D002 ↔ amd_2024_1A_D063]`) and the cited sentence IDs; the
+grounding check removes sentence IDs that are not in the retrieved peer evidence. Partial runs and missing
+pairs are stated in the answer.
+
+`tests/fixtures/peer_comparison/nvda/2024` is the agent's real output format, made from real disclosures with a
+scripted model, so its comparison text is synthetic (marked "SYNTHETIC TEST FIXTURE"). Replace it with a real
+pilot run (for example `--ticker NVDA --peers AMD INTC --year 2024 --items 1A --max-requests 10`) before demos.
 
 ## Data model
 
@@ -134,6 +178,7 @@ sentences from the alignment's `evidence` (`previous_text`, `current_text`). It 
 ```bash
 python -m pytest tests/test_chatbot.py                # no database needed
 python -m pytest tests/test_chatbot_integration.py    # needs the six fixture runs loaded; skips otherwise
+python -m pytest tests/test_peer_chatbot_integration.py  # loads the peer fixture temporarily; needs NVDA/AMD/INTC alignments
 ```
 
 Integration tests compute expected numbers from the fixture JSON files independently of the chatbot's SQL
@@ -159,4 +204,7 @@ src/sec_disclosure/chatbot/
 app/streamlit_app.py                 web UI
 db/init/06_chatbot.sql               alignment_changes view, chatbot_evidence_embeddings table
 scripts/embed_alignment_evidence.py  optional bge-m3 vectors for pgvector search
+db/init/07_peer_comparisons.sql      peer-comparison tables and peer_comparison_pairs view
+src/sec_disclosure/storage/peer_comparisons.py, scripts/load_peer_comparisons_to_postgres.py   loader
+src/sec_disclosure/chatbot/peers.py  peer lookup, year-over-year join, fallback filters
 ```

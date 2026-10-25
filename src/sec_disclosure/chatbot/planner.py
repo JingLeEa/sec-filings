@@ -16,6 +16,7 @@ from .entities import (COMPANY_ALIASES, DISCLOSURE_TAXONOMY_PATTERNS, ITEM_PATTE
 class Intent(str, Enum):
     MATCH_DETAIL = "match_detail"            # a specific match_id
     DISAGREEMENTS = "method_disagreements"   # semantic vs lexical labels differ
+    PEER_COMPARE = "peer_comparison"         # how two+ companies disclose the same topic (peer agent output first)
     COMPARE = "compare_companies"            # change patterns side by side
     LOW_CONFIDENCE = "low_confidence"        # materiality confidence scores
     SUMMARY = "summary"                      # key changes for a company/period
@@ -95,6 +96,26 @@ def residual_keywords(question: str) -> str:
     return " ".join(w for w in text.split() if w not in scaffolding and len(w) > 2)
 
 
+PEER_LANGUAGE_RE = re.compile(
+    r"\bcompar\w*|\bversus\b|\bvs\.?(?=\s|$)|\bdiffer\w*|\bsimilar\w*|\bcontrast\b|\bboth\b|\bside[\s-]by[\s-]side\b|"
+    r"\b(?:say|says|said|describe[sd]?|disclose[sd]?|discuss(?:es|ed)?|talk|treat|frame|position|approach)\b")
+PEER_SET_RE = re.compile(r"\bpeers?\b|\bcompetitors?\b|\brivals?\b|\bother\s+(?:banks|companies|chipmakers|firms)\b")
+CHANGE_STATS_RE = re.compile(
+    r"\bchange\s+(?:patterns?|profiles?|statistics|stats|rates?)\b|\btypes?\s+of\s+changes?\b|\bhow\s+many\b|"
+    r"\bnumber\s+of\b|\bdistribution\b|\bbreakdown\b|\bstatistic\w*|\bchange\s+labels?\b")
+PEER_FILLER = {"compare", "comparing", "comparison", "versus", "differ", "different", "difference", "differences",
+               "similar", "similarly", "contrast", "both", "say", "says", "said", "describe", "describes", "disclose",
+               "discloses", "discuss", "discusses", "talk", "treat", "frame", "position", "approach", "peers", "peer",
+               "competitors", "rivals", "their", "they", "them", "its", "vs", "and", "with"}
+
+
+def peer_topic(question: str) -> str | None:
+    topic = extract_topic(question)
+    if not topic:
+        topic = " ".join(w for w in residual_keywords(question).split() if w not in PEER_FILLER) or None
+    return topic
+
+
 def classify(question: str, filters: QueryFilters) -> Plan:
     text = question.lower()
     plan = Plan(intent=Intent.CUSTOM_SQL, filters=filters)
@@ -106,6 +127,11 @@ def classify(question: str, filters: QueryFilters) -> Plan:
         plan.intent = Intent.MATCH_DETAIL
     elif DISAGREE_RE.search(text) or ("semantic" in text and "lexical" in text):
         plan.intent = Intent.DISAGREEMENTS
+    elif not CHANGE_STATS_RE.search(text) and (
+            (len(filters.companies) >= 2 and PEER_LANGUAGE_RE.search(text))
+            or (len(filters.companies) >= 1 and PEER_SET_RE.search(text))):
+        plan.intent = Intent.PEER_COMPARE   # precomputed peer-agent comparisons first, alignments as fallback
+        plan.topic = peer_topic(question)
     elif COMPARE_RE.search(text):
         plan.intent = Intent.COMPARE  # across companies, or across periods when only one company is named
     elif re.search(r"\bconfiden\w*|\bcertain\w*|\bunsure\b", text):

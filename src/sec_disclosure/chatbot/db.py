@@ -9,6 +9,7 @@ from ..storage.disclosures import connection_arguments
 
 ROOT = Path(__file__).resolve().parents[3]
 CHATBOT_SCHEMA = ROOT / "db" / "init" / "06_chatbot.sql"
+PEER_SCHEMA = ROOT / "db" / "init" / "07_peer_comparisons.sql"
 STATEMENT_TIMEOUT_MS = 15000
 
 
@@ -77,18 +78,22 @@ class Database:
         return QueryResult(name=name, sql=sql, params=params, columns=columns, rows=list(rows))
 
     def ensure_schema(self) -> bool:
-        """Create the chatbot view/table when missing (older Docker volumes skip new init files)."""
+        """Create the chatbot view/tables when missing (older Docker volumes skip new init files)."""
         present = self.query("schema_check", "SELECT to_regclass('public.alignment_changes') AS v, "
-                                             "to_regclass('public.chatbot_evidence_embeddings') AS t").rows[0]
-        if present["v"] and present["t"]:
+                                             "to_regclass('public.chatbot_evidence_embeddings') AS t, "
+                                             "to_regclass('public.peer_comparison_pairs') AS p").rows[0]
+        missing = [path for path, ok in ((CHATBOT_SCHEMA, present["v"] and present["t"]), (PEER_SCHEMA, present["p"]))
+                   if not ok]
+        if not missing:
             return False
         conn = self._connect(read_only=False)
         try:
             with conn, conn.cursor() as cur:
-                cur.execute(CHATBOT_SCHEMA.read_text(encoding="utf-8"))
+                for path in missing:
+                    cur.execute(path.read_text(encoding="utf-8"))
         except Exception as error:
-            raise DatabaseError(f"Could not create the chatbot view ({type(error).__name__}). "
-                                f"Apply {CHATBOT_SCHEMA.relative_to(ROOT)} manually.") from None
+            raise DatabaseError(f"Could not create the chatbot views/tables ({type(error).__name__}). Apply "
+                                f"{', '.join(str(p.relative_to(ROOT)) for p in missing)} manually.") from None
         finally:
             conn.close()
         return True
@@ -108,6 +113,16 @@ class Database:
                    count(*) FILTER (WHERE a.extra ? 'materiality_analysis') AS with_materiality
             FROM alignment_runs r LEFT JOIN alignments a USING (run_id)
             GROUP BY 1, 2, 3 ORDER BY 1, 2""").rows
+
+    def peer_run_overview(self) -> list[dict]:
+        """Loaded peer-comparison runs (empty when the peer tables do not exist yet)."""
+        if self.query("peer_check", "SELECT to_regclass('public.peer_comparison_runs') AS t").rows[0]["t"] is None:
+            return []
+        return self.query("peer_run_overview", """
+            SELECT target, fiscal_year AS year, array_to_string(peers, ', ') AS peers,
+                   jobs_completed || '/' || jobs_planned AS done,
+                   (SELECT count(*) FROM peer_comparisons c WHERE c.peer_run_id = r.peer_run_id) AS comparisons
+            FROM peer_comparison_runs r ORDER BY target, fiscal_year""").rows
 
     def embedding_sources(self) -> dict[str, int]:
         """How many vectors each pgvector source holds (0 when the table is missing)."""
