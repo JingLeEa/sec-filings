@@ -32,6 +32,8 @@ class TestSynthesisIntegration(unittest.TestCase):
             materiality_pair_workers=1,
             materiality_concurrency=1,
             materiality_max_concurrent_requests=1,
+            data_dir=Path("data"),
+            env_file=None,
         )
 
     def run_case(self, until, synthesis_exit_code):
@@ -79,6 +81,7 @@ class TestSynthesisIntegration(unittest.TestCase):
         self.assertEqual(command[2:], [
             "--company", "AMD",
             "--years", "2023", "2024", "2025",
+            "--data-dir", "data",
         ])
 
     def test_failure(self):

@@ -55,6 +55,8 @@ def stage_dependencies(stages):
     for stage in stages:
         if stage.name.startswith("save_text_"):
             parents = {stage.name.removeprefix("save_")}
+        elif stage.name.startswith("save_xbrl_"):
+            parents = {"api_tables_and_save"}
         elif stage.phase == "extraction":
             parents = raw_saves | {"api_tables_and_save"}
         elif stage.phase == "preprocessing":

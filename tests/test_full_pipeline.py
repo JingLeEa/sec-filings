@@ -21,7 +21,8 @@ class FullPipelineTests(unittest.TestCase):
         patch.dict(os.environ, {}, clear=True).start()
         patch.object(runner, "dotenv_values", return_value={}).start()
         self.arguments = ["--ticker", "AMD", "--years", "2023", "2024", "2025",
-                          "--data-dir", str(self.root), "--user-agent", "Test test@example.com"]
+                          "--data-dir", str(self.root), "--user-agent", "Test test@example.com",
+                          "--skip-synthesis"]
 
     def test_each_stage_saves_and_materiality_is_imported_after_classification(self):
         stages = runner.build_stages(runner.parse_args(self.arguments))
@@ -39,6 +40,13 @@ class FullPipelineTests(unittest.TestCase):
                 self.assertEqual(stage.arguments[stage.arguments.index("--alignment-dir") + 1],
                                  stages[index + 1].arguments[stages[index + 1].arguments.index("--dir") + 1])
         names = [stage.name for stage in stages]
+        xbrl_saves = [stage for stage in stages if stage.script == "load_xbrl_to_postgres.py"]
+        self.assertEqual([stage.name for stage in xbrl_saves],
+                         ["save_xbrl_2023", "save_xbrl_2024", "save_xbrl_2025"])
+        self.assertEqual(
+            [Path(stage.arguments[stage.arguments.index("--file") + 1]).name for stage in xbrl_saves],
+            [f"amd_{year}_api_metrics_with_values.json" for year in (2023, 2024, 2025)],
+        )
         self.assertLess(names.index("api_tables_and_save"), names.index("extract_disclosures_and_save"))
         self.assertLess(names.index("align_and_save_2024_2025"), names.index("llm_changes_2023_2024"))
         self.assertLess(names.index("save_changes_2024_2025"), names.index("materiality_2023_2024"))
@@ -107,7 +115,8 @@ class FullPipelineTests(unittest.TestCase):
             self.assertEqual(runner.main(self.arguments), 0)
         state = json.loads((self.root / "pipeline_runs/amd/2023-2024-2025/status.json").read_text())
         self.assertTrue(state["complete"])
-        self.assertTrue(state["full_pipeline_complete"])
+        self.assertFalse(state["full_pipeline_complete"])
+        self.assertEqual(state["synthesis_status"], "skipped")
         self.assertEqual(state["until"], "materiality")
         self.assertEqual(state["extraction_concurrency"], {"year_workers": 3,
                                                          "batch_workers_per_year": 6,
@@ -146,11 +155,11 @@ class FullPipelineTests(unittest.TestCase):
         run.assert_not_called()
 
     def test_every_stopping_point_includes_its_final_database_save(self):
-        endpoints = {"preprocessing": (7, "api_tables_and_save"),
-                     "extraction": (8, "extract_disclosures_and_save"),
-                     "alignment": (10, "align_and_save_2024_2025"),
-                     "change-analysis": (16, "save_changes_2024_2025"),
-                     "materiality": (20, "save_materiality_2024_2025")}
+        endpoints = {"preprocessing": (10, "save_xbrl_2025"),
+                     "extraction": (11, "extract_disclosures_and_save"),
+                     "alignment": (13, "align_and_save_2024_2025"),
+                     "change-analysis": (19, "save_changes_2024_2025"),
+                     "materiality": (23, "save_materiality_2024_2025")}
         for target, (count, last) in endpoints.items():
             with self.subTest(until=target):
                 stages = runner.build_stages(runner.parse_args(self.arguments + ["--until", target]))
@@ -165,7 +174,7 @@ class FullPipelineTests(unittest.TestCase):
              redirect_stdout(io.StringIO()) as output:
             self.assertEqual(runner.main(self.arguments + ["--until", "extraction"]), 0)
         commands = [call.args[0].command for call in run.call_args_list]
-        self.assertEqual(len(commands), 8)
+        self.assertEqual(len(commands), 11)
         self.assertEqual(Path(commands[-1][1]).name, "extract_disclosures.py")
         self.assertIn("--store-postgres", commands[-1])
         self.assertFalse(any(Path(command[1]).name == "align_disclosures.py" for command in commands))
@@ -384,10 +393,10 @@ class FullPipelineTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertNotIn("text_2023", executed)
         self.assertEqual(executed[0], "save_text_2023")
-        self.assertEqual(len(executed), 6)
+        self.assertEqual(len(executed), 9)
         self.assertIn("skipping 1 completed stages", output)
         state = json.loads(self.progress_path.read_text())
-        self.assertEqual(len(state["stages"]), 7)
+        self.assertEqual(len(state["stages"]), 10)
         self.assertEqual(state["started_at"], original_start)
 
     def test_resume_only_retries_the_failed_materiality_pair_and_its_save(self):
@@ -409,10 +418,11 @@ class FullPipelineTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(executed, ["materiality_2023_2024", "save_materiality_2023_2024"])
         state = json.loads(self.progress_path.read_text())
-        self.assertTrue(state["full_pipeline_complete"])
+        self.assertFalse(state["full_pipeline_complete"])
+        self.assertEqual(state["synthesis_status"], "skipped")
         self.assertEqual(state["started_at"], original_start)
-        self.assertEqual(len(state["stages"]), 20)
-        self.assertEqual(len(state["skipped_stages"]), 18)
+        self.assertEqual(len(state["stages"]), 23)
+        self.assertEqual(len(state["skipped_stages"]), 21)
         self.assertTrue(all(entry["command_sha256"] for entry in state["stages"]))
 
     def test_resume_extends_until_and_preserves_progress_across_narrower_selections(self):
@@ -433,7 +443,7 @@ class FullPipelineTests(unittest.TestCase):
         with patch.object(runner, "preflight") as preflight, \
              patch.object(runner, "execute_stage") as execute, redirect_stdout(io.StringIO()) as output:
             # SEC_USER_AGENT is absent, and there is no --user-agent argument.
-            self.assertEqual(runner.main(self.arguments[:-2]), 0)
+            self.assertEqual(runner.main(self.arguments[:-3] + ["--skip-synthesis"]), 0)
         preflight.assert_not_called()
         execute.assert_not_called()
         self.assertIn("all selected stages are complete", output.getvalue())
@@ -442,13 +452,13 @@ class FullPipelineTests(unittest.TestCase):
         self.assertEqual(self.run_mock_pipeline(["--until", "change-analysis"])[0], 0)
         with patch.object(runner, "preflight") as preflight, \
              patch.object(runner, "execute_stage", return_value=0), redirect_stdout(io.StringIO()):
-            self.assertEqual(runner.main(self.arguments[:-2]), 0)
+            self.assertEqual(runner.main(self.arguments[:-3] + ["--skip-synthesis"]), 0)
         pending = preflight.call_args.kwargs["stages"]
         self.assertEqual(len(pending), 4)
         self.assertTrue(all(stage.phase == "materiality" for stage in pending))
 
     def test_pending_database_save_does_not_require_sec_or_llm_configuration(self):
-        args = runner.parse_args(self.arguments[:-2])
+        args = runner.parse_args(self.arguments[:-3] + ["--skip-synthesis"])
         stage = next(stage for stage in runner.build_stages(args) if stage.name == "save_materiality_2023_2024")
         with patch.object(runner, "load_config") as llm, \
              patch.object(runner, "connection_arguments", return_value={"dbname": "test"}), \
@@ -485,7 +495,7 @@ class FullPipelineTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertCountEqual(executed, ["align_and_save_2023_2024", "align_and_save_2024_2025"])
         state = json.loads(self.progress_path.read_text())
-        self.assertEqual(len(state["stages"]), 10)
+        self.assertEqual(len(state["stages"]), 13)
         code, executed, _ = self.run_mock_pipeline()
         self.assertEqual(code, 0)
         self.assertEqual(len(executed), 10)
@@ -497,8 +507,8 @@ class FullPipelineTests(unittest.TestCase):
         code, executed, output = self.run_mock_pipeline(["--dry-run"])
         self.assertEqual(code, 0)
         self.assertEqual(executed, [])
-        self.assertEqual(output.count("[cached; skipped]"), 16)
-        self.assertIn("17/20 materiality_2023_2024", output)
+        self.assertEqual(output.count("[cached; skipped]"), 19)
+        self.assertIn("20/23 materiality_2023_2024", output)
         self.assertEqual(self.progress_path.read_bytes(), before)
         code, executed, output = self.run_mock_pipeline(["--dry-run", "--no-resume"])
         self.assertEqual(code, 0)

@@ -23,7 +23,8 @@ PostgreSQL. Every downstream stage uses `--input-source postgres`; it queries
 the database directly for the previous stage's data. Local input JSON downloads
 are not required and there is no automatic fallback to local files:
 
-1. Preprocess narrative text and API/XBRL table metrics for every selected year.
+1. Preprocess narrative text and API/XBRL table metrics for every selected year,
+   then load the verified XBRL exports into PostgreSQL.
 2. Extract disclosures for every selected year.
 3. Align disclosures for every adjacent year pair.
 4. Run LLM change classification and lexical/semantic analysis, then save the
@@ -38,6 +39,7 @@ are not required and there is no automatic fallback to local files:
 | LLM change classification | PostgreSQL finalized alignments and source evidence |
 | Lexical/semantic analysis | PostgreSQL alignments containing the saved LLM labels, and source evidence |
 | Materiality | PostgreSQL alignments containing change analysis |
+| XBRL facts | Loaded from each verified yearly API/XBRL export into `xbrl_value_context` |
 
 Normalized result rows and their `pipeline_stage_snapshots` documents are saved
 in the same database transaction. The snapshots retain exact source hashes,
@@ -110,6 +112,16 @@ JSON and a separate output/checkpoint directory:
 Starting after preprocessing does not require SEC download credentials.
 `--from-stage` must be at or before `--until`. To continue farther later, use a
 later target or omit `--until` for all remaining stages.
+
+After all materiality results have been saved, the default full run executes the
+packaged synthesis agent. It reads material changes and loaded XBRL facts from
+PostgreSQL and writes the validated report, response cache, and token usage under
+`data/synthesis/` (or the selected `--data-dir`). Batch findings are followed by
+one final synthesis request for the executive summary and whole-period analyses.
+Use `--skip-synthesis` to run or test the upstream pipeline without making
+synthesis model calls; the status file records `synthesis_status: skipped`.
+The pipeline forwards `--env-file` to synthesis, which uses the shared SoCLaaS
+configuration and records provider-reported token usage.
 Successful model responses and embeddings are reused from stage caches.
 When PostgreSQL mode encounters an implementation-only change in an existing
 alignment checkpoint, it archives job decisions and revalidates cached responses.

@@ -82,6 +82,8 @@ def parse_args(argv=None):
                         help="Skip completed pipeline stages using saved progress (default: enabled); "
                              "--no-resume executes the selected stages again, retaining their internal caches.")
     parser.add_argument("--dry-run", action="store_true", help="Print every command without downloads, model calls or database writes")
+    parser.add_argument("--skip-synthesis", action="store_true",
+                        help="Skip the final synthesis report after upstream stages complete")
     args = parser.parse_args(argv)
     if PHASES.index(args.from_stage) > PHASES.index(args.until):
         parser.error("--from-stage must be at or before --until")
@@ -139,6 +141,10 @@ def build_stages(args, *, full=False):
         "--output-dir", data / "table_output" / args.ticker,
         "--sec-cache", data / "sec_cache", "--taxonomy-cache", data / "taxonomy_cache",
         "--user-agent", args.user_agent)
+    for year in args.years:
+        add("preprocessing", f"save_xbrl_{year}", "load_xbrl_to_postgres.py",
+            "--company", args.ticker, "--year", year, "--file",
+            data / "table_output" / args.ticker / f"{args.ticker}_{year}_api_metrics_with_values.json")
     add("extraction", "extract_disclosures_and_save", "extract_disclosures.py", "--ticker", args.ticker,
         "--years", *args.years, "--data-dir", data, "--output-root", disclosures,
         "--workers", args.workers, "--batch-workers", args.batch_workers,
@@ -362,13 +368,16 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
 
     # Run synthesis only after the full upstream pipeline succeeds.
     # Partial runs (for example, --until alignment) do not trigger synthesis.
-    if args.until == "materiality":
+    if args.until == "materiality" and not getattr(args, "skip_synthesis", False):
         synthesis_command = [
             sys.executable,
-            str(ROOT / "synthesis_dev" / "run_from_db.py"),
+            str(ROOT / "scripts" / "run_synthesis.py"),
             "--company", args.ticker.upper(),
             "--years", *map(str, args.years),
+            "--data-dir", str(args.data_dir),
         ]
+        if getattr(args, "env_file", None):
+            synthesis_command.extend(["--env-file", str(args.env_file)])
 
         print("\nRunning final synthesis stage...", flush=True)
 
@@ -402,10 +411,13 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
             return synthesis_code
 
         state["synthesis_status"] = "complete"
+    elif args.until == "materiality":
+        state["synthesis_status"] = "skipped"
 
     state.update(
         complete=True,
-        full_pipeline_complete=args.until == "materiality",
+        full_pipeline_complete=(args.until == "materiality"
+                                and not getattr(args, "skip_synthesis", False)),
         completed_at=datetime.now(timezone.utc).isoformat(),
     )
     write_json(log_dir / "status.json", state)
