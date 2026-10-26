@@ -8,6 +8,7 @@ import json
 import math
 import re
 import sys
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -45,10 +46,20 @@ Return only a JSON object with exactly these string/list fields:
 
 
 def _write_json(path: Path, value: Any) -> None:
+    """Convert Decimal values to JSON numbers only at the output boundary."""
+    def json_numbers(item):
+        if isinstance(item, Decimal):
+            return float(item)
+        if isinstance(item, dict):
+            return {key: json_numbers(child) for key, child in item.items()}
+        if isinstance(item, (list, tuple)):
+            return [json_numbers(child) for child in item]
+        return item
+
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(
-        json.dumps(value, indent=2, ensure_ascii=False, default=str) + "\n",
+        json.dumps(json_numbers(value), indent=2, ensure_ascii=False, default=str) + "\n",
         encoding="utf-8",
     )
     temporary.replace(path)
@@ -66,6 +77,10 @@ def _metric_for(records: list[dict], *aliases: str) -> dict | None:
                 for key in keys)),
         None,
     )
+
+
+def _decimal_value(value: Any) -> Decimal:
+    return value if isinstance(value, Decimal) else Decimal(str(value))
 
 
 def calculate_trends(financial_metrics: list[dict]) -> list[dict]:
@@ -103,7 +118,11 @@ def calculate_trends(financial_metrics: list[dict]) -> list[dict]:
                 continue
             old = values[previous].get(concept)
             new = values[current].get(concept)
-            if old is None or new is None or old["value"] == 0:
+            if old is None or new is None:
+                continue
+            old_value = _decimal_value(old["value"])
+            new_value = _decimal_value(new["value"])
+            if old_value == 0:
                 continue
             trends.append({
                 "type": "year_over_year_change",
@@ -112,10 +131,10 @@ def calculate_trends(financial_metrics: list[dict]) -> list[dict]:
                 "unit": new.get("unit"),
                 "from_year": previous,
                 "to_year": current,
-                "old_value": old["value"],
-                "new_value": new["value"],
+                "old_value": old_value,
+                "new_value": new_value,
                 "growth_pct": round(
-                    (new["value"] - old["value"]) / abs(old["value"]) * 100, 2
+                    (new_value - old_value) / abs(old_value) * 100, 2
                 ),
                 "formula": "(new_value - old_value) / abs(old_value) * 100",
                 "source_ids": [old["id"], new["id"]],
@@ -134,11 +153,14 @@ def calculate_trends(financial_metrics: list[dict]) -> list[dict]:
             (_metric_for(records, "PaymentsToAcquirePropertyPlantAndEquipment", "capital expenditure", "capex"),
              "Capital expenditure / revenue", "capital expenditure / revenue * 100", "%", True),
         )
-        if revenue and revenue["value"] != 0:
+        if revenue and _decimal_value(revenue["value"]) != 0:
             for record, name, formula, unit, _ in components:
                 if record:
                     trends.append(calculation(
-                        name, year, record["value"] / revenue["value"] * 100, unit,
+                        name, year,
+                        _decimal_value(record["value"])
+                        / _decimal_value(revenue["value"]) * 100,
+                        unit,
                         [record, revenue], formula,
                     ))
 
@@ -146,26 +168,33 @@ def calculate_trends(financial_metrics: list[dict]) -> list[dict]:
         cash_flow = _metric_for(
             records, "NetCashProvidedByUsedInOperatingActivities", "operating cash flow",
         )
-        if net_income and net_income["value"] != 0 and cash_flow:
+        if (net_income and _decimal_value(net_income["value"]) != 0
+                and cash_flow):
             trends.append(calculation(
                 "Operating cash flow / net income", year,
-                cash_flow["value"] / net_income["value"], "x",
+                _decimal_value(cash_flow["value"])
+                / _decimal_value(net_income["value"]),
+                "x",
                 [cash_flow, net_income], "operating cash flow / net income",
             ))
 
         assets = _metric_for(records, "AssetsCurrent", "current assets")
         liabilities = _metric_for(records, "LiabilitiesCurrent", "current liabilities")
-        if assets and liabilities and liabilities["value"] != 0:
+        if assets and liabilities and _decimal_value(liabilities["value"]) != 0:
             trends.append(calculation(
-                "Current ratio", year, assets["value"] / liabilities["value"], "x",
+                "Current ratio", year,
+                _decimal_value(assets["value"]) / _decimal_value(liabilities["value"]),
+                "x",
                 [assets, liabilities], "current assets / current liabilities",
             ))
 
         debt = _metric_for(records, "DebtLongtermAndShorttermCombinedAmount", "total debt")
         equity = _metric_for(records, "StockholdersEquity", "stockholders equity", "shareholders equity")
-        if debt and equity and equity["value"] != 0:
+        if debt and equity and _decimal_value(equity["value"]) != 0:
             trends.append(calculation(
-                "Debt / equity", year, debt["value"] / equity["value"], "x",
+                "Debt / equity", year,
+                _decimal_value(debt["value"]) / _decimal_value(equity["value"]),
+                "x",
                 [debt, equity], "reported combined debt / stockholders' equity",
             ))
 

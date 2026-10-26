@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from decimal import Decimal
+import json
 from typing import Any
 
 
@@ -105,7 +107,11 @@ def fetch_change_evidence(conn, company: str, previous_year: int,
 
 
 def fetch_financial_metrics(conn, company: str, years: list[int]) -> list[dict]:
-    """Fetch annual company-wide XBRL facts from the loaded XBRL view."""
+    """Fetch annual company-wide XBRL facts from the loaded XBRL view.
+
+    Instant facts are labeled with the calendar year of ``instant_date``. The
+    view has no verified issuer fiscal-year-end date with which to validate it.
+    """
     if not years:
         return []
     concepts = {
@@ -131,12 +137,9 @@ def fetch_financial_metrics(conn, company: str, years: list[int]) -> list[dict]:
                        extraction_id, taxonomy_year, concept, label, amount, unit,
                        concept_period_type, metric_scope, value_index, value_text,
                        period_start_date, period_end_date, instant_date, dimensions,
-                       status,
-                       ROW_NUMBER() OVER (
-                           PARTITION BY source_filing_year, concept
-                           ORDER BY COALESCE(period_end_date, instant_date) DESC,
-                                    value_index DESC
-                       ) AS period_rank
+                       status, decimals, precision,
+                       decimals IS NULL AS decimals_missing,
+                       precision IS NULL AS precision_missing
                 FROM xbrl_value_context
                 WHERE UPPER(company) = UPPER(%s)
                   AND source_filing_year = ANY(%s)
@@ -158,21 +161,31 @@ def fetch_financial_metrics(conn, company: str, years: list[int]) -> list[dict]:
                    extraction_id, taxonomy_year, concept, label, amount, unit,
                    concept_period_type, metric_scope, value_index, value_text,
                    period_start_date, period_end_date, instant_date,
-                   dimensions, status
-            FROM eligible WHERE period_rank = 1
+                   dimensions, status, decimals, precision,
+                   decimals_missing, precision_missing
+            FROM eligible
             ORDER BY source_filing_year, concept
             """,
             (company, years, sorted(concepts)),
         )
         rows = cursor.fetchall()
 
-    metrics = []
     grouped: dict[tuple, list[dict]] = defaultdict(list)
     for row in rows:
         (row_company, year, form_type, filing_id, extraction_id, taxonomy_year,
          concept, label, amount, unit, period_type, scope, value_index, value_text,
-         period_start, period_end, instant_date, dimensions, status) = row
-        period_date = period_end or instant_date
+         period_start, period_end, instant_date, dimensions, status,
+         decimals, precision, decimals_missing, precision_missing) = row
+        period_date = period_end if period_type == "duration" else instant_date
+        if period_date is None:
+            raise ValueError(
+                f"{concept} from source filing year {year} has no reporting-period date."
+            )
+        reporting_year = period_date.year
+        if period_type == "duration":
+            period_key = (concept, period_type, period_start, period_end, unit, scope)
+        else:
+            period_key = (concept, period_type, instant_date, unit, scope)
         metric = {
             "id": (f"xbrl:{row_company.upper()}:{year}:{filing_id}:{extraction_id}:"
                    f"{concept}:{period_date.isoformat()}:{value_index}"),
@@ -181,8 +194,8 @@ def fetch_financial_metrics(conn, company: str, years: list[int]) -> list[dict]:
             "label": label,
             "definition": None,
             "unit": unit,
-            "year": int(year),
-            "value": float(amount),
+            "year": reporting_year,
+            "value": Decimal(str(amount)),
             "period_type": "FY" if period_type == "duration" else "instant",
             "concept_period_type": period_type,
             "period_start_date": period_start.isoformat() if period_start else None,
@@ -198,17 +211,60 @@ def fetch_financial_metrics(conn, company: str, years: list[int]) -> list[dict]:
             "dimensions": dimensions,
             "metric_scope": scope,
             "status": status,
+            "decimals": decimals,
+            "precision": precision,
+            "decimals_missing": decimals_missing,
+            "precision_missing": precision_missing,
         }
-        grouped[(year, concept)].append(metric)
-        metrics.append(metric)
-
-    duplicates = {
-        key: [record["id"] for record in records]
-        for key, records in grouped.items() if len(records) > 1
-    }
-    if duplicates:
-        raise ValueError(
-            "Ambiguous financial facts remain after annual period selection: "
-            f"{duplicates}"
+        equivalence_key = (
+            Decimal(str(amount)),
+            unit,
+            json.dumps(dimensions, sort_keys=True, separators=(",", ":")),
+            status,
+            scope,
+            decimals_missing,
+            json.dumps(decimals, sort_keys=True, separators=(",", ":")),
+            precision_missing,
+            json.dumps(precision, sort_keys=True, separators=(",", ":")),
         )
-    return metrics
+        grouped[period_key].append((metric, equivalence_key))
+
+    selected_metrics = []
+    conflicts = {}
+    for period_key, records in grouped.items():
+        # The schema preserves missing accuracy metadata separately from JSON null,
+        # and preserves string/number JSON types. Require exact metadata matches;
+        # differing precision declarations remain ambiguous even when amounts match.
+        if len({equivalence_key for _, equivalence_key in records}) > 1:
+            conflicts[period_key] = [
+                {"source_filing_year": metric["source_filing_year"],
+                 "value": metric["value"], "unit": metric["unit"],
+                 "scope": metric["metric_scope"],
+                 "decimals": metric["decimals"], "precision": metric["precision"],
+                 "id": metric["id"]}
+                for metric, _ in records
+            ]
+            continue
+        # Prefer the earliest source filing containing the equivalent fact.
+        # Stable tie-breakers preserve deterministic provenance across query plans.
+        selected_metrics.append(min(
+            (metric for metric, _ in records),
+            key=lambda metric: (
+                metric["source_filing_year"], metric["filing_id"],
+                metric["extraction_id"], metric["value_index"], metric["id"],
+            ),
+        ))
+    if conflicts:
+        raise ValueError(
+            "Conflicting financial facts share the same reporting period, concept, "
+            "unit, and scope: "
+            f"{conflicts}"
+        )
+    return sorted(
+        selected_metrics,
+        key=lambda metric: (
+            metric["year"], metric["concept"], metric["period_type"],
+            metric["period_start_date"] or metric["instant_date"],
+            metric["source_filing_year"], metric["id"],
+        ),
+    )
