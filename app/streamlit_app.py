@@ -52,6 +52,8 @@ def render_details(reply) -> None:
     meta = [f"`{reply.intent}`", "LLM answer" if reply.mode == "llm" else "templated answer (offline)"]
     if reply.retrieval_method:
         meta.append(f"retrieval: {reply.retrieval_method}")
+    if reply.elapsed_ms is not None:
+        meta.append(f"{reply.elapsed_ms / 1000:.2f} s")
     if reply.filters:
         meta.append("filters: " + ", ".join(f"{k}={v}" for k, v in reply.filters.items()))
     st.caption(" · ".join(meta))

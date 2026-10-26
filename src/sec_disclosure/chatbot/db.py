@@ -1,6 +1,8 @@
 """PostgreSQL access for the chatbot: read-only, time-limited, credentials from connection_arguments()."""
 from __future__ import annotations
 
+import threading
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Sequence
@@ -24,6 +26,7 @@ class QueryResult:
     params: Sequence[Any] | dict | None
     columns: list[str] = field(default_factory=list)
     rows: list[dict] = field(default_factory=list)
+    elapsed_ms: float | None = None
 
     def as_records(self) -> list[dict]:
         return self.rows
@@ -38,12 +41,22 @@ class Run:
 
 
 class Database:
-    """Opens one connection per call so the chatbot holds no idle connection between questions."""
+    """One reused read-only connection; every query runs in its own READ ONLY transaction.
+
+    Reusing the connection matters on Windows: each new TCP connection to "localhost" can cost ~2 s there
+    (IPv6 ::1 is tried first and Docker only listens on 127.0.0.1), and one answer runs 10-20 queries.
+    For the same reason "localhost" is replaced by 127.0.0.1, which is what docker-compose.yml binds.
+    """
 
     def __init__(self, env_file: Path | None = None, *, statement_timeout_ms: int = STATEMENT_TIMEOUT_MS):
-        self._arguments = connection_arguments(env_file)
+        self._arguments = dict(connection_arguments(env_file))
+        if self._arguments.get("host") == "localhost":
+            self._arguments["host"] = "127.0.0.1"
         self.statement_timeout_ms = statement_timeout_ms
         self._runs: list[Run] | None = None
+        self._conn = None
+        self._lock = threading.Lock()          # Streamlit may call from more than one thread
+        self.connect_ms: float | None = None   # time the last connection took to open
 
     def _connect(self, *, read_only: bool):
         try:
@@ -59,23 +72,40 @@ class Database:
         conn.read_only = read_only
         return conn
 
+    def _reader(self):
+        if self._conn is None or self._conn.closed or self._conn.broken:
+            started = time.perf_counter()
+            self._conn = self._connect(read_only=True)
+            self.connect_ms = (time.perf_counter() - started) * 1000
+        return self._conn
+
+    def close(self) -> None:
+        with self._lock:
+            if self._conn is not None and not self._conn.closed:
+                self._conn.close()
+            self._conn = None
+
     def query(self, name: str, sql: str, params: Sequence[Any] | dict | None = None) -> QueryResult:
         """Run one SELECT inside a READ ONLY transaction with a statement timeout."""
-        conn = self._connect(read_only=True)
-        try:
-            with conn, conn.cursor() as cur:
-                cur.execute(f"SET LOCAL statement_timeout = {int(self.statement_timeout_ms)}")
-                cur.execute(sql, params)
-                columns = [c.name for c in cur.description] if cur.description else []
-                rows = cur.fetchall() if cur.description else []
-        except DatabaseError:
-            raise
-        except Exception as error:
-            message = str(error).split("\n")[0][:300]
-            raise DatabaseError(f"Query '{name}' failed: {type(error).__name__}: {message}") from None
-        finally:
-            conn.close()
-        return QueryResult(name=name, sql=sql, params=params, columns=columns, rows=list(rows))
+        with self._lock:
+            for attempt in (1, 2):
+                conn = self._reader()
+                started = time.perf_counter()
+                try:
+                    with conn.transaction(), conn.cursor() as cur:
+                        cur.execute(f"SET LOCAL statement_timeout = {int(self.statement_timeout_ms)}")
+                        cur.execute(sql, params)
+                        columns = [c.name for c in cur.description] if cur.description else []
+                        rows = cur.fetchall() if cur.description else []
+                    break
+                except Exception as error:
+                    if conn.broken and attempt == 1:   # server restarted / idle connection dropped: reconnect once
+                        self._conn = None
+                        continue
+                    message = str(error).split("\n")[0][:300]
+                    raise DatabaseError(f"Query '{name}' failed: {type(error).__name__}: {message}") from None
+        return QueryResult(name=name, sql=sql, params=params, columns=columns, rows=list(rows),
+                           elapsed_ms=(time.perf_counter() - started) * 1000)
 
     def ensure_schema(self) -> bool:
         """Create the chatbot view/tables when missing (older Docker volumes skip new init files)."""

@@ -119,6 +119,7 @@ class PeerStore:
         tsq = topic_tsquery(topic) if topic else ""
         comparison_rows: list[dict] = []
         no_match_rows: list[dict] = []
+        comparison_ms = no_match_ms = 0.0
         for a, b in out.covered_pairs:
             params = {"pa": a, "pb": b, "year": year, "items": filters.items or None, "tsq": tsq or None}
             where = (f"{_pair_condition()} AND (%(year)s::int IS NULL OR v.fiscal_year = %(year)s) "
@@ -136,7 +137,9 @@ class PeerStore:
                     FROM peer_comparison_pairs v WHERE {where}
                     ORDER BY (v.relationship = 'same_topic') DESC, v.retrieval_score DESC NULLS LAST, v.comparison_id
                     LIMIT {n}"""
-            comparison_rows.extend(self.db.query("peer_comparisons", sql, params).rows)
+            found = self.db.query("peer_comparisons", sql, params)
+            comparison_rows.extend(found.rows)
+            comparison_ms += found.elapsed_ms or 0
 
             no_match_sql = f"""
                 SELECT r.target AS company_a, res.peer AS company_b, r.fiscal_year, t.item, t.target_disclosure_id
@@ -150,7 +153,9 @@ class PeerStore:
                   AND (%(items)s::text[] IS NULL OR t.item = ANY(%(items)s))
                   {"AND " + TARGET_DOCUMENT + " @@ to_tsquery('english', %(tsq)s)" if tsq else ""}
                 ORDER BY t.target_disclosure_id LIMIT 5"""
-            no_match_rows.extend(self.db.query("peer_no_match", no_match_sql, params).rows)
+            unmatched = self.db.query("peer_no_match", no_match_sql, params)
+            no_match_rows.extend(unmatched.rows)
+            no_match_ms += unmatched.elapsed_ms or 0
 
         if tsq:
             comparison_rows.sort(key=lambda r: -(float(r["relevance"] or 0)))
@@ -158,10 +163,11 @@ class PeerStore:
         out.results.append(QueryResult("peer_comparisons", "-- per-pair peer_comparison_pairs lookup (see notes)",
                                        {"pairs": out.covered_pairs, "topic": topic, "year": year},
                                        columns=list(comparison_rows[0].keys()) if comparison_rows else [],
-                                       rows=comparison_rows))
+                                       rows=comparison_rows, elapsed_ms=comparison_ms))
         if no_match_rows:
             out.results.append(QueryResult("peer_no_match", "-- targets the agent could not match", None,
-                                           columns=list(no_match_rows[0].keys()), rows=no_match_rows))
+                                           columns=list(no_match_rows[0].keys()), rows=no_match_rows,
+                                           elapsed_ms=no_match_ms))
         out.found = bool(comparison_rows)
         if comparison_rows:
             out.results.append(self.year_over_year(comparison_rows))

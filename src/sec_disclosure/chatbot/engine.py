@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
@@ -76,6 +77,7 @@ class ChatResponse:
     warnings: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
     grounding: GroundingReport | None = None
+    elapsed_ms: float | None = None          # whole ask(): queries + answer writing
 
     @property
     def queries(self) -> list[tuple[str, str, object]]:
@@ -172,6 +174,7 @@ class Chatbot:
         question = question.strip()
         if not question:
             raise ValueError("Ask a question.")
+        started = time.perf_counter()
         plan = self.plan(question)
         notes = list(plan.notes)
         warnings: list[str] = []
@@ -214,7 +217,8 @@ class Chatbot:
             warnings.extend(report.warnings())
         return ChatResponse(question=question, answer=answer, intent=plan.intent.value, filters=plan.filters.as_dict(),
                             mode=mode, results=results, retrieval_method=retrieval_method, citations=citations,
-                            warnings=warnings, notes=notes, grounding=report)
+                            warnings=warnings, notes=notes, grounding=report,
+                            elapsed_ms=(time.perf_counter() - started) * 1000)
 
     def _peer_compare(self, plan: Plan, results: list[QueryResult], notes: list[str]) -> str:
         """Precomputed peer-agent comparisons first; per-company alignment data only when none match."""
