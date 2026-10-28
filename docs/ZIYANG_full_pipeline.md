@@ -118,6 +118,10 @@ packaged synthesis agent. It reads material changes and loaded XBRL facts from
 PostgreSQL and writes the validated report, response cache, and token usage under
 `data/synthesis/` (or the selected `--data-dir`). Batch findings are followed by
 one final synthesis request for the executive summary and whole-period analyses.
+Finding batches run concurrently (18 workers by default, configurable with
+`--finding-workers` and capped at the SoCLaaS limit of 20). The completed report
+is also upserted into PostgreSQL `synthesis_reports`, keyed by company and years;
+the JSON file remains available as a portable artifact.
 Use `--skip-synthesis` to run or test the upstream pipeline without making
 synthesis model calls; the status file records `synthesis_status: skipped`.
 The pipeline forwards `--env-file` to synthesis, which uses the shared SoCLaaS

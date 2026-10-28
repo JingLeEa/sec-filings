@@ -2,6 +2,7 @@
 
 import json
 import tempfile
+import threading
 import unittest
 from datetime import date
 from decimal import Decimal
@@ -9,6 +10,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from sec_disclosure.agents.synthesis import (
+    DEFAULT_FINDING_WORKERS,
+    MAX_FINDING_WORKERS,
     SynthesisCalls,
     _parse_json_object,
     _write_json,
@@ -16,6 +19,7 @@ from sec_disclosure.agents.synthesis import (
     synthesize,
 )
 from sec_disclosure.agents.synthesis_retrieval import fetch_financial_metrics
+from sec_disclosure.storage.synthesis import save_synthesis_report
 
 
 class FakeCalls:
@@ -27,8 +31,33 @@ class FakeCalls:
         self.prompts.append((stage, prompt, system_prompt))
         return self.responses.pop(0)
 
-    def invalidate_last(self):
+    def invalidate_last(self, stage=None):
         pass
+
+
+class ConcurrentFakeCalls(FakeCalls):
+    def __init__(self):
+        super().__init__([])
+        self.barrier = threading.Barrier(3)
+        self.active = 0
+        self.max_active = 0
+        self.lock = threading.Lock()
+
+    def complete(self, stage, prompt, system_prompt):
+        with self.lock:
+            self.prompts.append((stage, prompt, system_prompt))
+        if stage.startswith("findings-"):
+            with self.lock:
+                self.active += 1
+                self.max_active = max(self.max_active, self.active)
+            try:
+                self.barrier.wait(timeout=5)
+            finally:
+                with self.lock:
+                    self.active -= 1
+            change = json.loads(prompt)["material_changes"][0]
+            return finding(change["id"])
+        return FINAL_REPORT
 
 
 def finding(identifier):
@@ -115,6 +144,7 @@ class SynthesisAgentTests(unittest.TestCase):
             "financial_metrics": [],
             "finding_target": 2,
             "finding_batch_size": 1,
+            "finding_workers": 1,
         }
 
     def test_final_report_synthesizes_findings_once_and_receives_financial_data_once(self):
@@ -169,6 +199,28 @@ class SynthesisAgentTests(unittest.TestCase):
         result = synthesize(request, calls)
         self.assertTrue(result["validation"]["valid"])
         self.assertEqual(len(calls.prompts), 3)
+
+    def test_findings_batches_run_concurrently_with_a_bounded_worker_count(self):
+        calls = ConcurrentFakeCalls()
+        request = self.request()
+        request["material_changes"] = [{"id": f"c{i}"} for i in range(6)]
+        request["finding_target"] = 6
+        request["finding_workers"] = 3
+
+        result = synthesize(request, calls)
+
+        self.assertEqual(calls.max_active, 3)
+        self.assertEqual(result["validation"]["material_change_coverage"], 6)
+        self.assertEqual(
+            [finding["evidence_ids"][0] for finding in result["report"]["key_findings"]],
+            [f"c{i}" for i in range(6)],
+        )
+
+    def test_findings_worker_count_cannot_exceed_soclaas_limit(self):
+        request = self.request()
+        request["finding_workers"] = MAX_FINDING_WORKERS + 1
+        with self.assertRaisesRegex(ValueError, "finding_workers must be between"):
+            synthesize(request, FakeCalls([]))
 
     def test_reasoning_block_and_markdown_fence_are_ignored(self):
         text = '<think>{"not": "the answer"}</think>\n```json\n{"ok": true}\n```'
@@ -383,6 +435,39 @@ class SynthesisAgentTests(unittest.TestCase):
             usage = json.loads((root / "usage.json").read_text(encoding="utf-8"))
             self.assertEqual(usage["cached_responses"], 1)
             self.assertEqual(usage["reported_tokens"]["total_tokens"], 5)
+
+    def test_synthesis_report_is_upserted_to_postgres_as_jsonb(self):
+        class Cursor:
+            def __init__(self):
+                self.calls = []
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                pass
+
+            def execute(self, query, parameters=None):
+                self.calls.append((query, parameters))
+
+        class Connection:
+            def __init__(self):
+                self.fake_cursor = Cursor()
+
+            def cursor(self):
+                return self.fake_cursor
+
+        connection = Connection()
+        report_json = json.dumps({"report": {"executive_summary": "Example"}})
+        save_synthesis_report(connection, "example", [2023, 2024, 2025], report_json)
+
+        self.assertEqual(len(connection.fake_cursor.calls), 2)
+        insert_sql, parameters = connection.fake_cursor.calls[1]
+        self.assertIn("INSERT INTO synthesis_reports", insert_sql)
+        self.assertIn("ON CONFLICT (company, years) DO UPDATE", insert_sql)
+        self.assertEqual(
+            parameters, ("EXAMPLE", [2023, 2024, 2025], report_json)
+        )
 
 
 if __name__ == "__main__":
