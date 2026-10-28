@@ -45,8 +45,13 @@ def where_clause(filters: QueryFilters, *, alias: str = "", skip: tuple[str, ...
         params[name] = value
 
     add("companies", f"{p}company = ANY(%(companies)s)", filters.companies)
-    add("previous_year", f"{p}previous_year = %(previous_year)s", filters.previous_year)
-    add("current_year", f"{p}current_year = %(current_year)s", filters.current_year)
+    if filters.previous_year and filters.current_year and filters.current_year - filters.previous_year > 1:
+        # A multi-year span ("2023 to 2025") covers every comparison window inside it.
+        add("previous_year", f"{p}previous_year >= %(previous_year)s", filters.previous_year)
+        add("current_year", f"{p}current_year <= %(current_year)s", filters.current_year)
+    else:
+        add("previous_year", f"{p}previous_year = %(previous_year)s", filters.previous_year)
+        add("current_year", f"{p}current_year = %(current_year)s", filters.current_year)
     add("items", f"{p}item = ANY(%(items)s)", filters.items)
     add("change_types", f"{p}change_type = ANY(%(change_types)s)", filters.change_types)
     add("disclosure_taxonomies", f"{p}disclosure_taxonomy = ANY(%(disclosure_taxonomies)s)", filters.disclosure_taxonomies)

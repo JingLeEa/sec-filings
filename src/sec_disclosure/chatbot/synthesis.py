@@ -38,8 +38,15 @@ Data semantics:
   (company_b); comparison is that agent's model-written analysis; quote_a / quote_b are the original sentences it
   cited (sentence_ids_a / sentence_ids_b). relationship is same_topic or related_topic. peer_no_match rows are
   disclosures where the agent found no comparable peer disclosure among its retrieved candidates - not proof the
-  peer never discusses the topic. peer_year_over_year gives each disclosure's own year-over-year change label.
-  Tables named fallback_* are each company's own alignment data, used because no peer comparison matched.
+  peer never discusses the topic. A peer run with target_selection 'material_changes' compared only the target
+  company's disclosures marked material, so a topic missing there may still be disclosed. peer_year_over_year gives each disclosure's own year-over-year change label.
+  Tables named fallback_* are each company's own alignment data, used because no precomputed output matched.
+- Synthesis tables (synthesis_*) come from a separate synthesis agent that wrote a multi-year report for one
+  company: synthesis_report (executive summary, longitudinal and financial analysis, limitations),
+  synthesis_findings (each cites alignment match_ids; synthesis_finding_evidence holds those alignments' labels
+  and original text) and synthesis_trends (financial figures computed in code from XBRL facts: growth_pct for
+  year_over_year_change rows, value for calculated_metric rows such as margins in %; source_ids are XBRL facts).
+  Report text is model-written analysis; trends are deterministic calculations.
 
 Rules:
 1. Use only facts, numbers and IDs that appear in the evidence pack. Never invent a disclosure, match_id,
@@ -54,7 +61,10 @@ Rules:
    needs_review rows were excluded from change labels.
 6. Treat materiality and labels as pipeline outputs, not your own judgement; do not give investment advice.
 7. For peer questions, say when a peer run is partial or a company pair has no peer run, and when the answer
-   falls back to each company's own alignment data instead of a direct comparison."""
+   falls back to each company's own alignment data instead of a direct comparison.
+8. For summaries from a synthesis report, say it is a precomputed report and give its year span; cite the
+   match_ids of the findings you use. For financial questions, quote synthesis_trends numbers exactly (with
+   units and years), never compute new figures, and say when no financial data is loaded."""
 
 
 def _jsonable(value):
@@ -244,6 +254,12 @@ def offline_answer(question: str, plan: Plan, results: list[QueryResult], notes:
                 + "\n".join(_card(c) + f"\n  - semantic {c.get('semantic_label')} vs lexical {c.get('lexical_label')}"
                             for c in cards))
 
+    if intent == Intent.FINANCIAL:
+        return _financial_answer(plan, r, notes)
+
+    if intent == Intent.SUMMARY and "synthesis_report" in r and r["synthesis_report"].rows:
+        return _report_answer(plan, r, notes)
+
     if intent == Intent.SUMMARY:
         dist = r["change_type_by_run"].rows
         parts = [f"Summary for {scope}:\n", _table(dist, ["company", "previous_year", "current_year", "change_type", "n",
@@ -256,7 +272,7 @@ def offline_answer(question: str, plan: Plan, results: list[QueryResult], notes:
             rows = r[name].rows
             if rows:
                 parts.append(f"\n**{title}**\n\n" + "\n".join(_card(c) for c in rows))
-        return "\n".join(parts)
+        return "\n".join(parts) + _caveats(notes)
 
     if intent == Intent.PEER_COMPARE:
         return _peer_answer(plan, r, notes)
@@ -293,7 +309,8 @@ def _peer_answer(plan: Plan, r: dict[str, QueryResult], notes: list[str]) -> str
     rows = r["peer_comparisons"].rows if "peer_comparisons" in r else []
     names = " vs ".join(_company(c) for c in plan.filters.companies) or "the named companies"
     topic = f" on “{plan.topic}”" if plan.topic else ""
-    caveats = [n for n in notes if n.startswith(("peer runs still partial", "no peer-agent run", "no precomputed"))]
+    caveats = [n for n in notes if n.startswith(("peer runs still partial", "peer run covers only", "no peer-agent run",
+                                                 "no precomputed"))]
     caveat_text = ("\n\n" + "\n".join(f"_{c[0].upper() + c[1:]}._" for c in caveats)) if caveats else ""
     if not rows:
         fallback = r.get("fallback_topic_matches")
@@ -336,3 +353,93 @@ def _peer_answer(plan: Plan, r: dict[str, QueryResult], notes: list[str]) -> str
             lines.append(f"- [{row['disclosure_a']}] {_company(row['company_a'])} → {_company(row['company_b'])}: "
                          f"{row.get('topic_a') or ''} — {(row.get('rationale') or '')[:200]}")
     return "\n".join(lines) + caveat_text
+
+
+# ---------------------------------------------------------------- synthesis-report answers
+
+REPORT_CAVEATS = ("no synthesis report", "alignment data for", "the ", "no report finding", "no computed financial",
+                  "no financial trends")
+
+
+def _caveats(notes: list[str]) -> str:
+    picked = [n for n in notes if n.startswith(REPORT_CAVEATS) and ("synthesis" in n or "report" in n
+                                                                    or "financial" in n)]
+    return ("\n\n" + "\n".join(f"_{c[0].upper() + c[1:]}._" for c in picked)) if picked else ""
+
+
+def _clip(text: str | None, limit: int) -> str:
+    text = (text or "").strip()
+    return text if len(text) <= limit else text[:limit].rsplit(" ", 1)[0] + " …"
+
+
+def _report_answer(plan: Plan, r: dict[str, QueryResult], notes: list[str]) -> str:
+    parts: list[str] = []
+    findings = (r.get("synthesis_findings") or r.get("synthesis_findings_all"))
+    evidence = {row["match_id"]: row for row in (r["synthesis_finding_evidence"].rows
+                                                  if "synthesis_finding_evidence" in r else [])}
+    for rep in r["synthesis_report"].rows:
+        company = rep["company"]
+        parts.append(f"**{_company(company)} FY{rep['start_year']}–FY{rep['end_year']}** — precomputed synthesis report"
+                     + (f" over {rep['material_changes_selected']} material changes" if rep.get("material_changes_selected")
+                        else "") + ".\n\n" + _clip(rep["executive_summary"], 1200))
+        rows = [f for f in (findings.rows if findings else []) if f["company"] == company]
+        if rows:
+            title = f"Key findings on “{plan.topic}”" if plan.topic and "synthesis_findings" in r else "Key findings"
+            lines = [f"\n**{title}**"]
+            for f in rows[:8]:
+                cites = " ".join(f"[{m}]" for m in f["match_ids"][:6])
+                lines.append(f"- **{f['title']}** — {_clip(f['analysis'], 420)} {cites}".rstrip())
+                labels = [f"{evidence[m]['change_type'] or 'needs review'} {evidence[m]['previous_year']}→"
+                          f"{evidence[m]['current_year']}" for m in f["match_ids"][:3] if m in evidence]
+                if labels:
+                    lines.append(f"  - Alignment labels: {', '.join(labels)}")
+            parts.append("\n".join(lines))
+        if rep.get("financial_analysis") and rep.get("financial_metrics"):
+            parts.append("\n**Financial analysis** — " + _clip(rep["financial_analysis"], 700))
+        if rep.get("limitations"):
+            parts.append("\n_Limitations: " + "; ".join(_clip(x, 160) for x in rep["limitations"][:3]) + "_")
+    fallback = r.get("fallback_change_type_by_run")
+    if fallback is not None and fallback.rows:
+        parts.append("\nFrom the alignment data (no report):\n\n" + _table(
+            fallback.rows, ["company", "previous_year", "current_year", "change_type", "n", "material_yes"]))
+    return "\n".join(parts) + _caveats(notes)
+
+
+def _fmt_number(value, unit: str | None) -> str:
+    if value is None:
+        return "–"
+    v = float(value)
+    if unit and unit.upper() == "USD" and abs(v) >= 1e6:
+        return f"${v / 1e9:,.2f}B" if abs(v) >= 1e9 else f"${v / 1e6:,.1f}M"
+    if unit == "%":
+        return f"{v:.1f}%"
+    if unit == "x":
+        return f"{v:.2f}x"
+    return f"{v:,.2f}"
+
+
+def _financial_answer(plan: Plan, r: dict[str, QueryResult], notes: list[str]) -> str:
+    trends = r["synthesis_trends"].rows if "synthesis_trends" in r else []
+    if not trends:
+        fallback = r.get("fallback_topic_matches")
+        body = ("\n\nDisclosures that discuss it:\n\n" + "\n".join(_card(c) for c in fallback.rows[:8])
+                if fallback is not None and fallback.rows else "")
+        return "No computed financial figures are loaded for this question." + _caveats(notes) + body
+    growth = [t for t in trends if t["kind"] == "year_over_year_change"]
+    ratios = [t for t in trends if t["kind"] == "calculated_metric"]
+    parts = []
+    if growth:
+        rows = [{"company": t["company"].upper(), "metric": t["metric"], "period": f"{t['from_year']}→{t['to_year']}",
+                 "from": _fmt_number(t["old_value"], t["unit"]), "to": _fmt_number(t["new_value"], t["unit"]),
+                 "growth": f"{float(t['growth_pct']):+.1f}%" if t["growth_pct"] is not None else "–"} for t in growth]
+        parts.append("**Year-over-year change** (computed from XBRL facts):\n\n"
+                     + _table(rows, ["company", "metric", "period", "from", "to", "growth"]))
+    if ratios:
+        rows = [{"company": t["company"].upper(), "metric": t["metric"], "year": t["year"],
+                 "value": _fmt_number(t["value"], t["unit"]), "formula": t["formula"]} for t in ratios]
+        parts.append("**Ratios by fiscal year:**\n\n" + _table(rows, ["company", "metric", "year", "value", "formula"]))
+    years = sorted({y for t in trends for y in (t["year"], t["from_year"], t["to_year"]) if y})
+    head = (f"Financial trends for {', '.join(_company(c) for c in sorted({t['company'] for t in trends}))}"
+            + (f", FY{years[0]}–FY{years[-1]}" if years else "")
+            + " — from precomputed synthesis reports; figures are calculated in code, not by the model.")
+    return head + "\n\n" + "\n\n".join(parts) + _caveats(notes)

@@ -31,7 +31,9 @@ EXAMPLES = [
     "Which disclosures were expanded and why?",
     "Summarise the key changes for BAC 2023 to 2024",
     "Compare NVIDIA and AMD on supply chain risk in 2024",
-    "How does Nvidia compare to its peers on customer demand?",
+    "How does Nvidia compare to its peers on export controls?",
+    "Summarise the key changes for AMD from 2023 to 2025",
+    "How did AMD's gross margin and revenue change?",
 ]
 HIDDEN_COLUMNS = {"previous_ids", "current_ids"}
 
@@ -41,6 +43,11 @@ st.set_page_config(page_title="10-K Change Chatbot", page_icon="📑", layout="w
 @st.cache_resource(show_spinner="Connecting to PostgreSQL…")
 def get_bot(use_llm: bool, use_embeddings: bool) -> Chatbot:
     return Chatbot(use_llm=use_llm, use_embeddings=use_embeddings)
+
+
+def as_markdown(text: str) -> str:
+    """Streamlit renders $...$ as LaTeX; filing text is full of dollar amounts, so escape every $."""
+    return text.replace("$", "\\$")
 
 
 def frame(result) -> pd.DataFrame:
@@ -102,6 +109,10 @@ with st.sidebar:
         if not peer_runs.empty:
             st.markdown("**Peer-comparison runs**")
             st.dataframe(peer_runs, hide_index=True, width="stretch")
+        reports = pd.DataFrame(bot.db.synthesis_overview())
+        if not reports.empty:
+            st.markdown("**Synthesis reports**")
+            st.dataframe(reports, hide_index=True, width="stretch")
     except DatabaseError as error:
         st.error(str(error))
     st.markdown("**Try asking**")
@@ -118,7 +129,7 @@ for turn in st.session_state.history:
     with st.chat_message("user"):
         st.markdown(turn.question)
     with st.chat_message("assistant"):
-        st.markdown(turn.answer)
+        st.markdown(as_markdown(turn.answer))
         render_details(turn)
 
 question = st.chat_input("Ask about disclosure changes…") or st.session_state.pop("pending", None)
@@ -132,6 +143,6 @@ if question:
             except DatabaseError as error:
                 st.error(str(error))
                 st.stop()
-        st.markdown(reply.answer)
+        st.markdown(as_markdown(reply.answer))
         render_details(reply)
     st.session_state.history.append(reply)

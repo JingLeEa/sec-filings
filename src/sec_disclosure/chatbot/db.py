@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Sequence
 
+from ..storage.chatbot_schema import SCHEMAS, apply_outdated, outdated
 from ..storage.disclosures import connection_arguments
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -108,22 +109,19 @@ class Database:
                            elapsed_ms=(time.perf_counter() - started) * 1000)
 
     def ensure_schema(self) -> bool:
-        """Create the chatbot view/tables when missing (older Docker volumes skip new init files)."""
-        present = self.query("schema_check", "SELECT to_regclass('public.alignment_changes') AS v, "
-                                             "to_regclass('public.chatbot_evidence_embeddings') AS t, "
-                                             "to_regclass('public.peer_comparison_pairs') AS p").rows[0]
-        missing = [path for path, ok in ((CHATBOT_SCHEMA, present["v"] and present["t"]), (PEER_SCHEMA, present["p"]))
-                   if not ok]
-        if not missing:
+        """Apply chatbot/agent schema files whose recorded version is missing or old (see storage.chatbot_schema)."""
+        rows = self.query("schema_versions", "SELECT key, value FROM schema_info WHERE key = ANY(%s)",
+                          ([key for _, key, _ in SCHEMAS],)).rows
+        stale = outdated({r["key"]: r["value"] for r in rows})
+        if not stale:
             return False
         conn = self._connect(read_only=False)
         try:
             with conn, conn.cursor() as cur:
-                for path in missing:
-                    cur.execute(path.read_text(encoding="utf-8"))
+                apply_outdated(cur)
         except Exception as error:
-            raise DatabaseError(f"Could not create the chatbot views/tables ({type(error).__name__}). Apply "
-                                f"{', '.join(str(p.relative_to(ROOT)) for p in missing)} manually.") from None
+            raise DatabaseError(f"Could not update the chatbot schema ({type(error).__name__}). Apply "
+                                f"{', '.join(str(p.relative_to(ROOT)) for p in stale)} manually.") from None
         finally:
             conn.close()
         return True
@@ -144,12 +142,23 @@ class Database:
             FROM alignment_runs r LEFT JOIN alignments a USING (run_id)
             GROUP BY 1, 2, 3 ORDER BY 1, 2""").rows
 
+    def synthesis_overview(self) -> list[dict]:
+        """Loaded synthesis reports (empty when the synthesis tables do not exist yet)."""
+        if self.query("synthesis_check", "SELECT to_regclass('public.synthesis_reports') AS t").rows[0]["t"] is None:
+            return []
+        return self.query("synthesis_overview", """
+            SELECT company, start_year || '-' || end_year AS years,
+                   (SELECT count(*) FROM synthesis_findings f WHERE f.report_id = r.report_id) AS findings,
+                   (SELECT count(*) FROM synthesis_trends t WHERE t.report_id = r.report_id) AS trends
+            FROM synthesis_reports r ORDER BY company, start_year""").rows
+
     def peer_run_overview(self) -> list[dict]:
         """Loaded peer-comparison runs (empty when the peer tables do not exist yet)."""
         if self.query("peer_check", "SELECT to_regclass('public.peer_comparison_runs') AS t").rows[0]["t"] is None:
             return []
         return self.query("peer_run_overview", """
             SELECT target, fiscal_year AS year, array_to_string(peers, ', ') AS peers,
+                   CASE WHEN target_selection = 'material_changes' THEN 'material' ELSE 'all' END AS scope,
                    jobs_completed || '/' || jobs_planned AS done,
                    (SELECT count(*) FROM peer_comparisons c WHERE c.peer_run_id = r.peer_run_id) AS comparisons
             FROM peer_comparison_runs r ORDER BY target, fiscal_year""").rows

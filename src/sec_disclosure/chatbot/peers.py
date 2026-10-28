@@ -50,6 +50,7 @@ class PeerLookup:
     covered_pairs: list[tuple[str, str]] = field(default_factory=list)
     missing_pairs: list[tuple[str, str]] = field(default_factory=list)
     partial_runs: list[str] = field(default_factory=list)
+    material_only_runs: list[str] = field(default_factory=list)   # runs that compared only material disclosures
     fiscal_year: int | None = None
     notes: list[str] = field(default_factory=list)
 
@@ -98,7 +99,8 @@ class PeerStore:
             return out
         year = out.fiscal_year
         coverage = self.db.query("peer_coverage", """
-            SELECT peer_run_id, target, fiscal_year, peers, items, run_complete, jobs_completed, jobs_planned
+            SELECT peer_run_id, target, fiscal_year, peers, items, run_complete, jobs_completed, jobs_planned,
+                   coalesce(target_selection, 'all') AS target_selection
             FROM peer_comparison_runs
             WHERE (%(year)s::int IS NULL OR fiscal_year = %(year)s)
               AND (target = ANY(%(companies)s) OR peers && %(companies)s)
@@ -111,7 +113,10 @@ class PeerStore:
             (out.covered_pairs if covering else out.missing_pairs).append((a, b))
             out.partial_runs.extend(f"{r['target']} {r['fiscal_year']} ({r['jobs_completed']}/{r['jobs_planned']} "
                                     "disclosures)" for r in covering if not r["run_complete"])
+            out.material_only_runs.extend(f"{r['target'].upper()} {r['fiscal_year']}" for r in covering
+                                          if r["target_selection"] == "material_changes")
         out.partial_runs = list(dict.fromkeys(out.partial_runs))
+        out.material_only_runs = list(dict.fromkeys(out.material_only_runs))
         if not out.covered_pairs:
             return out
 

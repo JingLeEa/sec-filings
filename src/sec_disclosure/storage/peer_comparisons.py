@@ -12,13 +12,15 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from .chatbot_schema import apply_outdated
 from .disclosures import ROOT, connection_arguments
 
 SUPPORTED_SCHEMA = "2"
 STATUSES = {"compared", "no_comparable_candidate", "no_candidate_retrieved"}
 RELATIONSHIPS = {"same_topic", "related_topic"}
 ITEMS = {"1", "1A", "7", "8", "15"}
-SCHEMA_SQL = ROOT / "db" / "init" / "07_peer_comparisons.sql"
+# Older reports (agent policy v2) have no target_selection: they compared every target disclosure.
+TARGET_SELECTIONS = {"material_changes", "all"}
 
 
 class PeerComparisonStorageError(RuntimeError):
@@ -56,6 +58,8 @@ def read_report(path: Path) -> tuple[dict, bytes]:
     peers = sorted({str(p).lower() for p in report.get("peers") or []})
     if not target or not peers or target in peers:
         problems.append("report needs a target and at least one peer different from the target")
+    if report.get("target_selection", "all") not in TARGET_SELECTIONS:
+        problems.append(f"unknown target_selection {report.get('target_selection')!r}")
     if not str(report.get("fiscal_year", "")).isdigit():
         problems.append("fiscal_year must be a year")
     jobs = report.get("comparisons")
@@ -170,20 +174,18 @@ def store_peer_comparison(path: Path, *, env_file: Path | None = None) -> PeerCo
         raise PeerComparisonStorageError("psycopg is not installed. Run: pip install -r requirements.txt") from None
     try:
         with psycopg.connect(**connection_arguments(env_file)) as conn, conn.cursor() as cur:
-            cur.execute("SELECT to_regclass('public.peer_comparison_pairs')")
-            if cur.fetchone()[0] is None:
-                cur.execute(SCHEMA_SQL.read_text(encoding="utf-8"))
+            apply_outdated(cur)
             cur.execute("DELETE FROM peer_comparison_runs WHERE target = %s AND fiscal_year = %s AND peers = %s",
                         (target, year, peers))
             cur.execute("""
                 INSERT INTO peer_comparison_runs (target, fiscal_year, peers, items, schema_version, run_complete,
-                    jobs_completed, jobs_planned, policies, token_usage, source_file, source_sha256)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s::jsonb, %s::jsonb, %s, %s) RETURNING peer_run_id""",
+                    jobs_completed, jobs_planned, policies, token_usage, source_file, source_sha256, target_selection)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s::jsonb, %s::jsonb, %s, %s, %s) RETURNING peer_run_id""",
                         (target, year, peers, [str(i) for i in report.get("items") or []], str(report["schema_version"]),
                          bool(report.get("run_complete")), int(report["jobs_completed"]),
                          int(report.get("jobs_planned") or report["jobs_completed"]), json.dumps(policies),
                          json.dumps(report.get("token_usage") or {}), str(resolve_report(path)),
-                         hashlib.sha256(raw).hexdigest()))
+                         hashlib.sha256(raw).hexdigest(), report.get("target_selection") or "all"))
             run_id = cur.fetchone()[0]
             for row in targets:
                 row["peer_run_id"] = run_id

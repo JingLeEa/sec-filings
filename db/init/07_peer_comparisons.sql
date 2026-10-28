@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS peer_comparison_runs (
     loaded_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (target, fiscal_year, peers)
 );
+-- v2: which target disclosures the agent compared ('material_changes' = only those marked material, or 'all').
+ALTER TABLE peer_comparison_runs ADD COLUMN IF NOT EXISTS target_selection TEXT;
 
 -- One row per target disclosure the agent processed.
 CREATE TABLE IF NOT EXISTS peer_comparison_targets (
@@ -108,7 +110,8 @@ SELECT c.comparison_id,
        ev.quote_b,
        ev.sentence_ids_a,
        ev.sentence_ids_b,
-       ev.unseen_citations
+       ev.unseen_citations,
+       r.target_selection
 FROM peer_comparisons c
 JOIN peer_comparison_targets t USING (peer_run_id, target_disclosure_id)
 JOIN peer_comparison_runs r USING (peer_run_id)
@@ -121,5 +124,5 @@ LEFT JOIN LATERAL (
     FROM peer_comparison_evidence e WHERE e.comparison_id = c.comparison_id
 ) ev ON true;
 
-INSERT INTO schema_info (key, value) VALUES ('peer_comparison_schema_version', '1')
+INSERT INTO schema_info (key, value) VALUES ('peer_comparison_schema_version', '2')
 ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;

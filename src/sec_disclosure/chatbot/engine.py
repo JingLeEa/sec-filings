@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import re
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Callable
 
@@ -14,6 +14,7 @@ from .config import load_chat_config, load_embedding_config
 from .db import Database, DatabaseError, QueryResult
 from .grounding import GroundingReport, check_answer
 from .peers import PeerStore, fallback_filters
+from .reports import ReportStore
 from .planner import Intent, Plan, inherit_context, plan_question, residual_keywords
 from .queries import build_queries, topic_cards
 from .retrieval import Retriever
@@ -150,6 +151,7 @@ class Chatbot:
                 embedder = make_embedder(config=embed_config)
         self.retriever = Retriever(self.db, embedder)
         self.peers = PeerStore(self.db)
+        self.reports = ReportStore(self.db)
         self.last_plan: Plan | None = None
 
     def check_llm(self) -> str:
@@ -197,6 +199,10 @@ class Chatbot:
 
         if plan.intent == Intent.PEER_COMPARE:
             retrieval_method = self._peer_compare(plan, results, notes)
+        elif plan.intent == Intent.FINANCIAL:
+            retrieval_method = self._financial(question, plan, results, notes)
+        elif plan.intent == Intent.SUMMARY and plan.filters.companies:
+            retrieval_method = self._summary(plan, results, notes)
         elif plan.intent == Intent.TOPIC:
             retrieval = self.retriever.search(plan.topic or question, plan.filters, k=max(plan.filters.limit or 0, 25),
                                               exclude_unchanged=plan.exclude_unchanged)
@@ -220,6 +226,52 @@ class Chatbot:
                             warnings=warnings, notes=notes, grounding=report,
                             elapsed_ms=(time.perf_counter() - started) * 1000)
 
+    def _summary(self, plan: Plan, results: list[QueryResult], notes: list[str]) -> str:
+        """Synthesis report first; the SQL summary over alignments for companies without one."""
+        lookup = self.reports.lookup(plan.filters, topic=plan.topic)
+        notes.extend(lookup.notes)
+        if lookup.found:
+            results.extend(lookup.results)
+            if plan.topic and any(r.name == "synthesis_findings_all" for r in lookup.results):
+                notes.append(f"no report finding mentions '{plan.topic}'; showing the report's findings")
+        missing = lookup.companies_without
+        if missing:
+            notes.append("no synthesis report loaded for " + ", ".join(c.upper() for c in missing)
+                         + (" covering those years" if plan.filters.previous_year or plan.filters.current_year else "")
+                         + "; summarising from the alignment data instead")
+            fallback = Plan(intent=Intent.SUMMARY, filters=replace(plan.filters, companies=missing), topic=plan.topic)
+            for query in build_queries(fallback):
+                result = self.db.query(query.name, query.sql, query.params)
+                if lookup.found:
+                    result.name = f"fallback_{result.name}"
+                results.append(result)
+        if lookup.found and missing:
+            return "synthesis_report + fallback: alignment summary"
+        return "synthesis_report" if lookup.found else "alignment summary (no synthesis report)"
+
+    def _financial(self, question: str, plan: Plan, results: list[QueryResult], notes: list[str]) -> str:
+        """Financial figures exist only in synthesis-report trends (computed from XBRL); alignments hold text."""
+        lookup = self.reports.lookup(plan.filters, financial_question=question)
+        notes.extend(lookup.notes)
+        results.extend(lookup.results)
+        trends = next((r for r in lookup.results if r.name == "synthesis_trends"), None)
+        if trends is not None and trends.rows:
+            if lookup.companies_without:
+                notes.append("no financial trends loaded for " + ", ".join(c.upper() for c in lookup.companies_without))
+            return "synthesis_report trends"
+        notes.append("no computed financial trends for " + (", ".join(c.upper() for c in plan.filters.companies)
+                     or "these companies") + "; they come from synthesis reports (XBRL facts). "
+                     "Showing disclosures that discuss it instead")
+        keywords = residual_keywords(question)
+        if keywords:
+            retrieval = self.retriever.search(keywords, replace(plan.filters, disclosure_taxonomies=[]), k=15)
+            notes.extend(retrieval.notes)
+            topic_result = self._run_topic(retrieval, Plan(intent=Intent.TOPIC, filters=plan.filters, topic=keywords))
+            topic_result.name = "fallback_topic_matches"
+            results.append(topic_result)
+            return f"fallback: {retrieval.method}"
+        return "no financial data"
+
     def _peer_compare(self, plan: Plan, results: list[QueryResult], notes: list[str]) -> str:
         """Precomputed peer-agent comparisons first; per-company alignment data only when none match."""
         lookup = self.peers.lookup(plan.filters, plan.topic)
@@ -228,6 +280,9 @@ class Chatbot:
         names = lambda pairs: ", ".join(f"{a.upper()}–{b.upper()}" for a, b in pairs)  # noqa: E731
         if lookup.partial_runs:
             notes.append("peer runs still partial: " + "; ".join(lookup.partial_runs))
+        if lookup.material_only_runs:
+            notes.append("peer run covers only the target's disclosures marked material: "
+                         + "; ".join(lookup.material_only_runs))
         if lookup.missing_pairs:
             notes.append(f"no peer-agent run loaded for {names(lookup.missing_pairs)}"
                          + (f" in {lookup.fiscal_year}" if lookup.fiscal_year else ""))

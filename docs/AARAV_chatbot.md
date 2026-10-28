@@ -105,6 +105,8 @@ reciprocal rank fusion; the reply says which methods ran (`pgvector:evidence + f
 | summarise key changes for BAC 2023→2024 | `summary` | distribution, by-item, top material, new, removed |
 | tell me about bac_2023_2024_M0107 | `match_detail` | full row incl. original text |
 | compare NVIDIA and AMD on supply chain / how does NVDA compare to its peers on X | `peer_comparison` | peer-agent output first, alignments as fallback (below) |
+| summarise AMD 2023→2025 (optionally "about <topic>") | `summary` | synthesis report first, SQL summary as fallback (below) |
+| how did AMD's gross margin / revenue / debt change | `financial_trends` | synthesis-report trends computed from XBRL |
 | anything else | `custom_sql` | LLM writes a SELECT (offline: keyword search) |
 
 Year convention: years are 10-K fiscal years. "2024 10-K" means `current_year = 2024` (the 2023→2024 run);
@@ -122,15 +124,17 @@ across years, the peer agent compares companies with each other in the same year
 Load each agent report after a run:
 
 ```bash
-python scripts/load_peer_comparisons_to_postgres.py data/peer_comparison/nvda/2024
-python scripts/load_peer_comparisons_to_postgres.py data/peer_comparison/*/2024 --dry-run   # validate only
+python scripts/load_peer_comparisons_to_postgres.py test_data/peer_comparison/nvda/2024_amd_material_pilot
+python scripts/load_peer_comparisons_to_postgres.py data/peer_comparison/nvda/2024 --dry-run   # validate only
 ```
 
 Tables (`db/init/07_peer_comparisons.sql`, created automatically): `peer_comparison_runs` (one per target,
 year and peer set; partial runs allowed and flagged), `peer_comparison_targets`, `peer_comparison_results`
 (compared / no_comparable_candidate / no_candidate_retrieved per peer), `peer_comparisons` and
 `peer_comparison_evidence` (cited sentences), plus the `peer_comparison_pairs` view (both companies side by side
-with quotes). Reloading the same target/year/peer set replaces it.
+with quotes). Reloading the same target/year/peer set replaces it. `target_selection` records whether the agent
+compared only the target's disclosures marked material (`material_changes`, the agent's default since policy v3)
+or all of them; answers from a material-only run say so, because a topic missing there may still be disclosed.
 
 How a peer question is answered:
 
@@ -150,9 +154,43 @@ Answers cite both disclosure IDs (`[nvda_2024_1A_D002 ↔ amd_2024_1A_D063]`) an
 grounding check removes sentence IDs that are not in the retrieved peer evidence. Partial runs and missing
 pairs are stated in the answer.
 
-`tests/fixtures/peer_comparison/nvda/2024` is the agent's real output format, made from real disclosures with a
-scripted model, so its comparison text is synthetic (marked "SYNTHETIC TEST FIXTURE"). Replace it with a real
-pilot run (for example `--ticker NVDA --peers AMD INTC --year 2024 --items 1A --max-requests 10`) before demos.
+Tests and demos use Ariel's real pilot on the test-data branch,
+`test_data/peer_comparison/nvda/2024_amd_material_pilot`: NVDA vs AMD, fiscal 2024, 105 material NVDA disclosures,
+108 API calls, 109 supported comparisons and 8 "no comparable candidate" decisions.
+
+## Synthesis reports (summary and financial questions)
+
+The synthesis agent (`agents/synthesis.py`, synthesis-agent branch) writes one report per company and span of
+years to `data/synthesis/<COMPANY>_<first>_<last>_synthesis_output.json`: an executive summary, key findings
+citing alignment match_ids, a longitudinal and a financial analysis, limitations, and financial trends computed
+in code from XBRL facts. Load reports after a run:
+
+```bash
+python scripts/load_synthesis_to_postgres.py data/synthesis
+python scripts/load_synthesis_to_postgres.py tests/fixtures/synthesis      # the AMD 2023-2025 test report
+```
+
+Tables (`db/init/08_synthesis_reports.sql`, created automatically): `synthesis_reports` (one per company and
+year span; reloading replaces it), `synthesis_findings` (with the match_ids and XBRL fact IDs each cites) and
+`synthesis_trends` (growth and ratio rows).
+
+- **Summary questions** ("Summarise the key changes for AMD from 2023 to 2025") use the report whose span covers
+  the asked years (none asked = the latest); a topic ("…about data center") narrows the findings. Each cited
+  match_id is joined to `alignment_changes` for its label and original text. Companies without a report get the
+  SQL summary over their alignments, and the answer says so.
+- **Financial questions** ("How did AMD's gross margin change?", "revenue growth") read `synthesis_trends`, so
+  every figure is a deterministic calculation with its formula and source XBRL fact IDs. The alignments hold no
+  figures, so without a report the chatbot says no financial data is loaded and shows disclosures that discuss
+  the metric instead. Questions about what a company *says* ("…describe liquidity risk") stay disclosure
+  questions.
+- **Staleness**: if a company's alignments were reloaded after its report, the answer warns that the report may be
+  out of date; a report that failed the agent's own validation is flagged too.
+
+`tests/fixtures/synthesis/AMD_2023_2025_synthesis_output.json` is real agent output (25 Oct version, real XBRL
+facts); all 33 match_ids it cites exist in test_data with the same materiality.
+
+Schema files 06–08 record a version in `schema_info`; the chatbot and both loaders re-apply any file whose
+version is missing or older, so an existing Docker volume picks up new columns and tables without a reset.
 
 ## Data model
 
@@ -178,7 +216,8 @@ sentences from the alignment's `evidence` (`previous_text`, `current_text`). It 
 ```bash
 python -m pytest tests/test_chatbot.py                # no database needed
 python -m pytest tests/test_chatbot_integration.py    # needs the six fixture runs loaded; skips otherwise
-python -m pytest tests/test_peer_chatbot_integration.py  # loads the peer fixture temporarily; needs NVDA/AMD/INTC alignments
+python -m pytest tests/test_peer_chatbot_integration.py       # real NVDA/AMD pilot; needs NVDA and AMD alignments
+python -m pytest tests/test_synthesis_chatbot_integration.py  # AMD 2023-2025 report; needs AMD alignments
 ```
 
 Integration tests compute expected numbers from the fixture JSON files independently of the chatbot's SQL
@@ -207,4 +246,8 @@ scripts/embed_alignment_evidence.py  optional bge-m3 vectors for pgvector search
 db/init/07_peer_comparisons.sql      peer-comparison tables and peer_comparison_pairs view
 src/sec_disclosure/storage/peer_comparisons.py, scripts/load_peer_comparisons_to_postgres.py   loader
 src/sec_disclosure/chatbot/peers.py  peer lookup, year-over-year join, fallback filters
+src/sec_disclosure/chatbot/reports.py  synthesis-report lookup: summaries, findings evidence, financial trends
+db/init/08_synthesis_reports.sql     synthesis_reports, synthesis_findings, synthesis_trends
+src/sec_disclosure/storage/synthesis_reports.py, scripts/load_synthesis_to_postgres.py   loader
+src/sec_disclosure/storage/chatbot_schema.py   versioned schema files 06-08
 ```

@@ -351,7 +351,7 @@ class PeerRoutingTests(unittest.TestCase):
 
 
 class PeerLoaderValidationTests(unittest.TestCase):
-    FIXTURE = ROOT / "tests" / "fixtures" / "peer_comparison" / "nvda" / "2024" / "peer_comparison.json"
+    FIXTURE = ROOT / "test_data" / "peer_comparison" / "nvda" / "2024_amd_material_pilot" / "peer_comparison.json"
 
     def mutate(self, change):
         import json
@@ -382,7 +382,7 @@ class PeerLoaderValidationTests(unittest.TestCase):
             first["comparisons"] = []
 
         def missing_peer(r):
-            r["comparisons"][0]["peer_results"] = r["comparisons"][0]["peer_results"][:1]
+            r["comparisons"][0]["peer_results"] = []
 
         def count_mismatch(r):
             r["jobs_completed"] += 1
@@ -391,6 +391,116 @@ class PeerLoaderValidationTests(unittest.TestCase):
             r["schema_version"] = "1"
 
         for change in (wrong_peer_prefix, status_without_comparisons, missing_peer, count_mismatch, old_schema):
+            with self.subTest(change=change.__name__), self.assertRaises(ValueError):
+                read_report(self.mutate(change))
+
+
+
+class SynthesisRoutingTests(unittest.TestCase):
+    def test_financial_figure_questions_route_to_trends(self):
+        for question in ("How did AMD gross margin change from 2023 to 2025?", "What was AMD revenue growth in 2024?",
+                         "AMD financial trends", "Compare AMD and NVDA revenue growth", "How did AMD's debt change?"):
+            with self.subTest(question=question):
+                self.assertEqual(plan_question(question, PEER_RUNS).intent, Intent.FINANCIAL)
+
+    def test_disclosure_questions_with_financial_words_are_not_financial(self):
+        self.assertEqual(plan_question("What do JPM and BAC say about liquidity risk?", PEER_RUNS).intent,
+                         Intent.PEER_COMPARE)
+        self.assertEqual(plan_question("Which revenue disclosures were expanded for AMD?", PEER_RUNS).intent,
+                         Intent.LIST)
+
+    def test_summary_keeps_its_topic_and_span(self):
+        plan = plan_question("Summarise AMD changes about data center", PEER_RUNS)
+        self.assertEqual((plan.intent, plan.topic), (Intent.SUMMARY, "data center"))
+        plan = plan_question("Summarise the key changes for AMD from 2023 to 2025", PEER_RUNS)
+        self.assertEqual((plan.filters.previous_year, plan.filters.current_year), (2023, 2025))
+
+    def test_metric_patterns(self):
+        from sec_disclosure.chatbot.reports import wanted_metrics
+        self.assertEqual(wanted_metrics("How did gross margin change?"), ["gross margin%"])
+        self.assertEqual(wanted_metrics("AMD margins"), ["gross margin%", "operating margin%", "net margin%"])
+        self.assertEqual(wanted_metrics("operating margin and net margin"), ["operating margin%", "net margin%"])
+        self.assertIn("revenue%", wanted_metrics("revenue growth"))
+        self.assertEqual(wanted_metrics("AMD financial trends"), [])
+
+    def test_report_span(self):
+        from sec_disclosure.chatbot.reports import span_for
+        self.assertEqual(span_for(parse_filters("AMD 2023 to 2025", RUNS)), (2023, 2025))
+        self.assertEqual(span_for(parse_filters("AMD's 2024 10-K", RUNS)), (2023, 2024))
+        self.assertEqual(span_for(parse_filters("AMD", RUNS)), (None, None))
+
+    def test_multi_year_span_filters_every_window_inside_it(self):
+        where, params = where_clause(parse_filters("AMD 2023 to 2025", RUNS))
+        self.assertIn("previous_year >= %(previous_year)s", where)
+        self.assertIn("current_year <= %(current_year)s", where)
+        where, _ = where_clause(parse_filters("AMD 2023 to 2024", RUNS))
+        self.assertIn("previous_year = %(previous_year)s", where)
+
+    def test_schema_files_rerun_when_their_version_is_old(self):
+        from sec_disclosure.storage.chatbot_schema import SCHEMAS, outdated
+        current = {key: version for _, key, version in SCHEMAS}
+        self.assertEqual(outdated(current), [])
+        old_peer = {**current, "peer_comparison_schema_version": "1"}
+        self.assertEqual([p.name for p in outdated(old_peer)], ["07_peer_comparisons.sql"])
+        for path, _, _ in SCHEMAS:
+            self.assertTrue(path.is_file(), path)
+
+
+class SynthesisLoaderValidationTests(unittest.TestCase):
+    FIXTURE = ROOT / "tests" / "fixtures" / "synthesis" / "AMD_2023_2025_synthesis_output.json"
+
+    def mutate(self, change):
+        import json
+        import tempfile
+        report = json.loads(self.FIXTURE.read_text(encoding="utf-8"))
+        change(report)
+        path = Path(tempfile.mkdtemp()) / "X_synthesis_output.json"
+        path.write_text(json.dumps(report), encoding="utf-8")
+        return path
+
+    def test_fixture_is_valid(self):
+        from sec_disclosure.storage.synthesis_reports import read_report, rows_for
+        report, _ = read_report(self.FIXTURE)
+        head, findings, trends = rows_for(report)
+        self.assertEqual((head["company"], head["start_year"], head["end_year"]), ("amd", 2023, 2025))
+        self.assertEqual(len(findings), 10)
+        self.assertEqual(len(trends), 33)
+        self.assertTrue(all(m.startswith("amd_") for f in findings for m in f["match_ids"]))
+        self.assertTrue(any(f["metric_ids"] for f in findings))
+
+    def test_numbers_written_as_strings_are_accepted(self):
+        from sec_disclosure.storage.synthesis_reports import read_report, rows_for
+
+        def stringify(r):
+            for t in r["financial_trends"]:
+                for key in ("old_value", "new_value", "value", "growth_pct"):
+                    if t.get(key) is not None:
+                        t[key] = str(t[key])
+        _, _, trends = rows_for(read_report(self.mutate(stringify))[0])
+        self.assertTrue(all(t["growth_pct"] is not None for t in trends if t["kind"] == "year_over_year_change"))
+
+    def test_invalid_reports_are_rejected(self):
+        from sec_disclosure.storage.synthesis_reports import read_report
+
+        def other_company(r):
+            r["report"]["key_findings"][0]["evidence_ids"] = ["nvda_2023_2024_M0001"]
+
+        def no_summary(r):
+            r["report"]["executive_summary"] = " "
+
+        def bad_trend(r):
+            r["financial_trends"][0]["type"] = "guess"
+
+        def bad_number(r):
+            r["financial_trends"][0]["growth_pct"] = "lots"
+
+        def one_year(r):
+            r["years"] = [2024]
+
+        def finding_without_ids(r):
+            del r["report"]["key_findings"][0]["evidence_ids"]
+
+        for change in (other_company, no_summary, bad_trend, bad_number, one_year, finding_without_ids):
             with self.subTest(change=change.__name__), self.assertRaises(ValueError):
                 read_report(self.mutate(change))
 
