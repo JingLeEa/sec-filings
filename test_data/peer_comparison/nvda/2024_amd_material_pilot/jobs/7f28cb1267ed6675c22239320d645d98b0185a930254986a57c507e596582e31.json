@@ -1,0 +1,285 @@
+{
+  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
+  "request_hash": "8dd60da2e4b6fa3c15dc739d63cf1a09417eff9a7ba118069cf11fad0d7598b1",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_1_D046",
+    "item": "1",
+    "target_topic": "Export Control Licensing Requirements for Specific Regions and Products",
+    "target_summary": "The U.S. government has imposed various export licensing requirements on Nvidia's products, initially affecting A100 and H100 chips to China, Russia, and the Middle East in 2023, and later expanding in October 2023 to cover products exceeding certain performance thresholds shipped to China, the Middle East, and other designated Country Groups.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0281",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specifically address the U.S. government's announcement of new export license requirements impacting data center products to China and Russia in Q3 fiscal 2023. They share the specific topic of 'Export Control Licensing Requirements for China/Russia'. D046 provides the detailed context of these new requirements.\n\nD063 states the impact is difficult to quantify and challenging to manage/forecast. D047 discusses how further changes or the application of these controls may harm competitive position, prevent development of compliant products, and exclude markets like China. While they share the broad theme of export controls, D063 is specifically about the *initial announcement and quantification difficulty*, whereas D047 is about the *future harm and operational constraints*. However, the prompt allows many-to-many if they share the same SEC Item and topic. D063 is a precursor to the ongoing risk described in D046/D047. Given the strict topic correspondence, D063's specific focus on 'quantifying impact of new license requirements' aligns most closely with the detailed requirement descriptions in D046. D047 is more about 'potential future harm'. I will split D063's lin",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_1_D063",
+            "item": "1",
+            "section": "Government Regulations",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "In Q3 fiscal 2023, the U.S. announced new license requirements for exporting certain data center products to China (including Hong Kong and Macau) and Russia, which makes it difficult to quantify the impact and challenging to manage operations or forecast results.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1_D046",
+            "item": "1",
+            "section": "Government Regulations",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The U.S. government has imposed various export licensing requirements on Nvidia's products, initially affecting A100 and H100 chips to China, Russia, and the Middle East in 2023, and later expanding in October 2023 to cover products exceeding certain performance thresholds shipped to China, the Middle East, and other designated Country Groups.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_1_D047",
+            "item": "1",
+            "section": "Government Regulations",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Nvidia's competitive position and financial results may be harmed by further changes in U.S. export control rules, which could restrict sales of inventory, prevent development of compliant replacement products, and exclude the company from markets like China and the Middle East due to the strategic importance of AI and geopolitical tensions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.606191,
+            "sequence_match_ratio": 0.166259,
+            "length_ratio": 5.104478,
+            "word_count_delta": 275,
+            "added_tokens_sample": [
+              "or",
+              "the",
+              "usg",
+              "licensing",
+              "with",
+              "certain",
+              "exceptions",
+              "our",
+              "a100",
+              "and",
+              "h100",
+              "integrated",
+              "circuits",
+              "dgx",
+              "or",
+              "any",
+              "other",
+              "systems",
+              "or",
+              "boards"
+            ],
+            "removed_tokens_sample": [
+              "new",
+              "license",
+              "certain",
+              "data",
+              "center",
+              "impact",
+              "new",
+              "license",
+              "requirements",
+              "is",
+              "difficult",
+              "to",
+              "quantify",
+              "and",
+              "it",
+              "may",
+              "be",
+              "challenging",
+              "for",
+              "us"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "nvda_2023_1_D063",
+            "score": 0.79691,
+            "normalised_score": 0.7969,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 79.69% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure expands the 2023 summary by specifying the initial impact on A100/H100 chips and the subsequent October 2023 expansion to products exceeding performance thresholds. This specific quantification and expansion of the scope of export controls materially increases the detail and precision of the regulatory risk exposure.",
+          "key_change": "Expansion of export control scope to specific chip models and performance thresholds"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0257",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures serve as the opening statement for the Government Regulations section, stating that business activities are subject to U.S. and foreign laws. Evidence: nvda_2024_1_P050_S001 'Our worldwide business activities are subject to various laws, rules, and regulations of the United States as well as of foreign governments.' matches nvda_2025_1_P053_S001 'Our worldwide business activities are subject to various laws, rules, and regulations of the United States as well as of foreign governments.'\n\nBoth disclosures detail specific U.S. export control regulations and licensing requirements affecting shipments of high-performance AI chips (like A100, H100) to China, Russia, and the Middle East. Evidence: nvda_2024_1_P051_S001, P052_S001, P053_S001-S003 detail the 2023 licensing requirements for A100/H100. nvda_2025_1_P055_S001, P056_S001, P057_S001-S003 repeat these details. Note: D054 is a larger composite in 2025 covering both the general statement and these specifics.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1_D045",
+            "item": "1",
+            "section": "Government Regulations",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Nvidia's worldwide business activities are subject to various laws, rules, and regulations of the United States and foreign governments.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_1_D046",
+            "item": "1",
+            "section": "Government Regulations",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The U.S. government has imposed various export licensing requirements on Nvidia's products, initially affecting A100 and H100 chips to China, Russia, and the Middle East in 2023, and later expanding in October 2023 to cover products exceeding certain performance thresholds shipped to China, the Middle East, and other designated Country Groups.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_1_D054",
+            "item": "1",
+            "section": "Government Regulations",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "U.S. export controls require licenses for shipments of NVIDIA's A100, H100, Blackwell, and other high-performance products to China, Russia, and specific countries in the Middle East and Asia, but the company has not received licenses to ship these restricted products to China.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.906004,
+            "sequence_match_ratio": 0.782759,
+            "length_ratio": 1.48927,
+            "word_count_delta": 114,
+            "added_tokens_sample": [
+              "over",
+              "past",
+              "three",
+              "years",
+              "we",
+              "have",
+              "been",
+              "subject",
+              "to",
+              "a",
+              "series",
+              "shifting",
+              "and",
+              "expanding",
+              "export",
+              "control",
+              "restrictions",
+              "impacting",
+              "our",
+              "ability"
+            ],
+            "removed_tokens_sample": [
+              "during",
+              "third",
+              "quarter",
+              "fiscal",
+              "year",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "nvda_2024_1_D046",
+            "score": 0.920718,
+            "normalised_score": 0.9207,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 92.07% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Expanded",
+          "final_taxonomy": "Expanded"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The 2025 disclosure expands the list of restricted products to include 'Blackwell' systems (GB200, B200) and explicitly states that licenses have not been received to ship restricted products to China, nor have partners/customers. It also notes the removal of the grace period for A100/H100 shipments. This escalates the compliance risk and clarifies the operational impact of export controls, representing a meaningful change in the company's regulatory exposure.",
+          "key_change": "Expansion of export control restrictions and license status"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1_D094",
+            "peer_topic": "Scope of Global Regulatory Compliance and Risks",
+            "peer_summary": "AMD's global operations are subject to a wide range of US and foreign laws, including those governing export control, data privacy, and AI. While current compliance has not materially impacted financial results, future regulatory changes or failure to comply could materially adversely affect capital expenditures, operations, competitive position, and expose the company to fines, sales limits, and reputational damage.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.080216,
+            "relationship": "related_topic",
+            "comparison": "Both companies disclose that their global operations are subject to U.S. and foreign export control laws, highlighting the regulatory risk of restrictions on product sales. However, while AMD provides a general statement that current compliance has not materially impacted its results and only warns of potential future adverse impacts from regulatory changes, Nvidia provides specific details on enacted licensing requirements that restrict exports of specific high-performance products (such as A100, H100, and RTX 4090) to designated regions like China, Russia, and the Middle East.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_1_D046",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1_P051_S001",
+                    "paragraph_id": "nvda_2024_1_P051",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "During the third quarter of fiscal year 2023, the U.S. government, or the USG, announced licensing requirements that, with certain exceptions, impact exports to China (including Hong Kong and Macau) and Russia of our A100 and H100 integrated circuits, DGX or any other systems or boards which incorporate A100 or H100 integrated circuits.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_1_P053_S001",
+                    "paragraph_id": "nvda_2024_1_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "In October 2023, the USG announced new and updated licensing requirements that became effective in our fourth quarter of fiscal year 2024 for exports to China and Country Groups D1, D4, and D5 (including but not limited to Saudi Arabia, the United Arab Emirates, and Vietnam, but excluding Israel) of our products exceeding certain performance thresholds, including A100, A800, H100, H800, L4, L40, L40S and RTX 4090.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_1_D094",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1_P088_S001",
+                    "paragraph_id": "amd_2024_1_P088",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Our global operations are subject to various United States and foreign laws and regulations, including, but not limited to, those relating to export control, customs, intellectual property, data privacy and security, climate, environmental, health and safety requirements, cybersecurity, tax, employment, competition and anti-trust, anti-corruption, anti-bribery, conflict minerals, corporate governance, financial and other disclosures, and AI.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1_P088_S002",
+                    "paragraph_id": "amd_2024_1_P088",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Compliance with these governmental laws and regulations do not presently have a material adverse impact on our capital expenditures, results of operations or competitive position.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
+  "request_hash": "5d0f85736190e5633f76d8c9c0b1c09f1d4400df5f60a4db2531afcc970cf158",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_7_D023",
+    "item": "7",
+    "target_topic": "Operating Expenses and Acquisition Charge",
+    "target_summary": "Operating expenses increased in fiscal year 2024 due to employee growth and compensation increases; fiscal year 2023 included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0322",
+        "relationship": "current_only",
+        "status": "needs_review",
+        "review_reasons": [
+          "invalid_or_omitted_verifier_proposal"
+        ],
+        "explanation": "Automatic repair turn limit reached; remaining disclosures need review.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D023",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased in fiscal year 2024 due to employee growth and compensation increases; fiscal year 2023 included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0308",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss the increase in operating expenses for the fiscal year, driven by employee growth and compensation increases. nvda_2024_7_D023 cites FY24 OpEx growth due to employee/compensation and mentions the Arm charge (unique historical context). nvda_2025_7_D024 cites FY25 OpEx growth of 45% primarily due to higher compensation/benefits from employee growth, matching the primary driver identified in the 2024 summary.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D023",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased in fiscal year 2024 due to employee growth and compensation increases; fiscal year 2023 included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D024",
+            "item": "7",
+            "section": "Fiscal Year 2025 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased 45% primarily due to higher compensation and benefits from employee growth and increases, as well as engineering development, compute, and infrastructure costs for new product introductions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.358238,
+            "sequence_match_ratio": 0.309859,
+            "length_ratio": 1.151515,
+            "word_count_delta": 5,
+            "added_tokens_sample": [
+              "2025",
+              "were",
+              "up",
+              "45",
+              "from",
+              "a",
+              "year",
+              "ago",
+              "higher",
+              "compensation",
+              "and",
+              "benefits",
+              "expenses",
+              "due",
+              "to",
+              "employee",
+              "and",
+              "engineering",
+              "development",
+              "compute"
+            ],
+            "removed_tokens_sample": [
+              "increased",
+              "2024",
+              "in",
+              "employees",
+              "fiscal",
+              "year",
+              "2023",
+              "also",
+              "included",
+              "a",
+              "1",
+              "4",
+              "billion",
+              "acquisition",
+              "termination",
+              "charge",
+              "related",
+              "to",
+              "the",
+              "proposed"
+            ]
+          },
+          "semantic": {
+            "matched_id": "nvda_2024_7_D023",
+            "score": 0.766787,
+            "normalised_score": 0.7668,
+            "label": "Relocated",
+            "rationale": "Score 76.68% of ceiling — content is similar but section changed from 'Fiscal Year 2024 Summary' to 'Fiscal Year 2025 Summary'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.9,
+          "reason": "Operating expenses surged 45% in FY25, a specific quantitative escalation not present in the FY24 summary (which noted growth but no specific rate). The FY25 disclosure explicitly adds 'engineering development, compute, and infrastructure costs for new product introductions' to the drivers (compensation/employee growth) seen in FY24. This quantifies a significant increase in investment intensity for future products.",
+          "key_change": "Quantified 45% OpEx increase with added infrastructure/compute cost drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D032",
+            "peer_topic": "R&D Expense Increase and AI Headcount",
+            "peer_summary": "AMD's research and development expenses increased by 10% to $6.5 billion in 2024, primarily driven by higher employee-related costs resulting from an increase in headcount to support the company's AI strategy.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.091189,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AMD reported increases in operating expenses for fiscal year 2024 driven by employee growth and compensation. NVDA explicitly stated that operating expenses increased due to 'growth in employees and compensation increases' (nvda_2024_7_P024_S001). Similarly, AMD reported that its Research and Development expenses increased by 10% to $6.5 billion, attributing the rise primarily to 'higher employee-related costs due to an increase in headcount in support of our AI strategy' (amd_2024_7_P045_S001 and amd_2024_7_P045_S002). While NVDA presents a broader operating expense trend, AMD's specific R&D expense disclosure mirrors the underlying driver of personnel cost expansion cited by NVDA.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P024_S001",
+                    "paragraph_id": "nvda_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Operating expenses increased for fiscal year 2024, driven by growth in employees and compensation increases.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D032",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P045_S001",
+                    "paragraph_id": "amd_2024_7_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Research and development expenses of $6.5 billion in 2024 increased by $584 million, or 10%, compared to $5.9 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P045_S002",
+                    "paragraph_id": "amd_2024_7_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase was primarily due to higher employee-related costs due to an increase in headcount in support of our AI strategy.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      }
+    ]
+  }
+}
