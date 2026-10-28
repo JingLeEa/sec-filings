@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Compare a target company's SEC 10-K disclosures with same-year disclosures from multiple peers. The agent uses same-Item TF-IDF retrieval to select candidate topics, then compares the source text and cites exact source sentences. It also loads adjacent-year alignment reports when available, so the result can show how the target and peer each described or classified the topic over time.
+Compare target disclosures marked material in stage 5 with same-year disclosures from one or more peers. The agent uses same-Item TF-IDF retrieval to select the top three candidates per peer, then compares the source text and cites exact source sentences. It also loads adjacent-year alignment reports as context.
 
 ## Data from `test-data`
 
@@ -20,6 +20,7 @@ PYTHONPATH=src python3 scripts/compare_peer_disclosures.py \
   --ticker NVDA --peers AMD AVGO INTC --year 2024 \
   --disclosures-dir ../sec-filings-test-data/test_data/disclosures \
   --alignments-dir ../sec-filings-test-data/test_data/alignments \
+  --workers 6 \
   --dry-run
 ```
 
@@ -34,18 +35,64 @@ PYTHONPATH=src python3 scripts/compare_peer_disclosures.py \
   --ticker NVDA --peers AMD AVGO INTC --year 2024 \
   --disclosures-dir ../sec-filings-test-data/test_data/disclosures \
   --alignments-dir ../sec-filings-test-data/test_data/alignments \
-  --env-file .env --max-requests 5
+  --env-file .env --workers 6
 ```
 
-`--max-requests 5` is a useful paid-call pilot; increase it for broader coverage. The default Items are `1`, `1A`, `7`, and `8`. Item 15 can be added explicitly. The default is three candidate disclosures per peer for each target disclosure. `--top-k`, `--items`, `--max-requests`, `--max-tokens`, `--max-prompt-chars`, and `--output-dir` control scope and runtime. The CLI uses one bounded LLM decision per target disclosure and allows multiple supported matches for each peer.
+The default run processes every target disclosure whose stage 5 materiality label is `Yes`. Use `--target-selection all` to include all disclosures. The default Items are `1`, `1A`, `7`, and `8`; Item 15 can be added explicitly. TF-IDF retrieves up to three same-Item candidates per peer. The run continues until all selected disclosures finish. `--workers` controls concurrent target comparisons, defaults to 6, and accepts up to 20.
+
+To run 2023, 2024, and 2025 for one target/peer pair with six workers per year, launch one command per year concurrently. That uses at most 18 comparison workers. Use a separate output directory for each year. Make sure all three runs use the same data and peer list.
+
+```bash
+for year in 2023 2024 2025; do
+  PYTHONPATH=src python3 scripts/compare_peer_disclosures.py \
+    --ticker NVDA --peers AMD --year "$year" \
+    --disclosures-dir ../sec-filings-test-data/test_data/disclosures \
+    --alignments-dir ../sec-filings-test-data/test_data/alignments \
+    --output-dir "data/peer_comparison/nvda/${year}_amd_material_pilot" \
+    --workers 6 --env-file .env &
+done
+wait
+```
+
+## Save a test run on the `test-data` branch
+
+Keep the comparison code worktree on its feature branch and check out `test-data` in the separate data worktree. The current setup uses a detached data worktree, so create a local tracking branch once:
+
+```bash
+git -C ../sec-filings-test-data fetch origin test-data
+git -C ../sec-filings-test-data switch --track -c test-data origin/test-data
+```
+
+For later runs, update that worktree with `git -C ../sec-filings-test-data pull --ff-only`. Set `--output-dir` to a directory inside the data worktree; for example:
+
+```bash
+PYTHONPATH=src python3 scripts/compare_peer_disclosures.py \
+  --ticker NVDA --peers AMD --year 2024 \
+  --disclosures-dir ../sec-filings-test-data/test_data/disclosures \
+  --alignments-dir ../sec-filings-test-data/test_data/alignments \
+  --output-dir ../sec-filings-test-data/test_data/peer_comparison/nvda/2024_amd_material_pilot \
+  --workers 6 --env-file .env
+```
+
+After the run, inspect the report and Git status in the data worktree, then commit the output folder there:
+
+```bash
+git -C ../sec-filings-test-data status --short
+git -C ../sec-filings-test-data add test_data/peer_comparison/nvda/2024_amd_material_pilot
+git -C ../sec-filings-test-data commit -m "Add NVDA AMD 2024 peer comparison pilot"
+git -C ../sec-filings-test-data push origin test-data
+```
+
+The output folder contains the report, manifest, validated jobs, request records, and token usage. Keep credentials in `.env`; never add that file to Git. If the feature branch has a newer agent version, merge or cherry-pick that code into `test-data` only if the team wants the test-data branch to contain the runnable code too. The comparison command above runs the code from the current feature worktree while saving results to the data worktree.
 
 ## How it works
 
 1. Load accepted and review-candidate disclosures for the target and every peer. Reject inconsistent company/year metadata, missing content, invalid Items, or missing/duplicate source sentence IDs.
 2. Load completed adjacent-year alignment reports for each company when present. Preserve match status, review reasons, change taxonomy, materiality fields, and prior/current disclosure summaries as context. `needs_review` alignments remain flagged.
-3. Build a local TF-IDF index across all companies. For each target disclosure, retrieve candidates from each peer within the exact same SEC Item. Retrieval scores are rankings, not probabilities.
-4. Ask the LLM for zero or more supported peer comparisons per company. A peer with no retrieved candidates is recorded separately from a peer whose retrieved candidates were reviewed and not comparable.
-5. Validate every cited disclosure and sentence ID against its source. Store source sentence text, paragraph IDs, and source URLs with the comparison.
+3. By default, select target disclosures with stage 5 `materiality_analysis.materiality == "Yes"` in an attached adjacent-year alignment. Use `--target-selection all` to compare every target disclosure.
+4. Build a local TF-IDF index and retrieve up to three same-Item candidates from each peer for each selected target. Retrieval scores are rankings, not probabilities.
+5. Ask the LLM for supported peer comparisons. A peer with no retrieved candidates is recorded separately from a peer whose retrieved candidates were reviewed and not comparable.
+6. Validate every cited disclosure and sentence ID against its source. Store source sentence text, paragraph IDs, and source URLs with the comparison.
 
 The agent's statements are model-generated analysis, not human-verified conclusions. Alignment and materiality labels from the year-over-year reports provide context and are not treated as proof for peer comparisons.
 
@@ -59,7 +106,7 @@ The default output is `data/peer_comparison/TARGET/YEAR/`:
 - `requests/`: exact prompt response records, keyed by request hash. Completed responses are reused; every request's usage is counted once.
 - `token_usage.json`: provider-reported token totals and calls with unknown usage.
 
-When `--max-requests` is reached, the report is partial. Rerun with the same arguments and output directory to continue. If any source or alignment input changes, start a new output directory; the manifest prevents mixing results from different inputs.
+Runs use multiple worker threads when `--workers` is greater than one. Completed jobs are saved separately and skipped on resume. If any source or alignment input changes, start a new output directory; the manifest prevents mixing results from different inputs. The default material-change selection uses materiality `Yes` from the adjacent-year alignment windows available for the target year. For 2024, either 2023–2024 or 2024–2025 can qualify a disclosure.
 
 ## Limitations
 

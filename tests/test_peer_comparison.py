@@ -1,5 +1,7 @@
 import json
 import tempfile
+import threading
+import time
 import unittest
 from argparse import Namespace
 from pathlib import Path
@@ -12,6 +14,7 @@ from sec_disclosure.agents.peer_comparison import (
     load_company,
     make_candidates,
     run,
+    select_material_change_targets,
     validate_response,
 )
 
@@ -71,6 +74,16 @@ class PeerComparisonTests(unittest.TestCase):
         self.assertEqual(result[0]["status"], "compared")
         self.assertEqual(len(result[0]["comparisons"]), 2)
         self.assertEqual(result[0]["comparisons"][0]["evidence"][0]["sentences"][0]["sentence_id"], "a1")
+
+    def test_material_change_filter_keeps_only_stage_five_yes(self):
+        rows = [
+            {"disclosure_id": "yes", "year_over_year_context": [
+                {"materiality_analysis": {"materiality": "Yes"}}]},
+            {"disclosure_id": "no", "year_over_year_context": [
+                {"materiality_analysis": {"materiality": "No"}}]},
+            {"disclosure_id": "missing", "year_over_year_context": []},
+        ]
+        self.assertEqual([row["disclosure_id"] for row in select_material_change_targets(rows)], ["yes"])
 
     def test_rejects_citation_from_another_disclosure(self):
         target, ranked = self._inputs()
@@ -213,6 +226,61 @@ class PeerComparisonTests(unittest.TestCase):
         self.assertEqual(len(errors), 1)
         audit = json.loads(errors[0].read_text())
         self.assertTrue(audit["resolved"])
+
+    def test_live_workflow_runs_target_jobs_concurrently(self):
+        output = self.root / "concurrent-output"
+        second = disclosure("AAA", "aaa_2024_1A_D002", "1A",
+                            "We depend on two critical suppliers.", "a2")
+        path = self.root / "disclosures" / "aaa" / "2024" / "disclosures.json"
+        payload = json.loads(path.read_text())
+        payload["disclosures"].append({key: value for key, value in second.items()
+                                        if key in {"disclosure_id", "item", "summary", "topic",
+                                                   "taxonomy", "content", "sources"}})
+        path.write_text(json.dumps(payload))
+        args = Namespace(ticker="aaa", peers=["bbb"], year="2024", items=["1A"],
+                         disclosures_dir=self.root / "disclosures", alignments_dir=self.root / "alignments",
+                         data_dir=self.root, output_dir=output, top_k=3, dry_run=False, env_file=None,
+                         max_requests=-1, max_validation_attempts=1, max_tokens=100,
+                         max_prompt_chars=10000, timeout=10, workers=2)
+        active = 0
+        max_active = 0
+        lock = threading.Lock()
+
+        def fake_completion(prompt, **kwargs):
+            nonlocal active, max_active
+            agent_input = json.loads(prompt)
+            with lock:
+                active += 1
+                max_active = max(max_active, active)
+            time.sleep(0.05)
+            target_sentence_id = agent_input["target"]["sentences"][0]["sentence_id"]
+            peer_candidates = agent_input["peer_candidates"]["BBB"]
+            if peer_candidates:
+                peer_candidate = peer_candidates[0]
+                body = {"comparisons": [{
+                    "peer_ticker": "BBB", "peer_disclosure_id": peer_candidate["disclosure_id"],
+                    "relationship": "same_topic", "comparison": "Both describe supplier reliance.",
+                    "target_sentence_ids": [target_sentence_id],
+                    "peer_sentence_ids": [peer_candidate["sentences"][0]["sentence_id"]],
+                }], "no_match": []}
+            else:
+                body = {"comparisons": [], "no_match": [{
+                    "peer_ticker": "BBB", "reason": "No peer candidate was retrieved."
+                }]}
+            response = json.dumps(body)
+            with lock:
+                active -= 1
+            return CompletionResult(response, "test-model", "stop",
+                                    {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15})
+
+        with patch("sec_disclosure.agents.peer_comparison.load_config",
+                   return_value=SimpleNamespace(model="test-model", base_url="https://llm.example")), \
+             patch("sec_disclosure.agents.peer_comparison.request_completion",
+                   side_effect=fake_completion):
+            report = run(args)
+        self.assertTrue(report["run_complete"])
+        self.assertEqual(report["jobs_completed"], 2)
+        self.assertEqual(max_active, 2)
 
 
 if __name__ == "__main__":
