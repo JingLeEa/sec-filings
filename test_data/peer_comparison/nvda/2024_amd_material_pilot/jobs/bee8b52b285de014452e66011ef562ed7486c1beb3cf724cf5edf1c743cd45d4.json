@@ -1,0 +1,184 @@
+{
+  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
+  "request_hash": "6719de1d8b81b3a0e40e379f3189e348e114c92004ea2e36af82820a11d690fd",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_7_D052",
+    "item": "7",
+    "target_topic": "Indirect customer concentration",
+    "target_summary": "An indirect customer, purchasing through system integrators, distributors, and Customer A, is estimated to have represented approximately 19% of total revenue in fiscal year 2024, attributable to the Compute & Networking segment.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0347",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "nvda_2024_7_D052 reports ~19% revenue from an indirect customer in 2024. As established, 2023 had no such concentration. No 2023 counterpart exists.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D052",
+            "item": "7",
+            "section": "Results of Operations > Concentration of Revenue",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "An indirect customer, purchasing through system integrators, distributors, and Customer A, is estimated to have represented approximately 19% of total revenue in fiscal year 2024, attributable to the Compute & Networking segment.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 37,
+            "added_tokens_sample": [
+              "one",
+              "indirect",
+              "customer",
+              "which",
+              "primarily",
+              "purchases",
+              "our",
+              "products",
+              "through",
+              "system",
+              "integrators",
+              "and",
+              "distributors",
+              "including",
+              "through",
+              "customer",
+              "a",
+              "is",
+              "estimated",
+              "to"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.95,
+          "confidence_score": 0.98,
+          "reason": "The 2024 filing discloses that an indirect customer represented approximately 19% of total revenue. This is a significant concentration risk, especially as it is linked to Customer A (13%). The 2023 filing stated no customer exceeded 10%. The combination of direct and indirect exposure to a single economic entity totaling ~32% (13% + 19%) represents a material escalation in dependency and risk exposure compared to the prior year.",
+          "key_change": "Significant increase in indirect customer revenue concentration"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0330",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe an indirect customer that purchases through system integrators and distributors and estimate its share of total revenue. The 2024 disclosure cites ~19% via Customer A; the 2025 disclosure cites 10% or more via Direct Customer B. Both attribute this to the Compute & Networking segment and use similar estimation methodology descriptions.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D052",
+            "item": "7",
+            "section": "Results of Operations > Concentration of Revenue",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "An indirect customer, purchasing through system integrators, distributors, and Customer A, is estimated to have represented approximately 19% of total revenue in fiscal year 2024, attributable to the Compute & Networking segment.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D047",
+            "item": "7",
+            "section": "Results of Operations > Concentration of Revenue",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Indirect customer revenue is estimated, and for fiscal year 2025, one indirect customer primarily purchasing through system integrators and distributors is estimated to represent 10% or more of total revenue, attributable to the Compute & Networking segment.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.57993,
+            "sequence_match_ratio": 0.495413,
+            "length_ratio": 1.945946,
+            "word_count_delta": 35,
+            "added_tokens_sample": [
+              "indirect",
+              "customers",
+              "indirect",
+              "customer",
+              "revenue",
+              "is",
+              "an",
+              "estimation",
+              "based",
+              "upon",
+              "multiple",
+              "factors",
+              "including",
+              "customer",
+              "purchase",
+              "order",
+              "information",
+              "product",
+              "specifications",
+              "internal"
+            ],
+            "removed_tokens_sample": [
+              "one",
+              "a",
+              "have",
+              "represented",
+              "approximately",
+              "19",
+              "for",
+              "fiscal",
+              "year",
+              "2024"
+            ]
+          },
+          "semantic": {
+            "matched_id": "nvda_2024_7_D052",
+            "score": 0.89469,
+            "normalised_score": 0.8947,
+            "label": "Expanded",
+            "rationale": "Score 89.47% of ceiling — content grew from ~38 to ~74 words (1.9×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.75,
+          "reason": "The disclosure updates the estimated revenue concentration from a specific indirect customer from ~19% in fiscal 2024 to 10% or more in fiscal 2025. While both represent significant concentration (often >10% thresholds), the change in magnitude and the explicit methodology addition ('Indirect customer revenue is an estimation...') alters the financial exposure profile disclosure.",
+          "key_change": "Update in major customer revenue concentration percentage"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses customer concentration, revenue dependencies on specific indirect customers, or sales channels involving system integrators and distributors. The supplied AMD candidates relate to Gaming Segment Revenue, Contractual Purchase Commitments, and Amortization of Intangibles, which are financially and substantively distinct from NVDA's disclosure of indirect customer concentration representing 19% of total revenue."
+      }
+    ]
+  }
+}

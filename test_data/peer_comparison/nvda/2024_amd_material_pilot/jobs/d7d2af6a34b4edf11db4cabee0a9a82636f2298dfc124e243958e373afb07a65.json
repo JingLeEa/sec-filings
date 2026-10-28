@@ -1,0 +1,417 @@
+{
+  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
+  "request_hash": "f1e2f4072e27ac8cc9830f7da5c0b09fd8dbc44edcb127978ef735b52247b8b4",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_7_D058",
+    "item": "7",
+    "target_topic": "R&D and SG&A Expense Drivers",
+    "target_summary": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0352",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "The 2024 disclosure nvda_2024_7_D058 combines the R&D and SG&A expense analyses into a single statement, citing compensation and employee growth as the primary drivers. This matches the specific drivers identified in the 2023 disclosures: nvda_2023_7_D060 (R&D drivers) and nvda_2023_7_D061 (SG&A drivers). Both sides cover the same specific operating expense components and their drivers within Item 7.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in research and development expense for fiscal year 2023 was primarily driven by increased compensation, employee growth, engineering development costs, and data center infrastructure.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2023_7_D061",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in sales, general and administrative expense for fiscal year 2023 was primarily driven by increased compensation and employee growth.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D058",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0309",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures address the increase in Operating Expenses. D058 (2024) attributes the increase in R&D and SG&A to compensation/benefits and employee growth. D024 (2025) attributes the 45% OpEx increase to compensation/benefits (employee growth/increases) and engineering/compute costs. The shared topic is the primary drivers of Operating Expense growth.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D058",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D024",
+            "item": "7",
+            "section": "Fiscal Year 2025 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased 45% primarily due to higher compensation and benefits from employee growth and increases, as well as engineering development, compute, and infrastructure costs for new product introductions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.555517,
+            "sequence_match_ratio": 0.388889,
+            "length_ratio": 1.117647,
+            "word_count_delta": 4,
+            "added_tokens_sample": [
+              "operating",
+              "2025",
+              "were",
+              "up",
+              "45",
+              "from",
+              "a",
+              "year",
+              "ago",
+              "higher",
+              "expenses",
+              "due",
+              "to",
+              "and",
+              "engineering",
+              "development",
+              "compute",
+              "and",
+              "infrastructure",
+              "costs"
+            ],
+            "removed_tokens_sample": [
+              "the",
+              "increase",
+              "in",
+              "research",
+              "and",
+              "development",
+              "expenses",
+              "and",
+              "sales",
+              "general",
+              "and",
+              "administrative",
+              "2024",
+              "was",
+              "primarily",
+              "including",
+              "stock",
+              "based",
+              "compensation",
+              "reflecting"
+            ]
+          },
+          "semantic": {
+            "matched_id": "nvda_2024_7_D058",
+            "score": 0.763518,
+            "normalised_score": 0.7635,
+            "label": "Relocated",
+            "rationale": "Score 76.35% of ceiling — content is similar but section changed from 'Results of Operations > Operating Expenses' to 'Fiscal Year 2025 Summary'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "While the base driver (compensation/employee growth) is consistent, the FY25 disclosure introduces 'engineering development, compute, and infrastructure costs' as a distinct and significant component of the 45% OpEx increase. This expands the understanding of OpEx drivers beyond human capital to substantial capital-intensive infrastructure spend, materially changing the composition of expense growth.",
+          "key_change": "Addition of infrastructure/compute costs to OpEx growth drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0335",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures focus on the increase in Research and Development (R&D) expenses. D058 (2024) cites compensation and benefits as a primary driver for R&D/SG&A increases. D052 (2025) specifically details R&D expense increases driven by compensation/benefits (32% increase), compute/infrastructure, and engineering development. The specific topic is R&D expense drivers.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D058",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D052",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Research and development expenses for fiscal year 2025 increased due to a 32% rise in compensation and benefits, a 100% increase in compute and infrastructure costs, and a 234% surge in engineering development costs for new product introductions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.669262,
+            "sequence_match_ratio": 0.571429,
+            "length_ratio": 1.470588,
+            "word_count_delta": 16,
+            "added_tokens_sample": [
+              "increases",
+              "2025",
+              "were",
+              "a",
+              "32",
+              "increase",
+              "in",
+              "a",
+              "100",
+              "increase",
+              "in",
+              "compute",
+              "and",
+              "infrastructure",
+              "and",
+              "a",
+              "234",
+              "increase",
+              "in",
+              "engineering"
+            ],
+            "removed_tokens_sample": [
+              "increase",
+              "and",
+              "sales",
+              "general",
+              "and",
+              "administrative",
+              "expenses",
+              "2024",
+              "was",
+              "primarily"
+            ]
+          },
+          "semantic": {
+            "matched_id": "nvda_2024_7_D058",
+            "score": 0.872595,
+            "normalised_score": 0.8726,
+            "label": "Expanded",
+            "rationale": "Score 87.26% of ceiling — content grew from ~33 to ~49 words (1.5×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.88,
+          "confidence_score": 0.92,
+          "reason": "The disclosure introduces specific, high-magnitude drivers for R&D expense growth, including a 100% increase in compute/infrastructure and a 234% surge in engineering development costs. This quantifies a strategic shift and significant operational cost expansion not present in the previous general reference to compensation.",
+          "key_change": "Quantification of R&D expense growth drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0336",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures focus on the increase in Sales, General, and Administrative (SG&A) expenses. D058 (2024) cites compensation and benefits as a primary driver for SG&A increases. D053 (2025) specifically cites compensation and benefits as the primary driver for SG&A increases. The specific topic is SG&A expense drivers.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D058",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D053",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Sales, general, and administrative expenses for fiscal year 2025 increased primarily due to compensation and benefits, reflecting employee growth and compensation increases.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.838982,
+            "sequence_match_ratio": 0.825397,
+            "length_ratio": 0.852941,
+            "word_count_delta": -5,
+            "added_tokens_sample": [
+              "increases",
+              "2025",
+              "were"
+            ],
+            "removed_tokens_sample": [
+              "increase",
+              "research",
+              "and",
+              "development",
+              "expenses",
+              "and",
+              "2024",
+              "was"
+            ]
+          },
+          "semantic": {
+            "matched_id": "nvda_2024_7_D058",
+            "score": 0.918362,
+            "normalised_score": 0.9184,
+            "label": "Modified",
+            "rationale": "Score 91.84% of ceiling with 73% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.85,
+          "reason": "The change is primarily stylistic and scope-reducing, isolating SG&A from R&D. The core driver (compensation and benefits) remains identical to the previous year's disclosure for combined expenses. No new substantive risk or financial condition is introduced.",
+          "key_change": "Isolation of SG&A expense drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D032",
+            "peer_topic": "R&D Expense Increase and AI Headcount",
+            "peer_summary": "AMD's research and development expenses increased by 10% to $6.5 billion in 2024, primarily driven by higher employee-related costs resulting from an increase in headcount to support the company's AI strategy.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.193823,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AMD attribute their increases in Research & Development (R&D) expenses for fiscal year 2024 primarily to employee-related costs driven by headcount growth. NVDA explicitly links R&D expense increases to 'compensation and benefits, including stock-based compensation, reflecting employee growth' (nvda_2024_7_P061_S001). Similarly, AMD states its R&D expense increase was 'primarily due to higher employee-related costs due to an increase in headcount in support of our AI strategy' (amd_2024_7_P045_S002), confirming a shared driver of personnel expansion in R&D functions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D058",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P061_S001",
+                    "paragraph_id": "nvda_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D032",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P045_S002",
+                    "paragraph_id": "amd_2024_7_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase was primarily due to higher employee-related costs due to an increase in headcount in support of our AI strategy.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D033",
+            "peer_topic": "MG&A expenses increase in 2024",
+            "peer_summary": "Marketing, general and administrative expenses were $2.8 billion in 2024, an increase of $431 million or 18% from $2.4 billion in 2023, primarily due to increased go-to-market activities supporting revenue growth.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.205209,
+            "relationship": "same_topic",
+            "comparison": "While NVDA groups Sales, General, and Administrative (SG&A) expenses together with R&D to explain the overall operating expense increase driven by compensation (nvda_2024_7_P061_S001), AMD separately discloses that its Marketing, General, and Administrative (MG&A) expenses also increased in 2024. However, the drivers differ: AMD attributes its MG&A increase primarily to 'go-to-market activities to support our revenue growth' (amd_2024_7_P046_S002), whereas NVDA highlights compensation and benefits for its combined operating expenses.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D058",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P061_S001",
+                    "paragraph_id": "nvda_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D033",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P046_S002",
+                    "paragraph_id": "amd_2024_7_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase was primarily due to an increase in go-to-market activities to support our revenue growth.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

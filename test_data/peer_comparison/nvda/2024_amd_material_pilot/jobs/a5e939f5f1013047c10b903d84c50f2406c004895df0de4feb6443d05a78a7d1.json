@@ -1,0 +1,235 @@
+{
+  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
+  "request_hash": "957df320d67a0cecc90fbe15521073af458fde260117eae4fff226924b00f5c6",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_1_D059",
+    "item": "1",
+    "target_topic": "Employee Value Proposition",
+    "target_summary": "The company believes employees are its greatest assets and play a key role in creating long-term value for stakeholders.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0289",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2023 D073 covers two distinct topics: the philosophical view that employees are assets (matched by 2024 D059) and the specific headcount/functional breakdown (matched by 2024 D060). These are presented as separate disclosures in the current year, splitting the original group appropriately.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_1_D073",
+            "item": "1",
+            "section": "Human Capital Management",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "As of the end of fiscal year 2023, NVIDIA had 26,196 employees across 35 countries, with 19,532 in research and development and 6,664 in sales, marketing, operations, and administrative roles.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1_D059",
+            "item": "1",
+            "section": "Human Capital Management",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "The company believes employees are its greatest assets and play a key role in creating long-term value for stakeholders.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_1_D060",
+            "item": "1",
+            "section": "Human Capital Management",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "As of the end of fiscal year 2024, NVIDIA had approximately 29,600 employees in 36 countries, with 22,200 engaged in research and development and 7,400 in sales, marketing, operations, and administrative positions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.775345,
+            "sequence_match_ratio": 0.728571,
+            "length_ratio": 1.372881,
+            "word_count_delta": 22,
+            "added_tokens_sample": [
+              "2024",
+              "approximately",
+              "29",
+              "600",
+              "36",
+              "22",
+              "200",
+              "7",
+              "400",
+              "the",
+              "compensation",
+              "committee",
+              "of",
+              "our",
+              "board",
+              "of",
+              "directors",
+              "assists",
+              "in",
+              "the"
+            ],
+            "removed_tokens_sample": [
+              "2023",
+              "26",
+              "196",
+              "35",
+              "19",
+              "532",
+              "6",
+              "664"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "nvda_2023_1_D073",
+            "score": 0.917048,
+            "normalised_score": 0.917,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 91.70% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.92,
+          "reason": "While the philosophical statement is unchanged, the disclosure splits to update specific headcount figures. The increase in total employees (from 26,196 to ~29,600) and R&D staff (from 19,532 to 22,200) represents a significant change in the company's operational scale and human capital resource base, which is material information regarding the company's size and growth.",
+          "key_change": "Significant headcount increase"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0033",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure (D059) contains a specific generic statement: 'We believe that our employees are our greatest assets...'. The 2025 filing contains identical text in audit paragraph P069 (nvda_2025_1_P069_AUDIT). However, this paragraph is marked as 'ungrouped_or_excluded_evidence' because it is a generic belief statement rather than a specific policy, result, or risk disclosure suitable for extraction into the standard disclosure taxonomy. The extracted disclosures in the Human Capital Management section (e.g., D067 regarding employee counts) do not contain this specific statement. As per instructions, audit hits are not final disclosure IDs for matching unless they become part of the extracted set. Therefore, no valid extracted counterpart exists for D059 in the 2025 records.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1_D059",
+            "item": "1",
+            "section": "Human Capital Management",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "The company believes employees are its greatest assets and play a key role in creating long-term value for stakeholders.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -23,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "we",
+              "believe",
+              "that",
+              "our",
+              "employees",
+              "are",
+              "our",
+              "greatest",
+              "assets",
+              "and",
+              "they",
+              "play",
+              "a",
+              "key",
+              "role",
+              "in",
+              "creating",
+              "long",
+              "term",
+              "value"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The disclosure was a generic 'boilerplate' statement that employees are the company's greatest assets. This is standard corporate language that does not convey specific operational, human capital, or strategic changes, and its removal is immaterial.",
+          "key_change": "Removal of generic employee value statement"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1_D081",
+            "peer_topic": "Global Workforce Headcount",
+            "peer_summary": "As of December 28, 2024, AMD had approximately 28,000 employees in its global workforce.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.079765,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose their global employee headcounts as a key aspect of their Human Capital Management in Item 1, highlighting the scale of their workforce. NVIDIA reported approximately 29,600 employees as of the end of fiscal year 2024, while AMD reported approximately 28,000 employees as of December 28, 2024. Both disclosures serve to quantify the workforce size, though NVIDIA's disclosure in the 'Employee Value Proposition' summary context also emphasizes R&D concentration (22,200 employees), whereas AMD's candidate disclosure focuses strictly on the total global count.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_1_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1_P063_S001",
+                    "paragraph_id": "nvda_2024_1_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We believe that our employees are our greatest assets, and they play a key role in creating long-term value for our stakeholders.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_1_D081",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1_P076_S001",
+                    "paragraph_id": "amd_2024_1_P076",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "As of December 28, 2024, we had approximately 28,000 employees in our global workforce.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      }
+    ]
+  }
+}
