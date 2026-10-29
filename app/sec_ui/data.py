@@ -164,7 +164,7 @@ def _postgres_reports(company, previous, current):
     return reports, {}
 
 
-def load_comparison(company: str, previous: int, current: int, source: Source | None = None) -> dict:
+def load_comparison(company: str, previous: int, current: int, source: Source | None = None, *, apply_reviews=True) -> dict:
     """Return {"meta": ..., "records": [...]} for one company and year pair."""
     source = source or discover_source()
     kind = source.scopes.get((company, previous, current))
@@ -184,7 +184,11 @@ def load_comparison(company: str, previous: int, current: int, source: Source | 
         "has_text": any(r["previous_text"] or r["current_text"] for r in records),
         "record_count": len(records),
     }
-    return {"meta": meta, "records": records}
+    comparison = {"meta": meta, "records": records}
+    if apply_reviews:
+        from .review import apply_final_choices
+        comparison = apply_final_choices(comparison)
+    return comparison
 
 
 # --------------------------------------------------------------------------- normalising
@@ -242,7 +246,8 @@ def normalise(raw: dict, lookup: dict, company: str, previous: int, current: int
     urls = _unique([e["source_url"] for e in evidence] +
                    [s.get("source_url") for m in earlier + later for s in (m.get("sources") or []) if isinstance(s, dict)])
     categories = _unique([m.get("taxonomy") for m in later + earlier])
-    label = analysis.get("final_taxonomy") if isinstance(analysis.get("final_taxonomy"), str) else None
+    methods = {name: _method_label(analysis, name) for name in ("lexical", "semantic", "llm")}
+    label = methods["llm"] if methods["llm"] in config.CHANGE_LABELS else None
     decision = materiality.get("materiality")
     material = decision if decision in {"Yes", "No"} else None
     members = earlier + later
@@ -270,7 +275,10 @@ def normalise(raw: dict, lookup: dict, company: str, previous: int, current: int
         "sections": _unique([m.get("section") for m in members]),
         "category": categories[0] if categories else NOT_CLASSIFIED, "categories": categories,
         "change_label": label or NOT_LABELLED,
-        "methods": {name: _method_label(analysis, name) for name in ("lexical", "semantic", "llm")},
+        "pipeline_change_label": analysis.get("final_taxonomy"),
+        "llm_change_label": label, "final_change_label": label, "final_label_source": "llm",
+        "manual_change_label": None,
+        "methods": methods,
         "change_status": analysis.get("status"),
         "lexical": analysis.get("lexical") if isinstance(analysis.get("lexical"), dict) else {},
         "semantic": analysis.get("semantic") if isinstance(analysis.get("semantic"), dict) else {},
@@ -338,6 +346,10 @@ def export_rows(records, *, include_text: bool = True) -> list:
             "content_category": r["category"], "relationship": r["relationship"], "status": r["status"],
             "change_label": r["change_label"], "lexical_label": r["methods"]["lexical"] or "",
             "semantic_label": r["methods"]["semantic"] or "", "llm_label": r["methods"]["llm"] or "",
+            "final_change_label": r.get("final_change_label", r["change_label"]),
+            "final_label_source": r.get("final_label_source", "llm"),
+            "manual_change_label": r.get("manual_change_label"),
+            "original_change_label": r.get("pipeline_change_label"),
             "materiality": r["materiality"], "materiality_score": r["materiality_score"],
             "confidence_score": r["confidence_score"], "key_change": r["key_change"],
             "materiality_reason": r["materiality_reason"], "explanation": r["explanation"],

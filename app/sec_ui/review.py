@@ -1,4 +1,4 @@
-"""Persistent human labels for the needs_review queue, separate from pipeline output."""
+"""Persistent final-label choices, retaining original model labels and evidence."""
 from __future__ import annotations
 
 import hashlib
@@ -13,6 +13,64 @@ from threading import Lock
 from . import config, data
 
 _SAVE_LOCK = Lock()
+
+
+def label_source(saved):
+    # Older review files contain manual annotations without an explicit source.
+    return saved.get("label_source", "manual") if saved else "llm"
+
+
+def _valid_choice(saved, labels, manual_field):
+    return (saved.get("label_source", "manual") in {"llm", "manual"}
+            and (saved.get(manual_field) is None or saved[manual_field] in labels))
+
+
+def _manual_label(saved, field, legacy_field):
+    return saved.get(field, saved[legacy_field]) if saved else None
+
+
+def final_change(record, reviews):
+    saved = current_review(record, reviews)
+    llm = record["methods"].get("llm")
+    llm = llm if llm in config.CHANGE_LABELS else None
+    manual = _manual_label(saved, "manual_change_label", "change_label")
+    source = label_source(saved)
+    final = manual if source == "manual" else llm
+    return {**record, "llm_change_label": llm, "manual_change_label": manual,
+            "final_label_source": source, "final_change_label": final,
+            "change_label": final or data.NOT_LABELLED}
+
+
+def final_disclosure(record, reviews):
+    saved = current_disclosure_review(record, reviews)
+    llm = record.get("llm_disclosure_type", record.get("taxonomy"))
+    manual = _manual_label(saved, "manual_disclosure_type", "disclosure_type")
+    source = label_source(saved)
+    final = manual if source == "manual" else llm
+    return {**record, "llm_disclosure_type": llm, "manual_disclosure_type": manual,
+            "final_label_source": source, "final_disclosure_type": final,
+            "taxonomy": final or data.NOT_CLASSIFIED}
+
+
+def apply_final_choices(comparison):
+    """Resolve uncached annotations over cached pipeline data on every page run."""
+    meta = comparison["meta"]
+    company, previous, current = meta["company"], meta["previous_year"], meta["current_year"]
+    changes = load_reviews(company, previous, current)
+    types = {year: load_disclosure_reviews(company, year) for year in (previous, current)}
+    records = []
+    for original in comparison["records"]:
+        record = final_change(original, changes)
+        for side, year in (("previous", previous), ("current", current)):
+            record[side + "_members"] = [final_disclosure(
+                {**member, "company": company, "fiscal_year": year}, types[year])
+                for member in original[side + "_members"]]
+        categories = list(dict.fromkeys(member["taxonomy"] for member in
+                         record["current_members"] + record["previous_members"]
+                         if member["taxonomy"] != data.NOT_CLASSIFIED))
+        record.update(categories=categories, category=categories[0] if categories else data.NOT_CLASSIFIED)
+        records.append(record)
+    return {**comparison, "records": records}
 
 
 def _write_reviews(path, payload):
@@ -39,6 +97,17 @@ def requires_change_review(record):
             or record.get("change_status") == "needs_review")
 
 
+def ai_approved_change(record):
+    return (not requires_change_review(record)
+            and record.get("status") in {"ai_verified", "auto_matched", "unmatched"}
+            and record.get("change_status") == "completed"
+            and record["methods"].get("llm") in config.CHANGE_LABELS)
+
+
+def ai_approved_disclosure(record):
+    return not record["needs_review"] and record.get("taxonomy") in config.CONTENT_CATEGORIES
+
+
 def review_path(company: str, previous: int, current: int) -> Path:
     if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", company) or previous >= current:
         raise data.DataError("Invalid company or filing years for manual review.")
@@ -60,6 +129,7 @@ def load_reviews(company: str, previous: int, current: int) -> dict:
     for match_id, saved in payload["reviews"].items():
         if (not isinstance(saved, dict) or saved.get("match_id") != match_id
                 or saved.get("change_label") not in config.CHANGE_LABELS
+                or not _valid_choice(saved, config.CHANGE_LABELS, "manual_change_label")
                 or not all(isinstance(saved.get(key), str)
                            for key in ("notes", "reviewed_at", "source_fingerprint"))):
             raise data.DataError(f"Invalid manual review entry at {path}.")
@@ -80,11 +150,15 @@ def current_review(record: dict, reviews: dict) -> dict | None:
     return saved if saved and saved["source_fingerprint"] == fingerprint(record) else None
 
 
-def save_review(record: dict, label: str, notes: str, *, expected: dict | None) -> dict:
-    if not requires_change_review(record) and (not expected or expected.get("source_fingerprint") != fingerprint(record)):
-        raise data.DataError("Only groups needing a change label or from needs_review.json can be reviewed here.")
-    if label not in config.CHANGE_LABELS:
+def save_review(record: dict, label: str, notes: str, *, expected: dict | None, label_source="manual") -> dict:
+    if label_source not in {"llm", "manual"}:
+        raise data.DataError("Choose LLM or Manual for the final label source.")
+    llm = record["methods"].get("llm")
+    final = llm if label_source == "llm" else label
+    if final not in config.CHANGE_LABELS:
         raise data.DataError("Choose a change label before saving.")
+    if any(record[f"{side}_ids"] and not record[f"{side}_text"].strip() for side in ("previous", "current")):
+        raise data.DataError("Source text is missing for a disclosure in this match.")
     # Streamlit sessions share this lock. Read again inside it to retain other saved labels.
     with _SAVE_LOCK:
         company, previous, current = record["company"], record["previous_year"], record["current_year"]
@@ -92,12 +166,16 @@ def save_review(record: dict, label: str, notes: str, *, expected: dict | None) 
         reviews = load_reviews(company, previous, current)
         if reviews.get(record["match_id"]) != expected:
             raise data.DataError("This review was updated in another session. Reload data before saving again.")
+        prior_review = current_review(record, reviews)
         saved = {
-            "match_id": record["match_id"], "change_label": label, "notes": notes.strip(),
+            "match_id": record["match_id"], "change_label": final, "notes": notes.strip(),
+            "label_source": label_source, "llm_change_label": llm,
+            "manual_change_label": label if label in config.CHANGE_LABELS else
+                                   _manual_label(prior_review, "manual_change_label", "change_label"),
             "reviewed_at": datetime.now(timezone.utc).isoformat(),
             "source_fingerprint": fingerprint(record), "source_file": record["source_file"],
             "previous_ids": record["previous_ids"], "current_ids": record["current_ids"],
-            "original_change_label": record["change_label"],
+            "original_change_label": record.get("pipeline_change_label", record["change_label"]),
         }
         reviews[record["match_id"]] = saved
         payload = {"schema_version": 1, "company": company, "previous_year": previous,
@@ -106,14 +184,16 @@ def save_review(record: dict, label: str, notes: str, *, expected: dict | None) 
     return saved
 
 
-def export_rows(records: list, reviews: dict) -> list:
+def export_rows(records: list, reviews: dict, *, include_unreviewed=False) -> list:
     rows = []
     for record in records:
         saved = current_review(record, reviews)
-        if saved:
-            row = data.export_rows([record])[0]
-            row.update(manual_change_label=saved["change_label"], manual_notes=saved["notes"],
-                       reviewed_at=saved["reviewed_at"], source_fingerprint=saved["source_fingerprint"])
+        if saved or include_unreviewed:
+            final = final_change(record, reviews)
+            row = data.export_rows([final])[0]
+            row.update(manual_change_label=final["manual_change_label"], manual_notes=saved["notes"] if saved else "",
+                       reviewed_at=saved["reviewed_at"] if saved else "",
+                       source_fingerprint=fingerprint(record))
             rows.append(row)
     return rows
 
@@ -139,6 +219,7 @@ def load_disclosure_reviews(company, year):
     for disclosure_id, saved in payload["reviews"].items():
         if (not isinstance(saved, dict) or saved.get("disclosure_id") != disclosure_id
                 or saved.get("disclosure_type") not in config.CONTENT_CATEGORIES
+                or not _valid_choice(saved, config.CONTENT_CATEGORIES, "manual_disclosure_type")
                 or not all(isinstance(saved.get(field), str) for field in ("notes", "reviewed_at", "source_fingerprint"))):
             raise data.DataError(f"Invalid disclosure review entry at {path}.")
     return payload["reviews"]
@@ -154,8 +235,12 @@ def current_disclosure_review(record, reviews):
     return saved if saved and saved["source_fingerprint"] == disclosure_fingerprint(record) else None
 
 
-def save_disclosure_review(record, disclosure_type, notes, *, expected):
-    if disclosure_type not in config.CONTENT_CATEGORIES:
+def save_disclosure_review(record, disclosure_type, notes, *, expected, label_source="manual"):
+    if label_source not in {"llm", "manual"}:
+        raise data.DataError("Choose LLM or Manual for the final label source.")
+    llm = record.get("llm_disclosure_type", record.get("taxonomy"))
+    final = llm if label_source == "llm" else disclosure_type
+    if final not in config.CONTENT_CATEGORIES:
         raise data.DataError("Choose a disclosure type before saving.")
     if not (record.get("content") or "").strip():
         raise data.DataError("Source text is missing for this disclosure.")
@@ -165,8 +250,12 @@ def save_disclosure_review(record, disclosure_type, notes, *, expected):
         reviews = load_disclosure_reviews(company, year)
         if reviews.get(disclosure_id) != expected:
             raise data.DataError("This disclosure review was updated in another session. Reload data before saving again.")
-        saved = {"disclosure_id": disclosure_id, "disclosure_type": disclosure_type,
-                 "original_disclosure_type": record.get("taxonomy", ""), "notes": notes.strip(),
+        prior_review = current_disclosure_review(record, reviews)
+        saved = {"disclosure_id": disclosure_id, "disclosure_type": final,
+                 "label_source": label_source, "llm_disclosure_type": llm,
+                 "manual_disclosure_type": disclosure_type if disclosure_type in config.CONTENT_CATEGORIES else
+                                           _manual_label(prior_review, "manual_disclosure_type", "disclosure_type"),
+                 "original_disclosure_type": llm or "", "notes": notes.strip(),
                  "reviewed_at": datetime.now(timezone.utc).isoformat(),
                  "source_fingerprint": disclosure_fingerprint(record)}
         reviews[disclosure_id] = saved
@@ -175,18 +264,22 @@ def save_disclosure_review(record, disclosure_type, notes, *, expected):
     return saved
 
 
-def export_disclosure_rows(records, reviews):
+def export_disclosure_rows(records, reviews, *, include_unreviewed=False):
     rows = []
     for record in records:
         saved = current_disclosure_review(record, reviews)
-        if not saved:
+        if not saved and not include_unreviewed:
             continue
+        final = final_disclosure(record, reviews)
         sources = record.get("sources") or []
         rows.append({"disclosure_id": record["disclosure_id"], "company": record["company"],
                      "fiscal_year": record["fiscal_year"], "item": record.get("item", ""),
-                     "original_disclosure_type": record.get("taxonomy", ""),
-                     "manual_disclosure_type": saved["disclosure_type"], "manual_notes": saved["notes"],
-                     "reviewed_at": saved["reviewed_at"], "source_fingerprint": saved["source_fingerprint"],
+                     "original_disclosure_type": final["llm_disclosure_type"],
+                     "llm_disclosure_type": final["llm_disclosure_type"],
+                     "manual_disclosure_type": final["manual_disclosure_type"],
+                     "final_disclosure_type": final["final_disclosure_type"], "final_label_source": final["final_label_source"],
+                     "manual_notes": saved["notes"] if saved else "",
+                     "reviewed_at": saved["reviewed_at"] if saved else "", "source_fingerprint": disclosure_fingerprint(record),
                      "content": record.get("content", ""),
                      "paragraph_ids": "; ".join(dict.fromkeys(s.get("paragraph_id", "") for s in sources)),
                      "sentence_ids": "; ".join(sentence.get("sentence_id", "") for s in sources for sentence in s.get("sentences", [])),

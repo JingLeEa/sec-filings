@@ -529,14 +529,26 @@ by logic and by the model both use the `llm` field:
   "lexical": null,
   "semantic": null,
   "llm": "Removed",
-  "final_taxonomy": null
+  "final_taxonomy": "Removed"
 }
 ```
 
-`lexical`, `semantic` and `final_taxonomy` always remain null. `llm` is a single
-label string, or null while pending/under review. `status` is `not_started`,
+The base classifier leaves `lexical` and `semantic` null. `final_taxonomy`
+defaults to the completed `llm` label and stays null while pending/under review.
+Legacy paid label caches with a null final field are normalized locally without
+another model call. Optional lexical/semantic enrichment fields remain intact.
+`llm` is a single label string, or null while pending/under review. `status` is `not_started`,
 `completed` or `needs_review`. No method, fingerprint, explanation or citation
 object is added inside this result.
+
+The [Manual Review page](ZIYANG_manual_review.md) separates **AI approved** results
+from **Needs review** groups and displays the original AI change label clearly.
+AI labels are the default final results. A manual-only form lets a user save an
+override, including for an approved result. Dashboard views and downloads apply
+the override while preserving the model label and original pipeline evidence.
+Disclosure types have the same workflow in the separate Disclosure section.
+These local choices do not rewrite backend
+pipeline reports or rerun downstream stages.
 
 `New`/`Removed` describe the saved comparison's disclosure coverage, not filing-wide
 absence or the start/end of a real-world event. Qualifications remain on the

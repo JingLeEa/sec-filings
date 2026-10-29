@@ -6,9 +6,9 @@ import streamlit as st
 from sec_ui import components, config, data, reports, review
 
 
-def render():
+def render(scope):
     st.subheader("Alignment review")
-    st.caption("Review flagged year-to-year groups and uncertain change analysis, then save your change labels.")
+    st.caption("Inspect AI-approved change labels or manually label groups that need review.")
     if message := st.session_state.pop("_manual_review_message", None):
         st.success(message)
 
@@ -19,10 +19,13 @@ def render():
     except data.DataError as error:
         st.error(str(error))
         st.stop()
-    records = [r for r in comparison["records"] if review.requires_change_review(r)
-               or review.current_review(r, saved_reviews)]
+    all_records = comparison["records"]
+    records = [r for r in all_records if (review.ai_approved_change(r) if scope == "AI approved" else
+               not review.ai_approved_change(r) and (review.requires_change_review(r)
+                                                    or review.current_review(r, saved_reviews)))]
     if not records:
-        st.info("No alignment groups need review or change analysis for these filing years. Pick another comparison.")
+        st.info("No AI-approved change labels are available for these filing years." if scope == "AI approved" else
+                "No alignment groups need review or change analysis for these filing years. Pick another comparison.")
         st.stop()
 
     current_reviews = {r["match_id"]: saved for r in records if (saved := review.current_review(r, saved_reviews))}
@@ -31,7 +34,7 @@ def render():
     m1.metric("Review queue", f"{total:,}")
     m2.metric("Reviewed", f"{done:,}")
     m3.metric("Pending", f"{total - done:,}")
-    st.progress(done / total, text=f"{done:,} of {total:,} alignment groups reviewed")
+    st.progress(done / total, text=f"{done:,} of {total:,} alignment groups reviewed by a person")
 
     st.sidebar.header("Review filters")
     status = st.sidebar.selectbox("Review status", ["All", "Pending", "Reviewed"], key="manual_status")
@@ -47,8 +50,8 @@ def render():
 
     def downloads():
         st.divider()
-        st.subheader("Download reviews")
-        rows = review.export_rows(records, saved_reviews)
+        st.subheader("Download final results")
+        rows = review.export_rows(all_records, saved_reviews, include_unreviewed=True)
         base = f"{company}_{previous}_{current}_manual_reviews"
         payload = {"company": company, "previous_year": previous, "current_year": current, "reviews": rows}
         j, c = st.columns(2)
@@ -56,8 +59,8 @@ def render():
                           file_name=f"{base}.json", mime="application/json", width="stretch", disabled=not rows)
         c.download_button("Reviews (CSV)", reports.rows_to_csv(rows), file_name=f"{base}.csv",
                           mime="text/csv", width="stretch", disabled=not rows)
-        st.caption(f"Labels and notes are saved to {review.review_path(company, previous, current)}. "
-                   "Downloads include all saved reviews for this comparison, with source text and evidence references.")
+        st.caption(f"Choices and notes are saved to {review.review_path(company, previous, current)}. "
+                   "Downloads include every result in this comparison, using AI labels unless a manual label was saved.")
 
 
     if not filtered:
@@ -78,9 +81,8 @@ def render():
 
     def label(match_id):
         record = by_id[match_id]
-        summary = record["current_summary"] or record["previous_summary"] or record["key_change"]
-        state = "Reviewed" if match_id in current_reviews else "Pending"
-        return f"{match_id.rsplit('_', 1)[-1]} | Item {record['item']} | {state} | {summary[:70]}"
+        ai_label = record["methods"].get("llm") or data.NOT_LABELLED
+        return f"{match_id.rsplit('_', 1)[-1]} | Item {record['item']} | AI label: {ai_label}"
 
 
     def step(delta):
@@ -97,34 +99,37 @@ def render():
     record = by_id[st.session_state["manual_selected"]]
     saved = current_reviews.get(record["match_id"])
     components.chips(
-        ("Reviewed" if saved else "Pending review", "ok" if saved else "warn"),
-        (record["relationship_label"], ""),
+        (scope, "ok" if scope == "AI approved" else "warn"),
+        ("Human reviewed" if saved else "Not manually reviewed", "ok" if saved else ""),
         (config.ITEM_TITLES.get(record["item"], f"Item {record['item']}"), ""),
         (record["category"], ""),
     )
-    st.caption(f"Match ID: {record['match_id']} | Original change label: {record['change_label']}")
+    llm_label = record["methods"].get("llm")
+    if scope == "AI approved":
+        st.success(f"AI-approved change label: **{llm_label}**")
+    else:
+        st.info(f"AI change label: **{llm_label}**" if llm_label else "AI change label: Not labelled")
     reason = record["verifier_review_reason"] or "; ".join(record["review_reasons"])
     if reason:
         st.warning(components.safe("Reason for review: " + reason))
-    if record["sections"]:
-        st.caption(components.safe("Section: " + "; ".join(record["sections"])))
     components.side_by_side(record, previous, current, key="manual_highlight")
     if record["explanation"]:
         with st.expander("Match reasoning"):
             st.write(components.safe(record["explanation"]))
 
-    st.subheader("Your change label")
-    if saved:
-        st.caption(f"Saved label: {saved['change_label']} | Last saved: {saved['reviewed_at']}")
-    elif record["match_id"] in saved_reviews:
+    st.subheader("Final change label")
+    st.caption("Manual — choose a label and save to override the current final label.")
+    if saved and review.label_source(saved) == "manual":
+        st.caption(f"Saved manual label: {saved['change_label']} | Last saved: {saved['reviewed_at']}")
+    elif not saved and record["match_id"] in saved_reviews:
         st.warning("The disclosure text or matched members changed since the last review. Review this version and save a new label.")
 
     context = (company, previous, current, record["match_id"], review.fingerprint(record))
     if (st.session_state.get("_manual_review_context") != context
-            or "manual_label" not in st.session_state or "manual_notes" not in st.session_state):
+            or any(key not in st.session_state for key in ("manual_label", "manual_notes"))):
         st.session_state["_manual_review_context"] = context
         st.session_state["_manual_review_expected"] = saved_reviews.get(record["match_id"])
-        st.session_state["manual_label"] = saved["change_label"] if saved else None
+        st.session_state["manual_label"] = saved.get("manual_change_label", saved["change_label"]) if saved else None
         st.session_state["manual_notes"] = saved["notes"] if saved else ""
 
     missing_text = any(record[f"{side}_ids"] and not record[f"{side}_text"].strip() for side in ("previous", "current"))
@@ -143,12 +148,13 @@ def render():
 
     if save or save_next:
         try:
-            review.save_review(record, chosen_label, notes, expected=st.session_state["_manual_review_expected"])
+            result = review.save_review(record, chosen_label, notes,
+                                        expected=st.session_state["_manual_review_expected"])
         except data.DataError as error:
             st.error(str(error))
         else:
             st.session_state.pop("_manual_review_context", None)
-            st.session_state["_manual_review_message"] = f"Saved {chosen_label} for {record['match_id']}."
+            st.session_state["_manual_review_message"] = f"Saved {result['change_label']} for {record['match_id']} (Manual)."
             if save_next:
                 following = ids[position + 1:] + ids[:position]
                 next_id = next((i for i in following if i not in current_reviews), None)

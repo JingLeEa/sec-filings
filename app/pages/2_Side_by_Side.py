@@ -66,6 +66,6 @@ if record["materiality_reason"]:
                 + (f" Score {score:.2f}." if score is not None else ""))
 methods = record["methods"]
 st.caption("Change label by method: " + ", ".join(f"{k} = {v or 'n/a'}" for k, v in methods.items())
-           + f". Final label: {record['change_label']}.")
+           + f". Final label: {record['change_label']} ({record['final_label_source'].upper()}).")
 
 components.supporting_evidence(record, previous, current)

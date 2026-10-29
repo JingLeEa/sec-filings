@@ -30,6 +30,10 @@ def run(page: str) -> AppTest:
     return AppTest.from_file(str(APP / page), default_timeout=60).run()
 
 
+def manual_review():
+    return run("pages/5_Manual_Review.py")
+
+
 def metrics(at):
     return {m.label: m.value for m in at.metric}
 
@@ -137,12 +141,50 @@ def test_broken_alignment_file_shows_error_message(monkeypatch, tmp_path):
 
 
 def test_manual_review_only_shows_needs_review_queue():
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     assert metrics(at) == {"Review queue": "45", "Reviewed": "0", "Pending": "45"}
     assert at.selectbox(key="manual_label").value is None
     html = " ".join(m.value for m in at.markdown)
     assert "FY2024 (earlier)" in html and "FY2025 (later)" in html
     assert 'class="diffbox"' in html
+
+
+def test_ai_approved_scope_shows_labels_and_allows_manual_override_across_pages():
+    from sec_ui import components, data, review
+    at = run("Home.py")
+    at.switch_page("pages/5_Manual_Review.py").run()
+    assert at.segmented_control(key="review_scope").options == ["Needs review", "AI approved"]
+    assert all(radio.label != "Final label source" for radio in at.radio)
+    at.segmented_control(key="review_scope").select("AI approved").run()
+    cached = components.cached_comparison("amd", 2024, 2025, "files")
+    approved = [record for record in cached["records"] if review.ai_approved_change(record)]
+    assert metrics(at)["Review queue"] == str(len(approved))
+    record = next(record for record in approved if record["previous_text"] and record["current_text"])
+    match_id, llm = record["match_id"], record["methods"]["llm"]
+    at.selectbox(key="manual_selected").select(match_id).run()
+    assert not at.selectbox(key="manual_label").disabled
+    assert any(f"AI-approved change label: **{llm}**" in message.value for message in at.success)
+    assert any(f"AI label: {llm}" in label for label in at.selectbox(key="manual_selected").options)
+    manual = "Reduced" if llm != "Reduced" else "Expanded"
+    at.selectbox(key="manual_label").select(manual)
+    next(button for button in at.button if button.label == "Save review").click().run()
+    assert not at.exception and not at.error
+    (final,) = [row for row in data.load_comparison("amd", 2024, 2025)["records"] if row["match_id"] == match_id]
+    assert final["change_label"] == manual
+    assert next(row for row in cached["records"] if row["match_id"] == match_id)["change_label"] == llm
+    at.switch_page("pages/2_Side_by_Side.py").run()
+    at.selectbox(key="selected_match").select(match_id).run()
+    assert any(f"Final label: {manual}" in caption.value for caption in at.caption)
+    fresh = run("pages/5_Manual_Review.py")
+    assert all(not label.startswith(match_id.rsplit("_", 1)[-1] + " |")
+               for label in fresh.selectbox(key="manual_selected").options)
+    fresh.segmented_control(key="review_scope").select("AI approved").run()
+    fresh.selectbox(key="manual_selected").select(match_id).run()
+    assert fresh.selectbox(key="manual_label").value == manual
+    assert any(f"AI-approved change label: **{llm}**" in message.value for message in fresh.success)
+    assert not fresh.exception and not fresh.error
+    final = next(row for row in data.load_comparison("amd", 2024, 2025)["records"] if row["match_id"] == match_id)
+    assert final["change_label"] == manual and final["final_label_source"] == "manual"
 
 
 @pytest.mark.parametrize("page", ["pages/2_Side_by_Side.py", "pages/5_Manual_Review.py"])
@@ -160,7 +202,7 @@ def test_comparison_pages_show_disclosure_paragraph_and_sentence_sources(page):
 
 
 def test_manual_review_requires_a_label():
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     next(b for b in at.button if b.label == "Save review").click().run()
     assert not at.exception
     assert any("Choose a change label" in e.value for e in at.error)
@@ -168,7 +210,7 @@ def test_manual_review_requires_a_label():
 
 
 def test_manual_review_save_persists_and_can_be_edited():
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     match_id = at.selectbox(key="manual_selected").value
     at.selectbox(key="manual_label").select("Modified")
     at.text_area(key="manual_notes").input("Changed the impairment wording.")
@@ -177,7 +219,7 @@ def test_manual_review_save_persists_and_can_be_edited():
     assert metrics(at)["Reviewed"] == "1"
     assert any("Saved Modified" in s.value for s in at.success)
     # A fresh app session must read the label from disk, not another session's widgets.
-    fresh = run("pages/5_Manual_Review.py")
+    fresh = manual_review()
     assert fresh.selectbox(key="manual_selected").value == match_id
     assert fresh.selectbox(key="manual_label").value == "Modified"
     assert fresh.text_area(key="manual_notes").value == "Changed the impairment wording."
@@ -185,11 +227,11 @@ def test_manual_review_save_persists_and_can_be_edited():
     next(b for b in fresh.button if b.label == "Save review").click().run()
     assert not fresh.exception
     assert metrics(fresh)["Reviewed"] == "1"
-    assert run("pages/5_Manual_Review.py").selectbox(key="manual_label").value == "Reworded"
+    assert manual_review().selectbox(key="manual_label").value == "Reworded"
 
 
 def test_manual_review_save_and_next_does_not_copy_labels():
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     first = at.selectbox(key="manual_selected").value
     at.selectbox(key="manual_label").select("Expanded")
     at.text_area(key="manual_notes").input("Only for the first disclosure.")
@@ -205,7 +247,7 @@ def test_manual_review_save_and_next_does_not_copy_labels():
 
 
 def test_manual_review_year_switch_does_not_copy_labels():
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     at.selectbox(key="manual_label").select("Modified")
     next(b for b in at.button if b.label == "Save review").click().run()
     at.sidebar.selectbox(key="sel_pair").select("FY2023 to FY2024").run()
@@ -215,7 +257,7 @@ def test_manual_review_year_switch_does_not_copy_labels():
 
 
 def test_manual_review_empty_filter_keeps_downloads():
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     at.sidebar.selectbox(key="manual_status").select("Reviewed").run()
     assert not at.exception
     assert any("No disclosures match" in i.value for i in at.info)
@@ -231,12 +273,12 @@ def test_manual_review_handles_missing_and_broken_review_file(monkeypatch, tmp_p
     (folder / "alignments.json").write_text(json.dumps(main))
     monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(tmp_path / "alignments"))
     st.cache_data.clear()
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     assert not at.exception
     assert any("No alignment groups need review" in i.value for i in at.info)
     (folder / "needs_review.json").write_text("{broken")
     st.cache_data.clear()
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     assert not at.exception
     assert any("Could not load this comparison" in e.value for e in at.error)
 
@@ -251,7 +293,7 @@ def test_manual_review_finishing_pending_queue_keeps_exports(monkeypatch, tmp_pa
     (folder / "needs_review.json").write_text(json.dumps({"alignments": source["alignments"][:1]}))
     monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(tmp_path / "alignments"))
     st.cache_data.clear()
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     at.sidebar.selectbox(key="manual_status").select("Pending").run()
     at.selectbox(key="manual_label").select("Reworded")
     next(b for b in at.button if b.label == "Save and next").click().run()
@@ -263,7 +305,7 @@ def test_manual_review_finishing_pending_queue_keeps_exports(monkeypatch, tmp_pa
 
 def test_manual_review_does_not_label_missing_source_text():
     from sec_ui import components
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     comparison = components.cached_comparison("amd", 2024, 2025, "files")
     missing = next(r for r in comparison["records"] if r["source_file"] == "needs_review.json"
                    and any(r[f"{side}_ids"] and not r[f"{side}_text"].strip() for side in ("previous", "current")))
@@ -275,7 +317,7 @@ def test_manual_review_does_not_label_missing_source_text():
 
 def test_manual_review_conflict_can_be_resolved_with_reload():
     from sec_ui import components, review
-    at = run("pages/5_Manual_Review.py")
+    at = manual_review()
     match_id = at.selectbox(key="manual_selected").value
     comparison = components.cached_comparison("amd", 2024, 2025, "files")
     record = next(r for r in comparison["records"] if r["match_id"] == match_id)

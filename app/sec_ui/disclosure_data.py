@@ -45,7 +45,7 @@ def discover_source():
     return source
 
 
-def load_disclosures(company, year, source=None):
+def load_disclosures(company, year, source=None, *, include_all=False):
     source = source or discover_source()
     mode = source.scopes.get((company, year))
     if mode is None:
@@ -79,8 +79,8 @@ def load_disclosures(company, year, source=None):
             verification = apply_source_unit_policy(raw.get("verification") or {})
             needs_review = (verification.get("status") == "needs_review" or bool(verification.get("review_reasons"))
                             or not verification and name == "review_candidates.json")
-            if needs_review:
+            if needs_review or include_all:
                 row = deepcopy(raw)
-                row.update(company=company, fiscal_year=int(year), verification=verification)
+                row.update(company=company, fiscal_year=int(year), verification=verification, needs_review=needs_review)
                 records.append(row)
     return sorted(records, key=lambda row: row["disclosure_id"])

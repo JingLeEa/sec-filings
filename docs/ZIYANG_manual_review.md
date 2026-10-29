@@ -9,19 +9,29 @@ sidebar and follows the existing dashboard's styling. It has two sections:
 
 | Section | Scope | Human label |
 | --- | --- | --- |
-| **Disclosure** | One company's single filing year | Disclosure type (content category) |
-| **Alignment** | One company's pair of filing years | Change label for the year-to-year comparison |
+| **Disclosure** | One company's single filing year | Final disclosure type (content category) |
+| **Alignment** | One company's pair of filing years | Final change label for the year-to-year comparison |
+
+**AI labels are the default final results in both sections.** The review scopes
+are **AI approved** and **Needs review**. Approved records display their AI label
+in a prominent banner and in the record selector. The **Final change label** and
+**Final disclosure type** forms are manual-only: choose a label and save to
+override the current final result. There is no LLM/Manual source selector.
+Existing manual reviews retain their saved labels.
 
 Both sections support source evidence, review reasons, notes, saved progress,
 All/Pending/Reviewed filters, Previous/Next navigation, Save review, Save and next,
 and JSON/CSV downloads. Alignment reuses the existing side-by-side comparison
 with removed words in red and added words in green.
 
-The page makes no model calls. Saving records a local human annotation; it does
-not update pipeline labels or rerun extraction, alignment, change analysis or
-materiality. Other dashboard pages continue to show the saved pipeline results.
+The page makes no model calls. Saving records a local final-label choice and
+optional human annotation. Overview, Change Explorer and Side by Side use these
+choices in their displayed categories/change labels, filters and exports. Original
+pipeline evidence and model labels remain available. Saving does not rerun
+extraction, alignment, change analysis or materiality, and saved synthesis/peer
+reports are not regenerated.
 User accounts, reviewer identity and automatic application of human labels to
-downstream stages are not implemented.
+backend pipeline stages are not implemented.
 
 ## 2. Code and workflow
 
@@ -31,15 +41,16 @@ downstream stages are not implemented.
 | [`app/sec_ui/disclosure_review.py`](../app/sec_ui/disclosure_review.py) | Single-filing disclosure-type review form and navigation |
 | [`app/sec_ui/disclosure_data.py`](../app/sec_ui/disclosure_data.py) | Extraction review queue, independent of alignment runs |
 | [`app/sec_ui/alignment_review.py`](../app/sec_ui/alignment_review.py) | Year-to-year change-label review form and navigation |
-| [`app/sec_ui/review.py`](../app/sec_ui/review.py) | Separate annotation files, source fingerprints, validation, atomic saves and exports |
+| [`app/sec_ui/review.py`](../app/sec_ui/review.py) | Final-label resolution, separate annotation files, source fingerprints, validation, atomic saves and exports |
 | [`app/sec_ui/provenance.py`](../app/sec_ui/provenance.py) | Disclosure/paragraph labels and sentence provenance |
 | [`app/sec_ui/components.py`](../app/sec_ui/components.py), [`diff.py`](../app/sec_ui/diff.py) | Shared dashboard styling, evidence display and word highlighting |
 | [`app/sec_ui/config.py`](../app/sec_ui/config.py) | Data folders, allowed labels and annotation storage configuration |
 
-The workflow reads saved pipeline results, selects records requiring review,
-shows their original evidence and model concerns, then saves a human label and
-notes alongside those results. Existing matching annotations determine progress
-and populate the Reviewed filter.
+The workflow reads saved pipeline results, shows their original evidence and
+model concerns, then saves a manual label and optional notes. Existing matching
+annotations determine human review progress and populate the
+Reviewed filter. Pipeline data is cached; final-label choices are read again on
+each page run so saving a choice does not require clearing that cache.
 
 ## 3. Setup
 
@@ -64,7 +75,17 @@ API key is needed. PostgreSQL mode needs a configured, running database; see
 The review page reads PostgreSQL or JSON through the existing data layer. Human
 annotations are saved as local JSON files in either mode.
 
-## 4. Inputs and queue membership
+## 4. Inputs and review scope
+
+**Review scope** appears above the Disclosure/Alignment selector in a bordered
+control panel. Both selectors use segmented buttons with the dashboard's theme.
+The scope defaults to **Needs review** and stays selected when switching sections
+or visiting another dashboard page. **AI approved**
+shows completed, accepted AI results with valid labels and no active review flag.
+**Needs review** shows records flagged for human attention. The scopes are
+separate: an approved record does not join Needs review merely because a user
+saved an override. All/Pending/Reviewed describes human review progress; an
+AI-approved record can already have a final label without a human review.
 
 **Disclosure** reads `disclosures.json` and `review_candidates.json` from
 [disclosure extraction](ZIYANG_disclosure_extraction.md). PostgreSQL discovery
@@ -85,6 +106,8 @@ from `needs_review.json`, plus groups with explicit
 `change_analysis.status: needs_review`. An automatic stage that has merely not
 started does not create a review task. A group with a matching saved human review
 remains accessible if the pipeline later finalizes it.
+Finalized groups with completed labels appear under **AI approved**. Unstarted
+automatic stages alone do not create human review tasks or AI-approved labels.
 
 Source labels identify each displayed paragraph's disclosure ID and original
 paragraph ID. The evidence table lists available selected sentences with their
@@ -99,13 +122,20 @@ same provenance display is shared with the **Side by Side** page.
 
 1. Choose **Disclosure** or **Alignment**, then select the company and filing
    year or year pair in the sidebar.
-2. Use the review-status filter and other available filters to select a record.
+2. Select **AI approved** to inspect completed labels, or keep **Needs review**
+   for flagged records. Use the other filters to select a record. The record
+   selector shows only the disclosure/match ID, SEC Item and original AI
+   type/label in both sections. Human review status stays in the review filters
+   and progress indicators.
 3. Read the model's concern and the original evidence. In Alignment, compare
    the earlier and later filing text side by side.
-4. Choose a label, optionally add notes, then click **Save review** or
-   **Save and next**.
+4. Read the AI label in the banner. To make a correction, choose your own label
+   in the manual **Final change label** or **Final disclosure type** form.
+   Optionally add notes, then click **Save review** or **Save and next**.
+   The AI result remains the default until a manual override is saved.
 5. Use **Reviewed** to reopen and edit saved decisions. Download JSON or CSV to
-   export the current saved reviews for the selected scope.
+   export final results for the whole selected filing or year pair, including
+   unreviewed records using the AI default.
 
 Disclosure types are Strategy & Business Model; Operations & Capacity;
 Technology & AI; Cybersecurity & Data; Supply Chain & Third Parties;
@@ -121,6 +151,8 @@ resets the review form to its saved values. If selected text or source IDs chang
 the previous annotation does not count as reviewed for the new version. Saving
 without source text is disabled. Conflicting edits produce an error asking the
 reviewer to reload before saving again.
+If no AI label is available, no final label is invented. The manual form lets a
+reviewer supply one. The original AI label remains visible after an override.
 
 ## 6. Saved outputs and downloads
 
@@ -136,19 +168,28 @@ match ID. Writes use a temporary file and atomic replacement.
 
 | Scope | Envelope fields in addition to `schema_version` and `reviews` | Saved review fields |
 | --- | --- | --- |
-| Disclosure | `stage: disclosure`, `company`, `fiscal_year` | `disclosure_id`, `disclosure_type`, `original_disclosure_type`, `notes`, `reviewed_at`, `source_fingerprint` |
-| Alignment | `company`, `previous_year`, `current_year` | `match_id`, `change_label`, `original_change_label`, `notes`, `reviewed_at`, `source_fingerprint`, `source_file`, `previous_ids`, `current_ids` |
+| Disclosure | `stage: disclosure`, `company`, `fiscal_year` | `disclosure_id`, `disclosure_type`, `label_source`, `llm_disclosure_type`, `manual_disclosure_type`, `original_disclosure_type`, `notes`, `reviewed_at`, `source_fingerprint` |
+| Alignment | `company`, `previous_year`, `current_year` | `match_id`, `change_label`, `label_source`, `llm_change_label`, `manual_change_label`, `original_change_label`, `notes`, `reviewed_at`, `source_fingerprint`, `source_file`, `previous_ids`, `current_ids` |
+
+The internal `label_source` is `llm` for AI defaults or older saved AI choices,
+and `manual` for human overrides. New saves from the review forms always use
+`manual`; `disclosure_type`/`change_label` records that final value. Legacy
+entries without `label_source` are treated as manual. AI labels and manual
+labels remain separate for comparison and export.
 
 `reviewed_at` is an ISO timestamp in UTC. A source fingerprint binds a saved
 decision to the selected text and source membership, so reused IDs do not
 silently inherit a decision for different evidence.
 
-Downloads include saved reviews matching the current source records for the
-selected company/year scope, regardless of the current review filters.
-Disclosure exports contain `original_disclosure_type`, `manual_disclosure_type`,
-notes, timestamps, fingerprint, selected text, IDs and SEC URLs. Alignment exports
-retain the original `change_label` and evidence and add `manual_change_label`,
-`manual_notes`, `reviewed_at` and `source_fingerprint`.
+Downloads include every current source record for the selected company/year
+scope, regardless of review filters. Both exports include `final_label_source`.
+Disclosure exports contain `llm_disclosure_type`, `manual_disclosure_type` and
+`final_disclosure_type`. Alignment exports contain `llm_label`,
+`manual_change_label`, `final_change_label` and `change_label` (the effective
+final label). Original pipeline labels, notes, UTC timestamps, fingerprints,
+selected text, IDs and SEC URLs remain available. Unreviewed records have no
+review timestamp or manual label. An unavailable final label is null in the
+`final_*` field; the dashboard displays Not labelled/Not classified.
 
 ## 7. Example data and downstream usage
 
@@ -156,9 +197,9 @@ Alignment fixtures are under [`tests/fixtures/alignments/amd`](../tests/fixtures
 Review tests create temporary source records and annotation files; their labels
 are synthetic test decisions. No real human decisions are committed as fixtures.
 
-Downloaded reviews can be used to inspect human decisions alongside the original
-model labels. Applying them to pipeline outputs or consuming them automatically
-in synthesis requires a separate integration; clicking Save does not do this.
+Downloaded results can be used to inspect final choices alongside original model
+labels. Consuming those choices automatically in backend synthesis requires a
+separate integration; clicking Save does not rewrite existing reports.
 
 ## 8. Validation and limitations
 
@@ -170,6 +211,9 @@ Run the offline UI checks from the repository root:
 
 Coverage includes both sections, independent type/change labels and scopes,
 queue membership, table-warning retirement with model-review retention,
+AI defaults, separate AI-approved and flagged scopes, clear AI label display,
+manual-only forms, overriding completed results, final labels
+across dashboard pages and exports, legacy annotation compatibility,
 provenance for split/merged disclosures, safe highlighting, saved progress,
 editing and navigation, reloads, source changes, conflicting edits, atomic save
 failures and exports. Optional checks depend on local fixture data or PostgreSQL.
@@ -178,5 +222,5 @@ Both review sections have also been checked visually against live PostgreSQL dat
 Annotations have no authenticated reviewer identity. The conflict lock is shared
 within one app process; separate Streamlit processes should not share an
 annotation directory for concurrent writes. Missing evidence must be corrected
-upstream before it can be reviewed. Human labels remain separate from pipeline
-results until an explicit downstream integration is added.
+upstream before it can be reviewed. Saved choices affect dashboard final results;
+backend pipeline evidence and previously generated reports remain separate.

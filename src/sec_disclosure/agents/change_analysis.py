@@ -52,7 +52,8 @@ def compact_change_analysis(analysis):
             "lexical": deepcopy(lexical) if isinstance(lexical, dict) else None,
             "semantic": deepcopy(semantic) if isinstance(semantic, dict) else None,
             "llm": label if status == "completed" else None,
-            "final_taxonomy": final if enriched and isinstance(final, str) and final in CHANGE_TAXONOMY else None}
+            "final_taxonomy": final if enriched and isinstance(final, str) and final in CHANGE_TAXONOMY
+                              else label if status == "completed" else None}
 
 
 def selected_records(row, data):
@@ -97,9 +98,10 @@ def cached_analysis(runtime, identity):
         return None
     try:
         saved = json.loads(path.read_text())
-        result = saved["analysis"]
+        # Retire the old empty final field without invalidating paid label caches.
+        result = compact_change_analysis(saved["analysis"])
         if (saved.get("schema_version") == "change-analysis-cache-1.0" and saved.get("policy") == CHANGE_POLICY
-                and saved.get("input_sha256") == identity and result == compact_change_analysis(result)
+                and saved.get("input_sha256") == identity
                 and result["status"] in {"completed", "needs_review"}
                 and (result["llm"] is None or result["llm"] in MATCHED_TAXONOMY)):
             return result
@@ -131,7 +133,7 @@ def logical_analysis(row, data):
             if any(sentence != source.get(sentence.get("sentence_id")) for sentence in entry["sentences"]):
                 raise ValueError("Unmatched evidence differs from the selected source sentences.")
         label = "Removed" if before else "New"
-    return {**empty_change_analysis(), "status": "completed", "llm": label}
+    return {**empty_change_analysis(), "status": "completed", "llm": label, "final_taxonomy": label}
 
 
 def validate_change_action(action, rows, data=None):
@@ -315,7 +317,8 @@ def run_change_analysis(report, data, runtime, persist):
         labels = {entry["match_id"]: entry["llm"] for entry in results or []}
         for row in batch:
             label = labels.get(row["match_id"])
-            result = {**empty_change_analysis(), "status": "completed" if label is not None else "needs_review", "llm": label}
+            result = {**empty_change_analysis(), "status": "completed" if label is not None else "needs_review",
+                      "llm": label, "final_taxonomy": label}
             cache_analysis(runtime, identities[row["match_id"]], result)
             row["change_analysis"] = result
         report["change_analysis_summary"] = change_summary(report)

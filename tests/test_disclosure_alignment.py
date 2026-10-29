@@ -287,11 +287,16 @@ class AlignmentTests(unittest.TestCase):
         for row in report["alignments"]:
             analysis = row["change_analysis"]
             self.assertEqual(analysis, {"status": "completed", "lexical": None, "semantic": None,
-                                        "llm": "Modified", "final_taxonomy": None})
+                                        "llm": "Modified", "final_taxonomy": "Modified"})
         usage = self.output("token_usage.json")
         self.assertEqual(usage["reported_tokens"]["total_tokens"], 375)
         self.assertEqual(set(usage["by_agent"]), {"matching", "verification", "change_analysis"})
         self.assertTrue(usage["change_analysis_complete"])
+        # Old paid caches omitted the final label. They must upgrade locally.
+        for path in (self.root / "alignments/amd/2023-2024/change_analysis_cache").glob("*.json"):
+            cache = json.loads(path.read_text())
+            cache["analysis"]["final_taxonomy"] = None
+            write_json(path, cache)
         self.assertEqual(self.run_cli(change_analysis=True), (0, 0))
         self.assertEqual(self.saved_report()["alignments"], report["alignments"])
 
@@ -319,7 +324,7 @@ class AlignmentTests(unittest.TestCase):
             analysis = row["change_analysis"]
             expected = "Modified" if row["status"] == "ai_verified" else "Unchanged" if row["status"] == "auto_matched" else "Removed" if row["previous_ids"] else "New"
             self.assertEqual(analysis, {"status": "completed", "lexical": None, "semantic": None,
-                                        "llm": expected, "final_taxonomy": None})
+                                        "llm": expected, "final_taxonomy": expected})
         self.assertEqual(report["change_analysis_summary"]["taxonomy_counts"],
                          {"Unchanged": 1, "Modified": 1, "Removed": 1, "New": 1})
 
@@ -543,13 +548,13 @@ class AlignmentTests(unittest.TestCase):
 
     def test_legacy_change_analysis_converts_to_the_exact_five_field_format(self):
         expected = {"status": "completed", "lexical": None, "semantic": None,
-                    "llm": "Removed", "final_taxonomy": None}
+                    "llm": "Removed", "final_taxonomy": "Removed"}
         old = {"status": "completed", "lexical": None, "semantic": None, "llm": None,
                "final_taxonomy": "Removed", "method": "logic", "policy": "old", "input_sha256": "old",
                "logic": {"rule": "removed_disclosure", "explanation": "Old detail"}}
         self.assertEqual(compact_change_analysis(old), expected)
         old.update(llm={"taxonomy": "Modified", "evidence": [], "explanation": "Old explanation"}, final_taxonomy="Modified")
-        expected["llm"] = "Modified"
+        expected["llm"] = expected["final_taxonomy"] = "Modified"
         self.assertEqual(compact_change_analysis(old), expected)
 
     def test_change_analysis_uses_final_consolidated_split_group(self):
@@ -926,7 +931,7 @@ class AlignmentTests(unittest.TestCase):
         output = self.root / "alignments/amd/2023-2024"
         report = self.saved_report()
         analysis = {"status": "completed", "lexical": None, "semantic": None,
-                    "llm": "Modified", "final_taxonomy": None}
+                    "llm": "Modified", "final_taxonomy": "Modified"}
         materiality = {"materiality": "No", "materiality_score": 0.1,
                        "confidence_score": 0.9, "reason": "Routine update.", "key_change": "Routine update"}
         report["alignments"][0]["change_analysis"] = deepcopy(analysis)
@@ -969,7 +974,7 @@ class AlignmentTests(unittest.TestCase):
         module.write_alignment_json_reports(output, report)
         self.assertEqual(self.run_cli("--max-steps", "1", response=self.invalid_citation_response), (0, 0))
         saved = next(row for row in self.output("needs_review.json")["alignments"] if row["match_id"] == match_id)
-        self.assertEqual(saved["change_analysis"], analysis)
+        self.assertEqual(saved["change_analysis"], compact_change_analysis(analysis))
 
     def test_unmatched_change_analysis_survives_partial_reports_during_cached_rerun(self):
         def response(prompt, **kwargs):
@@ -989,7 +994,7 @@ class AlignmentTests(unittest.TestCase):
         module.write_alignment_json_reports(output, report)
         self.assertEqual(self.run_cli(response=response), (0, 0))
         saved = next(row for row in self.output("alignments.json")["alignments"] if row["match_id"] == match_id)
-        self.assertEqual(saved["change_analysis"], analysis)
+        self.assertEqual(saved["change_analysis"], compact_change_analysis(analysis))
 
     def test_legacy_combined_report_migrates_and_archives_redundant_views(self):
         self.assertEqual(self.run_cli(), (0, 2))
@@ -1007,7 +1012,7 @@ class AlignmentTests(unittest.TestCase):
         loaded["alignments"][0]["change_analysis"] = module.empty_change_analysis()
         module.write_alignment_json_reports(output, loaded)
         self.assertEqual(self.saved_report()["schema_version"], "8")
-        self.assertEqual(self.saved_report()["alignments"][0]["change_analysis"], analysis)
+        self.assertEqual(self.saved_report()["alignments"][0]["change_analysis"], compact_change_analysis(analysis))
         archive = next((output / "archives").glob("legacy_result_views_*"))
         for name, content in legacy.items():
             self.assertFalse((output / name).exists())
@@ -2134,7 +2139,7 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(report["change_analysis_summary"]["taxonomy_counts"], {"Unchanged": 3})
         for row in report["alignments"]:
             self.assertEqual(row["change_analysis"]["llm"], "Unchanged")
-            self.assertIsNone(row["change_analysis"]["final_taxonomy"])
+            self.assertEqual(row["change_analysis"]["final_taxonomy"], "Unchanged")
         self.assertEqual(self.output("token_usage.json")["reported_tokens"]["total_tokens"], 0)
         self.assertEqual(self.output("proposed_groups.json"), [])
         self.assertEqual(self.run_cli(), (0, 0))

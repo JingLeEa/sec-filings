@@ -3,12 +3,12 @@ from __future__ import annotations
 
 import streamlit as st
 
-from . import config, data, diff, provenance
+from . import config, data, diff, provenance, review
 
 PERSISTED_KEYS = [
     "sel_company", "sel_pair", "f_items", "f_categories", "f_changes", "f_materiality",
     "f_statuses", "f_relationships", "f_text", "selected_match",
-    "manual_section",
+    "manual_section", "review_scope",
 ]
 
 CSS = """
@@ -54,7 +54,7 @@ def cached_source():
 
 @st.cache_data(show_spinner="Loading comparison...", ttl=900, max_entries=8)
 def cached_comparison(company: str, previous: int, current: int, mode: str):
-    return data.load_comparison(company, previous, current, cached_source())
+    return data.load_comparison(company, previous, current, cached_source(), apply_reviews=False)
 
 
 def safe(text) -> str:
@@ -135,7 +135,7 @@ def load_selected(source, company, previous, current):
     """Load one comparison with friendly messages. Stops the page on failure."""
     mode = source.scopes.get((company, previous, current), "files")
     try:
-        return cached_comparison(company, previous, current, mode)
+        return review.apply_final_choices(cached_comparison(company, previous, current, mode))
     except data.DataError as error:
         st.error(f"Could not load this comparison. {error}")
         st.stop()
