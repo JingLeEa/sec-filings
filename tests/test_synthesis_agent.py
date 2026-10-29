@@ -60,6 +60,44 @@ class ConcurrentFakeCalls(FakeCalls):
         return FINAL_REPORT
 
 
+class PairBalancedFakeCalls(FakeCalls):
+    def __init__(self, workers):
+        super().__init__([])
+        self.barrier = threading.Barrier(workers)
+        self.active_by_pair = {}
+        self.max_active_by_pair = {}
+        self.max_active = 0
+        self.lock = threading.Lock()
+
+    def complete(self, stage, prompt, system_prompt):
+        with self.lock:
+            self.prompts.append((stage, prompt, system_prompt))
+        if not stage.startswith("findings-"):
+            return FINAL_REPORT
+
+        payload = json.loads(prompt)
+        batch = payload["material_changes"]
+        pair = (batch[0]["previous_year"], batch[0]["current_year"])
+        with self.lock:
+            self.active_by_pair[pair] = self.active_by_pair.get(pair, 0) + 1
+            self.max_active_by_pair[pair] = max(
+                self.max_active_by_pair.get(pair, 0),
+                self.active_by_pair[pair],
+            )
+            self.max_active = max(self.max_active, sum(self.active_by_pair.values()))
+        try:
+            self.barrier.wait(timeout=10)
+        finally:
+            with self.lock:
+                self.active_by_pair[pair] -= 1
+        ids = [change["id"] for change in batch]
+        return json.dumps({"key_findings": [{
+            "title": f"Changes {ids[0]}-{ids[-1]}",
+            "analysis": "The finding covers every change in this batch.",
+            "evidence_ids": ids,
+        }]})
+
+
 def finding(identifier):
     return json.dumps({
         "key_findings": [{
@@ -158,12 +196,56 @@ class SynthesisAgentTests(unittest.TestCase):
         final_prompt = json.loads(calls.prompts[2][1])
         self.assertEqual(len(final_prompt["batch_findings"]), 2)
         self.assertEqual(final_prompt["financial_metrics"], [])
+        self.assertEqual(
+            [period["id"] for period in final_prompt["material_change_periods"]],
+            ["c1", "c2"],
+        )
+        self.assertNotIn("material_changes", final_prompt)
         self.assertEqual(result["report"]["executive_summary"],
                          "Overall synthesis of all changes.")
         self.assertIn("No company-wide XBRL financial facts",
                       result["report"]["financial_analysis"])
         self.assertIn("Company-wide XBRL financial facts were unavailable for the requested periods.",
                       result["report"]["limitations"])
+
+    def test_batch_can_consolidate_changes_when_all_ids_are_cited(self):
+        calls = FakeCalls([
+            json.dumps({"key_findings": [{
+                "title": "Related changes",
+                "analysis": "The finding covers both supplied changes.",
+                "evidence_ids": ["c1", "c2"],
+            }]}),
+            FINAL_REPORT,
+        ])
+        request = self.request()
+        request["finding_batch_size"] = 2
+        request.pop("finding_target")
+
+        result = synthesize(request, calls)
+
+        self.assertTrue(result["validation"]["valid"])
+        self.assertEqual(result["validation"]["finding_target"], 1)
+        self.assertEqual(result["validation"]["finding_count"], 1)
+        self.assertEqual(result["validation"]["material_change_coverage"], 2)
+
+    def test_final_prompt_uses_compact_change_index_instead_of_raw_evidence(self):
+        calls = FakeCalls([finding("c1"), FINAL_REPORT])
+        request = self.request()
+        request["material_changes"] = [{
+            "id": "c1",
+            "taxonomy": "Operations & Capacity",
+            "relationship": "one_to_one",
+            "previous_year": 2023,
+            "current_year": 2024,
+            "source_evidence": [{"text": "raw disclosure " * 1000}],
+        }]
+        request["finding_target"] = 1
+
+        synthesize(request, calls)
+
+        final_prompt = calls.prompts[-1][1]
+        self.assertNotIn("raw disclosure", final_prompt)
+        self.assertIn('"material_change_periods"', final_prompt)
 
     def test_invalid_evidence_retries_and_fails_closed(self):
         calls = FakeCalls([
@@ -221,6 +303,43 @@ class SynthesisAgentTests(unittest.TestCase):
         request["finding_workers"] = MAX_FINDING_WORKERS + 1
         with self.assertRaisesRegex(ValueError, "finding_workers must be between"):
             synthesize(request, FakeCalls([]))
+
+    def test_multi_pair_batches_share_workers_without_exceeding_provider_limit(self):
+        for pair_count, workers_per_pair in ((2, 9), (3, 6)):
+            with self.subTest(pair_count=pair_count):
+                pairs = [
+                    (2023 + index, 2024 + index)
+                    for index in range(pair_count)
+                ]
+                changes = [
+                    {
+                        "id": f"p{pair_index}-c{change_index}",
+                        "previous_year": previous,
+                        "current_year": current,
+                    }
+                    for pair_index, (previous, current) in enumerate(pairs)
+                    for change_index in range(workers_per_pair * 10)
+                ]
+                calls = PairBalancedFakeCalls(pair_count * workers_per_pair)
+                request = {
+                    "company": "EXAMPLE",
+                    "years": list(range(2023, 2024 + pair_count)),
+                    "material_changes": changes,
+                    "financial_metrics": [],
+                    "finding_batch_size": 10,
+                    "finding_workers": pair_count * workers_per_pair,
+                }
+
+                result = synthesize(request, calls)
+
+                self.assertEqual(calls.max_active, pair_count * workers_per_pair)
+                self.assertEqual(
+                    calls.max_active_by_pair,
+                    {pair: workers_per_pair for pair in pairs},
+                )
+                self.assertTrue(result["validation"]["valid"])
+                self.assertEqual(result["validation"]["material_change_coverage"],
+                                 len(changes))
 
     def test_reasoning_block_and_markdown_fence_are_ignored(self):
         text = '<think>{"not": "the answer"}</think>\n```json\n{"ok": true}\n```'

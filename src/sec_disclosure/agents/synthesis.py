@@ -37,7 +37,7 @@ JSON object with this shape:
 {"key_findings":[{"title":"string","analysis":"string","evidence_ids":["id"]}]}"""
 
 FINAL_SYSTEM_PROMPT = """You are an evidence-grounded corporate disclosure and financial
-analyst. Synthesize the complete supplied set of batch findings, material changes,
+analyst. Synthesize the complete supplied set of batch findings, change-period index,
 financial facts, and deterministic financial trends into one cohesive report.
 Write one executive summary from the overall findings; do not repeat batch summaries.
 Explain longitudinal disclosure developments across all requested years. Analyze
@@ -419,13 +419,13 @@ def synthesize(request: dict, calls: SynthesisCalls) -> dict:
     batch_size = int(request.get("finding_batch_size", DEFAULT_BATCH_SIZE))
     if batch_size < 1:
         raise ValueError("finding_batch_size must be positive.")
-    finding_target = int(request.get("finding_target", len(changes)))
-    if finding_target < 1:
-        raise ValueError("finding_target must be positive.")
     batches = [
         changes[start:start + batch_size]
         for start in range(0, len(changes), batch_size)
     ]
+    finding_target = int(request.get("finding_target", len(batches)))
+    if finding_target < 1:
+        raise ValueError("finding_target must be positive.")
     finding_workers = int(request.get("finding_workers", DEFAULT_FINDING_WORKERS))
     if not 1 <= finding_workers <= MAX_FINDING_WORKERS:
         raise ValueError(f"finding_workers must be between 1 and {MAX_FINDING_WORKERS}.")
@@ -526,7 +526,16 @@ def synthesize(request: dict, calls: SynthesisCalls) -> dict:
         "company": request["company"],
         "years": request["years"],
         "batch_findings": findings,
-        "material_changes": changes,
+        "material_change_periods": [
+            {
+                "id": change["id"],
+                "previous_year": change.get("previous_year"),
+                "current_year": change.get("current_year"),
+                "taxonomy": change.get("taxonomy"),
+                "relationship": change.get("relationship"),
+            }
+            for change in changes
+        ],
         "financial_metrics": metrics,
         "financial_trends": trends,
         "finding_target": finding_target,
@@ -706,7 +715,10 @@ def run_from_database(company: str, years: list[int], *, env_file: Path | None,
         "years": years,
         "material_changes": changes,
         "financial_metrics": financial_metrics,
-        "finding_target": finding_target if finding_target is not None else len(changes),
+        "finding_target": (
+            finding_target if finding_target is not None
+            else math.ceil(len(changes) / finding_batch_size)
+        ),
         "finding_batch_size": finding_batch_size,
         "finding_workers": finding_workers,
     }

@@ -32,6 +32,8 @@ class TestSynthesisIntegration(unittest.TestCase):
             materiality_pair_workers=1,
             materiality_concurrency=1,
             materiality_max_concurrent_requests=1,
+            synthesis_finding_workers=18,
+            synthesis_max_changes=50,
             data_dir=Path("data"),
             env_file=None,
         )
@@ -82,6 +84,8 @@ class TestSynthesisIntegration(unittest.TestCase):
             "--company", "AMD",
             "--years", "2023", "2024", "2025",
             "--data-dir", "data",
+            "--max-changes", "50",
+            "--finding-workers", "18",
         ])
 
     def test_failure(self):
@@ -92,6 +96,32 @@ class TestSynthesisIntegration(unittest.TestCase):
         self.assertFalse(status["full_pipeline_complete"])
         self.assertEqual(status["synthesis_status"], "failed")
         mock_run.assert_called_once()
+
+    def test_configured_synthesis_concurrency_and_workload_are_forwarded(self):
+        args = self.make_args()
+        args.synthesis_finding_workers = 20
+        args.synthesis_max_changes = 180
+
+        with tempfile.TemporaryDirectory() as temp_dir, patch.object(
+            pipeline.subprocess,
+            "run",
+            return_value=SimpleNamespace(returncode=0),
+        ) as mock_run:
+            code = pipeline.run_pipeline(
+                args=args,
+                stages=[],
+                all_stages=[],
+                log_dir=Path(temp_dir),
+                previous={},
+                entries={},
+                pending=[],
+                skipped=[],
+            )
+
+        self.assertEqual(code, 0)
+        command = mock_run.call_args.args[0]
+        self.assertEqual(command[command.index("--max-changes") + 1], "180")
+        self.assertEqual(command[command.index("--finding-workers") + 1], "20")
 
     def test_partial_pipeline_skips_synthesis(self):
         code, status, mock_run = self.run_case("alignment", 0)

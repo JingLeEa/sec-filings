@@ -119,7 +119,12 @@ PostgreSQL and writes the validated report, response cache, and token usage unde
 `data/synthesis/` (or the selected `--data-dir`). Batch findings are followed by
 one final synthesis request for the executive summary and whole-period analyses.
 Finding batches run concurrently (18 workers by default, configurable with
-`--finding-workers` and capped at the SoCLaaS limit of 20). The completed report
+`--synthesis-finding-workers` and capped at the SoCLaaS limit of 20). The synthesis
+workload remains capped at 50 changes by default; raise it with
+`--synthesis-max-changes` to expose more batches to the worker pool. For example,
+180 changes with a batch size of 10 and 18 workers schedules nine batches per
+adjacent-year pair for two pairs, or six per pair for three pairs, while keeping
+the total findings concurrency below the provider limit. The completed report
 is also upserted into PostgreSQL `synthesis_reports`, keyed by company and years;
 the JSON file remains available as a portable artifact.
 Use `--skip-synthesis` to run or test the upstream pipeline without making

@@ -94,9 +94,22 @@ class FullPipelineTests(unittest.TestCase):
         for flag in ("--workers", "--batch-workers", "--max-concurrent-requests",
                      "--alignment-workers", "--alignment-pair-workers",
                      "--alignment-max-concurrent-requests", "--materiality-concurrency",
-                     "--materiality-pair-workers", "--materiality-max-concurrent-requests"):
+                     "--materiality-pair-workers", "--materiality-max-concurrent-requests",
+                     "--synthesis-finding-workers", "--synthesis-max-changes"):
             with self.subTest(flag=flag), redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 runner.parse_args(self.arguments + [flag, "0"])
+
+    def test_synthesis_workers_cannot_exceed_soclaas_limit(self):
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            runner.parse_args(self.arguments + ["--synthesis-finding-workers", "21"])
+
+    def test_synthesis_workload_controls_are_forwarded_to_the_final_stage(self):
+        args = runner.parse_args(self.arguments + [
+            "--synthesis-finding-workers", "18",
+            "--synthesis-max-changes", "180",
+        ])
+        self.assertEqual(args.synthesis_finding_workers, 18)
+        self.assertEqual(args.synthesis_max_changes, 180)
 
     def test_dry_run_makes_no_subprocess_database_or_model_calls(self):
         with patch.object(runner, "preflight") as preflight, \
