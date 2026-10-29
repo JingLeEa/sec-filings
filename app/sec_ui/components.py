@@ -133,6 +133,8 @@ def empty_state_no_data(source=None) -> None:
 
 def load_selected(source, company, previous, current):
     """Load one comparison with friendly messages. Stops the page on failure."""
+    from . import refresh
+    refresh.status_panel(company, (previous, current))
     mode = source.scopes.get((company, previous, current), "files")
     try:
         return review.apply_final_choices(cached_comparison(company, previous, current, mode))

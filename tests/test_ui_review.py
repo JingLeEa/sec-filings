@@ -186,3 +186,16 @@ def test_ai_approved_requires_a_completed_label_without_active_review_flags(queu
     assert not review.ai_approved_change({**record, "status": "needs_review"})
     record["methods"]["llm"] = None
     assert not review.ai_approved_change(record)
+
+
+def test_reviews_survive_renumbering_and_reused_ids_keep_earlier_versions(queue):
+    record = queue[0]
+    first = review.save_review(record, "Expanded", "Original group.", expected=None)
+    renumbered = {**record, "match_id": "amd_2024_2025_M9999"}
+    assert review.current_review(renumbered, review.load_reviews("amd", 2024, 2025)) == first
+    other = next(row for row in queue[1:] if row["current_text"] and row["previous_text"])
+    reused = {**other, "match_id": record["match_id"]}
+    review.save_review(reused, "Reduced", "Different group with reused ID.", expected=first)
+    saved = review.load_reviews("amd", 2024, 2025)
+    assert review.current_review(renumbered, saved)["change_label"] == "Expanded"
+    assert review.current_review(reused, saved)["change_label"] == "Reduced"

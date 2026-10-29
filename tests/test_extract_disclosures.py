@@ -13,6 +13,21 @@ from sec_disclosure.llm.config import LLMConfig
 
 
 class DisclosureTests(unittest.TestCase):
+    def test_cached_extraction_keeps_source_bound_manual_type_without_model_calls(self):
+        from sec_ui import review
+        with patch.dict("os.environ", {"SEC_UI_MANUAL_REVIEWS_DIR": str(self.root / "reviews")}):
+            self.assertEqual(self.run_command()[0], 0)
+            row = self.read_output("disclosures.json")["disclosures"][0]
+            original = row["taxonomy"]
+            chosen = "Technology & AI" if original != "Technology & AI" else "Operations & Capacity"
+            review.save_disclosure_review({**row, "fiscal_year": 2024}, chosen, "Human correction.", expected=None)
+            self.assertEqual(self.run_command(), (0, 0))
+            restored = next(item for item in self.read_output("disclosures.json")["disclosures"]
+                            if item["disclosure_id"] == row["disclosure_id"])
+            self.assertEqual(restored["taxonomy"], chosen)
+            self.assertEqual(restored["llm_disclosure_type"], original)
+            self.assertEqual(restored["sources"], row["sources"])
+
     def setUp(self):
         self.directory = TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)

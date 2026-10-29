@@ -9,7 +9,8 @@ from pathlib import Path
 import sys
 
 from sec_disclosure.agents.alignment_data import AlignmentData
-from sec_disclosure.agents.change_analysis import CHANGE_TAXONOMY, compact_change_analysis
+from sec_disclosure.agents.change_analysis import CHANGE_TAXONOMY, effective_change_analysis
+from sec_disclosure.review_overrides import manual_change_label
 from sec_disclosure.indexing.semantic_classification import classify_alignment_row
 from sec_disclosure.indexing.semantic_retrieval import SemanticIndex
 from sec_disclosure.llm.client import LLMError
@@ -29,7 +30,7 @@ def enrich_alignment(output: Path, data: AlignmentData, *, embedder, document=No
         raise ValueError("Finish alignment for the requested company and years before change analysis.")
     rows = document["alignments"]
     for row in rows:
-        if row["status"] not in {"auto_matched", "ai_verified", "unmatched"}:
+        if row["status"] not in {"auto_matched", "ai_verified", "unmatched"} and not manual_change_label(row):
             raise ValueError("Only finalized alignment rows can receive change analysis.")
         members = row["previous_ids"] + row["current_ids"]
         if not members or any(key not in data.records for key in members):
@@ -38,7 +39,7 @@ def enrich_alignment(output: Path, data: AlignmentData, *, embedder, document=No
         for side, year in (("previous", data.years[0]), ("current", data.years[1])):
             if any(data.records[key]["fiscal_year"] != year for key in row[side + "_ids"]):
                 raise ValueError("Alignment evidence belongs to the wrong comparison year.")
-        analysis = compact_change_analysis(row.get("change_analysis"))
+        analysis = effective_change_analysis(row)
         if analysis["status"] not in {"completed", "needs_review"}:
             raise ValueError("Run LLM change analysis before lexical/semantic enrichment.")
 
@@ -65,11 +66,11 @@ def enrich_alignment(output: Path, data: AlignmentData, *, embedder, document=No
                     "Low semantic similarity within a finalized matched group; "
                     "the accepted alignment establishes that a counterpart exists."))
         semantic["method"] = "embedding_cosine" if previous and current else "alignment_presence"
-        analysis = compact_change_analysis(row["change_analysis"])
+        analysis = effective_change_analysis(row)
         analysis.update(lexical=lexical, semantic=semantic)
         # The validated LLM label is the final taxonomy; independent lexical and
         # semantic measurements remain available for inspection and disagreement.
-        analysis["final_taxonomy"] = analysis["llm"] if analysis["llm"] in CHANGE_TAXONOMY else None
+        analysis["final_taxonomy"] = manual_change_label(row) or (analysis["llm"] if analysis["llm"] in CHANGE_TAXONOMY else None)
         row["change_analysis"] = analysis
 
     if original is not None and path.read_bytes() != original:

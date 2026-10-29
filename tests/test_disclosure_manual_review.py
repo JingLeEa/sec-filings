@@ -41,6 +41,7 @@ def inputs(monkeypatch, tmp_path):
     monkeypatch.setenv("SEC_UI_DISCLOSURES_DIR", str(root))
     monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(ROOT / "tests/fixtures/alignments"))
     monkeypatch.setenv("SEC_UI_MANUAL_REVIEWS_DIR", str(tmp_path / "reviews"))
+    monkeypatch.setenv("SEC_UI_REFRESH_AUTOSTART", "0")
     st.cache_data.clear()
     yield records
     st.cache_data.clear()
@@ -225,3 +226,28 @@ def test_selecting_llm_for_changed_disclosure_does_not_revive_stale_manual_type(
     refreshed = review.save_disclosure_review(changed, None, "New source.", expected=saved, label_source="llm")
     assert refreshed["manual_disclosure_type"] is None
     assert refreshed["disclosure_type"] == row["taxonomy"]
+
+
+def test_review_save_queues_refresh_and_ui_can_retry_failed_work(inputs):
+    from sec_ui import refresh
+    from sec_disclosure.llm.disclosures import write_json
+    jobs = refresh.backend()
+    at = app()
+    at.selectbox(key="disclosure_type").select("Operations & Capacity")
+    click(at, "Save review")
+    (job,) = jobs.jobs(refresh.queue_dir())
+    assert job["stage"] == "disclosure" and job["status"] == "queued"
+    assert job["review"]["disclosure_type"] == "Operations & Capacity"
+    job.update(status="failed", phase="Refresh stopped; review is saved", error="Temporary failure")
+    write_json(jobs.job_path(refresh.queue_dir(), job["job_id"]), job)
+    at.run()
+    assert any("Temporary failure" in message.value for message in at.warning)
+    click(at, "Retry pipeline refresh")
+    assert jobs.jobs(refresh.queue_dir())[0]["status"] == "queued"
+    job.update(status="complete", phase="Updated through materiality")
+    write_json(jobs.job_path(refresh.queue_dir(), job["job_id"]), job)
+    at.run()
+    assert not at.exception and not at.error
+    assert at.selectbox(key="disclosure_type").value == "Operations & Capacity"
+    click(at, "Refresh downstream results")
+    assert any(row["status"] == "queued" and row["job_id"] != job["job_id"] for row in jobs.jobs(refresh.queue_dir()))

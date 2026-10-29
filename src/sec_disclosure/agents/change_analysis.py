@@ -11,6 +11,7 @@ from sec_disclosure.llm.disclosures import digest, write_json
 from .alignment_exact import valid_exact_proof
 from .alignment_grouping import supported_match
 from .alignment_prompts import CHANGE_ANALYSIS_PROMPT
+from sec_disclosure.review_overrides import manual_change_label
 
 
 CHANGE_POLICY = "finalized_disclosure_change_v2"
@@ -26,7 +27,7 @@ def empty_change_analysis():
             "llm": None, "final_taxonomy": None}
 
 
-def compact_change_analysis(analysis):
+def compact_change_analysis(analysis, *, manual_label=None):
     """Normalize legacy results and emit only the user's five result fields."""
     if not isinstance(analysis, dict):
         return empty_change_analysis()
@@ -34,7 +35,7 @@ def compact_change_analysis(analysis):
     label = analysis.get("llm")
     if isinstance(label, dict):
         label = label.get("taxonomy")
-    if label is None and status == "completed":
+    if label is None and status == "completed" and manual_label is None:
         label = analysis.get("final_taxonomy")
     if not isinstance(label, str) or label not in CHANGE_TAXONOMY:
         label = None
@@ -42,7 +43,7 @@ def compact_change_analysis(analysis):
         status = "in_progress"
     if status not in {"not_started", "in_progress", "completed", "needs_review"}:
         status = "not_started"
-    if status == "completed" and label is None:
+    if status == "completed" and label is None and manual_label is None:
         status = "needs_review"
     lexical = analysis.get("lexical")
     semantic = analysis.get("semantic")
@@ -52,8 +53,13 @@ def compact_change_analysis(analysis):
             "lexical": deepcopy(lexical) if isinstance(lexical, dict) else None,
             "semantic": deepcopy(semantic) if isinstance(semantic, dict) else None,
             "llm": label if status == "completed" else None,
-            "final_taxonomy": final if enriched and isinstance(final, str) and final in CHANGE_TAXONOMY
+            "final_taxonomy": manual_label if manual_label in CHANGE_TAXONOMY else
+                              final if enriched and isinstance(final, str) and final in CHANGE_TAXONOMY
                               else label if status == "completed" else None}
+
+
+def effective_change_analysis(row):
+    return compact_change_analysis(row.get("change_analysis"), manual_label=manual_change_label(row))
 
 
 def selected_records(row, data):
@@ -253,18 +259,21 @@ def analysis_jobs(rows, data):
 
 
 def change_summary(report, error=None):
-    eligible = [row for row in report["alignments"] if row["status"] in {"ai_verified", "auto_matched", "unmatched"}]
+    eligible = [row for row in report["alignments"] if row["status"] in {"ai_verified", "auto_matched", "unmatched"}
+                or manual_change_label(row)]
     for row in eligible:
-        row["change_analysis"] = compact_change_analysis(row["change_analysis"])
+        row["change_analysis"] = effective_change_analysis(row)
     states = Counter(row["change_analysis"]["status"] for row in eligible)
     return {"policy": CHANGE_POLICY, "complete": report["run_complete"] and not error and not states["not_started"],
             "error": error, "eligible_alignments": len(eligible),
-            "deferred_alignment_review": sum(row["status"] == "needs_review" for row in report["alignments"]),
+            "deferred_alignment_review": sum(row["status"] == "needs_review" and not manual_change_label(row)
+                                             for row in report["alignments"]),
             "by_status": dict(states),
             "by_method": dict(Counter("pending" if row["change_analysis"]["status"] == "not_started"
+                                      else "manual" if manual_change_label(row)
                                       else "llm" if row["status"] == "ai_verified" else "logic" for row in eligible)),
-            "taxonomy_counts": dict(Counter(row["change_analysis"]["llm"] for row in eligible
-                                            if row["change_analysis"]["llm"] is not None))}
+            "taxonomy_counts": dict(Counter(row["change_analysis"]["final_taxonomy"] for row in eligible
+                                            if row["change_analysis"]["final_taxonomy"] is not None))}
 
 
 def run_change_analysis(report, data, runtime, persist):
@@ -273,6 +282,9 @@ def run_change_analysis(report, data, runtime, persist):
     pending, identities = [], {}
     blocked = set(report["coverage"]["pending_disclosure_ids"]) | set(report["coverage"]["conflicting_disclosure_ids"])
     for row in report["alignments"]:
+        if manual_change_label(row):
+            row["change_analysis"] = effective_change_analysis(row)
+            continue
         if row["status"] == "needs_review":
             row["change_analysis"] = empty_change_analysis()
             continue

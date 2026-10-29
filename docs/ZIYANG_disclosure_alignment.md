@@ -547,8 +547,12 @@ AI labels are the default final results. A manual-only form lets a user save an
 override, including for an approved result. Dashboard views and downloads apply
 the override while preserving the model label and original pipeline evidence.
 Disclosure types have the same workflow in the separate Disclosure section.
-These local choices do not rewrite backend
-pipeline reports or rerun downstream stages.
+Saving a disclosure review now applies that type and refreshes affected year
+comparisons through materiality. Saving an alignment change label preserves the
+group and human final label, then refreshes downstream analysis/materiality.
+Background progress and retry controls appear in the dashboard. Published
+PostgreSQL rows/snapshots or canonical file reports include the human correction;
+original model labels and evidence are retained.
 
 `New`/`Removed` describe the saved comparison's disclosure coverage, not filing-wide
 absence or the start/end of a real-world event. Qualifications remain on the

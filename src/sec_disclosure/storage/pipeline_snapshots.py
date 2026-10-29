@@ -17,6 +17,17 @@ class PipelineInputError(ValueError):
     """A database input is missing, incomplete, or unavailable."""
 
 
+def check_revisions(cur, expected):
+    """Do not publish a background result over newer upstream/stage snapshots."""
+    for (company, kind, previous, current), revision in sorted((expected or {}).items()):
+        cur.execute('''SELECT revision FROM pipeline_stage_snapshots
+            WHERE company=%s AND kind=%s AND previous_year=%s AND current_year=%s FOR UPDATE''',
+            (company, kind, int(previous), int(current)))
+        row = cur.fetchone()
+        if (row[0] if row else None) != revision:
+            raise PipelineInputError("Pipeline inputs changed while the review refresh was running. Retry with current inputs.")
+
+
 def file_document(path):
     path = Path(path)
     raw = path.read_bytes()

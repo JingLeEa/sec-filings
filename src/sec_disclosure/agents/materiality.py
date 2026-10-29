@@ -13,6 +13,7 @@ from collections import Counter, deque
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from datetime import datetime, timezone
 from pathlib import Path
+from sec_disclosure.review_overrides import manual_change_label
 from threading import RLock
 from uuid import uuid4
 
@@ -372,7 +373,10 @@ def load_document(path, *, validate_materiality=True, document=None):
         raise ValueError("alignments.json must contain a JSON object.")
     if not document.get("run_complete"):
         raise ValueError("Materiality classification requires a completed alignment run.")
-    if document.get("included_statuses") != ["ai_verified", "auto_matched", "unmatched"]:
+    statuses = ["ai_verified", "auto_matched", "unmatched"]
+    human_refresh = document.get("human_review_refresh") is True
+    if document.get("included_statuses") != statuses and not (
+            human_refresh and document.get("included_statuses") == statuses + ["needs_review"]):
         raise ValueError("alignments.json is not the canonical finalized alignment partition.")
     rows = document.get("alignments")
     if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
@@ -385,7 +389,8 @@ def load_document(path, *, validate_materiality=True, document=None):
         required = {"match_id", "status", "relationship", "previous_ids", "current_ids", "explanation"}
         if not required <= set(row):
             raise ValueError("Every alignment row is missing one or more required fields.")
-        if row["status"] not in {"ai_verified", "auto_matched", "unmatched"}:
+        if row["status"] not in {"ai_verified", "auto_matched", "unmatched"} and not (
+                human_refresh and row["status"] == "needs_review" and manual_change_label(row)):
             raise ValueError("alignments.json contains a non-final alignment row.")
         if validate_materiality and MATERIALITY_FIELD in row:
             row[MATERIALITY_FIELD], migrated = normalize_saved_analysis(
@@ -565,7 +570,8 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
                 run_state = normalize_run_state(prior_state)
                 classification_run_id = run_state["classification_run_id"]
         for row in rows:
-            if row["status"] == "auto_matched" and row.get("match_method") == "exact_text":
+            if (row["status"] == "auto_matched" and row.get("match_method") == "exact_text"
+                    and row.get("change_analysis", {}).get("final_taxonomy") in {None, "Unchanged"}):
                 exact = dict(EXACT_TEXT_ANALYSIS)
                 if row.get(MATERIALITY_FIELD) != exact:
                     row[MATERIALITY_FIELD] = exact

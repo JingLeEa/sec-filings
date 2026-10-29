@@ -147,7 +147,21 @@ def fingerprint(record: dict) -> str:
 
 def current_review(record: dict, reviews: dict) -> dict | None:
     saved = reviews.get(record["match_id"])
-    return saved if saved and saved["source_fingerprint"] == fingerprint(record) else None
+    if saved and saved["source_fingerprint"] == fingerprint(record):
+        return saved
+    # A pipeline rerun may renumber groups. Keep a review only for identical
+    # members and displayed source text, even when its old match ID differs.
+    pending, versions = list(reviews.values()), []
+    while pending:
+        candidate = pending.pop()
+        versions.append(candidate)
+        pending.extend(candidate.get("previous_reviews", []))
+    for candidate in sorted(versions, key=lambda value: value["reviewed_at"], reverse=True):
+        if (candidate.get("previous_ids") == record["previous_ids"]
+                and candidate.get("current_ids") == record["current_ids"]
+                and candidate["source_fingerprint"] == fingerprint({**record, "match_id": candidate["match_id"]})):
+            return candidate
+    return None
 
 
 def save_review(record: dict, label: str, notes: str, *, expected: dict | None, label_source="manual") -> dict:
@@ -177,6 +191,11 @@ def save_review(record: dict, label: str, notes: str, *, expected: dict | None, 
             "previous_ids": record["previous_ids"], "current_ids": record["current_ids"],
             "original_change_label": record.get("pipeline_change_label", record["change_label"]),
         }
+        if expected and expected["source_fingerprint"] != fingerprint(record):
+            saved["previous_reviews"] = expected.get("previous_reviews", []) + [
+                {key: value for key, value in expected.items() if key != "previous_reviews"}]
+        elif expected and expected.get("previous_reviews"):
+            saved["previous_reviews"] = expected["previous_reviews"]
         reviews[record["match_id"]] = saved
         payload = {"schema_version": 1, "company": company, "previous_year": previous,
                    "current_year": current, "reviews": reviews}

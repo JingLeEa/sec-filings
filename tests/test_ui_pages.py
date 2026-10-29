@@ -21,6 +21,7 @@ def sample_environment(monkeypatch, tmp_path):
     monkeypatch.setenv("SEC_UI_SYNTHESIS_DIRS", str(FIXTURES / "synthesis"))
     monkeypatch.setenv("SEC_UI_PEER_DIR", str(FIXTURES / "peer_comparison"))
     monkeypatch.setenv("SEC_UI_MANUAL_REVIEWS_DIR", str(tmp_path / "manual_reviews"))
+    monkeypatch.setenv("SEC_UI_REFRESH_AUTOSTART", "0")
     st.cache_data.clear()
     yield
     st.cache_data.clear()

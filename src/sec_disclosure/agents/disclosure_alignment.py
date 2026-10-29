@@ -26,7 +26,7 @@ from .alignment_graph import orchestration_manifest
 from .alignment_workflow import AlignmentWorkflow
 from .alignment_repair import ProposalError, RepairSource, VerificationRepair
 from .alignment_grouping import ASSIGNMENT_POLICY, GROUPING_POLICY, consolidate_alignments, grouping_summary, supported_match
-from .change_analysis import empty_change_analysis, compact_change_analysis, run_change_analysis, change_summary
+from .change_analysis import empty_change_analysis, compact_change_analysis, effective_change_analysis, run_change_analysis, change_summary
 
 
 MANIFEST_VERSION = "1"
@@ -257,6 +257,9 @@ def save_report(output, data, candidates, matches, groups, decisions, runtime, *
                                                                       if len(indices) > 1 and key not in conflicts)},
               "counts": dict(counts),
               "alignments": finalized}
+    from sec_disclosure.review_overrides import apply_alignment_reviews, read_reviews, review_root
+    report = apply_alignment_reviews(report, data.records,
+        read_reviews(review_root(), data.ticker, "alignment", *data.years))
     exact_path = output / "automatic_matches.json"
     if exact_path.exists():
         automatic = json.loads(exact_path.read_text())
@@ -544,7 +547,7 @@ def write_alignment_json_reports(output, report, *, preserve_change_analysis=Tru
             if same_decision and "materiality_analysis" not in row and "materiality_analysis" in old:
                 row["materiality_analysis"] = deepcopy(old["materiality_analysis"])
     for row in report["alignments"]:
-        row["change_analysis"] = compact_change_analysis(row["change_analysis"])
+        row["change_analysis"] = effective_change_analysis(row)
     for filename, statuses in (("alignments.json", list(FINAL_ALIGNMENT_STATUSES)),
                                ("needs_review.json", ["needs_review"])):
         rows = [row for row in report["alignments"] if row["status"] in statuses]

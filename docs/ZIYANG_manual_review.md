@@ -24,14 +24,16 @@ All/Pending/Reviewed filters, Previous/Next navigation, Save review, Save and ne
 and JSON/CSV downloads. Alignment reuses the existing side-by-side comparison
 with removed words in red and added words in green.
 
-The page makes no model calls. Saving records a local final-label choice and
-optional human annotation. Overview, Change Explorer and Side by Side use these
-choices in their displayed categories/change labels, filters and exports. Original
-pipeline evidence and model labels remain available. Saving does not rerun
-extraction, alignment, change analysis or materiality, and saved synthesis/peer
-reports are not regenerated.
-User accounts, reviewer identity and automatic application of human labels to
-backend pipeline stages are not implemented.
+Saving records a human annotation and automatically queues a background pipeline
+refresh through **materiality**, the current pipeline's final runnable stage.
+Disclosure reviews apply the human type to extraction outputs, then rerun affected
+year comparisons, change analysis, lexical/semantic analysis and materiality.
+Alignment reviews apply the human change label to the saved group and continue
+through change analysis and materiality, preserving the human label.
+Overview, Change Explorer and Side by Side use the resulting labels in views,
+filters and exports. Original model labels and source evidence remain available.
+Synthesis/peer reports are not regenerated; their agent runners are absent from
+this checkout. User accounts and authenticated reviewer identity are not implemented.
 
 ## 2. Code and workflow
 
@@ -45,6 +47,10 @@ backend pipeline stages are not implemented.
 | [`app/sec_ui/provenance.py`](../app/sec_ui/provenance.py) | Disclosure/paragraph labels and sentence provenance |
 | [`app/sec_ui/components.py`](../app/sec_ui/components.py), [`diff.py`](../app/sec_ui/diff.py) | Shared dashboard styling, evidence display and word highlighting |
 | [`app/sec_ui/config.py`](../app/sec_ui/config.py) | Data folders, allowed labels and annotation storage configuration |
+| [`app/sec_ui/refresh.py`](../app/sec_ui/refresh.py) | Save-triggered scheduling, live status, retry controls and cache refresh |
+| [`pipelines/review_jobs.py`](../src/sec_disclosure/pipelines/review_jobs.py) | Durable queue, separate worker process and interrupted-job recovery |
+| [`pipelines/review_refresh.py`](../src/sec_disclosure/pipelines/review_refresh.py) | Dependency planning, applying corrections, affected comparison reruns and publication |
+| [`review_overrides.py`](../src/sec_disclosure/review_overrides.py) | Source-bound human labels, original-label retention and match-ID renumbering |
 
 The workflow reads saved pipeline results, shows their original evidence and
 model concerns, then saves a manual label and optional notes. Existing matching
@@ -71,9 +77,16 @@ API key is needed. PostgreSQL mode needs a configured, running database; see
 | `SEC_UI_DISCLOSURES_DIR` | Extraction JSON root: `<company>/<year>/` |
 | `SEC_UI_ALIGNMENTS_DIR` | Alignment JSON root: `<company>/<previous>-<current>/` |
 | `SEC_UI_MANUAL_REVIEWS_DIR` | Writable annotation root; defaults to `data/manual_reviews` |
+| `SEC_UI_PIPELINE_DATA_DIR` | Pipeline raw-data/embedding-cache root; defaults to `data` in PostgreSQL mode or the extraction folder's parent in file mode |
+| `SEC_UI_PIPELINE_ENV_FILE` | Optional backend database/model configuration file; otherwise the existing defaults apply |
+| `SEC_UI_EMBEDDING_MODEL` | Refresh embedding model; defaults to `bge-m3` |
+| `SEC_UI_REFRESH_AUTOSTART` | Defaults to `1`; set `0` only to use a separately managed worker or offline UI tests |
 
 The review page reads PostgreSQL or JSON through the existing data layer. Human
 annotations are saved as local JSON files in either mode.
+Automatic refreshes use the configured model API and need the same backend
+dependencies and configuration as the full pipeline. File mode requires the raw
+paragraph/sentence files and complete extraction metadata, not just UI fixtures.
 
 ## 4. Inputs and review scope
 
@@ -137,6 +150,26 @@ same provenance display is shared with the **Side by Side** page.
    export final results for the whole selected filing or year pair, including
    unreviewed records using the AI default.
 
+After either Save action, **Pipeline updates** shows the queued/running stage,
+completion or a failure with **Retry pipeline refresh**. The review remains saved
+if a model, database or worker error stops the refresh. A completed refresh clears
+the dashboard cache and reloads current results automatically. **Refresh downstream
+results** can resubmit an existing saved decision without editing its label.
+
+A disclosure review affects adjacent available filing years and any existing
+comparison containing the reviewed year. For example, AMD FY2024 refreshes
+2023–2024 and 2024–2025; other companies and unrelated comparisons are unchanged.
+The human decision supplies the extraction-stage result: the model does not
+re-extract or replace the reviewed type. A resolved `model_requested_review` flag
+is retained in the audit metadata; unrelated source warnings remain active.
+
+An alignment review preserves the selected group's membership and original AI
+label, sets the human label as `final_taxonomy`, and recalculates downstream
+results. It does not ask the matching agent to undo the human decision. A group
+with unresolved correspondence warnings remains in `needs_review.json`; its human
+change label and materiality can be saved without falsely claiming AI approval.
+Materiality receives full selected source sentences for these human-reviewed groups.
+
 Disclosure types are Strategy & Business Model; Operations & Capacity;
 Technology & AI; Cybersecurity & Data; Supply Chain & Third Parties;
 Regulation, Legal & Compliance; Financial & Capital Resources;
@@ -165,6 +198,19 @@ data/manual_reviews/<company>/<previous>-<current>/manual_reviews.json
 
 Both use `schema_version: 1` and a `reviews` object keyed by disclosure ID or
 match ID. Writes use a temporary file and atomic replacement.
+Refresh jobs, stage workspaces, source backups and the worker log are stored under
+`<manual-reviews-root>/pipeline_refresh/`. One worker owns that queue at a time.
+Newer human decisions supersede older queued work; input revisions are checked
+before publishing so a background run cannot replace newer inputs silently.
+Valid reviews follow unchanged source text/membership if alignment renumbers IDs;
+changed source evidence requires a new review. Reused IDs retain earlier review
+versions for audit rather than deleting decisions for a different source group.
+
+To drain pending jobs using a separately managed worker or after an app restart:
+
+```bash
+.venv/bin/python scripts/process_review_refresh.py --queue-dir data/manual_reviews/pipeline_refresh
+```
 
 | Scope | Envelope fields in addition to `schema_version` and `reviews` | Saved review fields |
 | --- | --- | --- |
@@ -197,9 +243,10 @@ Alignment fixtures are under [`tests/fixtures/alignments/amd`](../tests/fixtures
 Review tests create temporary source records and annotation files; their labels
 are synthetic test decisions. No real human decisions are committed as fixtures.
 
-Downloaded results can be used to inspect final choices alongside original model
-labels. Consuming those choices automatically in backend synthesis requires a
-separate integration; clicking Save does not rewrite existing reports.
+Downloaded results retain final human choices alongside original model labels.
+The refresh publishes updated normalized PostgreSQL rows and pipeline snapshots,
+or updated canonical JSON reports in file mode. Backend synthesis integration is
+outside the current runnable pipeline.
 
 ## 8. Validation and limitations
 
@@ -207,6 +254,7 @@ Run the offline UI checks from the repository root:
 
 ```bash
 .venv/bin/python -m pytest tests/test_ui_data.py tests/test_ui_pages.py tests/test_ui_review.py tests/test_ui_provenance.py tests/test_disclosure_manual_review.py -q
+.venv/bin/python -m pytest tests/test_review_refresh.py -q
 ```
 
 Coverage includes both sections, independent type/change labels and scopes,
@@ -223,4 +271,4 @@ Annotations have no authenticated reviewer identity. The conflict lock is shared
 within one app process; separate Streamlit processes should not share an
 annotation directory for concurrent writes. Missing evidence must be corrected
 upstream before it can be reviewed. Saved choices affect dashboard final results;
-backend pipeline evidence and previously generated reports remain separate.
+original source evidence is retained while affected pipeline results are refreshed.

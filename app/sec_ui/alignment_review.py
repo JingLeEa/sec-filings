@@ -3,7 +3,7 @@ import json
 
 import streamlit as st
 
-from sec_ui import components, config, data, reports, review
+from sec_ui import components, config, data, reports, review, refresh
 
 
 def render(scope):
@@ -141,7 +141,7 @@ def render(scope):
                                     placeholder="Choose a change label", key="manual_label")
         notes = st.text_area("Review notes (optional)", key="manual_notes", placeholder="Explain your change label.")
         st.caption("Choose New, Removed, Expanded, Reduced, Modified, Reworded or Unchanged. "
-                   "Save your review before moving to another disclosure.")
+                   "Saving refreshes downstream results through materiality. Save before moving to another disclosure.")
         save_col, next_save_col = st.columns(2)
         save = save_col.form_submit_button("Save review", disabled=missing_text, width="stretch")
         save_next = next_save_col.form_submit_button("Save and next", type="primary", disabled=missing_text, width="stretch")
@@ -155,11 +155,28 @@ def render(scope):
         else:
             st.session_state.pop("_manual_review_context", None)
             st.session_state["_manual_review_message"] = f"Saved {result['change_label']} for {record['match_id']} (Manual)."
+            try:
+                refresh.request("alignment", record, result, comparison["meta"]["source"])
+            except data.DataError as error:
+                st.session_state["_manual_refresh_error"] = str(error)
+            else:
+                st.session_state["_manual_review_message"] += " Updating downstream results through materiality."
             if save_next:
                 following = ids[position + 1:] + ids[:position]
                 next_id = next((i for i in following if i not in current_reviews), None)
                 st.session_state["_manual_review_jump"] = next_id or (following[0] if following else record["match_id"])
             st.rerun()
+
+    if message := st.session_state.pop("_manual_refresh_error", None):
+        st.warning(message)
+    if saved and review.label_source(saved) == "manual":
+        if st.button("Refresh downstream results", key="refresh_alignment"):
+            try:
+                refresh.request("alignment", record, saved, comparison["meta"]["source"], force=True)
+            except data.DataError as error:
+                st.warning(str(error))
+            else:
+                st.rerun()
 
     components.supporting_evidence(record, previous, current)
     downloads()

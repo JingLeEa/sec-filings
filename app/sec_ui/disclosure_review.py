@@ -3,7 +3,7 @@ import json
 
 import streamlit as st
 
-from . import components, config, data, disclosure_data, reports, review
+from . import components, config, data, disclosure_data, reports, review, refresh
 
 
 @st.cache_data(ttl=300, show_spinner="Looking for disclosure inputs...")
@@ -39,6 +39,7 @@ def render(scope):
     mode = source.scopes[(company, year)]
     st.sidebar.caption("Data from " + ("PostgreSQL" if mode == "postgres" else "JSON files"))
     components.refresh_button()
+    refresh.status_panel(company, (year,))
     try:
         all_records = cached_disclosures(company, year, mode)
         saved_reviews = review.load_disclosure_reviews(company, year)
@@ -104,7 +105,8 @@ def render(scope):
 
     def label(disclosure_id):
         row = by_id[disclosure_id]
-        return f"{disclosure_id.rsplit('_', 1)[-1]} | Item {row['item']} | AI type: {row.get('taxonomy') or data.NOT_CLASSIFIED}"
+        ai_type = row.get("llm_disclosure_type", row.get("taxonomy")) or data.NOT_CLASSIFIED
+        return f"{disclosure_id.rsplit('_', 1)[-1]} | Item {row['item']} | AI type: {ai_type}"
 
     top, previous_col, next_col = st.columns([6, 1, 1], vertical_alignment="bottom")
     top.selectbox(f"Disclosure ({len(ids):,} match the filters)", ids, key="disclosure_selected", format_func=label)
@@ -117,9 +119,9 @@ def render(scope):
                      ("Human reviewed" if saved else "Not manually reviewed", "ok" if saved else ""),
                      (config.ITEM_TITLES.get(row["item"], f"Item {row['item']}"), ""), (row.get("taxonomy", ""), ""))
     if scope == "AI approved":
-        st.success(components.safe(f"AI-approved disclosure type: **{row['taxonomy']}**"))
+        st.success(components.safe(f"AI-approved disclosure type: **{row.get('llm_disclosure_type', row['taxonomy'])}**"))
     else:
-        st.info(components.safe(f"AI disclosure type: **{row.get('taxonomy') or data.NOT_CLASSIFIED}**"))
+        st.info(components.safe(f"AI disclosure type: **{row.get('llm_disclosure_type', row.get('taxonomy')) or data.NOT_CLASSIFIED}**"))
     verification = row.get("verification") or {}
     reason = verification.get("model_review_reason") or "; ".join(verification.get("review_reasons", []))
     if reason:
@@ -147,7 +149,7 @@ def render(scope):
         chosen = st.selectbox("Disclosure type", config.CONTENT_CATEGORIES, index=None,
                               placeholder="Choose a disclosure type", key="disclosure_type")
         notes = st.text_area("Review notes (optional)", key="disclosure_notes")
-        st.caption("Save your review before moving to another disclosure.")
+        st.caption("Saving refreshes affected comparisons through materiality. Save before moving to another disclosure.")
         left, right = st.columns(2)
         missing = not (row.get("content") or "").strip()
         save = left.form_submit_button("Save review", disabled=missing, width="stretch")
@@ -161,9 +163,25 @@ def render(scope):
         else:
             st.session_state.pop("_disclosure_review_context", None)
             st.session_state["_disclosure_review_message"] = f"Saved {result['disclosure_type']} for {row['disclosure_id']} (Manual)."
+            try:
+                refresh.request("disclosure", row, result, mode)
+            except data.DataError as error:
+                st.session_state["_disclosure_refresh_error"] = str(error)
+            else:
+                st.session_state["_disclosure_review_message"] += " Updating affected comparisons through materiality."
             if save_next:
                 following = ids[position+1:]+ids[:position]
                 st.session_state["_disclosure_review_jump"] = next((value for value in following if value not in current),
                                                                   following[0] if following else row["disclosure_id"])
             st.rerun()
+    if message := st.session_state.pop("_disclosure_refresh_error", None):
+        st.warning(message)
+    if saved and review.label_source(saved) == "manual":
+        if st.button("Refresh downstream results", key="refresh_disclosure"):
+            try:
+                refresh.request("disclosure", row, saved_reviews[row["disclosure_id"]], mode, force=True)
+            except data.DataError as error:
+                st.warning(str(error))
+            else:
+                st.rerun()
     downloads()

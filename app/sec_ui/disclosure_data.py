@@ -78,6 +78,7 @@ def load_disclosures(company, year, source=None, *, include_all=False):
             seen.add(raw["disclosure_id"])
             verification = apply_source_unit_policy(raw.get("verification") or {})
             needs_review = (verification.get("status") == "needs_review" or bool(verification.get("review_reasons"))
+                            or bool((raw.get("human_review") or {}).get("was_needs_review"))
                             or not verification and name == "review_candidates.json")
             if needs_review or include_all:
                 row = deepcopy(raw)
