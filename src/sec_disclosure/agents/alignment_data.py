@@ -150,12 +150,46 @@ class AlignmentData:
             for i in neighbors if paragraphs[i]["item"] == d["item"]]
         return result
 
+    def audit_key(self, key: str) -> str | None:
+        """Resolve only exact saved audit IDs or their exact original paragraph ID."""
+        if key in self.audit:
+            return key
+        candidate = key + "_AUDIT"
+        if candidate in self.audit and self.audit[candidate].get("paragraph_id") == key:
+            return candidate
+        return None
+
+    def audit_context(self, key: str) -> dict:
+        """Expose unselected source context without creating a disclosure or a citation."""
+        audit = deepcopy(self.audit[key])
+        paragraph_id, year, item = audit["paragraph_id"], audit["fiscal_year"], audit["item"]
+        audit.update(
+            context_only=True, valid_alignment_member=False,
+            guidance=("This is ungrouped/excluded source context, not an extracted disclosure. "
+                      "Do not put this audit ID, paragraph ID or its unselected sentence IDs in an alignment. "
+                      "Use only the eligible selected disclosures and their exact sentence IDs. "
+                      "If the counterpart exists only in audit context, explain the extraction gap and flag needs_review."),
+        )
+        paragraphs = self.paragraphs[year]
+        positions = [i for i, paragraph in enumerate(paragraphs) if paragraph["id"] == paragraph_id]
+        neighbors = sorted({j for i in positions for j in (i - 1, i, i + 1) if 0 <= j < len(paragraphs)})
+        audit["paragraph_context_only"] = [
+            {"paragraph_id": paragraphs[i]["id"], "text": paragraphs[i]["text"]}
+            for i in neighbors if paragraphs[i]["item"] == item]
+        audit["eligible_disclosures"] = [
+            self.view(disclosure_id, full=True) for disclosure_id, disclosure in sorted(self.records.items())
+            if disclosure["fiscal_year"] == year and disclosure["item"] == item
+            and any(source["paragraph_id"] == paragraph_id for source in disclosure["sources"])]
+        return audit
+
     def search(self, year: str, query: str, offset: int = 0, *, item: str) -> dict:
         hits = self.index.search(query, year, item=item, limit=8, offset=offset)
         audit = self.audit_index.search(query, year, item=item, limit=4)
         return {"year": year, "item": item, "query": query, "offset": offset, "scope": "same_item_including_review_and_audit",
                 "hits": [{**h, "record": self.view(h["disclosure_id"])} for h in hits],
-                "audit_hits": [{**h, "record": self.audit[h["disclosure_id"]]} for h in audit if h["text_score"] > 0]}
+                "audit_hits": [{**h, "record": {**self.audit[h["disclosure_id"]],
+                                                "context_only": True, "valid_alignment_member": False}}
+                               for h in audit if h["text_score"] > 0]}
 
     def tool(self, action: dict, visible: set[str], *, item: str) -> dict:
         if action["action"] == "search":
@@ -176,8 +210,31 @@ class AlignmentData:
                 results.append(result)
             return {"search_results": results}
         ids = action.get("disclosure_ids")
-        if not isinstance(ids, list) or not 1 <= len(ids) <= 4 or any(not isinstance(key, str) or key not in visible for key in ids):
-            raise ValueError("context requires 1-4 visible disclosure IDs.")
-        if any(self.records[key]["item"] != item for key in ids):
-            raise ValueError("Context cannot access a different SEC Item.")
-        return {"context_results": [self.context(key) for key in ids]}
+        if not isinstance(ids, list) or not 1 <= len(ids) <= 4 or any(not isinstance(key, str) for key in ids):
+            raise ValueError("context requires 1-4 visible disclosure IDs or exact saved audit IDs; use a JSON list of IDs.")
+        selected = []
+        for key in ids:
+            audit_key = self.audit_key(key)
+            record = self.records.get(key) if key in self.records else self.audit.get(audit_key)
+            if record is None:
+                allowed = sorted(k for k in visible if k in self.records and self.records[k]["item"] == item)
+                raise ValueError(
+                    f"Unknown context ID {key!r}. Use an exact disclosure ID from the supplied records/search hits "
+                    f"or an exact saved audit ID ending in _AUDIT. Raw paragraph IDs are accepted only when they "
+                    f"identify a saved audit record. Visible disclosure IDs: {json.dumps(allowed)}")
+            if record["item"] != item:
+                raise ValueError("Context cannot access a different SEC Item.")
+            if key in self.records and key not in visible:
+                raise ValueError(f"Disclosure {key!r} is not visible. Search its topic in the same SEC Item first, "
+                                 "then use an exact disclosure ID from the returned hits.")
+            selected.append((key, audit_key))
+        results = []
+        for key, audit_key in selected:
+            if key in self.records:
+                results.append(self.context(key))
+            else:
+                result = self.audit_context(audit_key)
+                # Only actual selected disclosures become eligible alignment members.
+                visible.update(disclosure["disclosure_id"] for disclosure in result["eligible_disclosures"])
+                results.append(result)
+        return {"context_results": results}

@@ -5,6 +5,7 @@ SEC_UI_ALIGNMENTS_DIR   folder with <company>/<previous>-<current>/alignments.js
 SEC_UI_DISCLOSURES_DIR  folder with <company>/<year>/disclosures.json
 SEC_UI_PEER_DIR         folder with <TARGET>/<YEAR>/peer_comparison.json
 SEC_UI_SYNTHESIS_DIRS   folders (os.pathsep separated) holding synthesis output JSON files
+SEC_UI_MANUAL_REVIEWS_DIR folder for saved human disclosure-type and change labels
 """
 from __future__ import annotations
 
@@ -92,6 +93,10 @@ def disclosures_dir():
 
 def peer_dir():
     return _env_path("SEC_UI_PEER_DIR") or (ROOT / "data" / "peer_comparison")
+
+
+def manual_reviews_dir():
+    return _env_path("SEC_UI_MANUAL_REVIEWS_DIR") or (ROOT / "data" / "manual_reviews")
 
 
 def synthesis_dirs():

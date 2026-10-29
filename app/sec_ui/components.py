@@ -3,11 +3,12 @@ from __future__ import annotations
 
 import streamlit as st
 
-from . import config, data
+from . import config, data, diff, provenance
 
 PERSISTED_KEYS = [
     "sel_company", "sel_pair", "f_items", "f_categories", "f_changes", "f_materiality",
     "f_statuses", "f_relationships", "f_text", "selected_match",
+    "manual_section",
 ]
 
 CSS = """
@@ -25,6 +26,8 @@ CSS = """
 .chip.accent { border-color: rgba(37,99,235,0.8); }
 .chip.bad { border-color: rgba(220,38,38,0.7); }
 .sidehead { font-weight: 600; margin-bottom: 0.25rem; }
+.sourcehead { margin: 0.85rem 0 0.3rem; font-size: 0.82rem; overflow-wrap: anywhere; }
+.sourcehead .source-label { opacity: 0.7; }
 </style>
 """
 
@@ -75,6 +78,8 @@ def tone_for_status(status: str) -> str:
 def refresh_button():
     if st.sidebar.button("Reload data", help="Clear cached files and look again", width="stretch"):
         st.cache_data.clear()
+        st.session_state.pop("_manual_review_context", None)
+        st.session_state.pop("_disclosure_review_context", None)
         st.rerun()
 
 
@@ -183,3 +188,107 @@ def _clean(key, options):
 def _item_order(item: str):
     digits = "".join(ch for ch in item if ch.isdigit())
     return (int(digits) if digits else 99, item)
+
+
+def side_by_side(record: dict, previous: int, current: int, *, key: str):
+    """Shared year columns and highlights for reading and manual review."""
+    from html import escape
+
+    show_marks = st.toggle("Highlight changes", value=True, key=key)
+    previous_blocks = provenance.source_blocks(record, "previous")
+    current_blocks = provenance.source_blocks(record, "current")
+    missing = record["missing_side"]
+    if missing == "later":
+        prev_html = [diff.whole_side_html(record["previous_text"][b["start"]:b["end"]], "removed") for b in previous_blocks]
+        curr_html = []
+        stats = "The whole earlier disclosure has no counterpart in the later filing."
+    elif missing == "earlier":
+        prev_html = []
+        curr_html = [diff.whole_side_html(record["current_text"][b["start"]:b["end"]], "added") for b in current_blocks]
+        stats = "The whole later disclosure has no counterpart in the earlier filing."
+    else:
+        result = diff.diff_texts(record["previous_text"], record["current_text"],
+                                 previous_ranges=[(b["start"], b["end"]) for b in previous_blocks],
+                                 current_ranges=[(b["start"], b["end"]) for b in current_blocks])
+        prev_html, curr_html = result["previous_blocks_html"], result["current_blocks_html"]
+        stats = ("The wording is the same apart from spacing." if result["identical"]
+                 else f"{result['removed_words']:,} words removed, {result['added_words']:,} words added.")
+    if not show_marks:
+        prev_html = [diff.plain_html(record["previous_text"][b["start"]:b["end"]]) for b in previous_blocks]
+        curr_html = [diff.plain_html(record["current_text"][b["start"]:b["end"]]) for b in current_blocks]
+
+    left, right = st.columns(2)
+    for column, title, blocks, bodies, empty_msg in (
+        (left, f"FY{previous} (earlier)", previous_blocks, prev_html, f"No counterpart found in the FY{previous} filing."),
+        (right, f"FY{current} (later)", current_blocks, curr_html, f"No counterpart found in the FY{current} filing."),
+    ):
+        with column:
+            st.markdown(f'<div class="sidehead">{title}</div>', unsafe_allow_html=True)
+            if not blocks:
+                st.markdown(f'<div class="diffbox empty">{empty_msg}</div>', unsafe_allow_html=True)
+            for block, body in zip(blocks, bodies):
+                owner = (f'<span class="source-label">Disclosure</span> <code>{escape(block["disclosure_id"])}</code>'
+                         if block["disclosure_id"] else "Disclosure attribution unavailable")
+                paragraph = (f'<span class="source-label">Paragraph</span> <code>{escape(block["paragraph_id"])}</code>'
+                             if block["paragraph_id"] else '<span class="source-label">Paragraph ID unavailable</span>')
+                st.markdown(f'<div class="sourcehead">{owner} · {paragraph}</div>', unsafe_allow_html=True)
+                if body.strip():
+                    st.markdown(f'<div class="diffbox">{body}</div>', unsafe_allow_html=True)
+                else:
+                    st.markdown('<div class="diffbox empty">Disclosure text is unavailable for this filing.</div>',
+                                unsafe_allow_html=True)
+    if record["text_source"] == "cited sentences":
+        st.warning("The full disclosure text was not found, so this view shows only the sentences cited as evidence. "
+                   "The comparison may be partial. Point SEC_UI_DISCLOSURES_DIR at the disclosures folder to see everything.")
+    st.caption(f"{stats}  Red with strike-through = removed. Green with underline = added.")
+    if missing:
+        st.info("No counterpart found means the saved comparison for this pair found none. "
+                "It is not proof that the topic is missing from the whole filing.")
+
+
+def supporting_evidence(record: dict, previous: int, current: int, *, include_citations=True):
+    import pandas as pd
+
+    st.subheader("Supporting evidence")
+    sentences = provenance.sentence_rows(record)
+    if sentences:
+        st.caption("Each sentence lists its disclosure and paragraph."
+                   + (" Cited marks sentences used in the alignment reasoning." if include_citations else ""))
+        columns = ["side", "disclosure_id", "paragraph_id", "sentence_id", "text"]
+        frame = pd.DataFrame(sentences)[columns + (["cited"] if include_citations else []) + ["source_url"]]
+        frame["side"] = frame["side"].map({"earlier": f"FY{previous}", "later": f"FY{current}"}).fillna(frame["side"])
+        st.dataframe(frame, hide_index=True, width="stretch", column_config={
+            "side": st.column_config.TextColumn("Filing", width="small"),
+            "disclosure_id": st.column_config.TextColumn("Disclosure ID"),
+            "paragraph_id": st.column_config.TextColumn("Paragraph ID"),
+            "sentence_id": st.column_config.TextColumn("Sentence ID"),
+            "text": st.column_config.TextColumn("Sentence", width="large"),
+            "cited": st.column_config.CheckboxColumn("Cited", width="small"),
+            "source_url": st.column_config.LinkColumn("SEC filing", display_text="Open on sec.gov"),
+        })
+    else:
+        st.info("No sentence-level evidence was saved for this match.")
+
+    with st.expander("Disclosures in this match"):
+        for side, label in (("previous_members", f"FY{previous}"), ("current_members", f"FY{current}")):
+            for member in record[side]:
+                st.markdown(f"**{label}** `{member.get('disclosure_id', '')}` Item {member.get('item', '')}, "
+                            f"{member.get('section', '') or 'no section'}")
+                st.caption(safe(member.get("summary")) or "No summary saved.")
+
+
+def disclosure_text(disclosure):
+    """One filing's selected text with the same source IDs used in comparisons."""
+    from html import escape
+
+    view = {"previous_members": [], "current_members": [disclosure],
+            "current_text": disclosure.get("content") or "", "evidence": []}
+    for block in provenance.source_blocks(view, "current"):
+        paragraph = escape(block["paragraph_id"]) if block["paragraph_id"] else "unavailable"
+        st.markdown(f'<div class="sourcehead"><span class="source-label">Disclosure</span> '
+                    f'<code>{escape(block["disclosure_id"])}</code> · <span class="source-label">Paragraph</span> '
+                    f'<code>{paragraph}</code></div>', unsafe_allow_html=True)
+        text = view["current_text"][block["start"]:block["end"]]
+        st.markdown(f'<div class="diffbox">{diff.plain_html(text)}</div>', unsafe_allow_html=True)
+    with st.expander("Sentence sources"):
+        supporting_evidence(view, disclosure["fiscal_year"], disclosure["fiscal_year"], include_citations=False)

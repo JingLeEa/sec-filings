@@ -9,17 +9,18 @@ from streamlit.testing.v1 import AppTest  # noqa: E402
 APP = Path(__file__).resolve().parents[1] / "app"
 FIXTURES = Path(__file__).parent / "fixtures"
 PAGES = ["Home.py", "pages/1_Change_Explorer.py", "pages/2_Side_by_Side.py",
-         "pages/3_Synthesis_Report.py", "pages/4_Peer_Comparison.py"]
+         "pages/3_Synthesis_Report.py", "pages/4_Peer_Comparison.py", "pages/5_Manual_Review.py"]
 
 
 @pytest.fixture(autouse=True)
-def sample_environment(monkeypatch):
+def sample_environment(monkeypatch, tmp_path):
     import streamlit as st
     monkeypatch.setenv("SEC_UI_DATA_SOURCE", "files")
     monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(FIXTURES / "alignments"))
     monkeypatch.setenv("SEC_UI_DISCLOSURES_DIR", str(FIXTURES / "no_disclosures_here"))
     monkeypatch.setenv("SEC_UI_SYNTHESIS_DIRS", str(FIXTURES / "synthesis"))
     monkeypatch.setenv("SEC_UI_PEER_DIR", str(FIXTURES / "peer_comparison"))
+    monkeypatch.setenv("SEC_UI_MANUAL_REVIEWS_DIR", str(tmp_path / "manual_reviews"))
     st.cache_data.clear()
     yield
     st.cache_data.clear()
@@ -133,3 +134,158 @@ def test_broken_alignment_file_shows_error_message(monkeypatch, tmp_path):
     at = run("pages/1_Change_Explorer.py")
     assert not at.exception
     assert any("Could not load this comparison" in e.value for e in at.error)
+
+
+def test_manual_review_only_shows_needs_review_queue():
+    at = run("pages/5_Manual_Review.py")
+    assert metrics(at) == {"Review queue": "45", "Reviewed": "0", "Pending": "45"}
+    assert at.selectbox(key="manual_label").value is None
+    html = " ".join(m.value for m in at.markdown)
+    assert "FY2024 (earlier)" in html and "FY2025 (later)" in html
+    assert 'class="diffbox"' in html
+
+
+@pytest.mark.parametrize("page", ["pages/2_Side_by_Side.py", "pages/5_Manual_Review.py"])
+def test_comparison_pages_show_disclosure_paragraph_and_sentence_sources(page):
+    at = run(page)
+    assert not at.exception
+    html = " ".join(m.value for m in at.markdown)
+    assert 'class="sourcehead"' in html
+    assert 'class="source-label">Disclosure</span>' in html
+    frame = at.dataframe[0].value
+    assert {"disclosure_id", "paragraph_id", "sentence_id", "text", "cited"} <= set(frame.columns)
+    assert frame["disclosure_id"].notna().all()
+    assert frame["sentence_id"].notna().all()
+    assert frame["cited"].all()  # These fixtures expose cited sentences only.
+
+
+def test_manual_review_requires_a_label():
+    at = run("pages/5_Manual_Review.py")
+    next(b for b in at.button if b.label == "Save review").click().run()
+    assert not at.exception
+    assert any("Choose a change label" in e.value for e in at.error)
+    assert metrics(at)["Reviewed"] == "0"
+
+
+def test_manual_review_save_persists_and_can_be_edited():
+    at = run("pages/5_Manual_Review.py")
+    match_id = at.selectbox(key="manual_selected").value
+    at.selectbox(key="manual_label").select("Modified")
+    at.text_area(key="manual_notes").input("Changed the impairment wording.")
+    next(b for b in at.button if b.label == "Save review").click().run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert metrics(at)["Reviewed"] == "1"
+    assert any("Saved Modified" in s.value for s in at.success)
+    # A fresh app session must read the label from disk, not another session's widgets.
+    fresh = run("pages/5_Manual_Review.py")
+    assert fresh.selectbox(key="manual_selected").value == match_id
+    assert fresh.selectbox(key="manual_label").value == "Modified"
+    assert fresh.text_area(key="manual_notes").value == "Changed the impairment wording."
+    fresh.selectbox(key="manual_label").select("Reworded")
+    next(b for b in fresh.button if b.label == "Save review").click().run()
+    assert not fresh.exception
+    assert metrics(fresh)["Reviewed"] == "1"
+    assert run("pages/5_Manual_Review.py").selectbox(key="manual_label").value == "Reworded"
+
+
+def test_manual_review_save_and_next_does_not_copy_labels():
+    at = run("pages/5_Manual_Review.py")
+    first = at.selectbox(key="manual_selected").value
+    at.selectbox(key="manual_label").select("Expanded")
+    at.text_area(key="manual_notes").input("Only for the first disclosure.")
+    next(b for b in at.button if b.label == "Save and next").click().run()
+    assert not at.exception
+    assert at.selectbox(key="manual_selected").value != first
+    assert at.selectbox(key="manual_label").value is None
+    assert at.text_area(key="manual_notes").value == ""
+    assert metrics(at)["Pending"] == "44"
+    at.sidebar.selectbox(key="manual_status").select("Reviewed").run()
+    assert at.selectbox(key="manual_selected").value == first
+    assert at.selectbox(key="manual_label").value == "Expanded"
+
+
+def test_manual_review_year_switch_does_not_copy_labels():
+    at = run("pages/5_Manual_Review.py")
+    at.selectbox(key="manual_label").select("Modified")
+    next(b for b in at.button if b.label == "Save review").click().run()
+    at.sidebar.selectbox(key="sel_pair").select("FY2023 to FY2024").run()
+    assert not at.exception
+    assert metrics(at)["Reviewed"] == "0"
+    assert at.selectbox(key="manual_label").value is None
+
+
+def test_manual_review_empty_filter_keeps_downloads():
+    at = run("pages/5_Manual_Review.py")
+    at.sidebar.selectbox(key="manual_status").select("Reviewed").run()
+    assert not at.exception
+    assert any("No disclosures match" in i.value for i in at.info)
+    assert len(at.get("download_button")) == 2
+
+
+def test_manual_review_handles_missing_and_broken_review_file(monkeypatch, tmp_path):
+    import json
+    import streamlit as st
+    folder = tmp_path / "alignments" / "amd" / "2024-2025"
+    folder.mkdir(parents=True)
+    main = json.loads((FIXTURES / "alignments/amd/2024-2025/alignments.json").read_text())
+    (folder / "alignments.json").write_text(json.dumps(main))
+    monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(tmp_path / "alignments"))
+    st.cache_data.clear()
+    at = run("pages/5_Manual_Review.py")
+    assert not at.exception
+    assert any("No alignment groups need review" in i.value for i in at.info)
+    (folder / "needs_review.json").write_text("{broken")
+    st.cache_data.clear()
+    at = run("pages/5_Manual_Review.py")
+    assert not at.exception
+    assert any("Could not load this comparison" in e.value for e in at.error)
+
+
+def test_manual_review_finishing_pending_queue_keeps_exports(monkeypatch, tmp_path):
+    import json
+    import streamlit as st
+    folder = tmp_path / "alignments" / "amd" / "2024-2025"
+    folder.mkdir(parents=True)
+    source = json.loads((FIXTURES / "alignments/amd/2024-2025/needs_review.json").read_text())
+    (folder / "alignments.json").write_text(json.dumps({"alignments": []}))
+    (folder / "needs_review.json").write_text(json.dumps({"alignments": source["alignments"][:1]}))
+    monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(tmp_path / "alignments"))
+    st.cache_data.clear()
+    at = run("pages/5_Manual_Review.py")
+    at.sidebar.selectbox(key="manual_status").select("Pending").run()
+    at.selectbox(key="manual_label").select("Reworded")
+    next(b for b in at.button if b.label == "Save and next").click().run()
+    assert not at.exception
+    assert metrics(at)["Reviewed"] == "1" and metrics(at)["Pending"] == "0"
+    assert any("All alignment groups" in s.value for s in at.success)
+    assert len(at.get("download_button")) == 2
+
+
+def test_manual_review_does_not_label_missing_source_text():
+    from sec_ui import components
+    at = run("pages/5_Manual_Review.py")
+    comparison = components.cached_comparison("amd", 2024, 2025, "files")
+    missing = next(r for r in comparison["records"] if r["source_file"] == "needs_review.json"
+                   and any(r[f"{side}_ids"] and not r[f"{side}_text"].strip() for side in ("previous", "current")))
+    at.selectbox(key="manual_selected").select(missing["match_id"]).run()
+    assert not at.exception
+    assert any("Source text is missing" in e.value for e in at.error)
+    assert all(b.disabled for b in at.button if b.label in {"Save review", "Save and next"})
+
+
+def test_manual_review_conflict_can_be_resolved_with_reload():
+    from sec_ui import components, review
+    at = run("pages/5_Manual_Review.py")
+    match_id = at.selectbox(key="manual_selected").value
+    comparison = components.cached_comparison("amd", 2024, 2025, "files")
+    record = next(r for r in comparison["records"] if r["match_id"] == match_id)
+    review.save_review(record, "Reworded", "Saved in another tab.", expected=None)
+    at.selectbox(key="manual_label").select("Modified")
+    next(b for b in at.button if b.label == "Save review").click().run()
+    assert not at.exception
+    assert any("another session" in e.value for e in at.error)
+    next(b for b in at.button if b.label == "Reload data").click().run()
+    assert not at.exception
+    assert not at.error
+    assert at.selectbox(key="manual_label").value == "Reworded"
+    assert at.text_area(key="manual_notes").value == "Saved in another tab."

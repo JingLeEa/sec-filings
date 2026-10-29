@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import html
 import re
+from bisect import bisect_left, bisect_right
 from difflib import SequenceMatcher
 
 # Words (keeping inner punctuation such as $6.5, 1,000 or co-operate), then single punctuation marks, then spaces.
@@ -54,7 +55,7 @@ def _flags(prev_tokens: list, curr_tokens: list, mark: str, first: bool) -> list
     return flags
 
 
-def diff_texts(previous: str, current: str) -> dict:
+def diff_texts(previous: str, current: str, *, previous_ranges=None, current_ranges=None) -> dict:
     """Return html for both sides plus counts of added and removed words.
 
     Whitespace-only differences are not highlighted. The html is escaped, so filing text can
@@ -63,13 +64,42 @@ def diff_texts(previous: str, current: str) -> dict:
     prev_tokens, curr_tokens = _tokens(previous), _tokens(current)
     prev_flags = _flags(prev_tokens, curr_tokens, "del", first=True)
     curr_flags = _flags(prev_tokens, curr_tokens, "ins", first=False)
-    return {
+    result = {
         "previous_html": _render(prev_tokens, prev_flags),
         "current_html": _render(curr_tokens, curr_flags),
         "removed_words": sum(1 for f in prev_flags if f),
         "added_words": sum(1 for f in curr_flags if f),
         "identical": not any(prev_flags) and not any(curr_flags),
     }
+    if previous_ranges is not None:
+        result["previous_blocks_html"] = _render_ranges(prev_tokens, prev_flags, previous_ranges)
+    if current_ranges is not None:
+        result["current_blocks_html"] = _render_ranges(curr_tokens, curr_flags, current_ranges)
+    return result
+
+
+def _render_ranges(tokens: list, flags: list, ranges: list) -> list:
+    """Project the whole-text diff onto exact source ranges before HTML escaping."""
+    starts, ends, token_flags = [], [], []
+    position, word = 0, 0
+    for token in tokens:
+        starts.append(position)
+        position += len(token)
+        ends.append(position)
+        token_flags.append(None if token.isspace() else flags[word])
+        word += not token.isspace()
+    result = []
+    for start, end in ranges:
+        if not 0 <= start <= end <= position:
+            raise ValueError("Source text range is outside the compared text.")
+        pieces, marks = [], []
+        for index in range(bisect_right(ends, start), bisect_left(starts, end)):
+            piece = tokens[index][max(0, start - starts[index]):min(len(tokens[index]), end - starts[index])]
+            pieces.append(piece)
+            if not piece.isspace():
+                marks.append(token_flags[index])
+        result.append(_render(pieces, marks))
+    return result
 
 
 def _render(tokens: list, flags: list) -> str:

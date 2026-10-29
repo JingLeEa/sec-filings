@@ -92,6 +92,40 @@ def alignment_snapshot(company, previous, current, *, env_file=None):
     return read_snapshots(company, [key], env_file=env_file)[key]
 
 
+def alignment_annotation_reports(company, previous, current, *, env_file=None):
+    """Read the three report documents without fetching historical request ledgers."""
+    from .disclosures import connection_arguments
+    import psycopg
+    from psycopg.rows import dict_row
+
+    try:
+        with psycopg.connect(**connection_arguments(env_file), row_factory=dict_row) as conn:
+            conn.read_only = True
+            with conn.cursor() as cur:
+                cur.execute('''SELECT documents->'manifest.json' AS manifest,
+                                      documents->'alignments.json' AS aligned,
+                                      documents->'needs_review.json' AS review
+                               FROM pipeline_stage_snapshots
+                               WHERE company=%s AND kind='alignments' AND previous_year=%s AND current_year=%s''',
+                            (company.lower(), int(previous), int(current)))
+                row = cur.fetchone()
+        names = {'manifest': 'manifest.json', 'aligned': 'alignments.json', 'review': 'needs_review.json'}
+        if row is None or any(not isinstance(row.get(key), dict)
+                              or not isinstance(row[key].get('payload'), dict) for key in names):
+            raise PipelineInputError(f'Missing PostgreSQL alignment annotation reports for {company} {previous}-{current}.')
+        for key in ('aligned', 'review'):
+            report = row[key]['payload']
+            if (report.get('company') != company.lower() or str(report.get('previous_year')) != str(previous)
+                    or str(report.get('current_year')) != str(current) or report.get('run_complete') is not True
+                    or report.get('error') or not isinstance(report.get('alignments'), list)):
+                raise PipelineInputError('Stored annotation reports must be complete and match the requested comparison.')
+        return {name: row[key]['payload'] for key, name in names.items()}
+    except PipelineInputError:
+        raise
+    except Exception as error:
+        raise PipelineInputError(f'Cannot read PostgreSQL alignment annotations ({type(error).__name__}).') from None
+
+
 def alignment_output(snapshot, output):
     """Preserve database report metadata in this stage's output/checkpoint folder."""
     from sec_disclosure.llm.disclosures import write_json

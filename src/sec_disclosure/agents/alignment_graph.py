@@ -45,12 +45,13 @@ class AgentState(TypedDict):
 
 class AlignmentAgentGraph:
     def __init__(self, runtime, role, job_id, system, payload, data, visible,
-                 *, validate=None, repair=None, seed=None, source_request=None, offline=False):
+                 *, validate=None, repair=None, seed=None, source_request=None, imported_actions=None, offline=False):
         self.runtime, self.role, self.job_id = runtime, role, job_id
         self.system, self.payload, self.data = system, payload, data
         self.visible = set(visible)
         self.validate, self.repair = validate, repair
         self.seed, self.source_request, self.offline = seed, source_request, offline
+        self.imported_actions = imported_actions
 
     def restore(self, state):
         if self.repair is not None:
@@ -66,10 +67,26 @@ class AlignmentAgentGraph:
     def prepare(self, state):
         state = deepcopy(state)
         self.restore(state)
-        if not state["initialized"] and self.repair is not None and self.seed is not None:
-            self.repair.receive(self.seed, set(state["visible"]))
+        if not state["initialized"] and self.repair is not None:
+            imports = self.imported_actions
+            if imports is None and self.seed is not None:
+                imports = [{"action": self.seed, "visible": set(state["visible"]),
+                            "source_request": self.source_request}]
+            if hasattr(self.repair, "allow_audit_context"):
+                self.repair.allow_audit_context = False
+            for imported in imports or []:
+                shown = set(imported["visible"])
+                if not shown <= self.data.records.keys() or self.data.item_for(shown) != self.payload["item"]:
+                    raise ValueError("Imported evidence crosses the verifier's validated scope.")
+                self.repair.receive(imported["action"], shown)
+                state["visible"] = sorted(set(state["visible"]) | shown)
+                state["trace"].append({"action": imported["action"],
+                    "source_request": imported["source_request"], "cached_seed": True,
+                    "visible_disclosure_ids": sorted(shown)})
+            if hasattr(self.repair, "allow_audit_context"):
+                self.repair.allow_audit_context = True
+                self.repair.recover_audit_context(set(state["visible"]))
             state["repair"] = self.repair.snapshot()
-            state["trace"].append({"action": self.seed, "source_request": self.source_request, "cached_seed": True})
         state.update(initialized=True, offline=self.offline)
         self.persist(state)
         return state
@@ -86,8 +103,18 @@ class AlignmentAgentGraph:
 
         self.restore(state)
         payload = self.repair.correction_payload(self.payload) if self.repair is not None and self.repair.started else self.payload
+        visible = set(state["visible"])
+        if self.role == "verification":
+            # Correction payloads can expose an existing counterpart mentioned
+            # in a rejected proposal. It is now visible source evidence too.
+            supplied = {record["disclosure_id"] for record in payload.get("records", [])}
+            if not supplied <= self.data.records.keys() or self.data.item_for(supplied | visible) != self.payload["item"]:
+                raise ValueError("Correction evidence crosses the verifier's validated scope.")
+            visible.update(supplied)
         request = {**payload, "remaining_turns_including_this_one": self.runtime.args.max_steps - state["step"],
                    "history": state["history"] if self.repair is not None else state["trace"]}
+        if self.role == "verification":
+            request["max_proposals_this_turn"] = 8
         action, error = None, None
         try:
             options = {}
@@ -97,7 +124,11 @@ class AlignmentAgentGraph:
             response = self.runtime.call(self.role, self.job_id,
                 json.dumps(request, ensure_ascii=False, separators=(",", ":")), self.system, **options)
             if response["finish_reason"] != "stop":
-                raise ValueError("Response did not finish normally.")
+                reason = response.get("finish_reason", "unknown")
+                if reason == "length":
+                    raise ValueError("Response reached the completion token limit. Return fewer complete alignment rows "
+                                     "this turn with compact explanations; accepted rows are preserved for later turns.")
+                raise ValueError(f"Response did not finish normally (finish_reason={reason}).")
             action = json.loads(response["text"], object_pairs_hook=unique_object)
             if not isinstance(action, dict):
                 raise ValueError("Expected a JSON action object.")
@@ -105,7 +136,8 @@ class AlignmentAgentGraph:
             error = str(exc)
         # Budget/API interruptions propagate without advancing this turn. On
         # restart, the ledger returns a completed response or requires retry permission.
-        return {"step": state["step"] + 1, "action": action, "action_error": error}
+        return {"step": state["step"] + 1, "action": action, "action_error": error,
+                "visible": sorted(visible)}
 
     def route_action(self, state):
         if state["action_error"] is not None:
@@ -169,6 +201,8 @@ class AlignmentAgentGraph:
                 state["repair"] = self.repair.snapshot()
                 pending_field = "pending_match_ids" if self.role == "change_analysis" else "pending_disclosure_ids"
                 entry = {"action": state["action"], pending_field: sorted(self.repair.pending)}
+                if self.role == "verification":
+                    entry["visible_disclosure_ids"] = sorted(state["visible"])
                 state["history"] = []
         except (ValueError, KeyError, TypeError) as exc:
             return self.record_error(state, str(exc))
@@ -209,9 +243,13 @@ class AlignmentAgentGraph:
         scope = self.visible | (self.repair.required if self.repair is not None and self.role != "change_analysis" else set())
         if self.data.item_for(scope) != self.payload["item"]:
             raise ValueError("Agent evidence must stay within the comparison job's SEC Item.")
-        identity = digest(json.dumps({"role": self.role, "payload": self.payload, "system": self.system,
+        identity_data = {"role": self.role, "payload": self.payload, "system": self.system,
             "visible": sorted(self.visible), "required": sorted(self.repair.required) if self.repair is not None else [],
-            "seed": self.seed, "max_steps": self.runtime.args.max_steps}, sort_keys=True).encode())
+            "seed": self.seed, "max_steps": self.runtime.args.max_steps}
+        if self.imported_actions is not None:
+            identity_data["imported_actions"] = [
+                {**entry, "visible": sorted(entry["visible"])} for entry in self.imported_actions]
+        identity = digest(json.dumps(identity_data, sort_keys=True).encode())
         initial = {"identity": identity, "initialized": False, "step": 0, "visible": sorted(self.visible),
                    "trace": [], "history": [], "action": None, "action_error": None,
                    "repair": self.repair.snapshot() if self.repair is not None else None,

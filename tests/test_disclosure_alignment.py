@@ -281,7 +281,7 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(self.run_cli(response=response, change_analysis=True), (0, 3))
         report = self.saved_report()
         self.assertEqual(len(observed), 3)
-        self.assertEqual(completion_limits, [(False, 6000), (False, 6000), (True, 1024)])
+        self.assertEqual(completion_limits, [(False, 12000), (False, 12000), (True, 1024)])
         self.assertTrue(report["change_analysis_summary"]["complete"])
         self.assertEqual(report["change_analysis_summary"]["taxonomy_counts"], {"Modified": 3})
         for row in report["alignments"]:
@@ -1179,13 +1179,13 @@ class AlignmentTests(unittest.TestCase):
 
     def test_alignment_waives_unassigned_neighbor_flag_without_expanding_evidence(self):
         key = self.legacy_single_sentence(warning="unassigned_context_in_source_paragraph")
-        flagged = self.legacy_single_sentence(2, ["possible_missing_table_context"], warning="unassigned_context_in_source_paragraph")
+        flagged = self.legacy_single_sentence(2, ["possible_missing_table_context", "model_requested_review"], warning="unassigned_context_in_source_paragraph")
         data = self.data()
         self.assertEqual(data.records[key]["extraction_status"], "source_validated")
         self.assertEqual(data.view(key)["extraction_review_reasons"], [])
         self.assertEqual(len(data.records[key]["sentence_map"]), 1)
         self.assertEqual(data.records[flagged]["extraction_status"], "needs_review")
-        self.assertEqual(data.view(flagged)["extraction_review_reasons"], ["possible_missing_table_context"])
+        self.assertEqual(data.view(flagged)["extraction_review_reasons"], ["model_requested_review"])
         row = self.supported_decision([key], ["amd_2024_7_D001"], data)
         row.update(status="needs_review", review_reasons=["input_extraction_needs_review"])
         refreshed = module.apply_extraction_policy_to_alignments([row], data)[0]
@@ -2002,6 +2002,88 @@ class AlignmentTests(unittest.TestCase):
         path = source / "matching_proposals.json"
         path.write_text(path.read_text() + " ")
         self.assertEqual(self.run_cli(*args), (1, 0))
+
+    def test_recovery_preserves_annotations_when_match_ids_are_renumbered(self):
+        self.assertEqual(self.run_cli(change_analysis=True)[0], 0)
+        baseline = self.saved_report()["alignments"]
+        for row in baseline:
+            row["materiality_analysis"] = {"materiality": "Yes", "reason": "Previously reviewed figures."}
+        report = self.saved_report()
+        for number, row in enumerate(report["alignments"], 10):
+            row["match_id"] = f"amd_2023_2024_M{number:04d}"
+            row["change_analysis"] = module.empty_change_analysis()
+            # Database-exported metadata can contain additional full-text fields.
+            for member in row["previous_disclosures"]:
+                member["content"] = "Selected source text from the database."
+        target = self.root / "new-recovery-output"
+        target.mkdir()
+        module.write_alignment_json_reports(target, report, previous_rows=baseline)
+        saved = module.load_alignment_report(target)["alignments"]
+        for old, new in zip(baseline, saved):
+            self.assertNotEqual(old["match_id"], new["match_id"])
+            self.assertEqual(old["change_analysis"], new["change_analysis"])
+            self.assertEqual(old["materiality_analysis"], new["materiality_analysis"])
+
+    def test_recovery_does_not_copy_annotations_to_changed_evidence(self):
+        self.assertEqual(self.run_cli(change_analysis=True)[0], 0)
+        baseline = self.saved_report()["alignments"]
+        report = self.saved_report()
+        for row in report["alignments"]:
+            row["change_analysis"] = module.empty_change_analysis()
+            row["evidence"][0]["sentences"] = row["evidence"][0]["sentences"][:1]
+            row["explanation"] += " Revised evidence and decision."
+        target = self.root / "different-evidence-output"
+        target.mkdir()
+        module.write_alignment_json_reports(target, report, previous_rows=baseline)
+        self.assertTrue(all(row["change_analysis"] == module.empty_change_analysis()
+                            for row in module.load_alignment_report(target)["alignments"]))
+
+    def test_postgres_recovery_preserves_database_materiality_without_model_calls(self):
+        from sec_disclosure.storage import pipeline_snapshots as snapshots
+        self.assertEqual(self.run_cli(change_analysis=True)[0], 0)
+        source = self.root / "alignments/amd/2023-2024"
+        documents = {name: self.output(name) for name in ("alignments.json", "needs_review.json", "manifest.json")}
+        for row in documents["alignments.json"]["alignments"]:
+            row["materiality_analysis"] = {"materiality": "Yes", "reason": "Stored only in PostgreSQL."}
+        target = self.root / "database-recovery"
+        with patch.object(snapshots, "read_snapshots", return_value=self.database_inputs()), \
+             patch.object(snapshots, "alignment_annotation_reports", return_value=documents):
+            self.assertEqual(self.run_cli("--input-source", "postgres", "--repair-from", str(source),
+                                          "--output-dir", str(target), "--offline-repair"), (0, 0))
+        recovered = module.load_alignment_report(target)["alignments"]
+        self.assertTrue(all(row["change_analysis"]["status"] == "completed" for row in recovered))
+        self.assertTrue(all(row["materiality_analysis"]["reason"] == "Stored only in PostgreSQL." for row in recovered))
+
+    def test_correction_prompt_exposes_known_counterpart_for_validation(self):
+        import threading
+        from sec_disclosure.agents.alignment_graph import AlignmentAgentGraph
+        data = self.data()
+        before, hidden, current = "amd_2023_7_D001", "amd_2023_7_D002", "amd_2024_7_D001"
+        proposed = {"previous_ids": [hidden], "current_ids": [current], "explanation": "Same disclosed topic.",
+                    "needs_review": False, "review_reason": "",
+                    "evidence": [{"disclosure_id": key, "sentence_ids": list(data.records[key]["sentence_map"])[:1]}
+                                 for key in (hidden, current)]}
+        action = {"action": "finalize", "alignments": [proposed]}
+        prompts = []
+
+        def call(role, job, prompt, system, **kwargs):
+            prompts.append(json.loads(prompt))
+            return {"text": json.dumps(action), "finish_reason": "stop"}
+
+        runtime = SimpleNamespace(output=self.root / "visible-recovery", args=SimpleNamespace(max_steps=2),
+                                  checkpoint_setup_lock=threading.Lock(), call=call)
+        payload = {"item": "7", "required_ids": [current], "previous_year": "2023", "current_year": "2024",
+                   "proposed_groups": [{"previous_ids": [before], "current_ids": [current]}],
+                   "records": [data.view(key, full=True) for key in (before, current)]}
+        repair = VerificationRepair(data, {current}, module.validate_alignments, module.review_row)
+        graph = AlignmentAgentGraph(runtime, "verification", "visibility", "Verify", payload,
+                                    data, {before, current}, repair=repair)
+        rows, _, reason = graph.run()
+        self.assertIsNone(reason)
+        self.assertEqual(len(prompts), 2)
+        self.assertIn(hidden, {row["disclosure_id"] for row in prompts[1]["records"]})
+        self.assertEqual(rows[0]["previous_ids"], [hidden])
+        self.assertEqual(rows[0]["status"], "ai_verified")
 
     def set_fixture_text(self, year, number, texts):
         raw = self.root / "raw/amd" / year

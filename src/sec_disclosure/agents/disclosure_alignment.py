@@ -273,7 +273,8 @@ def save_report(output, data, candidates, matches, groups, decisions, runtime, *
     validation_jobs = [json.loads(p.read_text()) for p in sorted((output / "validation_errors").glob("*.json"))]
     write_json(output / "validation_errors.json", {"schema_version": REPORT_VERSION, "company": data.ticker,
                "previous_year": data.years[0], "current_year": data.years[1], "jobs": validation_jobs})
-    write_alignment_reports(output, report, usage)
+    write_alignment_reports(output, report, usage,
+                            previous_rows=getattr(runtime, "analysis_baseline_rows", None))
     return report
 
 
@@ -466,7 +467,8 @@ def refresh_report_statuses(report):
         key for key, count in owners.items() if count > 1 and (key not in permitted or key in one_sided)}
     report["coverage"]["conflicting_disclosure_ids"] = sorted(conflicts)
     unresolved_ids = set(report["coverage"]["pending_disclosure_ids"]) | conflicts
-    blocked_reasons = {"agent_did_not_finish", "invalid_or_omitted_verifier_proposal", "conflicting_alignment_assignment"}
+    blocked_reasons = {"agent_did_not_finish", "invalid_or_omitted_verifier_proposal", "conflicting_alignment_assignment",
+                       "audit_context_requires_review"}
     for row in report["alignments"]:
         row.setdefault("change_analysis", empty_change_analysis())
         before, after = row["previous_ids"], row["current_ids"]
@@ -497,24 +499,28 @@ def refresh_report_statuses(report):
     report["counts"] = dict(Counter(row["status"] for row in report["alignments"]))
 
 
-def write_alignment_json_reports(output, report, *, preserve_change_analysis=True):
+def write_alignment_json_reports(output, report, *, preserve_change_analysis=True, previous_rows=None):
     """Partition all decisions into exactly two final result files, without model calls."""
     refresh_report_statuses(report)
     unknown = set(report["counts"]) - {"auto_matched", "ai_verified", "unmatched", "needs_review"}
     if unknown:
         raise ValueError(f"Cannot export unknown alignment statuses: {sorted(unknown)}.")
     previous_path = output / "alignments.json"
-    if previous_path.exists() and preserve_change_analysis:
-        previous = {row["match_id"]: row for row in load_alignment_report(output)["alignments"]}
+    if preserve_change_analysis and (previous_path.exists() or previous_rows):
+        previous = list(previous_rows or [])
+        if previous_path.exists():
+            previous.extend(load_alignment_report(output)["alignments"])
         def without_analysis(row):
             decision = {key: value for key, value in row.items()
-                        if key not in {"change_analysis", "materiality_analysis"}}
+                        if key not in {"match_id", "previous_disclosures", "current_disclosures",
+                                       "change_analysis", "materiality_analysis"}}
             # Cached jobs write partial reports before the final completion check.
             # Moving a supported absence decision between the two files must
             # not erase analysis when its underlying decision is unchanged.
             if bool(row["previous_ids"]) != bool(row["current_ids"]):
                 flags = list(dict.fromkeys(row["review_reasons"] + row.get("unmatched_notes", [])))
-                blocked = {"agent_did_not_finish", "invalid_or_omitted_verifier_proposal", "conflicting_alignment_assignment"}
+                blocked = {"agent_did_not_finish", "invalid_or_omitted_verifier_proposal", "conflicting_alignment_assignment",
+                           "audit_context_requires_review"}
                 members = set(row["previous_ids"] + row["current_ids"])
                 cited = {entry["disclosure_id"] for entry in row["evidence"] if entry.get("sentences")}
                 if "absence_not_proven_by_retrieval" in flags and not set(flags) & blocked and cited == members:
@@ -522,9 +528,14 @@ def write_alignment_json_reports(output, report, *, preserve_change_analysis=Tru
                     decision.pop("unmatched_notes", None)
                     decision.pop("unmatched_type", None)
             return decision
+        def signature(row):
+            return json.dumps(without_analysis(row), ensure_ascii=False, sort_keys=True)
+        # Resolving an earlier disclosure can renumber later match IDs. Carry
+        # annotations only when the actual decision and evidence are unchanged.
+        previous = {signature(row): row for row in previous}
         for row in report["alignments"]:
-            old = previous.get(row["match_id"])
-            same_decision = old is not None and without_analysis(row) == without_analysis(old)
+            old = previous.get(signature(row))
+            same_decision = old is not None
             # Cached alignment reruns must not erase later classification work.
             # A changed group, evidence or decision must not inherit stale labels.
             if (same_decision and row["change_analysis"] == empty_change_analysis()
@@ -552,9 +563,10 @@ def write_alignment_json_reports(output, report, *, preserve_change_analysis=Tru
             path.rename(archive / path.name)
 
 
-def write_alignment_reports(output, report, usage, *, preserve_change_analysis=True):
+def write_alignment_reports(output, report, usage, *, preserve_change_analysis=True, previous_rows=None):
     """Render saved alignment decisions without making model calls or revalidating them."""
-    write_alignment_json_reports(output, report, preserve_change_analysis=preserve_change_analysis)
+    write_alignment_json_reports(output, report, preserve_change_analysis=preserve_change_analysis,
+                                 previous_rows=previous_rows)
     counts = Counter(report["counts"])
     lines = [f"# {report['company'].upper()} {report['previous_year']}–{report['current_year']} disclosure alignment", "", report["note"], "",
              f"Run complete: {report['run_complete']}. Auto-matched: {counts['auto_matched']}; AI-verified: {counts['ai_verified']}; unmatched: {counts['unmatched']}; needs review: {counts['needs_review']}.", "",
@@ -669,7 +681,7 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
     parser.add_argument("--max-requests", type=int, default=-1, help="Total paid alignment and change-analysis requests for this pair, including prior attempts; default: -1 (no request cap). Set a positive value to impose a cap.")
     parser.add_argument("--max-new-requests", type=int, help="Pause after this many NEW requests; rerun to resume.")
     parser.add_argument("--max-total-tokens", type=int, default=30000000, help="Total alignment and change-analysis token budget per year pair; -1 removes the cap (default: 30000000).")
-    parser.add_argument("--max-tokens", type=int, default=6000, help="Maximum completion tokens per request.")
+    parser.add_argument("--max-tokens", type=int, default=12000, help="Maximum completion tokens per request (default: 12000).")
     parser.add_argument("--max-prompt-chars", type=int, default=150000)
     parser.add_argument("--timeout", type=float, default=180, help="Total deadline in seconds for each API attempt, including response reads (default: 180).")
     parser.add_argument("--fault-tolerant", action="store_true", help="Automatically retry temporary API failures and resume recoverable failed/interrupted requests.")
@@ -735,6 +747,16 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
         print(f"Local retrieval: {sum(map(len, candidates.values()))} candidate edges; no API tokens.", flush=True)
         if args.dry_run:
             return 0
+        baseline_rows = list(source.report_rows) if source else []
+        if source and args.input_source == "postgres":
+            from sec_disclosure.storage.pipeline_snapshots import alignment_annotation_reports
+            documents = alignment_annotation_reports(ticker, *years, env_file=args.env_file)
+            saved_hashes = documents["manifest.json"]["input_hashes"]
+            canonical = lambda values: {str(Path(key).resolve()): value for key, value in values.items()}
+            if canonical(saved_hashes) != canonical(data.hashes):
+                raise ValueError("Stored alignment annotations belong to different upstream inputs; cannot preserve them.")
+            for name in ("alignments.json", "needs_review.json"):
+                baseline_rows.extend(documents[name].get("alignments", []))
         config = load_config(args.env_file) if set(data.records) - exact_ids else None
         implementation = [Path(__file__), Path(__file__).with_name("alignment_data.py"),
                           Path(__file__).with_name("alignment_prompts.py"), Path(__file__).with_name("alignment_runtime.py"),
@@ -784,6 +806,7 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
         write_json(manifest_path, manifest)
         write_json(output / "automatic_matches.json", {"policy": manifest["exact_matching_policy"], "alignments": automatic})
         runtime = Runtime(output, config, args, request_pacer=request_pacer)
+        runtime.analysis_baseline_rows = baseline_rows
         if source:
             runtime.source_usage = source.usage
             candidates, matches, groups = source.candidates, source.matches, source.groups
