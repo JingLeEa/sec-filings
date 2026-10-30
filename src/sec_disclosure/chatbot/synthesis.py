@@ -217,7 +217,11 @@ def offline_answer(question: str, plan: Plan, results: list[QueryResult], notes:
 
     if intent == Intent.DISTRIBUTION:
         dist = r["change_type_distribution"].rows
-        columns = (["item"] if plan.group_by_item else []) + ["change_type", "n", "pct", "material_yes", "avg_materiality"]
+        dims = plan.group_by or ((["item"] if plan.group_by_item else []) + ["change_type"])
+        columns = dims + ["n", "pct", "material_yes", "avg_materiality"]
+        if dims != ["change_type"] and dims != ["item", "change_type"]:   # other breakdowns: the table is the answer
+            return (f"Breakdown by {' and '.join(d.replace('_', ' ') for d in dims)} for {scope}:\n\n"
+                    + _table(dist, columns))
         top = next((d for d in dist if d["change_type"] not in ("Unchanged", "Not analysed (needs review)")), None)
         lead = (f"Across {scope}, the most common label is **{dist[0]['change_type']}** ({dist[0]['n']}, {dist[0]['pct']}%)"
                 if dist else f"No alignments found for {scope}.")
@@ -240,7 +244,8 @@ def offline_answer(question: str, plan: Plan, results: list[QueryResult], notes:
         cards = r["lowest_confidence"].rows
         total = _total(r["low_confidence_by_run"])
         threshold = plan.filters.max_confidence if plan.filters.max_confidence is not None else 0.8
-        return (f"**{total}** materiality assessment(s) have confidence ≤ {threshold:g} for {scope}. "
+        op = "<" if plan.filters.max_confidence_strict else "≤"
+        return (f"**{total}** materiality assessment(s) have confidence {op} {threshold:g} for {scope}. "
                 f"Lowest-confidence first:\n\n" + "\n".join(_card(c, why=True) for c in cards))
 
     if intent == Intent.DISAGREEMENTS:
@@ -249,6 +254,12 @@ def offline_answer(question: str, plan: Plan, results: list[QueryResult], notes:
         cards = r["disagreement_examples"].rows
         lead = (f"Semantic and lexical labels disagree on **{agree.get('disagree', 0)}** of "
                 f"{agree.get('compared', 0)} analysed alignments for {scope}.")
+        per_company: dict[str, int] = {}
+        for row in r["disagreements_by_run"].rows:
+            per_company[row["company"]] = per_company.get(row["company"], 0) + int(row["n"])
+        if len(per_company) > 1:
+            lead += "\n\nBy company: " + ", ".join(f"{_company(c)} {n}" for c, n in
+                                                   sorted(per_company.items(), key=lambda kv: -kv[1])) + "."
         return (lead + "\n\n" + _table(pairs[:15], ["semantic_label", "lexical_label", "final_label", "n"])
                 + "\n\nMost material disagreements:\n\n"
                 + "\n".join(_card(c) + f"\n  - semantic {c.get('semantic_label')} vs lexical {c.get('lexical_label')}"

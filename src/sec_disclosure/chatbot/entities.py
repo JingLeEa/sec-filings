@@ -93,12 +93,16 @@ class QueryFilters:
     match_ids: list[str] = field(default_factory=list)
     min_materiality: float | None = None
     max_confidence: float | None = None
+    min_materiality_strict: bool = False     # "above 0.8" (>) vs "at least 0.8" (>=)
+    max_confidence_strict: bool = False      # "below 0.7" (<) vs "at most 0.7" (<=)
+    material: str | None = None              # 'Yes' for "material changes", 'No' for "non-material"
     limit: int | None = None
     # How an ambiguous phrase was read, shown to the user at the top of the answer (not a filter).
     clarifications: list[str] = field(default_factory=list)
 
     def as_dict(self) -> dict:
-        return {k: v for k, v in asdict(self).items() if v not in (None, [], "") and k != "clarifications"}
+        return {k: v for k, v in asdict(self).items()
+                if v not in (None, [], "") and v is not False and k != "clarifications"}
 
     def describe(self) -> str:
         parts = []
@@ -120,10 +124,12 @@ class QueryFilters:
             parts.append("status " + "/".join(self.statuses))
         if self.relationships:
             parts.append("/".join(self.relationships))
+        if self.material:
+            parts.append("material" if self.material == "Yes" else "not material")
         if self.min_materiality is not None:
-            parts.append(f"materiality ≥ {self.min_materiality:g}")
+            parts.append(f"materiality {'>' if self.min_materiality_strict else '≥'} {self.min_materiality:g}")
         if self.max_confidence is not None:
-            parts.append(f"confidence ≤ {self.max_confidence:g}")
+            parts.append(f"confidence {'<' if self.max_confidence_strict else '≤'} {self.max_confidence:g}")
         return " · ".join(parts) if parts else "all loaded comparisons"
 
 
@@ -233,16 +239,32 @@ def find_limit(text: str) -> int | None:
     return max(1, min(value, 100))
 
 
-def find_threshold(text: str, keyword: str) -> float | None:
-    """Explicit numeric thresholds such as 'materiality above 0.7' or 'confidence below 80%'."""
-    m = re.search(rf"{keyword}\w*(?:\s+score)?\s*(?:of\s+)?(?:is\s+)?(?:>=|<=|>|<|above|below|over|under|"
-                  rf"less\s+than|more\s+than|greater\s+than|at\s+least|at\s+most)\s*(\d*\.?\d+)\s*(%?)", text.lower())
+THRESHOLD_OPS = {">=": ">=", "<=": "<=", ">": ">", "<": "<", "above": ">", "over": ">", "more than": ">",
+                 "greater than": ">", "higher than": ">", "at least": ">=", "below": "<", "under": "<",
+                 "less than": "<", "lower than": "<", "at most": "<="}
+
+
+def find_threshold_op(text: str, keyword: str) -> tuple[float, str] | None:
+    """Explicit numeric thresholds such as 'materiality above 0.7' -> (0.7, '>'), 'confidence of at most 80%'."""
+    ops = "|".join(re.escape(o).replace(r"\ ", r"\s+") for o in sorted(THRESHOLD_OPS, key=len, reverse=True))
+    m = re.search(rf"{keyword}\w*(?:\s+scores?)?\s*(?:of\s+)?(?:is\s+|are\s+)?({ops})\s*(\d*\.?\d+)\s*(%?)",
+                  text.lower())
     if not m:
         return None
-    value = float(m.group(1))
-    if m.group(2) == "%" or value > 1:
+    value = float(m.group(2))
+    if m.group(3) == "%" or value > 1:
         value /= 100
-    return value
+    return value, THRESHOLD_OPS[re.sub(r"\s+", " ", m.group(1))]
+
+
+def find_threshold(text: str, keyword: str) -> float | None:
+    found = find_threshold_op(text, keyword)
+    return found[0] if found else None
+
+
+# "material changes" filters to material = 'Yes'; "most material" only ranks; "non-material" filters to 'No'.
+NOT_MATERIAL_RE = re.compile(r"\b(?:non-?\s?|not\s+|im)material\b")
+MATERIAL_WORD_RE = re.compile(r"(?<!most )(?<!least )(?<!more )(?<!less )\bmaterial\b(?!ity)")
 
 
 def normalise_match_id(value: str) -> str:
@@ -287,6 +309,20 @@ def parse_filters(question: str, runs: Iterable[tuple[str, int, int]] = ()) -> Q
     filters.statuses = _matches(STATUS_PATTERNS, text)
     filters.relationships = _matches(RELATIONSHIP_PATTERNS, text)
     filters.limit = find_limit(question)
-    filters.min_materiality = find_threshold(question, "materiality")
-    filters.max_confidence = find_threshold(question, "confidence")
+    materiality = find_threshold_op(question, "materiality")
+    if materiality and materiality[1] in (">", ">="):
+        filters.min_materiality, filters.min_materiality_strict = materiality[0], materiality[1] == ">"
+    elif materiality:
+        filters.clarifications.append("Filtering on a maximum materiality score isn't supported here; "
+                                      "no materiality filter applied.")
+    confidence = find_threshold_op(question, "confidence")
+    if confidence and confidence[1] in ("<", "<="):
+        filters.max_confidence, filters.max_confidence_strict = confidence[0], confidence[1] == "<"
+    elif confidence:
+        filters.clarifications.append("Filtering on a minimum confidence score isn't supported here; "
+                                      "no confidence filter applied.")
+    if NOT_MATERIAL_RE.search(text):
+        filters.material = "No"
+    elif MATERIAL_WORD_RE.search(text):
+        filters.material = "Yes"
     return filters

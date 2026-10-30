@@ -58,8 +58,11 @@ def where_clause(filters: QueryFilters, *, alias: str = "", skip: tuple[str, ...
     add("statuses", f"{p}status = ANY(%(statuses)s)", filters.statuses)
     add("relationships", f"{p}relationship = ANY(%(relationships)s)", filters.relationships)
     add("match_ids", f"{p}match_id = ANY(%(match_ids)s)", filters.match_ids)
-    add("min_materiality", f"{p}materiality_score >= %(min_materiality)s", filters.min_materiality)
-    add("max_confidence", f"{p}confidence_score <= %(max_confidence)s", filters.max_confidence)
+    add("material", f"{p}material = %(material)s", filters.material)
+    add("min_materiality", f"{p}materiality_score {'>' if filters.min_materiality_strict else '>='} %(min_materiality)s",
+        filters.min_materiality)
+    add("max_confidence", f"{p}confidence_score {'<' if filters.max_confidence_strict else '<='} %(max_confidence)s",
+        filters.max_confidence)
     return (" AND ".join(conditions) if conditions else "TRUE"), params
 
 
@@ -81,6 +84,12 @@ def _cards(name: str, where: str, params: dict, order: str, limit: int) -> SqlQu
 
 MATERIAL_ORDER = "materiality_score DESC NULLS LAST, confidence_score DESC NULLS LAST, match_id"
 UNCHANGED_EXCLUDED = "change_type IS DISTINCT FROM 'Unchanged'"
+# Counting what "changed": analysed rows with an actual change (not-analysed rows have no label yet).
+CHANGED_ONLY = "change_type IS NOT NULL AND change_type <> 'Unchanged'"
+# Breakdown dimensions a distribution question can ask for ("by status", "by change type and item").
+GROUP_COLUMNS = {"change_type": "coalesce(change_type, 'Not analysed (needs review)')", "item": "item",
+                 "status": "status", "company": "company", "relationship": "relationship",
+                 "disclosure_taxonomy": "disclosure_taxonomy", "material": "coalesce(material, 'Not analysed')"}
 
 
 def _pending_one_sided(filters: QueryFilters) -> SqlQuery | None:
@@ -122,6 +131,8 @@ def build_queries(plan: Plan) -> list[SqlQuery]:
         queries.append(_cards("most_material_changes", material_where, params, MATERIAL_ORDER, _limit(f)))
 
     elif plan.intent == Intent.COUNT:
+        if plan.exclude_unchanged and not f.change_types:
+            where = f"{where_clause(f)[0]} AND {CHANGED_ONLY}"
         queries.append(_per_run_counts(where, params))
         queries.append(SqlQuery("count_by_item", f"""
             SELECT item, count(*) AS n FROM alignment_changes WHERE {where} GROUP BY 1 ORDER BY 2 DESC""", params))
@@ -138,16 +149,18 @@ def build_queries(plan: Plan) -> list[SqlQuery]:
             queries.append(pending)
 
     elif plan.intent == Intent.DISTRIBUTION:
-        group = "item, " if plan.group_by_item else ""
+        dims = plan.group_by or (["item", "change_type"] if plan.group_by_item else ["change_type"])
+        select = ", ".join(f"{GROUP_COLUMNS[d]} AS {d}" for d in dims)
+        outer = dims[:-1]   # percentages within each outer group ("by item": share of each change type per item)
         queries.append(SqlQuery("change_type_distribution", f"""
-            SELECT {group}coalesce(change_type, 'Not analysed (needs review)') AS change_type,
+            SELECT {select},
                    count(*) AS n,
-                   round(100.0 * count(*) / sum(count(*)) OVER ({'PARTITION BY item' if group else ''}), 1) AS pct,
+                   round(100.0 * count(*) / sum(count(*)) OVER ({'PARTITION BY ' + ', '.join(GROUP_COLUMNS[d] for d in outer) if outer else ''}), 1) AS pct,
                    count(*) FILTER (WHERE material = 'Yes') AS material_yes,
                    round(avg(materiality_score)::numeric, 3) AS avg_materiality
             FROM alignment_changes WHERE {where}
-            GROUP BY {group}coalesce(change_type, 'Not analysed (needs review)')
-            ORDER BY {group}n DESC""", params))
+            GROUP BY {', '.join(GROUP_COLUMNS[d] for d in dims)}
+            ORDER BY {', '.join(outer + ['n DESC'])}""", params))
         queries.append(_per_run_counts(where, params))
         queries.append(_cards("most_material_examples", f"{where} AND {UNCHANGED_EXCLUDED}", params,
                               MATERIAL_ORDER, _limit(f, 5)))
@@ -184,7 +197,7 @@ def build_queries(plan: Plan) -> list[SqlQuery]:
         threshold = f.max_confidence if f.max_confidence is not None else LOW_CONFIDENCE_DEFAULT
         low_where, low_params = where_clause(f, skip=("max_confidence",))
         low_params = {**low_params, "threshold": threshold}
-        low_where = f"{low_where} AND confidence_score <= %(threshold)s"
+        low_where = f"{low_where} AND confidence_score {'<' if f.max_confidence_strict else '<='} %(threshold)s"
         queries.append(SqlQuery("confidence_distribution", f"""
             SELECT confidence_score, count(*) AS n, count(*) FILTER (WHERE material = 'Yes') AS material_yes
             FROM alignment_changes WHERE {where_clause(f, skip=("max_confidence",))[0]} AND confidence_score IS NOT NULL

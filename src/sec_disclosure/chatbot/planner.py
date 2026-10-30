@@ -37,7 +37,9 @@ class Plan:
     filters: QueryFilters
     topic: str | None = None
     group_by_item: bool = False
+    group_by: list[str] = field(default_factory=list)   # breakdown dimensions, e.g. ["change_type", "item"]
     exclude_unchanged: bool = False
+    fallback_intent: "Intent | None" = None   # rule answer to use when a calculation question cannot go to the LLM
     notes: list[str] = field(default_factory=list)
 
 
@@ -53,7 +55,44 @@ GENERIC_TOPIC_WORDS = {
     "modified", "unchanged", "disclosed", "language", "text", "wording", "section", "sections", "factor", "factors",
     "anything", "something", "things", "what", "how", "was", "were", "is", "are", "they", "we",
     "rewrote", "rewritten", "rewrite", "revised", "revision", "revisions", "updated", "update", "updates",
+    "top", "first", "least", "lowest", "highest", "biggest", "largest", "significant", "important",
 }
+# Calculations the built-in queries don't produce: averages, medians, shares, rankings of sections, differences.
+# With an LLM configured these go to the LLM SQL writer; offline the closest rule answer is shown and flagged.
+AGGREGATE_RE = re.compile(
+    r"\b(?:average|avg|mean|median|percentile|proportion|percentage|percent)\b|\d+(?:\.\d+)?\s*%|"
+    r"\b(?:what|which|highest|largest|biggest|lowest|smallest)\s+share\b|\bshare\s+of\b|"
+    r"\b(?:removal|change|review|approval)\s+rates?\b|\boutnumber\w*|\bexactly\b|"
+    r"\b(?:increase|decrease|drop|rise|growth)\s+in\s+the\s+(?:number|count|share)\b|"
+    r"\b(?:number|count)\s+of\b.{0,60}\bdiffer\w*\b|"
+    r"\bwhich\s+(?:\d+\s+|top\s+\d+\s+)?(?:sections?|items?|categor(?:y|ies)|taxonom(?:y|ies)|change\s+types?)\b"
+    r".{0,80}\b(?:most|least|highest|lowest|largest|fewest|more\s+than|fewer\s+than)\b")
+BREAKDOWN_DIMS = [("change_type", r"change[\s_-]types?|types?\s+of\s+changes?|labels?"), ("item", r"items?"),
+                  ("status", r"status(?:es)?"), ("company", r"compan(?:y|ies)|banks?|chipmakers?"),
+                  ("relationship", r"relationships?"), ("disclosure_taxonomy", r"categor(?:y|ies)|taxonom(?:y|ies)"),
+                  ("material", r"materiality\s+label|material\s+vs\.?\s+non-?material")]
+
+
+def breakdown_dims(text: str) -> list[str]:
+    """Dimensions named in "by X and Y" / "X breakdown"; [] when only change types (the default) are meant."""
+    dims = []
+    for m in re.finditer(r"\b(?:by|per|across|for\s+each)\s+((?:[\w-]+\s*){1,6})", text):
+        phrase = m.group(1)
+        for dim, pattern in BREAKDOWN_DIMS:
+            if re.search(rf"\b(?:{pattern})\b", phrase) and dim not in dims:
+                dims.append(dim)
+    for dim, pattern in BREAKDOWN_DIMS:
+        if re.search(rf"\b(?:{pattern})\s+(?:breakdown|distribution|split)\b|"
+                     rf"\b(?:breakdown|distribution|split)\s+(?:of|by)\s+(?:the\s+)?(?:{pattern})\b", text) \
+                and dim not in dims:
+            dims.append(dim)
+    if dims == ["change_type"] or dims == ["company"]:
+        return []
+    if dims and "change_type" not in dims and not re.search(r"\bstatus|relationship|categor|taxonom|material", text):
+        dims.append("change_type")
+    return dims
+
+
 # How much / which company changed the most: questions about the amount of change (change statistics).
 AMOUNT_OF_CHANGE = (r"\b(?:how\s+much|to\s+what\s+extent|how\s+(?:heavily|extensively|substantially))\b.{0,60}?"
                     r"\b(?:chang|revis|rewr|updat|edit)\w*|"
@@ -102,7 +141,8 @@ def _strip_known_terms(text: str) -> str:
     lowered = re.sub(r"\b(?:fy\s*)?20\d{2}\b|\b10-?k\b", " ", lowered)
     for _, pattern in ITEM_PATTERNS + STATUS_PATTERNS + RELATIONSHIP_PATTERNS:   # filters, not subjects
         lowered = re.sub(pattern, " ", lowered)
-    words = [w for w in re.findall(r"[a-z0-9&'-]+", lowered) if w not in GENERIC_TOPIC_WORDS]
+    words = [w for w in re.findall(r"[a-z0-9&'-]+", lowered)
+             if w not in GENERIC_TOPIC_WORDS and not re.fullmatch(r"\d+(?:\.\d+)?%?", w)]
     return " ".join(words).strip()
 
 
@@ -153,6 +193,7 @@ def classify(question: str, filters: QueryFilters) -> Plan:
     text = YEAR_BEFORE_RE.sub(" ", question.lower())
     plan = Plan(intent=Intent.CUSTOM_SQL, filters=filters)
     plan.group_by_item = bool(re.search(r"\bby\s+item\b|\bper\s+item\b|\beach\s+item\b|\bacross\s+items\b", text))
+    plan.group_by = breakdown_dims(text)
     asks_about_change = bool(re.search(r"\bchang\w*|\bevolv\w*|\bdifferen\w*|\bshift\w*|\bupdat\w*", text))
     topic = extract_topic(question)
 
@@ -177,9 +218,10 @@ def classify(question: str, filters: QueryFilters) -> Plan:
             and not topic):
         plan.intent = Intent.SUMMARY        # synthesis report first (narrowed to the topic, if any), SQL summary otherwise
         plan.topic = topic
-    elif re.search(r"\bhow\s+many\b|(?<!word )\bcount\b|\bnumber\s+of\b", text):
+    elif re.search(r"\bhow\s+many\b|(?<!word )\bcount\b|\bnumber\s+of\b", text) and not plan.group_by:
         plan.intent = Intent.COUNT
-    elif re.search(r"\bmost\s+common\b|\bdistribution\b|\bbreakdown\b|\bbreak\s+down\b|\btypes?\s+of\s+changes?\b|"
+        plan.exclude_unchanged = bool(re.search(r"\bchanged\b|\bwere\s+(?:changed|modified|revised|updated)\b", text))
+    elif plan.group_by or re.search(r"\bmost\s+common\b|\bdistribution\b|\bbreakdown\b|\bbreak\s+down\b|\btypes?\s+of\s+changes?\b|"
                    r"\bkinds?\s+of\s+changes?\b|\bpatterns?\b|\bfrequen\w*", text):
         plan.intent = Intent.DISTRIBUTION
     elif re.search(r"\bmaterial\w*|\bsignificant\w*|\bimportant\b|\bbiggest\b|\bmajor\b|\bimpactful\b|\bnotable\b", text) \
@@ -195,6 +237,11 @@ def classify(question: str, filters: QueryFilters) -> Plan:
         plan.exclude_unchanged = asks_about_change
     # Otherwise CUSTOM_SQL: the LLM writes the query (offline: keyword search on the question).
 
+    # A calculation the templates can't do: the LLM writes SQL; the rule answer is the offline fallback.
+    # (a confidence/materiality threshold written as a percentage, "confidence below 60%", is a filter, not a share)
+    calc_text = re.sub(r"\b(?:confidence|materiality)\b[^.?!]{0,30}?\d+(?:\.\d+)?\s*%", " ", text)
+    if AGGREGATE_RE.search(calc_text) and plan.intent not in (Intent.MATCH_DETAIL, Intent.FINANCIAL, Intent.CUSTOM_SQL):
+        plan.fallback_intent, plan.intent = plan.intent, Intent.CUSTOM_SQL
     # "rewrote" usually means changed in general, not the pipeline's Reworded label (same content, new wording).
     if re.search(r"\brewr(?:o|i)te\w*|\brewritten\b", text) and "Reworded" not in filters.change_types:
         filters.clarifications.append("Showing all changes. Ask for \"reworded\" disclosures to see only wording "

@@ -231,6 +231,75 @@ class FilterEvalFixTests(unittest.TestCase):
         self.assertEqual(self.plan("top 5 changes for AMD").filters.limit, 5)
 
 
+class SqlAccuracyFixTests(unittest.TestCase):
+    """Fixes from the SQL accuracy evaluation (eval/sql_accuracy)."""
+
+    def plan(self, question):
+        return plan_question(question, RUNS)
+
+    def test_material_filter(self):
+        self.assertEqual(self.plan("How many material changes did Bank of America have in 2024?").filters.material, "Yes")
+        self.assertEqual(self.plan("Show non-material changes for BAC").filters.material, "No")
+        self.assertIsNone(self.plan("What are the 5 most material changes for BAC?").filters.material)
+        self.assertIsNone(self.plan("changes with materiality above 0.8").filters.material)
+        where, params = where_clause(self.plan("How many material changes did BAC have?").filters)
+        self.assertIn("material = %(material)s", where)
+        self.assertEqual(params["material"], "Yes")
+
+    def test_threshold_operators(self):
+        f = self.plan("How many changes in Nvidia's 2025 10-K have a materiality score above 0.8?").filters
+        self.assertTrue(f.min_materiality_strict)
+        self.assertIn("materiality_score > %(min_materiality)s", where_clause(f)[0])
+        f = self.plan("changes with materiality of at least 0.9").filters
+        self.assertIn("materiality_score >= %(min_materiality)s", where_clause(f)[0])
+        f = self.plan("Which Goldman Sachs disclosures have a confidence score below 0.7?").filters
+        self.assertIn("confidence_score < %(max_confidence)s", where_clause(f)[0])
+        f = self.plan("changes with confidence of at most 80%").filters
+        self.assertAlmostEqual(f.max_confidence, 0.8)
+        self.assertIn("confidence_score <= %(max_confidence)s", where_clause(f)[0])
+        self.assertTrue(self.plan("changes with materiality below 0.3").filters.clarifications)
+
+    def test_changed_count_excludes_unchanged_and_unanalysed(self):
+        plan = self.plan("How many cybersecurity disclosures changed for JPMorgan in 2025?")
+        self.assertTrue(plan.exclude_unchanged)
+        sql = build_queries(plan)[0].sql
+        self.assertIn("change_type IS NOT NULL AND change_type <> 'Unchanged'", sql)
+        self.assertFalse(self.plan("How many changes did BAC have in 2024?").exclude_unchanged)
+
+    def test_numbers_are_not_topics(self):
+        plan = self.plan("What are Nvidia's 3 most material new disclosures in 2025?")
+        self.assertEqual(plan.intent, Intent.MATERIAL)
+        self.assertIsNone(plan.topic)
+        self.assertEqual(plan.filters.limit, 3)
+
+    def test_breakdown_dimensions(self):
+        plan = self.plan("Break down Bank of America's 2024 changes by change type and item")
+        self.assertEqual((plan.intent, plan.group_by), (Intent.DISTRIBUTION, ["change_type", "item"]))
+        sql = build_queries(plan)[0].sql
+        self.assertIn("GROUP BY coalesce(change_type, 'Not analysed (needs review)'), item", sql)
+        self.assertEqual(self.plan("What's the status breakdown for Goldman Sachs in 2024?").group_by, ["status"])
+        self.assertEqual(self.plan("What are the most common types of changes in Item 7?").group_by, [])
+        self.assertEqual(self.plan("How many alignments does each company have in 2025?").intent, Intent.COUNT)
+
+    def test_calculations_go_to_llm_sql_with_rule_fallback(self):
+        for question in ("What is the average materiality score of Morgan Stanley's 2025 changes?",
+                         "Which Item had the highest share of removed disclosures for JPMorgan in 2025?",
+                         "What is the median materiality score of new disclosures in 2025?",
+                         "For each company, what percentage of its 2024 alignments needs review?",
+                         "List the companies where removed disclosures outnumber new disclosures in 2024",
+                         "Which 3 sections of JPMorgan's 2024 MD&A have the most changed disclosures?"):
+            with self.subTest(question=question):
+                plan = self.plan(question)
+                self.assertEqual(plan.intent, Intent.CUSTOM_SQL)
+                self.assertIsNotNone(plan.fallback_intent)
+        for question in ("Show material changes where the model's confidence is below 60% for GS",
+                         "What are the 5 most material changes in Bank of America's 2024 10-K?",
+                         "What was AMD's gross margin in 2024?",
+                         "How many material changes did each chipmaker have in 2025?"):
+            with self.subTest(question=question):
+                self.assertNotEqual(self.plan(question).intent, Intent.CUSTOM_SQL)
+
+
 class SqlGuardTests(unittest.TestCase):
     def test_accepts_read_only_queries_and_wraps_a_limit(self):
         sql = validate_sql("SELECT company, count(*) AS \"Total\" FROM alignment_changes WHERE explanation ILIKE '%delete%' "

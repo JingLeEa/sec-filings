@@ -38,7 +38,8 @@ def strip_reasoning(text: str) -> str:
     return text.strip()
 
 SCHEMA_DOC = """View alignment_changes (one row per alignment decision; use this first):
-  run_id bigint, company text ('bac','jpm','intc'), previous_year int, current_year int, match_id text,
+  run_id bigint, company text (lowercase ticker: banks 'bac','jpm','c','gs','ms'; chipmakers 'intc','amd','nvda',
+     'avgo','qcom','mu'), previous_year int, current_year int, match_id text,
   status text ('auto_matched','ai_verified','unmatched','needs_review'),
   relationship text ('one_to_one','one_to_many','many_to_one','many_to_many','previous_only','current_only'),
   match_method text, source_file text, item text ('1','1A','7','8','15'), section text,
@@ -55,7 +56,13 @@ SCHEMA_DOC = """View alignment_changes (one row per alignment decision; use this
   previous_text text, current_text text  (original filing sentences; long - use left(x, 400))
 Tables also available: alignment_runs, alignments (JSONB change_analysis, extra->'materiality_analysis'),
   alignment_members(run_id, match_id, side, disclosure_id, item, section, taxonomy, summary),
-  disclosures, filings (may be empty in development)."""
+  disclosures, filings (may be empty in development).
+Meanings: material changes = material = 'Yes'; analysed = analysis_status = 'completed'; disclosures that changed =
+  change_type IN ('Modified','Reworded','Expanded','Reduced','New','Removed'); added = 'New'; removed = 'Removed';
+  shortened = 'Reduced'; flagged for review = status = 'needs_review'; merged = relationship 'many_to_one'; split =
+  'one_to_many'; risk factors = item '1A', MD&A = '7', financial statements = '8', business = '1', exhibits = '15';
+  semantic/lexical disagreement = both labels NOT NULL and different; "above"/"below" are strict (> / <).
+  Report percentages as 0-100. For "which ... highest/most" questions return the ranked groups with the measure."""
 
 SQL_SYSTEM = f"""You write one PostgreSQL SELECT query that answers an analyst's question about SEC 10-K
 disclosure changes. Return JSON only: {{"sql": "...", "reason": "one sentence"}}.
@@ -188,7 +195,13 @@ class Chatbot:
                 custom = self._llm_sql(question, notes)
                 if custom is not None:
                     results.append(custom)
-            if not results:  # offline, or the LLM query failed: fall back to keyword search on the question
+            if not results and plan.fallback_intent is not None:   # a calculation question without generated SQL
+                plan.intent = plan.fallback_intent
+                plan.filters.clarifications.append(
+                    "This question needs a calculation the built-in queries don't do"
+                    + (" and the generated SQL failed" if self.llm_enabled else " (it needs the LLM, which is off)")
+                    + "; showing the closest built-in answer instead.")
+            if not results and plan.intent == Intent.CUSTOM_SQL:   # fall back to keyword search on the question
                 keywords = residual_keywords(question)
                 if keywords:
                     plan.intent, plan.topic = Intent.TOPIC, keywords
