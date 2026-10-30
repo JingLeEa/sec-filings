@@ -1,0 +1,227 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "b8a96b4053a0f64a4a5f36ab3c0cace2bdd0a50eb28731a1c9efbf22419e5974",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D054",
+    "item": "7",
+    "target_topic": "Accounting for households in multiple channels",
+    "target_summary": "Individual households or participants engaged in one or more Wealth Management channels are included in each respective channel count.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0258",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures define 'Self-directed households' as the total number of households that include at least one active account with self-directed assets. The definition is consistent across years.\n\nBoth disclosures address the counting methodology for households/participants across Wealth Management channels, specifically noting that individuals engaged in multiple channels are included in each respective channel count. The 2023 disclosure (D056) includes this in sentence S002, and the 2024 disclosure (D054) contains it as the primary definition in S001.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D056",
+            "item": "7",
+            "section": "Wealth Management > Net New Assets (NNA) > Self-Directed Channel",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Self-directed households represent the total number of households with at least one active self-directed account, including participants engaged in any Wealth Management channel.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D053",
+            "item": "7",
+            "section": "Wealth Management > Net New Assets (NNA) > Self-Directed Channel",
+            "taxonomy": "Operations & Capacity",
+            "summary": "Self-directed households represent the total number of households that include at least one active account with self-directed assets.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D054",
+            "item": "7",
+            "section": "Wealth Management > Net New Assets (NNA) > Self-Directed Channel",
+            "taxonomy": "Operations & Capacity",
+            "summary": "Individual households or participants engaged in one or more Wealth Management channels are included in each respective channel count.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Unchanged",
+            "cosine_similarity": 1.0,
+            "sequence_match_ratio": 1.0,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "ms_2023_7_D056",
+            "score": 0.967183,
+            "normalised_score": 0.9672,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 96.72% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Reduced",
+          "final_taxonomy": "Reduced"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.05,
+          "confidence_score": 0.95,
+          "reason": "The disclosure content is substantively unchanged; the alignment shows a split of the previous single paragraph into two sentences without altering the meaning of 'Self-directed households' or counting methodology.",
+          "key_change": "Reorganization of unchanged content"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0055",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in 2025 Item 7 for the specific rule on counting households engaged in multiple Wealth Management channels. The 2025 records discuss Wealth Management risk and lending (e.g., D076, D212) but do not contain the specific operational definition for channel overlap counting.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D054",
+            "item": "7",
+            "section": "Wealth Management > Net New Assets (NNA) > Self-Directed Channel",
+            "taxonomy": "Operations & Capacity",
+            "summary": "Individual households or participants engaged in one or more Wealth Management channels are included in each respective channel count.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -25,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "individual",
+              "households",
+              "or",
+              "participants",
+              "that",
+              "are",
+              "engaged",
+              "in",
+              "one",
+              "or",
+              "more",
+              "of",
+              "our",
+              "wealth",
+              "management",
+              "channels",
+              "are",
+              "included",
+              "in",
+              "each"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The rule for counting households engaged in multiple channels is removed. This impacts how customer overlap and channel penetration are reported. Removing this methodological disclosure changes the substance of how the company's market coverage and customer engagement are described.",
+          "key_change": "Removal of multi-channel household counting rule"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D087",
+            "peer_topic": "GWIM Business Composition",
+            "peer_summary": "Global Wealth & Investment Management (GWIM) consists of two primary businesses: Merrill Wealth Management and Bank of America Private Bank, with Merrill focused on clients with over $250,000 in assets and both units serving high net worth clients.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.047749,
+            "relationship": "same_topic",
+            "comparison": "Both firms define the composition of their wealth management businesses and the client segments served. MS specifies the accounting methodology for counting households engaged in multiple channels, whereas BAC outlines the structural separation of its wealth management into distinct businesses with different asset thresholds. MS counts individuals engaged in 'one or more' channels in each respective count, while BAC distinguishes between Merrill Wealth Management (focused on clients with over $250,000 in assets) and Bank of America Private Bank (targeting high net worth clients).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D054",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P056_S002",
+                    "paragraph_id": "ms_2024_7_P056",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Individual households or participants that are engaged in one or more of our Wealth Management channels are included in each of the respective channel counts.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D087",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P096_S001",
+                    "paragraph_id": "bac_2024_7_P096",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "GWIM consists of two primary businesses: Merrill Wealth Management and Bank of America Private Bank.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P097_S001",
+                    "paragraph_id": "bac_2024_7_P097",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Merrill Wealth Management's advisory business provides a high-touch client experience through a network of financial advisors focused on clients with over $250,000 in total investable assets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates relate to deposit reporting cross-references and credit information disclaimers, which do not address wealth management household accounting or business composition."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss revenue composition and headcount changes, which are financially and operationally distinct from the specific wealth management channel household counting methodology."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates cover risk governance and wholesale credit risk monitoring, which are unrelated to wealth management client counting or business structure."
+      }
+    ]
+  }
+}

@@ -1,0 +1,353 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "c8d6be94bbe1277d53b963ffa2c076408e9568e7790ae3f57f44fb06689642bf",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D031",
+    "item": "7",
+    "target_topic": "Corporate Segment Revenue Offset",
+    "target_summary": "The increase in CIB principal transactions revenue was partially offset by a net decrease in Corporate, reflecting lower revenue in Treasury and CIO and gains compared to a net loss on certain legacy private equity investments in the prior year.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0342",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2023 vs 2024 Corporate Noninterest Revenue reconciliation. Both disclosures analyze the change in Corporate Noninterest Revenue, attributing the variance to the First Republic bargain purchase gain (2023) and Visa share gain (2024), as well as investment securities losses.\n\n2023 vs 2024 Corporate/Other Income offsetting factors. D160 details 2023 Corporate Noninterest Revenue drivers including First Republic and Treasury/CIO securities losses. D031 details the 2024 Corporate decrease driven by Treasury/CIO and legacy PE losses, contrasting with CIB growth. Both discuss the mixed drivers in Corporate/Other Income.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D160",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > 2023 compared with 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest revenue was $132 million compared to a loss of $1.8 billion in the prior year, primarily due to a $2.8 billion estimated bargain purchase gain from the First Republic acquisition, partially offset by higher net investment securities losses from repositioning the portfolio and lower gains on other Corporate investments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D031",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in CIB principal transactions revenue was partially offset by a net decrease in Corporate, reflecting lower revenue in Treasury and CIO and gains compared to a net loss on certain legacy private equity investments in the prior year.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D153",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest revenue was $7.6 billion; excluding a $7.9 billion Visa gain and a $2.8 billion First Republic bargain purchase gain, revenue increased by $2.4 billion due to lower investment securities losses from portfolio repositioning.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.741034,
+            "sequence_match_ratio": 0.39834,
+            "length_ratio": 1.077586,
+            "word_count_delta": 9,
+            "added_tokens_sample": [
+              "the",
+              "increase",
+              "in",
+              "cib",
+              "was",
+              "partially",
+              "offset",
+              "by",
+              "a",
+              "net",
+              "decrease",
+              "in",
+              "corporate",
+              "reflecting",
+              "lower",
+              "in",
+              "treasury",
+              "and",
+              "cio",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "noninterest",
+              "was",
+              "132",
+              "million",
+              "of",
+              "1",
+              "8",
+              "billion",
+              "driven",
+              "by",
+              "higher",
+              "losses",
+              "in",
+              "the",
+              "prior",
+              "year",
+              "on",
+              "certain",
+              "revenues",
+              "associated"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2023_7_D160",
+            "score": 0.916584,
+            "normalised_score": 0.9166,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 91.66% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The disclosure updates the major non-interest income drivers. 2023 was dominated by a $2.8B First Republic gain. 2024 replaces this with a $7.9B Visa gain and notes a $2.4B increase in core revenue excluding these one-time items. This represents a substantial change in the composition and magnitude of corporate income sources, shifting from acquisition-related gains to market-driven performance.",
+          "key_change": "Change from First Republic gain to Visa gain and core revenue growth"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0023",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure specifically attributes the net decrease in Corporate to lower revenue in Treasury/CIO and gains compared to a net loss on legacy private equity investments. The 2025 disclosure for this specific item (Corporate/Consolidated offsets) primarily discusses the offset to CIB principal transactions from Treasury/CIO revenue (in D032) or investment securities losses (in D036). D031's specific mention of 'legacy private equity investments' net loss vs gains is not present in any single 2025 disclosure as a primary topic. D036 mentions 'lower losses on sales... in Treasury and CIO' and 'lower losses on certain equity investments', but the specific narrative of 'gains compared with a net loss on certain legacy private equity investments' is distinct. Given the high specificity of the 2024 text regarding legacy private equity vs 2025's focus on investment securities repositioning, and no single 2025 disclosure covering this exact combination as a primary 'Corporate' offset narrative in the same way, it is treated as unmatched to avoid spurious links.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D031",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in CIB principal transactions revenue was partially offset by a net decrease in Corporate, reflecting lower revenue in Treasury and CIO and gains compared to a net loss on certain legacy private equity investments in the prior year.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -37,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "the",
+              "increase",
+              "in",
+              "cib",
+              "was",
+              "partially",
+              "offset",
+              "by",
+              "a",
+              "net",
+              "decrease",
+              "in",
+              "corporate",
+              "reflecting",
+              "lower",
+              "revenue",
+              "in",
+              "treasury",
+              "and",
+              "cio"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.9,
+          "reason": "Removal of the specific explanation for the 2024 Corporate net decrease, attributing it to legacy private equity losses. This is a one-time comparative variance explanation. The underlying financial data is reported in the Consolidated Results. The removal of this specific narrative attribution does not change the reported financials or future outlook.",
+          "key_change": "Removal of legacy private equity loss explanation"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D072",
+            "peer_topic": "Deposits segment net income and performance drivers",
+            "peer_summary": "Net income for the Deposits segment decreased $1.2 billion to $7.5 billion, primarily due to lower revenue and higher noninterest expense, partially offset by lower provision for credit losses.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.150504,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Bank of America report a segment-level revenue or income decrease in 2024 that was partially offset by other positive financial drivers. JPM's Corporate segment saw a net decrease in revenue partially offset by gains, whereas BAC's Deposits segment saw a net income decrease primarily due to lower revenue, partially offset by lower provision for credit losses. In both cases, a core operational decline was mitigated by specific favorable adjustments (gains/provision reductions) rather than organic revenue growth.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P050_S001",
+                    "paragraph_id": "jpm_2024_7_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The increase in CIB was partially offset by a net decrease in Corporate, reflecting lower revenue in Treasury and CIO, and gains compared with a net loss on certain legacy private equity investments in the prior year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D072",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P074_S001",
+                    "paragraph_id": "bac_2024_7_P074",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net income for Deposits decreased $1.2 billion to $7.5 billion primarily due to lower revenue and higher noninterest expense, partially offset by lower provision for credit losses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Citigroup's candidates describe an 'All Other' net loss driven by lower revenues and tax benefits. While JPM also mentions 'lower revenue' in its Corporate segment, JPM explicitly cites 'gains compared with a net loss' as a key driver of the offset, whereas Citigroup focuses on the widening of a loss due to revenue declines and tax benefit changes. The primary driver in Citigroup's disclosure is a deterioration (loss increase) rather than the specific gain/loss transition dynamic seen in JPM's peer comparisons with GS and MS, and the C candidates lack the specific 'gains vs prior loss' nuance present in the target that defines the offset mechanism in the other peers."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D092",
+            "peer_topic": "2024 Revenue, Expense, and Earnings Performance",
+            "peer_summary": "In 2024, Asset & Wealth Management reported net revenues of $16.14 billion, a 16% increase driven by higher Equity investment gains and Management fees, while Private banking and lending increased and Debt investments decreased. Operating expenses were $11.83 billion, down 9% due to lower commercial real estate CIE impairments, resulting in pre-tax earnings of $4.55 billion, a significant increase from $1.36 billion in 2023, with pre-tax margins reaching 28%.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.13828,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Goldman Sachs highlight the impact of investment performance and prior-year comparisons on their current segment results. JPM's Corporate segment results were influenced by gains compared to a net loss on legacy private equity investments in the prior year. Similarly, Goldman Sachs' Asset & Wealth Management equity investment gains were significantly higher in 2024 largely reflecting the impact of net losses in real estate investments in the prior year. Both disclosures emphasize how prior-year losses in specific alternative investment categories contributed to current-year relative strength or gains.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P050_S001",
+                    "paragraph_id": "jpm_2024_7_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The increase in CIB was partially offset by a net decrease in Corporate, reflecting lower revenue in Treasury and CIO, and gains compared with a net loss on certain legacy private equity investments in the prior year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D092",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P128_S002",
+                    "paragraph_id": "gs_2024_7_P128",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net revenues in Asset & Wealth Management were $16.14 billion for 2024, 16% higher than 2023, primarily reflecting significantly higher net revenues in Equity investments and higher Management and other fees.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P129_S001",
+                    "paragraph_id": "gs_2024_7_P129",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in Equity investments net revenues primarily reflected significantly higher net gains from investments in private equities (largely reflecting the impact of net losses in real estate investments in the prior year).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D072",
+            "peer_topic": "2024 Performance-based Income Revenue Growth",
+            "peer_summary": "Performance-based income and other revenues increased to $234 million in 2024 from $139 million in the prior year, driven by higher accrued carried interest in infrastructure and real estate funds, partially offset by lower accrued carried interest in certain private equity funds.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.127179,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Morgan Stanley discuss revenue changes driven by private investment vehicles and funds. JPMorgan's Corporate segment results included gains compared to a prior-year net loss on certain legacy private equity investments. Morgan Stanley's Performance-based income revenue increased due to higher accrued carried interest in infrastructure and real estate funds, but was partially offset by lower accrued carried interest in certain private equity funds. Both disclosures reflect the volatility and offsetting nature of private equity and alternative investment revenue streams.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P050_S001",
+                    "paragraph_id": "jpm_2024_7_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The increase in CIB was partially offset by a net decrease in Corporate, reflecting lower revenue in Treasury and CIO, and gains compared with a net loss on certain legacy private equity investments in the prior year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D072",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P080_S001",
+                    "paragraph_id": "ms_2024_7_P080",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Performance-based income and other revenues increased to $234 million in 2024, from $139 million in the prior year, primarily due to higher accrued carried interest in infrastructure and real estate funds, partially offset by lower accrued carried interest in certain private equity funds.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

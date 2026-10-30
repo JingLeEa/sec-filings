@@ -1,0 +1,293 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "a55522804ba4cc64b585803d8cde36bbbd2b8da5dd107959565032f4079d5663",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D264",
+    "item": "7",
+    "target_topic": "Credit Card Charge-Offs and Delinquencies",
+    "target_summary": "Net charge-offs increased $1.2 billion to $3.7 billion in 2024 compared to 2023, while loans 30 days or more past due increased $219 million and those 90 days or more past due increased $177 million at December 31, 2024.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0419",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report on credit card net charge-offs and delinquency metrics (loans 30+ and 90+ days past due) for the respective year-ends, noting the increase in these metrics compared to the prior year.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D269",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Credit Risk Management > Consumer Portfolio Credit Risk Management > Consumer Credit Portfolio > Credit Card",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net charge-offs for the credit card portfolio increased $1.2 billion to $2.6 billion in 2023, primarily due to late-stage delinquent loans charged off, while loans 30 and 90 days or more past due and still accruing interest also increased.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D264",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Consumer Portfolio Credit Risk Management > Consumer Credit Portfolio > Credit Card",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net charge-offs increased $1.2 billion to $3.7 billion in 2024 compared to 2023, while loans 30 days or more past due increased $219 million and those 90 days or more past due increased $177 million at December 31, 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.682704,
+            "sequence_match_ratio": 0.666667,
+            "length_ratio": 0.666667,
+            "word_count_delta": -21,
+            "added_tokens_sample": [
+              "3",
+              "7",
+              "2024",
+              "2023",
+              "219",
+              "177",
+              "2024"
+            ],
+            "removed_tokens_sample": [
+              "2",
+              "6",
+              "2023",
+              "2022",
+              "primarily",
+              "due",
+              "to",
+              "late",
+              "stage",
+              "delinquent",
+              "credit",
+              "card",
+              "loans",
+              "that",
+              "were",
+              "charged",
+              "off",
+              "and",
+              "still",
+              "accruing"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D269",
+            "score": 0.97045,
+            "normalised_score": 0.9705,
+            "label": "Relocated",
+            "rationale": "Score 97.05% of ceiling — content is similar but section changed from 'Management's Discussion and Analysis of Financial Condition and Results of Operations > Credit Risk Management > Consumer Portfolio Credit Risk Management > Consumer Credit Portfolio > Credit Card' to 'Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Consumer Portfolio Credit Risk Management > Consumer Credit Portfolio > Credit Card'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.85,
+          "reason": "While net charge-offs increased to $3.7 billion, this is a standard annual reporting of credit performance metrics. The disclosure describes the magnitude of charge-offs and delinquencies as a routine financial update. Without evidence of a structural break in loss trends or a change in provisioning methodology, annual fluctuations in these standard credit risk metrics are generally considered routine updates rather than material changes in risk exposure or strategy.",
+          "key_change": "Standard annual reporting of credit loss and delinquency metrics"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0472",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the credit card portfolio outstanding balances and the management segment split (Consumer Banking vs GWIM). D263 focuses on the segment split and balance increase, while D260 includes the same segment data alongside net charge-offs and delinquencies. They share the specific subject of portfolio composition and size.\n\nD264 reports credit card net charge-offs and delinquency metrics for 2024. D260 reports the same metrics for 2025. Although D260 also contains balance data (linked to D263), it fully covers the specific subject of credit quality metrics addressed in D264. The many-to-one link is supported by the shared subject of credit card performance indicators.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D263",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Consumer Portfolio Credit Risk Management > Consumer Credit Portfolio > Credit Card",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "At December 31, 2024, 96% of the credit card portfolio was managed in Consumer Banking, and total outstandings increased $1.4 billion to $103.6 billion, primarily driven by higher purchase volumes.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_7_D264",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Consumer Portfolio Credit Risk Management > Consumer Credit Portfolio > Credit Card",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net charge-offs increased $1.2 billion to $3.7 billion in 2024 compared to 2023, while loans 30 days or more past due increased $219 million and those 90 days or more past due increased $177 million at December 31, 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D260",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Consumer Portfolio Credit Risk Management > Consumer Credit Portfolio > Credit Card",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "At December 31, 2025, the credit card portfolio outstanding increased $2.5 billion to $106.0 billion, with 96 percent managed in Consumer Banking; net charge-offs remained stable at $3.7 billion, and delinquencies (30+ and 90+ days past due) decreased during the year.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.656272,
+            "sequence_match_ratio": 0.721893,
+            "length_ratio": 0.988235,
+            "word_count_delta": -1,
+            "added_tokens_sample": [
+              "2025",
+              "2",
+              "5",
+              "2025",
+              "106",
+              "0",
+              "volume",
+              "growth",
+              "and",
+              "card",
+              "transfer",
+              "demand",
+              "remained",
+              "relatively",
+              "unchanged",
+              "in",
+              "2025",
+              "at",
+              "decreased",
+              "34"
+            ],
+            "removed_tokens_sample": [
+              "2024",
+              "1",
+              "4",
+              "2024",
+              "103",
+              "6",
+              "primarily",
+              "higher",
+              "volumes",
+              "increased",
+              "1",
+              "2",
+              "billion",
+              "to",
+              "in",
+              "2024",
+              "compared",
+              "to",
+              "2023",
+              "increased"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2024_7_D263",
+            "score": 0.941299,
+            "normalised_score": 0.9413,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 94.13% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure changes reflect a material shift in credit quality metrics for the credit card portfolio. While segment composition remained static, portfolio balances grew faster ($2.5B vs $1.4B increase), and critically, credit quality trends reversed: delinquencies (30+ and 90+ days past due) decreased in 2025 compared to significant increases in 2024, and net charge-offs stabilized rather than increasing. This reversal in credit performance trends is a meaningful change in financial condition and risk exposure.",
+          "key_change": "Reversal in credit quality trends (delinquency decrease and NCO stabilization)"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss exclusions for government-guaranteed loans from delinquency ratios but do not disclose specific net charge-off amounts, delinquency trends, or charge-off drivers for the credit card portfolio comparable to BAC's disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D111",
+            "peer_topic": "Platform Solutions Credit Loss Provisions 2024",
+            "peer_summary": "Provision for credit losses increased to $1.54 billion in 2024 from $1.14 billion in 2023, primarily driven by net charge-offs in the credit card portfolio.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.209374,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and GS report on the performance of their credit card portfolios in 2024, specifically highlighting the impact of charge-offs on their provision for credit losses. BAC quantifies its credit card charge-offs as net charge-offs of $3.7 billion, an increase of $1.2 billion from the prior year, with specific attention to delinquency trends (30+ and 90+ days past due). GS reports that its total provision for credit losses was $1.54 billion, noting that this increase from 2023 primarily reflected net provisions driven by net charge-offs in the credit card portfolio. While BAC discloses the absolute dollar volume of charge-offs and delinquency balances, GS discloses the resulting expense provision driven by those charge-offs, but both identify credit card charge-offs as the primary driver of credit loss expense/provisions in 2024.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D264",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P306_S003",
+                    "paragraph_id": "bac_2024_7_P306",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net charge-offs increased $1.2 billion to $3.7 billion in 2024 compared to 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P306_S004",
+                    "paragraph_id": "bac_2024_7_P306",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Credit card loans 30 days or more past due increased $219 million, and 90 days or more past due increased $177 million at December 31, 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D111",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P174_S001",
+                    "paragraph_id": "gs_2024_7_P174",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Provision for credit losses was $1.54 billion for 2024, compared with $1.14 billion for 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P174_S002",
+                    "paragraph_id": "gs_2024_7_P174",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Provisions for 2024 reflected net provisions related to the credit card portfolio (primarily driven by net charge-offs).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss exclusions for government-insured mortgage loans and the policy to exempt credit card loans from nonaccrual status, but do not provide comparable data on credit card net charge-offs or delinquency volumes for 2024."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates define nonaccrual loans and the net charge-off ratio calculation methodology but do not disclose actual net charge-off figures, delinquency trends, or specific performance drivers for the credit card portfolio comparable to BAC's disclosure."
+      }
+    ]
+  }
+}

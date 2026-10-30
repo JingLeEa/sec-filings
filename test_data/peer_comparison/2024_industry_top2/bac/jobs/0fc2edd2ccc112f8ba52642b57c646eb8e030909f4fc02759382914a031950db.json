@@ -1,0 +1,391 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "44a4cbcf8b26de22390b9ae891fbbadf1a5ece9190430652f0904c8f492ccff8",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D027",
+    "item": "7",
+    "target_topic": "Loans and leases growth",
+    "target_summary": "Loans and leases increased by $42.1 billion, primarily driven by growth in commercial loans.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0201",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the year-over-year change in 'Loans and leases'. 2023 cites $8.0B increase driven by credit card and commercial loans (bac_2023_7_P026_S001). 2024 cites $42.1B increase driven by commercial loans (bac_2024_7_P024_S001). Same topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D026",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Assets > Loans and Leases",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans and leases increased by $8.0 billion in 2023, primarily driven by higher credit card spending and growth in commercial loans.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D027",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Assets > Loans and Leases",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans and leases increased by $42.1 billion, primarily driven by growth in commercial loans.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.659118,
+            "sequence_match_ratio": 0.727273,
+            "length_ratio": 0.736842,
+            "word_count_delta": -5,
+            "added_tokens_sample": [
+              "42",
+              "1"
+            ],
+            "removed_tokens_sample": [
+              "8",
+              "0",
+              "higher",
+              "credit",
+              "card",
+              "spending",
+              "and"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D026",
+            "score": 0.921393,
+            "normalised_score": 0.9214,
+            "label": "Modified",
+            "rationale": "Score 92.14% of ceiling with 67% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.55,
+          "confidence_score": 0.85,
+          "reason": "The growth in Loans and Leases accelerated significantly ($8.0B to $42.1B) and the driver narrowed from 'credit card spending and commercial loans' to exclusively 'commercial loans.' The removal of consumer credit card growth as a primary driver and the substantial increase in commercial lending volume represent a material shift in loan portfolio composition and growth strategy.",
+          "key_change": "Accelerated commercial loan growth and exclusion of consumer card growth"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0259",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the year-over-year increase in 'Loans and Leases' and attribute the growth primarily to 'commercial loans'. bac_2024_7_D027 states loans/leases increased $42.1B driven by commercial loans. bac_2025_7_D030 states loans/leases increased $89.9B driven by commercial loans and an acquisition. The specific subject (Loans and Leases growth) and primary driver align.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D027",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Assets > Loans and Leases",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans and leases increased by $42.1 billion, primarily driven by growth in commercial loans.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D030",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Assets > Loans and Leases",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans and leases increased by $89.9 billion, primarily driven by growth in commercial loans and a residential mortgage loan portfolio acquisition in the first quarter of 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.558753,
+            "sequence_match_ratio": 0.585366,
+            "length_ratio": 1.928571,
+            "word_count_delta": 13,
+            "added_tokens_sample": [
+              "89",
+              "9",
+              "and",
+              "a",
+              "residential",
+              "mortgage",
+              "loan",
+              "portfolio",
+              "acquisition",
+              "in",
+              "the",
+              "first",
+              "quarter",
+              "of",
+              "2025"
+            ],
+            "removed_tokens_sample": [
+              "42",
+              "1"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2024_7_D027",
+            "score": 0.902036,
+            "normalised_score": 0.902,
+            "label": "Expanded",
+            "rationale": "Score 90.20% of ceiling — content grew from ~13 to ~26 words (2.0×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The 2025 disclosure introduces a new driver for loan growth: 'a residential mortgage loan portfolio acquisition in the first quarter of 2025.' This represents a new strategic activity (M&A/acquisition) that materially alters the nature of the loan portfolio growth compared to the organic growth described in 2024. Acquisitions are distinct events that change the company's business composition and risk exposure, unlike routine organic growth.",
+          "key_change": "Introduction of acquisition as a driver for loan growth"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D177",
+            "peer_topic": "Average loan growth drivers by segment",
+            "peer_summary": "Average loans increased 2% year-over-year, driven by growth in Services (5%), Markets (6%), and USPB (7%). Decreases occurred in Banking (-6%) and Wealth (-1%), primarily due to regulatory capital optimization efforts.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.147116,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and C reported year-over-year growth in their loan portfolios for 2024, driven by commercial and consumer lending segments. BAC disclosed a $42.1 billion increase in loans and leases, primarily driven by commercial loans. Similarly, C reported a 2% year-over-year increase in average loans, with growth in Services (driven by export and agency finance, working capital loans) and USPB (Retail Banking mortgages and Branded Cards), while noting decreases in Banking and Wealth due to regulatory capital optimization.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D027",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P024_S001",
+                    "paragraph_id": "bac_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Loans and leases increased $42.1 billion primarily driven by growth in commercial loans.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D177",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P261_S002",
+                    "paragraph_id": "c_2024_7_P261",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "On an average basis, loans increased 2% year-over-year and were relatively unchanged sequentially.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P262_S002",
+                    "paragraph_id": "c_2024_7_P262",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "• Services increased 5% year-over-year, primarily driven by strong demand in TTS for export and agency finance, as well as working capital loans.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P262_S006",
+                    "paragraph_id": "c_2024_7_P262",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "• USPB increased 7% year-over-year, driven by growth in Retail Banking due to an increase in mortgage loans as a result of lower refinancings due to a higher interest rate environment and higher mortgage originations, as well as Branded Cards due to lower card payment rates and higher card spend volume.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D111",
+            "peer_topic": "Platform Solutions Credit Loss Provisions 2024",
+            "peer_summary": "Provision for credit losses increased to $1.54 billion in 2024 from $1.14 billion in 2023, primarily driven by net charge-offs in the credit card portfolio.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.153753,
+            "relationship": "related_topic",
+            "comparison": "While BAC focuses on the gross growth of its loan and lease portfolio, GS discloses the expense associated with credit risks within those loans, specifically the provision for credit losses. Both disclosures concern the financial performance of the lending books in 2024. BAC reported a $42.1 billion increase in loans and leases. In contrast, GS reported a $1.54 billion provision for credit losses, driven by net charge-offs in the credit card portfolio. GS's 2023 provision was lower at $1.14 billion, similar to how BAC's loan growth accelerated compared to its 2023 increase of $8.0 billion.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D027",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P024_S001",
+                    "paragraph_id": "bac_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Loans and leases increased $42.1 billion primarily driven by growth in commercial loans.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D111",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P174_S001",
+                    "paragraph_id": "gs_2024_7_P174",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Provision for credit losses was $1.54 billion for 2024, compared with $1.14 billion for 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P174_S002",
+                    "paragraph_id": "gs_2024_7_P174",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Provisions for 2024 reflected net provisions related to the credit card portfolio (primarily driven by net charge-offs).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D053",
+            "peer_topic": "Loans increase by segment",
+            "peer_summary": "Loans increased, reflecting higher outstanding balances in Card Services driven by growth in new accounts and normalization of revolving balances, higher wholesale loans in CIB, and higher securities-based lending in AWM due to higher client demand, partially offset by a decline in Home Lending as paydowns and loan sales outpaced originations.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.123489,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and JPM reported an overall increase in their loan portfolios in 2024, driven by commercial and consumer segments. BAC stated that loans and leases increased by $42.1 billion, primarily driven by commercial loans. JPM reported that loans increased, reflecting higher balances in Card Services, higher wholesale loans in CIB (commercial/institutional banking), and higher securities-based lending in AWM, partially offset by a decline in Home Lending. Both companies identified commercial/wholesale lending strength as a key driver of overall loan growth.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D027",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P024_S001",
+                    "paragraph_id": "bac_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Loans and leases increased $42.1 billion primarily driven by growth in commercial loans.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D053",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P089_S001",
+                    "paragraph_id": "jpm_2024_7_P089",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Loans increased, reflecting:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P089_S002",
+                    "paragraph_id": "jpm_2024_7_P089",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher outstanding balances in Card Services driven by growth in new accounts and normalization of revolving balances,",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P089_S003",
+                    "paragraph_id": "jpm_2024_7_P089",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher wholesale loans in CIB, and",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D288",
+            "peer_topic": "2024 growth drivers for total loans and lending commitments",
+            "peer_summary": "In 2024, total loans and lending commitments increased by approximately $47 billion, driven by growth in Corporate lending commitments and Secured lending facilities within Institutional Securities, and portfolio growth within Wealth Management.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.142389,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and MS reported significant year-over-year growth in their total loan and lending commitment portfolios in 2024. BAC reported a $42.1 billion increase in loans and leases, primarily driven by commercial loans. MS reported an approximately $47 billion increase in total loans and lending commitments, driven by growth in Corporate lending commitments and Secured lending facilities within Institutional Securities, and Wealth Management portfolios. Both disclosures highlight corporate/institutional lending as a primary growth driver.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D027",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P024_S001",
+                    "paragraph_id": "bac_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Loans and leases increased $42.1 billion primarily driven by growth in commercial loans.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D288",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P329_S001",
+                    "paragraph_id": "ms_2024_7_P329",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In 2024, total loans and lending commitments increased by approximately $47 billion, primarily due to an increase in Corporate lending commitments and Secured lending facilities within the Institutional Securities business segment, and growth across portfolios within the Wealth Management business segment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

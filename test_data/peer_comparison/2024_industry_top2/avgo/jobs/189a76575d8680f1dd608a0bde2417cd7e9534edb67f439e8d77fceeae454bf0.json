@@ -1,0 +1,248 @@
+{
+  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
+  "request_hash": "804feb2f55d3f1434354e0340b5cc93084c06b19a64d404e34cde862e12a72d7",
+  "result": {
+    "target_ticker": "AVGO",
+    "target_disclosure_id": "avgo_2024_8_D110",
+    "item": "8",
+    "target_topic": "Issuance of Senior Unsecured Notes in 2024",
+    "target_summary": "The company issued senior unsecured notes totaling $10 billion in 2024, with $5 billion issued in July and another $5 billion in October.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "avgo_2023_2024_M0401",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure reports the issuance of $10 billion in senior unsecured notes ($5B in July, $5B in October). The 2023 required_ids do not contain a disclosure of a 2023 senior note issuance event. Search hits for 'senior unsecured notes 2023' returned historical issuances (2017-2022) or other borrowing instruments, but no 2023 senior note issuance matching the 2024 event. Thus, no counterpart found.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_8_D110",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 10. Borrowings > Senior Notes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company issued senior unsecured notes totaling $10 billion in 2024, with $5 billion issued in July and another $5 billion in October.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 24,
+            "added_tokens_sample": [
+              "we",
+              "issued",
+              "senior",
+              "unsecured",
+              "notes",
+              "for",
+              "an",
+              "aggregate",
+              "principal",
+              "amount",
+              "of",
+              "5",
+              "000",
+              "million",
+              "in",
+              "october",
+              "2024",
+              "and",
+              "5",
+              "000"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The introduction of a $10 billion issuance of senior unsecured notes represents a significant change in the company's capital structure and debt obligations. This is a material financial event altering the company's liquidity and leverage profile.",
+          "key_change": "Issuance of $10 billion senior unsecured notes"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "avgo_2024_2025_M0367",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the issuance of new senior unsecured notes during the respective fiscal years, providing the aggregate principal amounts and the timing of the issuances (e.g., July/October 2024 vs Jan/July/Sept 2025).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_8_D110",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 10. Borrowings > Senior Notes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company issued senior unsecured notes totaling $10 billion in 2024, with $5 billion issued in July and another $5 billion in October.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2025_8_D115",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 10. Borrowings > Senior Notes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "During fiscal year 2025, the company issued senior unsecured notes with aggregate principal amounts of $3.0 billion in January, $6.0 billion in July, and $5.0 billion in September.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.301414,
+            "sequence_match_ratio": 0.517241,
+            "length_ratio": 1.416667,
+            "word_count_delta": 10,
+            "added_tokens_sample": [
+              "during",
+              "fiscal",
+              "year",
+              "2025",
+              "3",
+              "0",
+              "billion",
+              "january",
+              "2025",
+              "6",
+              "0",
+              "billion",
+              "in",
+              "july",
+              "2025",
+              "0",
+              "billion",
+              "september",
+              "2025"
+            ],
+            "removed_tokens_sample": [
+              "5",
+              "000",
+              "million",
+              "october",
+              "2024",
+              "000",
+              "million",
+              "july",
+              "2024"
+            ]
+          },
+          "semantic": {
+            "matched_id": "avgo_2024_8_D110",
+            "score": 0.926943,
+            "normalised_score": 0.9269,
+            "label": "Expanded",
+            "rationale": "Score 92.69% of ceiling — content grew from ~22 to ~31 words (1.4×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.85,
+          "reason": "The change reports the specific amounts and timing of senior note issuances for fiscal 2025 ($14 billion total) compared to fiscal 2024 ($10 billion). While the amounts differ year-over-year, this is a routine update of financial transaction data for the period. It reflects normal capital markets activity rather than a change in strategic direction, risk structure, or regulatory condition.",
+          "key_change": "Routine update of debt issuance figures"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The available candidates for AMD do not concern the issuance of senior notes in fiscal year 2024. One candidate (amd_2024_8_D087) describes the repayment of notes, and the other (amd_2024_8_D088) describes the terms of notes issued in 2022, neither of which matches the target's topic of 2024 issuance."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D134",
+            "peer_topic": "2024 Senior Notes Issuance and Redemption",
+            "peer_summary": "In 2024, the company issued $2.6 billion in senior notes and settled $1.9 billion in maturing senior notes via cash. The company also issued $11.0 billion in senior notes in 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.292498,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose active issuance of senior unsecured notes in fiscal year 2024. AVGO issued $10 billion in senior unsecured notes, split between $5 billion in July and $5 billion in October. INTC issued $2.6 billion in senior notes during 2024, while also settling $1.9 billion in maturing notes. Both entities utilized senior unsecured debt instruments to manage capital structure, though AVGO's issuance volume ($10 billion) significantly exceeded INTC's ($2.6 billion).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D110",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P150_S001",
+                    "paragraph_id": "avgo_2024_8_P150",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We issued senior unsecured notes for an aggregate principal amount of $5,000 million in October 2024 and $5,000 million in July 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D134",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P153_S001",
+                    "paragraph_id": "intc_2024_8_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "In 2024, we issued a total of $2.6 billion aggregate principal amount of senior notes, and settled in cash $1.9 billion of our senior notes that matured in May 2024 and June 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The available candidates for MU describe debt activities from prior years (2022 and 2023), not fiscal year 2024 issuances. One candidate (mu_2024_8_D049) details 2022 issuances and prepayments, while the other (mu_2024_8_D048) details 2023 issuances."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The single candidate for NVDA (nvda_2024_8_D001) is a navigation statement regarding the location of Item 8 information and contains no facts regarding note issuances or capital resources."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      }
+    ]
+  }
+}

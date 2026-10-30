@@ -1,0 +1,331 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "25da3a09611508aa08938887084c1433dfd02d5124d19b5778a8d10fcd90d83d",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D073",
+    "item": "7",
+    "target_topic": "Investment Management Non-Interest Expense Increase",
+    "target_summary": "Non-interest expenses for the Investment Management segment reached $4,724 million in 2024, representing a 4% increase from the prior year driven by higher compensation and non-compensation costs.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0275",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the total 'Non-interest expenses' for the Investment Management segment. The 2023 disclosure (D072) reports $4,528M (a 1% decrease) driven by lower compensation. The 2024 disclosure (D073) reports $4,724M (a 4% increase) driven by higher non-compensation and compensation. They represent the same specific topic: the aggregate non-interest expense line item for the segment.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D072",
+            "item": "7",
+            "section": "Investment Management > Non-Interest Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Non-interest expenses for 2023 were $4,528 million, a 1% decrease from the prior year, driven primarily by lower compensation and benefits expenses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D073",
+            "item": "7",
+            "section": "Investment Management > Non-Interest Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Non-interest expenses for the Investment Management segment reached $4,724 million in 2024, representing a 4% increase from the prior year driven by higher compensation and non-compensation costs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.567422,
+            "sequence_match_ratio": 0.6,
+            "length_ratio": 1.173913,
+            "word_count_delta": 4,
+            "added_tokens_sample": [
+              "724",
+              "2024",
+              "increased",
+              "4",
+              "as",
+              "a",
+              "result",
+              "of",
+              "higher",
+              "non",
+              "compensation",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "528",
+              "2023",
+              "decreased",
+              "1",
+              "primarily",
+              "due",
+              "to",
+              "lower"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D072",
+            "score": 0.880206,
+            "normalised_score": 0.8802,
+            "label": "Modified",
+            "rationale": "Score 88.02% of ceiling with 43% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The disclosure reports a reversal in expense trends for the Investment Management segment, moving from a 1% decrease in 2023 to a 4% increase in 2024, driven by both compensation and non-compensation costs. This change in the direction and composition of expense growth is a meaningful indicator of operational pressure and cost structure changes.",
+          "key_change": "Reversal to 4% expense growth driven by compensation and non-compensation increases"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0073",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in 2025 Item 7. Search results for 'Non-interest expenses for the Investment Management segment' returned only high-level regulatory capital (RWA) and market risk disclosures unrelated to Investment Management operating expenses.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D073",
+            "item": "7",
+            "section": "Investment Management > Non-Interest Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Non-interest expenses for the Investment Management segment reached $4,724 million in 2024, representing a 4% increase from the prior year driven by higher compensation and non-compensation costs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -27,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "non",
+              "interest",
+              "expenses",
+              "of",
+              "4",
+              "724",
+              "million",
+              "in",
+              "2024",
+              "increased",
+              "4",
+              "from",
+              "the",
+              "prior",
+              "year",
+              "as",
+              "a",
+              "result",
+              "of",
+              "higher"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure provided specific granular expense metrics for the Investment Management segment ($4,724 million, 4% increase) and identified key drivers (compensation and non-compensation costs). Its removal eliminates transparency into the cost structure and profitability drivers of a major business segment, which is material for financial analysis.",
+          "key_change": "Removal of segment-specific expense magnitude and drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided BAC candidates focus on 'Provision for credit losses' (bac_2024_7_D105) and 'Consumer Lending net income' (bac_2024_7_D082). While bac_2024_7_D082 mentions noninterest expense as an offsetting factor to revenue growth, it does not provide a comparable specific disclosure on non-interest expense trends or drivers for a comparable segment (Consumer Lending vs. Investment Management). bac_2024_7_D105 is entirely unrelated to non-interest expenses. Therefore, no sufficiently comparable candidate for non-interest expense analysis was retrieved."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided C candidates focus on 'Net income' for the 'All Other-Managed Basis' (c_2024_7_D118) and 'Banking' (c_2024_7_D038) segments. While these summaries mention 'lower expenses' as a driver for net income, they do not provide specific disclosures on non-interest expense amounts or detailed drivers comparable to MS's Investment Management segment reporting. They are too aggregate or focused on net income rather than the specific non-interest expense line item and its components."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D008",
+            "peer_topic": "Operating Expense Efficiency and Adjustments",
+            "peer_summary": "Operating expenses decreased 2% to $33.77 billion in 2024, aided by lower CIE commercial real estate impairments and prior year one-time charges like the GreenSky write-down, partially offset by higher compensation and transaction expenses, resulting in an efficiency ratio improvement to 63.1% from 74.6%.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.147977,
+            "relationship": "same_topic",
+            "comparison": "Both MS and GS report on their overall non-interest/operating expense trends for 2024, but they exhibit opposite directions and drivers. MS Investment Management reported a 4% increase in non-interest expenses to $4,724 million, driven by higher compensation and non-compensation costs. In contrast, GS reported a 2% decrease in total operating expenses to $33.77 billion. GS's decrease was primarily due to lower commercial real estate impairments and prior year one-time charges (like GreenSky write-downs), although GS also noted that these decreases were partially offset by higher compensation and benefits expenses. Thus, while both faced higher compensation pressures, GS's total expense profile improved due to significant non-compensation items, whereas MS's segment expenses rose.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D073",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P081_S001",
+                    "paragraph_id": "ms_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Non-interest expenses of $4,724 million in 2024 increased 4% from the prior year, as a result of higher Non-compensation and Compensation and benefits expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D008",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P010_S001",
+                    "paragraph_id": "gs_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Operating expenses were $33.77 billion for 2024, 2% lower than 2023, reflecting decreases driven by significantly lower expenses, including impairments, related to commercial real estate in consolidated investment entities (CIEs) and other significant expenses recognized in the prior year, including the write-down of identifiable intangible assets related to GreenSky Holdings, LLC (GreenSky), an impairment of goodwill related to Consumer platforms and the FDIC special assessment fee.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P010_S002",
+                    "paragraph_id": "gs_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These decreases were partially offset by higher compensation and benefits expenses (reflecting improved operating performance) and higher transaction based expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D059",
+            "peer_topic": "Factors driving 2024 operating expense decreases and increases",
+            "peer_summary": "Operating expenses decreased relative to 2023 due to lower commercial real estate impairments, GreenSky intangible asset write-downs, consumer platform goodwill impairments, and FDIC fees, partially offset by higher compensation and transaction-based expenses driven by improved performance. An additional $71 million FDIC special assessment fee was recognized in 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.133322,
+            "relationship": "same_topic",
+            "comparison": "Similar to the previous comparison, GS discloses that higher compensation and benefits expenses (reflecting improved operating performance) were a driver increasing costs, which partially offset larger decreases in other areas like impairments. This parallels MS's disclosure where higher compensation was a specific driver of the overall increase in non-interest expenses, even though MS does not mention significant offsetting decreases in impairments or one-time charges for the segment.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D073",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P081_S001",
+                    "paragraph_id": "ms_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Non-interest expenses of $4,724 million in 2024 increased 4% from the prior year, as a result of higher Non-compensation and Compensation and benefits expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P061_S002",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These decreases were partially offset by higher compensation and benefits expenses (reflecting improved operating performance) and higher transaction based expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D142",
+            "peer_topic": "Global Private Bank Expense and Credit Provision",
+            "peer_summary": "Noninterest expense was $14.4 billion, up 13%, predominantly driven by higher compensation (including revenue-related compensation and growth in private banking advisor teams) and higher distribution fees and legal expense; the provision for credit losses was a net benefit of $68 million compared to a $159 million provision in the prior year, which included a $146 million addition to the allowance for First Republic loans.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.125205,
+            "relationship": "same_topic",
+            "comparison": "Both MS and JPM report an increase in non-interest expense for the relevant segments, with higher compensation being a key driver for both. MS Investment Management's non-interest expenses increased 4% to $4,724 million, driven by higher compensation and non-compensation expenses. JPM Global Private Bank's noninterest expense increased 13% to $14.4 billion, predominantly driven by higher compensation (including revenue-related compensation) and growth in private banking advisor teams. Both disclosures highlight compensation as a primary growth factor in their non-interest costs.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D073",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P081_S001",
+                    "paragraph_id": "ms_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Non-interest expenses of $4,724 million in 2024 increased 4% from the prior year, as a result of higher Non-compensation and Compensation and benefits expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D142",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P215_S001",
+                    "paragraph_id": "jpm_2024_7_P215",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $14.4 billion, up 13%, predominantly driven by:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P215_S002",
+                    "paragraph_id": "jpm_2024_7_P215",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher compensation, including revenue-related compensation, and continued growth in private banking advisor teams, and",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

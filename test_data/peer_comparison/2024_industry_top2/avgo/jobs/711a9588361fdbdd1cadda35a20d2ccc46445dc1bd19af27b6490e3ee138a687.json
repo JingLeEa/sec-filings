@@ -1,0 +1,285 @@
+{
+  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
+  "request_hash": "786bd02c3e982333b6ff8aa1a7b438d2c7275a14223451b1ecc3f9db5044ae7c",
+  "result": {
+    "target_ticker": "AVGO",
+    "target_disclosure_id": "avgo_2024_8_D135",
+    "item": "8",
+    "target_topic": "Income Tax Provision Drivers",
+    "target_summary": "The provision for income taxes increased in fiscal years 2024 and 2023, primarily due to a non-recurring intra-group transfer of IP rights to the U.S. in 2024 and higher pre-tax income in 2023.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "avgo_2023_2024_M0425",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures explain the changes in the provision for income taxes between fiscal years. D125 attributes the 2023 increase to higher income before taxes and statute lapses (P160_S004, P160_S005). D135 attributes the 2024 increase to a non-recurring IP transfer and higher income in 2023 (P179_S004, P179_S005). They cover the same topic: drivers of income tax provision changes.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2023_8_D125",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 11. Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in the provision for income taxes in fiscal year 2023 compared to 2022 was primarily due to higher income before taxes, partially offset by an increase in uncertain tax benefits from lapses of statutes of limitations, while the 2022 increase compared to 2021 was due to higher income before taxes.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_8_D135",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 12. Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provision for income taxes increased in fiscal years 2024 and 2023, primarily due to a non-recurring intra-group transfer of IP rights to the U.S. in 2024 and higher pre-tax income in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.867571,
+            "sequence_match_ratio": 0.502732,
+            "length_ratio": 1.577465,
+            "word_count_delta": 41,
+            "added_tokens_sample": [
+              "the",
+              "increase",
+              "in",
+              "provision",
+              "for",
+              "income",
+              "taxes",
+              "in",
+              "fiscal",
+              "year",
+              "2024",
+              "compared",
+              "to",
+              "fiscal",
+              "year",
+              "2023",
+              "was",
+              "primarily",
+              "due",
+              "to"
+            ],
+            "removed_tokens_sample": [
+              "the",
+              "increase",
+              "in",
+              "provision",
+              "for",
+              "income",
+              "taxes",
+              "in",
+              "fiscal",
+              "year",
+              "2022",
+              "compared",
+              "to",
+              "fiscal",
+              "year",
+              "2021",
+              "was",
+              "primarily",
+              "due",
+              "to"
+            ]
+          },
+          "semantic": {
+            "matched_id": "avgo_2023_8_D125",
+            "score": 0.911206,
+            "normalised_score": 0.9112,
+            "label": "Relocated",
+            "rationale": "Score 91.12% of ceiling — content is similar but section changed from 'CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 11. Income Taxes' to 'CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 12. Income Taxes'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The 2024 disclosure introduces a new, specific driver for the tax provision increase: a 'non-recurring intra-group transfer of IP rights to the U.S. as a result of supply chain realignment.' This qualitative change in the explanation of tax costs reflects a meaningful operational and strategic event (VMware integration/supply chain shift) that differentiates 2024 from 2023.",
+          "key_change": "Introduction of non-recurring IP transfer tax impact"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "avgo_2024_2025_M0390",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures analyze the primary drivers of the income tax provision/benefit year-over-year. D135 cites the IP transfer and stock-based awards for the 2024 increase vs 2023. D141 cites the uncertain tax benefits and stock-based awards for the 2025 benefit. While the specific drivers differ (IP transfer vs statute of limitations), they serve the same functional role of explaining the provision variance and key tax items.\n\nBoth disclosures relate to the components and drivers of the income tax provision within Item 8 Note 12. D135 (2024) explains the drivers of the provision increase (IP transfer, jurisdictional mix), while D139 (2025) presents the structural components by jurisdiction and rate reconciliation. They cover the same specific subject: the composition and explanation of the income tax provision.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_8_D135",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 12. Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provision for income taxes increased in fiscal years 2024 and 2023, primarily due to a non-recurring intra-group transfer of IP rights to the U.S. in 2024 and higher pre-tax income in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2025_8_D139",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 12. Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The filing presents the components of income before taxes by jurisdiction, the provision for income taxes, and a reconciliation of the effective tax rate to the statutory federal rate.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "avgo_2025_8_D141",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 12. Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The income tax benefit in fiscal year 2025 was primarily driven by the recognition of uncertain tax benefits from expired statutes of limitations and audit settlements, and excess tax benefits from stock-based awards, partially offset by the valuation allowance against CAMT credits.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D123",
+            "peer_topic": "Income Tax Provision and Effective Rates",
+            "peer_summary": "The Company recorded an income tax provision of $381 million and an income tax benefit of $346 million in 2024 and 2023, with effective tax rates of 19% and (68%) respectively, driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.176759,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and AMD attribute changes in their income tax provisions to specific non-recurring or structural intercompany events in fiscal 2024. AVGO cites a 'non-recurring intra-group transfer of certain IP rights' resulting from supply chain realignment, while AMD cites a '$373 million tax effect from an intercompany integration transaction.' Additionally, both companies note that higher pre-tax income was a driver for the increase in tax provision, though AVGO's increase was further impacted by jurisdictional shifts, whereas AMD's effective tax rate was heavily influenced by prior year benefits (2023 benefit vs 2024 provision).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D135",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P179_S004",
+                    "paragraph_id": "avgo_2024_8_P179",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase in provision for income taxes in fiscal year 2024 compared to fiscal year 2023 was primarily due to the impact of a non-recurring intra-group transfer of certain IP rights to the United States as a result of supply chain realignment and the resulting shift in jurisdictional mix of income, partially offset by an increase in excess tax benefits from stock-based awards.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D123",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P131_S001",
+                    "paragraph_id": "amd_2024_8_P131",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The Company recorded an income tax provision of $381 million and an income tax benefit of $346 million in 2024 and 2023, respectively, representing effective tax rates of 19% and (68)%, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P131_S002",
+                    "paragraph_id": "amd_2024_8_P131",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in income tax provision in 2024 was primarily due to higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "While INTC discloses tax provisions, its provided candidates (intc_2024_8_D114, intc_2024_8_D109) focus on balance sheet items (receivables/payables) and R&D tax credits. None of the cited sentences specifically discuss the drivers of the change in the income tax provision amount for fiscal 2024 (e.g., comparable intercompany transactions or stock-based award impacts) in a way that allows for a direct factual comparison with AVGO's explanation of the 2024 provision increase."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D090",
+            "peer_topic": "Recognition and amounts of income tax benefits for share-based awards",
+            "peer_summary": "Income tax benefits related to tax deductions for share-based awards are recognized upon settlement of the awards, amounting to $140 million, $68 million, and $77 million for the fiscal years 2024, 2023, and 2022, respectively.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.135145,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and MU disclose the impact of stock-based awards on their income tax provisions. AVGO notes that its increase in tax provision was 'partially offset by an increase in excess tax benefits from stock-based awards,' indicating a reduction in the effective tax rate due to these awards. MU provides specific quantitative data on this same line item, stating that 'Income tax benefits for share-based awards were $140 million' in fiscal 2024, which represents a cash tax benefit recognized upon settlement. Both disclosures highlight this specific driver within the broader income tax provision discussion.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D135",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P179_S004",
+                    "paragraph_id": "avgo_2024_8_P179",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase in provision for income taxes in fiscal year 2024 compared to fiscal year 2023 was primarily due to the impact of a non-recurring intra-group transfer of certain IP rights to the United States as a result of supply chain realignment and the resulting shift in jurisdictional mix of income, partially offset by an increase in excess tax benefits from stock-based awards.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D090",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P098_S002",
+                    "paragraph_id": "mu_2024_8_P098",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Income tax benefits for share-based awards were $140 million, $68 million, and $77 million for 2024, 2023, and 2022, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      }
+    ]
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "e3c00b498b4e6e54adb0ca116b9e428b33a6c0780c59743a62b1ca96272f9cf3",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_7_D047",
+    "item": "7",
+    "target_topic": "Network and Edge Cost of Sales Analysis",
+    "target_summary": "NEX cost of sales decreased $761 million from 2022, driven by lower sales volume across product lines, partially offset by higher period charges from inventory reserves taken in 2023.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0292",
+        "relationship": "current_only",
+        "status": "needs_review",
+        "review_reasons": [
+          "invalid_or_omitted_verifier_proposal"
+        ],
+        "explanation": "Automatic repair turn limit reached; remaining disclosures need review.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D047",
+            "item": "7",
+            "section": "Operating Segment Trends and Results > 2023 vs. 2022 > Cost of Sales",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "NEX cost of sales decreased $761 million from 2022, driven by lower sales volume across product lines, partially offset by higher period charges from inventory reserves taken in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0073",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure details NEX cost of sales decreases driven by lower sales volume and inventory reserves. The search for a 2025 counterpart with matching specific drivers (NEX cost of sales changes, lower sales volume, inventory reserve impacts) yielded no exact match. The search results for 'NEX cost of sales' did not surface a disclosure explicitly breaking out NEX cost of sales variances for 2025 vs 2024 with similar drivers. The hits returned were largely for DCAI or CCG operating income, or general inventory accounting estimates. Thus, no equivalent disclosure was found.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D047",
+            "item": "7",
+            "section": "Operating Segment Trends and Results > 2023 vs. 2022 > Cost of Sales",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "NEX cost of sales decreased $761 million from 2022, driven by lower sales volume across product lines, partially offset by higher period charges from inventory reserves taken in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -30,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "nex",
+              "cost",
+              "of",
+              "sales",
+              "decreased",
+              "761",
+              "million",
+              "from",
+              "2022",
+              "driven",
+              "by",
+              "lower",
+              "sales",
+              "volume",
+              "across",
+              "product",
+              "lines",
+              "partially",
+              "offset",
+              "by"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.8,
+          "reason": "Similar to M0072, the 2024 filing detailed specific drivers for NEX cost of sales decreases (sales volume, inventory reserves). This specific financial breakdown is absent in the 2025 filing's Item 7 disclosures. The removal of this segment-specific cost analysis reduces the granularity of disclosed operational performance drivers, constituting a material change in disclosure substance.",
+          "key_change": "Removal of specific NEX cost of sales variance drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D027",
+            "peer_topic": "Gaming Segment Operating Income Decline",
+            "peer_summary": "Gaming operating income decreased to $290 million in 2024 from $971 million in 2023, primarily driven by lower revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.144643,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures analyze operational financial performance changes driven by demand fluctuations. Intel attributes its NEX cost of sales decrease to lower sales volume, whereas AMD attributes its Gaming segment operating income decrease primarily to lower revenue. Both identify volume/revenue decline as the primary negative driver, though AMD's disclosure is at the operating income level while Intel's is at the cost of sales level.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D047",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P042_S004",
+                    "paragraph_id": "intc_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "▪NEX cost of sales decreased $761 million from 2022, driven by lower sales volume across product lines, partially offset by higher period charges driven by inventory reserves taken in 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D027",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P039_S002",
+                    "paragraph_id": "amd_2024_7_P039",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The decrease in operating income was primarily driven by lower revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates (avgo_2024_7_D049, avgo_2024_7_D057) discuss gross margin increases and operating income drivers from AI networking products, which are conceptually different from Intel's specific cost of sales analysis of the NEX segment driven by volume declines and inventory reserves."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates (mu_2024_7_D014, mu_2024_7_D015) discuss operating income changes for EBU and SBU segments driven by ASPs and bit shipments. These do not match Intel's specific cost of sales analysis for NEX or the inventory reserve context."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D030",
+            "peer_topic": "Inventory Provision Methodology and Judgment",
+            "peer_summary": "The company charges cost of sales for inventory provisions to write-down inventory to the lower of cost or net realizable value, or for obsolete or excess inventory. Most provisions relate to excess quantities based on inventory levels and future commitments compared to assumptions about future demand, requiring management judgment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.091683,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures discuss inventory provisions charged to cost of sales. Intel explicitly mentions 'higher period charges driven by inventory reserves taken in 2023' as an offsetting factor to its cost of sales decrease. NVIDIA discloses its methodology for charging cost of sales for inventory provisions to write down inventory for excess or obsolete items, providing the accounting context for the type of charge Intel reported. While Intel reports the specific financial impact of these charges, NVIDIA explains the general policy and judgment involved in determining excess inventory.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D047",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P042_S004",
+                    "paragraph_id": "intc_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "▪NEX cost of sales decreased $761 million from 2022, driven by lower sales volume across product lines, partially offset by higher period charges driven by inventory reserves taken in 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P030_S001",
+                    "paragraph_id": "nvda_2024_7_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We charge cost of sales for inventory provisions to write-down our inventory to the lower of cost or net realizable value or for obsolete or excess inventory, and for excess product purchase commitments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates (qcom_2024_7_D023, qcom_2024_7_D012) discuss QCT revenue drivers and R&D expense increases. These topics are unrelated to Intel's cost of sales analysis or inventory reserves."
+      }
+    ]
+  }
+}

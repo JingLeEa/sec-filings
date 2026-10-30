@@ -1,0 +1,374 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "c03add907f3a6182feecbd7982e621443b705ffd788f6b40d36a63b878301b72",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_7_D185",
+    "item": "7",
+    "target_topic": "GSBE Leverage Ratio and Audited Profits",
+    "target_summary": "GSBE's leverage ratio as of December 2024 included profits subject to annual audit and shareholder approval, which contributed 54 basis points to the leverage ratio.",
+    "target_source_status": "needs_review",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0591",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures describe GSBE's leverage ratio as of year-end, specifically noting the inclusion of profits subject to annual audit and shareholder approval and their contribution to the leverage ratio (58 bps in 2023, 54 bps in 2024).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_7_D189",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Subsidiary Capital Requirements > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The leverage ratio for GSBE as of December 2023 included profits subject to audit and shareholder approval, which contributed 58 basis points to the ratio.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D185",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Subsidiary Capital Requirements > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "GSBE's leverage ratio as of December 2024 included profits subject to annual audit and shareholder approval, which contributed 54 basis points to the leverage ratio.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0049",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "Previous disclosure concerns GSBE's leverage ratio including audit profits. No 2025 counterpart for GSBE's specific leverage ratio metric was found in the selected sentences of the 2025 disclosures; the audit paragraph mentions GSBE's leverage ratio but it is not linked to a specific validated 2025 disclosure ID in the provided records (gs_2025_7_D204 is a table caption, not the ratio fact).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D185",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Subsidiary Capital Requirements > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "GSBE's leverage ratio as of December 2024 included profits subject to annual audit and shareholder approval, which contributed 54 basis points to the leverage ratio.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -63,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "the",
+              "table",
+              "below",
+              "presents",
+              "gsbe's",
+              "leverage",
+              "ratio",
+              "requirement",
+              "and",
+              "leverage",
+              "ratio",
+              "in",
+              "the",
+              "table",
+              "above",
+              "the",
+              "leverage",
+              "ratio",
+              "as",
+              "of"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.7,
+          "reason": "Removal of specific disclosure regarding GSBE's leverage ratio and the impact of pending profits on this metric. Similar to the CET1 removal, this indicates a change in the level of detail provided regarding the subsidiary's leverage position and regulatory capital components, which is material for assessing the financial health and regulatory compliance of the banking subsidiary.",
+          "key_change": "Removal of GSBE subsidiary leverage ratio and pending profit disclosure"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D182",
+            "peer_topic": "Supplementary Leverage Ratio (SLR) Requirements and Compliance",
+            "peer_summary": "The Corporation must maintain a minimum SLR of 3.0% plus a 2.0% leverage buffer to avoid restrictions on capital distributions and bonus payments, with the numerator defined as quarter-end Basel 3 Tier 1 capital and the denominator based on total leverage exposure. At December 31, 2024, its insured depository institution subsidiaries exceeded the 6.0% minimum SLR required to be considered well capitalized under the PCA framework.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.073827,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures detail leverage ratio requirements for banking entities. GS specifies that its leverage ratio calculation includes profits subject to audit and approval (contributing 54 basis points), while BAC defines its Supplementary Leverage Ratio (SLR) mechanics, including the numerator (Basel 3 Tier 1 capital) and denominator (total leverage exposure), and notes compliance with minimum SLR requirements to avoid distribution restrictions. Both address the composition and regulatory minimums of leverage ratios, though GS focuses on a specific accounting adjustment within the ratio and BAC focuses on the structural definition and buffer requirements.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D185",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P259_S001",
+                    "paragraph_id": "gs_2024_7_P259",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In the table above, the leverage ratio as of December 2024 reflected profits that are still subject to annual audit by GSBE's external auditors and approval by GSBE's shareholder (GS Bank USA) for inclusion in risk-based capital.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P259_S002",
+                    "paragraph_id": "gs_2024_7_P259",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These profits contributed 54 basis points to the leverage ratio as of December 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D182",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P191_S001",
+                    "paragraph_id": "bac_2024_7_P191",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The Corporation is also required to maintain a minimum supplementary leverage ratio (SLR) of 3.0 percent plus a leverage buffer of 2.0 percent in order to avoid certain restrictions on capital distributions and discretionary bonus payments to executive officers.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P191_S003",
+                    "paragraph_id": "bac_2024_7_P191",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The numerator of the SLR is quarter-end Basel 3 Tier 1 capital.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P191_S004",
+                    "paragraph_id": "bac_2024_7_P191",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The denominator is total leverage exposure based on the daily average of the sum of on-balance sheet exposures less permitted deductions and the simple average of certain off-balance sheet exposures, as of the end of each month in a quarter.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D021",
+            "peer_topic": "Supplementary Leverage Ratio Status",
+            "peer_summary": "Citigroup's Supplementary Leverage Ratio was 5.8% as of December 31, 2024, largely unchanged from the prior year, as higher Tier 1 Capital was offset by an increase in Total Leverage Exposure.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.124158,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures report on the Supplementary Leverage Ratio (SLR) for the fiscal year 2024. C explicitly states its SLR was 5.8% as of December 31, 2024, driven by Tier 1 Capital and Total Leverage Exposure. While GS does not report a specific SLR percentage in the selected sentences, it discusses the calculation of its leverage ratio and the inclusion of profits, which is a component of the leverage ratio framework relevant to SLR calculations. Both concern the quantitative status and components of leverage ratios.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D185",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P259_S001",
+                    "paragraph_id": "gs_2024_7_P259",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In the table above, the leverage ratio as of December 2024 reflected profits that are still subject to annual audit by GSBE's external auditors and approval by GSBE's shareholder (GS Bank USA) for inclusion in risk-based capital.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P259_S002",
+                    "paragraph_id": "gs_2024_7_P259",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These profits contributed 54 basis points to the leverage ratio as of December 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D021",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P016_S001",
+                    "paragraph_id": "c_2024_7_P016",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "December 31, 2024 was 5.8%, largely unchanged from December 31, 2023, as higher Tier 1 Capital was offset by an increase in Total Leverage Exposure.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D263",
+            "peer_topic": "Capital ratio performance",
+            "peer_summary": "J.P. Morgan Securities plc's capital ratios as of December 31, 2024 exceeded minimum Pillar 1 requirements and additional capital requirements specified by the PRA, with at least 75% of the Tier 1 leverage ratio minimum met with CET1 capital.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.127484,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures address leverage ratio requirements and compliance. GS details how its leverage ratio is calculated, specifically noting the inclusion of profits subject to audit. JPM reports that J.P. Morgan Securities plc's capital ratios exceeded minimum requirements, including the Tier 1 leverage ratio minimum, and notes that at least 75% of that minimum must be met with CET1 capital. Both focus on the specific regulatory leverage ratio metrics and their compliance status.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D185",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P259_S001",
+                    "paragraph_id": "gs_2024_7_P259",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In the table above, the leverage ratio as of December 2024 reflected profits that are still subject to annual audit by GSBE's external auditors and approval by GSBE's shareholder (GS Bank USA) for inclusion in risk-based capital.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P259_S002",
+                    "paragraph_id": "gs_2024_7_P259",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These profits contributed 54 basis points to the leverage ratio as of December 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D263",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P389_S002",
+                    "paragraph_id": "jpm_2024_7_P389",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "J.P. Morgan Securities plc's capital ratios as of December 31, 2024 exceeded the minimum requirements, including the additional capital requirements specified by the PRA.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P390_S001",
+                    "paragraph_id": "jpm_2024_7_P390",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(b)At least 75% of the Tier 1 leverage ratio minimum must be met with CET1 capital.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D172",
+            "peer_topic": "Leverage-Based Capital Requirements",
+            "peer_summary": "Leverage-based capital requirements include a minimum Tier 1 leverage ratio of 4%, a minimum Supplementary Leverage Ratio (SLR) of 3%, and an enhanced SLR capital buffer of at least 2%.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.194379,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures outline leverage-based capital requirements. MS lists specific minimum leverage-based capital requirements, including a Tier 1 leverage ratio of 4% and an SLR of 3% with a buffer. GS discusses the calculation of its leverage ratio, including the impact of profits on the ratio. Both firms disclose the structural requirements and calculation specifics of their leverage ratios.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D185",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P259_S001",
+                    "paragraph_id": "gs_2024_7_P259",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In the table above, the leverage ratio as of December 2024 reflected profits that are still subject to annual audit by GSBE's external auditors and approval by GSBE's shareholder (GS Bank USA) for inclusion in risk-based capital.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P259_S002",
+                    "paragraph_id": "gs_2024_7_P259",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These profits contributed 54 basis points to the leverage ratio as of December 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D172",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P212_S001",
+                    "paragraph_id": "ms_2024_7_P212",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Leverage-Based Regulatory Capital.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P212_S002",
+                    "paragraph_id": "ms_2024_7_P212",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Leverage-based capital requirements include a minimum Tier 1 leverage ratio of 4%, a minimum SLR of 3% and an enhanced SLR capital buffer of at least 2%.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,551 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "cef20fb31d81b41d32e16b13888a26ae9b77d8b8d0370ac4876e28d89c9fc15b",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_7_D059",
+    "item": "7",
+    "target_topic": "Factors driving 2024 operating expense decreases and increases",
+    "target_summary": "Operating expenses decreased relative to 2023 due to lower commercial real estate impairments, GreenSky intangible asset write-downs, consumer platform goodwill impairments, and FDIC fees, partially offset by higher compensation and transaction-based expenses driven by improved performance. An additional $71 million FDIC special assessment fee was recognized in 2024.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0484",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail the primary drivers of operating expense changes year-over-year, specifically citing commercial real estate impairments, GreenSky intangible write-downs, Consumer platform goodwill impairments, and the FDIC special assessment fee. gs_2023_7_D060 lists these as drivers of the *increase* in 2023 expenses vs 2022. gs_2024_7_D059 lists these same items as drivers of the *decrease* in 2024 expenses vs 2023 (due to lower expenses in the prior year). The specific underlying topic is the reconciliation of operating expenses driven by these specific one-time/impairment items.\n\nBoth disclosures specifically report the net provisions for litigation and regulatory proceedings. gs_2023_7_D060 mentions $115 million for 2023. gs_2024_7_D060 explicitly compares 2024 ($166 million) to 2023 ($115 million). While gs_2023_7_D060 is a multi-topic disclosure, this specific sentence constitutes a distinct topic regarding litigation provisions.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in operating expenses compared to 2022 was primarily driven by $1.46 billion in commercial real estate impairments within CIEs, a $506 million write-down of GreenSky intangible assets, a $504 million goodwill impairment in Consumer platforms, and a $529 million FDIC special assessment fee, partially offset by lower net provisions for litigation and regulatory proceedings of $115 million in 2023 versus $576 million in 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D059",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses decreased relative to 2023 due to lower commercial real estate impairments, GreenSky intangible asset write-downs, consumer platform goodwill impairments, and FDIC fees, partially offset by higher compensation and transaction-based expenses driven by improved performance. An additional $71 million FDIC special assessment fee was recognized in 2024.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net provisions for litigation and regulatory proceedings were $166 million in 2024, compared to $115 million in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.772791,
+            "sequence_match_ratio": 0.446154,
+            "length_ratio": 1.954545,
+            "word_count_delta": 84,
+            "added_tokens_sample": [
+              "2023",
+              "decreases",
+              "driven",
+              "by",
+              "lower",
+              "expenses",
+              "including",
+              "related",
+              "to",
+              "commercial",
+              "real",
+              "estate",
+              "in",
+              "cies",
+              "largely",
+              "in",
+              "depreciation",
+              "and",
+              "amortization",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "the",
+              "increase",
+              "in",
+              "2022",
+              "primarily",
+              "higher",
+              "related",
+              "to",
+              "commercial",
+              "real",
+              "estate",
+              "within",
+              "cies",
+              "a",
+              "related",
+              "to",
+              "greensky",
+              "of",
+              "504",
+              "million"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2023_7_D060",
+            "score": 0.922189,
+            "normalised_score": 0.9222,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 92.22% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The change reflects a reversal in the primary drivers of operating expenses: the prior year was driven by significant impairments and fees (increases), while the current year is driven by lower impairments (decreases). This structural change in expense composition and direction (increase vs decrease) meaningfully alters the understanding of cost performance and risk exposure.",
+          "key_change": "Reversal in primary operating expense drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0509",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2025 D060 consolidates the Operating Expenses discussion (total, drivers, efficiency ratio) found in 2024 D058 and D059. 2024 D058 covers the totals/efficiency. 2024 D059 covers the detailed drivers (CIE, GreenSky, FDIC, comp). 2025 D060 covers the totals/efficiency AND the detailed drivers (comp, transaction, FDIC reduction). These are the same specific topic: Consolidated OpEx breakdown.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D058",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses were $33.77 billion in 2024, a 2% decrease from 2023, with an efficiency ratio of 63.1% compared to 74.6% in the prior year.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D059",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses decreased relative to 2023 due to lower commercial real estate impairments, GreenSky intangible asset write-downs, consumer platform goodwill impairments, and FDIC fees, partially offset by higher compensation and transaction-based expenses driven by improved performance. An additional $71 million FDIC special assessment fee was recognized in 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased 11% to $37.54 billion in 2025 from 2024, primarily driven by higher compensation and benefits due to improved operating performance and higher transaction-based expenses. The efficiency ratio rose to 64.4% from 63.1%, and net provisions for litigation and regulatory proceedings increased to $215 million from $166 million, partially offset by a $75 million reduction in FDIC special assessment fees.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.712008,
+            "sequence_match_ratio": 0.397554,
+            "length_ratio": 0.730159,
+            "word_count_delta": -51,
+            "added_tokens_sample": [
+              "2025",
+              "versus",
+              "37",
+              "54",
+              "2025",
+              "11",
+              "higher",
+              "than",
+              "64",
+              "4",
+              "for",
+              "2025",
+              "compared",
+              "with",
+              "the",
+              "increase",
+              "in",
+              "2024",
+              "primarily",
+              "net"
+            ],
+            "removed_tokens_sample": [
+              "versus",
+              "2023",
+              "33",
+              "77",
+              "2",
+              "lower",
+              "than",
+              "2023",
+              "compared",
+              "with",
+              "74",
+              "6",
+              "for",
+              "2023",
+              "2023",
+              "decreases",
+              "driven",
+              "by",
+              "significantly",
+              "lower"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2024_7_D058",
+            "score": 0.866412,
+            "normalised_score": 0.8664,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 86.64% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The disclosure consolidates previous separate discussions of OpEx totals and drivers into a single narrative that reports a significant 11% increase in OpEx to $37.54 billion. This is a substantive change in financial condition (from a decrease in 2024 to a significant increase in 2025) and alters the efficiency ratio narrative. It also introduces specific new litigation provisions ($215M) not present in the 2024 breakdown.",
+          "key_change": "Consolidation and reversal of OpEx trend"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0512",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail the specific drivers of the 2024 vs 2023 consolidated OpEx decrease: lower CIE CRE impairments ($1.46B), GreenSky write-downs ($506M), Consumer/Platform goodwill impairments ($504M), and FDIC fees ($529M in 2023), offset by higher comp/transaction expenses and a $71M incremental FDIC fee in 2024. They cover the same specific subject.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D059",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses decreased relative to 2023 due to lower commercial real estate impairments, GreenSky intangible asset write-downs, consumer platform goodwill impairments, and FDIC fees, partially offset by higher compensation and transaction-based expenses driven by improved performance. An additional $71 million FDIC special assessment fee was recognized in 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_7_D063",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses decreased 2% to $33.77 billion in 2024 from 2023, an improvement largely driven by lower expenses including $1.46 billion in commercial real estate impairments in CIEs, $506 million in GreenSky intangible asset write-downs, $504 million in Platform Solutions goodwill impairment, and a $529 million FDIC special assessment fee in 2023. These decreases were partially offset by higher compensation and benefits and transaction-based expenses, along with a $71 million incremental FDIC special assessment fee recognized in 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.948772,
+            "sequence_match_ratio": 0.886297,
+            "length_ratio": 1.227273,
+            "word_count_delta": 35,
+            "added_tokens_sample": [
+              "2024",
+              "versus",
+              "2023",
+              "operating",
+              "expenses",
+              "in",
+              "the",
+              "consolidated",
+              "statements",
+              "of",
+              "earnings",
+              "were",
+              "33",
+              "77",
+              "billion",
+              "for",
+              "2024",
+              "2",
+              "lower",
+              "than"
+            ],
+            "removed_tokens_sample": [
+              "consumer",
+              "platforms"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2024_7_D059",
+            "score": 0.978266,
+            "normalised_score": 0.9783,
+            "label": "Unchanged",
+            "rationale": "Score 97.83% of ceiling — semantically identical despite surface differences (word overlap 84%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Reduced",
+          "final_taxonomy": "Reduced"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The disclosure is a re-reporting of the 2024 vs 2023 OpEx decrease drivers. The text is nearly identical, with only minor naming updates ('Consumer platforms' to 'Platform Solutions'). The financial facts and explanations remain unchanged.",
+          "key_change": "Minor naming update"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D019",
+            "peer_topic": "Noninterest expense increase drivers and prior year comparisons",
+            "peer_summary": "Noninterest expense increased $967 million to $66.8 billion in 2024 compared to 2023, primarily driven by higher revenue-related expenses and investments in people, operations, and technology, partially offset by higher FDIC expense in 2023 (including a $2.1 billion special assessment) and lower expenses from a liquidating business activity.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.215805,
+            "relationship": "same_topic",
+            "comparison": "Both Goldman Sachs and Bank of America disclose that FDIC special assessment fees were a significant, non-recurring driver of operating expense volatility in the 2023-2024 period, though with opposite trends in expense recognition. Goldman Sachs recognized an incremental $71 million in 2024 but benefited from the absence of the large 2023 $529 million fee, contributing to a net decrease in operating expenses. Conversely, Bank of America reported a year-over-year increase in noninterest expense in 2024, but explicitly noted that this increase was partially offset by the absence of the large $2.1 billion FDIC expense accrual from 2023, meaning the comparison of normalized expenses would likely show a decrease similar to GS, despite the headline increase. Additionally, both firms cite higher compensation and revenue-related expenses as offsetting drivers against these regulatory fee benefits.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P061_S001",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Operating expenses, compared with 2023, reflected decreases driven by significantly lower expenses, including impairments ($1.46 billion recognized in 2023), related to commercial real estate in CIEs (largely in depreciation and amortization) and other significant expenses recognized in the prior year, including the write-down of identifiable intangible assets related to GreenSky of $506 million and an impairment of goodwill related to Consumer platforms of $504 million (both in depreciation and amortization), and the FDIC special assessment fee of $529 million (in other expenses).",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P061_S003",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "An incremental expense for the FDIC special assessment fee of $71 million was recognized in 2024, as the FDIC notified banks subject to the special assessment fee of the updated estimated cost to the Deposit Insurance Fund resulting from the closures in 2023 of Silicon Valley Bank and Signature Bank.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D019",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P017_S001",
+                    "paragraph_id": "bac_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Noninterest expense increased $967 million to $66.8 billion in 2024 compared to 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P017_S002",
+                    "paragraph_id": "bac_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The increase was primarily driven by higher revenue-related expenses as well as investments in people, operations and technology, partially offset by higher Federal Deposit Insurance Corporation (FDIC) expense in 2023, including $2.1 billion for the estimated special assessment amount arising from the closure of Silicon Valley Bank and Signature Bank, and lower expenses related to a liquidating business activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D011",
+            "peer_topic": "2024 Operating Expense Overview and Drivers",
+            "peer_summary": "Citigroup's operating expenses decreased 4% to $54.0 billion in 2024, with a 2% decrease to $53.8 billion excluding FDIC special assessments. The decline was driven by organizational simplification savings, reduced restructuring charges, and repositioning costs, partially offset by higher volume-related expenses and costs associated with a July 2024 Civil Money Penalty Consent Order.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.157478,
+            "relationship": "same_topic",
+            "comparison": "Citigroup and Goldman Sachs both highlight the dramatic year-over-year decrease in FDIC special assessment charges as a key factor in their 2024 operating expense profiles. Goldman Sachs recognized a small incremental $71 million in 2024 compared to $529 million in 2023, while Citigroup recognized $203 million in 2024 compared to approximately $1.7 billion in 2023. Both firms use this variance to explain parts of their total operating expense movements, alongside other items. Goldman Sachs focuses on impairments and goodwill write-downs as the primary drivers of its decrease, whereas Citigroup emphasizes organizational simplification savings and reduced restructuring charges, but both explicitly exclude or detail the FDIC assessment impacts to provide context on underlying expense trends.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P061_S001",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Operating expenses, compared with 2023, reflected decreases driven by significantly lower expenses, including impairments ($1.46 billion recognized in 2023), related to commercial real estate in CIEs (largely in depreciation and amortization) and other significant expenses recognized in the prior year, including the write-down of identifiable intangible assets related to GreenSky of $506 million and an impairment of goodwill related to Consumer platforms of $504 million (both in depreciation and amortization), and the FDIC special assessment fee of $529 million (in other expenses).",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P061_S003",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "An incremental expense for the FDIC special assessment fee of $71 million was recognized in 2024, as the FDIC notified banks subject to the special assessment fee of the updated estimated cost to the Deposit Insurance Fund resulting from the closures in 2023 of Silicon Valley Bank and Signature Bank.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D011",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P007_S002",
+                    "paragraph_id": "c_2024_7_P007",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Excluding the FDIC special assessment ($203 million in 2024 versus approximately $1.7 billion in the prior year), expenses of $53.8 billion decreased 2%, driven by savings related to Citi's organizational simplification and stranded cost reduction, as well as the lower restructuring charges ($259 million in 2024 versus $781 million in the prior year) and repositioning costs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D009",
+            "peer_topic": "Noninterest Expense Drivers",
+            "peer_summary": "Noninterest expense was $91.8 billion, up 5%, driven by higher compensation and a $1.0 billion Visa share contribution to the foundation, partially offset by lower FDIC-related expenses due to the timing of special assessments.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.171706,
+            "relationship": "same_topic",
+            "comparison": "JPMorgan Chase and Goldman Sachs both attribute significant year-over-year variance in their noninterest/operating expenses to the timing and magnitude of FDIC special assessments. JPMorgan noted a decrease in FDIC-related expense in 2024 compared to the large $2.9 billion assessment in Q4 2023, partially offsetting higher compensation. Similarly, Goldman Sachs benefited from the absence of its 2023 $529 million FDIC fee, contributing to lower total operating expenses despite higher compensation. Both firms disclose that compensation expenses increased due to improved performance, but the regulatory fee tailwinds (or lack thereof) played a distinct role in their respective year-over-year expense comparisons.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P061_S001",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Operating expenses, compared with 2023, reflected decreases driven by significantly lower expenses, including impairments ($1.46 billion recognized in 2023), related to commercial real estate in CIEs (largely in depreciation and amortization) and other significant expenses recognized in the prior year, including the write-down of identifiable intangible assets related to GreenSky of $506 million and an impairment of goodwill related to Consumer platforms of $504 million (both in depreciation and amortization), and the FDIC special assessment fee of $529 million (in other expenses).",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P061_S003",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "An incremental expense for the FDIC special assessment fee of $71 million was recognized in 2024, as the FDIC notified banks subject to the special assessment fee of the updated estimated cost to the Deposit Insurance Fund resulting from the closures in 2023 of Silicon Valley Bank and Signature Bank.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D009",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P018_S002",
+                    "paragraph_id": "jpm_2024_7_P018",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• Noninterest expense was $91.8 billion, up 5%, driven by higher compensation expense, including higher revenue-related compensation and growth in the number of employees, as well as a $1.0 billion contribution of Visa shares to the JPMorgan Chase Foundation recorded in the second quarter of 2024, partially offset by lower FDIC-related expense, reflecting a $2.9 billion special assessment recognized in the fourth quarter of 2023, compared with a $725 million increase to the FDIC special assessment recognized in the first quarter of 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D064",
+            "peer_topic": "Wealth Management Non-Interest Expense Trend and Drivers",
+            "peer_summary": "Wealth Management non-interest expenses increased 5% to $20,618 million in 2024 compared to the prior year. This increase was driven by higher compensation and benefits expenses, primarily due to increased formulaic payouts to representatives on higher compensable revenues, partially offset by decreases in non-compensation expenses such as professional services, legal expenses, and FDIC special assessment costs.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.196516,
+            "relationship": "same_topic",
+            "comparison": "Goldman Sachs and Morgan Stanley both identify lower FDIC special assessment costs in 2024 compared to 2023 as a contributing factor to their non-compensation or non-interest expense trends. For Morgan Stanley, lower FDIC special assessment costs reduced non-compensation expenses in its Wealth Management segment. For Goldman Sachs, the reduction in FDIC fees (from $529 million in 2023 to an incremental $71 million in 2024) was a major driver of the decrease in total operating expenses. Both firms also reported higher compensation-related expenses, but the regulatory fee environment improved for both, reducing a significant prior-year burden.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P061_S001",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Operating expenses, compared with 2023, reflected decreases driven by significantly lower expenses, including impairments ($1.46 billion recognized in 2023), related to commercial real estate in CIEs (largely in depreciation and amortization) and other significant expenses recognized in the prior year, including the write-down of identifiable intangible assets related to GreenSky of $506 million and an impairment of goodwill related to Consumer platforms of $504 million (both in depreciation and amortization), and the FDIC special assessment fee of $529 million (in other expenses).",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P061_S003",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "An incremental expense for the FDIC special assessment fee of $71 million was recognized in 2024, as the FDIC notified banks subject to the special assessment fee of the updated estimated cost to the Deposit Insurance Fund resulting from the closures in 2023 of Silicon Valley Bank and Signature Bank.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D064",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P068_S001",
+                    "paragraph_id": "ms_2024_7_P068",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Non-interest expenses of $20,618 million in 2024 increased 5% compared with the prior year, as a result of higher Compensation and benefits expenses, partially offset by lower Non-compensation expenses.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P068_S003",
+                    "paragraph_id": "ms_2024_7_P068",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Non-compensation expenses decreased, primarily driven by lower professional services and legal expenses and lower FDIC special assessment cost, partially offset by higher technology spend.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

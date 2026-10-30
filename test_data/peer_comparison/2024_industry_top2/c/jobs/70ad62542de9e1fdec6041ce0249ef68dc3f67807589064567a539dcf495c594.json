@@ -1,0 +1,309 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "b412734afcbb57973be9017e7f928628ea433dabf09301e9802ae517b004deea",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D039",
+    "item": "7",
+    "target_topic": "Banking revenue growth and composition",
+    "target_summary": "Banking revenues of $6.2 billion increased 32%, including a $180 million loss on loan hedges; excluding these losses, revenues were $6.4 billion (up 24%), driven by higher Investment Banking and Corporate Lending revenues.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0450",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report on the Banking segment's revenues. D039 reports 2024 Banking revenues of $6.2 billion. D064 reports 2025 Banking revenues, noting a 32% increase driven by Investment Banking and Corporate Lending. They share the same specific subject: Banking segment revenues.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > EXECUTIVE SUMMARY > 2024 Results Summary > Banking",
+            "summary": "Banking revenues of $6.2 billion increased 32%, including a $180 million loss on loan hedges; excluding these losses, revenues were $6.4 billion (up 24%), driven by higher Investment Banking and Corporate Lending revenues.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D039",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "Banking",
+            "summary": "Banking net income increased 53% to $2.3 billion, and revenues grew 32% (31% excluding loan hedges) due to growth in Investment Banking and Corporate Lending, aided by a lower mark-to-market loss on loan hedges.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2025_7_D064",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 1.761062,
+            "change_taxonomy": "Expanded",
+            "word_count_delta": 86,
+            "cosine_similarity": 0.707513,
+            "added_tokens_sample": [
+              "net",
+              "income",
+              "3",
+              "53",
+              "revenues",
+              "increased",
+              "driven",
+              "by",
+              "growth",
+              "and",
+              "a",
+              "lower",
+              "mark",
+              "to",
+              "market",
+              "loss",
+              "on",
+              "loan",
+              "hedges",
+              "a"
+            ],
+            "sequence_match_ratio": 0.173077,
+            "removed_tokens_sample": [
+              "banking",
+              "revenues",
+              "6",
+              "including",
+              "a",
+              "180",
+              "million",
+              "loss",
+              "on",
+              "loan",
+              "hedges",
+              "2024",
+              "versus",
+              "a",
+              "443",
+              "million",
+              "loss",
+              "on",
+              "loan",
+              "hedges"
+            ]
+          },
+          "semantic": {
+            "label": "Relocated",
+            "score": 0.863443,
+            "method": "embedding_cosine",
+            "rationale": "Score 86.34% of ceiling — content is similar but section changed from 'Management's Discussion and Analysis of Financial Condition and Results of Operations > EXECUTIVE SUMMARY > 2024 Results Summary > Banking' to 'Banking'.",
+            "matched_id": "c_2024_7_D039",
+            "normalised_score": 0.8634
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure updates specific revenue figures and growth rates (32% vs 24% excluding hedges) and quantifies the change in loan hedge losses. This provides a more precise financial picture of the segment's operating performance compared to the prior year's summary.",
+          "key_change": "Updated revenue growth figures and hedge loss quantification"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D104",
+            "peer_topic": "Noninterest income increase",
+            "peer_summary": "Noninterest income increased $572 million to $10.7 billion due to higher investment banking fees and treasury service charges, partially offset by lower leasing-related revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.132764,
+            "relationship": "same_topic",
+            "comparison": "Both Citigroup and Bank of America report significant year-over-year growth in investment banking revenues for 2024, driven by similar market recovery dynamics. Citigroup attributes its 38% increase in Investment Banking revenues to a 'rebound in overall wallet activity,' while Bank of America cites 'higher investment banking fees' as a primary driver for its $572 million increase in total noninterest income. Both disclosures highlight the recovery in fee-based revenue streams despite broader banking sector volatility.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P028_S003",
+                    "paragraph_id": "c_2024_7_P028",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Investment Banking revenues of $3.6 billion increased 38%, due to a rebound in overall wallet activity and wallet share gains across all products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D104",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P113_S001",
+                    "paragraph_id": "bac_2024_7_P113",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Noninterest income increased $572 million to $10.7 billion due to higher investment banking fees and treasury service charges, partially offset by lower leasing-related revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D045",
+            "peer_topic": "Investment Banking Revenue Drivers",
+            "peer_summary": "Investment banking revenues were $7.74 billion in 2024, up 24% from 2023, primarily due to significantly higher revenues in debt underwriting (leveraged finance) and equity underwriting (secondary and IPOs), as well as higher advisory revenues from increased M&A activity.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.169907,
+            "relationship": "same_topic",
+            "comparison": "Citigroup and Goldman Sachs both disclose substantial growth in investment banking revenues for 2024, driven by a recovery in underwriting activities. Citigroup reports a 38% increase in Investment Banking revenues due to a 'rebound in overall wallet activity,' while Goldman Sachs reports a 24% increase, primarily reflecting 'significantly higher revenues in debt underwriting, primarily driven by leveraged finance activity, and in equity underwriting.' Both firms point to the resurgence in leveraged finance and IPOs as key growth engines.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P028_S003",
+                    "paragraph_id": "c_2024_7_P028",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Investment Banking revenues of $3.6 billion increased 38%, due to a rebound in overall wallet activity and wallet share gains across all products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D045",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P049_S002",
+                    "paragraph_id": "gs_2024_7_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Investment banking revenues in the consolidated statements of earnings were $7.74 billion for 2024, 24% higher than 2023, primarily reflecting significantly higher revenues in debt underwriting, primarily driven by leveraged finance activity, and in equity underwriting, primarily driven by secondary and initial public offerings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D126",
+            "peer_topic": "Banking & Payments Revenue Composition and Drivers",
+            "peer_summary": "Banking & Payments revenue was $35.3 billion, up 11%, driven by Investment Banking fees up 37% (ranked #1 globally), Payments revenue up 1% despite margin compression from higher rates, and Lending revenue up 8% due to higher rates and the First Republic acquisition.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.157741,
+            "relationship": "same_topic",
+            "comparison": "Citigroup and JPMorgan Chase both report strong growth in Investment Banking revenues for 2024, attributed to favorable market conditions and increased transaction volumes. Citigroup’s Investment Banking revenues increased 38% due to a 'rebound in overall wallet activity,' while JPMorgan’s Investment Banking revenue increased 36% (fees up 37%), driven by 'higher fees across products' and specifically noting 'wallet share gains in IPOs.' Both disclosures highlight the recovery in M&A and underwriting pipelines.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P028_S003",
+                    "paragraph_id": "c_2024_7_P028",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Investment Banking revenues of $3.6 billion increased 38%, due to a rebound in overall wallet activity and wallet share gains across all products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D126",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P176_S002",
+                    "paragraph_id": "jpm_2024_7_P176",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• Investment Banking revenue was $9.6 billion, up 36%. Investment Banking fees were up 37%, driven by higher fees across products. The Firm ranked #1 for Global Investment Banking fees, according to Dealogic.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D029",
+            "peer_topic": "Investment Banking Revenue Growth and Drivers",
+            "peer_summary": "Investment banking net revenues increased 35% to $6,170 million in 2024, driven by higher M&A advisory volumes, increased equity underwriting from IPOs and follow-ons, and higher fixed income underwriting from bond and loan issuances.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.157694,
+            "relationship": "same_topic",
+            "comparison": "Citigroup and Morgan Stanley both disclose significant growth in investment banking revenues for 2024, driven by the recovery in M&A and underwriting. Citigroup’s Investment Banking revenues increased 38% due to a 'rebound in overall wallet activity,' while Morgan Stanley’s investment banking net revenues increased 35%, reflecting 'an increase in underwriting and Advisory revenues' with higher completed M&A transactions. Both firms experienced double-digit growth in this segment, reflecting industry-wide recovery.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P028_S003",
+                    "paragraph_id": "c_2024_7_P028",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Investment Banking revenues of $3.6 billion increased 38%, due to a rebound in overall wallet activity and wallet share gains across all products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P033_S001",
+                    "paragraph_id": "ms_2024_7_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net revenues of $6,170 million in 2024 increased 35% compared with the prior year, reflecting an increase in underwriting and Advisory revenues.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

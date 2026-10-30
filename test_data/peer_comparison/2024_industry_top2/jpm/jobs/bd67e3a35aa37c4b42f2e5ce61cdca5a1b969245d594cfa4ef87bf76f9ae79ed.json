@@ -1,0 +1,269 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "dd4458fcd69253e1fb18dfa93ea9466aa74ecab86b0abfcbc07e974108545c35",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D070",
+    "item": "7",
+    "target_topic": "2024 Operating Cash Flow Drivers",
+    "target_summary": "In 2024, cash used in operating activities resulted from higher trading assets and higher securities borrowed, largely offset by net income.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0370",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Previous D080 details drivers of cash provided in operating activities for 2023 and 2022. Current D070 details drivers for 2024. Current D071 details drivers for 2023. D080 contains the 2023 data found in D071. D070 is the 2024 counterpart. This is a split match where one previous disclosure covers two current years, and the current disclosures split those years. D080 matches D071 (2023) directly. D080's 2023 content matches D071. D070 is the new 2024 year. D080 does not match D070 directly as it didn't exist in 2023. However, D080 is a composite. I should separate D070 and D071 if possible, but D080 has 2022 too. D071 has 2023. D070 has 2024. D080 has 2023/2022. D071 is a subset of D080. D070 is unrelated in time. This grouping is slightly messy. D080 -> D071 is a strong match for 2023. D070 has no previous counterpart in D080 (2024 didn't exist). I will split this into two rows for clarity and accuracy, or keep as one if the topic is 'Operating Cash Flow Drivers'. The prompt allows many-to-many. D080 -> [D071] is the historical link. D070 is new. D080 -> [D070] is weak because of year difference. I will split D070 and D071. D071 matches D080. D070 is unmatched/new.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D080",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated cash flows analysis > Operating activities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2023, operating cash flows primarily reflected net income, lower other assets, and accrued interest and accounts receivable, offset by higher trading assets, lower accounts payable and other liabilities, and higher securities borrowed. In 2022, cash provided resulted from higher accounts payable and other liabilities, lower securities borrowed, and net proceeds from sales, securitizations, and paydowns of loans held-for-sale, partially offset by higher trading assets.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D070",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated cash flows analysis > Operating activities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2024, cash used in operating activities resulted from higher trading assets and higher securities borrowed, largely offset by net income.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D071",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated cash flows analysis > Operating activities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2023, cash provided in operating activities primarily reflected net income, lower other assets, and accrued interest and accounts receivable, predominantly offset by higher trading assets, lower accounts payable and other liabilities, and higher securities borrowed.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.88677,
+            "sequence_match_ratio": 0.559322,
+            "length_ratio": 0.761194,
+            "word_count_delta": -16,
+            "added_tokens_sample": [
+              "in",
+              "2024",
+              "cash",
+              "used",
+              "resulted",
+              "from",
+              "higher",
+              "trading",
+              "assets",
+              "and",
+              "higher",
+              "securities",
+              "borrowed",
+              "largely",
+              "offset",
+              "by",
+              "net",
+              "income"
+            ],
+            "removed_tokens_sample": [
+              "in",
+              "2022",
+              "cash",
+              "provided",
+              "resulted",
+              "from",
+              "higher",
+              "accounts",
+              "payable",
+              "and",
+              "other",
+              "liabilities",
+              "lower",
+              "securities",
+              "borrowed",
+              "and",
+              "net",
+              "proceeds",
+              "from",
+              "sales"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2023_7_D080",
+            "score": 0.998917,
+            "normalised_score": 0.9989,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 99.89% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The disclosure reflects a significant change in the drivers of operating cash flows. The 2023 disclosure described cash *provided* by operations driven by net income and asset/liability changes. The current disclosure describes cash *used* in operating activities for 2024, driven by higher trading assets and securities borrowed. This represents a substantive change in the company's operational cash flow performance and the specific balance sheet items driving it, contrasting with the prior year's positive cash flow generation.",
+          "key_change": "Shift from operating cash flow provision to usage driven by trading assets/borrowings"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0304",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures analyze cash flows from operating activities. jpm_2024_7_D070 describes 2024 results (higher trading assets/securities borrowed offset by net income). jpm_2025_7_D063 explicitly contains the same 2024 text (Sentence 5) alongside 2025 details, confirming it covers the same underlying topic of operating cash flow drivers for the comparative periods.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D070",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated cash flows analysis > Operating activities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2024, cash used in operating activities resulted from higher trading assets and higher securities borrowed, largely offset by net income.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D063",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated cash flows analysis > Operating activities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2025, cash used in operating activities resulted from higher trading assets, securities borrowed, loan held-for-sale net originations and purchases, other assets, and accrued interest/accounts receivable, partially offset by net income and higher trading liabilities; in 2024, cash used resulted from higher trading assets and securities borrowed, largely offset by net income excluding non-cash adjustments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.805579,
+            "sequence_match_ratio": 0.428571,
+            "length_ratio": 3.666667,
+            "word_count_delta": 48,
+            "added_tokens_sample": [
+              "in",
+              "2025",
+              "cash",
+              "used",
+              "resulted",
+              "from",
+              "higher",
+              "trading",
+              "assets",
+              "higher",
+              "securities",
+              "borrowed",
+              "net",
+              "originations",
+              "and",
+              "purchases",
+              "of",
+              "loans",
+              "held",
+              "for"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_7_D070",
+            "score": 0.974249,
+            "normalised_score": 0.9742,
+            "label": "Unchanged",
+            "rationale": "Score 97.42% of ceiling — semantically identical despite surface differences (word overlap 46%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The 2025 disclosure expands the description of operating cash flows in 2024 from a simple summary to one that 'excludes non-cash adjustments'. This refinement changes the substantive definition of the metric being discussed in the comparative context, indicating a shift in how the company presents or reconciles this cash flow data. Combined with the addition of new 2025 drivers, the scope of the analysis has materially broadened.",
+          "key_change": "Refinement of 2024 operating cash flow definition"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates (bac_2024_7_D009 and bac_2024_7_D088) focus on Net Income performance and segment operating margins rather than the drivers of cash flows from operating activities. JPM's target disclosure specifically analyzes cash flow drivers (trading assets, securities borrowed, net income), which is structurally and substantively different from the income statement drivers described in BAC's candidates."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates (c_2024_7_D029 and c_2024_7_D097) describe 'Markets net income' and 'All Other-Managed Basis segment' net income performance, driven by revenues and cost of credit. This is an income statement analysis, whereas JPM's target is a cash flow analysis of operating activities. The topics are not comparable."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D269",
+            "peer_topic": "2024 cash and cash equivalents decrease drivers",
+            "peer_summary": "Cash and cash equivalents decreased by $59.49 billion to $182.09 billion at the end of 2024, primarily due to net cash used for investing and operating activities, partially offset by financing activities. Investing outflows reflected net purchases of U.S. government available-for-sale securities and increased lending; operating outflows stemmed from trading assets, offset by collateralized transaction inflows; financing inflows came from secured financings and deposits, offset by stock repurchases and debt repayments.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.159679,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and GS disclose the primary drivers of cash used in operating activities for 2024, identifying 'trading assets' as a key outflow driver. JPM attributes cash used in operating activities to 'higher trading assets and higher securities borrowed, largely offset by net income,' whereas GS states that net cash used for operating activities 'primarily reflected cash outflows from trading assets, partially offset by cash inflows from collateralized transactions.' Both firms cite trading asset increases as a negative driver for operating cash flow, highlighting similar balance sheet pressures in their trading operations.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D070",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P110_S004",
+                    "paragraph_id": "jpm_2024_7_P110",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• In 2024, cash used resulted from higher trading assets and higher securities borrowed, largely offset by net income.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D269",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P358_S004",
+                    "paragraph_id": "gs_2024_7_P358",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The net cash used for operating activities primarily reflected cash outflows from trading assets, partially offset by cash inflows from collateralized transactions (reflecting both an increase in collateralized financings and a decrease in collateralized agreements).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates (ms_2024_7_D179 and ms_2024_7_D264) discuss Credit risk Risk-Weighted Assets (RWA) and Wealth Management non-trading interest rate risk composition. Neither candidate addresses cash flows from operating activities or the specific drivers of cash usage such as trading assets or securities borrowed, making them incomparable to JPM's disclosure."
+      }
+    ]
+  }
+}

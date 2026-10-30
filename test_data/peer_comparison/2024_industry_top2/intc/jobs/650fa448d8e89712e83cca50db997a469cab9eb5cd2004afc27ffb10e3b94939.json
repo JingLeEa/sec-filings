@@ -1,0 +1,331 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "4e23c2fde82d6f6194f125d577e397507ff339976368da64686009dc71d45f2e",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_8_D102",
+    "item": "8",
+    "target_topic": "Components of Other, Net Income",
+    "target_summary": "Other, net for 2024 includes a $755 million loss from the fair value change of an Ireland SCIP derivative and $560 million of interest received related to a refunded 2009 European Commission competition matter, while 2022 included a $1.0 billion gain from the first closing of the NAND memory business divestiture.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0499",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures are titled 'Interest and Other, Net' and break down specific unusual items. While D095 focuses on the NAND divestiture gain in 2022 and D102 includes that same gain alongside 2024 specific items (SCIP derivative, EC interest), they cover the same 'Other, net' line item context.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2023_8_D095",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 6: Other Financial Statement Details > Interest and Other, Net",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other, net includes a $1.0 billion gain recognized in 2022 resulting from the first closing of the divestiture of the company's NAND memory business.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_8_D102",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 6: Other Financial Statement Details > Interest and Other, Net",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other, net for 2024 includes a $755 million loss from the fair value change of an Ireland SCIP derivative and $560 million of interest received related to a refunded 2009 European Commission competition matter, while 2022 included a $1.0 billion gain from the first closing of the NAND memory business divestiture.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.599389,
+            "sequence_match_ratio": 0.411765,
+            "length_ratio": 3.434783,
+            "word_count_delta": 56,
+            "added_tokens_sample": [
+              "in",
+              "2024",
+              "a",
+              "755",
+              "million",
+              "loss",
+              "from",
+              "the",
+              "change",
+              "in",
+              "fair",
+              "value",
+              "of",
+              "a",
+              "derivative",
+              "related",
+              "to",
+              "ireland",
+              "scip",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "in",
+              "2022"
+            ]
+          },
+          "semantic": {
+            "matched_id": "intc_2023_8_D095",
+            "score": 0.853903,
+            "normalised_score": 0.8539,
+            "label": "Expanded",
+            "rationale": "Score 85.39% of ceiling — content grew from ~22 to ~78 words (3.5×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure introduces significant new items in 'Other, net', specifically a $755 million loss from a SCIP derivative and $560 million in interest received from a refunded EC competition matter. These represent new financial exposures and unusual items that were not present in the 2023 disclosure, materially altering the composition of other income/expense.",
+          "key_change": "New litigation and derivative items"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0547",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "missing_review_metadata",
+          "verifier_requested_review"
+        ],
+        "explanation": "Both disclosures detail the components of 'Other, net' income, specifically the $755 million loss from the Ireland SCIP derivative fair value change and the $560 million interest benefit from the European Commission competition matter. D138 also adds 2025 NAND sale charges, but the shared 2024 items are identical.\n\nD102 (2024) covers fair value changes of an Ireland SCIP derivative. D136 (2025) covers mark-to-market of Escrowed Shares derivative liability. Both disclosures relate to 'Interest and Other, Net' but describe distinct derivative instruments (SCIP vs. Escrowed Shares) with different underlying subjects. No counterpart found for D136 in 2024.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_8_D102",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 6: Other Financial Statement Details > Interest and Other, Net",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other, net for 2024 includes a $755 million loss from the fair value change of an Ireland SCIP derivative and $560 million of interest received related to a refunded 2009 European Commission competition matter, while 2022 included a $1.0 billion gain from the first closing of the NAND memory business divestiture.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2025_8_D136",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 6: Other Financial Statement Details > Interest and Other, Net",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The section includes a gain or loss from the mark-to-market of Escrowed Shares related to changes in the fair value of the derivative liability, with further details referenced in Note 5.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "intc_2025_8_D138",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 6: Other Financial Statement Details > Interest and Other, Net",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other, net in 2025 included $229 million in charges related to the sale of the NAND memory business, while 2024 included a $755 million loss from derivative fair value changes related to Ireland SCIP and $560 million of interest received regarding the EC competition matter.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D039",
+            "peer_topic": "Accounting policy for advertising and cooperative programs",
+            "peer_summary": "Advertising costs are expensed as incurred. Cooperative advertising funding obligations are recorded upon agreement, with expenses recognized up to the estimated fair value of the benefit received and any excess cash paid recorded as a reduction of revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.0714,
+            "relationship": "related_topic",
+            "comparison": "Both Intel and AMD disclose non-operating financial items in 'Other, net', but the composition differs significantly. Intel's 2024 'Other, net' includes a $755 million loss from a derivative fair value change and interest income, reflecting specific financial instrument and litigation-related events. In contrast, AMD's disclosed item in this section focuses on the accounting policy for advertising and cooperative programs, expensing costs as incurred and recording excess cash paid over fair value as a revenue reduction, rather than reporting specific large non-operating gains/losses like Intel's derivative or interest items.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D102",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P116_S001",
+                    "paragraph_id": "intc_2024_8_P116",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Other, net in 2024 includes a $755 million loss from the change in fair value of a derivative related to Ireland SCIP and $560 million of interest received and recognized as a benefit in 2024 in relation to the European Commission competition matter that was recorded and paid in 2009 and refunded to us in 2022.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P116_S002",
+                    "paragraph_id": "intc_2024_8_P116",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Other, net in 2022 included a $1.0 billion gain recognized from the first closing of the divestiture of our NAND memory business.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P047_S001",
+                    "paragraph_id": "amd_2024_8_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Advertising costs are expensed as incurred.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P047_S004",
+                    "paragraph_id": "amd_2024_8_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Any excess of cash paid over the estimated fair value of the advertising benefit received is recorded as a reduction of revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D025",
+            "peer_topic": "Derivative instruments hedging policy and status",
+            "peer_summary": "The company uses derivative financial instruments, specifically foreign exchange forward contracts and treasury rate locks, to manage exposure to foreign exchange and interest rate risks for hedging purposes, not for speculation. Outstanding derivatives are recognized at fair value based on Level 2 inputs. As of November 3, 2024, and October 29, 2023, the company had no material foreign exchange forward contracts outstanding. In August 2023, the company settled $5.5 billion in treasury rate lock contracts for a $371 million cumulative gain, with $75 million to be amortized to interest expense through October 2034 upon the issuance of $1.75 billion senior notes, and the remainder amortized for future debt.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.084652,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Broadcom (AVGO) discuss derivative instruments affecting 'Other, net' or similar non-operating lines. Intel reports a $755 million loss from the fair value change of a specific Ireland SCIP derivative in 2024. Broadcom also discusses derivative instruments, noting that for non-designated hedges, fair value changes are recognized in 'other income (expense), net', although Broadcom stated these gains/losses were not material in the period. Both disclosures relate to the impact of derivative fair value changes on non-operating income, though Intel's impact was material while Broadcom's was not.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D102",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P116_S001",
+                    "paragraph_id": "intc_2024_8_P116",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Other, net in 2024 includes a $755 million loss from the change in fair value of a derivative related to Ireland SCIP and $560 million of interest received and recognized as a benefit in 2024 in relation to the European Commission competition matter that was recorded and paid in 2009 and refunded to us in 2022.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P044_S002",
+                    "paragraph_id": "avgo_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "These forward contracts are not designated as hedging instruments, and the changes in fair value are recognized in other income (expense), net in the period of change.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P044_S004",
+                    "paragraph_id": "avgo_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The gains and losses recorded in other income (expense), net for derivative instruments not designated as hedges were not material.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D079",
+            "peer_topic": "Fair Value Hedges for Interest Rate Risk",
+            "peer_summary": "The company utilizes fixed-to-floating interest rate swaps as fair value hedges to mitigate fair value changes in fixed-rate debt from benchmark interest rate fluctuations, recognizing $96 million in interest expense for the changes in swap fair value in 2022, with no significant impact in 2023 or 2024, offset by corresponding reductions in interest expense on the hedged debt.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.084854,
+            "relationship": "related_topic",
+            "comparison": "Both Intel and Micron (MU) disclose financial impacts from derivative fair value changes. Intel recognizes a $755 million loss in 2024 from an Ireland SCIP derivative in 'Other, net'. Micron discloses the use of interest rate swaps as fair value hedges, recognizing $96 million in interest expense for fair value changes in 2022, with no significant impact in 2023 or 2024. While both involve derivative fair value adjustments, Intel's is a non-hedging or specific operational derivative loss in 'Other, net', whereas Micron's is a hedged item impacting interest expense, and the magnitude and fiscal year impact differ.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D102",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P116_S001",
+                    "paragraph_id": "intc_2024_8_P116",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Other, net in 2024 includes a $755 million loss from the change in fair value of a derivative related to Ireland SCIP and $560 million of interest received and recognized as a benefit in 2024 in relation to the European Commission competition matter that was recorded and paid in 2009 and refunded to us in 2022.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D079",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P090_S001",
+                    "paragraph_id": "mu_2024_8_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We also utilize fixed-to-floating interest rate swaps designated as fair value hedges to minimize certain exposures to changes in the fair value of fixed-rate debt that result from fluctuations in benchmark interest rates.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_8_P090_S002",
+                    "paragraph_id": "mu_2024_8_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We recognized interest expense of $96 million for changes in the fair value of our interest rate swaps in 2022 and the impact to interest expense was not significant for 2024 or 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The only retrieved candidate (nvda_2024_8_D001) is a generic 'Location of Required Information' statement, which is boilerplate and does not contain specific financial data, risks, or non-operating income components comparable to Intel's detailed 'Other, net' disclosure."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved for QCOM."
+      }
+    ]
+  }
+}

@@ -1,0 +1,280 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "ecb6a7c7777c1947acd6748dd7182e15b73acec259454dcc8d4132afb55e926a",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D156",
+    "item": "7",
+    "target_topic": "Income tax expense drivers",
+    "target_summary": "Income tax expense was driven by changes in the level and mix of taxable income and expenses, including the impact of the Visa share gain and charitable contribution, partially offset by benefits from tax audit settlements.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0442",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "jpm_2024_7_D156 describes current period income tax expense drivers (Visa gain, audit settlements) in the context of Business Segment & Corporate Results. jpm_2023_7_D165 and D166 describe prior/current period income tax benefits in Business Segment Results. These are comparable segment-level tax driver disclosures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D165",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > 2023 compared with 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The current period income tax benefit was driven by the finalization of certain income tax regulations, other tax adjustments, and tax benefits from audit settlements, partially offset by changes in the level and mix of income and expenses subject to taxes.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2023_7_D166",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > 2023 compared with 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The prior period income tax benefit was driven by benefits related to tax audit settlements and other tax adjustments, partially offset by changes in the level and mix of income and expenses subject to U.S. federal, state, and local taxes.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D156",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Income tax expense was driven by changes in the level and mix of taxable income and expenses, including the impact of the Visa share gain and charitable contribution, partially offset by benefits from tax audit settlements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.690031,
+            "sequence_match_ratio": 0.409091,
+            "length_ratio": 0.6,
+            "word_count_delta": -44,
+            "added_tokens_sample": [
+              "expense",
+              "and",
+              "including",
+              "impact",
+              "of",
+              "net",
+              "gain",
+              "on",
+              "visa",
+              "shares",
+              "and",
+              "the",
+              "contribution",
+              "of",
+              "visa",
+              "shares",
+              "to",
+              "the",
+              "jpmorgan",
+              "chase"
+            ],
+            "removed_tokens_sample": [
+              "benefit",
+              "the",
+              "finalization",
+              "of",
+              "certain",
+              "income",
+              "tax",
+              "regulations",
+              "other",
+              "tax",
+              "adjustments",
+              "and",
+              "tax",
+              "benefits",
+              "associated",
+              "with",
+              "tax",
+              "audit",
+              "settlements",
+              "partially"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2023_7_D165",
+            "score": 0.811487,
+            "normalised_score": 0.8115,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 81.15% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.9,
+          "reason": "The disclosure introduces the impact of the 'net gain on Visa shares' and its charitable contribution as a key driver of income tax expense for the current period. This is a specific, non-recurring, and substantial corporate event that materially changes the composition of the tax provision drivers compared to the prior year, which was driven by regulatory finalizations and audit settlements.",
+          "key_change": "Impact of Visa share gain and charitable contribution on tax expense"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0369",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review"
+        ],
+        "explanation": "Both disclosures describe the drivers of current period income tax expense. The 2024 text cites changes in mix of income/expenses and the Visa share gain/charitable contribution. The 2025 text cites changes in mix of income/expenses and a $774 million tax benefit from audit resolutions. While the specific drivers differ (Visa vs Audit benefit), they both fall under the specific topic of 'Income Tax Expense drivers in the Corporate/Overall segment' within Item 7. D139 is a subset/footnote context for the benefit mentioned in D147, so D147 is the more complete counterpart for the general tax expense discussion.\n\nThis row captures the specific link to the tax benefit detail. However, D139 is primarily about the $774M benefit, while D156 is about the overall expense drivers including Visa. Since D147 also covers the overall expense drivers and mentions the benefit, and instructions say to keep specific links but not merge rows unnecessarily if they share IDs, I will keep D147 as the primary match for the 'Expense Drivers' topic. D139 is a specific component. To avoid splitting the 'Tax Expense' topic into overlapping rows that might confuse the one-to-many mapping, I will assign D147 a",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D156",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Income tax expense was driven by changes in the level and mix of taxable income and expenses, including the impact of the Visa share gain and charitable contribution, partially offset by benefits from tax audit settlements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D139",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CORPORATE",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In Q2 2025, the firm recorded a $774 million income tax benefit driven by the resolution of tax audits and tax regulations regarding foreign currency translation gains and losses finalized in 2024.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2025_7_D147",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2025 compared with 2024",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Current period income tax expense was driven by changes in the mix of taxable income and expenses, and a $774 million income tax benefit recorded in Q2 2025 from the resolution of tax audits and finalized foreign currency translation regulations.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D133",
+            "peer_topic": "Income tax benefit variance",
+            "peer_summary": "The income tax benefit decreased to $7.6 billion in 2024 from $8.4 billion in 2023, primarily due to the absence of benefits recorded against pretax charges in 2023 for the FDIC special assessment and the impact of BSBY's cessation.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.096479,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC disclose specific drivers behind their 2024 income tax results, citing settlements and structural changes. JPM attributes its expense to 'benefits related to tax audit settlements,' while BAC attributes its decrease in tax benefit primarily to the 'absence of benefits recorded against pretax charges in 2023 for the FDIC special assessment' and the cessation of BSBY.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D156",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P243_S001",
+                    "paragraph_id": "jpm_2024_7_P243",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The current period income tax expense was driven by changes in the level and mix of income and expenses subject to U.S. federal and state and local taxes, including the impact of the net gain on Visa shares and the contribution of Visa shares to the JPMorgan Chase Foundation recorded in the second quarter of 2024, partially offset by benefits related to tax audit settlements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D133",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P140_S002",
+                    "paragraph_id": "bac_2024_7_P140",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The decrease in the income tax benefit was primarily due to the benefits recorded against pretax charges in 2023 for the FDIC special assessment and the impact of BSBY's cessation.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss income tax benefits only as a driver of segment net loss (All Other), not as the primary disclosure of income tax expense drivers for the consolidated entity."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D062",
+            "peer_topic": "Effective Income Tax Rate Changes",
+            "peer_summary": "The effective income tax rate increased to 22.4% in 2024 from 20.7% in 2023, primarily driven by a decrease in the impact of permanent tax benefits, partially offset by changes in the geographic mix of earnings.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.153106,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and GS explain the variance in their 2024 income tax metrics relative to 2023 by referencing changes in the composition of earnings and permanent tax items. JPM highlights 'changes in the level and mix of taxable income and expenses' including specific events like the Visa gain, whereas GS cites a 'decrease in the impact of permanent tax benefits' and 'changes in the geographic mix of earnings.'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D156",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P243_S001",
+                    "paragraph_id": "jpm_2024_7_P243",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The current period income tax expense was driven by changes in the level and mix of income and expenses subject to U.S. federal and state and local taxes, including the impact of the net gain on Visa shares and the contribution of Visa shares to the JPMorgan Chase Foundation recorded in the second quarter of 2024, partially offset by benefits related to tax audit settlements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D062",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P063_S001",
+                    "paragraph_id": "gs_2024_7_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The effective income tax rate for 2024 was 22.4%, up from the full year income tax rate of 20.7% for 2023, primarily due to a decrease in the impact of permanent tax benefits for 2024 compared with 2023, partially offset by changes in the geographic mix of earnings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss future accounting standard updates or segment-level interest drivers, not the specific drivers of consolidated 2024 income tax expense."
+      }
+    ]
+  }
+}

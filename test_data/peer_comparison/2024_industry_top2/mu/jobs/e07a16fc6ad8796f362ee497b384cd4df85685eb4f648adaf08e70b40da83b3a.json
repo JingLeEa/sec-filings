@@ -1,0 +1,254 @@
+{
+  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
+  "request_hash": "5628c387cad152eb4937d92592285cb4f6d44d44ab49eba9daae76e13f0b5af9",
+  "result": {
+    "target_ticker": "MU",
+    "target_disclosure_id": "mu_2024_8_D100",
+    "item": "8",
+    "target_topic": "Benefit of government incentives on operating income",
+    "target_summary": "In 2024, government incentives reduced expenses, benefiting operating income by $588 million, with approximately 85% allocated to COGS and 15% to R&D.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "mu_2023_2024_M0353",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the operating income benefit from government incentives recognized as a reduction of expense for the fiscal year. D110 reports $318 million for 2023, and D100 reports $588 million for 2024. The subject is the P&L impact of incentives.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2023_8_D110",
+            "item": "8",
+            "section": "Government Incentives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2023, government incentives recognized as a reduction of expense, primarily reduced depreciation, benefited operating income by $318 million.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2024_8_D100",
+            "item": "8",
+            "section": "Government Incentives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2024, government incentives reduced expenses, benefiting operating income by $588 million, with approximately 85% allocated to COGS and 15% to R&D.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.723914,
+            "sequence_match_ratio": 0.741935,
+            "length_ratio": 0.771429,
+            "word_count_delta": -8,
+            "added_tokens_sample": [
+              "2024",
+              "588",
+              "85",
+              "15"
+            ],
+            "removed_tokens_sample": [
+              "2023",
+              "318",
+              "93",
+              "7",
+              "primarily",
+              "in",
+              "the",
+              "form",
+              "of",
+              "reduced",
+              "depreciation",
+              "expense"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2023_8_D110",
+            "score": 0.921253,
+            "normalised_score": 0.9213,
+            "label": "Modified",
+            "rationale": "Score 92.13% of ceiling with 60% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The operating income benefit from government incentives more than doubled from $318 million to $588 million. Furthermore, the composition of this benefit changed significantly: the 2023 disclosure specified the benefit was primarily from 'reduced depreciation expense,' while the 2024 disclosure removes this qualification and provides a new breakdown of 85% COGS and 15% R&D. This shift from a depreciation-focused benefit to a broader operational expense reduction, combined with the substantial increase in magnitude, represents a meaningful change in how incentives are impacting the income statement.",
+          "key_change": "Shift in incentive benefit composition and magnitude"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "mu_2024_2025_M0353",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the benefit to operating income from government incentives, detailing the allocation between COGS and R&D. The 2024 sentence cites $588 million (85% COGS, 15% R&D), and the 2025 sentence cites $588 million (87% COGS, 13% R&D).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2024_8_D100",
+            "item": "8",
+            "section": "Government Incentives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2024, government incentives reduced expenses, benefiting operating income by $588 million, with approximately 85% allocated to COGS and 15% to R&D.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2025_8_D101",
+            "item": "8",
+            "section": "Note 20. Government Incentives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2025, government incentives reduced depreciation and operating expenses, benefiting operating income by $588 million, with approximately 87% in COGS and 13% in R&D.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.537278,
+            "sequence_match_ratio": 0.558824,
+            "length_ratio": 1.518519,
+            "word_count_delta": 14,
+            "added_tokens_sample": [
+              "2025",
+              "87",
+              "13",
+              "that",
+              "reduced",
+              "depreciation",
+              "and",
+              "operating",
+              "incentives",
+              "which",
+              "offset",
+              "against",
+              "the",
+              "related",
+              "expense",
+              "in",
+              "the",
+              "period",
+              "the",
+              "expense"
+            ],
+            "removed_tokens_sample": [
+              "2024",
+              "85",
+              "15",
+              "recognized",
+              "as",
+              "a",
+              "reduction",
+              "of"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2024_8_D100",
+            "score": 0.964436,
+            "normalised_score": 0.9644,
+            "label": "Relocated",
+            "rationale": "Score 96.44% of ceiling — content is similar but section changed from 'Government Incentives' to 'Note 20. Government Incentives'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "The operating income benefit remained flat at $588 million. Minor shift in allocation between COGS and R&D (85/15 to 87/13) and addition of 'depreciation' expense reduction are immaterial operational details. No meaningful change in substance.",
+          "key_change": "Minor shift in COGS/R&D expense allocation"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates disclose segment revenue and operating income tables (amd_2024_8_D058) and management performance review metrics (amd_2024_8_D053), but do not contain specific disclosures regarding government incentives reducing expenses or benefiting operating income by a quantified amount comparable to the target topic."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates disclose lease expense trends (avgo_2024_8_D093) and depreciation expense amounts (avgo_2024_8_D090), but do not contain specific disclosures regarding government incentives reducing expenses or benefiting operating income by a quantified amount comparable to the target topic."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D099",
+            "peer_topic": "Impact of operating-related incentives on income",
+            "peer_summary": "Operating-related incentives, including those under the CHIPS Act, benefited operating income by $442 million in 2024, with the substantial majority recorded in cost of sales.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.173802,
+            "relationship": "same_topic",
+            "comparison": "Both MU and INTC disclose specific benefits to operating income from government incentives recognized as a reduction of expense in 2024. MU reports a total benefit of $588 million, with the majority (85%) allocated to COGS and 15% to R&D. INTC reports a total benefit of $442 million from operating-related incentives (including CHIPS Act), noting that the 'substantial majority' was recorded in cost of sales. While both companies show a primary impact on COGS, INTC also discloses a separate $594 million reduction in depreciation expense from capital-related incentives (intc_2024_8_D098), a component not explicitly quantified in the same manner in MU's summary for operating income benefits.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D100",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P107_S001",
+                    "paragraph_id": "mu_2024_8_P107",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2024, operating income (loss) benefited by $588 million (approximately 85% in COGS and 15% in R&D) from government incentives recognized as a reduction of expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D099",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P112_S001",
+                    "paragraph_id": "intc_2024_8_P112",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Operating-related incentives, including those recognized under the CHIPS Act, benefited operating income by $442 million in 2024, the substantial majority of which was recorded in cost of sales ($202 million in 2023 and $104 million in 2022, a majority of which was recorded in cost of sales in both periods).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      }
+    ]
+  }
+}

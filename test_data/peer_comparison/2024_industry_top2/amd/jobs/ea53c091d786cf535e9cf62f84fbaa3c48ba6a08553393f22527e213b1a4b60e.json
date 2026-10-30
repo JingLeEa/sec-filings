@@ -1,0 +1,340 @@
+{
+  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
+  "request_hash": "22f9c0488ccbde844e98ecf03bba89cdaa68cfac4d5466d15bb5cbc80c334ed3",
+  "result": {
+    "target_ticker": "AMD",
+    "target_disclosure_id": "amd_2024_8_D036",
+    "item": "8",
+    "target_topic": "Accounting Policy for Property and Equipment",
+    "target_summary": "Property and equipment are stated at cost, with depreciation and amortization calculated on a straight-line basis over estimated useful lives of 2 to 15 years for equipment, 34 to 44 years for buildings, and based on the shorter of lease terms or useful lives for leasehold improvements.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "amd_2023_2024_M0334",
+        "relationship": "one_to_one",
+        "status": "auto_matched",
+        "review_reasons": [],
+        "explanation": "The complete selected original text is identical within the same SEC Item after removing line-leading bullet formatting and normalizing whitespace. Neither LLM agent was used for this link.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2023_8_D033",
+            "item": "8",
+            "section": "Property and Equipment",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "AMD states property and equipment at cost and uses straight-line depreciation over estimated useful lives ranging from two to 15 years for equipment, 34 to 44 years for buildings, and the shorter of lease terms or useful lives for leasehold improvements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2024_8_D036",
+            "item": "8",
+            "section": "Property and Equipment",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Property and equipment are stated at cost, with depreciation and amortization calculated on a straight-line basis over estimated useful lives of 2 to 15 years for equipment, 34 to 44 years for buildings, and based on the shorter of lease terms or useful lives for leasehold improvements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Unchanged",
+            "cosine_similarity": 1.0,
+            "sequence_match_ratio": 1.0,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "amd_2023_8_D033",
+            "score": 1.004802,
+            "normalised_score": 1.0048,
+            "label": "Unchanged",
+            "rationale": "Score 100.48% of ceiling with 100% word overlap — text is effectively identical.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.0,
+          "confidence_score": 1.0,
+          "reason": "The aligned disclosures are exact-text matches under the automatic matching policy, so no meaningful disclosure change is identified.",
+          "key_change": "No substantive change"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "amd_2024_2025_M0326",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the accounting policy for Property and Equipment, specifically stating that assets are recorded at cost and depreciation is calculated on a straight-line basis over estimated useful lives. The 2024 record (P044_S001, P044_S002) and 2025 record (P040_S001, P040_S002) cover the same subject matter, though specific useful life ranges for equipment have changed.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2024_8_D036",
+            "item": "8",
+            "section": "Property and Equipment",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Property and equipment are stated at cost, with depreciation and amortization calculated on a straight-line basis over estimated useful lives of 2 to 15 years for equipment, 34 to 44 years for buildings, and based on the shorter of lease terms or useful lives for leasehold improvements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2025_8_D032",
+            "item": "8",
+            "section": "Property and Equipment",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Property and equipment are stated at cost, with depreciation and amortization calculated on a straight-line basis over specific estimated useful lives: 2 to 7 years for equipment, up to 44 years for buildings, and leasehold improvements are measured by the shorter of the lease term or the improvement's useful life.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.955081,
+            "sequence_match_ratio": 0.949153,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "2",
+              "7",
+              "up"
+            ],
+            "removed_tokens_sample": [
+              "two",
+              "15",
+              "34"
+            ]
+          },
+          "semantic": {
+            "matched_id": "amd_2024_8_D036",
+            "score": 1.040099,
+            "normalised_score": 1.0401,
+            "label": "Unchanged",
+            "rationale": "Score 104.01% of ceiling — semantically identical despite surface differences (word overlap 86%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "AMD narrowed the estimated useful life range for equipment from '2 to 15 years' to '2 to 7 years' and changed the building range from '34 to 44 years' to 'up to 44 years'. Changing depreciation estimates for significant asset categories directly impacts reported earnings and asset base, representing a material accounting policy update.",
+          "key_change": "Narrowing of equipment and building useful life estimates"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D026",
+            "peer_topic": "Property, plant and equipment depreciation",
+            "peer_summary": "Property, plant and equipment are stated at cost less accumulated depreciation, using the straight-line method over 15-40 years for buildings and 3-10 years for machinery and equipment, with costs capitalized for additions and expensed for maintenance.",
+            "peer_taxonomy": "Operations & Capacity",
+            "retrieval_score": 0.234571,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Broadcom disclose that property and equipment are stated at cost and depreciated using the straight-line method. However, their estimated useful lives differ significantly: AMD uses 2–15 years for equipment and 34–44 years for buildings, whereas Broadcom uses 3–10 years for machinery and equipment and 15–40 years for buildings and leasehold improvements.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D036",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P044_S001",
+                    "paragraph_id": "amd_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Property and equipment are stated at cost.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P044_S002",
+                    "paragraph_id": "amd_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Depreciation and amortization are provided on a straight-line basis over the estimated useful lives of two to 15 years for equipment, 34 to 44 years for buildings, and leasehold improvements are measured by the shorter of the remaining terms of the leases or the estimated useful economic lives of the improvements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D026",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P046_S002",
+                    "paragraph_id": "avgo_2024_8_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Property, plant and equipment are stated at cost less accumulated depreciation and amortization.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P046_S006",
+                    "paragraph_id": "avgo_2024_8_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Buildings and leasehold improvements are generally depreciated over 15 to 40 years, or over the lease period, whichever is shorter, and machinery and equipment are generally depreciated over 3 to 10 years.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P046_S007",
+                    "paragraph_id": "avgo_2024_8_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We use the straight-line method of depreciation for all property, plant and equipment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D019",
+            "peer_topic": "Depreciation and capitalized interest methodology",
+            "peer_summary": "The company uses the straight-line method to compute depreciation over estimated useful lives and capitalizes interest on borrowings for eligible capital expenditures, adding this interest to asset cost.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.233687,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Intel utilize the straight-line method to compute depreciation over estimated useful lives. A key difference is that Intel explicitly states it capitalizes interest on borrowings for eligible capital expenditures and adds this interest to the cost of qualified assets, while AMD’s disclosure for this item focuses solely on the depreciation rates and does not mention capitalized interest.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D036",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P044_S002",
+                    "paragraph_id": "amd_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Depreciation and amortization are provided on a straight-line basis over the estimated useful lives of two to 15 years for equipment, 34 to 44 years for buildings, and leasehold improvements are measured by the shorter of the remaining terms of the leases or the estimated useful economic lives of the improvements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D019",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P032_S001",
+                    "paragraph_id": "intc_2024_8_P032",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We compute depreciation using the straight-line method over the estimated useful life of assets.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P032_S002",
+                    "paragraph_id": "intc_2024_8_P032",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We also capitalize interest on borrowings related to eligible capital expenditures.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P032_S003",
+                    "paragraph_id": "intc_2024_8_P032",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Capitalized interest is added to the cost of qualified assets and depreciated over the estimated useful life.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D017",
+            "peer_topic": "Depreciation and disposal policies for PP&E",
+            "peer_summary": "Property, plant, and equipment is depreciated using the straight-line method over estimated useful lives ranging from 3 to 30 years depending on the asset type, with gains or losses recognized upon retirement or disposal.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.28369,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Micron state that property, plant, and equipment are stated at cost and depreciated using the straight-line method. They differ in their specific useful life estimates; AMD reports 2–15 years for equipment and 34–44 years for buildings, while Micron reports generally 7 years for production equipment, up to 7 years for other equipment, and 10–30 years for buildings.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D036",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P044_S001",
+                    "paragraph_id": "amd_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Property and equipment are stated at cost.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P044_S002",
+                    "paragraph_id": "amd_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Depreciation and amortization are provided on a straight-line basis over the estimated useful lives of two to 15 years for equipment, 34 to 44 years for buildings, and leasehold improvements are measured by the shorter of the remaining terms of the leases or the estimated useful economic lives of the improvements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D017",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P027_S001",
+                    "paragraph_id": "mu_2024_8_P027",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Property, plant, and equipment is stated at cost and depreciated using the straight-line method over estimated useful lives of generally 10 to 30 years for buildings, 7 years for production equipment, up to 7 years for other equipment, and 3 to 5 years for software.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "no candidate was retrieved"
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "no candidate was retrieved"
+      }
+    ]
+  }
+}

@@ -1,0 +1,331 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "08881a7878fb5031e420db030ee069a350d1f346c12e67bf24dfd2d0646bd884",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_8_D239",
+    "item": "8",
+    "target_topic": "Enforcement actions in margin lending",
+    "target_summary": "If necessary, the Firm may request additional margin collateral or sell securities that have not been paid for, or purchase securities sold but not delivered from customers to manage exposure.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0745",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The required 2024 disclosure D239 ('Customer Margin and Other Lending') describes managing exposure by requesting additional margin collateral or selling/purchasing customer securities. No matching 2023 disclosure was found in the proposed groups or records that describes this specific customer margin and lending activity. D228 (Collateralized Transactions) covers a different topic. Therefore, D239 is unmatched.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D239",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Customer Margin and Other Lending",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "If necessary, the Firm may request additional margin collateral or sell securities that have not been paid for, or purchase securities sold but not delivered from customers to manage exposure.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 32,
+            "added_tokens_sample": [
+              "the",
+              "firm",
+              "may",
+              "request",
+              "additional",
+              "margin",
+              "collateral",
+              "from",
+              "customers",
+              "if",
+              "appropriate",
+              "and",
+              "if",
+              "necessary",
+              "may",
+              "sell",
+              "securities",
+              "that",
+              "have",
+              "not"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.75,
+          "reason": "This unmatched row introduces specific details on how the firm manages exposure in customer margin lending (requesting additional collateral, selling/purchasing securities). This operational detail was absent in the previous year's corresponding disclosures. It clarifies the mechanics of risk mitigation, which is a material operational detail for understanding credit risk.",
+          "key_change": "Introduction of specific customer margin risk mitigation mechanics"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0736",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures cover the enforcement actions and risk management aspects of margin lending, specifically the firm's right to request additional collateral or sell/purchase securities to manage exposure. D239 focuses on the action of requesting collateral or selling/buying securities. D244 includes this exact action, along with the demand basis and collateral policy limits, providing comprehensive support for the match.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D239",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Customer Margin and Other Lending",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "If necessary, the Firm may request additional margin collateral or sell securities that have not been paid for, or purchase securities sold but not delivered from customers to manage exposure.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2025_8_D244",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Customer Margin and Other Lending",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Margin loans are extended on a demand basis and are not committed facilities; adherence to collateral policies significantly limits credit exposure, and the Firm may request additional collateral or sell securities in the event of customer default.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.397392,
+            "sequence_match_ratio": 0.329897,
+            "length_ratio": 5.0625,
+            "word_count_delta": 130,
+            "added_tokens_sample": [
+              "margin",
+              "loans",
+              "are",
+              "extended",
+              "on",
+              "a",
+              "demand",
+              "basis",
+              "and",
+              "generally",
+              "are",
+              "not",
+              "committed",
+              "facilities",
+              "factors",
+              "considered",
+              "in",
+              "the",
+              "review",
+              "of"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "ms_2024_8_D239",
+            "score": 0.80451,
+            "normalised_score": 0.8045,
+            "label": "Expanded",
+            "rationale": "Score 80.45% of ceiling — content grew from ~32 to ~162 words (5.1×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Expanded",
+          "final_taxonomy": "Expanded"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.15,
+          "confidence_score": 0.8,
+          "reason": "The alignment matches a sentence describing the firm's right to request collateral or sell securities against customer default. The 2025 current disclosure merges this specific sentence into a broader paragraph that also includes the 'demand basis' and 'not committed' language (which were separate in the previous year's alignment M0735 but contextually linked). The specific enforcement action disclosed remains identical. The change is primarily structural/organizational of the disclosure text rather than a change in the substantive risk or operational condition.",
+          "key_change": "Structural reorganization of margin enforcement text"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D283",
+            "peer_topic": "Collateral from Securities Financing Transactions",
+            "peer_summary": "The Corporation accepts securities and loans as collateral from securities borrowed or purchased under agreements to resell, with a fair value of $925.7 billion at December 31, 2024, of which $882.2 billion were sold or repledged.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.069996,
+            "relationship": "related_topic",
+            "comparison": "MS and Bank of America (BAC) both discuss the acceptance and management of collateral, but in different contexts. MS focuses on margin collateral from customers in lending activities, specifically the right to sell unpaid securities. BAC focuses on collateral accepted from securities borrowed or purchased under agreements to resell, noting the significant fair value ($925.7 billion) and the fact that a large portion was sold or repledged. While both involve collateral, MS's disclosure is about enforcement of margin calls and liquidation, whereas BAC's is about the volume and reuse of collateral in securities financing transactions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D239",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P304_S005",
+                    "paragraph_id": "ms_2024_8_P304",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The Firm may request additional margin collateral from customers, if appropriate, and, if necessary, may sell securities that have not been paid for or purchase securities sold but not delivered from customers.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D283",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P327_S001",
+                    "paragraph_id": "bac_2024_8_P327",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The Corporation accepts securities and loans as collateral that it is permitted by contract or practice to sell or repledge.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P327_S002",
+                    "paragraph_id": "bac_2024_8_P327",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "At December 31, 2024 and 2023, the fair value of this collateral was $925.7 billion and $911.3 billion, of which $882.2 billion and $870.9 billion were sold or repledged.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D313",
+            "peer_topic": "Margin collateral requirements and liquidation policy",
+            "peer_summary": "Citi requires customers to maintain margin collateral in compliance with regulatory and internal guidelines, with daily monitoring. If customers cannot meet these requirements, the company may liquidate underlying financial instruments to restore compliance.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.108222,
+            "relationship": "same_topic",
+            "comparison": "Both Morgan Stanley (MS) and Citigroup (C) describe specific enforcement mechanisms in margin lending where they can demand additional collateral or liquidate securities to manage exposure. MS states it 'may sell securities that have not been paid for or purchase securities sold but not delivered from customers,' while C states it 'may liquidate sufficient underlying financial instruments to bring the customer into compliance with the required margin level.' Both disclosures highlight the firm's right to take action against customers who fail to maintain required margin collateral.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D239",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P304_S005",
+                    "paragraph_id": "ms_2024_8_P304",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The Firm may request additional margin collateral from customers, if appropriate, and, if necessary, may sell securities that have not been paid for or purchase securities sold but not delivered from customers.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D313",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P385_S001",
+                    "paragraph_id": "c_2024_8_P385",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Citi seeks to protect itself from the risks associated with customer activities by requiring customers to maintain margin collateral in compliance with regulatory and internal guidelines.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_8_P385_S003",
+                    "paragraph_id": "c_2024_8_P385",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Where customers cannot meet collateral requirements, Citi may liquidate sufficient underlying financial instruments to bring the customer into compliance with the required margin level.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Goldman Sachs (GS) candidates focus on realized gains/losses from securities sales and accounting recognition for collateral received in securities lending transactions. Neither candidate addresses the specific topic of margin collateral enforcement, margin calls, or liquidation of customer positions due to margin deficits, which is the core of MS's disclosure."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D391",
+            "peer_topic": "Collateral mitigation and allowance requirements for specific lending exposures",
+            "peer_summary": "Exposures subject to collateral maintenance are generally mitigated by short-term nature, collateral fair value, and margin requirements, meaning they typically do not require an allowance; however, if an allowance is deemed necessary, it is estimated based on collateral value and default probability.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.085462,
+            "relationship": "same_topic",
+            "comparison": "Both MS and JPMorgan Chase (JPM) discuss collateral maintenance and margin requirements in the context of credit risk mitigation. MS notes it 'may request additional margin collateral from customers,' and JPM describes how credit risk is mitigated by 'the Firm's right to call for, and the borrower's obligation to provide additional margin when the fair value of the collateral declines.' Both disclosures frame the ability to request additional collateral as a key feature of managing lending exposure.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D239",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P304_S005",
+                    "paragraph_id": "ms_2024_8_P304",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The Firm may request additional margin collateral from customers, if appropriate, and, if necessary, may sell securities that have not been paid for or purchase securities sold but not delivered from customers.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D391",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P583_S001",
+                    "paragraph_id": "jpm_2024_8_P583",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Credit risk arising from lending activities subject to collateral maintenance requirements is generally mitigated by factors such as the short-term nature of the activity, the fair value of collateral held and the Firm's right to call for, and the borrower's obligation to provide additional margin when the fair value of the collateral declines.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,418 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "9667475cea68fe5763bdf3ecb692a99dc1c5214302f99226aec5145ffd9db679",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D075",
+    "item": "7",
+    "target_topic": "Deposit segment provision for credit losses decrease",
+    "target_summary": "The provision for credit losses decreased $188 million to $303 million, primarily driven by lower overdraft losses from fraud activity.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0244",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures address overdraft losses as a driver for credit metrics in the consumer portfolio. D274 (2023) cites lower overdraft losses driving decreased net charge-offs ($480M), while D075 (2024) cites lower overdraft losses from fraud driving decreased provision for credit losses ($303M). Shared subject: Overdraft loss drivers impacting consumer credit metrics.\n\nBoth disclosures report net charge-offs for the 'Other Consumer' segment, primarily driven by deposit overdraft losses. D274 (2023) reports $480M net charge-offs, while D267 (2024) reports $295M. Both explicitly attribute the change/driver to overdraft losses. Shared subject: Other Consumer net charge-offs and overdraft loss drivers.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D274",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Credit Risk Management > Consumer Portfolio Credit Risk Management > Consumer Credit Portfolio > Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other consumer primarily consists of deposit overdraft balances. Net charge-offs for this segment decreased $41 million in 2023 to $480 million, primarily driven by lower overdraft losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D075",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Consumer Banking > Deposits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provision for credit losses decreased $188 million to $303 million, primarily driven by lower overdraft losses from fraud activity.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_7_D267",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Consumer Portfolio Credit Risk Management > Consumer Credit Portfolio > Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other consumer primarily consists of deposit overdraft balances. Net charge-offs decreased $185 million to $295 million in 2024 compared to 2023, primarily driven by lower overdraft losses from fraud activity.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.708416,
+            "sequence_match_ratio": 0.552632,
+            "length_ratio": 2.04,
+            "word_count_delta": 26,
+            "added_tokens_sample": [
+              "the",
+              "provision",
+              "for",
+              "credit",
+              "losses",
+              "decreased",
+              "188",
+              "million",
+              "to",
+              "303",
+              "million",
+              "primarily",
+              "driven",
+              "by",
+              "lower",
+              "overdraft",
+              "losses",
+              "from",
+              "fraud",
+              "activity"
+            ],
+            "removed_tokens_sample": [
+              "41",
+              "to",
+              "480",
+              "million"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_7_D274",
+            "score": 1.013061,
+            "normalised_score": 1.0131,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 101.31% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The disclosure updates the nature of the loss driver. Previous year cited 'lower overdraft losses' generally. Current year specifies 'lower overdraft losses from fraud activity' and links it to a specific provision decrease. This identifies a specific operational/risk factor (fraud) as a material driver of credit metrics, changing the substance of the risk disclosure compared to the previous generic attribution.",
+          "key_change": "Identification of fraud as specific driver of lower overdraft losses"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0302",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the Provision for Credit Losses for the Consumer Banking segment, with 2024 showing a decrease of $171 million to $5.0 billion (due to fraud) and 2025 showing a decrease of $338 million to $4.6 billion (due to asset quality).\n\nMatched. Both disclosures discuss the provision for credit losses decreasing significantly. The 2024 disclosure cites a $188 million decrease to $303 million driven by fraud-related overdraft losses. The 2025 disclosure cites a $338 million decrease to $4.6 billion driven by improved credit card asset quality. While the drivers differ, they are the primary segment-level PCL disclosures for Consumer Banking/Deposits in their respective years.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D067",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Consumer Banking > Consumer Banking Results",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provision for credit losses decreased $171 million to $5.0 billion, mainly due to lower overdraft losses from fraud. Noninterest expense increased $688 million to $22.1 billion, driven by investments in operations, technology, and people.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_7_D075",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Consumer Banking > Deposits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provision for credit losses decreased $188 million to $303 million, primarily driven by lower overdraft losses from fraud activity.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D072",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Consumer Banking > Consumer Banking Results",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provision for credit losses decreased $338 million to $4.6 billion, primarily due to improved asset quality in credit card.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.417327,
+            "sequence_match_ratio": 0.313253,
+            "length_ratio": 0.33871,
+            "word_count_delta": -41,
+            "added_tokens_sample": [
+              "338",
+              "4",
+              "6",
+              "due",
+              "improved",
+              "asset",
+              "quality",
+              "card"
+            ],
+            "removed_tokens_sample": [
+              "171",
+              "5",
+              "0",
+              "driven",
+              "by",
+              "lower",
+              "overdraft",
+              "losses",
+              "from",
+              "fraud",
+              "activity",
+              "noninterest",
+              "expense",
+              "increased",
+              "688",
+              "million",
+              "22",
+              "1",
+              "billion",
+              "primarily"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2024_7_D075",
+            "score": 0.895481,
+            "normalised_score": 0.8955,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 89.55% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.95,
+          "reason": "The provision for credit losses decreased significantly ($338 million) due to improved asset quality in credit cards, contrasting with prior year drivers (fraud). This indicates a meaningful improvement in credit risk and asset quality within the segment, impacting financial performance.",
+          "key_change": "Improved credit card asset quality driving PCL decrease"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D028",
+            "peer_topic": "Services cost of credit improvement",
+            "peer_summary": "Cost of credit decreased to $276 million from $950 million in the prior year, primarily due to a smaller allowance for credit losses build for transfer risk outside the U.S.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.211211,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures report a decrease in credit loss provisions/costs for 2024 compared to the prior year, but they differ in magnitude and primary drivers. Citigroup's Services segment saw cost of credit decrease significantly from $950 million to $276 million, driven by a smaller allowance build for transfer risk outside the U.S. In contrast, BAC's Consumer Banking provision decreased by a smaller amount ($188 million to $303 million), driven by lower overdraft losses from fraud activity. While both represent improvements in credit metrics, C's driver is cross-border regulatory transfer risk, whereas BAC's is operational fraud losses.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D075",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P075_S001",
+                    "paragraph_id": "bac_2024_7_P075",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The provision for credit losses decreased $188 million to $303 million primarily driven by lower overdraft losses from fraud activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D028",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P021_S002",
+                    "paragraph_id": "c_2024_7_P021",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Cost of credit decreased to $276 million from $950 million in the prior year, primarily driven by a smaller ACL build for transfer risk associated with exposures outside of the U.S., driven by safety and soundness considerations under U.S. banking law.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D102",
+            "peer_topic": "Provisions and Credit Losses",
+            "peer_summary": "Provisions were $463 million (compared to $438 million prior year), primarily driven by higher net credit losses of $168 million (vs $32 million prior year) on loans in spread products, partially offset by a lower ACL build on other assets.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.163499,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures discuss the composition and movement of the provision for credit losses, but with opposite trends. BAC reported a decrease in provision to $303 million driven by lower fraud losses. Conversely, C (in the context of its specific segment or aggregate not detailed in the snippet but implied by the text 'Provisions were $463 million') reported an increase in provisions to $463 million from $438 million, driven by higher net credit losses. This highlights divergent credit experiences where BAC saw improvement while C saw deterioration in credit losses.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D075",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P075_S001",
+                    "paragraph_id": "bac_2024_7_P075",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The provision for credit losses decreased $188 million to $303 million primarily driven by lower overdraft losses from fraud activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D102",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P129_S001",
+                    "paragraph_id": "c_2024_7_P129",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Provisions were $463 million, compared to $438 million in the prior year, primarily driven by higher net credit losses, partially offset by a lower ACL build on other assets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved that discusses provision for credit losses, cost of credit, or related financial measures comparable to BAC's disclosure. The available candidates (gs_2024_7_D055) only reference a table without providing the specific provision amount or drivers, and (gs_2024_7_D293) discusses Value at Risk (VaR), which is a market risk metric, not a credit loss provision topic."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D129",
+            "peer_topic": "Provision for Credit Losses 2024 vs 2023",
+            "peer_summary": "The provision for credit losses was $762 million in 2024, reflecting net charge-offs of $617 million (primarily in Real Estate/Office) and a $145 million net addition to the allowance driven by real estate downgrades and First Republic portfolio inclusion, compared to a $2.1 billion provision in the prior year which included a $1.5 billion allowance addition for First Republic.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.165545,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures detail the provision for credit losses and its primary drivers, but they differ in direction and specific causes. BAC reported a decrease in provision ($188 million decrease to $303 million) primarily due to lower overdraft losses from fraud. JPM reported a provision of $762 million, driven by net charge-offs in Real Estate/Office and a net addition to the allowance. While BAC's improvement was driven by fraud reductions, JPM's provision was driven by credit losses in specific sectors (Real Estate) and portfolio incorporation effects, illustrating different credit stressors and outcomes.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D075",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P075_S001",
+                    "paragraph_id": "bac_2024_7_P075",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The provision for credit losses decreased $188 million to $303 million primarily driven by lower overdraft losses from fraud activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D129",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P182_S001",
+                    "paragraph_id": "jpm_2024_7_P182",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The provision for credit losses was $762 million, reflecting:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P182_S002",
+                    "paragraph_id": "jpm_2024_7_P182",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• net charge-offs of $617 million, primarily in Real Estate, largely concentrated in Office, and",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P182_S003",
+                    "paragraph_id": "jpm_2024_7_P182",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• a $145 million net addition to the allowance for credit losses, driven by",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P182_S004",
+                    "paragraph_id": "jpm_2024_7_P182",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "-net downgrade activity, primarily in Real Estate, and the impact of incorporating the First Republic portfolio into the Firm's modeled credit loss estimates in the second quarter of 2024, predominantly offset by",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D038",
+            "peer_topic": "Provision for credit losses in 2024",
+            "peer_summary": "In 2024, the provision for credit losses on loans and lending commitments was $202 million, primarily driven by growth in the corporate loan portfolio and provisions for specific commercial real estate loans, partially offset by improvements in the macroeconomic outlook.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.186315,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures analyze the drivers of the provision for credit losses. BAC's decrease was driven by lower fraud-related overdraft losses. MS's provision of $202 million was driven by growth in the corporate loan portfolio and provisions for specific commercial real estate loans, partially offset by macroeconomic improvements. Both companies provide specific operational or portfolio drivers for their respective provision amounts, though BAC focused on fraud/overdrafts while MS focused on corporate/CRE growth and specific loan provisions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D075",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P075_S001",
+                    "paragraph_id": "bac_2024_7_P075",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The provision for credit losses decreased $188 million to $303 million primarily driven by lower overdraft losses from fraud activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D038",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P042_S001",
+                    "paragraph_id": "ms_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In 2024, the Provision for credit losses on loans and lending commitments of $202 million was primarily related to growth in the corporate loan portfolio and provisions for certain specific commercial real estate loans, partially offset by improvements in the macroeconomic outlook.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

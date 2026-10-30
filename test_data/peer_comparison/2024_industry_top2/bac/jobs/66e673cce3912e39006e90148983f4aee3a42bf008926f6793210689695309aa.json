@@ -1,0 +1,333 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "665416cb060d6a0445c6e9afc32c83ef436cedeb5f36a583e7beb57d2e0be85d",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D107",
+    "item": "7",
+    "target_topic": "Return on average allocated capital",
+    "target_summary": "The return on average allocated capital was 17 percent, down from 21 percent, due to lower net income.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0272",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the Return on Average Allocated Capital (ROAAC) for the Global Banking segment. The 2023 record states it was 21% (up from 18%). The 2024 record states it was 17% (down from 21%). The subject matter and segment alignment are identical.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D097",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The return on average allocated capital was 21 percent, up from 18 percent, due to higher net income partially offset by higher allocated capital.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D107",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The return on average allocated capital was 17 percent, down from 21 percent, due to lower net income.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.621408,
+            "sequence_match_ratio": 0.619048,
+            "length_ratio": 0.75,
+            "word_count_delta": -6,
+            "added_tokens_sample": [
+              "17",
+              "percent",
+              "down",
+              "from",
+              "lower"
+            ],
+            "removed_tokens_sample": [
+              "percent",
+              "up",
+              "from",
+              "18",
+              "higher",
+              "partially",
+              "offset",
+              "by",
+              "higher",
+              "allocated",
+              "capital"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D097",
+            "score": 0.906565,
+            "normalised_score": 0.9066,
+            "label": "Modified",
+            "rationale": "Score 90.66% of ceiling with 52% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "Return on Average Allocated Capital (ROAAC) declined from 21% to 17%. This is a significant deterioration in segment profitability efficiency, reversing the previous year's improvement.",
+          "key_change": "Decline in segment profitability efficiency"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0329",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Correct match. Both disclose Return on Average Allocated Capital for Global Banking. D107 cites ROAC 17% down from 21%. D098 (sentence P107_S001) cites ROAC 15% down from 16%. Both are the same specific topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D107",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The return on average allocated capital was 17 percent, down from 21 percent, due to lower net income.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D098",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense increased $563 million to $12.4 billion due to investments in people, technology, operations, and higher regulatory costs. The return on average allocated capital was 15 percent, down from 16 percent.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.607101,
+            "sequence_match_ratio": 0.551724,
+            "length_ratio": 2.222222,
+            "word_count_delta": 22,
+            "added_tokens_sample": [
+              "15",
+              "16",
+              "and",
+              "an",
+              "increase",
+              "in",
+              "allocated",
+              "capital",
+              "for",
+              "information",
+              "on",
+              "capital",
+              "allocated",
+              "to",
+              "the",
+              "business",
+              "segments",
+              "see",
+              "business",
+              "segment"
+            ],
+            "removed_tokens_sample": [
+              "17",
+              "21"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2024_7_D107",
+            "score": 0.884232,
+            "normalised_score": 0.8842,
+            "label": "Expanded",
+            "rationale": "Score 88.42% of ceiling — content grew from ~18 to ~40 words (2.2×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The disclosure expands to include the cause of the ROAC change. While the ROAC metric itself (15% vs 17%) is a routine financial update, the 2025 disclosure explicitly adds 'an increase in allocated capital' as a driver alongside lower net income. This changes the substance of the explanation for profitability, indicating capital allocation changes or risk weight changes, which is material to understanding segment performance.",
+          "key_change": "Introduction of allocated capital as a profitability driver"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D077",
+            "peer_topic": "Return on Equity Calculation Methodology",
+            "peer_summary": "The filing defines the calculation for return on average common stockholders' equity using net income less preferred dividends, and for return on average total stockholders' equity using net income.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.185954,
+            "relationship": "related_topic",
+            "comparison": "Both BAC and C disclose return on equity metrics for 2024, but BAC reports a specific return on average allocated capital percentage (17%) while C only defines the calculation methodology without reporting the resulting 2024 rate. BAC's disclosure highlights a decline in the metric due to lower net income, whereas C's candidate focuses solely on the definition of ROE. BAC cites 'The return on average allocated capital was 17 percent, down from 21 percent, due to lower net income.' C cites '(1) The return on average common stockholders' equity is calculated using net income less preferred stock dividends divided by average common stockholders' equity.'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D107",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P116_S001",
+                    "paragraph_id": "bac_2024_7_P116",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The return on average allocated capital was 17 percent, down from 21 percent, due to lower net income.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D077",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P071_S001",
+                    "paragraph_id": "c_2024_7_P071",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(1) The return on average common stockholders' equity is calculated using net income less preferred stock dividends divided by average common stockholders' equity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D039",
+            "peer_topic": "Financial metrics definitions",
+            "peer_summary": "The filing provides calculations for net earnings to average assets, return on shareholders' equity, average equity to average assets, and dividend payout ratio.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.077932,
+            "relationship": "related_topic",
+            "comparison": "Both BAC and GS disclose return on equity metrics for 2024, but both focus on definitions and calculation methodologies rather than reporting a specific aggregate return percentage for the segment discussed. BAC provides the resulting 17% return on average allocated capital. GS defines 'return on shareholders' equity' as net earnings divided by average monthly shareholders' equity. The comparison highlights that while both track this financial measure, BAC provides the outcome while GS provides the formula.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D107",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P116_S001",
+                    "paragraph_id": "bac_2024_7_P116",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The return on average allocated capital was 17 percent, down from 21 percent, due to lower net income.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P042_S003",
+                    "paragraph_id": "gs_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Return on shareholders' equity is calculated by dividing net earnings by average monthly shareholders' equity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D241",
+            "peer_topic": "Capital allocation methodology and ROE performance measures",
+            "peer_summary": "Each Line of Business (LOB) and Corporate is allocated capital considering peer levels and regulatory requirements, while Return on Equity (ROE) is used as a key performance measure with internal targets established.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.107159,
+            "relationship": "related_topic",
+            "comparison": "Both BAC and JPM disclose capital allocation methodologies and return metrics for 2024. BAC reports a specific return on average allocated capital of 17% driven by net income, while JPM describes the process of allocating capital to LOBs and using ROE as a performance measure without providing the aggregate segment return percentage in the cited text. Both confirm that capital allocation considers peer levels and regulatory requirements. BAC cites 'The return on average allocated capital was 17 percent, down from 21 percent, due to lower net income.' JPM cites 'Each LOB and Corporate is allocated capital by taking into consideration a variety of factors including capital levels of similarly rated peers and applicable regulatory capital requirements.'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D107",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P116_S001",
+                    "paragraph_id": "bac_2024_7_P116",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The return on average allocated capital was 17 percent, down from 21 percent, due to lower net income.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D241",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P358_S001",
+                    "paragraph_id": "jpm_2024_7_P358",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Each LOB and Corporate is allocated capital by taking into consideration a variety of factors including capital levels of similarly rated peers and applicable regulatory capital requirements.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P358_S002",
+                    "paragraph_id": "jpm_2024_7_P358",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "ROE is measured and internal targets for expected returns are established as key measures of an LOB's performance.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses return on average allocated capital or similar return-on-capital metrics. The supplied MS candidates (ms_2024_7_D061, ms_2024_7_D037) focus on Wealth Management net interest revenues and Other Net Revenues, which are distinct from the target's topic of return on average allocated capital."
+      }
+    ]
+  }
+}

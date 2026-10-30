@@ -1,0 +1,248 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "7d1f1faa98798d449d9d9daea06289281d635893a064d9547440b0246b53e4ae",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D104",
+    "item": "7",
+    "target_topic": "Noninterest income increase",
+    "target_summary": "Noninterest income increased $572 million to $10.7 billion due to higher investment banking fees and treasury service charges, partially offset by lower leasing-related revenue.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0269",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report Noninterest Income for the Global Banking segment. The 2023 disclosure cites a $106 million increase to $10.2 billion driven by tax-advantaged investments and prior year valuation adjustments, while the 2024 disclosure cites a $572 million increase to $10.7 billion driven by investment banking and treasury services.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D094",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest income increased by $106 million to $10.2 billion, driven by negative valuation adjustments on leveraged loans in the prior year and higher revenue from tax-advantaged investment activities, partially offset by lower treasury service charges and investment banking fees.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D104",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest income increased $572 million to $10.7 billion due to higher investment banking fees and treasury service charges, partially offset by lower leasing-related revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.471993,
+            "sequence_match_ratio": 0.338028,
+            "length_ratio": 0.577778,
+            "word_count_delta": -19,
+            "added_tokens_sample": [
+              "572",
+              "7",
+              "due",
+              "to",
+              "higher",
+              "investment",
+              "banking",
+              "fees",
+              "treasury",
+              "service",
+              "charges",
+              "leasing",
+              "related",
+              "revenue"
+            ],
+            "removed_tokens_sample": [
+              "106",
+              "2",
+              "driven",
+              "by",
+              "negative",
+              "valuation",
+              "adjustments",
+              "on",
+              "leveraged",
+              "loans",
+              "in",
+              "the",
+              "prior",
+              "year",
+              "higher",
+              "revenue",
+              "from",
+              "tax",
+              "advantaged",
+              "investment"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D094",
+            "score": 0.943154,
+            "normalised_score": 0.9432,
+            "label": "Reduced",
+            "rationale": "Score 94.32% of ceiling — content shrank from ~43 to ~24 words (0.6×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The drivers of Noninterest Income changed significantly. 2023 was influenced by non-recurring items (negative valuation adjustments on leveraged loans) and tax-advantaged investments. 2024 is driven by core operational fees (investment banking, treasury services) offset by leasing revenue. The removal of the leveraged loan valuation impact and the shift to fee-based revenue drivers represents a meaningful change in the composition and quality of earnings.",
+          "key_change": "Shift from non-recurring valuation adjustments to core fee income drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0025",
+        "relationship": "previous_only",
+        "status": "needs_review",
+        "review_reasons": [
+          "absence_not_proven_by_retrieval",
+          "conflicting_alignment_assignment"
+        ],
+        "explanation": "Unmatched. Previous D104 is Noninterest Income. No current disclosure with Noninterest Income evidence was found. D096 has PCL evidence. D097 has Expense evidence. D098 has ROAC evidence.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D104",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest income increased $572 million to $10.7 billion due to higher investment banking fees and treasury service charges, partially offset by lower leasing-related revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0325",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "conflicting_alignment_assignment",
+          "verifier_requested_review"
+        ],
+        "explanation": "Mismatched topic. Previous D104 reports Noninterest Income. Current D096 (sentence P105_S001) reports Provision for Credit Losses. The proposed link in group_0154 is spurious because the evidence does not support a Noninterest Income disclosure.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D104",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest income increased $572 million to $10.7 billion due to higher investment banking fees and treasury service charges, partially offset by lower leasing-related revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D096",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest income increased $984 million to $11.5 billion, primarily due to sales of certain leveraged finance positions, higher investment banking fees, and higher treasury service charges.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for C focus on 'Markets net income' and overall 'Net income' driven by cost of credit and expenses, rather than specifically isolating noninterest income drivers like investment banking fees or treasury charges comparable to BAC's specific noninterest income breakdown."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D069",
+            "peer_topic": "Global Banking & Markets revenue sources",
+            "peer_summary": "Global Banking & Markets generates revenues from investment banking fees, FICC, and Equities.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.151124,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and GS disclose that investment banking fees are a primary driver of noninterest or similar fee-based income in their respective Global Banking or Markets segments. BAC attributes its $572 million increase in noninterest income directly to higher investment banking fees, while GS identifies investment banking fees as a core revenue source for its Global Banking & Markets segment, confirming the strategic importance of this fee line item across both firms' institutional banking operations.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D104",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P113_S001",
+                    "paragraph_id": "bac_2024_7_P113",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Noninterest income increased $572 million to $10.7 billion due to higher investment banking fees and treasury service charges, partially offset by lower leasing-related revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D069",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P073_S002",
+                    "paragraph_id": "gs_2024_7_P073",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Investment banking fees.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for JPM discuss 'Noninterest expense' drivers and 'Card income' drivers, which are distinct from the 'Noninterest income' topic of BAC. There is no candidate discussing noninterest income components like investment banking fees."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for MS discuss 'Performance-based income' (carried interest) and 'Wealth Management net interest revenue'. These are distinct from BAC's 'Noninterest income' driven by investment banking fees and treasury service charges."
+      }
+    ]
+  }
+}

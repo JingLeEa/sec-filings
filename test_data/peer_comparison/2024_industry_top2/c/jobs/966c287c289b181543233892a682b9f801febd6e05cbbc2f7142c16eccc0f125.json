@@ -1,0 +1,269 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "ff181987460e0080b3a17e5b7365bdf0f8ac5d6c91a33444238ec7b539bf986c",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D044",
+    "item": "7",
+    "target_topic": "USPB Net Income Performance",
+    "target_summary": "USPB net income was $1.4 billion, a 24% decrease from the prior year, primarily driven by higher cost of credit which was partially offset by higher revenues and lower expenses.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "c_2023_2024_M0300",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report USPB net income decreases driven by higher cost of credit, partially offset by revenues. 2023 cites $1.8B (34% drop) with higher expenses; 2024 cites $1.4B (24% drop) with lower expenses.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > EXECUTIVE SUMMARY > 2023 Results Summary > U.S. Personal Banking",
+            "summary": "USPB net income decreased 34% to $1.8 billion in 2023, driven by higher cost of credit and expenses, partially offset by higher revenues.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2023_7_D029",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > EXECUTIVE SUMMARY > 2024 Results Summary > U.S. Personal Banking",
+            "summary": "USPB net income was $1.4 billion, a 24% decrease from the prior year, primarily driven by higher cost of credit which was partially offset by higher revenues and lower expenses.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D044",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 1.045455,
+            "change_taxonomy": "Modified",
+            "word_count_delta": 1,
+            "cosine_similarity": 0.759563,
+            "added_tokens_sample": [
+              "4",
+              "24",
+              "driven",
+              "by",
+              "and",
+              "lower",
+              "expenses"
+            ],
+            "sequence_match_ratio": 0.711111,
+            "removed_tokens_sample": [
+              "8",
+              "34",
+              "reflecting",
+              "and",
+              "higher",
+              "expenses"
+            ]
+          },
+          "semantic": {
+            "label": "Relocated",
+            "score": 0.976405,
+            "method": "embedding_cosine",
+            "rationale": "Score 97.64% of ceiling — content is similar but section changed from 'Management's Discussion and Analysis of Financial Condition and Results of Operations > EXECUTIVE SUMMARY > 2023 Results Summary > U.S. Personal Banking' to 'Management's Discussion and Analysis of Financial Condition and Results of Operations > EXECUTIVE SUMMARY > 2024 Results Summary > U.S. Personal Banking'.",
+            "matched_id": "c_2023_7_D029",
+            "normalised_score": 0.9764
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The driver of the USPB net income decrease shifted. In 2023, the decline was driven by both higher cost of credit AND higher expenses. In 2024, the decline was driven by higher cost of credit but was 'partially offset by lower expenses.' This indicates a material improvement in the cost structure and operational efficiency of the USPB segment, changing the narrative from a broad deterioration to a cost-containment success amidst credit headwinds.",
+          "key_change": "Shift in net income decline drivers from rising expenses to cost reductions offsetting credit losses"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0039",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "c_2024_7_D044 describes USPB net income. While c_2025_7_D084 reports USPB net income, the previous group logic placed D044 with D045. D044 is a single topic (Net Income). D084 is the net income counterpart. However, the prompt requires splitting if distinct topics. D044 is Net Income, D045 is Revenue. D084 is Net Income. D085 is NII. So D044 matches D084. Wait, the previous group had D044 unmatched. I should match it if possible. D084 is the clear match for D044's topic (USPB Net Income).",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > EXECUTIVE SUMMARY > 2024 Results Summary > U.S. Personal Banking",
+            "summary": "USPB net income was $1.4 billion, a 24% decrease from the prior year, primarily driven by higher cost of credit which was partially offset by higher revenues and lower expenses.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D044",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "llm": "Removed",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.0,
+            "change_taxonomy": "Removed",
+            "word_count_delta": -23,
+            "cosine_similarity": 0.0,
+            "added_tokens_sample": [],
+            "sequence_match_ratio": 0.0,
+            "removed_tokens_sample": [
+              "uspb",
+              "net",
+              "income",
+              "of",
+              "1",
+              "4",
+              "billion",
+              "decreased",
+              "24",
+              "driven",
+              "by",
+              "higher",
+              "cost",
+              "of",
+              "credit",
+              "partially",
+              "offset",
+              "by",
+              "higher",
+              "revenues"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "method": "alignment_presence",
+            "rationale": "One-sided change established by the finalized alignment.",
+            "matched_id": null,
+            "normalised_score": null
+          },
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The specific disclosure of USPB (U.S. Personal Banking) net income results and its primary drivers (cost of credit, revenues) has been removed. This represents a loss of specific financial data for a major business segment, affecting the user's ability to assess the company's financial position and operational results.",
+          "key_change": "Removal of segment net income results"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D072",
+            "peer_topic": "Deposits segment net income and performance drivers",
+            "peer_summary": "Net income for the Deposits segment decreased $1.2 billion to $7.5 billion, primarily due to lower revenue and higher noninterest expense, partially offset by lower provision for credit losses.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.228488,
+            "relationship": "same_topic",
+            "comparison": "Both C (USPB) and BAC (Deposits segment) reported net income decreases in 2024 driven by cost pressures and revenue dynamics, with both citing lower provisions for credit losses as a partial offset. However, C’s decline (24%) was primarily driven by higher cost of credit, whereas BAC’s segment decline ($1.2 billion) was primarily driven by lower revenue and higher noninterest expense, explicitly stating its provision was lower (a tailwind rather than a headwind like C's). Additionally, C cited higher revenues as an offsetting factor to its cost of credit issues, while BAC cited higher provision as an offset to its revenue/expense issues (though the specific BAC segment sentence says 'partially offset by lower provision', the aggregate BAC net income sentence mentions higher provision as a drag; the segment specific disclosure is the closer peer match).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D044",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P035_S001",
+                    "paragraph_id": "c_2024_7_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "USPB net income of $1.4 billion decreased 24%, driven by higher cost of credit, partially offset by higher revenues and lower expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D072",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P074_S001",
+                    "paragraph_id": "bac_2024_7_P074",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net income for Deposits decreased $1.2 billion to $7.5 billion primarily due to lower revenue and higher noninterest expense, partially offset by lower provision for credit losses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved shares the same specific topic of net income performance and its primary drivers. GS candidates focus on operating expense efficiency and net interest income growth, which are components but do not address the consolidated net income decline driven by cost of credit found in the target."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D107",
+            "peer_topic": "Net income and net revenue performance in 2024",
+            "peer_summary": "In 2024, net income was $17.6 billion, down 17% from the prior year, while net revenue was $71.5 billion, up 2%.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.200892,
+            "relationship": "same_topic",
+            "comparison": "Both C and JPM reported consolidated net income declines in 2024 (C down 24%, JPM down 17%). Both disclosures frame the performance relative to the prior year. JPM attributes its decline implicitly to credit/economic factors in other sections (though this specific sentence is minimal), while C explicitly identifies 'higher cost of credit' as the primary driver. Both companies also reported stable or improved revenue metrics (C: higher revenues; JPM: net revenue up 2%) which moderated the net income declines, though the magnitude of the credit impact differed.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D044",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P035_S001",
+                    "paragraph_id": "c_2024_7_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "USPB net income of $1.4 billion decreased 24%, driven by higher cost of credit, partially offset by higher revenues and lower expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D107",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P150_S001",
+                    "paragraph_id": "jpm_2024_7_P150",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Net income was $17.6 billion, down 17%.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved shares the same specific topic. MS candidates focus on Wealth Management segment expenses and net interest revenue, which are too narrow and segmented compared to the target's USPB consolidated net income performance."
+      }
+    ]
+  }
+}

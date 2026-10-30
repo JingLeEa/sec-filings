@@ -1,0 +1,227 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "05ad80d5ba572857aadf013d69c52e3648aadc7c229d04062fcc93e41307ea7f",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_8_D317",
+    "item": "8",
+    "target_topic": "Credit loss impact from loan sales",
+    "target_summary": "Sales of loans may result in write-downs, recoveries, or changes in the allowance for credit losses recognized in the provision for credit losses.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M1104",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report net gains/losses on sales of loans and lending-related commitments. D356 (2023) reports $56M for 2023, $186M loss for 2022, $261M gain for 2021. D316 (2024) reports $154M for 2024, $56M for 2023, $186M loss for 2022. They share the subject of gains/losses on loan sales.\n\nBoth disclosures discuss the potential for write-downs, recoveries, or changes to the allowance for credit losses resulting from the sale of loans. D356 includes this as an additional sentence. D317 consists entirely of this sentence.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_8_D356",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 12 - Loans > Gains and losses on sales of loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net gains on sales of loans and lending-related commitments were $56 million for the year ended December 31, 2023, $(186) million for 2022, and $261 million for 2021, with specific portions related to loans included in these totals. The sale of loans may also result in write-downs, recoveries, or changes to the allowance for credit losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D316",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 12 - Loans > Gains and losses on sales of loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net gains on sales of loans and lending-related commitments were $154 million for the year ended December 31, 2024, $56 million for 2023, and losses of $186 million for 2022. The 2024 figure includes $113 million related specifically to loans, compared to $62 million in 2023 and $48 million in 2022.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D317",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 12 - Loans > Gains and losses on sales of loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Sales of loans may result in write-downs, recoveries, or changes in the allowance for credit losses recognized in the provision for credit losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.869436,
+            "sequence_match_ratio": 0.889706,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "were",
+              "154",
+              "2024",
+              "113",
+              "were",
+              "were",
+              "56",
+              "2023",
+              "62",
+              "were",
+              "were",
+              "186",
+              "2022",
+              "48",
+              "were"
+            ],
+            "removed_tokens_sample": [
+              "was",
+              "56",
+              "2023",
+              "62",
+              "was",
+              "was",
+              "186",
+              "2022",
+              "48",
+              "was",
+              "was",
+              "261",
+              "2021",
+              "253",
+              "was"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2023_8_D356",
+            "score": 1.023934,
+            "normalised_score": 1.0239,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 102.39% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure splits the previous single disclosure into two: one detailing the gains/losses and another detailing the potential for write-downs or allowance changes. More importantly, the 2024 data provides a more granular breakdown of gains related specifically to loans versus lending-related commitments ($113M of $154M in 2024 vs implied less granular data in 2023). This increased transparency and segmentation of gain/loss drivers is a meaningful change in financial disclosure granularity.",
+          "key_change": "Increased granularity in gains/losses on loan sales disclosure"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M1063",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures describe the specific accounting impact of loan sales on the allowance for credit losses. D317 (2024) states that sale of loans may result in write-downs, recoveries, or changes in the allowance recognized in the provision for credit losses. D351 (2025) contains the identical statement: 'In addition, the sale of loans may also result in write downs, recoveries or changes in the allowance recognized in the provision for credit losses.' They share the exact same subject and wording.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D317",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 12 - Loans > Gains and losses on sales of loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Sales of loans may result in write-downs, recoveries, or changes in the allowance for credit losses recognized in the provision for credit losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_8_D351",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 12 - Loans > Gains and losses on sales of loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company recognizes net gains or losses on sales of loans and lending-related commitments in noninterest revenue, with additional write-downs, recoveries, or allowance changes recognized in the provision for credit losses.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "While BAC discloses changes in the allowance for credit losses and provision drivers, it does not contain specific disclosure regarding the accounting treatment or impact of loan sales (write-downs/recoveries from sales) comparable to JPM's specific disclosure on loan sale impacts. BAC's disclosed sentences focus on portfolio-level allowance decreases/increases and provision drivers rather than loan sale mechanics."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D084",
+            "peer_topic": "Loans Held-for-Sale Accounting and Reporting",
+            "peer_summary": "Loans identified for sale are classified as Loans Held-for-Sale (HFS) and accounted for at the lower of cost or market value, with gains, losses, and write-downs generally presented in Other revenue. Cash flows related to HFS loans are reported in operating activities as 'Change in loans HFS', and gains on sales of charged-off loans are presented as gross credit recoveries in the Provision for credit losses.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.174459,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and Citi disclose specific accounting treatments for gains, losses, and write-downs associated with loan sales. JPM states that sales of loans may result in write-downs, recoveries, or changes in the allowance recognized in the provision for credit losses. Citi similarly notes that gains and losses on loans held-for-sale are generally presented in Other revenue, with specific gains on charged-off loans presented as gross credit recoveries in the Provision for credit losses, indicating a shared focus on how loan sale mechanics impact credit loss provisions and revenue recognition.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D317",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P472_S004",
+                    "paragraph_id": "jpm_2024_8_P472",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "In addition, the sale of loans may also result in write downs, recoveries or changes in the allowance recognized in the provision for credit losses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D084",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P079_S004",
+                    "paragraph_id": "c_2024_8_P079",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Gains and losses on loans HFS are generally presented in Other revenue.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_8_P079_S005",
+                    "paragraph_id": "c_2024_8_P079",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Gains on sales of fully or partially charged-off loans are presented as gross credit recoveries in the Provision for credit losses up to the amount of prior charge-offs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses loan sales or the impact of loan sales on credit loss allowances. One candidate (gs_2024_8_D252) mentions loans transferred to held for sale in the context of allowance table reductions, but does not discuss the gain/loss recognition or write-down mechanics from sales. The other candidate (gs_2024_8_D317) concerns intangible asset impairment, which is not comparable to loan sale credit loss impacts."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses loan sales or the impact of loan sales on credit loss allowances. The candidates relate to general allowance references and modified loan evaluation, which are not comparable to the specific topic of credit loss impact from loan sales."
+      }
+    ]
+  }
+}

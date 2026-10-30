@@ -1,0 +1,244 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "934a239b9be76d723d0683f61edc89a63050a8b8794fdd2dada90d8f53ae1037",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D060",
+    "item": "7",
+    "target_topic": "Transactional Revenues Performance",
+    "target_summary": "Transactional revenues increased by 9% year-over-year to $3,864 million in 2024, driven by higher client activity, particularly in equity-related transactions.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0264",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report Wealth Management Transactional Revenues and their primary drivers (client activity, DCP gains/losses).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D062",
+            "item": "7",
+            "section": "Wealth Management > Net Revenues > Transactional Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Transactional revenues increased 44% to $3,556 million in 2023, driven by a turnaround in DCP investment gains (from $858 million losses to $282 million gains), partially offset by lower client activity.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D060",
+            "item": "7",
+            "section": "Wealth Management > Net Revenues > Transactional Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Transactional revenues increased by 9% year-over-year to $3,864 million in 2024, driven by higher client activity, particularly in equity-related transactions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.488121,
+            "sequence_match_ratio": 0.430769,
+            "length_ratio": 0.585366,
+            "word_count_delta": -17,
+            "added_tokens_sample": [
+              "864",
+              "2024",
+              "9",
+              "reflecting",
+              "higher",
+              "particularly",
+              "in",
+              "equity",
+              "related",
+              "transactions"
+            ],
+            "removed_tokens_sample": [
+              "556",
+              "2023",
+              "44",
+              "primarily",
+              "due",
+              "to",
+              "282",
+              "million",
+              "of",
+              "gains",
+              "on",
+              "dcp",
+              "investments",
+              "compared",
+              "with",
+              "858",
+              "million",
+              "of",
+              "losses",
+              "in"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D062",
+            "score": 0.879133,
+            "normalised_score": 0.8791,
+            "label": "Reduced",
+            "rationale": "Score 87.91% of ceiling — content shrank from ~40 to ~22 words (0.6×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The primary driver of transactional revenue changed from 'DCP investment gains' (a specific product/market performance factor) in 2023 to 'higher client activity' in 2024. This represents a fundamental shift in the source of revenue volatility and business activity.",
+          "key_change": "Change in revenue primary driver"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0061",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in Item 7 for the 2025 filing. The disclosure reports 'Transactional revenues' performance ($3.864B, +9%). Search results did not return a specific 'Transactional Revenue' performance disclosure in the top 8 hits. The hits were for RWA rollforwards, Management VaR, and Credit Ratings. These are different topics. Therefore, no matched counterpart is identified.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D060",
+            "item": "7",
+            "section": "Wealth Management > Net Revenues > Transactional Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Transactional revenues increased by 9% year-over-year to $3,864 million in 2024, driven by higher client activity, particularly in equity-related transactions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -24,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "transactional",
+              "revenues",
+              "of",
+              "3",
+              "864",
+              "million",
+              "in",
+              "2024",
+              "increased",
+              "9",
+              "compared",
+              "with",
+              "the",
+              "prior",
+              "year",
+              "reflecting",
+              "higher",
+              "client",
+              "activity",
+              "particularly"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The 2024 filing disclosed specific financial performance data for Transactional Revenues ($3.86B, +9%). The complete absence of this specific financial performance disclosure in the 2025 Item 7 results represents a significant gap in the financial narrative. This is a material removal of segment financial data.",
+          "key_change": "Removal of Transactional Revenue performance data"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D095",
+            "peer_topic": "Merrill Wealth Management Revenue",
+            "peer_summary": "Merrill Wealth Management revenue of $19.1 billion increased nine percent, primarily driven by higher asset management fees due to higher average equity market valuations and positive AUM flows, as well as higher brokerage fees due to increased transactional volume.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.105265,
+            "relationship": "same_topic",
+            "comparison": "Both Morgan Stanley and Bank of America reported a 9% year-over-year increase in revenues directly linked to transactional activity or volume in their wealth management segments for 2024. MS attributes its 9% growth in transactional revenues specifically to higher client activity in equity-related transactions, while BAC attributes its 9% growth in Merrill Wealth Management revenue to higher brokerage fees resulting from increased transactional volume. Both disclosures highlight equity market strength as a key driver for this activity.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P063_S001",
+                    "paragraph_id": "ms_2024_7_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Transactional revenues of $3,864 million in 2024 increased 9% compared with the prior year, reflecting higher client activity particularly in equity-related transactions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D095",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P105_S001",
+                    "paragraph_id": "bac_2024_7_P105",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Merrill Wealth Management revenue of $19.1 billion increased nine percent primarily driven by higher asset management fees due to the impact of higher average equity market valuations and positive AUM flows, as well as higher brokerage fees due to increased transactional volume.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that specifically discusses wealth management transactional revenues or brokerage fee drivers comparable to the target topic."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that specifically discusses wealth management transactional revenues. The provided candidates focus on investment banking underwriting and general market making environments, which are distinct business lines and revenue drivers from the targeted wealth management transactional revenues."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that specifically discusses wealth management transactional revenues. The provided candidates focus on credit card charge-offs and market-making related to federal funds/resale agreements, which are not comparable to wealth management transactional revenue performance."
+      }
+    ]
+  }
+}

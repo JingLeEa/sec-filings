@@ -1,0 +1,274 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "94c7f79fdb3ed3ba13a018d6f2da8e40a2225cb932bb1fb852d42d0ea309007b",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D158",
+    "item": "7",
+    "target_topic": "Expense Reduction Drivers",
+    "target_summary": "Expenses decreased 19%, primarily driven by lower FDIC expenses (down from $1.7 billion) and reduced restructuring charges ($259 million vs $781 million), partially offset by costs associated with the July 2024 Consent Orders with the FRB and OCC.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "c_2023_2024_M0414",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss 'All Other' expenses. The 2023 disclosure (D137) cites a $1.7 billion FDIC special assessment and restructuring charges as primary drivers of a 22% expense increase. The 2024 disclosure (D158) discusses a 19% expense decrease, specifically contrasting the lower FDIC expenses ($203 million vs $1.7 billion) and lower restructuring charges ($259 million vs $781 million), directly linking to the same specific items mentioned in the prior year.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "ALL OTHER-Managed Basis > All Other-Managed Basis",
+            "summary": "2023 revenues increased 4% driven by Corporate/Other, partially offset by Legacy Franchises; expenses increased 22% primarily due to a $1.7 billion FDIC special assessment and restructuring charges.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2023_7_D137",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "U.S. PERSONAL BANKING > ALL OTHER-Managed Basis > All Other-Managed Basis",
+            "summary": "Expenses decreased 19%, primarily driven by lower FDIC expenses (down from $1.7 billion) and reduced restructuring charges ($259 million vs $781 million), partially offset by costs associated with the July 2024 Consent Orders with the FRB and OCC.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D158",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.705263,
+            "change_taxonomy": "Reduced",
+            "word_count_delta": -28,
+            "cosine_similarity": 0.431466,
+            "added_tokens_sample": [
+              "expenses",
+              "decreased",
+              "19",
+              "primarily",
+              "lower",
+              "fdic",
+              "expenses",
+              "203",
+              "million",
+              "2024",
+              "versus",
+              "approximately",
+              "1",
+              "7",
+              "billion",
+              "in",
+              "the",
+              "prior",
+              "year",
+              "and"
+            ],
+            "sequence_match_ratio": 0.098765,
+            "removed_tokens_sample": [
+              "all",
+              "other",
+              "managed",
+              "basis",
+              "revenues",
+              "increased",
+              "4",
+              "higher",
+              "revenues",
+              "corporate",
+              "other",
+              "lower",
+              "revenues",
+              "in",
+              "legacy",
+              "franchises",
+              "managed",
+              "basis",
+              "expenses",
+              "increased"
+            ]
+          },
+          "semantic": {
+            "label": "Relocated",
+            "score": 0.734319,
+            "method": "embedding_cosine",
+            "rationale": "Score 73.43% of ceiling — content is similar but section changed from 'ALL OTHER-Managed Basis > All Other-Managed Basis' to 'U.S. PERSONAL BANKING > ALL OTHER-Managed Basis > All Other-Managed Basis'.",
+            "matched_id": "c_2023_7_D137",
+            "normalised_score": 0.7343
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The disclosure provides specific quantitative updates on the reduction of FDIC special assessments ($1.7B to $203M) and restructuring charges, which are material items impacting expenses. It also introduces a new offsetting factor: costs associated with July 2024 Consent Orders with regulators, indicating ongoing regulatory risk.",
+          "key_change": "Quantified reduction in regulatory assessments and introduction of Consent Order costs"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "BAC's candidate disclosures (bac_2024_7_D089, bac_2024_7_D073) focus exclusively on net interest income drivers related to deposit balances, not on expense reduction drivers or non-interest expense composition."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D008",
+            "peer_topic": "Operating Expense Efficiency and Adjustments",
+            "peer_summary": "Operating expenses decreased 2% to $33.77 billion in 2024, aided by lower CIE commercial real estate impairments and prior year one-time charges like the GreenSky write-down, partially offset by higher compensation and transaction expenses, resulting in an efficiency ratio improvement to 63.1% from 74.6%.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.118197,
+            "relationship": "same_topic",
+            "comparison": "Both C and GS reported decreases in overall operating expenses for 2024, attributing the reductions to specific non-recurring or regulatory charges from the prior year. C stated expenses decreased 19% primarily due to lower FDIC expenses and reduced restructuring charges, partially offset by Consent Order costs. Similarly, GS reported operating expenses decreased 2%, driven by significantly lower expenses related to CIE impairments and prior year one-time charges like the GreenSky write-down and FDIC special assessment fee, partially offset by higher compensation.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D158",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P238_S001",
+                    "paragraph_id": "c_2024_7_P238",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Expenses decreased 19%, primarily driven by lower FDIC expenses ($203 million in 2024 versus approximately $1.7 billion in the prior year) and the reduction from the closed exits and wind-downs, as well as lower restructuring charges ($259 million in 2024 versus $781 million in the prior year), partially offset by the costs of the July 2024 Consent Orders entered into with the FRB and OCC.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D008",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P010_S001",
+                    "paragraph_id": "gs_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Operating expenses were $33.77 billion for 2024, 2% lower than 2023, reflecting decreases driven by significantly lower expenses, including impairments, related to commercial real estate in consolidated investment entities (CIEs) and other significant expenses recognized in the prior year, including the write-down of identifiable intangible assets related to GreenSky Holdings, LLC (GreenSky), an impairment of goodwill related to Consumer platforms and the FDIC special assessment fee.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D154",
+            "peer_topic": "Noninterest expense reduction and drivers",
+            "peer_summary": "Noninterest expense decreased 29% to $4.0 billion, driven by lower FDIC assessments, reduced First Republic-related costs, and lower legal expenses, partially offset by a $1.0 billion Visa share contribution to the JPMorgan Chase Foundation and higher international consumer initiative costs.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.146129,
+            "relationship": "same_topic",
+            "comparison": "Both C and JPM highlighted FDIC-related expenses as a key driver of expense reduction in 2024 compared to the prior year. C reported a decrease in expenses driven by lower FDIC expenses ($203 million vs $1.7 billion), while JPM reported a 29% decrease in noninterest expense driven by a lower FDIC special assessment. Both companies also noted partial offsets from other specific items; C cited costs from Consent Orders, while JPM cited higher international consumer initiative costs and a charitable contribution.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D158",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P238_S001",
+                    "paragraph_id": "c_2024_7_P238",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Expenses decreased 19%, primarily driven by lower FDIC expenses ($203 million in 2024 versus approximately $1.7 billion in the prior year) and the reduction from the closed exits and wind-downs, as well as lower restructuring charges ($259 million in 2024 versus $781 million in the prior year), partially offset by the costs of the July 2024 Consent Orders entered into with the FRB and OCC.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D154",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P239_S001",
+                    "paragraph_id": "jpm_2024_7_P239",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $4.0 billion, down 29%, driven by:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P239_S002",
+                    "paragraph_id": "jpm_2024_7_P239",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• a lower FDIC special assessment,",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D040",
+            "peer_topic": "Non-interest expense composition and drivers",
+            "peer_summary": "Non-interest expenses totaled $19,129 million in 2024, a 5% increase year-over-year, driven by higher compensation and benefits (primarily discretionary incentive compensation) and higher non-compensation expenses (primarily execution-related and technology spend).",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.135007,
+            "relationship": "same_topic",
+            "comparison": "While MS reported an overall increase in non-interest expenses, it specifically identified 'lower FDIC special assessment cost' as a component of its non-compensation expense trends, mirroring the specific regulatory fee focus seen in C's disclosure. C detailed a massive reduction in FDIC expenses as a primary driver of its overall expense decrease, whereas MS noted this reduction only as a partial counterbalance to higher compensation and technology spend within its broader expense structure.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D158",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P238_S001",
+                    "paragraph_id": "c_2024_7_P238",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Expenses decreased 19%, primarily driven by lower FDIC expenses ($203 million in 2024 versus approximately $1.7 billion in the prior year) and the reduction from the closed exits and wind-downs, as well as lower restructuring charges ($259 million in 2024 versus $781 million in the prior year), partially offset by the costs of the July 2024 Consent Orders entered into with the FRB and OCC.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D040",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P044_S003",
+                    "paragraph_id": "ms_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Non-compensation expenses increased primarily reflecting higher execution-related expenses and increased technology spend, partially offset by lower legal expenses and lower FDIC special assessment cost.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

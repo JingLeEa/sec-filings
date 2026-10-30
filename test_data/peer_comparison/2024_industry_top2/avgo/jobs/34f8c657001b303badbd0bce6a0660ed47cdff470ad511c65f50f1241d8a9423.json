@@ -1,0 +1,311 @@
+{
+  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
+  "request_hash": "a3b2f782ed898c5bfcca6a5840fae5f61ff5808db12bc161bf9aca9a75ecd3ac",
+  "result": {
+    "target_ticker": "AVGO",
+    "target_disclosure_id": "avgo_2024_8_D060",
+    "item": "8",
+    "target_topic": "Dilutive effect calculation for equity and convertible stock",
+    "target_summary": "The dilutive effect of equity awards is calculated using the treasury stock method assuming repurchases with ESPP payments and unrecognized compensation expense, while convertible preferred stock uses the if-converted method.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "avgo_2023_2024_M0353",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail the calculation methods for diluted EPS, specifically the treasury stock method for equity awards and the if-converted method for convertible preferred stock.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2023_8_D060",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 2. Summary of Significant Accounting Policies > Other Policies and Judgments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The dilutive effect of equity awards is calculated using the treasury stock method, while convertible preferred stock dilution is calculated using the if-converted method, assuming conversion at the beginning of the period if dilutive.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_8_D060",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 2. Summary of Significant Accounting Policies > Other Policies and Judgments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The dilutive effect of equity awards is calculated using the treasury stock method assuming repurchases with ESPP payments and unrecognized compensation expense, while convertible preferred stock uses the if-converted method.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.98828,
+            "sequence_match_ratio": 0.971429,
+            "length_ratio": 0.962617,
+            "word_count_delta": -4,
+            "added_tokens_sample": [
+              "expense"
+            ],
+            "removed_tokens_sample": [
+              "exercising",
+              "stock",
+              "options",
+              "and",
+              "cost"
+            ]
+          },
+          "semantic": {
+            "matched_id": "avgo_2023_8_D060",
+            "score": 1.02333,
+            "normalised_score": 1.0233,
+            "label": "Unchanged",
+            "rationale": "Score 102.33% of ceiling with 94% word overlap — text is effectively identical.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.7,
+          "reason": "The 2023 treasury stock method description includes the amount employees must pay for 'exercising stock options'. The 2024 description removes 'exercising stock options' and refers only to 'purchasing shares under the ESPP'. This implies a change in the underlying equity instruments being modeled for dilution (potentially due to no outstanding options or a policy change), which affects the substance of the EPS calculation methodology disclosed.",
+          "key_change": "Removal of stock option exercise assumption"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "avgo_2024_2025_M0319",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosures D059 and D060 together describe the calculation of Basic and Diluted EPS, including the use of the treasury stock method for equity awards (RSUs/ESPP) and the if-converted method for convertible preferred stock. The 2025 disclosure D062 covers the Basic and Diluted EPS calculation, specifically mentioning the treasury stock method for equity awards. While D062 does not explicitly mention convertible preferred stock in the selected sentences, it shares the core topic of EPS calculation methods for equity awards and the exclusion of antidilutive shares. Given the grouping of D059/D060 in the previous proposal as they both relate to the *methodology* of diluted EPS components, they are grouped here. D062 is the closest match for the EPS policy, although it omits the specific mention of convertible preferred stock in the selected text. The shared topic is the EPS calculation methodology.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_8_D059",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 2. Summary of Significant Accounting Policies > Other Policies and Judgments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Basic EPS uses weighted-average common shares, while diluted EPS includes potentially dilutive shares like unvested RSUs, ESPP rights, and convertible preferred stock, excluding antidilutive shares.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "avgo_2024_8_D060",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 2. Summary of Significant Accounting Policies > Other Policies and Judgments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The dilutive effect of equity awards is calculated using the treasury stock method assuming repurchases with ESPP payments and unrecognized compensation expense, while convertible preferred stock uses the if-converted method.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2025_8_D062",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 2. Summary of Significant Accounting Policies > Other Policies and Judgments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Basic and diluted net income per share are calculated by dividing net income by weighted-average common shares outstanding, including dilutive unvested RSUs and ESPP rights using the treasury stock method, while excluding antidilutive shares.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.941301,
+            "sequence_match_ratio": 0.849604,
+            "length_ratio": 0.771028,
+            "word_count_delta": -49,
+            "added_tokens_sample": [
+              "net",
+              "income",
+              "per",
+              "share"
+            ],
+            "removed_tokens_sample": [
+              "attributable",
+              "to",
+              "common",
+              "stock",
+              "attributable",
+              "to",
+              "common",
+              "stock",
+              "as",
+              "well",
+              "as",
+              "convertible",
+              "preferred",
+              "stock",
+              "the",
+              "dilutive",
+              "effect",
+              "of",
+              "convertible",
+              "preferred"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "avgo_2024_8_D059",
+            "score": 0.95396,
+            "normalised_score": 0.954,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 95.40% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.3,
+          "confidence_score": 0.75,
+          "reason": "The change involves the removal of text referring to 'convertible preferred stock' in the EPS policy description. While this indicates a potential change in capital structure (no longer having dilutive convertible preferred stock), the disclosure itself is a standard accounting policy description. Without evidence that convertible preferred stock was previously material or present in significant amounts, the textual removal is best classified as a routine update reflecting current capital structure rather than a material change in business strategy or risk.",
+          "key_change": "Omission of convertible preferred stock from EPS policy"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D104",
+            "peer_topic": "Diluted EPS Calculation Methodology",
+            "peer_summary": "Diluted earnings per share includes potentially dilutive shares, determined using the treasury stock method for stock options, RSUs, ESPP common stock, and warrants.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.211999,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and AMD utilize the treasury stock method to calculate the dilutive effect of equity awards. AVGO explicitly assumes that ESPP payments and unrecognized compensation expense are used to repurchase shares under this method, a detail also consistent with AMD's methodology for stock options, RSUs, and ESPP shares.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P087_S001",
+                    "paragraph_id": "avgo_2024_8_P087",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The dilutive effect of equity awards is calculated based on the average stock price for each fiscal period, using the treasury stock method.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P087_S002",
+                    "paragraph_id": "avgo_2024_8_P087",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Under the treasury stock method, the amount the employee must pay for purchasing shares under the ESPP and the amount of compensation expense for future service that we have not yet recognized are collectively assumed to be used to repurchase shares.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D104",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P109_S002",
+                    "paragraph_id": "amd_2024_8_P109",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Potentially dilutive shares are determined by applying the treasury stock method to the Company's stock options, RSUs (including PRSUs), common stock to be issued under the ESPP and warrants.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D088",
+            "peer_topic": "EPS Calculation Methodology",
+            "peer_summary": "Intel computes basic earnings per share based on the weighted average number of shares of common stock outstanding. Diluted earnings per share includes potentially dilutive shares, with the treasury stock method applied to employee equity and the if-converted method for contractual conversion features.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.210215,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and INTC apply the treasury stock method to employee equity incentive plans (options, RSUs, stock purchase plans) and use the if-converted method for convertible or contractual conversion features. This indicates identical accounting treatments for determining the dilutive impact of these specific securities.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P087_S001",
+                    "paragraph_id": "avgo_2024_8_P087",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The dilutive effect of equity awards is calculated based on the average stock price for each fiscal period, using the treasury stock method.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P087_S003",
+                    "paragraph_id": "avgo_2024_8_P087",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The dilutive effect of convertible preferred stock is calculated using the if-converted method.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D088",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P101_S001",
+                    "paragraph_id": "intc_2024_8_P101",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Potentially dilutive shares of common stock from employee equity incentive plans are determined by applying the treasury stock method to the assumed exercise of outstanding stock options, the assumed vesting of outstanding RSUs, and the assumed issuance of common stock under the stock purchase plan.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P101_S002",
+                    "paragraph_id": "intc_2024_8_P101",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "The potentially dilutive impact from the assumed issuance of common stock associated with a contractual conversion feature is determined by applying the if-converted method to the assumed exercise of the outstanding conversion feature.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The disclosed candidates for MU concern treasury stock retirement accounting and stock-based compensation expense recognition methods, which are not comparable to the specific dilutive effect calculation methodologies (treasury stock vs if-converted) for EPS disclosed by AVGO."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      }
+    ]
+  }
+}

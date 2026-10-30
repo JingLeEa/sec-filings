@@ -1,0 +1,284 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "1bd74c2e28d9b05994b4adfc89020247750d61de20b240664121ec270c04ab8f",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D063",
+    "item": "7",
+    "target_topic": "Trading liabilities increase",
+    "target_summary": "Trading liabilities increased due to client-driven market-making activities primarily in Fixed Income Markets, which resulted in higher levels of short positions in debt instruments.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0365",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in 2023 required IDs for 'Trading liabilities'. The 2023 disclosures cover Trading Assets (D069) but not Trading Liabilities.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D063",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated balance sheets analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Trading liabilities increased due to client-driven market-making activities primarily in Fixed Income Markets, which resulted in higher levels of short positions in debt instruments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 26,
+            "added_tokens_sample": [
+              "trading",
+              "liabilities",
+              "increased",
+              "due",
+              "to",
+              "client",
+              "driven",
+              "market",
+              "making",
+              "activities",
+              "primarily",
+              "in",
+              "fixed",
+              "income",
+              "markets",
+              "which",
+              "resulted",
+              "in",
+              "higher",
+              "levels"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "This row introduces a new disclosure category ('Trading liabilities') not present in the 2023 filing. It details an increase in trading liabilities driven by client-driven market-making activities in Fixed Income Markets, resulting in higher short positions. The introduction of a new liability class with specific operational drivers constitutes a meaningful change in the disclosure of the company's financial position and risk exposure.",
+          "key_change": "Introduction of trading liabilities disclosure with fixed income market drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0298",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report an increase in 'Trading liabilities' primarily due to client-driven market-making activities resulting in higher short positions in debt instruments. The 2025 disclosure adds higher derivative payables, but the primary driver and subject matter are identical.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D063",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated balance sheets analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Trading liabilities increased due to client-driven market-making activities primarily in Fixed Income Markets, which resulted in higher levels of short positions in debt instruments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D057",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated balance sheets analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Trading liabilities increased due to client-driven market-making activities resulting in higher short positions, as well as higher derivative payables primarily from market movements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.520608,
+            "sequence_match_ratio": 0.631579,
+            "length_ratio": 1.192308,
+            "word_count_delta": 5,
+            "added_tokens_sample": [
+              "as",
+              "well",
+              "as",
+              "higher",
+              "derivative",
+              "payables",
+              "primarily",
+              "as",
+              "a",
+              "result",
+              "of",
+              "market",
+              "movements"
+            ],
+            "removed_tokens_sample": [
+              "primarily",
+              "in",
+              "fixed",
+              "income",
+              "markets",
+              "in",
+              "debt",
+              "instruments"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_7_D063",
+            "score": 0.978267,
+            "normalised_score": 0.9783,
+            "label": "Unchanged",
+            "rationale": "Score 97.83% of ceiling — semantically identical despite surface differences (word overlap 47%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The disclosure adds a new significant driver for the increase in Trading liabilities: 'higher derivative payables... from market movements'. In 2024, the increase was attributed solely to short positions in debt instruments. This introduces a new exposure to derivative market risk.",
+          "key_change": "Addition of derivative payables as a driver for trading liability growth"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D033",
+            "peer_topic": "Trading Account Liabilities Composition and Change",
+            "peer_summary": "Trading account liabilities consist primarily of short positions in equity and fixed-income securities and decreased by $3.0 billion, primarily due to lower levels of short positions within Global Markets.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.254574,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC discuss the composition of their trading liabilities as consisting primarily of short positions in securities driven by client market-making. However, they experienced opposite directional changes: JPM reported an increase in trading liabilities due to higher short positions in Fixed Income, whereas BAC reported a $3.0 billion decrease in trading account liabilities due to lower levels of short positions within Global Markets.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D063",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P101_S001",
+                    "paragraph_id": "jpm_2024_7_P101",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Trading liabilities increased due to client-driven market-making activities primarily in Fixed Income Markets, which resulted in higher levels of short positions in debt instruments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D033",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P030_S002",
+                    "paragraph_id": "bac_2024_7_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Trading account liabilities decreased $3.0 billion primarily due to lower levels of short positions within Global Markets.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P030_S001",
+                    "paragraph_id": "bac_2024_7_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Trading account liabilities consist primarily of short positions in equity and fixed-income securities including U.S. Treasury and agency securities, non-U.S. sovereign debt and corporate securities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The available candidates (c_2024_7_D030, c_2024_7_D098) discuss Markets revenue drivers and growth, not the specific composition or change in trading liabilities or short positions."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D082",
+            "peer_topic": "Accounting Treatment of Inventory",
+            "peer_summary": "The firm's inventory is recorded as trading assets for long positions or trading liabilities for short positions on its consolidated balance sheets.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.184279,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and GS identify short positions as a component of trading liabilities on their consolidated balance sheets arising from market-making activities. JPM specifically highlights an increase in these liabilities in Fixed Income Markets, while GS provides the accounting policy stating that its inventory is recorded as trading liabilities for short positions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D063",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P101_S001",
+                    "paragraph_id": "jpm_2024_7_P101",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Trading liabilities increased due to client-driven market-making activities primarily in Fixed Income Markets, which resulted in higher levels of short positions in debt instruments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D082",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P081_S004",
+                    "paragraph_id": "gs_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Our inventory is recorded in trading assets (long positions) or trading liabilities (short positions) in our consolidated balance sheets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The available candidates (ms_2024_7_D007, ms_2024_7_D068) discuss commissions/fees from market-making and asset management revenues, not trading liabilities or short positions."
+      }
+    ]
+  }
+}

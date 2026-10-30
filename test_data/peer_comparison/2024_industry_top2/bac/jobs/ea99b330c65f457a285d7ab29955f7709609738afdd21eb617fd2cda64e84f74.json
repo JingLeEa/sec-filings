@@ -1,0 +1,253 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "7fc83bf46ae9223c65742de4cbc88ff05560985caa8e5095d187764f55abe0ef",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_8_D198",
+    "item": "8",
+    "target_topic": "Performance and Delinquency Status of Modified Loans",
+    "target_summary": "Defaults on modified loans within 12 months were insignificant in 2024 and 2023; as of December 31, 2024, the $650 million in modified loans included $546 million current, $58 million 30-89 days past due, and $46 million greater than 90 days past due.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0701",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the volume of modified loans, their aging status, and the financial impact (interest rate reduction and principal forgiveness). The 2024 disclosure (bac_2024_8_D197) provides the 2024 figures ($650M modified, 0.31%, 18.89% rate reduction, $113M forgiveness) compared to the 2023 figures in the previous year's disclosure (bac_2023_8_D192: $598M modified, 0.29%).\n\nBoth disclosures monitor the performance of modified loans and report post-modification default rates and aging distributions. The 2024 disclosure (bac_2024_8_D198) explicitly compares the 2024 aging bucket details ($546M current, $58M 30-89 days, $46M >90 days) against the 2023 details ($491M current, $59M 30-89 days, $48M >90 days) referenced in the 2023 disclosure (bac_2023_8_D192).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_8_D192",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Loan Modifications to Borrowers in Financial Difficulty > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Modified loans are monitored for performance; as of December 31, 2023, post-modification defaults since January 1, 2023 were insignificant. Of the $598 million modified, $491 million were current, $59 million 30-89 days past due, and $48 million greater than 90 days past due, representing 0.29% of outstanding loans.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D197",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Loan Modifications to Borrowers in Financial Difficulty > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2024, modified loans totaled $650 million (0.31% of outstanding loans), resulting in an average interest rate reduction of 18.89% and $113 million in principal forgiveness.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D198",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Loan Modifications to Borrowers in Financial Difficulty > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Defaults on modified loans within 12 months were insignificant in 2024 and 2023; as of December 31, 2024, the $650 million in modified loans included $546 million current, $58 million 30-89 days past due, and $46 million greater than 90 days past due.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.846396,
+            "sequence_match_ratio": 0.412903,
+            "length_ratio": 2.333333,
+            "word_count_delta": 124,
+            "added_tokens_sample": [
+              "the",
+              "december",
+              "31",
+              "2024",
+              "amortized",
+              "cost",
+              "of",
+              "credit",
+              "card",
+              "and",
+              "other",
+              "consumer",
+              "loans",
+              "that",
+              "were",
+              "modified",
+              "through",
+              "these",
+              "programs",
+              "during"
+            ],
+            "removed_tokens_sample": [
+              "modified",
+              "since",
+              "january",
+              "1",
+              "2023",
+              "of",
+              "the",
+              "598",
+              "million",
+              "in",
+              "as",
+              "these",
+              "modifications",
+              "represented",
+              "0",
+              "29",
+              "percent",
+              "of",
+              "outstanding",
+              "credit"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_8_D192",
+            "score": 0.99308,
+            "normalised_score": 0.9931,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 99.31% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure provides updated quantitative metrics for the current year (2024) compared to the prior year (2023). Key changes include: modified loan volume increasing from $598 million to $650 million; percentage of outstanding loans increasing from 0.29% to 0.31%; principal forgiveness nearly doubling from $61 million to $113 million; and aging bucket shifts. These are meaningful changes in the company's financial exposure and credit risk profile for consumer loans.",
+          "key_change": "Increase in modified loan volume and principal forgiveness"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0725",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures report on the performance of modified credit card and other consumer loans, specifically tracking defaults within 12 months of modification and aging status of modified loans. The 2025 disclosure explicitly references the 2024 totals ($650 million, $546 million current, etc.) for comparison, confirming the same underlying topic.\n\nBoth disclosures relate to Credit Card and Other Consumer loans modified in financial difficulty. D211 presents carrying value by program type for TDRs modified in 2022. D183 presents the aging/default status of modified Credit Card and Other Consumer loans ($705 million total, split by current/past due) for 2025/2024. They share the specific topic of quantitative performance/status of modified Credit Card and Other Consumer loans.\n\nD212 defines the payment default criteria for Credit Card and Other Consumer loans (missing 2 of 2 consecutive payments). D183 discusses the defaults of modified Credit Card and Other Consumer loans, stating they were insignificant in 2025/2024 and provides the aging bucket details. While D212 is a definition and D183 is a status report, they both concern the specific topic of 'payment default' and 'aging/statu",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D198",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Loan Modifications to Borrowers in Financial Difficulty > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Defaults on modified loans within 12 months were insignificant in 2024 and 2023; as of December 31, 2024, the $650 million in modified loans included $546 million current, $58 million 30-89 days past due, and $46 million greater than 90 days past due.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D211",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Prior-period Troubled Debt Restructuring Disclosures > Consumer Real Estate > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "A table presents the December 31, 2022 carrying value for Credit Card and Other Consumer loans modified in a TDR during 2022, broken down by program type.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D212",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Prior-period Troubled Debt Restructuring Disclosures > Consumer Real Estate > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Credit card and other consumer loans are considered in payment default during the quarter a borrower misses the second of two consecutive payments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_8_D183",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Loan Modifications to Borrowers in Financial Difficulty > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Modified loan defaults within 12 months were insignificant in 2025 and 2024; at December 31, 2025, $705 million in modified loans consisted of $602 million current, $59 million 30-89 days past due, and $44 million greater than 90 days past due.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved for a topic directly comparable to BAC's consumer loan modification performance. C's candidate d368 focuses on 'Modified Corporate Loans', which differs from BAC's 'Credit Card and Other Consumer' focus. Candidate d372 discusses delinquency definitions and exclusions for Private Bank loans, which is a general delinquency taxonomy item rather than a specific disclosure on the performance outcomes of modified loans to borrowers in financial difficulty."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D239",
+            "peer_topic": "Loan Modification Policies and Outcomes",
+            "peer_summary": "The firm may modify terms for borrowers in financial difficulty, primarily via term extensions; modified loans were mostly performing, with negligible defaults in 2024 and ~$100 million charged off in 2023 from previously modified loans.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.167514,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and GS disclose that defaults on modified loans to borrowers in financial difficulty were insignificant or not material in 2024. BAC reports that defaults on modified credit card and other consumer loans were insignificant for both 2024 and 2023, with a total modified loan balance of $650 million at year-end 2024, of which $546 million were current and only $104 million were past due. Similarly, GS states that during 2024, loans that defaulted after being modified were not material, and substantially all remaining modified loans were performing in accordance with modified terms. However, GS notes that in 2023, it charged off approximately $100 million of previously modified loans, whereas BAC reported insignificant defaults for both years. Additionally, GS's modified loans primarily involved corporate and commercial real estate loans with term extensions, while BAC's disclosure focuses specifically on credit card and other consumer loans.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D198",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P231_S002",
+                    "paragraph_id": "bac_2024_8_P231",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "During 2024 and 2023, defaults of credit card and other consumer loans that had been modified within 12 months were insignificant.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P231_S003",
+                    "paragraph_id": "bac_2024_8_P231",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "At December 31, 2024, modified credit card and other consumer loans to borrowers experiencing financial difficulty over the last 12 months totaled $650 million, of which $546 million were current, $58 million were 30-89 days past due, and $46 million were greater than 90 days past due.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D239",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P319_S005",
+                    "paragraph_id": "gs_2024_8_P319",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• During 2024, loans that defaulted after being modified were not material. During 2023, the firm charged off approximately $100 million of loans that had defaulted after being modified. Substantially all of the remaining modified loans were performing in accordance with the modified contractual terms as of both December 2024 and December 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved for a topic directly comparable to BAC's modified loan performance. Candidate d369 discloses 'Unfunded Commitments on Modified Loans', which is a risk exposure metric (future lending potential) rather than the performance status (current vs. past due) or default rates of the modified loans themselves. Candidate d114 discusses the inclusion of government-guaranteed loans in past-due data, which is a definition/exclusion note, not a disclosure on the outcomes of modified loans."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved for a topic directly comparable to BAC's modified loan performance. Candidate d251 discusses the status of 'Past Due Loans Held for Investment' generally, noting a shift in the majority of past due loans being 90+ days past due, but it does not disclose data specifically on the modification program outcomes, defaults of modified loans, or the performance of loans modified for borrowers in financial difficulty. Candidate d263 discusses employee loan vintage status, which is unrelated to modified consumer loans."
+      }
+    ]
+  }
+}

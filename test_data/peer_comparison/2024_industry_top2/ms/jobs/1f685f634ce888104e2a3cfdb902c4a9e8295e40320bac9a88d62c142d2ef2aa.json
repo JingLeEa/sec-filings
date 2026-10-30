@@ -1,0 +1,307 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "7e6f06e918ec557dbf58775793ef61a34b0e0b6d12ecd7326ca10015d50e3de2",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D074",
+    "item": "7",
+    "target_topic": "Compensation Expense Driver",
+    "target_summary": "Compensation and benefits expenses increased primarily due to higher compensation associated with carried interest.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0276",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures analyze the drivers of changes in 'Compensation and benefits expenses' within the Investment Management segment. The 2023 disclosure (D073) attributes the decrease to lower carried interest expenses, partially offset by DCP. The 2024 disclosure (D074) attributes the increase to higher compensation associated with carried interest. They address the same specific sub-component of expenses and its variation drivers.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D073",
+            "item": "7",
+            "section": "Investment Management > Non-Interest Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Compensation and benefits expenses decreased mainly due to lower costs associated with carried interest, partially offset by higher expenses related to DCP.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D074",
+            "item": "7",
+            "section": "Investment Management > Non-Interest Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Compensation and benefits expenses increased primarily due to higher compensation associated with carried interest.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.64731,
+            "sequence_match_ratio": 0.615385,
+            "length_ratio": 0.56,
+            "word_count_delta": -11,
+            "added_tokens_sample": [
+              "increased",
+              "higher"
+            ],
+            "removed_tokens_sample": [
+              "decreased",
+              "lower",
+              "expenses",
+              "related",
+              "to",
+              "partially",
+              "offset",
+              "by",
+              "higher",
+              "expenses",
+              "related",
+              "to",
+              "dcp"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D073",
+            "score": 0.876671,
+            "normalised_score": 0.8767,
+            "label": "Reduced",
+            "rationale": "Score 87.67% of ceiling — content shrank from ~26 to ~15 words (0.6×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.3,
+          "confidence_score": 0.8,
+          "reason": "The change is primarily the removal of the 'partially offset by higher expenses related to DCP' clause found in 2023. The remaining driver (higher compensation associated with carried interest) is a routine fluctuation in a performance-based expense line item. The removal of the offset detail simplifies the explanation but does not materially alter the understanding of the primary cost driver or risk.",
+          "key_change": "Removal of DCP expense offset detail"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0074",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in 2025 Item 7. Search results for 'Compensation and benefits expenses... carried interest' returned unrelated funding, deposit, and RWA disclosures. No 2025 disclosure specifically addresses Investment Management compensation drivers related to carried interest.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D074",
+            "item": "7",
+            "section": "Investment Management > Non-Interest Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Compensation and benefits expenses increased primarily due to higher compensation associated with carried interest.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -14,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "compensation",
+              "and",
+              "benefits",
+              "expenses",
+              "increased",
+              "primarily",
+              "due",
+              "to",
+              "higher",
+              "compensation",
+              "associated",
+              "with",
+              "carried",
+              "interest"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The disclosure explained that increased compensation was driven by 'carried interest.' Carried interest compensation is a critical, variable, and often significant component of investment firm economics. Its removal obscures the link between performance and executive pay, a key risk and incentive metric for investors.",
+          "key_change": "Removal of carried interest compensation driver"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D091",
+            "peer_topic": "GWIM Noninterest Expense",
+            "peer_summary": "Noninterest expense increased $1.4 billion to $17.2 billion, primarily due to higher revenue-related incentives.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.186484,
+            "relationship": "same_topic",
+            "comparison": "Both MS and BAC identified performance-based or revenue-linked compensation as a primary driver for the increase in their respective non-interest/compensation expenses in FY2024. MS attributed its increase to 'higher compensation associated with carried interest,' while BAC cited 'higher revenue-related incentives' as the primary cause for its $1.4 billion noninterest expense increase.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D074",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P081_S002",
+                    "paragraph_id": "ms_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Compensation and benefits expenses increased primarily due to higher compensation associated with carried interest.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D091",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P102_S001",
+                    "paragraph_id": "bac_2024_7_P102",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Noninterest expense increased $1.4 billion to $17.2 billion primarily due to higher revenue-related incentives.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The available candidate c_2024_7_D088 attributes expense increases to technology investments, platform modernization, and regulatory taxes rather than performance-based or carried interest compensation. Candidate c_2024_7_D154 concerns revenue growth, not expense drivers. No candidate matches the specific topic of compensation expense driven by performance-linked items like carried interest."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D008",
+            "peer_topic": "Operating Expense Efficiency and Adjustments",
+            "peer_summary": "Operating expenses decreased 2% to $33.77 billion in 2024, aided by lower CIE commercial real estate impairments and prior year one-time charges like the GreenSky write-down, partially offset by higher compensation and transaction expenses, resulting in an efficiency ratio improvement to 63.1% from 74.6%.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.14603,
+            "relationship": "same_topic",
+            "comparison": "Both MS and GS reported that compensation expenses were driven by improved business performance metrics. GS explicitly stated that higher compensation expenses reflected 'improved operating performance,' aligning with MS's driver of 'higher compensation associated with carried interest,' which typically correlates with performance outcomes.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D074",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P081_S002",
+                    "paragraph_id": "ms_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Compensation and benefits expenses increased primarily due to higher compensation associated with carried interest.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D008",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P010_S002",
+                    "paragraph_id": "gs_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These decreases were partially offset by higher compensation and benefits expenses (reflecting improved operating performance) and higher transaction based expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D128",
+            "peer_topic": "Noninterest Expense Drivers",
+            "peer_summary": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense (including revenue-related compensation and increased headcount) and higher technology and brokerage expense, partially offset by lower legal expense.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.148682,
+            "relationship": "same_topic",
+            "comparison": "Both MS and JPM identified revenue-related or performance-based compensation as a key driver of their increased noninterest expenses. JPM’s increase was driven by 'higher compensation expense, including revenue-related compensation,' whereas MS’s increase was primarily due to 'higher compensation associated with carried interest,' representing a similar linkage to performance-based pay structures.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D074",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P081_S002",
+                    "paragraph_id": "ms_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Compensation and benefits expenses increased primarily due to higher compensation associated with carried interest.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D128",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P181_S001",
+                    "paragraph_id": "jpm_2024_7_P181",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense, including revenue-related compensation and an increase in the number of employees, as well as higher technology and brokerage expense partially offset by lower legal expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

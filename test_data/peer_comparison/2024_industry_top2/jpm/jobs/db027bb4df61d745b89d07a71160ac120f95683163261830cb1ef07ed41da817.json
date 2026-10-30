@@ -1,0 +1,248 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "b731c6bc8d524acb245b72c2f548de79854506ff5f77f5bdd7aac31ffec658ee",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D381",
+    "item": "7",
+    "target_topic": "Multifamily Exposure Performance and Geography",
+    "target_summary": "Total Multifamily exposure is approximately 99% performing and is largely located in California.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0641",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the security profile and composition of the Real Estate exposure, specifically noting the percentage secured (82% in 2023, 84% in 2024) and that unsecured exposure is largely investment-grade REITs/REOCs. The shared topic is the aggregate Real Estate portfolio quality.\n\nBoth disclosures discuss Multifamily exposure characteristics, specifically geographic concentration in California. 2023 D381 states Multifamily is largely in California; 2024 D381 states Multifamily is largely in California.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D381",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > WHOLESALE CREDIT PORTFOLIO > Real Estate",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Approximately 82% of Real Estate exposure is secured, while unsecured exposure is mainly investment-grade exposure to REITs and REOCs. Multifamily exposure is largely concentrated in California, and the portfolio includes $33.4 billion in exposure associated with First Republic.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D381",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Real Estate",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total Multifamily exposure is approximately 99% performing and is largely located in California.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D383",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Real Estate",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Real Estate exposure is approximately 84% secured; unsecured exposure is largely investment-grade primarily to Real Estate Investment Trusts (REITs) and Real Estate Operating Companies (REOCs) with generally diversified underlying assets.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.836126,
+            "sequence_match_ratio": 0.762887,
+            "length_ratio": 0.94,
+            "word_count_delta": -3,
+            "added_tokens_sample": [
+              "total",
+              "multifamily",
+              "exposure",
+              "is",
+              "approximately",
+              "99",
+              "performing",
+              "84",
+              "largely",
+              "primarily"
+            ],
+            "removed_tokens_sample": [
+              "82",
+              "predominantly",
+              "largely",
+              "e",
+              "represents",
+              "drawn",
+              "exposure",
+              "as",
+              "a",
+              "percentage",
+              "of",
+              "credit",
+              "exposure"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2023_7_D381",
+            "score": 0.920576,
+            "normalised_score": 0.9206,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 92.06% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The disclosure introduces a new metric for Multifamily exposure (99% performing) and updates the secured percentage of total Real Estate exposure (82% to 84%). These changes provide updated insight into the credit quality and structure of the Real Estate portfolio.",
+          "key_change": "Updated Real Estate portfolio quality metrics"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0579",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure D381 contains two distinct sentences: one on multifamily performance (99% performing) and one on geographic concentration (California). The 2025 filings split these into two separate disclosures, D383 (performance) and D384 (geography). Both 2025 disclosures correspond to the single 2024 source, representing a one-to-many split of the original topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D381",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Real Estate",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total Multifamily exposure is approximately 99% performing and is largely located in California.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D383",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Real Estate",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total Multifamily exposure is approximately 99% performing.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2025_7_D384",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Real Estate",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Multifamily exposure is largely in California.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Unchanged",
+            "cosine_similarity": 1.0,
+            "sequence_match_ratio": 1.0,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2024_7_D381",
+            "score": 0.935339,
+            "normalised_score": 0.9353,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 93.53% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The change is purely structural: splitting one combined sentence about Multifamily exposure into two separate disclosures (one for performance, one for geography). The information content is identical. This does not meaningfully change the risk or business description.",
+          "key_change": "Structural split of combined disclosure"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Bank of America's candidates discuss total commercial reservable criticized utilized exposure and broad commercial credit diversification. They do not contain specific data points regarding multifamily loan performance rates or multifamily geographic concentration comparable to JPMorgan's disclosure."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Citigroup's candidates focus on auto/energy sector exposure and Argentina ARS exposure. There is no disclosed information regarding multifamily real estate performance or geography to compare with JPMorgan."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D100",
+            "peer_topic": "Composition and Concentration of Alternative Equity Securities",
+            "peer_summary": "Alternative equity securities included $12.6 billion in private equity positions and $0.8 billion in public equity positions (converted from private equity upon IPOs) as of December 2024. Real estate equity concentrations included 14% multifamily, 5% mixed use, 3% industrials, 2% office, and 3% other as of December 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.061752,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Goldman Sachs disclose specific multifamily exposure concentrations or performance metrics within their real estate portfolios. JPMorgan reports that its total multifamily exposure is approximately 99% performing and is largely located in California. In contrast, Goldman Sachs discloses the composition of its alternative equity securities in real estate, noting that multifamily represented 14% of real estate equity securities as of December 2024, compared to 13% in 2023. While JPMorgan focuses on loan performance and geography, Goldman Sachs focuses on equity allocation percentages within private/public equity holdings.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D381",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P557_S001",
+                    "paragraph_id": "jpm_2024_7_P557",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(a)Total Multifamily exposure is approximately 99% performing.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P557_S002",
+                    "paragraph_id": "jpm_2024_7_P557",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Multifamily exposure is largely in California.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D100",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P157_S003",
+                    "paragraph_id": "gs_2024_7_P157",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• The concentrations for real estate equity securities as of December 2024 were 14% for multifamily (13% as of December 2023), 5% for mixed use (8% as of December 2023), 3% for industrials (3% as of December 2023), 2% for office (2% as of December 2023) and 3% for other real estate equity securities (4% as of December 2023).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Morgan Stanley's candidates define total exposure composition and discuss TLAC/LTD regulatory ratios. Neither candidate contains specific details on multifamily real estate performance or geographic concentration."
+      }
+    ]
+  }
+}

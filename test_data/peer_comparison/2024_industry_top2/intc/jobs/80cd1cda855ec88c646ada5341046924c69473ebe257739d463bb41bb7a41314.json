@@ -1,0 +1,213 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "d0247487cbe72205f39dc6ead82e0d02db939c26633744d52a6ab5cc0e9243d9",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_8_D106",
+    "item": "8",
+    "target_topic": "Asset Impairments from Restructuring Activities",
+    "target_summary": "2024 restructuring included $545 million in non-cash asset impairments, comprising $442 million for construction-in-progress assets due to exiting test hardware manufacturing and $103 million for real estate consolidations and exits, with specific accounting treatments noted for property and leased assets.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0504",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review"
+        ],
+        "explanation": "The 2023 disclosure (D091) covers balance sheet classification of government incentives (grants receivables in other long-term assets, tax credits in income taxes payable). The 2024 disclosure (D106) covers restructuring-related asset impairments (construction-in-progress and operating leased assets). While both are in Note 8 (or Note 7 for 2024 D106, actually D106 is Note 7), the topics are distinct: D091 is about Government Incentives classification, while D106 is about Restructuring Charges/Impairments. The matching rationale in the input was weak and based on loose 'restructuring' or 'lease' keywords. D091 is about incentives. D106 is about impairments. There is no counterpart for D091 in the 2024 group that covers the balance sheet classification of government incentives (receivables/payables). D106 does not cover this. Therefore, D091 has no valid counterpart in the proposed group. D106 has no valid counterpart in the previous group (D091 is incentives, not impairments). This link is spurious. I will split them into single-sided rows with no match found or unmatched status. However, the prompt asks to remove spurious links by splitting. D091 2023 does not match D106 2024. D09",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2023_8_D091",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 6: Other Financial Statement Details > Government Incentives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 30, 2023, capital-related and operating-related grants receivables totaled $559 million, primarily recorded in other long-term assets, while capital-related refundable tax credits totaled $365 million, recorded within income taxes payable.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_8_D106",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 7: Restructuring and Other Charges",
+            "taxonomy": "Operations & Capacity",
+            "summary": "2024 restructuring included $545 million in non-cash asset impairments, comprising $442 million for construction-in-progress assets due to exiting test hardware manufacturing and $103 million for real estate consolidations and exits, with specific accounting treatments noted for property and leased assets.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0555",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe non-cash asset impairment charges resulting from restructuring plans. 2024 D106 details $442M for construction-in-progress (test hardware) and $103M for real estate/leased assets. 2025 D145 details $474M for non-core lines and $48M for leased assets, while explicitly referencing the 2024 charges discussed in D106 in its sentences.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_8_D106",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 7: Restructuring and Other Charges",
+            "taxonomy": "Operations & Capacity",
+            "summary": "2024 restructuring included $545 million in non-cash asset impairments, comprising $442 million for construction-in-progress assets due to exiting test hardware manufacturing and $103 million for real estate consolidations and exits, with specific accounting treatments noted for property and leased assets.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2025_8_D145",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 7: Restructuring and Other Charges",
+            "taxonomy": "Operations & Capacity",
+            "summary": "2025 asset impairment charges totaled $522 million, including $474 million for non-core lines of business under the 2025/2024 Plans and $48 million for leased assets, while 2024 charges included $442 million for exiting internal test hardware manufacturing and $103 million for real estate consolidations, which may result in future cash outlays for facility restoration or relocation.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.937336,
+            "sequence_match_ratio": 0.779456,
+            "length_ratio": 1.470149,
+            "word_count_delta": 63,
+            "added_tokens_sample": [
+              "asset",
+              "impairment",
+              "charges",
+              "in",
+              "2025",
+              "primarily",
+              "included",
+              "474",
+              "million",
+              "of",
+              "non",
+              "cash",
+              "charges",
+              "associated",
+              "with",
+              "the",
+              "2025",
+              "and",
+              "2024",
+              "restructuring"
+            ],
+            "removed_tokens_sample": [
+              "includes",
+              "of",
+              "accumulated",
+              "depreciation",
+              "sheets"
+            ]
+          },
+          "semantic": {
+            "matched_id": "intc_2024_8_D106",
+            "score": 0.982639,
+            "normalised_score": 0.9826,
+            "label": "Unchanged",
+            "rationale": "Score 98.26% of ceiling — semantically identical despite surface differences (word overlap 78%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure details specific asset impairment charges ($522 million in 2025) resulting from the exit of non-core lines of business and real estate consolidations. While restructuring is ongoing, the specific identification of non-core exits and associated impairment values represents a meaningful update to the company's operational restructuring profile and cost structure.",
+          "key_change": "Update of restructuring impairment charges"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D076",
+            "peer_topic": "IPR&D impairment due to restructuring",
+            "peer_summary": "In Q4 FY2024, the Company recorded a $58 million impairment charge for certain in-process R&D in the Data Center segment, related to the 2024 Restructuring Plan.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.0779,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and AMD recorded asset impairment charges directly linked to their respective 2024 Restructuring Plans as non-cash charges. Intel reported $442 million in impairments for construction-in-progress assets due to exiting test hardware manufacturing, while AMD recorded a $58 million impairment for in-process R&D (IPR&D) within the Data Center segment. While the asset types differ (physical CIP vs. intangible R&D), the common driver is the strategic restructuring of operations in 2024.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D106",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P120_S001",
+                    "paragraph_id": "intc_2024_8_P120",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Asset impairment charges in 2024 includes non-cash charges associated with the 2024 Restructuring Plan, including $442 million of non-cash impairments of construction-in-progress assets associated with our decision to exit and outsource manufacturing capabilities for certain internal test hardware; and $103 million of non-cash impairments of operating leased assets and related leasehold improvements resulting from real estate consolidations and exits.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D076",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P078_S003",
+                    "paragraph_id": "amd_2024_8_P078",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "During the fourth quarter of fiscal year 2024, the Company determined that the fair value of certain IPR&D recorded within the Data Center segment was not recoverable resulting from actions related to the 2024 Restructuring Plan, and recorded an impairment charge of $58 million within Restructuring charges in the Company's Consolidated Statement of Operations.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates discuss unrelated topics: one covers 2023 IP litigation charges and the other covers general PP&E depreciation policies, neither of which matches the specific topic of 2024 restructuring-driven asset impairments."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates cover lease accounting policies (component separation and scope of leases), which are distinct from the target's topic of asset impairments resulting from restructuring activities."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidate is a generic Item 8 location notice stating where financial statements are found, containing no substantive data on impairments or restructuring to compare."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "no candidate was retrieved"
+      }
+    ]
+  }
+}

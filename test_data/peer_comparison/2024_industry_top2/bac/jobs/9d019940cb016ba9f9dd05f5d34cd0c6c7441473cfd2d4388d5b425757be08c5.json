@@ -1,0 +1,320 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "e6a71516d5d8ceb77891cc544c00ca383a81d19e2e4ef6c698079345c7f576b5",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_1_D012",
+    "item": "1",
+    "target_topic": "Employee compensation expense",
+    "target_summary": "Compensation and benefits expense was $40.2 billion in 2024 and $38.3 billion in 2023, representing 60% and 58% of total noninterest expense respectively.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0130",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report compensation and benefits expense as a dollar amount and percentage of total noninterest expense. 2023 figures: $38.3B / 58%; 2024 figures: $40.2B / 60%. The subject matter and structure are identical.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_1_D010",
+            "item": "1",
+            "section": "Human Capital Resources",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2023, compensation and benefits expense was $38.3 billion, representing 58% of total noninterest expense, compared to $36.4 billion (59%) in 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_1_D012",
+            "item": "1",
+            "section": "Human Capital Resources",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Compensation and benefits expense was $40.2 billion in 2024 and $38.3 billion in 2023, representing 60% and 58% of total noninterest expense respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.844772,
+            "sequence_match_ratio": 0.724138,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "2024",
+              "and",
+              "40",
+              "2",
+              "billion",
+              "and",
+              "60",
+              "58"
+            ],
+            "removed_tokens_sample": [
+              "and",
+              "2022",
+              "and",
+              "36",
+              "4",
+              "billion",
+              "58",
+              "59"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_1_D010",
+            "score": 1.019091,
+            "normalised_score": 1.0191,
+            "label": "Unchanged",
+            "rationale": "Score 101.91% of ceiling — semantically identical despite surface differences (word overlap 71%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.85,
+          "reason": "Compensation and benefits expense increased from $38.3B to $40.2B, and the percentage of total noninterest expense increased from 58% to 60%. This represents a meaningful quantitative change in the company's cost structure and labor intensity.",
+          "key_change": "Increase in compensation expense and ratio"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0185",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the Compensation and Benefits expense figure and its percentage of total noninterest expense for the respective fiscal years ($40.2B/60% in 2024 vs $42.3B/61% in 2025).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_1_D012",
+            "item": "1",
+            "section": "Human Capital Resources",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Compensation and benefits expense was $40.2 billion in 2024 and $38.3 billion in 2023, representing 60% and 58% of total noninterest expense respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_1_D009",
+            "item": "1",
+            "section": "Human Capital Resources",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2025, the Corporation's compensation and benefits expense was $42.3 billion, representing 61 percent of total noninterest expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.881304,
+            "sequence_match_ratio": 0.724138,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "2025",
+              "and",
+              "42",
+              "3",
+              "billion",
+              "and",
+              "61",
+              "60"
+            ],
+            "removed_tokens_sample": [
+              "and",
+              "2023",
+              "and",
+              "38",
+              "3",
+              "billion",
+              "60",
+              "58"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2024_1_D012",
+            "score": 0.991139,
+            "normalised_score": 0.9911,
+            "label": "Unchanged",
+            "rationale": "Score 99.11% of ceiling — semantically identical despite surface differences (word overlap 71%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "This disclosure reflects routine annual financial reporting of compensation expenses. While the absolute dollar amount and percentage increased slightly, this is a standard periodic financial update rather than a change in strategy, policy, or exposure.",
+          "key_change": "Routine annual compensation expense update"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate addresses compensation expense or human capital costs; all candidates (D045, D022) relate to financial assets (DTAs) and credit losses (ACL)."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_1_D182",
+            "peer_topic": "Risk to Compensation and Efficiency Ratio Targets",
+            "peer_summary": "Statements regarding future compensation expense levels and the efficiency ratio are subject to risk that compensation and other operating costs may exceed current expectations.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.054121,
+            "relationship": "same_topic",
+            "comparison": "Both Bank of America and Goldman Sachs explicitly disclose compensation expense as a key financial metric and highlight the associated risks or components. BAC quantifies compensation and benefits expense at $40.2 billion (60% of noninterest expense), whereas GS focuses on the risk that 'compensation and other operating costs may be greater than currently expected' for future expense levels. While BAC provides historical absolute values and GS discusses forward-looking risk exposure to those same costs, both filings treat compensation expense as a material driver of operating costs.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1_P009_S002",
+                    "paragraph_id": "bac_2024_1_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Additionally, in 2024 and 2023, the Corporation's compensation and benefits expense was $40.2 billion and $38.3 billion, or 60 percent and 58 percent, of total noninterest expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1_D182",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1_P245_S001",
+                    "paragraph_id": "gs_2024_1_P245",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Statements about the level of future compensation expense, including as a percentage of both operating expenses and net revenues, net of provision for credit losses, and our efficiency ratio are subject to the risks that the compensation and other costs to operate our businesses may be greater than currently expected.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_1_D054",
+            "peer_topic": "Compensation Philosophy and Framework",
+            "peer_summary": "The Firm provides market-competitive compensation guided by principles of pay-for-performance, alignment with shareholder interests, and culture reinforcement, supported by a disciplined framework integrating risk, controls, and conduct.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.051035,
+            "relationship": "related_topic",
+            "comparison": "While BAC reports specific compensation expense figures, JPMorgan Chase describes its 'compensation and benefits programs' and philosophy without providing aggregate dollar amounts in this specific sentence. Both disclosures address the management and provision of compensation to employees, with BAC focusing on the financial magnitude ($40.2 billion) and JPM focusing on the guiding principles ('pay-for-performance', 'market-competitive').",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1_P009_S002",
+                    "paragraph_id": "bac_2024_1_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Additionally, in 2024 and 2023, the Corporation's compensation and benefits expense was $40.2 billion and $38.3 billion, or 60 percent and 58 percent, of total noninterest expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1_D054",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1_P061_S001",
+                    "paragraph_id": "jpm_2024_1_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The Firm provides market-competitive compensation and benefits programs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_1_D047",
+            "peer_topic": "Meritocracy and talent attraction strategy",
+            "peer_summary": "The company is committed to a meritocracy based on rigor, humility, and partnership, striving to be a diverse and inclusive workplace to facilitate talent attraction, retention, and employee growth.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.038794,
+            "relationship": "related_topic",
+            "comparison": "Morgan Stanley discusses supporting employees with 'competitive compensation' as part of its talent strategy, similar to how Bank of America treats compensation expense as a significant cost component. However, MS does not quantify the total compensation expense in this disclosure, whereas BAC reports $40.2 billion in compensation and benefits expense.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1_P009_S002",
+                    "paragraph_id": "bac_2024_1_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Additionally, in 2024 and 2023, the Corporation's compensation and benefits expense was $40.2 billion and $38.3 billion, or 60 percent and 58 percent, of total noninterest expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_1_D047",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_1_P058_S005",
+                    "paragraph_id": "ms_2024_1_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "We support our employees with competitive compensation, benefits, and health and wellbeing programs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,261 @@
+{
+  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
+  "request_hash": "9ebe6c297d35ccfabfb786a045dd7ebe6397903b37838ae42a2be8c6be3f524a",
+  "result": {
+    "target_ticker": "MU",
+    "target_disclosure_id": "mu_2024_1_D012",
+    "item": "1",
+    "target_topic": "DRAM financial results",
+    "target_summary": "Total reported DRAM revenue was $17.60 billion in 2024, $10.98 billion in 2023, and $22.39 billion in 2022.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "mu_2023_2024_M0126",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report CNBU revenue figures for the respective years and prior year comparisons, establishing a direct financial correspondence for the same business unit.\n\nBoth disclosures report financial revenue figures for memory products. D011 (2023) reports CNBU revenue, which is primarily driven by the DRAM products mentioned in other disclosures. D012 (2024) explicitly reports Total DRAM revenue. Both are under the 'Financial & Capital Resources' taxonomy (D012) and 'Sales/Revenue' context (D011 summary), matching the specific subject of DRAM/CNBU revenue reporting.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2023_1_D011",
+            "item": "1",
+            "section": "Sales, Markets, and Products > Products by Business Unit and Market > Compute and Networking Business Unit (\"CNBU\")",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "CNBU reported revenue of $5.71 billion in 2023, a decrease from $13.69 billion in 2022 and $12.28 billion in 2021.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2024_1_D012",
+            "item": "1",
+            "section": "Products, Market, and Sales > Product Technologies",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total reported DRAM revenue was $17.60 billion in 2024, $10.98 billion in 2023, and $22.39 billion in 2022.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "mu_2024_1_D029",
+            "item": "1",
+            "section": "Products, Market, and Sales > Products by Business Unit and Market > Compute and Networking Business Unit (\"CNBU\")",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "CNBU reported revenue of $9.51 billion in 2024, compared to $5.71 billion in 2023 and $13.69 billion in 2022, with sales consisting primarily of HBM, DDR, LPDDR, and GDDR DRAM products.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.689182,
+            "sequence_match_ratio": 0.372093,
+            "length_ratio": 3.3,
+            "word_count_delta": 46,
+            "added_tokens_sample": [
+              "total",
+              "reported",
+              "dram",
+              "revenue",
+              "was",
+              "17",
+              "60",
+              "billion",
+              "in",
+              "2024",
+              "10",
+              "98",
+              "billion",
+              "in",
+              "2023",
+              "and",
+              "22",
+              "39",
+              "billion",
+              "in"
+            ],
+            "removed_tokens_sample": [
+              "12",
+              "28",
+              "billion",
+              "2021"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "mu_2023_1_D011",
+            "score": 0.84769,
+            "normalised_score": 0.8477,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 84.77% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The alignment compares CNBU revenue of $5.71 billion in 2023 to $9.51 billion in 2024, a significant year-over-year increase. It also introduces total DRAM revenue figures. The change from specific CNBU component sales to broader DRAM revenue metrics, along with the substantial variance in reported financials, reflects a material shift in the company's financial position and revenue composition.",
+          "key_change": "Significant year-over-year revenue increase and broadening to total DRAM revenue reporting"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "mu_2024_2025_M0130",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Matched 2024 Total DRAM Revenue to 2025 Total DRAM Revenue. Evidence: D012 reports $17.60B for 2024; D011 reports $28.58B for 2025. Same financial metric for same product line.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2024_1_D012",
+            "item": "1",
+            "section": "Products, Market, and Sales > Product Technologies",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total reported DRAM revenue was $17.60 billion in 2024, $10.98 billion in 2023, and $22.39 billion in 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2025_1_D011",
+            "item": "1",
+            "section": "Products, Market, and Sales > Product Technologies",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total reported DRAM revenue was $28.58 billion in 2025, an increase from $17.60 billion in 2024 and $10.98 billion in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.83505,
+            "sequence_match_ratio": 0.714286,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "28",
+              "58",
+              "billion",
+              "in",
+              "2025",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "and",
+              "22",
+              "39",
+              "billion",
+              "in",
+              "2022"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2024_1_D012",
+            "score": 1.026571,
+            "normalised_score": 1.0266,
+            "label": "Unchanged",
+            "rationale": "Score 102.66% of ceiling — semantically identical despite surface differences (word overlap 65%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "DRAM revenue increased from $17.60 billion in 2024 to $28.58 billion in 2025, representing a significant increase of approximately 62%. This substantial growth in the company's largest revenue stream reflects a major shift in the company's financial condition and market dynamics.",
+          "key_change": "Significant increase in DRAM revenue"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1_D060",
+            "peer_topic": "Competitive landscape and determinants of product competitiveness",
+            "peer_summary": "AMD operates in a highly competitive market where timely delivery of latest products is critical for revenue growth. Key factors determining product competitiveness include total cost of ownership, performance, features (including AI accelerations), energy efficiency, and software compatibility.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.025652,
+            "relationship": "related_topic",
+            "comparison": "Both MU and AMD discuss how their products are received in the market and the importance of competitiveness. MU's disclosure focuses on specific financial outcomes of its DRAM product lines (total revenue of $17.60 billion, with CNBU revenue of $9.51 billion driven by HBM, DDR, LPDDR, and GDDR). In contrast, AMD discusses the qualitative drivers of its product competitiveness, such as total cost of ownership, timely introductions, and AI accelerations, without providing specific revenue breakdowns for these factors in the cited text. While both address product success, MU quantifies the result (revenue) whereas AMD describes the determinants of that success.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P011_S001",
+                    "paragraph_id": "mu_2024_1_P011",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Total reported DRAM revenue was $17.60 billion in 2024, $10.98 billion in 2023, and $22.39 billion in 2022.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_1_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1_P063_S001",
+                    "paragraph_id": "amd_2024_1_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The markets in which our products are sold are highly competitive and delivering the latest and best products to market on a timely basis is critical to achieving revenue growth.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1_P063_S002",
+                    "paragraph_id": "amd_2024_1_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We believe that the main factors that determine our product competitiveness are total cost of ownership, timely product introductions, product quality, product features and capabilities (including accelerations for key workloads such as AI), energy efficiency (including power consumption and battery life, given their impact on total cost of ownership), reliability, performance, size (or form factor), selling price, cost, adherence to industry standards (and the creation of open industry standards), level of integration, software and hardware compatibility, ease of use and functionality of software design tools, completeness of applicable software solutions, security and stability, brand recognition and availability.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (avgo_2024_1_D005, avgo_2024_1_D044) discuss a major acquisition (VMware) and software-defined cost reductions, which are distinct from MU's disclosure of DRAM financial results and product sales composition. There is no substantive overlap in the specific topic of semiconductor product revenue performance."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (intc_2024_1_D087, intc_2024_1_D055) discuss equity market risk sensitivity regarding securities investments and capital offset partnerships (SCIP), respectively. These topics are unrelated to MU's disclosure of DRAM revenue and product line performance."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (nvda_2024_1_D004, nvda_2024_1_D005) describe NVIDIA's platform strategy and R&D investment history/innovations. While both companies are in the semiconductor space, the specific topic of NVDA's platform architecture and historical R&D does not provide a comparable fact pattern to MU's quantitative reporting of DRAM revenue and specific product sales (HBM, DDR, etc.)."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (qcom_2024_1_D052, qcom_2024_1_D037) discuss the impact of innovation on wireless communications and QCT's fabless manufacturing model. These topics differ from MU's focus on DRAM financial results and product technology sales composition."
+      }
+    ]
+  }
+}

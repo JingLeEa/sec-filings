@@ -1,0 +1,334 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "edb1d3bb8581e277b2160c2ae7fe8075059944cf21775f172cb3d075ce388de2",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_8_D406",
+    "item": "8",
+    "target_topic": "March 2025 Dividend Declaration",
+    "target_summary": "On January 14, 2025, the Board declared a $3.00 per common share dividend to be paid on March 28, 2025 to shareholders of record on February 28, 2025.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M1137",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report a specific declaration of a quarterly common stock dividend by the Board of Directors. D408 details the Jan 2024 declaration of $2.75/share. D406 details the Jan 2025 declaration of $3.00/share. They are direct counterparts in the common equity section.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_8_D408",
+            "item": "8",
+            "section": "Accounting Firm > Shareholders' Equity > Common Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On January 12, 2024, the Board declared a dividend of $2.75 per common share to be paid on March 28, 2024 to shareholders of record on February 29, 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D406",
+            "item": "8",
+            "section": "Accounting Firm > Shareholders' Equity > Common Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On January 14, 2025, the Board declared a $3.00 per common share dividend to be paid on March 28, 2025 to shareholders of record on February 28, 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.673568,
+            "sequence_match_ratio": 0.794521,
+            "length_ratio": 0.972973,
+            "word_count_delta": -1,
+            "added_tokens_sample": [
+              "14",
+              "2025",
+              "3",
+              "00",
+              "2025",
+              "28",
+              "2025"
+            ],
+            "removed_tokens_sample": [
+              "12",
+              "2024",
+              "board",
+              "2",
+              "75",
+              "2024",
+              "29",
+              "2024"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2023_8_D408",
+            "score": 0.965542,
+            "normalised_score": 0.9655,
+            "label": "Modified",
+            "rationale": "Score 96.55% of ceiling with 66% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.9,
+          "reason": "This is a routine, periodic declaration of a quarterly dividend. While the amount increased from $2.75 to $3.00, a single quarterly declaration is a standard operational event and does not represent a change in strategic priority, risk, or long-term financial condition.",
+          "key_change": "Routine quarterly dividend declaration"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M1187",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report on the Board's declaration of a quarterly common stock dividend. gs_2024_8_D406 reports a $3.00 dividend declared in Jan 2025 for 2025 payment. gs_2025_8_D393 reports a $4.50 dividend (increased from $4.00) declared in Jan 2026 for 2026 payment. They describe the same specific topic (quarterly common dividend declarations) across different fiscal periods.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D406",
+            "item": "8",
+            "section": "Accounting Firm > Shareholders' Equity > Common Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On January 14, 2025, the Board declared a $3.00 per common share dividend to be paid on March 28, 2025 to shareholders of record on February 28, 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_8_D393",
+            "item": "8",
+            "section": "Accounting Firm > Shareholders' Equity > Common Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Board increased the quarterly dividend to $4.50 per share from $4.00 per share on January 14, 2026, payable on March 30, 2026, to shareholders of record on March 2, 2026.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.56513,
+            "sequence_match_ratio": 0.617284,
+            "length_ratio": 1.25,
+            "word_count_delta": 9,
+            "added_tokens_sample": [
+              "2026",
+              "increased",
+              "the",
+              "quarterly",
+              "to",
+              "4",
+              "50",
+              "per",
+              "common",
+              "share",
+              "from",
+              "4",
+              "the",
+              "dividend",
+              "will",
+              "30",
+              "2026",
+              "march",
+              "2",
+              "2026"
+            ],
+            "removed_tokens_sample": [
+              "2025",
+              "declared",
+              "a",
+              "of",
+              "3",
+              "to",
+              "28",
+              "2025",
+              "february",
+              "28",
+              "2025"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2024_8_D406",
+            "score": 0.899306,
+            "normalised_score": 0.8993,
+            "label": "Modified",
+            "rationale": "Score 89.93% of ceiling with 49% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.92,
+          "reason": "The Board declared an increase in the quarterly common dividend from $4.00 to $4.50 per share. This represents a meaningful change in the company's capital distribution policy and financial commitment to shareholders, directly impacting financial position and strategic priorities regarding returns.",
+          "key_change": "Increase in quarterly common stock dividend rate"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D485",
+            "peer_topic": "Dividend Payout Ratio calculation",
+            "peer_summary": "Dividend Payout Ratio is defined as common dividends declared divided by net income applicable to common shareholders.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.17727,
+            "relationship": "related_topic",
+            "comparison": "Goldman Sachs discloses the specific dollar amount and dates for a declared common dividend, whereas Bank of Columbia defines the 'Dividend Payout Ratio' metric without stating a declared dividend amount or specific payment dates for the common stock. GS focuses on the event of declaration ($3.00/share), while BAC provides the formulaic definition of the ratio.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D406",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P538_S001",
+                    "paragraph_id": "gs_2024_8_P538",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "On January 14, 2025, the Board of Directors of Group Inc. declared a dividend of $3.00 per common share to be paid on March 28, 2025 to common shareholders of record on February 28, 2025.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D485",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P604_S001",
+                    "paragraph_id": "bac_2024_8_P604",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Dividend Payout Ratio - Common dividends declared divided by net income applicable to common shareholders.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D705",
+            "peer_topic": "Calculation of Dividend Payout Ratio",
+            "peer_summary": "The dividend payout ratio is calculated based on dividends declared per common share as a percentage of diluted EPS.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.264037,
+            "relationship": "related_topic",
+            "comparison": "Similar to BAC, Citigroup's candidate disclosure defines the 'Dividend Payout Ratio' calculation based on dividends declared per common share relative to diluted EPS, but does not disclose the specific declared dividend amount or payment schedule for a specific period. In contrast, Goldman Sachs explicitly reports the $3.00 per share dividend declaration details. Both companies operate in the same industry and use 'common dividends declared' as a variable, but GS provides the factual declaration event while C provides the computational metric definition.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D406",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P538_S001",
+                    "paragraph_id": "gs_2024_8_P538",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "On January 14, 2025, the Board of Directors of Group Inc. declared a dividend of $3.00 per common share to be paid on March 28, 2025 to common shareholders of record on February 28, 2025.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D705",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P1013_S001",
+                    "paragraph_id": "c_2024_8_P1013",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(4) Dividends declared per common share as a percentage of diluted EPS.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for JPM focus on share repurchase program authorizations (D508) and common stock authorization counts (D507), which are distinct from the specific common dividend declaration event disclosed by GS. No candidate discloses a declared common dividend amount or payment date comparable to the GS filing."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D399",
+            "peer_topic": "Series C Stock Characteristics",
+            "peer_summary": "Series C is non-voting perpetual preferred stock with dividends payable at a rate of 10% per annum of the liquidation preference of $1,000 per share.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.112013,
+            "relationship": "related_topic",
+            "comparison": "Goldman Sachs discloses a dividend declaration for *common* equity ($3.00 per common share). Morgan Stanley's candidate disclosure describes the dividend terms for *Series C preferred* stock (non-cumulative, 10% of liquidation preference). Both disclosures concern dividend payments to shareholders, but they refer to entirely different classes of equity (common vs. preferred) with distinct rights and calculation methods.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D406",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P538_S001",
+                    "paragraph_id": "gs_2024_8_P538",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "On January 14, 2025, the Board of Directors of Group Inc. declared a dividend of $3.00 per common share to be paid on March 28, 2025 to common shareholders of record on February 28, 2025.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D399",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P497_S002",
+                    "paragraph_id": "ms_2024_8_P497",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Dividends on the Series C preferred stock are payable, on a non-cumulative basis, as and if declared by the Board of Directors, in cash, at the rate of 10% per annum of the liquidation preference of $1,000 per share.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

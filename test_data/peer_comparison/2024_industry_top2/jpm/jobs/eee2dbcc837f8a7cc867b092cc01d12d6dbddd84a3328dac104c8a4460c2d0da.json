@@ -1,0 +1,334 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "7bbe3da3a1d9939d71a26dfe25aa9b2269a640f39295c785efef1da365860a8d",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D155",
+    "item": "7",
+    "target_topic": "Provision for credit losses",
+    "target_summary": "The provision for credit losses was $10 million in 2024, compared to $171 million in the prior year which included a net addition for a single name exposure that was later charged off after loan restructuring.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0441",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the Provision for Credit Losses in the Other Corporate segment, specifically referencing the prior year's $171M provision which included a net addition for a single name exposure charged off after restructuring. D164 describes the 2023 provision; D155 describes the 2024 provision ($10M) and explicitly references the 2023 details as the prior year comparison.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D164",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > 2023 compared with 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provision for credit losses was $171 million, reflecting a net addition to the allowance for credit losses related to a single name exposure that was subsequently charged off upon loan restructuring.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D155",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provision for credit losses was $10 million in 2024, compared to $171 million in the prior year which included a net addition for a single name exposure that was later charged off after loan restructuring.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.925713,
+            "sequence_match_ratio": 0.886076,
+            "length_ratio": 1.257143,
+            "word_count_delta": 9,
+            "added_tokens_sample": [
+              "was",
+              "10",
+              "million",
+              "the",
+              "provision",
+              "in",
+              "the",
+              "prior",
+              "year"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_7_D164",
+            "score": 0.980262,
+            "normalised_score": 0.9803,
+            "label": "Relocated",
+            "rationale": "Score 98.03% of ceiling — content is similar but section changed from 'BUSINESS SEGMENT RESULTS > 2023 compared with 2022' to 'BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.9,
+          "reason": "The provision for credit losses decreased significantly from $171 million to $10 million. The prior year included a specific, non-recurring loss related to a single name exposure charge-off after restructuring, whereas the current year provision is minimal. This represents a meaningful de-escalation in credit loss exposure and specific risk events for this segment.",
+          "key_change": "Drastic reduction in provision for credit losses due to absence of prior year one-time charge-off"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0047",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure discusses a specific $10 million provision and a $171 million prior year provision related to a single name exposure. The 2025 search results returned various provision disclosures (firmwide, Consumer, Wholesale, Corporate), but none specifically matched the detail of the $10 million current year provision or the specific single-name exposure charge-off narrative for 2024 in a 2025 segment-specific context. The closest 2025 Corporate provision context is in D139/D147 which focuses on tax, not credit losses. No specific 2025 counterpart was found for this exact narrative.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D155",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provision for credit losses was $10 million in 2024, compared to $171 million in the prior year which included a net addition for a single name exposure that was later charged off after loan restructuring.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -44,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "the",
+              "provision",
+              "for",
+              "credit",
+              "losses",
+              "was",
+              "10",
+              "million",
+              "the",
+              "provision",
+              "in",
+              "the",
+              "prior",
+              "year",
+              "was",
+              "171",
+              "million",
+              "reflecting",
+              "a",
+              "net"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure reveals a specific, non-routine provision ($171 million prior year) for a single name exposure that was later charged off. This narrative provides specific insight into credit risk management and historical loss drivers. Its removal in 2025 eliminates a specific, identifiable credit risk event disclosure, which is material for understanding the quality of the loan portfolio and provisioning behavior.",
+          "key_change": "Removal of specific single-name credit loss provision narrative"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D105",
+            "peer_topic": "Provision for credit losses increase",
+            "peer_summary": "The provision for credit losses increased $1.5 billion to $883 million, primarily driven by the commercial real estate office portfolio compared to a benefit in the prior year.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.168637,
+            "relationship": "same_topic",
+            "comparison": "While both companies disclose the provision for credit losses, the magnitude and drivers differ significantly. JPMorgan reported a nominal provision of $10 million, attributing the prior year's higher provision to a specific, singular exposure that was subsequently charged off. In contrast, Bank of America reported a substantially higher provision of $883 million, driven by broad commercial real estate office portfolio conditions compared to a benefit in the prior year.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D155",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P240_S001",
+                    "paragraph_id": "jpm_2024_7_P240",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The provision for credit losses was $10 million.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P241_S001",
+                    "paragraph_id": "jpm_2024_7_P241",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The provision in the prior year was $171 million, reflecting a net addition to the allowance for credit losses related to a single name exposure, which was subsequently charged off upon the restructuring of a loan.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D105",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P114_S001",
+                    "paragraph_id": "bac_2024_7_P114",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The provision for credit losses increased $1.5 billion to $883 million primarily driven by the commercial real estate office portfolio compared to a benefit in the prior year due to certain improved macroeconomic conditions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D102",
+            "peer_topic": "Provisions and Credit Losses",
+            "peer_summary": "Provisions were $463 million (compared to $438 million prior year), primarily driven by higher net credit losses of $168 million (vs $32 million prior year) on loans in spread products, partially offset by a lower ACL build on other assets.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.208206,
+            "relationship": "same_topic",
+            "comparison": "Both companies discuss the provision for credit losses in the context of year-over-year changes, but the scales and specific loan quality metrics diverge. JPMorgan's provision was minimal at $10 million. Citigroup reported a provision of $463 million, which increased from the prior year primarily due to higher net credit losses of $168 million on loans in spread products, whereas JPMorgan's prior year provision was driven by a single name exposure.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D155",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P240_S001",
+                    "paragraph_id": "jpm_2024_7_P240",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The provision for credit losses was $10 million.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P241_S001",
+                    "paragraph_id": "jpm_2024_7_P241",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The provision in the prior year was $171 million, reflecting a net addition to the allowance for credit losses related to a single name exposure, which was subsequently charged off upon the restructuring of a loan.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D102",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P129_S001",
+                    "paragraph_id": "c_2024_7_P129",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Provisions were $463 million, compared to $438 million in the prior year, primarily driven by higher net credit losses, partially offset by a lower ACL build on other assets.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P130_S001",
+                    "paragraph_id": "c_2024_7_P130",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Net credit losses were $168 million, compared to $32 million in the prior year, largely driven by higher losses on loans in spread products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for GS only provide a definition of the provision for credit losses or reference a table, without disclosing specific provision amounts or drivers comparable to JPMorgan's numerical disclosure."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D038",
+            "peer_topic": "Provision for credit losses in 2024",
+            "peer_summary": "In 2024, the provision for credit losses on loans and lending commitments was $202 million, primarily driven by growth in the corporate loan portfolio and provisions for specific commercial real estate loans, partially offset by improvements in the macroeconomic outlook.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.117649,
+            "relationship": "same_topic",
+            "comparison": "Both firms report the provision for credit losses for 2024, but the drivers and amounts are distinct. JPMorgan's provision was low at $10 million, with prior year costs linked to a single restructuring/charge-off event. Morgan Stanley reported a $202 million provision, driven by growth in its corporate loan portfolio and specific commercial real estate loans, contrasting with JPMorgan's singular event focus and lower overall provision.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D155",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P240_S001",
+                    "paragraph_id": "jpm_2024_7_P240",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The provision for credit losses was $10 million.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P241_S001",
+                    "paragraph_id": "jpm_2024_7_P241",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The provision in the prior year was $171 million, reflecting a net addition to the allowance for credit losses related to a single name exposure, which was subsequently charged off upon the restructuring of a loan.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D038",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P042_S001",
+                    "paragraph_id": "ms_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In 2024, the Provision for credit losses on loans and lending commitments of $202 million was primarily related to growth in the corporate loan portfolio and provisions for certain specific commercial real estate loans, partially offset by improvements in the macroeconomic outlook.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

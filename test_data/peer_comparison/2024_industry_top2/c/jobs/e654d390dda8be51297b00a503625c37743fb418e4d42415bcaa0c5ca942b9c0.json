@@ -1,0 +1,391 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "4daefba1cc1d2b146b8f4059b07cfd70fd50027794acff547c6251daff61ed3a",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D112",
+    "item": "7",
+    "target_topic": "Investment Banking revenue growth composition",
+    "target_summary": "Investment Banking revenues increased 38%, fueled by a 42% rise in fees from rebounding wallet activity and gains across products, including a 61% increase in DCM underwriting fees due to record debt issuance and a 38% increase in equity underwriting fees from stronger follow-on and convertibles activity.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0063",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "c_2024_7_D112 details the 38% increase in Investment Banking revenues, driven by DCM (+61%) and Equity underwriting (+38%). The closest 2025 counterpart c_2025_7_D064 shows IB revenue growth of 22%, with DCM up 5% and ECM up 2%. While both discuss IB performance, the specific metric disclosures (the detailed fee breakdowns) differ significantly in magnitude and driver emphasis, and c_2024_7_D112's specific high-growth DCM/ECM narrative does not have a matching detailed disclosure in 2025. The general IB section in 2025 (c_2025_7_D064) is too distinct in its specific content (lower growth, different drivers) to be a direct counterpart to the specific 2024 detailed breakdown.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "BANKING > All Other-Managed Basis",
+            "summary": "Investment Banking revenues increased 38%, fueled by a 42% rise in fees from rebounding wallet activity and gains across products, including a 61% increase in DCM underwriting fees due to record debt issuance and a 38% increase in equity underwriting fees from stronger follow-on and convertibles activity.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D112",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "llm": "Removed",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.0,
+            "change_taxonomy": "Removed",
+            "word_count_delta": -83,
+            "cosine_similarity": 0.0,
+            "added_tokens_sample": [],
+            "sequence_match_ratio": 0.0,
+            "removed_tokens_sample": [
+              "investment",
+              "banking",
+              "revenues",
+              "increased",
+              "38",
+              "reflecting",
+              "a",
+              "42",
+              "increase",
+              "in",
+              "investment",
+              "banking",
+              "fees",
+              "due",
+              "to",
+              "a",
+              "rebound",
+              "in",
+              "overall",
+              "wallet"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "method": "alignment_presence",
+            "rationale": "One-sided change established by the finalized alignment.",
+            "matched_id": null,
+            "normalised_score": null
+          },
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "Removal of specific Investment Banking revenue growth (38%) and detailed driver analysis (DCM +61%, Equity +38%) removes significant detail on the performance drivers of a key revenue stream.",
+          "key_change": "Removal of IB revenue growth and detailed fee drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D015",
+            "peer_topic": "Investment Banking Fees Drivers",
+            "peer_summary": "Investment banking fees increased $1.5 billion primarily due to higher debt and equity issuance fees and higher advisory fees.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.222663,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and Bank of America attribute increases in investment banking revenues to higher debt and equity issuance fees, alongside stronger advisory activity. Citi reports a specific 38% total increase in Investment Banking revenues, with DCM underwriting fees rising 61% and equity fees rising 38% due to record issuance and follow-on activity. Bank of America reports a broader $1.5 billion increase in investment banking fees, explicitly citing higher debt and equity issuance fees and advisory fees as the primary drivers, mirroring Citi's product-level growth factors.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D112",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P153_S001",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Investment Banking revenues increased 38%, reflecting a 42% increase in investment banking fees, due to a rebound in overall wallet activity and wallet share gains across all products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P153_S002",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "DCM underwriting fees increased 61%, benefiting from near record debt issuance, particularly in investment grade and higher leveraged finance activity.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P153_S004",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Equity underwriting fees increased 38%, due to stronger follow-on and convertibles activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D015",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P015_S006",
+                    "paragraph_id": "bac_2024_7_P015",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "● Investment banking fees increased $1.5 billion primarily due to higher debt and equity issuance fees and higher advisory fees.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D045",
+            "peer_topic": "Investment Banking Revenue Drivers",
+            "peer_summary": "Investment banking revenues were $7.74 billion in 2024, up 24% from 2023, primarily due to significantly higher revenues in debt underwriting (leveraged finance) and equity underwriting (secondary and IPOs), as well as higher advisory revenues from increased M&A activity.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.18953,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and Goldman Sachs report significant year-over-year growth in investment banking revenues driven by strong debt and equity underwriting markets. Citi's Investment Banking revenue grew 38%, fueled by a 61% surge in DCM underwriting fees from near-record debt issuance and a 38% rise in equity underwriting fees. Similarly, Goldman Sachs reported a 24% increase in investment banking revenues to $7.74 billion, primarily reflecting significantly higher revenues in debt underwriting (leveraged finance) and equity underwriting (secondary and IPOs). Both disclosures highlight robust debt issuance activity as a key growth engine.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D112",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P153_S001",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Investment Banking revenues increased 38%, reflecting a 42% increase in investment banking fees, due to a rebound in overall wallet activity and wallet share gains across all products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P153_S002",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "DCM underwriting fees increased 61%, benefiting from near record debt issuance, particularly in investment grade and higher leveraged finance activity.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P153_S004",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Equity underwriting fees increased 38%, due to stronger follow-on and convertibles activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D045",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P049_S002",
+                    "paragraph_id": "gs_2024_7_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Investment banking revenues in the consolidated statements of earnings were $7.74 billion for 2024, 24% higher than 2023, primarily reflecting significantly higher revenues in debt underwriting, primarily driven by leveraged finance activity, and in equity underwriting, primarily driven by secondary and initial public offerings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D029",
+            "peer_topic": "Investment Banking Fee Drivers",
+            "peer_summary": "Investment banking fees increased in 2024 due to favorable market conditions, resulting in higher debt underwriting fees from increased leveraged loans and bond issuances, higher equity underwriting fees from IPO and follow-on offerings, and higher advisory fees from increased M&A activity.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.271672,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and JPMorgan report substantial growth in investment banking fees driven by favorable market conditions and increases across debt, equity, and advisory products. Citi's Investment Banking revenues increased 38%, with DCM fees up 61% and equity fees up 38%, while advisory fees rose 22% due to closing transactions. JPMorgan's investment banking fees also increased, driven by higher industry-wide issuances in leveraged loans and bonds (debt), increased IPO and follow-on fees (equity), and higher M&A activity (advisory). Both firms cite wallet share gains and industry-wide volume increases as contributors to this growth.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D112",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P153_S001",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Investment Banking revenues increased 38%, reflecting a 42% increase in investment banking fees, due to a rebound in overall wallet activity and wallet share gains across all products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P153_S002",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "DCM underwriting fees increased 61%, benefiting from near record debt issuance, particularly in investment grade and higher leveraged finance activity.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P153_S003",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Advisory fees increased 22%, due to strong announced deal volume from earlier in the year coming to fruition as those transactions closed.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P153_S004",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Equity underwriting fees increased 38%, due to stronger follow-on and convertibles activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P046_S001",
+                    "paragraph_id": "jpm_2024_7_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Investment banking fees increased, reflecting in CIB the benefit of favorable market conditions, which resulted in:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P046_S002",
+                    "paragraph_id": "jpm_2024_7_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher debt underwriting fees predominantly driven by higher industry-wide issuances in leveraged loans, and in high-grade and high-yield bonds,",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P046_S003",
+                    "paragraph_id": "jpm_2024_7_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher equity underwriting fees driven by higher industry-wide fees and wallet share gains in IPOs, and in follow-on and convertible securities offerings, and",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P046_S004",
+                    "paragraph_id": "jpm_2024_7_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher advisory fees driven by higher industry-wide mergers and acquisitions (\"M&A\") activity and wallet share gains.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D029",
+            "peer_topic": "Investment Banking Revenue Growth and Drivers",
+            "peer_summary": "Investment banking net revenues increased 35% to $6,170 million in 2024, driven by higher M&A advisory volumes, increased equity underwriting from IPOs and follow-ons, and higher fixed income underwriting from bond and loan issuances.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.169653,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and Morgan Stanley report strong double-digit growth in investment banking revenues for 2024, driven by recoveries in debt underwriting, equity underwriting, and advisory. Citi's Investment Banking revenues rose 38%, with DCM fees up 61% and equity fees up 38%. Morgan Stanley's net revenues for investment banking increased 35% to $6,170 million, driven by higher initial public offerings and follow-on offerings (equity), higher bond issuances (debt), and higher completed M&A transactions (advisory). The composition of growth is highly similar across both firms.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D112",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P153_S001",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Investment Banking revenues increased 38%, reflecting a 42% increase in investment banking fees, due to a rebound in overall wallet activity and wallet share gains across all products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P153_S002",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "DCM underwriting fees increased 61%, benefiting from near record debt issuance, particularly in investment grade and higher leveraged finance activity.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P153_S003",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Advisory fees increased 22%, due to strong announced deal volume from earlier in the year coming to fruition as those transactions closed.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P153_S004",
+                    "paragraph_id": "c_2024_7_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Equity underwriting fees increased 38%, due to stronger follow-on and convertibles activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P033_S001",
+                    "paragraph_id": "ms_2024_7_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net revenues of $6,170 million in 2024 increased 35% compared with the prior year, reflecting an increase in underwriting and Advisory revenues.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P033_S002",
+                    "paragraph_id": "ms_2024_7_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Advisory revenues increased primarily due to higher completed M&A transactions.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P033_S003",
+                    "paragraph_id": "ms_2024_7_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Equity underwriting revenues increased primarily on higher initial public offerings and follow-on offerings.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P033_S004",
+                    "paragraph_id": "ms_2024_7_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Fixed income underwriting revenues increased primarily reflecting higher bond issuances, non-investment grade loan issuances and securitized products revenues.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

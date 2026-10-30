@@ -1,0 +1,454 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "8d4b9498c652b329951adeb00de9a05e056e583cf2d705e46368f83b08e067be",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_8_D412",
+    "item": "8",
+    "target_topic": "Definition of included items in interest tables",
+    "target_summary": "The interest tables include: interest paid on Securities purchased under agreements to resell; fees paid on Securities borrowed; interest received on Securities sold under agreements to repurchase; fees received on Securities loaned; and fees received from Equity Financing customers related to short transactions under margin or securities lending arrangements.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0901",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2023 D420 and 2024 D412 both list the specific components of Interest Income and Interest Expense, including interest on repos/reverse repos, fees on borrowed/loaned securities, and equity financing fees. The subjects are identical.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_8_D420",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > 18. Interest Income and Interest Expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Interest income and expense include specific components such as interest paid on securities purchased under agreements to resell, fees paid on securities borrowed, interest received on securities sold under agreements to repurchase, fees received on securities loaned, and fees received from equity financing customers related to short transactions under margin or securities lending arrangements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D412",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > 18. Interest Income and Interest Expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The interest tables include: interest paid on Securities purchased under agreements to resell; fees paid on Securities borrowed; interest received on Securities sold under agreements to repurchase; fees received on Securities loaned; and fees received from Equity Financing customers related to short transactions under margin or securities lending arrangements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.840629,
+            "sequence_match_ratio": 0.8,
+            "length_ratio": 0.728395,
+            "word_count_delta": -22,
+            "added_tokens_sample": [
+              "5",
+              "6",
+              "7"
+            ],
+            "removed_tokens_sample": [
+              "4",
+              "5",
+              "6",
+              "interest",
+              "income",
+              "and",
+              "interest",
+              "expense",
+              "are",
+              "classified",
+              "in",
+              "the",
+              "income",
+              "statement",
+              "based",
+              "on",
+              "the",
+              "nature",
+              "of",
+              "the"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_8_D420",
+            "score": 0.940749,
+            "normalised_score": 0.9407,
+            "label": "Modified",
+            "rationale": "Score 94.07% of ceiling with 68% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The disclosure lists the components of interest income and expense. The content is substantively identical between years, with only minor formatting or numbering changes. No new risk, product, or strategic element is introduced.",
+          "key_change": "No substantive change to interest income/expense components"
+        }
+      },
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0900",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "conflicting_alignment_assignment"
+        ],
+        "explanation": "The proposed link is invalid. 2023 D096 defines securities borrowed/sold under repurchase as collateralized financings (classification topic). 2023 D420 lists specific interest/fee components included in Income Statement presentation. 2024 D412 lists the same specific interest/fee components as D420. D096 does not describe these components or their classification in the income statement; it describes balance sheet treatment. D420 maps to D412. D096 has no counterpart in this group because the specific topic (balance sheet classification vs income statement composition) differs. D096 is unmatched.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_8_D096",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Transfers of Financial Assets",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Securities borrowed or purchased under agreements to resell and securities loaned or sold under agreements to repurchase are treated as collateralized financings.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2023_8_D420",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > 18. Interest Income and Interest Expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Interest income and expense include specific components such as interest paid on securities purchased under agreements to resell, fees paid on securities borrowed, interest received on securities sold under agreements to repurchase, fees received on securities loaned, and fees received from equity financing customers related to short transactions under margin or securities lending arrangements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D412",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > 18. Interest Income and Interest Expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The interest tables include: interest paid on Securities purchased under agreements to resell; fees paid on Securities borrowed; interest received on Securities sold under agreements to repurchase; fees received on Securities loaned; and fees received from Equity Financing customers related to short transactions under margin or securities lending arrangements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0888",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures list the specific components included in the Interest Income and Interest Expense tables, such as interest paid on securities purchased under agreements to resell, fees paid on securities borrowed, interest received on securities sold under agreements to repurchase, and fees received on securities loaned.\n\nThe 2024 disclosure groups footnote definitions for the 'Effect of Volume and Rate Changes on Net Interest Income' table. In 2025, these specific technical notes are split into three separate disclosures. The evidence supports that ms_2024_8_D412 covers the same underlying subjects as the combination of the three 2025 disclosures: (1) Interest/fees on repo/reverse repo and securities lending/borrowing, and (2) Calculation methodology. Specifically, ms_2024_8_D412's footnote 2 ('Securities purchased under agreements to resell') and footnote 3 ('Securities borrowed') correspond to ms_2025_8_D482's items 3 and 4. Footnote 5 ('Securities sold under agreements to repurchase') in 2024 corresponds to ms_2025_8_D483's item 6. The calculation methodology context in 2024 aligns with ms_2025_8_D484's item 8. All belong to Item 8 same section.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D412",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > 18. Interest Income and Interest Expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The interest tables include: interest paid on Securities purchased under agreements to resell; fees paid on Securities borrowed; interest received on Securities sold under agreements to repurchase; fees received on Securities loaned; and fees received from Equity Financing customers related to short transactions under margin or securities lending arrangements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2025_8_D416",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > 18. Interest Income and Interest Expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Interest income and expense include specific components such as interest paid on securities purchased under agreements to resell, fees paid on securities borrowed, interest received on securities sold under agreements to repurchase, and fees received on securities loaned.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2025_8_D482",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Resolution and Recovery Planning > Effect of Volume and Rate Changes on Net Interest Income",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The table includes interest paid on Securities purchased under agreements to resell, fees paid on Securities borrowed, interest received on Securities sold under agreements to repurchase, and fees received on Securities loaned.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2025_8_D483",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Resolution and Recovery Planning > Effect of Volume and Rate Changes on Net Interest Income",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average daily balance includes borrowings carried at fair value, where interest expense is considered part of fair value and recorded in Trading revenues.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2025_8_D484",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Resolution and Recovery Planning > Effect of Volume and Rate Changes on Net Interest Income",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The annualized average rate is calculated using interest expense on all securities sold under agreements to repurchase and securities-loaned transactions, combined with net average on-balance sheet balances that exclude certain securities-for-securities transactions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.758844,
+            "sequence_match_ratio": 0.401914,
+            "length_ratio": 2.542373,
+            "word_count_delta": 91,
+            "added_tokens_sample": [
+              "4",
+              "5",
+              "3",
+              "includes",
+              "interest",
+              "paid",
+              "on",
+              "securities",
+              "purchased",
+              "under",
+              "agreements",
+              "to",
+              "resell",
+              "4",
+              "includes",
+              "fees",
+              "paid",
+              "on",
+              "securities",
+              "borrowed"
+            ],
+            "removed_tokens_sample": [
+              "5",
+              "6",
+              "from",
+              "equity",
+              "financing",
+              "customers",
+              "related",
+              "their",
+              "short",
+              "can",
+              "be",
+              "under",
+              "either",
+              "margin",
+              "or",
+              "lending",
+              "arrangements"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "ms_2024_8_D412",
+            "score": 0.946471,
+            "normalised_score": 0.9465,
+            "rationale": "Split: 1 previous → 4 current. Best pair scored 94.65% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.8,
+          "reason": "The 2025 disclosure omits 'fees received from Equity Financing customers related to their short transactions,' which was explicitly included in the 2024 disclosure. This removal of a specific revenue/expense component from the interest income/expense table description represents a meaningful change in the reported composition of these financial line items.",
+          "key_change": "Omission of equity financing customer fees from interest tables"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "While BAC discusses collateral from securities financing, its primary disclosure (bac_2024_8_D283) focuses on the fair value of collateral accepted and repledged, and (bac_2024_8_D276) focuses on the purpose of matched-book transactions and fair value option elections. Neither candidate explicitly details the specific interest and fee components included in the interest tables (such as fees on short transactions or specific interest on repurchase agreements) in the same definitional manner as MS, making them less directly comparable to the specific table note context provided by MS."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D062",
+            "peer_topic": "Accounting treatment of repurchase and resale agreements",
+            "peer_summary": "Securities sold under agreements to repurchase (repos) and purchased under agreements to resell (reverse repos) are treated as collateralized financing transactions rather than sales or purchases of the underlying securities.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.264151,
+            "relationship": "same_topic",
+            "comparison": "Both MS and C discuss the accounting treatment of securities financing transactions. MS specifically lists the components included in its interest tables (interest on repos/resales, fees on borrowed/loaned securities). C similarly identifies these exact transaction types (repos, reverse repos, securities borrowed/loaned) and clarifies that for accounting purposes, they are treated as collateralized financing transactions rather than sales or purchases of underlying securities, which provides the context for how the associated interest and fees are recognized.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D412",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P513_S001",
+                    "paragraph_id": "ms_2024_8_P513",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.Includes interest paid on Securities purchased under agreements to resell.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P516_S001",
+                    "paragraph_id": "ms_2024_8_P516",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "5.Includes interest received on Securities sold under agreements to repurchase.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D062",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P061_S001",
+                    "paragraph_id": "c_2024_8_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Securities sold under agreements to repurchase (repos) and securities purchased under agreements to resell (reverse repos) do not constitute a sale (or purchase) of the underlying securities for accounting purposes and are treated as collateralized financing transactions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D056",
+            "peer_topic": "Presentation of Financial Instruments on Consolidated Balance Sheets",
+            "peer_summary": "Derivatives are reported on a net-by-counterparty basis when enforceable netting agreements exist and net of cash collateral under enforceable credit support agreements; however, resale/repurchase and securities borrowing/loaning transactions are not reported net of collateral.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.136002,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures address the presentation and netting of resale/repurchase and securities borrowing/loaning transactions. MS defines the specific interest and fee components included in its interest tables related to these transactions (e.g., interest paid on securities purchased under agreements to resell, fees paid on securities borrowed). GS discusses the balance sheet presentation, noting that these same transaction types (resale, repurchase, borrowed, loaned) are presented on a net-by-counterparty basis when specific settlement and netting criteria are met, but are not reported net of collateral. Both confirm the standard use of these instruments in their financing activities.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D412",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P513_S001",
+                    "paragraph_id": "ms_2024_8_P513",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.Includes interest paid on Securities purchased under agreements to resell.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P514_S001",
+                    "paragraph_id": "ms_2024_8_P514",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "3.Includes fees paid on Securities borrowed.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D056",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P077_S002",
+                    "paragraph_id": "gs_2024_8_P077",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Resale agreements and securities sold under agreements to repurchase (repurchase agreements) and securities borrowed and loaned transactions with the same settlement date are presented on a net-by-counterparty basis in the consolidated balance sheets when such transactions meet certain settlement criteria and are subject to netting agreements.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P078_S002",
+                    "paragraph_id": "gs_2024_8_P078",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In the consolidated balance sheets, resale and repurchase agreements, and securities borrowed and loaned, are not reported net of the related cash and securities received or posted as collateral.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D222",
+            "peer_topic": "Cross-Reference to Related Accounting Notes",
+            "peer_summary": "Further information on accounting for interest income and expense related to hedge accounting, investment securities, securities financing activities, loans, and long-term debt is available in Notes 5, 10, 11, 12, and 20.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.158442,
+            "relationship": "same_topic",
+            "comparison": "Both MS and JPM explicitly link their interest income/expense disclosures to their securities financing activities. MS itemizes the interest and fees included in its interest tables that arise from securities borrowed, loaned, and agreements to resell/repurchase. JPM cross-references Note 11 and Note 12 for further information on interest income and expense related to securities financing activities, specifically defining these activities as 'securities purchased or sold under resale or repurchase agreements; securities borrowed; and securities loaned,' mirroring the components MS lists.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D412",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P513_S001",
+                    "paragraph_id": "ms_2024_8_P513",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.Includes interest paid on Securities purchased under agreements to resell.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P514_S001",
+                    "paragraph_id": "ms_2024_8_P514",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "3.Includes fees paid on Securities borrowed.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P516_S001",
+                    "paragraph_id": "ms_2024_8_P516",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "5.Includes interest received on Securities sold under agreements to repurchase.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D222",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P348_S001",
+                    "paragraph_id": "jpm_2024_8_P348",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Refer to Notes 5, 10, 11, 12, and 20 for further information on accounting for interest income and interest expense related to hedge accounting, investment securities, securities financing activities (i.e., securities purchased or sold under resale or repurchase agreements; securities borrowed; and securities loaned), loans and long-term debt, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

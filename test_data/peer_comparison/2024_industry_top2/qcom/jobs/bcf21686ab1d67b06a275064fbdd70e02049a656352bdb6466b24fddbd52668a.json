@@ -1,0 +1,394 @@
+{
+  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
+  "request_hash": "80b2d3926168542e9cb60533902eec6009af2a4bab39973ac503784a4e98e722",
+  "result": {
+    "target_ticker": "QCOM",
+    "target_disclosure_id": "qcom_2024_7_D011",
+    "item": "7",
+    "target_topic": "Gross Margin Stability",
+    "target_summary": "Gross margin percentage remained flat in fiscal 2024 compared to the prior year.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "qcom_2023_2024_M0183",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss the year-over-year change in the consolidated Gross Margin Percentage. D012 (2023) states it decreased primarily due to QCT margin decrease, while D011 (2024) states it remained flat.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2023_7_D012",
+            "item": "7",
+            "section": "Results of Operations > 2023 vs. 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margin percentage decreased in fiscal 2023 primarily due to a decrease in QCT gross margin.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_7_D011",
+            "item": "7",
+            "section": "Results of Operations > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margin percentage remained flat in fiscal 2024 compared to the prior year.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.443335,
+            "sequence_match_ratio": 0.416667,
+            "length_ratio": 0.5,
+            "word_count_delta": -8,
+            "added_tokens_sample": [
+              "remained",
+              "flat",
+              "2024"
+            ],
+            "removed_tokens_sample": [
+              "decreased",
+              "2023",
+              "primarily",
+              "due",
+              "to",
+              "a",
+              "decrease",
+              "in",
+              "qct",
+              "gross",
+              "margin"
+            ]
+          },
+          "semantic": {
+            "matched_id": "qcom_2023_7_D012",
+            "score": 0.706551,
+            "normalised_score": 0.7066,
+            "label": "Relocated",
+            "rationale": "Score 70.66% of ceiling — content is similar but section changed from 'Results of Operations > 2023 vs. 2022' to 'Results of Operations > 2024 vs. 2023'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The gross margin percentage status shifts from a reported decrease driven by QCT margins to remaining flat. This indicates a stabilization or improvement in the core hardware business margin profile compared to the prior year's erosion, which is a meaningful change in operational efficiency and profitability trends.",
+          "key_change": "Stabilization of gross margin percentage after prior year decline"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "qcom_2024_2025_M0196",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss the year-over-year change in consolidated gross margin percentage. D011 notes it remained flat, while D008 notes it decreased, driven by the mix of high-margin QTL licensing revenues.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_7_D011",
+            "item": "7",
+            "section": "Results of Operations > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margin percentage remained flat in fiscal 2024 compared to the prior year.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2025_7_D008",
+            "item": "7",
+            "section": "Results of Operations > 2025 vs. 2024",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margin percentage decreased in fiscal 2025 primarily because the proportion of total revenues from QTL licensing revenues, which have higher margins, declined.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.290712,
+            "sequence_match_ratio": 0.263158,
+            "length_ratio": 3.75,
+            "word_count_delta": 22,
+            "added_tokens_sample": [
+              "decreased",
+              "2025",
+              "primarily",
+              "due",
+              "to",
+              "a",
+              "decrease",
+              "in",
+              "the",
+              "proportion",
+              "of",
+              "total",
+              "revenues",
+              "related",
+              "to",
+              "qtl",
+              "licensing",
+              "revenues",
+              "which",
+              "have"
+            ],
+            "removed_tokens_sample": [
+              "remained",
+              "flat",
+              "2024"
+            ]
+          },
+          "semantic": {
+            "matched_id": "qcom_2024_7_D011",
+            "score": 0.686922,
+            "normalised_score": 0.6869,
+            "label": "Modified",
+            "rationale": "Score 68.69% of ceiling — weak match, possibly a substantial rewrite. Manual review recommended.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.95,
+          "reason": "Gross margin percentage shifted from remaining flat in FY2024 to decreasing in FY2025, with a specific explanation regarding the declining proportion of high-margin QTL licensing revenue. This indicates a structural change in the company's profitability profile and mix of business, which is materially different from the previous stability.",
+          "key_change": "Shift from flat to decreased gross margin percentage"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D031",
+            "peer_topic": "Gross Margin Performance 2024",
+            "peer_summary": "Gross margin as a percentage of net revenue increased to 49% in 2024 from 46% in 2023. This increase was primarily driven by a favorable shift in revenue mix towards higher Data Center and Client revenues, as well as lower Gaming revenue, which was partially offset by the impact of lower Embedded revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.203916,
+            "relationship": "same_topic",
+            "comparison": "While QCOM reported stable gross margins in fiscal 2024, AMD reported an increase in gross margin percentage from 46% to 49%. Both companies attributed their performance to shifts in revenue mix; QCOM stated its margin remained flat, whereas AMD’s increase was driven by higher Data Center and Client revenues offset by lower Gaming revenue.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D011",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P009_S001",
+                    "paragraph_id": "qcom_2024_7_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Gross margin percentage remained flat in fiscal 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P044_S001",
+                    "paragraph_id": "amd_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Gross margin as a percentage of net revenue was 49% in 2024 compared to 46% in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P044_S002",
+                    "paragraph_id": "amd_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in gross margin was due to a favorable shift in revenue mix of higher Data Center and Client revenues, lower Gaming revenue, partially offset by the impact of lower Embedded revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D049",
+            "peer_topic": "Gross margin financial results and VMware impact",
+            "peer_summary": "Gross margin increased to $32,509 million in fiscal year 2024 from $24,690 million in fiscal year 2023, primarily due to VMware contributions offset by higher amortization of acquisition-related intangible assets. As a percentage of net revenue, gross margin decreased to 63% from 69%, driven by the same amortization factors, less favorable semiconductor product mix, and offsets from infrastructure software margins.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.177961,
+            "relationship": "same_topic",
+            "comparison": "QCOM and AVGO both disclosed their fiscal 2024 gross margin percentages, but with opposite directional changes. QCOM reported flat gross margins, while AVGO’s gross margin percentage decreased to 63% from 69% due to VMware merger amortization and less favorable semiconductor product mix. AVGO did note that its gross margin dollars increased due to VMware contributions, a factor not present in QCOM's flat percentage narrative.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D011",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P009_S001",
+                    "paragraph_id": "qcom_2024_7_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Gross margin percentage remained flat in fiscal 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D049",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P048_S001",
+                    "paragraph_id": "avgo_2024_7_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "As a percentage of net revenue, gross margin was 63% and 69% of net revenue for the fiscal years 2024 and 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P048_S002",
+                    "paragraph_id": "avgo_2024_7_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The decrease was primarily due to higher amortization of acquisition-related intangible assets from the VMware Merger.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for INTC either concern unrelated expense categories (intc_2024_7_D073 on 'All other operating expenses') or focus on specific offsetting movements within unfavorable gross margin impacts rather than reporting the consolidated gross margin percentage or overall performance trend comparable to QCOM's flat margin disclosure."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_7_D007",
+            "peer_topic": "Consolidated Gross Margin Performance 2023-2024",
+            "peer_summary": "Consolidated gross margin improved to 22% in 2024 from -9% in 2023, aided by increased average selling prices and manufacturing cost reductions, despite the prior year's inventory write-downs and lower costs from selling previously written-down inventory in 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.175655,
+            "relationship": "same_topic",
+            "comparison": "QCOM and MU both reported their consolidated gross margin percentages for fiscal 2024, revealing divergent operational stability. QCOM’s gross margin remained flat year-over-year, indicating stability, whereas MU’s gross margin significantly improved to 22% from -9% in 2023, driven by higher average selling prices and manufacturing cost reductions after prior year write-downs.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D011",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P009_S001",
+                    "paragraph_id": "qcom_2024_7_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Gross margin percentage remained flat in fiscal 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D007",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P010_S002",
+                    "paragraph_id": "mu_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Our consolidated gross margin percentage improved to 22% for 2024 from negative 9% for 2023, as a result of improvements in margins for both DRAM and NAND products, primarily due to increases in average selling prices, and manufacturing cost reductions, the effects of charges to write down inventories to their NRV in 2023 and lower costs in 2024 from the sale of inventories written down in 2023 (as detailed in \"Inventory NRV write-downs\" below).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D056",
+            "peer_topic": "Fiscal 2024 gross margin performance and drivers",
+            "peer_summary": "Overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023, primarily driven by 217% growth in Data Center revenue and lower net inventory provisions as a percentage of revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.182092,
+            "relationship": "same_topic",
+            "comparison": "In contrast to QCOM’s flat gross margin in fiscal 2024, NVDA reported a substantial increase in gross margin to 72.7% from 56.9%. NVDA attributed this growth to significant Data Center revenue growth (217%) and lower net inventory provisions, whereas QCOM cited stability without specifying such dramatic growth drivers or inventory benefits.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D011",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P009_S001",
+                    "paragraph_id": "qcom_2024_7_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Gross margin percentage remained flat in fiscal 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D056",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P059_S001",
+                    "paragraph_id": "nvda_2024_7_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P059_S002",
+                    "paragraph_id": "nvda_2024_7_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The year over year increase was primarily due to strong Data Center revenue growth of 217% and lower net inventory provisions as a percentage of revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

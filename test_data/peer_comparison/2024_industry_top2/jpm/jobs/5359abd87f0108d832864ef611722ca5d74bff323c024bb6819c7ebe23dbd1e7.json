@@ -1,0 +1,238 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "e55b57d8db7ee7303a69927b0bd500b9cdd007931b63491b01474f6cb56b101b",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D388",
+    "item": "7",
+    "target_topic": "Oil & Gas Exposure Amounts",
+    "target_summary": "Oil & Gas exposure stood at $31.7 billion as of December 31, 2024, with criticized exposure reported at $192 million and $123 million at December 31, 2024, and 2023, respectively.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0647",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the Oil & Gas exposure and criticized exposure amounts for their respective years. 2023 reported $34.5B exposure/$123M criticized; 2024 reported $31.7B exposure/$192M criticized.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D386",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > WHOLESALE CREDIT PORTFOLIO > Oil & Gas",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 31, 2023, Oil & Gas exposure was $34.5 billion, with $123 million considered criticized.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D388",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Oil & Gas",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Oil & Gas exposure stood at $31.7 billion as of December 31, 2024, with criticized exposure reported at $192 million and $123 million at December 31, 2024, and 2023, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.563286,
+            "sequence_match_ratio": 0.478261,
+            "length_ratio": 1.421053,
+            "word_count_delta": 8,
+            "added_tokens_sample": [
+              "31",
+              "7",
+              "2024",
+              "criticized",
+              "exposure",
+              "was",
+              "192",
+              "million",
+              "and",
+              "at",
+              "december",
+              "31",
+              "2024",
+              "and",
+              "2023",
+              "respectively"
+            ],
+            "removed_tokens_sample": [
+              "34",
+              "5",
+              "2023",
+              "of",
+              "which",
+              "was",
+              "considered",
+              "criticized"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_7_D386",
+            "score": 0.992804,
+            "normalised_score": 0.9928,
+            "label": "Relocated",
+            "rationale": "Score 99.28% of ceiling — content is similar but section changed from 'BUSINESS SEGMENT RESULTS > WHOLESALE CREDIT PORTFOLIO > Oil & Gas' to 'BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Oil & Gas'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.25,
+          "confidence_score": 0.85,
+          "reason": "The change reflects the routine reporting of periodic financial data for the Oil & Gas portfolio (exposure decreased from $34.5B to $31.7B; criticized exposure increased from $123M to $192M). While the specific numbers changed, this represents the standard annual update of performance metrics rather than a fundamental shift in business activity, risk exposure, or strategic priority.",
+          "key_change": "Routine update of periodic financial data"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0060",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No direct counterpart found in 2025. The 2024 disclosure reports Oil & Gas exposure ($31.7B) and criticized exposure ($192M). The 2025 search results do not contain a disclosure with these specific metrics for Oil & Gas; the top hits are for Real Estate or general consumer credit. The 2025 disclosure for Consumer & Retail (jpm_2025_7_D387) has different metrics and section context.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D388",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Oil & Gas",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Oil & Gas exposure stood at $31.7 billion as of December 31, 2024, with criticized exposure reported at $192 million and $123 million at December 31, 2024, and 2023, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -27,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "oil",
+              "gas",
+              "exposure",
+              "was",
+              "31",
+              "7",
+              "billion",
+              "as",
+              "of",
+              "december",
+              "31",
+              "2024",
+              "criticized",
+              "exposure",
+              "was",
+              "192",
+              "million",
+              "and",
+              "123",
+              "million"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.8,
+          "reason": "The 2024 disclosure provides specific quantitative risk exposure data for the Oil & Gas sector ($31.7B exposure, $192M criticized exposure). The complete absence of this specific, quantified disclosure in the 2025 validated set, without a matching counterpart, suggests a significant change in disclosure practices or data availability regarding a major industry credit risk. For a financial institution, the removal of specific industry credit exposure metrics is material to the understanding of credit risk concentration.",
+          "key_change": "Disappearance of specific Oil & Gas credit exposure metrics"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D285",
+            "peer_topic": "Composition of Criticized Utilized Exposure",
+            "peer_summary": "Total commercial reservable criticized utilized exposure included $25.5 billion and $22.5 billion in loans and leases, and $977 million and $795 million in commercial letters of credit at year-end 2024 and 2023, respectively.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.174827,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures quantify criticized exposure within their respective credit portfolios. JPMorgan reports Oil & Gas criticized exposure of $192 million, while Bank of America reports total commercial reservable criticized utilized exposure of $25.5 billion. Both companies provide a year-over-year comparison, with JPM reporting a year-over-year increase in criticized exposure for its Oil & Gas sector ($192 million in 2024 vs $123 million in 2023) and BAC reporting a year-over-year increase in its broader commercial criticized utilized exposure ($25.5 billion in 2024 vs $22.5 billion in 2023).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D388",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P566_S002",
+                    "paragraph_id": "jpm_2024_7_P566",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Criticized exposure was $192 million and $123 million at December 31, 2024 and 2023, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D285",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P339_S001",
+                    "paragraph_id": "bac_2024_7_P339",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "(1)Total commercial reservable criticized utilized exposure includes loans and leases of $25.5 billion and $22.5 billion and commercial letters of credit of $977 million and $795 million at December 31, 2024 and 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate addresses sector-specific credit exposure or criticized asset metrics comparable to the Oil & Gas exposure topic."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate addresses sector-specific credit exposure or criticized asset metrics comparable to the Oil & Gas exposure topic."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate addresses sector-specific credit exposure or criticized asset metrics comparable to the Oil & Gas exposure topic."
+      }
+    ]
+  }
+}

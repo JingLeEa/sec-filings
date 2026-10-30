@@ -1,0 +1,193 @@
+{
+  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
+  "request_hash": "9fc7ee8e4354119cb6e2a954eb749e6930f15007df79fb9152a8a87161571156",
+  "result": {
+    "target_ticker": "AVGO",
+    "target_disclosure_id": "avgo_2024_8_D091",
+    "item": "8",
+    "target_topic": "Components of Other Income (Expense), Net",
+    "target_summary": "Other income and other expense include foreign exchange gains and losses, factoring fees for the sales of receivables, and other miscellaneous items.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "avgo_2023_2024_M0383",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "Both disclosures define the components of Other Income (Expense), Net, specifically citing foreign exchange gains/losses and factoring fees for receivables. The 2024 disclosure adds 'other miscellaneous items' but retains the core same-topic subject.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2023_8_D071",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 4. Supplemental Financial Information > Other Income (Expense), Net",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other income and other expense consist of foreign exchange gains and losses, factoring fees for the sales of receivables, dividend income, and other miscellaneous items.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_8_D091",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 5. Supplemental Financial Information > Other Income (Expense), Net",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other income and other expense include foreign exchange gains and losses, factoring fees for the sales of receivables, and other miscellaneous items.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "avgo_2024_2025_M0351",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail the components of Other Income/Expense, specifically identifying foreign exchange gains/losses and factoring fees for sales of receivables as part of other miscellaneous items.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_8_D091",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 5. Supplemental Financial Information > Other Income (Expense), Net",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other income and other expense include foreign exchange gains and losses, factoring fees for the sales of receivables, and other miscellaneous items.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2025_8_D095",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 5. Supplemental Financial Information > Other Income, Net",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other income and other expense include gains on sales of businesses, foreign exchange gains and losses, factoring fees for the sales of receivables, and other miscellaneous items.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.926065,
+            "sequence_match_ratio": 0.897959,
+            "length_ratio": 1.227273,
+            "word_count_delta": 5,
+            "added_tokens_sample": [
+              "gains",
+              "on",
+              "sales",
+              "of",
+              "businesses"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "avgo_2024_8_D091",
+            "score": 1.028756,
+            "normalised_score": 1.0288,
+            "label": "Unchanged",
+            "rationale": "Score 102.88% of ceiling with 90% word overlap — text is effectively identical.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.8,
+          "reason": "The disclosure introduces a new component to Other Income: 'gains on sales of businesses.' This indicates the company engaged in divestitures or asset sales during the current period, which is a change in strategic activity and financial composition. While the amounts are not explicitly quantified in this snippet, the introduction of this line item changes the substance of the Other Income disclosure, distinguishing it from the prior year which did not list this specific gain source.",
+          "key_change": "Introduction of gains on sales of businesses in Other Income"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates for AMD discuss foreign currency remeasurement *policies* (how gains/losses are calculated and measured) or available-for-sale debt securities, but do not explicitly list 'foreign exchange gains and losses' as a line-item component of 'Other Income (Expense), Net' in the same direct manner as AVGO's disclosure. AMD's disclosure focuses on the functional currency and remeasurement methodology rather than the composition of the income statement line item itself."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates for INTC discuss the non-allocation of non-operating items to segments or the specific gains/losses from cash flow hedges in other comprehensive income. They do not provide a comparable disclosure listing 'foreign exchange gains and losses' as a component of the 'Other Income (Expense), Net' line item in the income statement."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D081",
+            "peer_topic": "Accounting Treatment of Derivative Gains and Losses",
+            "peer_summary": "Realized and unrealized gains and losses on these non-hedge accounting derivatives, along with changes in underlying monetary items due to exchange rates, are recorded in other non-operating income (expense), and recognized amounts were not significant for the reported periods.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.106225,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and MU disclose the accounting treatment for foreign currency-related items within 'Other Income (Expense)' or 'other non-operating income (expense)'. AVGO explicitly lists 'foreign exchange gains and losses' as a component of other income and expense. MU similarly reports that gains and losses from changes in currency exchange rates on underlying monetary assets and liabilities, as well as on non-designated derivatives, are included in 'other non-operating income (expense), net.' However, MU discloses that these recognized amounts were not significant for the periods presented, whereas AVGO does not qualify the significance of its foreign exchange gains and losses in this specific summary sentence.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D091",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P123_S001",
+                    "paragraph_id": "avgo_2024_8_P123",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Other income and other expense include foreign exchange gains and losses, factoring fees for the sales of receivables, and other miscellaneous items.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D081",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P091_S003",
+                    "paragraph_id": "mu_2024_8_P091",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Realized and unrealized gains and losses on derivative instruments without hedge accounting designation as well as the changes in the underlying monetary assets and liabilities from changes in currency exchange rates are included in other non-operating income (expense), net.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved."
+      }
+    ]
+  }
+}

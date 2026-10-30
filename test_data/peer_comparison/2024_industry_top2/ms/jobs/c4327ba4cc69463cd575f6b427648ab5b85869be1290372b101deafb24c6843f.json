@@ -1,0 +1,286 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "d1b3cc68d738a44e625c91ff96d32a8ee1c1d0ae8dd0817b2ebc8ccd9d8c79d4",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D033",
+    "item": "7",
+    "target_topic": "Equity Net Revenues and Drivers",
+    "target_summary": "Institutional Securities Equity net revenues were $12,230 million in 2024, representing a 22% increase from the prior year, driven by growth in Execution services and Financing, particularly in Asia and the Americas.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0239",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report total net revenues for the Equity segment and discuss year-over-year changes. The 2023 record cites a 7% decrease driven by Financing and Execution services (ms_2023_7_P039_S001), while the 2024 record cites a 22% increase driven by the same services (ms_2024_7_P039_S001).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D031",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net revenues for the Equity segment were $9,986 million in 2023, a 7% decrease from the prior year, driven primarily by declines in Financing and Execution services.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D033",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Institutional Securities Equity net revenues were $12,230 million in 2024, representing a 22% increase from the prior year, driven by growth in Execution services and Financing, particularly in Asia and the Americas.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.56534,
+            "sequence_match_ratio": 0.538462,
+            "length_ratio": 1.363636,
+            "word_count_delta": 8,
+            "added_tokens_sample": [
+              "12",
+              "230",
+              "2024",
+              "increased",
+              "22",
+              "an",
+              "increase",
+              "both",
+              "and",
+              "financing",
+              "particularly",
+              "in",
+              "asia",
+              "and",
+              "the",
+              "americas"
+            ],
+            "removed_tokens_sample": [
+              "9",
+              "986",
+              "2023",
+              "decreased",
+              "7",
+              "decreases",
+              "financing",
+              "and"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D031",
+            "score": 0.848126,
+            "normalised_score": 0.8481,
+            "label": "Modified",
+            "rationale": "Score 84.81% of ceiling with 41% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.95,
+          "reason": "This disclosure reflects a significant positive shift in the Equity segment's financial performance, moving from a 7% revenue decrease in 2023 to a 22% increase in 2024. The growth is now driven by both Execution and Financing services, with specific geographic expansion mentioned (Asia and Americas), indicating a meaningful change in business performance and demand.",
+          "key_change": "Significant increase in Equity segment revenues"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0036",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure reports Institutional Securities Equity net revenues ($12,230 million) and their drivers (Execution services and Financing). The 2025 search results for Item 7 yielded no disclosure covering Institutional Securities Equity net revenues or their specific breakdown. The hits were related to Credit Risk, RWA, or general funding, not Equity trading revenues.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D033",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Institutional Securities Equity net revenues were $12,230 million in 2024, representing a 22% increase from the prior year, driven by growth in Execution services and Financing, particularly in Asia and the Americas.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -30,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "net",
+              "revenues",
+              "of",
+              "12",
+              "230",
+              "million",
+              "in",
+              "2024",
+              "increased",
+              "22",
+              "compared",
+              "with",
+              "the",
+              "prior",
+              "year",
+              "reflecting",
+              "an",
+              "increase",
+              "in",
+              "both"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The 2024 report provided specific quantitative results ($12,230 million) and qualitative drivers (Execution services, Financing) for Institutional Securities Equity net revenues. The complete removal of this segment performance data in 2025 is a significant loss of material financial information regarding business operations.",
+          "key_change": "Removal of segment revenue performance data"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "BAC candidates focus on credit risk metrics (provision for credit losses, criticized utilized exposure) rather than equity market revenue performance or drivers. The topics are unrelated to the target's disclosure on Equity Net Revenues and Execution/Financing growth."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "C candidates discuss overall segment net income or profitability drivers (cost of credit, revenues/expenses) but do not provide specific details on Equity net revenues, execution services, or financing revenues comparable to the target's specific business line disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D044",
+            "peer_topic": "2024 Net Revenue Growth Overview",
+            "peer_summary": "Net revenues for the Goldman Sachs Group, Inc. were $53.51 billion in 2024, a 16% increase from 2023, driven by higher other principal transactions revenues, net interest income, investment banking revenues, and investment management revenues.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.109224,
+            "relationship": "same_topic",
+            "comparison": "Both MS and GS report significant growth in net revenues for 2024, driven by similar segments including Equities and Investment Banking. MS reported a 22% increase in Institutional Securities Equity net revenues to $12,230 million, driven by Execution services and Financing. GS reported a 16% increase in consolidated net revenues to $53.51 billion, primarily reflecting higher other principal transactions revenues (which include equity trading) and investment banking revenues. Both disclose growth in equity-related trading and investment banking as key drivers.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D033",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P039_S001",
+                    "paragraph_id": "ms_2024_7_P039",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net revenues of $12,230 million in 2024 increased 22% compared with the prior year, reflecting an increase in both Execution services and Financing, particularly in Asia and the Americas.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D044",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P048_S001",
+                    "paragraph_id": "gs_2024_7_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net revenues in the consolidated statements of earnings were $53.51 billion for 2024, 16% higher than 2023, primarily reflecting significantly higher other principal transactions revenues, net interest income and investment banking revenues and higher investment management revenues.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D006",
+            "peer_topic": "2024 Net Revenue Growth by Segment",
+            "peer_summary": "Net revenues increased 16% to $53.51 billion in 2024, driven primarily by higher revenues in Global Banking & Markets (Equities, Investment banking, FICC) and Asset & Wealth Management (Equity investments, Management fees), with slight increases in Platform Solutions.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.103936,
+            "relationship": "same_topic",
+            "comparison": "Both MS and GS highlight the performance of their Equities businesses within their broader market segments. MS details a 22% increase in Equity net revenues due to Execution and Financing. GS breaks down its 16% net revenue growth by segment, noting that the increase in Global Banking & Markets primarily reflected higher net revenues in Equities, alongside higher Investment banking fees.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D033",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P039_S001",
+                    "paragraph_id": "ms_2024_7_P039",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net revenues of $12,230 million in 2024 increased 22% compared with the prior year, reflecting an increase in both Execution services and Financing, particularly in Asia and the Americas.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D006",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P008_S001",
+                    "paragraph_id": "gs_2024_7_P008",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net revenues were $53.51 billion for 2024, 16% higher than 2023, primarily reflecting higher net revenues in Global Banking & Markets and Asset & Wealth Management.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P008_S002",
+                    "paragraph_id": "gs_2024_7_P008",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in net revenues in Global Banking & Markets primarily reflected higher net revenues in Equities, significantly higher Investment banking fees and higher net revenues in Fixed Income, Currency and Commodities (FICC).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "JPM candidates focus on credit card net charge-offs and general Corporate segment financial results. These topics concern credit risk and aggregate corporate finances, not the specific drivers of Equity net revenues such as execution services or financing in the markets business."
+      }
+    ]
+  }
+}

@@ -1,0 +1,297 @@
+{
+  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
+  "request_hash": "7ef8e5cbe3deac866c12f0317e0af51d976d39b48edb5620d7f17545d484c0d4",
+  "result": {
+    "target_ticker": "QCOM",
+    "target_disclosure_id": "qcom_2024_7_D025",
+    "item": "7",
+    "target_topic": "QTL Licensing Revenue Increase Drivers",
+    "target_summary": "QTL licensing revenues increased in fiscal 2024, driven primarily by a $402 million increase in estimated sales of 3G/4G/5G-based multimode products, offset by decreases in estimated revenues per unit ($90 million) and upfront license fee recognition from Nokia ($68 million).",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "qcom_2023_2024_M0196",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specifically analyze the year-over-year change in QTL licensing revenues, citing identical specific drivers: changes in estimated sales of 3G/4G/5G-based multimode products and upfront license fee recognition from a Nokia agreement. D028 cites a decrease driven by these factors, while D025 cites an increase driven by similar factors.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2023_7_D028",
+            "item": "7",
+            "section": "Segment Results > QTL Segment (in millions, except percentages) > 2023 vs. 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL licensing revenues decreased in fiscal 2023 primarily due to a $730 million reduction in estimated sales of 3G/4G/5G-based multimode products driven by macroeconomic weakness and a $205 million decrease from the ending of recognition of upfront license fee consideration from a Nokia agreement in Q1 fiscal 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_7_D025",
+            "item": "7",
+            "section": "Segment Results > QTL Segment (in millions, except percentages) > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL licensing revenues increased in fiscal 2024, driven primarily by a $402 million increase in estimated sales of 3G/4G/5G-based multimode products, offset by decreases in estimated revenues per unit ($90 million) and upfront license fee recognition from Nokia ($68 million).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.86075,
+            "sequence_match_ratio": 0.80916,
+            "length_ratio": 1.015385,
+            "word_count_delta": 1,
+            "added_tokens_sample": [
+              "increase",
+              "2024",
+              "402",
+              "increase",
+              "90",
+              "million",
+              "decrease",
+              "in",
+              "estimated",
+              "revenues",
+              "per",
+              "unit",
+              "68"
+            ],
+            "removed_tokens_sample": [
+              "decrease",
+              "2023",
+              "730",
+              "decrease",
+              "primarily",
+              "driven",
+              "by",
+              "the",
+              "macroeconomic",
+              "environment",
+              "weakness",
+              "205"
+            ]
+          },
+          "semantic": {
+            "matched_id": "qcom_2023_7_D028",
+            "score": 0.975281,
+            "normalised_score": 0.9753,
+            "label": "Relocated",
+            "rationale": "Score 97.53% of ceiling — content is similar but section changed from 'Segment Results > QTL Segment (in millions, except percentages) > 2023 vs. 2022' to 'Segment Results > QTL Segment (in millions, except percentages) > 2024 vs. 2023'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The QTL revenue drivers shifted significantly. The prior year cited a $730 million decrease from macro factors and a $205 million one-time decrease from Nokia upfront fees. The current year shows a $402 million increase in estimated sales (offsetting the $68 million remaining Nokia fee decrease). The removal of the large macroeconomic negative driver and the reversal in the core sales volume metric represents a meaningful change in the revenue quality and growth trajectory.",
+          "key_change": "Shift from macro-driven revenue decrease to sales volume growth"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "qcom_2024_2025_M0211",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "These disclosures are related to the QTL Segment results but address distinct financial aspects. D025 details the drivers of revenue increase (sales volume vs. price) in 2024, while D026 details the drivers of EBT margin expansion (amortization vs. revenue). D023 in 2025 provides a high-level statement that both revenues and EBT remained flat due to offsetting license expirations and new agreements (Transsion, Chinese OEMs). While D023 covers the same broad topic (QTL financial performance drivers/changes), the 2024 disclosures are specific variance breakdowns, whereas 2023 is a summary of offsetting forces. Given the validation errors cited 'invalid_citations' for the previous rejected attempts which improperly cited D023 for both, and the semantic difference between 'drivers of increase' (2024) and 'flat status/mix of agreements' (2025), we treat them as separate alignments to avoid spurious linkage. However, since they all fall under QTL Segment Results, we must align them if a counterpart exists. D023 is the only 2025 candidate for QTL segment narrative. D025 and D026 are both 2024 QTL segment drivers. A many-to-one alignment is allowed if they share the specific topic. The top",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_7_D025",
+            "item": "7",
+            "section": "Segment Results > QTL Segment (in millions, except percentages) > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL licensing revenues increased in fiscal 2024, driven primarily by a $402 million increase in estimated sales of 3G/4G/5G-based multimode products, offset by decreases in estimated revenues per unit ($90 million) and upfront license fee recognition from Nokia ($68 million).",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "qcom_2024_7_D026",
+            "item": "7",
+            "section": "Segment Results > QTL Segment (in millions, except percentages) > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL EBT as a percentage of revenues increased in fiscal 2024 primarily due to lower cost of sales driven by a decrease in amortization expense related to acquired patents and higher revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2025_7_D023",
+            "item": "7",
+            "section": "Segment Results > QTL Segment (in millions, except percentages) > 2025 vs. 2024",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "QTL licensing revenues and EBT remained approximately flat in fiscal 2025 due to a mix of new long-term licenses with key Chinese OEMs and the expiration of agreements with others, such as Huawei. Specifically, new agreements were executed with two key Chinese OEMs for expired terms and with Transsion, resolving all outstanding litigation between Qualcomm and Transsion.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.292439,
+            "sequence_match_ratio": 0.182857,
+            "length_ratio": 0.804124,
+            "word_count_delta": -19,
+            "added_tokens_sample": [
+              "and",
+              "ebt",
+              "remained",
+              "approximately",
+              "flat",
+              "2025",
+              "during",
+              "second",
+              "2025",
+              "we",
+              "executed",
+              "final",
+              "agreements",
+              "for",
+              "new",
+              "licenses",
+              "with",
+              "two",
+              "key",
+              "chinese"
+            ],
+            "removed_tokens_sample": [
+              "the",
+              "increase",
+              "in",
+              "2024",
+              "was",
+              "primarily",
+              "due",
+              "to",
+              "402",
+              "million",
+              "increase",
+              "in",
+              "estimated",
+              "sales",
+              "of",
+              "3g",
+              "4g",
+              "5g",
+              "based",
+              "multimode"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "qcom_2024_7_D025",
+            "score": 0.703174,
+            "normalised_score": 0.7032,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 70.32% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The 2025 disclosure reveals a fundamental shift in QTL revenue dynamics: revenues and EBT are flat due to the expiration of major license agreements (e.g., Huawei) and the need to execute *new* long-term licenses with specific OEMs (Transsion, Chinese OEMs) to resolve litigation. This contrasts with 2024, where revenue was growing significantly driven by sales volume increases. The introduction of specific license expirations and the resolution of litigation via new agreements represents a material change in the licensing strategy and revenue sustainability risk.",
+          "key_change": "Shift from volume-driven growth to flat revenue due to license expirations and new OEM agreements"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided AMD candidates discuss Gaming and Client segment operating income declines/improvements driven by revenue changes or expenses. These do not align with QCOM's specific topic of QTL licensing revenue drivers (volume vs. price vs. upfront fees) in the patent licensing sector."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided AVGO candidates discuss financing activities (debt issuance, dividends) and operating cash flow changes driven by the VMware merger. These are unrelated to QCOM's QTL licensing revenue drivers."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided INTC candidates discuss Data Center and AI cost of sales drivers (inventory charges) and 'All Other' revenue performance. Neither addresses QCOM's specific QTL licensing revenue variance analysis."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_7_D005",
+            "peer_topic": "2024 Total Revenue Growth Drivers",
+            "peer_summary": "Total revenue for 2024 increased 62% compared to 2023, driven by a 60% increase in DRAM sales (due to mid-40% bit shipment growth and low-teen ASP growth) and a 72% increase in NAND sales (due to low-30% bit shipment growth and low-30% ASP growth).",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.063098,
+            "relationship": "same_topic",
+            "comparison": "Both QCOM and MU disclose specific drivers for their respective revenue increases in fiscal 2024. QCOM attributes its QTL licensing revenue increase to a $402 million rise in estimated sales of multimode products, alongside decreases in unit price ($90 million) and upfront fees ($68 million). Similarly, MU attributes its total revenue increase to growth in both unit shipments (bit shipments) and average selling prices (ASP) for its DRAM and NAND products. Both disclosures break down the revenue variance into volume (sales/shipments) and price components, though QCOM notes a price decline offsetting volume growth while MU reports price growth alongside volume growth.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P024_S002",
+                    "paragraph_id": "qcom_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "+ $402 million increase in estimated sales of 3G/4G/5G-based multimode products",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_7_P024_S003",
+                    "paragraph_id": "qcom_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "- $90 million decrease in estimated revenues per unit",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D005",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P008_S002",
+                    "paragraph_id": "mu_2024_7_P008",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "• Sales of DRAM products increased 60% primarily due to a mid-40% range increase in bit shipments and a low-teen percentage range increase in average selling prices.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_7_P008_S003",
+                    "paragraph_id": "mu_2024_7_P008",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "• Sales of NAND products increased 72% primarily due to a low-30% range increase in bit shipments and a low-30% percentage range increase in average selling prices.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided NVDA candidates discuss All Other operating loss variance (Arm termination cost) and overall gross margin drivers (Data Center revenue growth and inventory provisions). These do not match the specific topic of QCOM's QTL licensing revenue drivers."
+      }
+    ]
+  }
+}

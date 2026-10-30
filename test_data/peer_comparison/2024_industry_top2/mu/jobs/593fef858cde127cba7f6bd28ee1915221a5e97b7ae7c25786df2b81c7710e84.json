@@ -1,0 +1,390 @@
+{
+  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
+  "request_hash": "1217e3b39995766603f78eb81f44926c5fcf5e01d4d89dd88885d3636dc13bce",
+  "result": {
+    "target_ticker": "MU",
+    "target_disclosure_id": "mu_2024_8_D048",
+    "item": "8",
+    "target_topic": "2023 Debt Issuance and Prepayment Losses",
+    "target_summary": "In 2023, the company issued $6.70 billion of senior unsecured notes and term loans, receiving $6.69 billion in cash, and prepaid $600 million of the 2024 Term Loan A principal.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "mu_2023_2024_M0306",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the prepayment of $600 million principal of the 2024 Term Loan A. The 2023 disclosure identifies this as a specific event in April 2023 using proceeds from notes, while the 2024 disclosure summarizes this prepayment activity within the annual debt activity table. The specific action and amount match exactly.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2023_8_D062",
+            "item": "8",
+            "section": "Debt > 2024 Term Loan A",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On April 13, 2023, the company prepaid $600 million principal amount of its 2024 Term Loan A using proceeds from senior unsecured notes issued in April 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2024_8_D048",
+            "item": "8",
+            "section": "Debt > Debt Activity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2023, the company issued $6.70 billion of senior unsecured notes and term loans, receiving $6.69 billion in cash, and prepaid $600 million of the 2024 Term Loan A principal.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.23629,
+            "sequence_match_ratio": 0.296296,
+            "length_ratio": 0.6875,
+            "word_count_delta": -10,
+            "added_tokens_sample": [
+              "in",
+              "issued",
+              "6",
+              "70",
+              "billion",
+              "and",
+              "agreements",
+              "and",
+              "received",
+              "cash",
+              "of",
+              "6",
+              "69",
+              "billion"
+            ],
+            "removed_tokens_sample": [
+              "on",
+              "april",
+              "13",
+              "used",
+              "a",
+              "portion",
+              "of",
+              "the",
+              "proceeds",
+              "from",
+              "our",
+              "april",
+              "2023",
+              "issuance",
+              "to",
+              "prepay",
+              "600",
+              "million",
+              "principal",
+              "amount"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2023_8_D062",
+            "score": 0.847151,
+            "normalised_score": 0.8472,
+            "label": "Relocated",
+            "rationale": "Score 84.72% of ceiling — content is similar but section changed from 'Debt > 2024 Term Loan A' to 'Debt > Debt Activity'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure summarizes a 2023 event (prepayment of Term Loan A) that was previously detailed in a specific 2023 subsection. The 2024 version is a high-level inclusion in a debt activity table, lacking the specific transaction details (date, funding source) of the 2023 text. This is a reduction in granular disclosure detail for a past event, not a change in substance or current risk.",
+          "key_change": "Reduction in granularity of past debt event disclosure"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "mu_2024_2025_M0312",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure describes the issuance of senior unsecured notes and term loans in 2023. The 2025 disclosure describes the borrowing under a new Term Loan Agreement in 2025. Both relate to the raising of debt capital through term loan instruments, though they refer to different specific instruments and years.\n\nThe 2024 disclosure details the terms of the Multi-Tranche Term Loan Agreement (2026/2027 Term Loan A), including SOFR-based interest and installment payments. The 2025 disclosure details the terms of the 2029 Term Loan Agreement, also including SOFR-based interest. Both describe specific term loan facilities and their interest rate mechanics.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2024_8_D048",
+            "item": "8",
+            "section": "Debt > Debt Activity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2023, the company issued $6.70 billion of senior unsecured notes and term loans, receiving $6.69 billion in cash, and prepaid $600 million of the 2024 Term Loan A principal.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "mu_2024_8_D052",
+            "item": "8",
+            "section": "Debt > Multi-Tranche Term Loan Agreement",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The 2026 and 2027 Term Loan A require equal quarterly installment payments of 1.25% of the original principal amount, with interest generally bearing at adjusted term SOFR plus a margin of 1.00% to 2.00% depending on tranches and credit ratings.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2025_8_D058",
+            "item": "8",
+            "section": "Note 12. Debt > 2029 Term Loan A",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On January 17, 2025, the company borrowed $1.68 billion under a Term Loan Agreement due January 17, 2029, with interest based on adjusted term SOFR plus a margin of 0.875% to 1.50% depending on credit ratings, and prepaid $700 million of the principal on August 18, 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.59155,
+            "sequence_match_ratio": 0.415301,
+            "length_ratio": 0.648649,
+            "word_count_delta": -39,
+            "added_tokens_sample": [
+              "on",
+              "january",
+              "17",
+              "2025",
+              "entered",
+              "into",
+              "and",
+              "borrowed",
+              "1",
+              "68",
+              "billion",
+              "due",
+              "january",
+              "17",
+              "2029",
+              "the",
+              "term",
+              "loan",
+              "agreement",
+              "0"
+            ],
+            "removed_tokens_sample": [
+              "in",
+              "2023",
+              "issued",
+              "6",
+              "70",
+              "billion",
+              "of",
+              "senior",
+              "unsecured",
+              "notes",
+              "and",
+              "term",
+              "loan",
+              "agreements",
+              "and",
+              "received",
+              "cash",
+              "of",
+              "6",
+              "69"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "mu_2024_8_D052",
+            "score": 0.778256,
+            "normalised_score": 0.7783,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 77.83% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.85,
+          "reason": "The disclosure shifts from historical 2023 term loan activity to new 2025 debt issuance and repayment. The company entered a new $1.68 billion Term Loan Agreement in 2025 with a 2029 maturity and different interest margins (0.875%-1.50% vs 1.00%-2.00%). This represents a new significant capital resource and exposure, changing the company's debt maturity profile and interest rate sensitivity.",
+          "key_change": "New $1.68 billion term loan issuance and interest margin change"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D088",
+            "peer_topic": "Issuance and Terms of Senior Notes",
+            "peer_summary": "On June 9, 2022, the Company issued $1.0 billion in aggregate principal amount of 3.924% Senior Notes Due 2032 and 4.393% Senior Notes Due 2052, which are general unsecured senior obligations governed by a June 9, 2022 indenture. Interest is payable semi-annually on June 1 and December 1, commencing December 1, 2022.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.162368,
+            "relationship": "same_topic",
+            "comparison": "Both MU and AMD issued senior unsecured notes during the relevant period, but the timing and scale differ significantly. MU issued $6.70 billion in 2023, whereas AMD's disclosed issuance of $1.0 billion in Senior Notes occurred in 2022. Both issuances were structured as general unsecured senior obligations.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D048",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P054_S002",
+                    "paragraph_id": "mu_2024_8_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2023, we issued $6.70 billion of senior unsecured notes and term loan agreements and received cash of $6.69 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D088",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P090_S001",
+                    "paragraph_id": "amd_2024_8_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "On June 9, 2022, the Company issued $1.0 billion in aggregate principal amount of 3.924% Notes and 4.393% Notes.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P090_S002",
+                    "paragraph_id": "amd_2024_8_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The 3.924% Notes and 4.393% Notes are general unsecured senior obligations of the Company.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D110",
+            "peer_topic": "Issuance of Senior Unsecured Notes in 2024",
+            "peer_summary": "The company issued senior unsecured notes totaling $10 billion in 2024, with $5 billion issued in July and another $5 billion in October.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.261425,
+            "relationship": "same_topic",
+            "comparison": "Both MU and AVGO issued significant amounts of senior unsecured notes. AVGO issued $10 billion in senior unsecured notes during 2024 (in July and October), while MU issued $6.70 billion in 2023. AVGO's issuance is a distinct 2024 event, whereas MU's activity centered on 2023.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D048",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P054_S002",
+                    "paragraph_id": "mu_2024_8_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2023, we issued $6.70 billion of senior unsecured notes and term loan agreements and received cash of $6.69 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D110",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P150_S001",
+                    "paragraph_id": "avgo_2024_8_P150",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We issued senior unsecured notes for an aggregate principal amount of $5,000 million in October 2024 and $5,000 million in July 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D134",
+            "peer_topic": "2024 Senior Notes Issuance and Redemption",
+            "peer_summary": "In 2024, the company issued $2.6 billion in senior notes and settled $1.9 billion in maturing senior notes via cash. The company also issued $11.0 billion in senior notes in 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.279693,
+            "relationship": "same_topic",
+            "comparison": "Both MU and INTC engage in large-scale senior notes issuance. INTC issued $11.0 billion in senior notes in 2023 and $2.6 billion in 2024. MU issued $6.70 billion in senior unsecured notes in 2023. The volumes are comparable in the 2023 period, though INTC's 2024 issuance ($2.6B) is smaller than MU's 2023 issuance.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D048",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P054_S002",
+                    "paragraph_id": "mu_2024_8_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2023, we issued $6.70 billion of senior unsecured notes and term loan agreements and received cash of $6.69 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D134",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P153_S001",
+                    "paragraph_id": "intc_2024_8_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "In 2024, we issued a total of $2.6 billion aggregate principal amount of senior notes, and settled in cash $1.9 billion of our senior notes that matured in May 2024 and June 2024.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P154_S001",
+                    "paragraph_id": "intc_2024_8_P154",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "In 2023, we issued a total of $11.0 billion aggregate principal amount of senior notes.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidate for NVDA is a boilerplate statement regarding the location of information in the 10-K and contains no facts about debt issuance, repayment, or financial activity comparable to MU's debt activity disclosure."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved."
+      }
+    ]
+  }
+}
