@@ -107,12 +107,12 @@ is not required. File mode reads the available extraction reports in the
 configured folder. Records enter the queue when their effective verification
 still needs review.
 
-Table inspection is outside the narrative extraction stage. The pipeline no
-longer generates `possible_missing_table_context`, and the shared source policy
-removes that legacy flag from active review reasons when older outputs are read.
-A table-only warning therefore does not create a human review task.
-`model_requested_review` and other active concerns remain. The original selected
-narrative evidence is retained; dropping a warning does not delete the disclosure.
+The UI follows the extraction pipeline's verification and active review reasons;
+it does not independently suppress table-context warnings. The narrative-only
+policy that retires `possible_missing_table_context` belongs to the
+`alignment-agent` branch. `model_requested_review` remains available for human
+review. Changes to the extraction policy should be implemented and tested in
+that pipeline branch, then integrated with the UI.
 
 **Alignment** reads [alignment outputs](ZIYANG_disclosure_alignment.md): groups
 from `needs_review.json`, plus groups with explicit

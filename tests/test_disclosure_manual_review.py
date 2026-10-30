@@ -6,7 +6,6 @@ import pytest
 import streamlit as st
 from streamlit.testing.v1 import AppTest
 
-from sec_disclosure.llm.disclosures import apply_source_unit_policy
 from sec_ui import config, data, disclosure_data, review
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,7 +21,8 @@ def disclosure(number, flags, year=2024):
             "sources": [{"paragraph_id": paragraph_id, "selected_text": text,
                          "source_url": "https://www.sec.gov/example.htm",
                          "sentences": [{"sentence_id": paragraph_id+"_S001", "text": text}]}],
-            "verification": {"status": "needs_review", "source_unit_count": 1, "review_reasons": flags,
+            "verification": {"status": "needs_review" if flags else "source_validated",
+                             "source_unit_count": 1, "review_reasons": flags,
                              "model_review_reason": "Confirm the disclosure type." if "model_requested_review" in flags else ""}}
 
 
@@ -31,12 +31,15 @@ def inputs(monkeypatch, tmp_path):
     root = tmp_path / "disclosures"
     records = [disclosure(901, ["possible_missing_table_context"]),
                disclosure(902, ["model_requested_review"]),
-               disclosure(903, ["possible_missing_table_context", "model_requested_review"])]
+               disclosure(903, ["possible_missing_table_context", "model_requested_review"]),
+               disclosure(905, [])]
     for year, rows in [(2024, records), (2023, [disclosure(904, ["model_requested_review"], 2023)])]:
         folder = root / "amd" / str(year)
         folder.mkdir(parents=True)
-        (folder / "disclosures.json").write_text(json.dumps({"disclosures": []}))
-        (folder / "review_candidates.json").write_text(json.dumps({"disclosures": rows}))
+        accepted = [row for row in rows if row["verification"]["status"] == "source_validated"]
+        pending = [row for row in rows if row["verification"]["status"] == "needs_review"]
+        (folder / "disclosures.json").write_text(json.dumps({"disclosures": accepted}))
+        (folder / "review_candidates.json").write_text(json.dumps({"disclosures": pending}))
     monkeypatch.setenv("SEC_UI_DATA_SOURCE", "files")
     monkeypatch.setenv("SEC_UI_DISCLOSURES_DIR", str(root))
     monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(ROOT / "tests/fixtures/alignments"))
@@ -56,31 +59,17 @@ def click(at, text):
     return next(button for button in at.button if button.label == text).click().run()
 
 
-def test_table_warning_is_retired_but_explicit_human_review_survives():
-    original = {"status": "needs_review", "source_unit_count": 1,
-                "review_reasons": ["possible_missing_table_context"], "model_review_reason": ""}
-    assert apply_source_unit_policy(original)["status"] == "source_validated"
-    both = {**original, "review_reasons": ["possible_missing_table_context", "model_requested_review"],
-            "model_review_reason": "Confirm classification."}
-    actual = apply_source_unit_policy(both)
-    assert actual["status"] == "needs_review"
-    assert actual["review_reasons"] == ["model_requested_review"]
-    assert actual["model_review_reason"] == "Confirm classification."
-    assert apply_source_unit_policy(actual) == actual
-    assert original["review_reasons"] == ["possible_missing_table_context"]
-    assert apply_source_unit_policy({**original, "source_unit_count": 0})["status"] == "needs_review"
-
-
-def test_disclosure_queue_does_not_require_alignment_and_excludes_table_only_flags(inputs, monkeypatch, tmp_path):
+def test_disclosure_queue_does_not_require_alignment_and_honors_pipeline_flags(inputs, monkeypatch, tmp_path):
     monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(tmp_path / "no_alignment"))
     source = disclosure_data.discover_source()
     assert source.years("amd") == [2023, 2024]
     records = disclosure_data.load_disclosures("amd", 2024, source)
-    assert [row["disclosure_id"] for row in records] == [inputs[1]["disclosure_id"], inputs[2]["disclosure_id"]]
-    assert all(row["verification"]["review_reasons"] == ["model_requested_review"] for row in records)
+    assert [row["disclosure_id"] for row in records] == [row["disclosure_id"] for row in inputs[:3]]
+    assert [row["verification"]["review_reasons"] for row in records] == [
+        row["verification"]["review_reasons"] for row in inputs[:3]]
     at = app()
     assert not at.exception and not at.error
-    assert {m.label: m.value for m in at.metric} == {"Review queue": "2", "Reviewed": "0", "Pending": "2"}
+    assert {m.label: m.value for m in at.metric} == {"Review queue": "3", "Reviewed": "0", "Pending": "3"}
 
 
 def test_disclosure_type_validation_persistence_editing_and_stage_isolation(inputs):
@@ -148,7 +137,7 @@ def test_alignment_queue_accepts_uncertain_change_analysis_but_not_unstarted_sta
 def test_validated_disclosures_are_editable_and_can_return_to_llm(inputs):
     records = disclosure_data.load_disclosures("amd", 2024, include_all=True)
     row = next(row for row in records if not row["needs_review"])
-    assert row["disclosure_id"] == inputs[0]["disclosure_id"]
+    assert row["disclosure_id"] == inputs[3]["disclosure_id"]
     default = review.final_disclosure(row, {})
     assert default["final_label_source"] == "llm" and default["final_disclosure_type"] == row["taxonomy"]
     saved = review.save_disclosure_review(row, "Operations & Capacity", "Correction.", expected=None)
@@ -170,8 +159,8 @@ def test_disclosure_ai_approved_scope_shows_type_and_manual_only_form(inputs):
     assert not at.selectbox(key="disclosure_type").disabled
     at.segmented_control(key="review_scope").select("AI approved").run()
     assert next(metric.value for metric in at.metric if metric.label == "Review queue") == "1"
-    at.selectbox(key="disclosure_selected").select(inputs[0]["disclosure_id"]).run()
-    ai_type = inputs[0]["taxonomy"]
+    at.selectbox(key="disclosure_selected").select(inputs[3]["disclosure_id"]).run()
+    ai_type = inputs[3]["taxonomy"]
     assert any(f"AI-approved disclosure type: **{ai_type}**" in message.value for message in at.success)
     assert any(f"AI type: {ai_type}" in label for label in at.selectbox(key="disclosure_selected").options)
     at.selectbox(key="disclosure_type").select("Operations & Capacity")
@@ -179,8 +168,8 @@ def test_disclosure_ai_approved_scope_shows_type_and_manual_only_form(inputs):
     assert not at.exception and not at.error
     assert at.selectbox(key="disclosure_type").value == "Operations & Capacity"
     at.segmented_control(key="review_scope").select("Needs review").run()
-    assert next(metric.value for metric in at.metric if metric.label == "Review queue") == "2"
-    assert all(not label.startswith(inputs[0]["disclosure_id"].rsplit("_", 1)[-1] + " |")
+    assert next(metric.value for metric in at.metric if metric.label == "Review queue") == "3"
+    assert all(not label.startswith(inputs[3]["disclosure_id"].rsplit("_", 1)[-1] + " |")
                for label in at.selectbox(key="disclosure_selected").options)
 
 

@@ -64,9 +64,7 @@ selected disclosure text and sentence count, before assigning disclosure IDs.
 Both exclusions go to `excluded_sources.json`; original input files stay intact.
 The rules do not require table keywords and amounts do not override them.
 Two-sentence paragraphs or single sentences ending in a period survive this rule.
-Table inspection is outside this narrative stage. The extractor does not create
-`possible_missing_table_context`; that warning is retired when reading older
-outputs. Explicit `model_requested_review` concerns remain for human review.
+A `possible_missing_table_context` warning alone does not exclude a disclosure.
 
 A whole subsection stays together when it fits the batch target. Large subsections
 split at paragraph boundaries. Each sentence belongs to one request; up to two
@@ -623,9 +621,8 @@ Allowed content taxonomy:
 
 One meaningful sentence is valid. Selected sentence IDs are not reused across
 retained disclosures; partial paragraphs are allowed. The retired
-`fewer_than_two_source_units`, `unassigned_context_in_source_paragraph`, and
-`possible_missing_table_context` flags do not by themselves require review.
-`model_requested_review` and other source concerns remain active. Omitted
+`fewer_than_two_source_units` and `unassigned_context_in_source_paragraph` flags
+do not by themselves require review. Other concerns remain active. Omitted
 neighbor sentences still appear in their audit files.
 
 IDs are assigned in source order per Item after filtering, boundary merges and consolidation.

@@ -1184,13 +1184,13 @@ class AlignmentTests(unittest.TestCase):
 
     def test_alignment_waives_unassigned_neighbor_flag_without_expanding_evidence(self):
         key = self.legacy_single_sentence(warning="unassigned_context_in_source_paragraph")
-        flagged = self.legacy_single_sentence(2, ["possible_missing_table_context", "model_requested_review"], warning="unassigned_context_in_source_paragraph")
+        flagged = self.legacy_single_sentence(2, ["possible_missing_table_context"], warning="unassigned_context_in_source_paragraph")
         data = self.data()
         self.assertEqual(data.records[key]["extraction_status"], "source_validated")
         self.assertEqual(data.view(key)["extraction_review_reasons"], [])
         self.assertEqual(len(data.records[key]["sentence_map"]), 1)
         self.assertEqual(data.records[flagged]["extraction_status"], "needs_review")
-        self.assertEqual(data.view(flagged)["extraction_review_reasons"], ["model_requested_review"])
+        self.assertEqual(data.view(flagged)["extraction_review_reasons"], ["possible_missing_table_context"])
         row = self.supported_decision([key], ["amd_2024_7_D001"], data)
         row.update(status="needs_review", review_reasons=["input_extraction_needs_review"])
         refreshed = module.apply_extraction_policy_to_alignments([row], data)[0]
