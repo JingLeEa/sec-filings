@@ -175,22 +175,37 @@ def score_table(q, gold, results):
     def cell(v):
         return f"{round(float(v), 2):g}" if is_num(v) else norm_key(v)
 
-    def contains(r):
-        """Every reference row appears in this result (extra rows/columns allowed, e.g. more years shown)."""
+    def contains(r, cols_wanted):
+        """Every reference row (projected on cols_wanted) appears in this result; extra rows/columns allowed."""
         candidates = []
-        for gc in gcols:
+        for gc in cols_wanted:
             need = Counter(cell(row.get(gc)) for row in gold["rows"])
             cols = [cc for cc in r["columns"] if not need - Counter(cell(row.get(cc)) for row in r["rows"])]
             if not cols:
                 return False
             candidates.append(cols[:3])
         from itertools import product
+        want = Counter(tuple(cell(row.get(gc)) for gc in cols_wanted) for row in gold["rows"])
         for combo in product(*candidates):
-            have = Counter(tuple(cell(row.get(c)) for c in combo) for row in r["rows"])
-            if not Counter(tuple(cell(row.get(gc)) for gc in gcols) for row in gold["rows"]) - have:
+            if not want - Counter(tuple(cell(row.get(c)) for c in combo) for row in r["rows"]):
                 return True
         return False
-    full = any(contains(r) for r in results if r["rows"])
+
+    labels = [c for c in gcols if not is_num(gold["rows"][0].get(c))]
+    numbers = [c for c in gcols if c not in labels]
+    # the asked measure (a share, average, increase...) rather than helper counts the reference also returns
+    measures = [c for c in numbers if re.search(r"pct|percent|share|avg|average|mean|median|increase|diff|rate|ratio",
+                                                c)] or numbers
+    full = False
+    for r in (r for r in results if r["rows"]):
+        if contains(r, gcols):
+            full = True
+        elif labels and any(contains(r, labels + [n]) for n in measures):
+            full = True   # the labels and the asked measure; helper columns (totals) need not be returned
+        elif not labels and len(gold["rows"]) == 1 and len(numbers) >= 2:
+            cells = {cell(v) for row in r["rows"] for v in row.values() if is_num(v)}
+            found = sum(cell(gold["rows"][0][n]) in cells for n in numbers)
+            full = full or found >= len(numbers) - 1   # e.g. both counts returned, the difference left to the answer
     top_row = gold["rows"][0]
     label_col = next((c for c in gcols if not is_num(top_row.get(c))), None)
     top_label = top_row.get(label_col) if label_col else None
