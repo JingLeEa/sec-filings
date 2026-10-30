@@ -173,10 +173,24 @@ class DisclosureTests(unittest.TestCase):
         self.assertEqual(original["status"], "needs_review")
         self.assertEqual(original["review_reasons"], ["fewer_than_two_source_units"])
         self.assertEqual(module.apply_source_unit_policy(current), current)
-        for extra in ({"review_reasons": ["fewer_than_two_source_units", "possible_missing_table_context"]},
+        for extra in ({"review_reasons": ["fewer_than_two_source_units", "boundary_check_failed"]},
                       {"model_review_reason": "A relevant detail may be missing."},
                       {"source_unit_count": 0}):
             self.assertEqual(module.apply_source_unit_policy(original | extra)["status"], "needs_review")
+
+    def test_saved_table_warning_is_waived_without_mutating_human_review(self):
+        original = {"status": "needs_review", "source_unit_count": 1,
+                    "review_reasons": ["possible_missing_table_context"], "model_review_reason": ""}
+        self.assertEqual(module.apply_source_unit_policy(original)["status"], "source_validated")
+        both = {**original, "review_reasons": ["possible_missing_table_context", "model_requested_review"],
+                "model_review_reason": "Confirm classification."}
+        current = module.apply_source_unit_policy(both)
+        self.assertEqual(current["status"], "needs_review")
+        self.assertEqual(current["review_reasons"], ["model_requested_review"])
+        self.assertEqual(current["model_review_reason"], "Confirm classification.")
+        self.assertEqual(module.apply_source_unit_policy(current), current)
+        self.assertEqual(original["review_reasons"], ["possible_missing_table_context"])
+        self.assertEqual(module.apply_source_unit_policy({**original, "source_unit_count": 0})["status"], "needs_review")
 
     def test_quarantines_invented_duplicate_ids_and_unknown_taxonomy(self):
         invalid = [
@@ -218,8 +232,7 @@ class DisclosureTests(unittest.TestCase):
         self.assertEqual(self.run_command(), (0, 0))
 
     def test_unassigned_neighbors_do_not_clear_other_extraction_concerns(self):
-        for other in ("spans_multiple_sections", "section_continues_across_batch_boundary",
-                      "possible_missing_table_context", "model_requested_review"):
+        for other in ("spans_multiple_sections", "section_continues_across_batch_boundary", "model_requested_review"):
             original = {"status": "needs_review", "source_unit_count": 2,
                         "review_reasons": ["unassigned_context_in_source_paragraph", other],
                         "model_review_reason": ""}
@@ -307,8 +320,7 @@ class DisclosureTests(unittest.TestCase):
         self.assertTrue(all(x["reason"] == module.TABLE_INTRODUCTION_REASON and x["method"] == "deterministic_filter" for x in excluded))
         self.assertTrue(all(x["text"] in x["original_paragraph"] for x in excluded))
         reviews = self.read_output("review_candidates.json")["disclosures"]
-        self.assertEqual(len(reviews), 1)
-        self.assertIn("possible_missing_table_context", reviews[0]["verification"]["review_reasons"])
+        self.assertEqual(reviews, [])
         coverage = self.read_output("token_usage.json")["coverage"]
         self.assertEqual(coverage["input_sentence_records"], 9)
         self.assertEqual(coverage["disclosure_source_units"], 8)
@@ -319,16 +331,58 @@ class DisclosureTests(unittest.TestCase):
         self.assertEqual(coverage["unprocessed_sentence_ids"], [])
         self.assertEqual(self.run_command(), (0, 0))
 
-    def test_table_reference_and_fact_inside_one_unit_are_kept_with_existing_warnings(self):
+    def test_table_reference_and_fact_inside_one_unit_are_kept_without_table_review(self):
         text = "The following table summarizes Goodwill: During 2024 there was no goodwill impairment."
         self.add_paragraph("8", [text], section="Goodwill")
         self.write_inputs()
         self.assertEqual(self.run_command(), (0, 3))
-        row = self.read_output("review_candidates.json")["disclosures"][0]
+        row = next(row for row in self.read_output("disclosures.json")["disclosures"] if row["content"] == text)
         self.assertEqual(row["content"], text)
         self.assertEqual(row["verification"]["source_unit_count"], 1)
-        self.assertIn("possible_missing_table_context", row["verification"]["review_reasons"])
+        self.assertNotIn("possible_missing_table_context", row["verification"]["review_reasons"])
+        self.assertEqual(row["verification"]["status"], "source_validated")
         self.assertEqual(self.read_output("excluded_sources.json")["excluded"], [])
+
+    def test_pipeline_drops_table_context_on_fresh_and_cached_runs_but_keeps_human_review(self):
+        phrases = ["The following table describes our debt. Interest remains fixed.",
+                   "The table below describes our commitments. Contracts remain in force.",
+                   "Our obligations were as follows. All amounts relate to signed contracts.",
+                   "Our commitments are as follows. The stated maturity dates remain unchanged."]
+        for text in phrases:
+            self.add_paragraph("8", [text], section="Table-reference narrative")
+        self.write_inputs()
+
+        def human_review(prompt, **kwargs):
+            response = self.response(prompt, **kwargs)
+            payload = json.loads(response.text)
+            document = json.loads(prompt)
+            if document.get("section") == "Table-reference narrative" and payload.get("disclosures"):
+                payload["disclosures"][0]["review_reason"] = "A human should confirm this disclosure type."
+            return CompletionResult(json.dumps(payload), response.model, response.finish_reason, response.usage)
+
+        code, calls = self.run_command(responder=human_review)
+        self.assertEqual(code, 0)
+        self.assertGreater(calls, 0)
+        for name in ("disclosures.json", "review_candidates.json"):
+            report = self.read_output(name)
+            self.assertFalse(report["source_unit_policy"]["table_context_requires_review"])
+            self.assertTrue(all("possible_missing_table_context" not in row["verification"]["review_reasons"]
+                                for row in report["disclosures"]))
+        review = self.read_output("review_candidates.json")
+        row = next(row for row in review["disclosures"] if row["section"] == "Table-reference narrative")
+        for text in phrases:
+            self.assertIn(text, row["content"])
+        self.assertEqual(row["verification"]["review_reasons"], ["model_requested_review"])
+
+        # Simulate a legacy export. Resuming the pipeline must regenerate it
+        # from cached model responses without relying on a manual cleanup.
+        row["verification"]["review_reasons"].append("possible_missing_table_context")
+        module.write_json(self.root / "disclosures/amd/2024/review_candidates.json", review)
+        self.assertEqual(self.run_command(responder=human_review), (0, 0))
+        restored = next(row for row in self.read_output("review_candidates.json")["disclosures"]
+                        if row["section"] == "Table-reference narrative")
+        self.assertEqual(restored["verification"]["review_reasons"], ["model_requested_review"])
+        self.assertEqual(restored["verification"]["model_review_reason"], "A human should confirm this disclosure type.")
 
     def test_post_extraction_filter_excludes_intro_selected_from_longer_paragraph(self):
         intro = "Total future purchase commitments were as follows:  \n"
@@ -538,7 +592,7 @@ class DisclosureTests(unittest.TestCase):
         merged = next(d for d in records if d["item"] == "7")
         self.assertEqual(merged["verification"]["source_unit_count"], 4)
         self.assertEqual(merged["content"], "\n\n".join(p["text"] for p in self.paragraphs[:2]))
-        self.assertEqual(set(merged["verification"]["review_reasons"]), {"possible_missing_table_context", "model_requested_review"})
+        self.assertEqual(set(merged["verification"]["review_reasons"]), {"model_requested_review"})
         self.assertEqual(merged["verification"]["extraction_batch_ids"], ["batch_001", "batch_002"])
         self.assertEqual(self.read_output("token_usage.json")["coverage"]["disclosure_source_units"], 6)
 
@@ -567,8 +621,8 @@ class DisclosureTests(unittest.TestCase):
         self.assertEqual(self.read_output("token_usage.json")["coverage"]["post_extraction_colon_disclosures_excluded"], 1)
         self.assertEqual(self.run_command(*options, responder=split_then_merge), (0, 1))
         self.assertEqual(self.read_output("excluded_sources.json")["excluded"], [])
-        reviews = self.read_output("review_candidates.json")["disclosures"]
-        merged = next(d for d in reviews if d["item"] == "7")
+        retained = self.read_output("disclosures.json")["disclosures"]
+        merged = next(d for d in retained if d["item"] == "7")
         self.assertEqual(merged["verification"]["source_unit_count"], 4)
         self.assertIn(intro, merged["content"])
         self.assertEqual(self.read_output("token_usage.json")["coverage"]["post_extraction_colon_disclosures_excluded"], 0)

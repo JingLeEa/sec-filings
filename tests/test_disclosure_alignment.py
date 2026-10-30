@@ -1093,18 +1093,38 @@ class AlignmentTests(unittest.TestCase):
 
     def test_alignment_waives_unassigned_neighbor_flag_without_expanding_evidence(self):
         key = self.legacy_single_sentence(warning="unassigned_context_in_source_paragraph")
-        flagged = self.legacy_single_sentence(2, ["possible_missing_table_context"], warning="unassigned_context_in_source_paragraph")
+        flagged = self.legacy_single_sentence(2, ["possible_missing_table_context", "model_requested_review"], warning="unassigned_context_in_source_paragraph")
         data = self.data()
         self.assertEqual(data.records[key]["extraction_status"], "source_validated")
         self.assertEqual(data.view(key)["extraction_review_reasons"], [])
         self.assertEqual(len(data.records[key]["sentence_map"]), 1)
         self.assertEqual(data.records[flagged]["extraction_status"], "needs_review")
-        self.assertEqual(data.view(flagged)["extraction_review_reasons"], ["possible_missing_table_context"])
+        self.assertEqual(data.view(flagged)["extraction_review_reasons"], ["model_requested_review"])
         row = self.supported_decision([key], ["amd_2024_7_D001"], data)
         row.update(status="needs_review", review_reasons=["input_extraction_needs_review"])
         refreshed = module.apply_extraction_policy_to_alignments([row], data)[0]
         self.assertEqual(refreshed["status"], "ai_verified")
         self.assertEqual(refreshed["evidence"], row["evidence"])
+
+    def test_alignment_waives_table_only_warning_but_preserves_requested_human_review(self):
+        clean = self.legacy_single_sentence(warning="possible_missing_table_context")
+        flagged = self.legacy_single_sentence(2, ["model_requested_review"],
+                                              warning="possible_missing_table_context")
+        paths = list((self.root / "disclosures").rglob("*.json"))
+        original = {p: p.read_bytes() for p in paths}
+        data = self.data()
+        self.assertEqual(data.records[clean]["extraction_status"], "source_validated")
+        self.assertEqual(data.view(clean)["extraction_review_reasons"], [])
+        self.assertEqual(data.records[flagged]["extraction_status"], "needs_review")
+        self.assertEqual(data.view(flagged)["extraction_review_reasons"], ["model_requested_review"])
+        for key in (clean, flagged):
+            row = self.supported_decision([key], ["amd_2024_7_D001"], data)
+            row.update(status="needs_review", review_reasons=["input_extraction_needs_review"])
+            result = module.apply_extraction_policy_to_alignments([row], data)[0]
+            self.assertEqual(result["evidence"], row["evidence"])
+            self.assertEqual(result["status"], "ai_verified" if key == clean else "needs_review")
+            self.assertEqual(result["review_reasons"], [] if key == clean else ["input_extraction_needs_review"])
+        self.assertEqual({p: p.read_bytes() for p in paths}, original)
 
     def test_refresh_length_policy_does_not_clear_other_alignment_concerns(self):
         key = self.legacy_single_sentence()

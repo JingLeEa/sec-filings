@@ -340,6 +340,13 @@ retired IDs in grouping provenance; it does not perform new model verification.
 `--refresh-extraction-policy` updates effective source warnings without changing
 historical extraction files. Unchanged repeated refreshes are no-ops.
 
+The narrative-only extraction policy retires `possible_missing_table_context`.
+New extraction runs do not generate it, and alignment applies the same policy
+when loading older disclosure reports. `model_requested_review` and other
+active concerns remain. A policy refresh clears `input_extraction_needs_review`
+only when no participating disclosure still needs review; it preserves source
+sentences, citations and unrelated alignment review reasons.
+
 To repair a saved same-Item run in a separate folder:
 
 ```bash

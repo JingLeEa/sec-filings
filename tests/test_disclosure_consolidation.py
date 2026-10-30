@@ -341,7 +341,7 @@ class ConsolidationTests(TestCase):
         self.assertEqual(self.run_cli(responder=respond), (0, 10))
         combined = next(d for d in self.records() if d["verification"]["source_unit_count"] == 3)
         self.assertCountEqual(combined["verification"]["review_reasons"],
-                              ["boundary_context_unresolved", "possible_missing_table_context", "model_requested_review"])
+                              ["boundary_context_unresolved", "model_requested_review"])
         self.assertIn("missing amount", combined["verification"]["model_review_reason"])
         self.assertEqual(len(combined["verification"]["boundary_checks"]), 2)
 
