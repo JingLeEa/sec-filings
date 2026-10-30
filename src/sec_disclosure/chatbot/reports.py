@@ -2,7 +2,9 @@
 
 A synthesis report (agents/synthesis.py) covers one company over a span of fiscal years: an executive summary,
 key findings that cite alignment match_ids, a longitudinal and a financial analysis, and financial trends
-computed in code from XBRL facts. Loaded with scripts/load_synthesis_to_postgres.py.
+computed in code from XBRL facts. The agent saves each report to synthesis_reports (company, years, report
+jsonb); the chatbot reads it through the chatbot_synthesis_* views (db/init/08_synthesis_reports.sql).
+Report files made elsewhere load with scripts/load_synthesis_to_postgres.py.
 
 Summary questions use the report covering the asked company and years; without one the chatbot falls back to
 its SQL summary over the alignments. Financial questions read the report's computed trends; the alignments hold
@@ -17,7 +19,8 @@ from .db import Database, DatabaseError, QueryResult
 from .entities import QueryFilters
 
 # Question words -> trend metric name patterns (SQL LIKE on the lower-cased metric, as the agent names them:
-# growth rows use the XBRL label, e.g. "Revenue", "Diluted EPS"; ratio rows a fixed name, e.g. "Gross margin").
+# growth rows use the XBRL label, e.g. "Revenue from Contract with Customer...",
+# "Net Cash Provided by (Used in) Operating Activities"; ratio rows a fixed name, e.g. "Gross margin").
 METRIC_PATTERNS: list[tuple[str, list[str]]] = [
     (r"\bgross\s+margins?\b", ["gross margin%"]),
     (r"\boperating\s+margins?\b", ["operating margin%"]),
@@ -28,8 +31,8 @@ METRIC_PATTERNS: list[tuple[str, list[str]]] = [
     (r"\boperating\s+income\b|\boperating\s+profit\b", ["operating income%"]),
     (r"\bnet\s+income\b|\bearnings\b(?!\s+per)|\bbottom[\s-]line\b", ["net income%"]),
     (r"\beps\b|\bearnings\s+per\s+share\b", ["%eps%", "%earnings per share%"]),
-    (r"\bcash\s+flows?\b|\bcash\s+from\s+operations\b", ["operating cash flow%"]),
-    (r"\bcapex\b|\bcapital\s+expenditures?\b", ["capital expenditure%"]),
+    (r"\bcash\s+flows?\b|\bcash\s+from\s+operations\b", ["operating cash flow%", "%operating activit%"]),
+    (r"\bcapex\b|\bcapital\s+expenditures?\b", ["capital expenditure%", "payments to acquire property, plant%"]),
     (r"\bcurrent\s+ratio\b|\bliquidity\b", ["current ratio%"]),
     (r"\bdebt\b|\bleverage\b", ["debt%"]),
     (r"\bassets\b", ["assets%", "total assets%"]),
@@ -80,7 +83,7 @@ class ReportStore:
     def available(self) -> bool:
         try:
             return self.db.query("synthesis_tables",
-                                 "SELECT to_regclass('public.synthesis_reports') AS t").rows[0]["t"] is not None
+                                 "SELECT to_regclass('public.chatbot_synthesis_reports') AS t").rows[0]["t"] is not None
         except DatabaseError:
             return False
 
@@ -88,14 +91,13 @@ class ReportStore:
         start, end = span_for(filters)
         return self.db.query("synthesis_report", """
             SELECT DISTINCT ON (r.company)
-                   r.report_id, r.company, r.start_year, r.end_year, r.executive_summary, r.longitudinal_analysis,
+                   r.report_key, r.company, r.start_year, r.end_year, r.executive_summary, r.longitudinal_analysis,
                    r.financial_analysis, r.limitations, r.valid, r.loaded_at,
-                   r.coverage->'input_summary'->>'material_changes_selected' AS material_changes_selected,
-                   jsonb_array_length(r.financial_metrics) AS financial_metrics,
+                   r.material_changes_selected, r.financial_metrics,
                    (SELECT max(a.loaded_at) FROM alignment_runs a
                      WHERE a.company = r.company AND a.previous_year >= r.start_year AND a.current_year <= r.end_year)
                        > r.loaded_at AS alignments_newer
-            FROM synthesis_reports r
+            FROM chatbot_synthesis_reports r
             WHERE r.company = ANY(%(companies)s)
               AND (%(start)s::int IS NULL OR (r.start_year <= %(start)s AND r.end_year >= %(end)s))
             ORDER BY r.company, (r.end_year - r.start_year), r.end_year DESC""",
@@ -108,7 +110,7 @@ class ReportStore:
             out.notes.append("synthesis reports are per company; name a company to use one")
             return out
         if not self.available():
-            out.notes.append("no synthesis tables yet (load reports with scripts/load_synthesis_to_postgres.py)")
+            out.notes.append("no synthesis reports table yet (run the synthesis agent or scripts/load_synthesis_to_postgres.py)")
             return out
         reports = self._reports(filters.companies, filters)
         out.results.append(reports)
@@ -124,21 +126,21 @@ class ReportStore:
                 out.notes.append(f"the {r['company'].upper()} synthesis report failed the agent's own validation")
         if not reports.rows:
             return out
-        ids = [r["report_id"] for r in reports.rows]
+        ids = [r["report_key"] for r in reports.rows]
         if financial_question is not None:
             out.results.append(self.trends(ids, wanted_metrics(financial_question)))
             return out
         out.results.extend(self.findings(ids, topic, limit))
         return out
 
-    def findings(self, report_ids: list[int], topic: str | None, limit: int) -> list[QueryResult]:
+    def findings(self, report_ids: list[str], topic: str | None, limit: int) -> list[QueryResult]:
         params = {"ids": report_ids, "topic": topic}
         topic_sql = ("AND to_tsvector('english', f.title || ' ' || f.analysis) @@ "
                      "websearch_to_tsquery('english', %(topic)s)") if topic else ""
         findings = self.db.query("synthesis_findings", f"""
             SELECT r.company, r.start_year, r.end_year, f.ordinal, f.title, f.analysis, f.match_ids, f.metric_ids
-            FROM synthesis_findings f JOIN synthesis_reports r USING (report_id)
-            WHERE f.report_id = ANY(%(ids)s) {topic_sql}
+            FROM chatbot_synthesis_findings f JOIN chatbot_synthesis_reports r USING (report_key, company)
+            WHERE f.report_key = ANY(%(ids)s) {topic_sql}
             ORDER BY r.company, f.ordinal LIMIT {int(limit)}""", params)
         if topic and not findings.rows:   # topic not in the findings: show the report's findings, say so
             findings = self.findings(report_ids, None, limit)[0]
@@ -151,12 +153,12 @@ class ReportStore:
             FROM alignment_changes WHERE match_id = ANY(%(ids)s) ORDER BY match_id""", {"ids": match_ids})
         return [findings, evidence]
 
-    def trends(self, report_ids: list[int], metrics: list[str]) -> QueryResult:
+    def trends(self, report_ids: list[str], metrics: list[str]) -> QueryResult:
         return self.db.query("synthesis_trends", """
             SELECT r.company, t.kind, t.metric, t.unit, t.year, t.from_year, t.to_year, t.old_value, t.new_value,
                    t.value, round(t.growth_pct, 2) AS growth_pct, t.formula, t.source_ids
-            FROM synthesis_trends t JOIN synthesis_reports r USING (report_id)
-            WHERE t.report_id = ANY(%(ids)s)
+            FROM chatbot_synthesis_trends t JOIN chatbot_synthesis_reports r USING (report_key, company)
+            WHERE t.report_key = ANY(%(ids)s)
               AND (%(metrics)s::text[] IS NULL OR lower(t.metric) LIKE ANY(%(metrics)s))
             ORDER BY r.company, t.kind DESC, t.metric, coalesce(t.year, t.to_year)""",
                              {"ids": report_ids, "metrics": metrics or None})

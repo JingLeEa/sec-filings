@@ -13,7 +13,7 @@ INIT = ROOT / "db" / "init"
 SCHEMAS: list[tuple[Path, str, str]] = [
     (INIT / "06_chatbot.sql", "chatbot_schema_version", "1"),
     (INIT / "07_peer_comparisons.sql", "peer_comparison_schema_version", "2"),
-    (INIT / "08_synthesis_reports.sql", "synthesis_schema_version", "1"),
+    (INIT / "08_synthesis_reports.sql", "synthesis_schema_version", "2"),
 ]
 
 

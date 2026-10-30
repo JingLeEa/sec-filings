@@ -143,14 +143,16 @@ class Database:
             GROUP BY 1, 2, 3 ORDER BY 1, 2""").rows
 
     def synthesis_overview(self) -> list[dict]:
-        """Loaded synthesis reports (empty when the synthesis tables do not exist yet)."""
-        if self.query("synthesis_check", "SELECT to_regclass('public.synthesis_reports') AS t").rows[0]["t"] is None:
+        """Loaded synthesis reports (empty when the synthesis views do not exist yet)."""
+        if self.query("synthesis_check",
+                      "SELECT to_regclass('public.chatbot_synthesis_reports') AS t").rows[0]["t"] is None:
             return []
         return self.query("synthesis_overview", """
-            SELECT company, start_year || '-' || end_year AS years,
-                   (SELECT count(*) FROM synthesis_findings f WHERE f.report_id = r.report_id) AS findings,
-                   (SELECT count(*) FROM synthesis_trends t WHERE t.report_id = r.report_id) AS trends
-            FROM synthesis_reports r ORDER BY company, start_year""").rows
+            SELECT r.company, r.start_year || '-' || r.end_year AS years,
+                   (SELECT count(*) FROM chatbot_synthesis_findings f WHERE f.report_key = r.report_key) AS findings,
+                   (SELECT count(*) FROM chatbot_synthesis_trends t WHERE t.report_key = r.report_key) AS trends,
+                   to_char(r.loaded_at, 'YYYY-MM-DD HH24:MI') AS generated
+            FROM chatbot_synthesis_reports r ORDER BY r.company, r.start_year""").rows
 
     def peer_run_overview(self) -> list[dict]:
         """Loaded peer-comparison runs (empty when the peer tables do not exist yet)."""

@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Load synthesis agent reports (*_synthesis_output.json) into PostgreSQL for the chatbot.
+"""Load synthesis agent report files (*_synthesis_output.json) into PostgreSQL for the chatbot.
+
+The synthesis agent already saves every report it generates to synthesis_reports; use this for report files
+produced elsewhere (a teammate's run, the samples in test_data/synthesis).
 
     python scripts/load_synthesis_to_postgres.py data/synthesis
-    python scripts/load_synthesis_to_postgres.py data/synthesis/AMD_2023_2025_synthesis_output.json --dry-run
+    python scripts/load_synthesis_to_postgres.py test_data/synthesis --dry-run
 """
 from __future__ import annotations
 

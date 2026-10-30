@@ -447,7 +447,8 @@ class SynthesisRoutingTests(unittest.TestCase):
 
 
 class SynthesisLoaderValidationTests(unittest.TestCase):
-    FIXTURE = ROOT / "tests" / "fixtures" / "synthesis" / "AMD_2023_2025_synthesis_output.json"
+    FIXTURE = ROOT / "test_data" / "synthesis" / "amd_2023_2025_synthesis_output.json"
+    SAMPLES = sorted((ROOT / "test_data" / "synthesis").glob("*_synthesis_output.json"))
 
     def mutate(self, change):
         import json
@@ -458,26 +459,44 @@ class SynthesisLoaderValidationTests(unittest.TestCase):
         path.write_text(json.dumps(report), encoding="utf-8")
         return path
 
-    def test_fixture_is_valid(self):
-        from sec_disclosure.storage.synthesis_reports import read_report, rows_for
-        report, _ = read_report(self.FIXTURE)
-        head, findings, trends = rows_for(report)
-        self.assertEqual((head["company"], head["start_year"], head["end_year"]), ("amd", 2023, 2025))
-        self.assertEqual(len(findings), 10)
-        self.assertEqual(len(trends), 33)
-        self.assertTrue(all(m.startswith("amd_") for f in findings for m in f["match_ids"]))
-        self.assertTrue(any(f["metric_ids"] for f in findings))
+    def test_agent_samples_are_valid(self):
+        from sec_disclosure.storage.synthesis_reports import read_report
+        self.assertTrue(self.SAMPLES)
+        for path in self.SAMPLES:
+            report, _ = read_report(path)
+            company = report["company"].lower()
+            ids = [i for f in report["report"]["key_findings"] for i in f["evidence_ids"] if "_M" in i]
+            self.assertTrue(ids, path.name)
+            self.assertTrue(all(i.startswith(company + "_") for i in ids), path.name)
+
+    def test_report_key(self):
+        from sec_disclosure.storage.synthesis_reports import report_key
+        self.assertEqual(report_key("AMD", [2023, 2024, 2025]), "amd_2023_2024_2025")
+
+    def test_old_synthesis_schema_is_upgraded(self):
+        from sec_disclosure.storage.chatbot_schema import SCHEMAS, outdated
+        current = {key: version for _, key, version in SCHEMAS}
+        self.assertEqual([p.name for p in outdated({**current, "synthesis_schema_version": "1"})],
+                         ["08_synthesis_reports.sql"])
+
+    def test_schema_matches_the_agents_table(self):
+        sql = (ROOT / "db" / "init" / "08_synthesis_reports.sql").read_text(encoding="utf-8")
+        for line in ("company       TEXT NOT NULL CHECK (company = upper(company))",
+                     "years         INTEGER[] NOT NULL CHECK (cardinality(years) >= 2)",
+                     "report        JSONB NOT NULL CHECK (jsonb_typeof(report) = 'object')",
+                     "PRIMARY KEY (company, years)"):
+            self.assertIn(line, sql)
 
     def test_numbers_written_as_strings_are_accepted(self):
-        from sec_disclosure.storage.synthesis_reports import read_report, rows_for
+        from sec_disclosure.storage.synthesis_reports import read_report
 
         def stringify(r):
             for t in r["financial_trends"]:
                 for key in ("old_value", "new_value", "value", "growth_pct"):
                     if t.get(key) is not None:
                         t[key] = str(t[key])
-        _, _, trends = rows_for(read_report(self.mutate(stringify))[0])
-        self.assertTrue(all(t["growth_pct"] is not None for t in trends if t["kind"] == "year_over_year_change"))
+        report, _ = read_report(self.mutate(stringify))
+        self.assertTrue(report["financial_trends"])
 
     def test_invalid_reports_are_rejected(self):
         from sec_disclosure.storage.synthesis_reports import read_report

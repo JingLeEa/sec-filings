@@ -1,13 +1,13 @@
 """Validate and atomically store synthesis agent reports (*_synthesis_output.json) in PostgreSQL.
 
-A report covers one company over a span of fiscal years. Reloading the same company and span replaces it.
+A report covers one company over a span of fiscal years. Reports go into the synthesis agent's own table,
+synthesis_reports(company, years, report jsonb); reloading the same company and years replaces the report.
 Both the current agent output (src/sec_disclosure/agents/synthesis.py, written to data/synthesis/) and the
 earlier synthesis_dev output are accepted: they share the report, trend and source-catalog fields.
 """
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
 import sys
@@ -32,7 +32,7 @@ class SynthesisImport:
     company: str
     start_year: int
     end_year: int
-    report_id: int
+    report_key: str
     findings: int
     trends: int
     valid: bool | None
@@ -106,62 +106,27 @@ def read_report(path: Path) -> tuple[dict, bytes]:
     return report, raw
 
 
-def rows_for(report: dict) -> tuple[dict, list[dict], list[dict]]:
-    body = report["report"]
-    years = sorted(int(y) for y in report["years"])
-    head = {
-        "company": str(report["company"]).lower(), "start_year": years[0], "end_year": years[-1], "years": years,
-        "executive_summary": body["executive_summary"].strip(),
-        "longitudinal_analysis": body.get("longitudinal_analysis"),
-        "financial_analysis": body.get("financial_analysis"),
-        "limitations": [str(x) for x in body.get("limitations") or []],
-        "valid": (report.get("validation") or {}).get("valid"),
-        "validation": json.dumps(report.get("validation") or {}, ensure_ascii=False, default=str),
-        "coverage": json.dumps({"input_summary": report.get("input_summary"),
-                                "coverage_summary": report.get("coverage_summary"),
-                                "coverage_gaps": report.get("coverage_gaps")}, ensure_ascii=False, default=str),
-        "financial_metrics": json.dumps(report.get("financial_metrics") or [], ensure_ascii=False, default=str),
-    }
-    findings = []
-    for ordinal, finding in enumerate(body["key_findings"], start=1):
-        ids = [str(i) for i in finding["evidence_ids"]]
-        findings.append({"ordinal": ordinal, "title": finding["title"].strip(), "analysis": finding["analysis"].strip(),
-                         "evidence_ids": ids, "match_ids": [i for i in ids if MATCH_ID.match(i)],
-                         "metric_ids": [i for i in ids if i.startswith("xbrl:")]})
-    trends = []
-    for ordinal, trend in enumerate(report.get("financial_trends") or [], start=1):
-        trends.append({"ordinal": ordinal, "kind": trend["type"],
-                       "metric": trend.get("label") or trend.get("name") or trend.get("concept") or "metric",
-                       "concept": trend.get("concept"), "unit": trend.get("unit"), "year": trend.get("year"),
-                       "from_year": trend.get("from_year"), "to_year": trend.get("to_year"),
-                       "old_value": _number(trend.get("old_value")), "new_value": _number(trend.get("new_value")),
-                       "value": _number(trend.get("value")), "growth_pct": _number(trend.get("growth_pct")),
-                       "formula": trend.get("formula"), "source_ids": [str(s) for s in trend.get("source_ids") or []]})
-    return head, findings, trends
+def report_key(company: str, years: list[int]) -> str:
+    """The chatbot views' id for a report, e.g. 'amd_2023_2024_2025'."""
+    return "_".join([company.lower(), *(str(y) for y in years)])
 
 
-INSERT_REPORT = """
-INSERT INTO synthesis_reports (company, start_year, end_year, years, executive_summary, longitudinal_analysis,
-    financial_analysis, limitations, valid, validation, coverage, financial_metrics, source_file, source_sha256)
-VALUES (%(company)s, %(start_year)s, %(end_year)s, %(years)s, %(executive_summary)s, %(longitudinal_analysis)s,
-    %(financial_analysis)s, %(limitations)s, %(valid)s, %(validation)s::jsonb, %(coverage)s::jsonb,
-    %(financial_metrics)s::jsonb, %(source_file)s, %(source_sha256)s)
-RETURNING report_id"""
-INSERT_FINDING = """
-INSERT INTO synthesis_findings (report_id, ordinal, title, analysis, evidence_ids, match_ids, metric_ids)
-VALUES (%(report_id)s, %(ordinal)s, %(title)s, %(analysis)s, %(evidence_ids)s, %(match_ids)s, %(metric_ids)s)"""
-INSERT_TREND = """
-INSERT INTO synthesis_trends (report_id, ordinal, kind, metric, concept, unit, year, from_year, to_year, old_value,
-    new_value, value, growth_pct, formula, source_ids)
-VALUES (%(report_id)s, %(ordinal)s, %(kind)s, %(metric)s, %(concept)s, %(unit)s, %(year)s, %(from_year)s,
-    %(to_year)s, %(old_value)s, %(new_value)s, %(value)s, %(growth_pct)s, %(formula)s, %(source_ids)s)"""
+# Same upsert as the synthesis agent's storage/synthesis.py: one row per (COMPANY, years), whole report as JSONB.
+UPSERT_REPORT = """
+INSERT INTO synthesis_reports (company, years, report)
+VALUES (%(company)s, %(years)s, %(report)s::jsonb)
+ON CONFLICT (company, years) DO UPDATE SET report = EXCLUDED.report, generated_at = now()"""
 
 
 def store_synthesis_report(path: Path, *, env_file: Path | None = None) -> SynthesisImport:
-    """Replace one (company, year span) report and its findings/trends in a single transaction."""
+    """Upsert one report file into the synthesis agent's synthesis_reports table (the chatbot reads it via views).
+
+    The pipeline already saves every report it generates; this is for report files produced elsewhere
+    (a teammate's run, test_data/synthesis samples).
+    """
     report, raw = read_report(path)
-    head, findings, trends = rows_for(report)
-    head.update(source_file=str(path), source_sha256=hashlib.sha256(raw).hexdigest())
+    company = str(report["company"]).strip().upper()
+    years = sorted(int(y) for y in report["years"])
     try:
         import psycopg
     except ImportError:
@@ -169,20 +134,14 @@ def store_synthesis_report(path: Path, *, env_file: Path | None = None) -> Synth
     try:
         with psycopg.connect(**connection_arguments(env_file)) as conn, conn.cursor() as cur:
             apply_outdated(cur)
-            cur.execute("DELETE FROM synthesis_reports WHERE company = %s AND start_year = %s AND end_year = %s",
-                        (head["company"], head["start_year"], head["end_year"]))
-            cur.execute(INSERT_REPORT, head)
-            report_id = cur.fetchone()[0]
-            if findings:
-                cur.executemany(INSERT_FINDING, [{**f, "report_id": report_id} for f in findings])
-            if trends:
-                cur.executemany(INSERT_TREND, [{**t, "report_id": report_id} for t in trends])
+            cur.execute(UPSERT_REPORT, {"company": company, "years": years, "report": raw.decode("utf-8")})
     except Exception as error:
         raise SynthesisStorageError(
             f"PostgreSQL synthesis import failed ({type(error).__name__}). Check that the database is running "
             "and POSTGRES_* or DATABASE_URL settings are correct.") from None
-    return SynthesisImport(head["company"], head["start_year"], head["end_year"], report_id, len(findings),
-                           len(trends), head["valid"])
+    return SynthesisImport(company.lower(), years[0], years[-1], report_key(company, years),
+                           len(report["report"]["key_findings"]), len(report.get("financial_trends") or []),
+                           (report.get("validation") or {}).get("valid"))
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -205,7 +164,7 @@ def main(argv: list[str] | None = None) -> int:
                       f"{len(report.get('financial_trends') or [])} trends).")
                 continue
             r = store_synthesis_report(path, env_file=args.env_file)
-            print(f"Done. {r.company} {r.start_year}-{r.end_year} (report_id {r.report_id}): {r.findings} findings, "
+            print(f"Done. {r.company} {r.start_year}-{r.end_year} [{r.report_key}]: {r.findings} findings, "
                   f"{r.trends} financial trends" + ("" if r.valid is not False else ", agent validation FAILED") + ".")
         except (OSError, ValueError, KeyError, TypeError, SynthesisStorageError) as error:
             print(f"Synthesis import error ({path}): {error}", file=sys.stderr)

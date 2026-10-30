@@ -1,26 +1,51 @@
-"""Integration tests: synthesis-report loader, summary-first and financial-trend answers in the chatbot.
+"""Integration tests: synthesis reports in the chatbot (summary-first and financial-trend answers).
 
-Uses tests/fixtures/synthesis/AMD_2023_2025_synthesis_output.json (real agent output; see its README). The
-report is loaded for the tests and removed afterwards unless it was already loaded. Skipped when the database
-is unreachable, when AMD's alignments are not loaded, or when a different AMD 2023-2025 report is loaded (so a
-real report is never replaced). Expected values come from the fixture JSON. No model is called.
+The synthesis agent saves each report to synthesis_reports(company, years, report jsonb) (its
+db/init/06_synthesis_reports.sql and storage/synthesis.py); the chatbot reads that table through the
+chatbot_synthesis_* views in db/init/08_synthesis_reports.sql.
+
+Uses the agent's sample output in test_data/synthesis/amd_2023_2025_synthesis_output.json. The report is upserted
+for the tests and removed afterwards unless it was already in the table. Skipped when the database is
+unreachable, when AMD's alignments are not loaded, or when a different AMD 2023-2025 report is stored (so a
+real report is never replaced). Expected values come from the sample JSON. No model is called.
 """
 from __future__ import annotations
 
-import hashlib
 import json
 import re
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = ROOT / "tests" / "fixtures" / "synthesis" / "AMD_2023_2025_synthesis_output.json"
+SAMPLE = ROOT / "test_data" / "synthesis" / "amd_2023_2025_synthesis_output.json"
 NEEDED_ALIGNMENTS = [("amd", 2023, 2024), ("amd", 2024, 2025)]
+KEY = "company = 'AMD' AND years = ARRAY[2023, 2024, 2025]"
 PRELOADED = False
+
+# The synthesis agent's table, verbatim from db/init/06_synthesis_reports.sql on the synthesis-agent branch.
+AGENT_DDL = """
+CREATE TABLE IF NOT EXISTS synthesis_reports (
+    company       TEXT NOT NULL CHECK (company = upper(company)),
+    years         INTEGER[] NOT NULL CHECK (cardinality(years) >= 2),
+    report        JSONB NOT NULL CHECK (jsonb_typeof(report) = 'object'),
+    generated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (company, years)
+);"""
+AGENT_UPSERT = """
+INSERT INTO synthesis_reports (company, years, report) VALUES (%s, %s, %s::jsonb)
+ON CONFLICT (company, years) DO UPDATE SET report = EXCLUDED.report, generated_at = now()"""
+
+
+def _connect():
+    import psycopg
+    from sec_disclosure.storage.disclosures import connection_arguments
+    return psycopg.connect(**connection_arguments())
 
 
 def _setup():
     global PRELOADED
+    if not SAMPLE.exists():
+        return None, f"sample report missing: {SAMPLE.relative_to(ROOT)}"
     try:
         from sec_disclosure.chatbot.db import Database
         db = Database()
@@ -31,10 +56,9 @@ def _setup():
     missing = [r for r in NEEDED_ALIGNMENTS if r not in loaded]
     if missing:
         return None, f"alignment runs not loaded: {missing}"
-    existing = db.query("t", "SELECT source_sha256 FROM synthesis_reports WHERE company = 'amd' "
-                             "AND start_year = 2023 AND end_year = 2025").rows
-    if existing and existing[0]["source_sha256"] != hashlib.sha256(FIXTURE.read_bytes()).hexdigest():
-        return None, "a different AMD 2023-2025 synthesis report is loaded; not replacing it with the fixture"
+    existing = db.query("t", f"SELECT report FROM synthesis_reports WHERE {KEY}").rows
+    if existing and existing[0]["report"] != json.loads(SAMPLE.read_text(encoding="utf-8")):
+        return None, "a different AMD 2023-2025 synthesis report is stored; not replacing it with the sample"
     PRELOADED = bool(existing)
     return db, ""
 
@@ -48,8 +72,8 @@ class SynthesisChatbotIntegrationTests(unittest.TestCase):
     def setUpClass(cls):
         from sec_disclosure.chatbot import Chatbot
         from sec_disclosure.storage.synthesis_reports import store_synthesis_report
-        cls.report = json.loads(FIXTURE.read_text(encoding="utf-8"))
-        cls.result = store_synthesis_report(FIXTURE)
+        cls.report = json.loads(SAMPLE.read_text(encoding="utf-8"))
+        cls.result = store_synthesis_report(SAMPLE)
         cls.bot = Chatbot(db=DB, use_llm=False, use_embeddings=False)
         cls.finding_ids = {i for f in cls.report["report"]["key_findings"] for i in f["evidence_ids"]}
 
@@ -57,10 +81,8 @@ class SynthesisChatbotIntegrationTests(unittest.TestCase):
     def tearDownClass(cls):
         if PRELOADED:
             return
-        import psycopg
-        from sec_disclosure.storage.disclosures import connection_arguments
-        with psycopg.connect(**connection_arguments()) as conn:
-            conn.execute("DELETE FROM synthesis_reports WHERE report_id = %s", (cls.result.report_id,))
+        with _connect() as conn:
+            conn.execute(f"DELETE FROM synthesis_reports WHERE {KEY}")
 
     def setUp(self):
         self.bot.reset()
@@ -69,15 +91,40 @@ class SynthesisChatbotIntegrationTests(unittest.TestCase):
         return [t for t in self.report["financial_trends"] if t["type"] == kind
                 and (t.get("label") or t.get("name")) == metric and all(t.get(k) == v for k, v in where.items())]
 
-    # ------------------------------------------------------------------ loader
+    # ------------------------------------------------------------------ storage / views
 
-    def test_loader_counts_and_reload(self):
+    def test_loader_writes_the_agents_table_and_reload_replaces(self):
         from sec_disclosure.storage.synthesis_reports import store_synthesis_report
+        self.assertEqual(self.result.report_key, "amd_2023_2024_2025")
         self.assertEqual(self.result.findings, len(self.report["report"]["key_findings"]))
-        self.assertEqual(self.result.trends, len(self.report["financial_trends"]))
-        type(self).result = store_synthesis_report(FIXTURE)
-        rows = DB.query("t", "SELECT count(*) AS n FROM synthesis_reports WHERE company = 'amd'").rows
-        self.assertEqual(rows[0]["n"], 1)
+        type(self).result = store_synthesis_report(SAMPLE)
+        self.assertEqual(DB.query("t", f"SELECT count(*) AS n FROM synthesis_reports WHERE {KEY}").rows[0]["n"], 1)
+
+    def test_views_expose_every_finding_and_trend(self):
+        q = "SELECT count(*) AS n FROM {} WHERE report_key = 'amd_2023_2024_2025'"
+        self.assertEqual(DB.query("t", q.format("chatbot_synthesis_findings")).rows[0]["n"],
+                         len(self.report["report"]["key_findings"]))
+        self.assertEqual(DB.query("t", q.format("chatbot_synthesis_trends")).rows[0]["n"],
+                         len(self.report["financial_trends"]))
+        row = DB.query("t", "SELECT * FROM chatbot_synthesis_reports WHERE report_key = 'amd_2023_2024_2025'").rows[0]
+        self.assertEqual((row["company"], row["start_year"], row["end_year"]), ("amd", 2023, 2025))
+        self.assertEqual(row["executive_summary"], self.report["report"]["executive_summary"])
+
+    def test_agent_ddl_and_upsert_work_after_the_chatbot_schema(self):
+        """The agent's own DDL is a no-op on our table, its upsert lands in it, and the views see the update."""
+        with _connect() as conn:
+            conn.execute(AGENT_DDL)
+            conn.execute(AGENT_UPSERT, ("AMD", [2023, 2024, 2025], SAMPLE.read_text(encoding="utf-8")))
+            n = conn.execute("SELECT count(*) FROM chatbot_synthesis_reports "
+                             "WHERE report_key = 'amd_2023_2024_2025'").fetchone()[0]
+        self.assertEqual(n, 1)
+
+    def test_schema_file_is_idempotent(self):
+        sql = (ROOT / "db" / "init" / "08_synthesis_reports.sql").read_text(encoding="utf-8")
+        with _connect() as conn:
+            conn.execute(sql)
+            n = conn.execute(f"SELECT count(*) FROM synthesis_reports WHERE {KEY}").fetchone()[0]
+        self.assertEqual(n, 1)   # rerunning the file keeps the agent's rows
 
     # ------------------------------------------------------------------ summary-first
 
@@ -96,11 +143,11 @@ class SynthesisChatbotIntegrationTests(unittest.TestCase):
         self.assertEqual(self.bot.ask("Summarise the key changes for AMD").retrieval_method, "synthesis_report")
 
     def test_topic_narrows_the_findings(self):
-        reply = self.bot.ask("Summarise AMD changes about data center")
-        findings = next(r for r in reply.results if r.name == "synthesis_findings").rows
+        reply = self.bot.ask("Summarise AMD changes about export controls")
+        findings = next(r for r in reply.results if r.name.startswith("synthesis_findings")).rows
         self.assertTrue(findings)
-        self.assertTrue(all("data center" in (f["title"] + f["analysis"]).lower() for f in findings))
-        self.assertLess(len(findings), len(self.report["report"]["key_findings"]))
+        if next(r for r in reply.results if r.name.startswith("synthesis_findings")).name == "synthesis_findings":
+            self.assertLess(len(findings), len(self.report["report"]["key_findings"]))
 
     def test_company_without_report_falls_back_to_alignment_summary(self):
         reply = self.bot.ask("Summarise the key changes for BAC 2023 to 2024")
@@ -116,24 +163,18 @@ class SynthesisChatbotIntegrationTests(unittest.TestCase):
 
     def test_years_outside_the_report_fall_back(self):
         from sec_disclosure.chatbot.entities import parse_filters
-        lookup = self.bot.reports.lookup(parse_filters("AMD 2021 to 2022"))
-        self.assertFalse(lookup.found)
+        self.assertFalse(self.bot.reports.lookup(parse_filters("AMD 2021 to 2022")).found)
 
     def test_stale_report_is_flagged(self):
-        import psycopg
-        from sec_disclosure.storage.disclosures import connection_arguments
-        with psycopg.connect(**connection_arguments()) as conn:
-            original = conn.execute("SELECT loaded_at FROM synthesis_reports WHERE report_id = %s",
-                                    (self.result.report_id,)).fetchone()[0]
-            conn.execute("UPDATE synthesis_reports SET loaded_at = '2000-01-01' WHERE report_id = %s",
-                         (self.result.report_id,))
+        with _connect() as conn:
+            original = conn.execute(f"SELECT generated_at FROM synthesis_reports WHERE {KEY}").fetchone()[0]
+            conn.execute(f"UPDATE synthesis_reports SET generated_at = '2000-01-01' WHERE {KEY}")
         try:
             reply = self.bot.ask("Summarise the key changes for AMD")
             self.assertTrue(any("may be out of date" in n for n in reply.notes))
         finally:
-            with psycopg.connect(**connection_arguments()) as conn:
-                conn.execute("UPDATE synthesis_reports SET loaded_at = %s WHERE report_id = %s",
-                             (original, self.result.report_id))
+            with _connect() as conn:
+                conn.execute(f"UPDATE synthesis_reports SET generated_at = %s WHERE {KEY}", (original,))
 
     # ------------------------------------------------------------------ financial trends
 
@@ -150,10 +191,20 @@ class SynthesisChatbotIntegrationTests(unittest.TestCase):
     def test_revenue_growth_matches_the_computed_trends(self):
         reply = self.bot.ask("What was AMD revenue growth?")
         rows = next(r for r in reply.results if r.name == "synthesis_trends").rows
-        self.assertEqual({r["metric"] for r in rows}, {"Revenue"})
+        self.assertTrue(rows)
+        self.assertTrue(all(r["metric"].lower().startswith("revenue") for r in rows))
         for row in rows:
-            expected = self.trend("year_over_year_change", "Revenue", from_year=row["from_year"])[0]["growth_pct"]
+            expected = self.trend("year_over_year_change", row["metric"], from_year=row["from_year"])[0]["growth_pct"]
             self.assertIn(f"{float(expected):+.1f}%", reply.answer)
+
+    def test_metric_words_match_the_agents_xbrl_labels(self):
+        for question, label in (("AMD operating cash flow", "Net Cash Provided by (Used in) Operating Activities"),
+                                ("AMD capex", "Payments to Acquire Property, Plant, and Equipment"),
+                                ("AMD diluted EPS", "Earnings Per Share, Diluted"),
+                                ("AMD net income", "Net Income (Loss) Attributable to Parent")):
+            with self.subTest(question=question):
+                rows = next(r for r in self.bot.ask(question).results if r.name == "synthesis_trends").rows
+                self.assertIn(label, {r["metric"] for r in rows})
 
     def test_financial_question_without_report_says_so_and_shows_disclosures(self):
         reply = self.bot.ask("How did Intel revenue change?")

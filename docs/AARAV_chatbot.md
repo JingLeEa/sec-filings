@@ -163,22 +163,33 @@ Tests and demos use Ariel's real pilot on the test-data branch,
 The synthesis agent (`agents/synthesis.py`, synthesis-agent branch) writes one report per company and span of
 years to `data/synthesis/<COMPANY>_<first>_<last>_synthesis_output.json`: an executive summary, key findings
 citing alignment match_ids, a longitudinal and a financial analysis, limitations, and financial trends computed
-in code from XBRL facts. Load reports after a run:
+in code from XBRL facts.
+
+The synthesis agent saves every report it generates into its own table, `synthesis_reports(company, years,
+report jsonb)` (`db/init/06_synthesis_reports.sql` on the synthesis-agent branch), so after a pipeline run there
+is nothing to load. The chatbot only reads that table, through three views in `db/init/08_synthesis_reports.sql`
+(created automatically): `chatbot_synthesis_reports` (one row per report, keyed `amd_2023_2024_2025`),
+`chatbot_synthesis_findings` (one row per key finding, with the match_ids and XBRL fact IDs it cites) and
+`chatbot_synthesis_trends` (growth and ratio rows). A report counts as out of date when the alignments for its
+years were reloaded after its `generated_at`.
+
+Report files made elsewhere (a teammate's run, the samples in `test_data/synthesis`) are upserted into the same
+table with:
 
 ```bash
+python scripts/load_synthesis_to_postgres.py test_data/synthesis     # AMD 2023-2025 and GS 2023-2024 samples
 python scripts/load_synthesis_to_postgres.py data/synthesis
-python scripts/load_synthesis_to_postgres.py tests/fixtures/synthesis      # the AMD 2023-2025 test report
 ```
 
-Tables (`db/init/08_synthesis_reports.sql`, created automatically): `synthesis_reports` (one per company and
-year span; reloading replaces it), `synthesis_findings` (with the match_ids and XBRL fact IDs each cites) and
-`synthesis_trends` (growth and ratio rows).
+Schema version 1 of `08_synthesis_reports.sql` created a chatbot-owned `synthesis_reports` with a different
+layout that would have broken the agent's save; version 2 drops that old layout automatically (reload any report
+files afterwards).
 
 - **Summary questions** ("Summarise the key changes for AMD from 2023 to 2025") use the report whose span covers
   the asked years (none asked = the latest); a topic ("…about data center") narrows the findings. Each cited
   match_id is joined to `alignment_changes` for its label and original text. Companies without a report get the
   SQL summary over their alignments, and the answer says so.
-- **Financial questions** ("How did AMD's gross margin change?", "revenue growth") read `synthesis_trends`, so
+- **Financial questions** ("How did AMD's gross margin change?", "revenue growth") read `chatbot_synthesis_trends`, so
   every figure is a deterministic calculation with its formula and source XBRL fact IDs. The alignments hold no
   figures, so without a report the chatbot says no financial data is loaded and shows disclosures that discuss
   the metric instead. Questions about what a company *says* ("…describe liquidity risk") stay disclosure
@@ -186,8 +197,9 @@ year span; reloading replaces it), `synthesis_findings` (with the match_ids and 
 - **Staleness**: if a company's alignments were reloaded after its report, the answer warns that the report may be
   out of date; a report that failed the agent's own validation is flagged too.
 
-`tests/fixtures/synthesis/AMD_2023_2025_synthesis_output.json` is real agent output (25 Oct version, real XBRL
-facts); all 33 match_ids it cites exist in test_data with the same materiality.
+Tests use the agent's samples in `test_data/synthesis`. AMD 2023-2025: all 180 match_ids it cites exist in
+test_data and are marked material. GS 2023-2024: 179 of 180 exist, but only 37 of them are marked material in the
+test_data alignments, so GS answers can show a cited finding next to an "Unchanged" or "needs review" label.
 
 Schema files 06–08 record a version in `schema_info`; the chatbot and both loaders re-apply any file whose
 version is missing or older, so an existing Docker volume picks up new columns and tables without a reset.
@@ -247,7 +259,7 @@ db/init/07_peer_comparisons.sql      peer-comparison tables and peer_comparison_
 src/sec_disclosure/storage/peer_comparisons.py, scripts/load_peer_comparisons_to_postgres.py   loader
 src/sec_disclosure/chatbot/peers.py  peer lookup, year-over-year join, fallback filters
 src/sec_disclosure/chatbot/reports.py  synthesis-report lookup: summaries, findings evidence, financial trends
-db/init/08_synthesis_reports.sql     synthesis_reports, synthesis_findings, synthesis_trends
+db/init/08_synthesis_reports.sql     chatbot_synthesis_* views over the agent's synthesis_reports
 src/sec_disclosure/storage/synthesis_reports.py, scripts/load_synthesis_to_postgres.py   loader
 src/sec_disclosure/storage/chatbot_schema.py   versioned schema files 06-08
 ```
