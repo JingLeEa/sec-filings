@@ -10,6 +10,7 @@ from sec_ui import components, config, data, reports
 components.setup("Overview")
 st.title("SEC disclosure comparison")
 st.caption("What changed in a company's 10-K from one year to the next, with the source text behind every change.")
+st.page_link("pages/0_Run_Pipeline.py", label="Run pipeline", icon=":material/play_circle:")
 
 source, company, previous, current = components.comparison_picker()
 comparison = components.load_selected(source, company, previous, current)

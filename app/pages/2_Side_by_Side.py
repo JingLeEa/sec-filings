@@ -14,9 +14,9 @@ if not records:
     st.info("This comparison has no records yet. Pick another company or year pair.")
     st.stop()
 
-filtered = components.filters(records)
+filtered = components.filters(records, location="page")
 if not filtered:
-    st.info("No disclosures match these filters. Clear a filter in the sidebar to see more.")
+    st.info("No disclosures match these filters. Clear a filter above to see more.")
     st.stop()
 
 ids = [r["match_id"] for r in filtered]

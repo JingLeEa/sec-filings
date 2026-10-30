@@ -191,7 +191,8 @@ def preflight(args, *, stages=None):
         modules.extend(("sklearn", "numpy"))
     for module in modules:
         if importlib.util.find_spec(module) is None:
-            raise ValueError("Install requirements.txt into the selected Python environment first.")
+            raise ValueError(f"Missing Python package '{module}' in {sys.executable}. "
+                             "Install requirements.txt into that environment.")
     if llm:
         load_config(args.env_file)
     if downloads and not args.user_agent.strip():

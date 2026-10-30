@@ -139,9 +139,10 @@ def load_selected(source, company, previous, current):
         st.stop()
 
 
-def filters(records: list, prefix_help: bool = True):
-    """Sidebar filters shared by the explorer and the side-by-side page."""
-    st.sidebar.header("Filters")
+def filters(records: list, *, location: str = "sidebar"):
+    """Shared filters, shown in the sidebar or in a page panel."""
+    if location not in {"sidebar", "page"}:
+        raise ValueError("Filter location must be 'sidebar' or 'page'.")
     items = sorted({r["item"] for r in records if r["item"]}, key=_item_order)
     categories = [c for c in config.CONTENT_CATEGORIES + [data.NOT_CLASSIFIED]
                   if any(c in (r["categories"] or [data.NOT_CLASSIFIED]) for r in records)]
@@ -154,16 +155,29 @@ def filters(records: list, prefix_help: bool = True):
     _clean("f_statuses", statuses)
     _clean("f_relationships", relationships)
     _clean("f_materiality", ["Material", "Not material", data.NOT_ASSESSED])
-    sel_items = st.sidebar.multiselect("SEC Item", items, key="f_items", format_func=lambda i: config.ITEM_TITLES.get(i, f"Item {i}"))
-    sel_categories = st.sidebar.multiselect("Content category", categories, key="f_categories")
-    sel_changes = st.sidebar.multiselect("Change label", changes, key="f_changes")
-    sel_materiality = st.sidebar.multiselect("Materiality", ["Material", "Not material", data.NOT_ASSESSED], key="f_materiality")
-    with st.sidebar.expander("More filters"):
-        sel_statuses = st.multiselect("Match status", statuses, key="f_statuses", format_func=lambda s: data.STATUS_LABELS[s])
-        sel_relationships = st.multiselect("Match type", relationships, key="f_relationships",
-                                           format_func=lambda s: data.RELATIONSHIP_LABELS[s])
-        text = st.text_input("Search text", key="f_text", placeholder="word or phrase")
-    st.sidebar.button("Clear filters", width="stretch", on_click=_clear_filters)
+    area = st.sidebar if location == "sidebar" else st.container(border=True)
+    with area:
+        if location == "sidebar":
+            st.header("Filters")
+            columns = [st] * 4
+        else:
+            st.subheader("Filters")
+            columns = st.columns(4)
+        sel_items = columns[0].multiselect("SEC Item", items, key="f_items",
+                                           format_func=lambda i: config.ITEM_TITLES.get(i, f"Item {i}"))
+        sel_categories = columns[1].multiselect("Content category", categories, key="f_categories")
+        sel_changes = columns[2].multiselect("Change label", changes, key="f_changes")
+        sel_materiality = columns[3].multiselect("Materiality", ["Material", "Not material", data.NOT_ASSESSED],
+                                                 key="f_materiality")
+        with st.expander("More filters"):
+            more = st.columns(3) if location == "page" else [st] * 3
+            sel_statuses = more[0].multiselect("Match status", statuses, key="f_statuses",
+                                                format_func=lambda s: data.STATUS_LABELS[s])
+            sel_relationships = more[1].multiselect("Match type", relationships, key="f_relationships",
+                                                     format_func=lambda s: data.RELATIONSHIP_LABELS[s])
+            text = more[2].text_input("Search text", key="f_text", placeholder="word or phrase")
+        st.button("Clear filters", width="stretch" if location == "sidebar" else "content",
+                  on_click=_clear_filters)
     return data.filter_records(records, items=sel_items, categories=sel_categories, change_labels=sel_changes,
                                materiality=sel_materiality, statuses=sel_statuses, relationships=sel_relationships, text=text)
 

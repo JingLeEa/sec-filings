@@ -16,7 +16,7 @@ if not records:
     st.info("This comparison has no records yet. Pick another company or year pair.")
     st.stop()
 
-filtered = components.filters(records)
+filtered = components.filters(records, location="page")
 st.caption(f"{config.company_label(company)}: FY{previous} to FY{current}")
 
 m1, m2, m3 = st.columns(3)
@@ -25,7 +25,7 @@ m2.metric("Material", f"{sum(r['materiality'] == 'Material' for r in filtered):,
 m3.metric("Need review", f"{sum(r['status'] == 'needs_review' for r in filtered):,}")
 
 if not filtered:
-    st.info("No disclosures match these filters. Clear a filter in the sidebar to see more.")
+    st.info("No disclosures match these filters. Clear a filter above to see more.")
     st.stop()
 
 frame = pd.DataFrame([data.table_row(r) for r in filtered], columns=data.TABLE_COLUMNS)
