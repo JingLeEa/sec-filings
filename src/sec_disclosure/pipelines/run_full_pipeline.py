@@ -29,6 +29,7 @@ from sec_disclosure.pipelines.pipeline_progress import (
 
 ROOT = Path(__file__).resolve().parents[3]
 PHASES = ("preprocessing", "extraction", "alignment", "change-analysis", "materiality")
+MAX_SYNTHESIS_WORKERS = 20
 
 
 @dataclass(frozen=True)
@@ -73,6 +74,10 @@ def parse_args(argv=None):
                         help="Concurrent materiality year pairs (default: 2)")
     parser.add_argument("--materiality-max-concurrent-requests", type=int,
                         help="Shared materiality API cap; defaults to active pairs times batches per pair (18 for 2 x 9)")
+    parser.add_argument("--synthesis-finding-workers", type=int, default=18,
+                        help=f"Concurrent synthesis finding batches (1-{MAX_SYNTHESIS_WORKERS}; default: 18)")
+    parser.add_argument("--synthesis-max-changes", type=int, default=50,
+                        help="Maximum material changes analyzed by synthesis (default: 50)")
     parser.add_argument("--embedding-model", default="bge-m3")
     parser.add_argument("--until", choices=PHASES, default="materiality",
                         help="Stop after this stage and its PostgreSQL saves (default: materiality, the full pipeline)")
@@ -82,6 +87,8 @@ def parse_args(argv=None):
                         help="Skip completed pipeline stages using saved progress (default: enabled); "
                              "--no-resume executes the selected stages again, retaining their internal caches.")
     parser.add_argument("--dry-run", action="store_true", help="Print every command without downloads, model calls or database writes")
+    parser.add_argument("--skip-synthesis", action="store_true",
+                        help="Skip the final synthesis report after upstream stages complete")
     args = parser.parse_args(argv)
     if PHASES.index(args.from_stage) > PHASES.index(args.until):
         parser.error("--from-stage must be at or before --until")
@@ -106,8 +113,14 @@ def parse_args(argv=None):
             or min(args.workers, args.batch_workers, args.max_concurrent_requests,
                    args.alignment_workers, args.alignment_pair_workers,
                    args.alignment_max_concurrent_requests, args.materiality_concurrency,
-                   args.materiality_pair_workers, args.materiality_max_concurrent_requests) < 1):
+                   args.materiality_pair_workers, args.materiality_max_concurrent_requests,
+                   args.synthesis_finding_workers, args.synthesis_max_changes) < 1):
         parser.error(f"Use a valid ticker, at least {minimum_years} fiscal year(s) (1900–2200), and positive workers.")
+    if args.synthesis_finding_workers > MAX_SYNTHESIS_WORKERS:
+        parser.error(
+            "--synthesis-finding-workers cannot exceed the SoCLaaS limit of "
+            f"{MAX_SYNTHESIS_WORKERS}."
+        )
     # Parse literally; do not execute shell configuration or print credentials.
     for path in ([args.env_file] if args.env_file else []) + [ROOT / ".env"]:
         if path.is_file():
@@ -139,6 +152,10 @@ def build_stages(args, *, full=False):
         "--output-dir", data / "table_output" / args.ticker,
         "--sec-cache", data / "sec_cache", "--taxonomy-cache", data / "taxonomy_cache",
         "--user-agent", args.user_agent)
+    for year in args.years:
+        add("preprocessing", f"save_xbrl_{year}", "load_xbrl_to_postgres.py",
+            "--company", args.ticker, "--year", year, "--file",
+            data / "table_output" / args.ticker / f"{args.ticker}_{year}_api_metrics_with_values.json")
     add("extraction", "extract_disclosures_and_save", "extract_disclosures.py", "--ticker", args.ticker,
         "--years", *args.years, "--data-dir", data, "--output-root", disclosures,
         "--workers", args.workers, "--batch-workers", args.batch_workers,
@@ -359,9 +376,67 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
         print(f"Pipeline stopped at {error.name} (exit {error.code}). "
               "Saved work is retained. Rerun the same command to resume using stage caches.", file=sys.stderr)
         return error.code
-    state.update(complete=True, full_pipeline_complete=args.until == "materiality",
-                 completed_at=datetime.now(timezone.utc).isoformat())
+
+    # Run synthesis only after the full upstream pipeline succeeds.
+    # Partial runs (for example, --until alignment) do not trigger synthesis.
+    if args.until == "materiality" and not getattr(args, "skip_synthesis", False):
+        synthesis_command = [
+            sys.executable,
+            str(ROOT / "scripts" / "run_synthesis.py"),
+            "--company", args.ticker.upper(),
+            "--years", *map(str, args.years),
+            "--data-dir", str(args.data_dir),
+            "--max-changes", str(args.synthesis_max_changes),
+            "--finding-workers", str(args.synthesis_finding_workers),
+        ]
+        if getattr(args, "env_file", None):
+            synthesis_command.extend(["--env-file", str(args.env_file)])
+
+        print("\nRunning final synthesis stage...", flush=True)
+
+        state["synthesis_status"] = "running"
+        write_json(log_dir / "status.json", state)
+
+        try:
+            result = subprocess.run(
+                synthesis_command,
+                cwd=ROOT,
+                check=False,
+            )
+            synthesis_code = result.returncode
+        except OSError as error:
+            print(f"Could not start synthesis: {error}", file=sys.stderr)
+            synthesis_code = 1
+
+        if synthesis_code != 0:
+            state.update(
+                complete=False,
+                full_pipeline_complete=False,
+                synthesis_status="failed",
+            )
+            write_json(log_dir / "status.json", state)
+            print(
+                f"Upstream stages completed, but synthesis failed "
+                f"(exit code {synthesis_code}). Rerun the same command "
+                "to retry synthesis.",
+                file=sys.stderr,
+            )
+            return synthesis_code
+
+        state["synthesis_status"] = "complete"
+    elif args.until == "materiality":
+        state["synthesis_status"] = "skipped"
+
+    state.update(
+        complete=True,
+        full_pipeline_complete=(args.until == "materiality"
+                                and not getattr(args, "skip_synthesis", False)),
+        completed_at=datetime.now(timezone.utc).isoformat(),
+    )
     write_json(log_dir / "status.json", state)
-    print(f"\nPipeline completed through {args.until} for {args.ticker.upper()}: "
-          "every completed stage saved to PostgreSQL.", flush=True)
+    print(
+        f"\nPipeline completed through {args.until} for "
+        f"{args.ticker.upper()}: every completed stage saved to PostgreSQL.",
+        flush=True,
+    )
     return 0
