@@ -225,6 +225,9 @@ sentences from the alignment's `evidence` (`previous_text`, `current_text`). It 
 
 ## Tests
 
+Accuracy evaluations (filter extraction and SQL accuracy), their results and the changes made from them are
+documented in [AARAV_chatbot_evaluation.md](AARAV_chatbot_evaluation.md).
+
 ```bash
 python -m pytest tests/test_chatbot.py                # no database needed
 python -m pytest tests/test_chatbot_integration.py    # needs the six fixture runs loaded; skips otherwise
