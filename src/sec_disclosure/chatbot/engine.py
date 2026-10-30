@@ -216,6 +216,8 @@ class Chatbot:
                 results.append(self.db.query(query.name, query.sql, query.params))
 
         answer, mode, report = self._synthesise(question, plan, results, notes, warnings)
+        if plan.filters.clarifications:   # say how an ambiguous phrase was read, so the user can correct it
+            answer = "\n".join(f"_{c}_" for c in plan.filters.clarifications) + "\n\n" + answer
         self.last_plan = plan
         citations = list(dict.fromkeys(row["match_id"] for res in results for row in res.rows
                                        if isinstance(row.get("match_id"), str)))

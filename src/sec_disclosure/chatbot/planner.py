@@ -10,7 +10,8 @@ import re
 from dataclasses import dataclass, field
 from enum import Enum
 
-from .entities import (COMPANY_ALIASES, DISCLOSURE_TAXONOMY_PATTERNS, ITEM_PATTERNS, QueryFilters, parse_filters)
+from .entities import (COMPANY_ALIASES, DISCLOSURE_TAXONOMY_PATTERNS, ITEM_PATTERNS, RELATIONSHIP_PATTERNS,
+                       STATUS_PATTERNS, QueryFilters, parse_filters)
 from .reports import FINANCIAL_RE
 
 
@@ -42,7 +43,7 @@ class Plan:
 
 TOPIC_RE = re.compile(
     r"\b(?:about|regarding|concerning|related\s+to|relating\s+to|around|on\s+the\s+topic\s+of|mention(?:s|ing)?|"
-    r"discuss(?:es|ing)?|involving|on)\s+(?P<topic>.+?)(?=\s+(?:across|between|for|in|from|at|within|over|since|during)\b"
+    r"discuss(?:es|ing|ed)?|describe[sd]?|describing|involving|on)\s+(?P<topic>.+?)(?=\s+(?:across|between|for|in|from|at|within|over|since|during)\b"
     r"|\s*[?.!]|$)", re.IGNORECASE)
 GENERIC_TOPIC_WORDS = {
     "the", "a", "an", "their", "its", "his", "her", "this", "that", "these", "those", "of", "and", "or", "in", "for",
@@ -51,10 +52,29 @@ GENERIC_TOPIC_WORDS = {
     "material", "materiality", "most", "key", "new", "removed", "added", "expanded", "reduced", "reworded",
     "modified", "unchanged", "disclosed", "language", "text", "wording", "section", "sections", "factor", "factors",
     "anything", "something", "things", "what", "how", "was", "were", "is", "are", "they", "we",
+    "rewrote", "rewritten", "rewrite", "revised", "revision", "revisions", "updated", "update", "updates",
 }
+# How much / which company changed the most: questions about the amount of change (change statistics).
+AMOUNT_OF_CHANGE = (r"\b(?:how\s+much|to\s+what\s+extent|how\s+(?:heavily|extensively|substantially))\b.{0,60}?"
+                    r"\b(?:chang|revis|rewr|updat|edit)\w*|"
+                    r"\b(?:chang|revis|rewr|updat|edit|add)\w*\b.{0,40}?\bthe\s+(?:most|least|fewest)\b"
+                    r"(?!\s+(?:material|significant|important|notable|common|frequent))|"
+                    r"\b(?:more|less)\s+(?:heavily\s+|substantially\s+|significantly\s+)?"
+                    r"(?:revised|changed|rewritten|updated|edited)\b")
+# "compared to the year before" inside a single-filing question is not a comparison between companies or periods.
+YEAR_BEFORE_RE = re.compile(r"\b(?:compared\s+(?:to|with)|vs\.?|versus|relative\s+to|against|over)\s+"
+                            r"(?:the\s+|its\s+|their\s+)?(?:year\s+before|prior\s+year|previous\s+year|"
+                            r"preceding\s+year|last\s+year|(?:fy\s*)?20\d{2}\s+(?=one|filing|10-?k|report))(?:'s)?"
+                            r"(?:\s+(?:one|filing|10-?k|report))?|\bcomparison\s+(?:windows?|periods?|years?)\b")
+# "<subject> disclosures": "its tariff disclosures", "in Nvidia's export control disclosures".
+DISCLOSURE_TOPIC_RE = re.compile(r"(?:\b(?:its|their|the|in|on|to)\s+|'s\s+)(?P<topic>(?:[\w&-]+\s+){0,3}?[\w&-]+)\s+"
+                                 r"disclosures?\b", re.IGNORECASE)
 COMPARE_RE = re.compile(r"\bcompar\w*|\bversus\b|\bvs\.?\b|\bdifferences?\s+between\b|\bside[\s-]by[\s-]side\b|"
-                        r"\bcontrast\b|\bhow\s+do\s+\w+\s+and\s+\w+\s+differ\b")
+                        r"\bcontrast\b|\bhow\s+do\s+\w+\s+and\s+\w+\s+differ\b|" + AMOUNT_OF_CHANGE)
 DISAGREE_RE = re.compile(r"\bdisagree\w*|\bconflict\w*|\bdiverg\w*|\bmismatch\w*|\binconsisten\w*|"
+                         r"\blabel(?:l?ed|s|ing)?\s+(?:\w+\s+){0,2}differently\b|\b(?:two|both)\s+(?:labell?ing\s+)?methods\b|"
+                         r"\bmethods?\s+(?:disagree|differ)\w*|(?:n['o]t|\bnot)\b.{0,60}?\bagree\b|"
+                         r"\bdifferent\s+(?:verdicts|labels|conclusions|classifications)\b|"
                          r"\bsemantic\s+(?:vs\.?|versus|and)\s+lexical\b|\blexical\s+(?:vs\.?|versus|and)\s+semantic\b")
 
 
@@ -65,7 +85,8 @@ HOW_CHANGED_RE = re.compile(
 
 def extract_topic(question: str) -> str | None:
     """The subject of a 'what changed about X' / 'how did X change' question, minus company/period/item words."""
-    for m in list(TOPIC_RE.finditer(question)) + list(HOW_CHANGED_RE.finditer(question)):
+    for m in (list(TOPIC_RE.finditer(question)) + list(HOW_CHANGED_RE.finditer(question))
+              + list(DISCLOSURE_TOPIC_RE.finditer(question))):
         topic = m.group("topic").strip(" ,;:'\"")
         cleaned = _strip_known_terms(topic)
         if cleaned:
@@ -79,10 +100,13 @@ def _strip_known_terms(text: str) -> str:
         for alias in aliases:
             lowered = re.sub(rf"(?<![\w.]){re.escape(alias)}(?:'s)?(?!\w)", " ", lowered)
     lowered = re.sub(r"\b(?:fy\s*)?20\d{2}\b|\b10-?k\b", " ", lowered)
-    for _, pattern in ITEM_PATTERNS:
+    for _, pattern in ITEM_PATTERNS + STATUS_PATTERNS + RELATIONSHIP_PATTERNS:   # filters, not subjects
         lowered = re.sub(pattern, " ", lowered)
     words = [w for w in re.findall(r"[a-z0-9&'-]+", lowered) if w not in GENERIC_TOPIC_WORDS]
     return " ".join(words).strip()
+
+
+SHORT_TERMS = {"ai", "ip", "hr", "fx", "rd"}
 
 
 def residual_keywords(question: str) -> str:
@@ -95,7 +119,7 @@ def residual_keywords(question: str) -> str:
     text = _strip_known_terms(question)
     for _, pattern in ITEM_PATTERNS:
         text = re.sub(pattern, " ", text)
-    return " ".join(w for w in text.split() if w not in scaffolding and len(w) > 2)
+    return " ".join(w for w in text.split() if w not in scaffolding and (len(w) > 2 or w in SHORT_TERMS))
 
 
 # Financial-figure questions ("how did AMD's gross margin change") vs. disclosure questions that merely mention
@@ -104,15 +128,18 @@ NOT_FINANCIAL_RE = re.compile(r"\bdisclos\w*|\brisks?\b|\blanguage\b|\bwording\b
                               r"\b(?:say|says|said|describe[sd]?|discuss(?:es|ed)?)\b|\bitem\s*\d")
 PEER_LANGUAGE_RE = re.compile(
     r"\bcompar\w*|\bversus\b|\bvs\.?(?=\s|$)|\bdiffer\w*|\bsimilar\w*|\bcontrast\b|\bboth\b|\bside[\s-]by[\s-]side\b|"
-    r"\b(?:say|says|said|describe[sd]?|disclose[sd]?|discuss(?:es|ed)?|talk|treat|frame|position|approach)\b")
+    r"\b(?:say|says|said|describe[sd]?|disclose[sd]?|discuss(?:es|ed)?|talk|treat|frame|position|approach)\b|"
+    r"\bstacks?\s+up\b|\bstacked\s+up\b|\bmeasures?\s+up\b|\brelative\s+to\b|\bfares?\s+against\b|\bagainst\b")
 PEER_SET_RE = re.compile(r"\bpeers?\b|\bcompetitors?\b|\brivals?\b|\bother\s+(?:banks|companies|chipmakers|firms)\b")
 CHANGE_STATS_RE = re.compile(
     r"\bchange\s+(?:patterns?|profiles?|statistics|stats|rates?)\b|\btypes?\s+of\s+changes?\b|\bhow\s+many\b|"
-    r"\bnumber\s+of\b|\bdistribution\b|\bbreakdown\b|\bstatistic\w*|\bchange\s+labels?\b")
+    r"\bnumber\s+of\b|\bdistribution\b|\bbreakdown\b|\bstatistic\w*|\bchange\s+labels?\b|" + AMOUNT_OF_CHANGE)
 PEER_FILLER = {"compare", "comparing", "comparison", "versus", "differ", "different", "difference", "differences",
                "similar", "similarly", "contrast", "both", "say", "says", "said", "describe", "describes", "disclose",
                "discloses", "discuss", "discusses", "talk", "treat", "frame", "position", "approach", "peers", "peer",
-               "competitors", "rivals", "their", "they", "them", "its", "vs", "and", "with"}
+               "competitors", "rivals", "their", "they", "them", "its", "vs", "and", "with", "stack", "stacks",
+               "stacked", "measure", "measures", "fare", "fares", "against", "relative", "disclosure", "disclosures",
+               "up"}
 
 
 def peer_topic(question: str) -> str | None:
@@ -123,7 +150,7 @@ def peer_topic(question: str) -> str | None:
 
 
 def classify(question: str, filters: QueryFilters) -> Plan:
-    text = question.lower()
+    text = YEAR_BEFORE_RE.sub(" ", question.lower())
     plan = Plan(intent=Intent.CUSTOM_SQL, filters=filters)
     plan.group_by_item = bool(re.search(r"\bby\s+item\b|\bper\s+item\b|\beach\s+item\b|\bacross\s+items\b", text))
     asks_about_change = bool(re.search(r"\bchang\w*|\bevolv\w*|\bdifferen\w*|\bshift\w*|\bupdat\w*", text))
@@ -145,7 +172,8 @@ def classify(question: str, filters: QueryFilters) -> Plan:
     elif re.search(r"\bconfiden\w*|\bcertain\w*|\bunsure\b", text):
         plan.intent = Intent.LOW_CONFIDENCE
     elif re.search(r"\bsummar\w*|\boverview\b|\brecap\b|\btl;?dr\b", text) or (
-            re.search(r"\bkey\s+changes\b|\bhighlights?\b|\bmain\s+changes\b|\bwhat\s+changed\s+(?:in|for)\b", text)
+            re.search(r"\bkey\s+changes\b|\bhighlights?\b|\bmain\s+changes\b|\bwhat\s+changed\s+(?:in|for|between)\b|"
+                      r"\bwalk\s+(?:me\s+|us\s+)?through\b", text)
             and not topic):
         plan.intent = Intent.SUMMARY        # synthesis report first (narrowed to the topic, if any), SQL summary otherwise
         plan.topic = topic
@@ -167,6 +195,10 @@ def classify(question: str, filters: QueryFilters) -> Plan:
         plan.exclude_unchanged = asks_about_change
     # Otherwise CUSTOM_SQL: the LLM writes the query (offline: keyword search on the question).
 
+    # "rewrote" usually means changed in general, not the pipeline's Reworded label (same content, new wording).
+    if re.search(r"\brewr(?:o|i)te\w*|\brewritten\b", text) and "Reworded" not in filters.change_types:
+        filters.clarifications.append("Showing all changes. Ask for \"reworded\" disclosures to see only wording "
+                                      "changes (same content, new wording).")
     # Topic words inside other intents (e.g. "most material changes about climate") narrow those intents too.
     if plan.intent in (Intent.MATERIAL, Intent.SUMMARY) and topic:
         plan.topic = topic

@@ -45,7 +45,8 @@ CHANGE_TYPE_PATTERNS: list[tuple[str, str]] = [
     ("Expanded", r"\bexpand\w*|\blengthen\w*|\bgrew\s+longer\b|\bmore\s+detail\w*|\belaborat\w*"),
     ("Reduced", r"\breduc\w*|\bshorten\w*|\bcondens\w*|\btrimm\w*|\bshorter\b|\bless\s+detail\w*"),
     ("Reworded", r"\breword\w*|\brephras\w*|\bmeaning\s+shift\w*"),
-    ("Modified", r"\bmodifi\w*|\brevis\w*"),
+    # "revised" is left out on purpose: people use it for any change, not the Modified label.
+    ("Modified", r"\bmodifi\w*"),
 ]
 CHANGE_TYPES = ("Unchanged", "Modified", "Reworded", "Expanded", "Reduced", "New", "Removed")
 
@@ -93,9 +94,11 @@ class QueryFilters:
     min_materiality: float | None = None
     max_confidence: float | None = None
     limit: int | None = None
+    # How an ambiguous phrase was read, shown to the user at the top of the answer (not a filter).
+    clarifications: list[str] = field(default_factory=list)
 
     def as_dict(self) -> dict:
-        return {k: v for k, v in asdict(self).items() if v not in (None, [], "")}
+        return {k: v for k, v in asdict(self).items() if v not in (None, [], "") and k != "clarifications"}
 
     def describe(self) -> str:
         parts = []
@@ -152,26 +155,64 @@ def find_companies(text: str, known: Iterable[str] = ()) -> list[str]:
     return sorted(first, key=lambda t: (first[t], t))
 
 
-def resolve_years(text: str, runs: Iterable[tuple[int, int]] = ()) -> tuple[int | None, int | None]:
+LATEST_RE = re.compile(r"\b(?:latest|most\s+recent|newest|current|this\s+year'?s?)\b(?!\s+(?:ratio|assets|liabilit))")
+OPEN_RANGE_RE = re.compile(rf"\b(?:since|starting\s+(?:in|from|with)|beginning\s+(?:in|with))\s+{YEAR_RE}\b|"
+                           rf"\b(?:from\s+)?{YEAR_RE}\s+(?:on(?:wards?)?|and\s+(?:after|later|beyond))\b|"
+                           rf"\bfrom\s+{YEAR_RE}\s+on\b")
+FILING_WORD = r"(?:annual\s+)?(?:filings?|10-?k'?s?|reports?)"
+# Two filings named as filings ("changes in the 2024 and 2025 10-Ks", "its 2025 10-K ... than its 2024 one"): each
+# filing is compared with the one before it, so both comparison windows count.
+TWO_FILINGS_RES = [
+    re.compile(rf"\b{YEAR_RE}\s*(?:and|&|,)\s*{YEAR_RE}\s+{FILING_WORD}\s+(?:changes|revisions|updates|edits)\b"),
+    re.compile(rf"\b(?:changes?|revisions?|updates?|edits?)\s+(?:in|to|across)\s+(?:the\s+|its\s+|their\s+)?"
+               rf"{YEAR_RE}\s*(?:and|&|,)\s*{YEAR_RE}\s+{FILING_WORD}"),
+    re.compile(rf"\b{YEAR_RE}\s+{FILING_WORD}\b.{{0,60}}?\bthan\s+"
+               rf"(?:its|the|their)\s+{YEAR_RE}\s+(?:one|{FILING_WORD})"),
+]
+
+
+def resolve_years(text: str, runs: Iterable[tuple[int, int]] = (),
+                  clarifications: list[str] | None = None) -> tuple[int | None, int | None]:
     """Map year mentions to (previous_year, current_year) using the loaded comparison runs.
 
-    "between 2023 and 2024", "2023 to 2024", "2024-2025", "2023 vs 2024" -> explicit pair.
-    "since 2023" / "from 2023" -> previous_year. A single year otherwise means the filing for that year,
+    "between 2023 and 2024", "2023 to 2024", "2024-2025", "2023 vs 2024" -> explicit pair (a span of more than one
+    year covers every comparison inside it). "the 2024 and 2025 filings" -> each filing vs the one before.
+    "since 2023" / "2023 onwards" -> 2023 up to the newest loaded year. "from 2023" -> previous_year.
+    "latest" / "most recent" -> the newest loaded filing. A single year otherwise means the filing for that year,
     i.e. current_year, unless no loaded run ends in that year (then it is read as previous_year).
     """
     lowered = text.lower()
-    pair = re.search(rf"{YEAR_RE}\s*(?:-|–|—|/|to|and|vs\.?|versus|→|->)\s*{YEAR_RE}", lowered)
+    run_list = list(runs)
+    newest = max((c for _, c in run_list), default=None)
+    for pattern in TWO_FILINGS_RES:
+        m = pattern.search(lowered)
+        if m:
+            a, b = sorted((int(m.group(1)), int(m.group(2))))
+            if a != b:
+                return a - 1, b
+    pair = re.search(rf"(\bbetween\s+)?{YEAR_RE}\s*(-|–|—|/|to|and|vs\.?|versus|→|->)\s*{YEAR_RE}", lowered)
     if pair:
-        a, b = sorted((int(pair.group(1)), int(pair.group(2))))
+        a, b = sorted((int(pair.group(2)), int(pair.group(4))))
         if a != b:
+            between = pair.group(1) or re.search(r"\bbetween\b[^.?!]{0,30}$", lowered[:pair.start()])
+            if clarifications is not None and pair.group(3) == "and" and not between and b - a == 1:
+                clarifications.append(f"Read as the {a} → {b} comparison. To see the changes in each of the {a} and "
+                                      f"{b} filings, ask about \"changes in the {a} and {b} filings\".")
             return a, b
+    open_range = OPEN_RANGE_RE.search(lowered)
+    if open_range:   # the start year is a filing: "since 2024" includes the 2024 10-K's comparison with 2023
+        start = int(next(g for g in open_range.groups() if g))
+        if any(c == start for _, c in run_list):
+            start -= 1
+        return (start, newest) if newest and newest > start else (start, None)
     years = [int(y) for y in re.findall(rf"\b{YEAR_RE}\b", lowered)]
     if not years:
+        if newest and LATEST_RE.search(lowered):
+            return None, newest
         return None, None
     year = years[0]
     if re.search(rf"\b(?:since|from|after)\s+(?:fy\s*)?{year}\b", lowered):
         return year, None
-    run_list = list(runs)
     if run_list and not any(c == year for _, c in run_list) and any(p == year for p, _ in run_list):
         return year, None
     return None, year
@@ -181,7 +222,7 @@ def find_limit(text: str) -> int | None:
     lowered = re.sub(r"\bitem\s*\d+\s*a?\b|\b(?:fy\s*)?20\d{2}\b|\b10-?k\b", " ", text.lower())
     m = re.search(r"\b(?:top|first|last|best|biggest|largest|most\s+\w+\s+)?\s*(\d{1,3}|"
                   + "|".join(NUMBER_WORDS) + r")\s+(?:most\s+)?(?:\w+\s+){0,2}(?:changes?|disclosures?|items?|"
-                  r"examples?|risk\s+factors?|results?|rows?|alignments?|matches?)\b", lowered)
+                  r"examples?|risk\s+factors?|results?|rows?|alignments?|matches?)\b(?!-)", lowered)
     m = m or re.search(r"\btop\s+(\d{1,3}|" + "|".join(NUMBER_WORDS) + r")\b", lowered)
     if not m:
         return None
@@ -210,6 +251,12 @@ def normalise_match_id(value: str) -> str:
     return f"{head.lower()}_M{int(number[1:]):04d}"
 
 
+SECTORS = {"banks": ["bac", "jpm", "c", "gs", "ms"], "chips": ["intc", "amd", "nvda", "avgo", "qcom", "mu"]}
+SECTOR_RES = {"banks": re.compile(r"\bbanks?\b(?!\s+of\b)|\bbanking\s+(?:companies|firms|names)\b"),
+              "chips": re.compile(r"\bchip\s?-?makers?\b|\bsemiconductors?(?:\s+(?:companies|firms|names))?\b|"
+                                  r"\bchip\s+(?:companies|firms|names)\b")}
+
+
 def parse_filters(question: str, runs: Iterable[tuple[str, int, int]] = ()) -> QueryFilters:
     """Extract every filter the question states. ``runs`` is (company, previous_year, current_year) for loaded runs."""
     run_list = list(runs)
@@ -217,8 +264,20 @@ def parse_filters(question: str, runs: Iterable[tuple[str, int, int]] = ()) -> Q
     filters = QueryFilters()
     filters.match_ids = sorted({normalise_match_id(m) for m in MATCH_ID_RE.findall(question)})
     filters.companies = find_companies(question, {r[0] for r in run_list})
+    if not filters.companies:   # "which bank ...", "the chipmakers": the sector's loaded companies
+        for sector, pattern in SECTOR_RES.items():
+            if pattern.search(text):
+                filters.companies.extend(SECTORS[sector])
     company_runs = [(p, c) for co, p, c in run_list if not filters.companies or co in filters.companies]
-    filters.previous_year, filters.current_year = resolve_years(question, company_runs or [(p, c) for _, p, c in run_list])
+    filters.previous_year, filters.current_year = resolve_years(
+        question, company_runs or [(p, c) for _, p, c in run_list], filters.clarifications)
+    if not filters.companies:
+        short = re.search(r"(?<![\w.\d])(?<!\d\s)(ms|gs|mu)(?:'s)?(?![\w])", question)
+        if short:
+            ticker = short.group(1)
+            filters.clarifications.append(
+                f"No company filter applied. Did you mean {COMPANY_NAMES[ticker]}? Type the ticker in capitals "
+                f"({ticker.upper()}) or use the company name.")
     filters.items = _matches(ITEM_PATTERNS, text)
     if "1A" in filters.items and "1" in filters.items and not re.search(r"\bitem\s*1\b(?!\s*a)", text):
         filters.items.remove("1")

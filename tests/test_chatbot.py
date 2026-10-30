@@ -94,7 +94,9 @@ class RoutingTests(unittest.TestCase):
         self.assertEqual(resolve_years("2024-2025", bac), (2024, 2025))
         self.assertEqual(resolve_years("between 2025 and 2024", bac), (2024, 2025))
         self.assertEqual(resolve_years("the 2024 10-K", bac), (None, 2024))
-        self.assertEqual(resolve_years("changes since 2024", bac), (2024, None))
+        self.assertEqual(resolve_years("changes since 2024", bac), (2023, 2025))   # the 2024 and 2025 filings
+        self.assertEqual(resolve_years("changes since 2023", bac), (2023, 2025))
+        self.assertEqual(resolve_years("changes from 2024", bac), (2024, None))
         self.assertEqual(resolve_years("BAC 2023", bac), (2023, None))  # no run ends in 2023
         self.assertEqual(resolve_years("no year here", bac), (None, None))
 
@@ -137,6 +139,96 @@ class QueryBuilderTests(unittest.TestCase):
         plan = plan_question("How many new risk factors did Intel add in 2025?", RUNS)
         names = [q.name for q in build_queries(plan)]
         self.assertIn("pending_review_candidates", names)
+
+
+class FilterEvalFixTests(unittest.TestCase):
+    """Fixes from the 80-question filter evaluation, plus questions whose reading must not change."""
+
+    def plan(self, question):
+        return plan_question(question, RUNS)
+
+    def windows(self, question):
+        f = self.plan(question).filters
+        return f.previous_year, f.current_year
+
+    def test_year_phrasing(self):
+        self.assertEqual(self.windows("tl;dr of Micron's latest filing changes"), (None, 2025))
+        self.assertEqual(self.windows("BAC's most recent 10-K"), (None, 2025))
+        self.assertEqual(self.windows("How has Micron's operating cash flow evolved since 2023?"), (2023, 2025))
+        self.assertEqual(self.windows("Micron's material changes, 2024 onward"), (2023, 2025))
+        self.assertEqual(self.windows("Compare Intel's 2024 and 2025 filing changes"), (2023, 2025))
+        self.assertEqual(self.windows("Was Morgan Stanley's 2025 10-K more heavily revised than its 2024 one?"),
+                         (2023, 2025))
+        # unchanged readings
+        self.assertEqual(self.windows("What changed between JPMorgan's 2024 and 2025 10-Ks?"), (2024, 2025))
+        self.assertEqual(self.windows("new disclosures in Intel's 2025 filing versus its 2024 one"), (None, 2025))
+        self.assertEqual(self.windows("Summarise BAC from 2023 to 2025"), (2023, 2025))
+        self.assertEqual(self.windows("What is AMD's current ratio?"), (None, None))
+
+    def test_ambiguous_year_pair_is_flagged(self):
+        plan = self.plan("Compare the 2024 and 2025 10-Ks for BAC")
+        self.assertEqual((plan.filters.previous_year, plan.filters.current_year), (2024, 2025))
+        self.assertTrue(any("2024 → 2025" in c for c in plan.filters.clarifications))
+        self.assertEqual(self.plan("changes between 2024 and 2025 for BAC").filters.clarifications, [])
+
+    def test_lowercase_short_ticker_is_flagged_not_matched(self):
+        plan = self.plan("how many changes did ms have in 2024")
+        self.assertEqual(plan.filters.companies, [])
+        self.assertTrue(any("Morgan Stanley" in c for c in plan.filters.clarifications))
+        self.assertEqual(self.plan("query took 5 ms for BAC").filters.clarifications, [])
+
+    def test_revised_is_not_the_modified_label(self):
+        self.assertEqual(self.plan("Which BAC disclosures were revised in 2024?").filters.change_types, [])
+        self.assertEqual(self.plan("Which BAC disclosures were modified in 2024?").filters.change_types, ["Modified"])
+
+    def test_rewrote_is_flagged_not_filtered(self):
+        plan = self.plan("Compare how much AMD and Nvidia rewrote their Item 1A in 2024")
+        self.assertEqual(plan.intent, Intent.COMPARE)
+        self.assertEqual(plan.filters.change_types, [])
+        self.assertTrue(any("reworded" in c for c in plan.filters.clarifications))
+
+    def test_intent_fixes(self):
+        cases = {
+            "What were the highlights of Intel's 2025 10-K compared to the year before?": Intent.SUMMARY,
+            "How did JPMorgan describe its liquidity risk in the 2024 risk factors?": Intent.TOPIC,
+            "What changed in Nvidia's export control disclosures in 2024?": Intent.TOPIC,
+            "Has AMD updated its cybersecurity disclosures?": Intent.TOPIC,
+            "How does Qualcomm's AI disclosure stack up against Broadcom's?": Intent.PEER_COMPARE,
+            "Which bank changed its 10-K the most in 2025: BAC, JPM, C, GS or MS?": Intent.COMPARE,
+            "To what extent did Qualcomm revise its Item 1A in 2024?": Intent.COMPARE,
+            "Which JPM alignments did the two methods label differently?": Intent.DISAGREEMENTS,
+            "In Goldman's 2024 risk factors, where don't the embedding and text-diff classifications agree?":
+                Intent.DISAGREEMENTS,
+            "What changed between JPMorgan's 2024 and 2025 10-Ks?": Intent.SUMMARY,
+            "Walk me through Micron's changes between 2024 and 2025": Intent.SUMMARY,
+            "How many reworded disclosures did Broadcom have across both comparison windows?": Intent.COUNT,
+            # must not change
+            "Summarise the key changes for BAC 2023 to 2024": Intent.SUMMARY,
+            "What changed in BAC's 2024 10-K?": Intent.SUMMARY,
+            "Show me the split disclosures (one-to-many) for Micron 2024": Intent.LIST,
+            "List the new disclosures in AMD's 2025 business section": Intent.LIST,
+            "Compare NVIDIA and AMD on supply chain risk in 2024": Intent.PEER_COMPARE,
+            "Compare the change patterns between BAC and JPM for 2024-2025": Intent.COMPARE,
+            "Which bank made the most material changes in 2025?": Intent.MATERIAL,
+            "Show me the semantic vs lexical disagreements": Intent.DISAGREEMENTS,
+        }
+        for question, intent in cases.items():
+            with self.subTest(question=question):
+                self.assertEqual(self.plan(question).intent, intent)
+
+    def test_topics(self):
+        self.assertEqual(self.plan("What changed in Nvidia's export control disclosures in 2024?").topic,
+                         "export control")
+        self.assertEqual(self.plan("How did JPMorgan describe its liquidity risk in 2024?").topic, "liquidity")
+        self.assertEqual(self.plan("How does Qualcomm's AI disclosure stack up against Broadcom's?").topic, "ai")
+
+    def test_sector_words_and_limits(self):
+        self.assertEqual(self.plan("Which chipmaker revised its 10-K the least?").filters.companies,
+                         ["intc", "amd", "nvda", "avgo", "qcom", "mu"])
+        self.assertEqual(self.plan("Which bank changed the most?").filters.companies, ["bac", "jpm", "c", "gs", "ms"])
+        self.assertEqual(self.plan("Bank of America's top changes").filters.companies, ["bac"])
+        self.assertIsNone(self.plan("where the two change-detection methods differ").filters.limit)
+        self.assertEqual(self.plan("top 5 changes for AMD").filters.limit, 5)
 
 
 class SqlGuardTests(unittest.TestCase):
