@@ -2,6 +2,25 @@
 
 Run commands from the repository root after installing the dependencies. Set `SEC_USER_AGENT` for SEC requests and `SEC_API_KEY` for sec-api.io requests.
 
+## Item boundaries and printed pages
+
+The API/XBRL and HTML table pipelines call the existing text preprocessor's
+section selector in `extraction/sec_10k_extractor.py`. A table-side adapter maps
+the selected section back to start/end positions in the original filing HTML.
+It uses the same closing Items and longest-section selection for repeated Item
+headings. Text preprocessing code and outputs are unchanged.
+
+Tables and facts before the first narrative paragraph or after the last one
+remain inside the full heading-to-heading span. Printed page labels are still
+verified separately from footers; one printed page can contain several Items.
+Explicit incorporated sections, page references and same-accession reports
+retain their existing verification and take priority over physical membership.
+For sections with no retained narrative, the verified table-heading fallback
+remains available. Membership audit scopes record shared ranges under
+`item_boundaries`, with `method: "text_preprocessing"` and original HTML positions.
+Existing exports are preserved; choose a new output directory to generate new
+results with the shared section selection.
+
 ## Export existing XBRL data from Docker
 
 Use the dedicated exporter to read data that is already in PostgreSQL:
