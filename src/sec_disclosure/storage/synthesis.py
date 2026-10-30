@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from contextlib import contextmanager
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 import psycopg
+
+from .disclosures import connection_arguments
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -12,6 +15,19 @@ ROOT = Path(__file__).resolve().parents[3]
 
 class SynthesisStorageError(RuntimeError):
     """A synthesis report could not be saved to PostgreSQL."""
+
+
+@contextmanager
+def synthesis_connection(env_file: Path | None = None):
+    """Treat connection and transaction-commit failures as failed synthesis runs."""
+    try:
+        with psycopg.connect(**connection_arguments(env_file)) as conn:
+            yield conn
+    except psycopg.Error:
+        raise SynthesisStorageError(
+            "Could not read or commit synthesis data in PostgreSQL. Check the database "
+            "connection and permissions; saved model responses are retained for retry."
+        ) from None
 
 
 def save_synthesis_report(conn, company: str, years: list[int], report_json: str) -> None:

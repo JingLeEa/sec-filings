@@ -49,6 +49,21 @@ class PeerComparisonTests(unittest.TestCase):
             (folder / "disclosures.json").write_text(json.dumps({
                 "company": ticker, "fiscal_year": "2024", "disclosures": rows
             }))
+        database = patch("sec_disclosure.agents.peer_comparison.read_peer_inputs", side_effect=self.database_inputs)
+        database.start()
+        self.addCleanup(database.stop)
+
+    def database_inputs(self, ticker, peers, year, **kwargs):
+        documents, alignments = {}, {}
+        for company in [ticker, *peers]:
+            folder = self.root / "disclosures" / company / str(year)
+            documents[company] = {path.name: json.loads(path.read_text()) for path in folder.glob('*.json')}
+            alignments[company] = {}
+            for previous, current in ((int(year) - 1, int(year)), (int(year), int(year) + 1)):
+                folder = self.root / "alignments" / company / f"{previous}-{current}"
+                alignments[company].update({(str(previous), str(current), path.name): json.loads(path.read_text())
+                                            for path in folder.glob('*.json')})
+        return {"disclosures": documents, "alignments": alignments}
 
     def tearDown(self):
         self.tmp.cleanup()

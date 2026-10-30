@@ -13,6 +13,7 @@ from importlib.metadata import version
 from typing import TypedDict
 
 from langgraph.checkpoint.sqlite import SqliteSaver
+from sec_disclosure.storage.artifacts import checkpoint_saver
 from langgraph.graph import END, START, StateGraph
 
 from sec_disclosure.llm.disclosures import digest, write_json
@@ -220,8 +221,7 @@ class AlignmentAgentGraph:
         directory.mkdir(parents=True, exist_ok=True)
         config = {"configurable": {"thread_id": self.job_id, "checkpoint_ns": ""},
                   "recursion_limit": self.runtime.args.max_steps * 3 + 10}
-        with SqliteSaver.from_conn_string(str(directory / "checkpoints.sqlite")) as saver:
-            saver.conn.execute("PRAGMA busy_timeout = 60000")
+        with checkpoint_saver(directory / "checkpoints.sqlite") as saver:
             with self.runtime.checkpoint_setup_lock:
                 graph = self.build(saver)
                 snapshot = graph.get_state(config)

@@ -16,7 +16,7 @@ import bisect
 from collections import Counter, defaultdict
 from copy import deepcopy
 import json
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import sys
 

@@ -9,15 +9,15 @@ import math
 import re
 import sys
 from decimal import Decimal
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from threading import RLock
 from typing import Any
 
 from sec_disclosure.llm.client import LLMError, request_completion
 from sec_disclosure.llm.config import LLMConfig, load_config
 from sec_disclosure.llm.concurrency import run_jobs
-from sec_disclosure.storage.disclosures import connection_arguments
-from sec_disclosure.storage.synthesis import save_synthesis_report
+from sec_disclosure.llm.request_pacing import RequestPacer
+from sec_disclosure.storage.synthesis import save_synthesis_report, synthesis_connection
 
 from .synthesis_retrieval import fetch_change_evidence, fetch_financial_metrics
 
@@ -250,12 +250,13 @@ class SynthesisCalls:
     """Shared-client requests with deterministic on-disk response caching and usage."""
 
     def __init__(self, config: LLMConfig, cache_dir: Path, usage_path: Path,
-                 timeout: float, max_tokens: int):
+                 timeout: float, max_tokens: int, *, request_pacer: RequestPacer | None = None):
         self.config = config
         self.cache_dir = cache_dir
         self.usage_path = usage_path
         self.timeout = timeout
         self.max_tokens = max_tokens
+        self.pacer = request_pacer if request_pacer is not None else RequestPacer(2.0, 60.0, MAX_FINDING_WORKERS)
         self.requests: list[dict] = []
         self.last_cache_path: Path | None = None
         self.cache_paths_by_stage: dict[str, Path] = {}
@@ -314,14 +315,17 @@ class SynthesisCalls:
             return cached_result["text"]
 
         try:
-            result = request_completion(
-                prompt,
-                config=self.config,
-                system_prompt=system_prompt,
-                max_tokens=self.max_tokens,
-                timeout=self.timeout,
-            )
+            with self.pacer.request():
+                result = request_completion(
+                    prompt,
+                    config=self.config,
+                    system_prompt=system_prompt,
+                    max_tokens=self.max_tokens,
+                    timeout=self.timeout,
+                )
         except LLMError as error:
+            if error.status_code == 429 and error.retryable:
+                self.pacer.rate_limited(error.retry_after)
             with self.lock:
                 self.requests.append({"stage": stage, "model": self.config.model,
                                       "cached": False, "error": str(error), "usage": None})
@@ -666,8 +670,6 @@ def run_from_database(company: str, years: list[int], *, env_file: Path | None,
                       data_dir: Path, limit_per_pair: int, max_changes: int,
                       finding_target: int | None, finding_batch_size: int,
                       finding_workers: int, timeout: float, max_tokens: int) -> Path:
-    import psycopg
-
     company = company.strip().upper()
     years = sorted(set(years))
     if len(years) < 2:
@@ -682,7 +684,7 @@ def run_from_database(company: str, years: list[int], *, env_file: Path | None,
 
     pairs = list(zip(years, years[1:]))
     retrieved = []
-    with psycopg.connect(**connection_arguments(env_file)) as conn:
+    with synthesis_connection(env_file) as conn:
         for previous_year, current_year in pairs:
             retrieved.extend(fetch_change_evidence(
                 conn, company, previous_year, current_year, limit_per_pair,
@@ -731,6 +733,7 @@ def run_from_database(company: str, years: list[int], *, env_file: Path | None,
         output_dir / f"{safe_company}_{years[0]}_{years[-1]}_token_usage.json",
         timeout,
         max_tokens,
+        request_pacer=RequestPacer(2.0, 60.0, finding_workers),
     )
     result = synthesize(request, calls)
     source_catalog = {
@@ -781,7 +784,8 @@ def run_from_database(company: str, years: list[int], *, env_file: Path | None,
             "Citation coverage shows whether a selected change is referenced, not whether it is fully analyzed.",
         ],
     })
-    with psycopg.connect(**connection_arguments(env_file)) as conn:
+    result["token_usage"] = json.loads(calls.usage_path.read_text(encoding="utf-8"))
+    with synthesis_connection(env_file) as conn:
         report_json = json.dumps(
             _json_compatible(result), ensure_ascii=False, default=str,
         )

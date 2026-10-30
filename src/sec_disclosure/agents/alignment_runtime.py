@@ -8,7 +8,7 @@ import time
 from dataclasses import asdict
 from datetime import datetime, timezone
 from itertools import count
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 from sec_disclosure.llm.client import LLMError, request_completion
 from sec_disclosure.llm.request_pacing import RequestPacer

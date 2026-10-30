@@ -22,7 +22,7 @@ def fetch_change_evidence(conn, company: str, previous_year: int,
             SELECT
                 ar.run_id, ar.company, ar.previous_year, ar.current_year,
                 a.match_id, a.status AS alignment_status, a.relationship,
-                a.change_analysis->>'final_taxonomy' AS change_taxonomy,
+                a.change_analysis->>'llm' AS change_taxonomy,
                 a.extra->'materiality_analysis' AS materiality_analysis,
                 a.evidence
             FROM alignments AS a

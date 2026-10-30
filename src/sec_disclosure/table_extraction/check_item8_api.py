@@ -19,7 +19,7 @@ from collections import Counter, defaultdict
 import hashlib
 import json
 import os
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import sys
 

@@ -21,7 +21,7 @@ import gzip
 import hashlib
 import json
 import os
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import sys
 import tempfile
@@ -384,16 +384,15 @@ def check_strict(result):
 def write_json(value, path):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = None
+    from uuid import uuid4
+    temporary = path.with_name('.' + path.name + '.' + uuid4().hex + '.tmp')
     try:
-        with tempfile.NamedTemporaryFile('w', dir=path.parent, encoding='utf-8', delete=False) as handle:
-            temporary = Path(handle.name)
+        with temporary.open('w', encoding='utf-8') as handle:
             json.dump(value, handle, ensure_ascii=False, indent=2, allow_nan=False)
             handle.write('\n')
         temporary.replace(path)
     finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
+        temporary.unlink(missing_ok=True)
 
 
 def main(argv=None):

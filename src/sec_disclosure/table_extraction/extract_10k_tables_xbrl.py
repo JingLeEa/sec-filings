@@ -26,7 +26,7 @@ from decimal import Decimal, InvalidOperation
 import hashlib
 import json
 import os
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import sys
 from urllib.parse import urljoin, urlparse, urldefrag
@@ -2495,17 +2495,15 @@ def write_result(result, output, strict=False):
     output.parent.mkdir(parents=True, exist_ok=True)
     # Atomic replacement prevents a failed extraction/serialization truncating
     # a previously successful result.
-    import tempfile
-    temporary = None
+    from uuid import uuid4
+    temporary = output.with_name('.' + output.name + '.' + uuid4().hex + '.tmp')
     try:
-        with tempfile.NamedTemporaryFile('w', encoding='utf-8', dir=output.parent, delete=False) as handle:
-            temporary = Path(handle.name)
+        with temporary.open('w', encoding='utf-8') as handle:
             json.dump(result, handle, ensure_ascii=False, indent=2, allow_nan=False)
             handle.write('\n')
         temporary.replace(output)
     finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
+        temporary.unlink(missing_ok=True)
 
 
 def main(argv=None):

@@ -6,7 +6,7 @@ import json
 from dataclasses import asdict
 from datetime import datetime, timezone
 from itertools import count
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from threading import RLock
 from time import perf_counter
 

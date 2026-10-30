@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare a target company's saved disclosures with same-year peer filings."""
+"""Alias for the separate, PostgreSQL-backed peer comparison pipeline."""
 
 import sys
 from pathlib import Path

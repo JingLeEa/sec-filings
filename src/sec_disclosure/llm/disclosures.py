@@ -16,7 +16,7 @@ from copy import deepcopy
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from itertools import count
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from typing import Any
 
 from sec_disclosure.annotation.export_table_annotations import CONTENT_LABELS
@@ -687,8 +687,16 @@ def prepare_year(args, config):
             previous = json.loads(manifest_path.read_text())
             legacy = {key: value for key, value in manifest.items() if not key.startswith("consolidation_")}
             legacy["version"] = "3"
-            if previous != manifest and previous != legacy:
+            from sec_disclosure.storage.artifacts import canonical_artifact_path
+            def comparable(value):
+                return {**value, 'input_hashes': {canonical_artifact_path(key): item
+                                                 for key, item in value['input_hashes'].items()}}
+            if comparable(previous) not in (comparable(manifest), comparable(legacy)):
                 raise ValueError(f"{args.year}: Inputs, model, or batching changed. Choose a new --output-dir or --output-root to keep token accounting separate.")
+            # Keep original provenance stable when only the storage address moved.
+            # Content hashes, prompts, model and batching were all checked above.
+            filing.input_hashes = dict(previous['input_hashes'])
+            manifest['input_hashes'] = filing.input_hashes
     return filing, batches, output, manifest
 
 
