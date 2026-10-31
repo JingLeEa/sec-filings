@@ -443,6 +443,35 @@ class MaterialityTests(unittest.TestCase):
             "--skip-verification", "--retry-failed", "--timeout", "300"
         ), (0, 1))
 
+    def test_retry_failed_connection_reuses_successful_requests_and_keeps_usage_history(self):
+        write_json(self.output / "alignments.json", self.document([self.row(1), self.row(2)]))
+
+        def response(prompt, **kwargs):
+            if json.loads(prompt)["rows"][0]["match_id"].endswith("0002"):
+                raise LLMError("Cannot connect to SoCLaaS. Check the endpoint and your network connection.",
+                               retryable=True)
+            return self.response(prompt, **kwargs)
+
+        options = ("--batch-size", "1", "--concurrency", "1", "--skip-verification")
+        self.assertEqual(self.run_cli(*options, response=response), (1, 2))
+        requests = self.output / "materiality/requests"
+        completed = {path: path.read_bytes() for path in requests.glob("*.json")
+                     if json.loads(path.read_text())["status"] == "completed"}
+        first_analysis = self.saved()["alignments"][0][module.MATERIALITY_FIELD]
+        self.assertEqual(len(completed), 1)
+        self.assertEqual(self.run_cli(*options), (1, 0))
+        self.assertEqual(self.run_cli(*options, "--retry-failed"), (0, 1))
+        self.assertEqual(self.saved()["alignments"][0][module.MATERIALITY_FIELD], first_analysis)
+        for path, original in completed.items():
+            self.assertEqual(path.read_bytes(), original)
+        records = [json.loads(path.read_text()) for path in requests.glob("*.json")]
+        self.assertEqual(sum(record["status"] == "completed" for record in records), 2)
+        self.assertEqual(sum(record["status"] == "failed" for record in records), 1)
+        usage = json.loads((self.output / "materiality/token_usage.json").read_text())
+        self.assertEqual(usage["requests_with_unknown_usage"], 1)
+        self.assertEqual(usage["unknown_usage_budget_reserve"]["unacknowledged_attempt_count"], 0)
+        self.assertGreater(usage["unknown_usage_budget_reserve"]["estimated_tokens"], 0)
+
     def test_reclassify_starts_fresh_run_and_resumes_without_flag(self):
         rows = [self.row(number) for number in range(1, 4)]
         write_json(self.output / "alignments.json", self.document(rows))

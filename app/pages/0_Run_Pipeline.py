@@ -160,9 +160,23 @@ def run_panel(ticker, years, confirmed):
         st.status("Pipeline running", state="running", expanded=False)
     elif not complete:
         label = "Resume pipeline" if job or progress else "Start pipeline"
-        if st.button(label, icon=":material/play_arrow:", type="primary", disabled=not (valid and confirmed)):
+        retry_failed = False
+        retry_required = bool(job and job.get("status") == "stopped"
+                              and "--retry-failed" in pipeline_runs.log_tail(ticker, years, job))
+        if retry_required:
+            st.warning("An AI request failed or was interrupted. Select the retry option below to resume. "
+                       "Successful responses and completed stages will be reused.")
+            retry_failed = st.checkbox(
+                "Retry failed AI requests on resume",
+                key=f"pipeline_retry_{ticker}_{'-'.join(map(str, years))}_{job.get('run_id', '')}",
+                help="Applies to failed requests in unfinished extraction, alignment, change analysis and materiality. "
+                     "Existing request and token limits still apply.",
+            )
+        if st.button(label, icon=":material/play_arrow:", type="primary",
+                     disabled=not (valid and confirmed and (not retry_required or retry_failed))):
             try:
-                pipeline_runs.start_run(ticker, years)
+                options = {"retry_failed": True} if retry_failed else {}
+                pipeline_runs.start_run(ticker, years, **options)
             except pipeline_runs.RunError as error:
                 st.error(str(error))
             else:

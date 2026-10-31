@@ -80,6 +80,31 @@ class FullPipelineTests(unittest.TestCase):
                     self.assertNotIn("--sec-timeouts", stage.arguments)
                     self.assertEqual(args.sec_timeouts, [60, 180, 300])
 
+    def test_retry_failed_is_forwarded_only_to_supported_ai_stages_without_invalidating_progress(self):
+        normal = runner.build_stages(runner.parse_args(self.arguments))
+        retry = runner.build_stages(runner.parse_args(self.arguments + ["--retry-failed"]))
+        supported = {"extract_disclosures.py", "align_disclosures.py", "classify_materiality.py"}
+        self.assertEqual(len(normal), len(retry))
+        for original, changed in zip(normal, retry):
+            self.assertNotIn("--retry-failed", original.arguments)
+            self.assertEqual("--retry-failed" in changed.arguments, changed.script in supported)
+            self.assertEqual(runner.stage_signature(original), runner.stage_signature(changed))
+
+    def test_retry_failed_resume_skips_completed_stages_and_only_retries_unfinished_materiality(self):
+        options = self.arguments + ["--years", "2024", "2025"]
+        with patch.object(runner, "preflight"), \
+             patch.object(runner, "execute_stage", side_effect=lambda stage, **kwargs:
+                          1 if stage.name == "materiality_2024_2025" else 0), \
+             redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            self.assertEqual(runner.main(options), 1)
+        with patch.object(runner, "preflight"), patch.object(runner, "execute_stage", return_value=0) as execute, \
+             redirect_stdout(io.StringIO()):
+            self.assertEqual(runner.main(options + ["--retry-failed"]), 0)
+        stages = [call.args[0] for call in execute.call_args_list]
+        self.assertEqual([stage.name for stage in stages], ["materiality_2024_2025", "save_materiality_2024_2025"])
+        self.assertIn("--retry-failed", stages[0].arguments)
+        self.assertNotIn("--retry-failed", stages[1].arguments)
+
     def test_every_downstream_stage_reads_postgres_and_llm_results_are_saved(self):
         stages = runner.build_stages(runner.parse_args(self.arguments))
         for stage in stages:

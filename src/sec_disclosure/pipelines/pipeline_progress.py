@@ -26,7 +26,7 @@ def stage_signature(stage):
     for argument in arguments:
         if argument in EXECUTION_OPTIONS:
             next(arguments)
-        elif argument != "--fault-tolerant":
+        elif argument not in {"--fault-tolerant", "--retry-failed"}:
             retained.append(argument)
     value = json.dumps([stage.script, retained], separators=(",", ":"))
     return hashlib.sha256(value.encode()).hexdigest()

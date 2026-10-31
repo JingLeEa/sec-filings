@@ -109,7 +109,7 @@ def _finish_job(process: subprocess.Popen, folder: Path, run_id: str) -> None:
         pass
 
 
-def start_run(ticker: str, years) -> dict:
+def start_run(ticker: str, years, *, retry_failed: bool = False) -> dict:
     ticker, years = normalized_selection(ticker, years)
     folder = run_folder(ticker, years)
     with _START_LOCK:
@@ -126,10 +126,12 @@ def start_run(ticker: str, years) -> dict:
         log_name = f"ui_run_{run_id[:12]}.log"
         job = {"run_id": run_id, "ticker": ticker, "years": list(years),
                "status": "starting", "started_at": datetime.now(timezone.utc).isoformat(),
-               "log_file": log_name}
+               "log_file": log_name, "retry_failed": retry_failed}
         _write_json(folder / "ui_run.json", job)
         command = [_pipeline_python(), "-u", str(ROOT / "scripts" / "run_full_pipeline.py"),
                    "--ticker", ticker, "--years", *map(str, years), "--data-dir", str(ROOT / "data")]
+        if retry_failed:
+            command.append("--retry-failed")
         try:
             with (folder / log_name).open("w", encoding="utf-8") as output:
                 process = subprocess.Popen(command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT,

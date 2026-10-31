@@ -94,6 +94,8 @@ class PipelineRunUiTests(unittest.TestCase):
             self.assertEqual(popen.call_args.kwargs["cwd"], pipeline_runs.ROOT)
             self.assertTrue(popen.call_args.kwargs["start_new_session"])
             self.assertEqual(job["status"], "running")
+            self.assertNotIn("--retry-failed", command)
+            self.assertFalse(job["retry_failed"])
             with patch.object(pipeline_runs, "_pid_alive", return_value=True), self.assertRaises(pipeline_runs.RunError):
                 pipeline_runs.start_run("amd", [2023, 2024, 2025])
             with patch.object(pipeline_runs, "_pid_alive", return_value=True), self.assertRaisesRegex(
@@ -114,6 +116,13 @@ class PipelineRunUiTests(unittest.TestCase):
              patch.object(pipeline_runs, "Thread"):
             pipeline_runs.start_run("unh", [2023, 2024])
         self.assertEqual(popen.call_args.args[0][0], str(python))
+
+    def test_explicit_failed_request_retry_is_passed_to_runner_and_recorded(self):
+        with patch.object(pipeline_runs.subprocess, "Popen", return_value=SimpleNamespace(pid=12345)) as popen, \
+             patch.object(pipeline_runs, "Thread"):
+            job = pipeline_runs.start_run("nvda", [2024, 2025], retry_failed=True)
+        self.assertIn("--retry-failed", popen.call_args.args[0])
+        self.assertTrue(job["retry_failed"])
 
     def test_stopped_preflight_is_visible_without_status_file(self):
         process = SimpleNamespace(pid=12345, wait=lambda: 1)
@@ -312,6 +321,42 @@ class RunPipelinePageTests(unittest.TestCase):
         self.assertTrue(any("Pipeline stopped" in message.value for message in page.error))
         self.assertTrue(any(button.label == "Resume pipeline" for button in page.button))
         self.assertFalse(page.success)
+
+    def test_failed_ai_request_requires_explicit_checkbox_before_resume(self):
+        progress = {"stages": [{"stage": "materiality_2024_2025", "phase": "materiality", "status": "stopped"}]}
+        job = {"status": "stopped", "run_id": "failed-ai", "exit_code": 1}
+        log = "Materiality stopped: An earlier API attempt failed. Use --retry-failed for another paid attempt."
+        with patch.object(pipeline_runs, "read_run", return_value=(job, progress)), \
+             patch.object(pipeline_runs, "log_tail", return_value=log), \
+             patch.object(pipeline_runs, "start_run") as start:
+            page = self.page()
+            page.checkbox(key="confirm_multi_year").check().run()
+            resume = next(button for button in page.button if button.label == "Resume pipeline")
+            self.assertTrue(resume.disabled)
+            self.assertTrue(any("Successful responses and completed stages will be reused" in message.value
+                                for message in page.warning))
+            self.assertFalse(any("charges" in message.value for message in page.warning))
+            retry = next(box for box in page.checkbox if box.label == "Retry failed AI requests on resume")
+            retry.check().run()
+            resume = next(button for button in page.button if button.label == "Resume pipeline")
+            self.assertFalse(resume.disabled)
+            resume.click().run()
+        start.assert_called_once_with("AMD", [2023, 2024, 2025], retry_failed=True)
+        self.assertFalse(page.exception)
+
+    def test_new_failed_invocation_does_not_reuse_the_previous_retry_checkbox(self):
+        progress = {"stages": [{"stage": "materiality_2024_2025", "phase": "materiality", "status": "stopped"}]}
+        job = {"status": "stopped", "run_id": "attempt-one", "exit_code": 1}
+        with patch.object(pipeline_runs, "read_run", side_effect=lambda *args: (dict(job), progress)), \
+             patch.object(pipeline_runs, "log_tail", return_value="Use --retry-failed for another attempt."):
+            page = self.page()
+            page.checkbox(key="confirm_multi_year").check().run()
+            next(box for box in page.checkbox if box.label == "Retry failed AI requests on resume").check().run()
+            job["run_id"] = "attempt-two"
+            page.run()
+            self.assertFalse(next(box for box in page.checkbox if box.label == "Retry failed AI requests on resume").value)
+            self.assertTrue(next(button for button in page.button if button.label == "Resume pipeline").disabled)
+        self.assertFalse(page.exception)
 
 
 if __name__ == "__main__":

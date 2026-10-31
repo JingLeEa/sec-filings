@@ -95,6 +95,9 @@ def parse_args(argv=None):
     parser.add_argument("--resume", action=argparse.BooleanOptionalAction, default=True,
                         help="Skip completed pipeline stages using saved progress (default: enabled); "
                              "--no-resume executes the selected stages again, retaining their internal caches.")
+    parser.add_argument("--retry-failed", action="store_true",
+                        help="Allow additional paid attempts for failed/interrupted AI requests in unfinished "
+                             "extraction, alignment, change-analysis and materiality stages; retain successful caches and budgets.")
     parser.add_argument("--dry-run", action="store_true", help="Print every command without downloads, model calls or database writes")
     parser.add_argument("--skip-synthesis", action="store_true",
                         help="Stop no later than materiality; equivalent to --until materiality for a full run")
@@ -150,6 +153,7 @@ def build_stages(args, *, full=False):
     data = args.data_dir
     disclosures = data / "disclosures"
     env = ["--env-file", str(args.env_file)] if args.env_file else []
+    retries = ["--retry-failed"] if args.retry_failed else []
 
     def add(phase, name, script, *arguments):
         stages.append(Stage(name, script, tuple(map(str, arguments)), phase))
@@ -175,7 +179,7 @@ def build_stages(args, *, full=False):
         "--years", *args.years, "--data-dir", data, "--output-root", disclosures,
         "--workers", args.workers, "--batch-workers", args.batch_workers,
         "--max-concurrent-requests", args.max_concurrent_requests, "--fault-tolerant", "--store-postgres",
-        "--input-source", "postgres", *env)
+        "--input-source", "postgres", *retries, *env)
 
     pairs = list(zip(args.years, args.years[1:]))
     for previous, current in pairs:
@@ -184,14 +188,14 @@ def build_stages(args, *, full=False):
             "--ticker", args.ticker, "--previous-year", previous, "--current-year", current,
             "--data-dir", data, "--disclosures-dir", disclosures, "--output-dir", output,
             "--workers", args.alignment_workers, "--request-interval", "2",
-            "--fault-tolerant", "--skip-change-analysis", "--store-postgres", "--input-source", "postgres", *env)
+            "--fault-tolerant", "--skip-change-analysis", "--store-postgres", "--input-source", "postgres", *retries, *env)
     for previous, current in pairs:
         output = data / "alignments" / args.ticker / f"{previous}-{current}"
         common = ["--ticker", args.ticker, "--previous-year", previous, "--current-year", current,
                   "--data-dir", data, "--disclosures-dir", disclosures]
         add("change-analysis", f"llm_changes_{previous}_{current}", "align_disclosures.py", *common,
             "--output-dir", output, "--workers", args.alignment_workers, "--request-interval", "2", "--fault-tolerant",
-            "--change-analysis-only", "--store-postgres", "--input-source", "postgres", *env)
+            "--change-analysis-only", "--store-postgres", "--input-source", "postgres", *retries, *env)
         add("change-analysis", f"save_changes_{previous}_{current}", "load_alignments_to_postgres.py",
             "--company", args.ticker, "--previous-year", previous, "--current-year", current,
             "--dir", output, *env)
@@ -199,7 +203,7 @@ def build_stages(args, *, full=False):
         output = data / "alignments" / args.ticker / f"{previous}-{current}"
         add("materiality", f"materiality_{previous}_{current}", "classify_materiality.py", "--ticker", args.ticker,
             "--previous-year", previous, "--current-year", current, "--alignment-dir", output,
-            "--concurrency", args.materiality_concurrency, "--request-interval", "2", "--input-source", "postgres", *env)
+            "--concurrency", args.materiality_concurrency, "--request-interval", "2", "--input-source", "postgres", *retries, *env)
         add("materiality", f"save_materiality_{previous}_{current}", "load_alignments_to_postgres.py",
             "--company", args.ticker, "--previous-year", previous, "--current-year", current,
             "--dir", output, *env)
