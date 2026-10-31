@@ -10,7 +10,7 @@ import io
 import json
 from pathlib import Path
 
-from . import config
+from . import config, data as ui_data
 from .data import DataError
 
 
@@ -39,8 +39,12 @@ def load_synthesis(path) -> dict:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise DataError(f"Could not read {path.name}: {error}") from error
+    return _normalise_synthesis(data, path.name)
+
+
+def _normalise_synthesis(data, name: str) -> dict:
     if not isinstance(data, dict) or not isinstance(data.get("report"), dict):
-        raise DataError(f"{path.name} does not look like a synthesis output (no 'report' section).")
+        raise DataError(f"{name} does not look like a synthesis output (no 'report' section).")
     data.setdefault("source_catalog", {})
     data.setdefault("financial_trends", [])
     data.setdefault("financial_metrics", [])
@@ -49,6 +53,42 @@ def load_synthesis(path) -> dict:
     data.setdefault("limitations", [])
     data["report"].setdefault("key_findings", [])
     return data
+
+
+def _synthesis_query(sql: str, parameters=()) -> list:
+    try:
+        with ui_data._postgres_connection() as conn, conn.cursor() as cursor:
+            conn.read_only = True
+            cursor.execute("SELECT to_regclass(%s)", ("synthesis_reports",))
+            if cursor.fetchone()[0] is None:
+                return []
+            cursor.execute(sql, parameters)
+            return cursor.fetchall()
+    except DataError:
+        raise
+    except Exception:
+        raise DataError("Could not read synthesis reports from PostgreSQL. Check the database connection and schema.") from None
+
+
+def list_synthesis_reports() -> list[dict]:
+    """Database report metadata, newest first, without fetching every report body."""
+    rows = _synthesis_query(
+        "SELECT company, years, generated_at FROM synthesis_reports "
+        "ORDER BY generated_at DESC, company, years"
+    )
+    return [dict(company=company, years=years, generated_at=generated_at)
+            for company, years, generated_at in rows]
+
+
+def load_synthesis_report(company: str, years: list[int]) -> dict:
+    """Read the same complete output that the synthesis backend saves."""
+    rows = _synthesis_query(
+        "SELECT report FROM synthesis_reports WHERE company=%s AND years=%s::integer[]",
+        (company.upper(), list(years)),
+    )
+    if not rows:
+        raise DataError("The selected synthesis report is no longer available. Reload saved reports.")
+    return _normalise_synthesis(rows[0][0], f"{company.upper()} synthesis report")
 
 
 def synthesis_label(path, data=None) -> str:

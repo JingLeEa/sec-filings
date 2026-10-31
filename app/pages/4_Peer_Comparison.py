@@ -146,8 +146,7 @@ if not labelled:
     st.info("No peer comparison output was found yet. Check prerequisites and start a comparison above.")
     st.stop()
 
-st.sidebar.header("Comparison")
-choice = st.sidebar.selectbox("Target, year and peers", list(labelled), key="sel_peer")
+choice = st.selectbox("Target, year and peers", list(labelled), key="sel_peer")
 source, ref = labelled[choice]
 try:
     peer = peer_runs.load_report(ref) if source == "postgres" else reports.load_peer(ref)
@@ -168,14 +167,18 @@ if not rows:
     st.stop()
 frame = pd.DataFrame(rows)
 
-st.sidebar.header("Filters")
 items = sorted(frame["item"].dropna().unique(), key=components._item_order)
-sel_items = st.sidebar.multiselect("SEC Item", items, key="peer_items", format_func=lambda i: config.ITEM_TITLES.get(i, f"Item {i}"))
 peers = sorted(frame["peer_ticker"].unique())
-sel_peers = st.sidebar.multiselect("Peer", peers, key="peer_peers")
 statuses = [s for s in reports.PEER_STATUS_LABELS if s in set(frame["status"])]
-sel_status = st.sidebar.multiselect("Result", statuses, key="peer_status", format_func=lambda s: reports.PEER_STATUS_LABELS[s])
-needle = st.sidebar.text_input("Search text", key="peer_text")
+with st.container(border=True):
+    st.markdown("**Filters**")
+    item_column, peer_column, result_column, search_column = st.columns(4)
+    sel_items = item_column.multiselect("SEC Item", items, key="peer_items",
+                                       format_func=lambda i: config.ITEM_TITLES.get(i, f"Item {i}"))
+    sel_peers = peer_column.multiselect("Peer", peers, key="peer_peers")
+    sel_status = result_column.multiselect("Result", statuses, key="peer_status",
+                                          format_func=lambda s: reports.PEER_STATUS_LABELS[s])
+    needle = search_column.text_input("Search text", key="peer_text")
 
 view = frame
 if sel_items:

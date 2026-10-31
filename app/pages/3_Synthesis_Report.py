@@ -10,27 +10,51 @@ components.setup("Synthesis report")
 st.title("Synthesis report")
 st.caption("A multi-year summary written by the synthesis agent from material changes and reported financial figures.")
 
-files = reports.list_synthesis_files()
-if not files:
+labelled = {}
+if config.data_source_mode() != "files":
+    try:
+        for saved in reports.list_synthesis_reports():
+            years = saved["years"]
+            span = (f"{min(years)}-{max(years)}" if years == list(range(min(years), max(years) + 1))
+                    else ", ".join(map(str, years)))
+            label = f"{saved['company']} {span} (PostgreSQL)"
+            labelled[label] = ("postgres", saved)
+    except data.DataError as error:
+        st.warning(str(error))
+
+for path in reports.list_synthesis_files():
+    try:
+        label = f"{reports.synthesis_label(path)} (local file; {path.name})"
+    except (data.DataError, TypeError, ValueError):
+        continue
+    if label in labelled:
+        label += f" · {path.parent}"
+    labelled[label] = ("files", path)
+
+if not labelled:
     st.info("No synthesis output was found yet.")
     st.markdown(
-        "The synthesis agent writes a JSON file such as `AMD_2023_2025_synthesis_output.json`. "
-        "Put it in `data/synthesis/` or set `SEC_UI_SYNTHESIS_DIRS` to the folder that holds it, then reload."
+        "Complete the pipeline through synthesis to save a report in PostgreSQL. "
+        "To open a local JSON export, put it in `data/synthesis/` or set "
+        "`SEC_UI_SYNTHESIS_DIRS` to the folder that holds it, then reload."
     )
     st.caption("Looked in: " + ", ".join(str(p) for p in config.synthesis_dirs()))
     st.stop()
 
-labelled = {}
-for path in files:
-    try:
-        labelled[f"{reports.synthesis_label(path)} ({path.name})"] = path
-    except Exception:  # noqa: BLE001
-        continue
 st.sidebar.header("Report")
 choice = st.sidebar.selectbox("Synthesis output", list(labelled), key="sel_synthesis")
-path = labelled[choice]
+source, selected = labelled[choice]
 try:
-    synth = reports.load_synthesis(path)
+    if source == "postgres":
+        synth = reports.load_synthesis_report(selected["company"], selected["years"])
+        filename = f"{selected['company']}_{'_'.join(map(str, selected['years']))}_synthesis_output.json"
+        source_label = "PostgreSQL · synthesis_reports"
+        st.caption(f"Report source: {source_label} · Saved: {selected['generated_at']}")
+    else:
+        synth = reports.load_synthesis(selected)
+        filename = selected.name
+        source_label = str(selected)
+        st.caption(f"Report source: local file · {source_label}")
 except data.DataError as error:
     st.error(str(error))
     st.stop()
@@ -109,11 +133,10 @@ if synth.get("materiality_policy"):
 
 st.divider()
 st.subheader("Download")
-base = path.stem
+base = filename.removesuffix(".json")
 d1, d2, d3 = st.columns(3)
 d1.download_button("Report (Markdown)", reports.synthesis_markdown(synth), file_name=f"{base}.md", mime="text/markdown", width="stretch")
 d2.download_button("Evidence (CSV)", reports.rows_to_csv(reports.synthesis_evidence_rows(synth)), file_name=f"{base}_evidence.csv",
                    mime="text/csv", width="stretch")
-d3.download_button("Full output (JSON)", json.dumps(synth, indent=2, ensure_ascii=False), file_name=path.name,
+d3.download_button("Full output (JSON)", json.dumps(synth, indent=2, ensure_ascii=False), file_name=filename,
                    mime="application/json", width="stretch")
-st.caption(f"Source file: {path}")

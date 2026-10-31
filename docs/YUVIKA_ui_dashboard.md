@@ -13,7 +13,7 @@ Implemented:
 - **Overview** (`app/Home.py`): counts and charts for one company and year pair.
 - **Change explorer**: filter by SEC Item, content category, change label, materiality, match status, match type and free text using controls in the page; click a row for the reasoning; export the filtered rows as CSV or JSON.
 - **Side by side**: earlier and later disclosure text next to each other, with words removed (red, struck through) and added (green, underlined). Filters appear in the page above the disclosure selector, while company and years remain in the sidebar. One-sided matches show "No counterpart found". Sentence IDs, disclosure IDs and SEC links are listed under the text.
-- **Synthesis report**: reads the synthesis agent's JSON, shows each finding with its cited evidence, financial figures, limitations and validation result; downloads as Markdown, evidence CSV and JSON.
+- **Synthesis report**: reads saved PostgreSQL reports or local JSON exports, shows each finding with its cited evidence, financial figures, limitations and validation result; downloads as Markdown, evidence CSV and JSON.
 - **Peer comparison**: checks saved company/year prerequisites, launches or resumes `run_peer_comparison_pipeline.py` in the background, and polls comparison counts and the activity log. Reads PostgreSQL reports or local exports, shows cited sentences on both sides, and downloads Markdown, CSV and JSON.
 - **Run pipeline**: accepts a ticker and comma-separated fiscal years (1900-2200), shows the exact comparison pairs, confirms selections spanning more than two years, and starts or resumes `run_full_pipeline.py` in the background. Shows all six phases through synthesis, PostgreSQL saves, activity logs, and an in-app completion or failure notice. Filing-section recovery and download-timeout retries are automatic inside the extractor.
 - Two data sources behind one data layer (`app/sec_ui/data.py`): the JSON files on the `test-data` branch, or PostgreSQL through `sec_disclosure.storage.exports`.
@@ -41,6 +41,7 @@ flowchart TD
     A[test-data JSON files] --> D[data.py]
     B[(PostgreSQL)] --> D
     C[Synthesis and peer JSON] --> R[reports.py]
+    B --> R
     U[Run pipeline page] --> J[run_full_pipeline.py]
     J --> B
     J --> S[PostgreSQL pipeline artifacts]
@@ -103,6 +104,8 @@ For **Peer comparison**, first prepare the target and every peer for the same fi
 Choose the target, peers, fiscal year, Items and selection mode, then click **Check prerequisites**. Missing company data or material target disclosures disables launch and shows the backend's reason. Editing the selection requires a fresh check. **Start peer comparison** rechecks inputs and starts `run_peer_comparison_pipeline.py` in a background process; the backend checks again before model requests. One UI-launched peer run is allowed at a time, and launch waits while a UI-launched main pipeline is running. The page polls saved target-comparison counts every three seconds, retains an activity log, and supports resuming stopped/partial runs. It does not automatically run the main pipeline.
 
 Peer reports appear directly from PostgreSQL in the saved-comparison selector in `auto` or `postgres` mode. `SEC_UI_DATA_SOURCE=files` restricts that viewer to local exports and fixtures. Different peer sets, Items and target selections have separate database records. UI process metadata and logs live under `data/peer_runs/`; model caches and progress remain in PostgreSQL. The source is labelled, and fixture reports retain their sample-data warning.
+
+**Synthesis report** also reads saved reports directly from PostgreSQL (`synthesis_reports`) in `auto` or `postgres` mode, with the newest database reports listed first. Local JSON exports remain available in the same selector with their source labelled. No local export or rerun is needed after completing synthesis in the pipeline. `SEC_UI_DATA_SOURCE=files` skips database discovery and shows only configured local exports. Reports are discovered on each page rerun; a database connection failure shows a warning while keeping local reports available. Both sources support the same evidence display and Markdown, CSV and JSON downloads. Offline coverage is in `tests/test_ui_synthesis_reports.py`; run it with `PYTHONPATH=src:app .venv/bin/python -m unittest discover -s tests -p 'test_ui_synthesis_reports.py'`.
 
 ## 6. Final output JSON structure
 

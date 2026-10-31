@@ -19,7 +19,7 @@ if not records:
 
 filtered = components.filters(records, location="page")
 st.markdown(
-    f'<p style="font-size: 1.25rem; font-weight: 600; color: #000000; margin: 0.5rem 0 0.75rem;">'
+    f'<p style="font-size: 1.25rem; font-weight: 600; color: inherit; margin: 0.5rem 0 0.75rem;">'
     f'{escape(config.company_label(company))}: FY{previous} to FY{current}</p>',
     unsafe_allow_html=True,
 )
