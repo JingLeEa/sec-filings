@@ -33,6 +33,7 @@ from typing import Any, Iterable
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from sec_disclosure.storage.pipeline_snapshots import file_document, publish
 
 CHUNK_KNOWN = {

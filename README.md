@@ -16,6 +16,7 @@ The current implementation focuses on the preprocessing and benchmark dataset wo
 - Extract verified HTML and XBRL metrics, export API values, and merge yearly metric files.
 - Convert older annotation IDs after extraction logic changes.
 - Add original paragraph context back into annotation CSVs.
+- Compare same-year disclosures for a target company and peer set with an evidence-citing LLM agent.
 
 ## Project Layout
 
@@ -26,9 +27,9 @@ src/sec_disclosure/
 ├── annotation/      # implemented annotation export, ID conversion, context tools
 ├── table_extraction/ # implemented HTML, XBRL, and API metric extraction
 ├── pipelines/       # implemented end-to-end runner
-├── agents/          # planned agentic workflow
-├── llm/             # planned shared LLM client and prompts
-├── indexing/        # planned embeddings/vector search
+├── agents/          # disclosure alignment and peer comparison agents
+├── llm/             # shared LLM client, prompts, and response handling
+├── indexing/        # local TF-IDF disclosure retrieval
 ├── evaluation/      # planned benchmark evaluation
 └── utils/           # planned shared utilities
 
@@ -105,10 +106,14 @@ See the usage and schema guides below for offline inputs, source verification, a
 
 ## Documentation
 
+- [Full PostgreSQL Pipeline](docs/ZIYANG_full_pipeline.md): preprocessing through synthesis, stage concurrency, database saves and resume controls. Peer comparison runs separately.
+- Both pipeline commands store caches and outputs in PostgreSQL by default. Add `--save-local-output` to export result files locally; caches remain in the database.
+- [Synthesis Agent](docs/TRUMAN_synthesis_agent.md): evidence-grounded reports from saved materiality results and XBRL facts.
 - [Downstream JSON from PostgreSQL](docs/ZIYANG_disclosure_extraction.md#export-joined-data-from-postgresql): join normalized disclosure and alignment tables into JSON or read them directly from Python.
 - [Pipeline Usage](docs/pipeline_usage.md): detailed extraction, comparison, ID conversion, paragraph context, and table commands.
 - [Current Text Preprocessing Flow](docs/current_text_preprocessing_flow.md): current extraction, chunking, sentence splitting, bullet handling, and ID behavior.
 - [Disclosure Annotation Export](docs/disclosure_annotation_export.md): detailed guide for exporting narrative comparison rows to Google Sheets.
+- [Peer Comparison Pipeline](docs/ARIEL_ZIYANG_peer_company_comparison_agent.md): compare companies already stored in PostgreSQL and save the results separately from the main pipeline.
 
 - [Table Extraction Usage](docs/table_extraction_usage.md): HTML tables, API metrics, batch runs, and yearly merges.
 - [API Metrics JSON](docs/API_EXTRACTION_TABLE_OUTPUT_METRICS_GUIDE.md): yearly metric schema and verification fields.

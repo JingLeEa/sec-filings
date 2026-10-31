@@ -19,7 +19,7 @@ from collections import Counter, defaultdict
 import hashlib
 import json
 import os
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import sys
 
@@ -28,7 +28,7 @@ from sec_disclosure.table_extraction import extract_10k_tables_xbrl as ix
 from sec_disclosure.table_extraction import api_filing_documents as filing_docs
 from sec_disclosure.table_extraction import api_filing_metadata as metadata
 
-VERSION = '1.11.0'
+VERSION = '1.12.0'
 SUPPORTED_ITEMS = ('1', '1A', '7', '8')
 STATUS_HELP = {
     'item_8': 'All entries have Item 8 location evidence; they may also be referenced by other Items.',
@@ -420,6 +420,7 @@ def check_response(payload, data, source, parameters, year, prefix='/response', 
         'source': {'request': parameters, 'response_sha256': api.digest(payload),
                    'filing': source, 'filing_sha256': sha(data)},
         'item_8_scope': {'headings': [h for h in layout.headings if h['item'] == '8'],
+                         'item_boundaries': [b for b in layout.item_boundaries if b['item'] == '8'],
                          'page_references': [r for r in layout.references if r['item'] == '8'],
                          'incorporated_sections': [r for r in layout.ranges if r['item'] == '8']},
         'summary': {'top_level_entries': len(groups), 'groups': len(api_groups),
@@ -446,6 +447,7 @@ def check_response(payload, data, source, parameters, year, prefix='/response', 
         ])
         result['item_scopes'] = {
             item: {'headings': [h for h in layout.headings if h['item'] == item],
+                   'item_boundaries': [b for b in layout.item_boundaries if b['item'] == item],
                    'page_references': [r for r in layout.references if r['item'] == item],
                    'incorporated_sections': [r for r in layout.ranges if r['item'] == item],
                    'image_only_pages': [g for g in layout.image_gaps if any(

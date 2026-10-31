@@ -16,7 +16,7 @@ import os
 from collections import Counter, defaultdict
 from copy import deepcopy
 from datetime import date
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import sys
 from urllib.error import URLError

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 from sec_disclosure.indexing.disclosure_retrieval import DisclosureIndex
 from sec_disclosure.llm.disclosures import apply_source_unit_policy, digest, normalized
