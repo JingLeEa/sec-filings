@@ -5,7 +5,7 @@ from __future__ import annotations
 import copy
 import json
 from collections import Counter
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 from sec_disclosure.llm.disclosures import digest
 from .alignment_exact import EXACT_POLICY, exact_matches

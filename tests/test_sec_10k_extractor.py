@@ -1,6 +1,7 @@
 import io
 import json
 import unittest
+from urllib.error import URLError
 from contextlib import redirect_stderr, redirect_stdout
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
@@ -2694,6 +2695,91 @@ class IncorporatedReportTests(unittest.TestCase):
             self.assertEqual([call.args[0] for call in fetch.call_args_list], list(responses))
             records = json.loads((Path(temporary) / 'example/2031/2031_chunks.json').read_text())
             self.assertTrue(all(r['source'] == base + 'changed-name.htm' for r in records))
+
+    def test_sec_download_timeout_has_retryable_exit_code(self):
+        with patch('sec_disclosure.extraction.sec_10k_extractor.fetch_url_bytes',
+                   side_effect=URLError(TimeoutError('read operation timed out'))) as fetch, \
+             redirect_stderr(io.StringIO()):
+            code = main(['https://www.sec.gov/Archives/edgar/data/1/filing.htm',
+                         '--user-agent', 'Test test@example.com', '--sec-timeout', '180'])
+        self.assertEqual(code, 75)
+        self.assertEqual(fetch.call_args.kwargs['timeout'], 180)
+        self.assertEqual(fetch.call_count, 1)
+
+    def test_sec_timeouts_retry_until_success_and_write_extracted_items(self):
+        source = (b'<h1>Item 1. Business</h1><p>We develop semiconductor products.</p>'
+                  b'<h1>Item 1A. Risk Factors</h1><p>Markets fluctuate.</p>')
+        for options, failures, expected in (([], [URLError(TimeoutError('timeout')), TimeoutError('timeout')], [60, 180, 300]),
+                                            (['--sec-timeouts', '90', '240'], [TimeoutError('timeout')], [90, 240])):
+            with self.subTest(options=options), TemporaryDirectory() as temporary, \
+                 patch('sec_disclosure.extraction.sec_10k_extractor.fetch_url_bytes',
+                       side_effect=[*failures, source]) as fetch, \
+                 redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                code = main(['https://www.sec.gov/Archives/edgar/data/1/filing.htm',
+                             '--user-agent', 'Test test@example.com', '--company', 'sample', '--year', '2025',
+                             '--items', '1', '--no-agent-fallback', '--no-follow-references',
+                             '--out-dir', temporary, *options])
+                self.assertEqual(code, 0)
+                self.assertEqual([call.kwargs.get('timeout', 60) for call in fetch.call_args_list], expected)
+                self.assertIn('semiconductor products',
+                              (Path(temporary) / 'sample/2025/2025_item_1.txt').read_text())
+
+    def test_exhausted_sec_timeouts_preserve_existing_outputs(self):
+        with TemporaryDirectory() as temporary:
+            output = Path(temporary) / 'sample/2025/2025_chunks.json'
+            output.parent.mkdir(parents=True)
+            output.write_text('["existing results"]')
+            with patch('sec_disclosure.extraction.sec_10k_extractor.fetch_url_bytes',
+                       side_effect=URLError(TimeoutError('timeout'))) as fetch, \
+                 redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                code = main(['https://www.sec.gov/Archives/edgar/data/1/filing.htm',
+                             '--user-agent', 'Test test@example.com', '--company', 'sample', '--year', '2025',
+                             '--out-dir', temporary])
+            self.assertEqual(code, 75)
+            self.assertEqual([call.kwargs.get('timeout', 60) for call in fetch.call_args_list], [60, 180, 300])
+            self.assertEqual(output.read_text(), '["existing results"]')
+
+    def test_non_timeout_download_failure_is_not_retried(self):
+        with patch('sec_disclosure.extraction.sec_10k_extractor.fetch_url_bytes',
+                   side_effect=URLError('connection refused')) as fetch, \
+             redirect_stderr(io.StringIO()):
+            self.assertEqual(main(['https://www.sec.gov/Archives/edgar/data/1/filing.htm',
+                                   '--user-agent', 'Test test@example.com']), 2)
+        self.assertEqual(fetch.call_count, 1)
+
+    def test_incorporated_report_timeout_retries_extraction_with_longer_timeout(self):
+        base = 'https://www.sec.gov/Archives/edgar/data/999888/000099988832000001/'
+        report_url = base + 'changed-name.htm'
+        responses = {base + 'main.htm': incorporated_filing('2031'),
+                     base + '0000999888-32-000001-index.htm': report_index(report_url),
+                     report_url: incorporated_report('2031')}
+        timeouts = []
+
+        def download(url, agent, *, timeout=60):
+            if url == report_url:
+                timeouts.append(timeout)
+                if len(timeouts) == 1:
+                    raise TimeoutError('report download timed out')
+            return responses[url].encode()
+
+        with TemporaryDirectory() as temporary, \
+             patch('sec_disclosure.extraction.sec_10k_extractor.fetch_url_bytes', side_effect=download), \
+             redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            code = main([base + 'main.htm', '--company', 'example', '--year', '2031', '--items', '1A', '7', '8',
+                         '--user-agent', 'Test test@example.com', '--out-dir', temporary, '--no-agent-fallback'])
+            self.assertEqual(code, 0)
+            self.assertEqual(timeouts, [60, 180])
+            records = json.loads((Path(temporary) / 'example/2031/2031_chunks.json').read_text())
+            self.assertTrue(any(record['source'] == report_url for record in records))
+
+    def test_sec_timeout_arguments_require_finite_positive_increasing_values(self):
+        for options in (['--sec-timeout', '0'], ['--sec-timeout', 'nan'], ['--sec-timeout', 'inf'],
+                        ['--sec-timeouts', '0'], ['--sec-timeouts', '180', '60'],
+                        ['--sec-timeouts', '60', '60'], ['--sec-timeouts', '60', 'nan'],
+                        ['--sec-timeouts', '60', 'inf'],
+                        ['--sec-timeout', '60', '--sec-timeouts', '60', '180']):
+            with self.subTest(options=options), redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                parse_args(options)
 
     def test_reference_failures_do_not_replace_existing_outputs(self):
         for failure in ('missing-heading', 'ambiguous-document', 'pdf-document', 'outside-filing', 'missing-index', 'page-only'):

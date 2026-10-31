@@ -7,7 +7,7 @@ import json
 import os
 import sys
 from dataclasses import dataclass
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 from dotenv import dotenv_values
 from .pipeline_snapshots import DISCLOSURE_FILES, folder_documents, publish

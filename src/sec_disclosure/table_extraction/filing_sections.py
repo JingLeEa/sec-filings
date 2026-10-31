@@ -21,7 +21,7 @@ import sys
 import textwrap
 from dataclasses import dataclass
 from html.parser import HTMLParser
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from typing import Iterable
 from urllib.parse import parse_qs, quote, urljoin, urlparse
 from urllib.request import Request, urlopen
