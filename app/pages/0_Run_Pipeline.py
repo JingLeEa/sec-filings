@@ -8,15 +8,18 @@ from sec_ui import components, pipeline_runs
 
 STAGES = (
     ("preprocessing", "Preprocessing", "Preparing filing text and financial tables",
-     "Extracts SEC filing sections and financial metrics, then saves structured source records."),
+     "Extracts filing sections and financial metrics, then saves them. Missing sections are checked with AI; "
+     "timed-out downloads retry automatically, so this stage may take longer."),
     ("extraction", "Disclosure extraction", "Hang on, we are extracting disclosures",
      "Identifies company-specific disclosures and checks their supporting source sentences."),
     ("alignment", "Alignment", "Matching disclosures across years",
      "Connects related disclosures between selected filings and identifies unmatched ones."),
     ("change-analysis", "Change analysis", "Analyzing disclosure changes",
-     "Compares aligned disclosures using LLM, lexical, and semantic methods."),
+     "Compares aligned disclosures and labels their changes using the supporting text."),
     ("materiality", "Materiality", "Assessing materiality",
      "Evaluates whether each change meaningfully affects the company's business, risk, operations, or finances."),
+    ("synthesis", "Synthesis", "Preparing the synthesis report",
+     "Summarizes material changes and supporting evidence, then saves the report."),
 )
 
 
@@ -50,7 +53,7 @@ def show_progress(ticker, years):
     st.caption(f"{ticker} | FY{', FY'.join(map(str, years))} | {len(years) - 1} comparison pair(s)")
 
     if full_complete:
-        st.success("Pipeline complete. All five stages have been saved to PostgreSQL.")
+        st.success(f"Pipeline complete. All {len(STAGES)} stages have been saved to PostgreSQL.")
         if job and st.session_state.get("pipeline_notified_run") != job.get("run_id"):
             st.session_state["pipeline_notified_run"] = job["run_id"]
             st.cache_data.clear()
@@ -99,8 +102,12 @@ def show_progress(ticker, years):
         st.caption(f"{phase['saved']} of {phase['total']} outputs loaded to database")
         if phase["status"] == "running":
             detail_reader = getattr(pipeline_runs, "stage_progress", None)
-            work = ([row for stage in phase["active"] for row in detail_reader(ticker, years, stage)]
-                    if detail_reader else [])
+            try:
+                work = ([row for stage in phase["active"] for row in detail_reader(ticker, years, stage)]
+                        if detail_reader else [])
+            except pipeline_runs.RunError as error:
+                st.warning(str(error))
+                work = []
             if work:
                 for row in work:
                     if row["total"]:

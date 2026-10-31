@@ -22,12 +22,15 @@ def sample_environment(monkeypatch, tmp_path):
     monkeypatch.setenv("SEC_UI_SYNTHESIS_DIRS", str(FIXTURES / "synthesis"))
     monkeypatch.setenv("SEC_UI_PEER_DIR", str(FIXTURES / "peer_comparison"))
     monkeypatch.setattr(pipeline_runs, "ROOT", tmp_path)
+    monkeypatch.setattr(pipeline_runs, "_postgres_documents", lambda *args: {})
     st.cache_data.clear()
     yield
     st.cache_data.clear()
 
 
 def run(page: str) -> AppTest:
+    if page == "pages/4_Peer_Comparison.py":
+        return AppTest.from_file(str(APP / "Home.py"), default_timeout=60).run().switch_page(page).run()
     return AppTest.from_file(str(APP / page), default_timeout=60).run()
 
 
@@ -55,13 +58,14 @@ def test_pipeline_page_shows_running_stage_and_saved_database_outputs(monkeypatc
         {"stage": "save_text_2023", "phase": "preprocessing", "status": "complete"},
         {"stage": "save_text_2024", "phase": "preprocessing", "status": "complete"},
         {"stage": "save_text_2025", "phase": "preprocessing", "status": "complete"},
-        {"stage": "api_tables_and_save", "phase": "preprocessing", "status": "complete"},
+        *[{"stage": f"save_xbrl_{year}", "phase": "preprocessing", "status": "complete"}
+          for year in (2023, 2024, 2025)],
         {"stage": "extract_disclosures_and_save", "phase": "extraction", "status": "running"},
     ]}
     monkeypatch.setattr(pipeline_runs, "read_run", lambda ticker, years: ({"status": "running"}, progress))
     at = run("pages/0_Run_Pipeline.py")
     assert any("extracting disclosures" in message.value for message in at.info)
-    assert any("4 of 4 outputs loaded to database" in message.value for message in at.caption)
+    assert any("6 of 6 outputs loaded to database" in message.value for message in at.caption)
     assert any(status.label == "Pipeline running" and status.state == "running" for status in at.get("status"))
     assert not at.exception
 
@@ -121,7 +125,7 @@ def test_pipeline_page_shows_completion(monkeypatch):
     monkeypatch.setattr(pipeline_runs, "read_run", lambda ticker, selected: ({"run_id": "test", "status": "complete"}, progress))
     at = run("pages/0_Run_Pipeline.py")
     assert any("Pipeline complete" in message.value for message in at.success)
-    assert any("5 of 5 stages complete" in message.text for message in at.get("progress"))
+    assert any("6 of 6 stages complete" in message.text for message in at.get("progress"))
     assert not at.exception
 
 

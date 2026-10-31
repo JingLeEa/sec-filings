@@ -14,8 +14,8 @@ Implemented:
 - **Change explorer**: filter by SEC Item, content category, change label, materiality, match status, match type and free text using controls in the page; click a row for the reasoning; export the filtered rows as CSV or JSON.
 - **Side by side**: earlier and later disclosure text next to each other, with words removed (red, struck through) and added (green, underlined). Filters appear in the page above the disclosure selector, while company and years remain in the sidebar. One-sided matches show "No counterpart found". Sentence IDs, disclosure IDs and SEC links are listed under the text.
 - **Synthesis report**: reads the synthesis agent's JSON, shows each finding with its cited evidence, financial figures, limitations and validation result; downloads as Markdown, evidence CSV and JSON.
-- **Peer comparison**: reads the peer agent's `peer_comparison.json`, shows each target disclosure against each peer with the cited sentences on both sides; downloads as Markdown, CSV and JSON.
-- **Run pipeline**: accepts a ticker and comma-separated fiscal years (1900-2200), shows the exact comparison pairs, confirms selections spanning more than two years, and starts or resumes `run_full_pipeline.py` in the background. Polls the runner's stage status, shows completed PostgreSQL saves, activity logs, and an in-app completion or failure notice.
+- **Peer comparison**: checks saved company/year prerequisites, launches or resumes `run_peer_comparison_pipeline.py` in the background, and polls comparison counts and the activity log. Reads PostgreSQL reports or local exports, shows cited sentences on both sides, and downloads Markdown, CSV and JSON.
+- **Run pipeline**: accepts a ticker and comma-separated fiscal years (1900-2200), shows the exact comparison pairs, confirms selections spanning more than two years, and starts or resumes `run_full_pipeline.py` in the background. Shows all six phases through synthesis, PostgreSQL saves, activity logs, and an in-app completion or failure notice. Filing-section recovery and download-timeout retries are automatic inside the extractor.
 - Two data sources behind one data layer (`app/sec_ui/data.py`): the JSON files on the `test-data` branch, or PostgreSQL through `sec_disclosure.storage.exports`.
 
 Not implemented (planned): the chatbot (Aarav), user accounts and saving of user notes, and human review actions on `needs_review` matches.
@@ -28,7 +28,8 @@ Verification: see section 8.
 | --- | --- |
 | `app/Home.py` | Overview page and the entry point. |
 | `app/pages/0_Run_Pipeline.py` ... `4_Peer_Comparison.py` | One file per page; the run page launches and monitors the full pipeline. |
-| `app/sec_ui/pipeline_runs.py` | Safe local subprocess launch, persisted UI job state, console-log tail, and mapping of saved database outputs to pipeline phases. |
+| `app/sec_ui/pipeline_runs.py` | Safe local subprocess launch, persisted UI job state, console-log tail, PostgreSQL checkpoint reads, and mapping of database saves to pipeline phases. |
+| `app/sec_ui/peer_runs.py` | Peer prerequisites using backend validation, background peer CLI launch, progress polling, and PostgreSQL report reads. |
 | `app/sec_ui/config.py` | Data folders, environment variables, company names. |
 | `app/sec_ui/data.py` | Finds data, loads a comparison, flattens each alignment into one record, filters and exports. No Streamlit code. |
 | `app/sec_ui/diff.py` | Word-level text comparison with escaped HTML. No Streamlit code. |
@@ -42,7 +43,7 @@ flowchart TD
     C[Synthesis and peer JSON] --> R[reports.py]
     U[Run pipeline page] --> J[run_full_pipeline.py]
     J --> B
-    J --> S[status.json]
+    J --> S[PostgreSQL pipeline artifacts]
     S --> U
     D --> P[Explorer, Side by side, Overview]
     R --> Q[Synthesis, Peer pages]
@@ -50,7 +51,7 @@ flowchart TD
     Q --> E
 ```
 
-The exploration and report pages remain read-only. The Run pipeline page starts the existing CLI, which makes SEC and model API calls and saves results to PostgreSQL. It polls `status.json` every three seconds and clears the comparison cache when the run completes. While running, it shows a spinner and stage-level progress from saved extraction batch/check checkpoints, alignment matching/verification jobs, and materiality row counts. The bars count completed work units, not elapsed time or an ETA. Loaded comparisons are otherwise cached for 15 minutes; the sidebar button "Reload data" clears the cache.
+The overview, explorer, side-by-side and synthesis report pages remain read-only. Peer comparison can launch its separate backend after checking prerequisites. The Run pipeline page starts the existing CLI, which makes SEC and model API calls and saves results to PostgreSQL. Every three seconds it reads the runner's `status.json` artifact from PostgreSQL's `main` namespace and clears the comparison cache when the run completes. While running, it shows a spinner and stage-level progress from saved extraction batch/check checkpoints, alignment matching/verification jobs, and materiality row counts. Legacy local progress is used only when no database status exists for that selection; missing database checkpoints are never filled from stale local files. The bars count completed work units, not elapsed time or an ETA. Loaded comparisons are otherwise cached for 15 minutes; the sidebar button "Reload data" clears the cache.
 
 ## 3. Setup
 
@@ -85,17 +86,25 @@ The Run Pipeline page can launch jobs directly. It shows the active UI-launched 
 
 - Aligned disclosures: `alignments.json` (and `needs_review.json` when present) per company and year pair, as written by the alignment, change-analysis and materiality stages. Full text comes from `disclosures.json`. Without it the side-by-side page shows only the sentences cited as evidence and says so.
 - Synthesis output: one JSON file per company, with `report`, `source_catalog`, `financial_metrics`, `financial_trends`, `validation`.
-- Peer output: `peer_comparison.json` (schema version 2) from `scripts/compare_peer_disclosures.py`.
+- Peer output: PostgreSQL `peer_comparison_reports.report`, or local `<TICKER>/<YEAR>/peer_comparison.json` and `<TICKER>/<YEAR>/<peers>/peer_comparison.json` exports (schema version 2). `scripts/compare_peer_disclosures.py` is an alias of the database-backed peer pipeline.
 
 ## 5. Run and rerun
 
 `streamlit run app/Home.py`, then open the address it prints. On **Run Pipeline**, select a ticker and two or more years. The UI sorts and deduplicates the years, shows the adjacent selected pairs it will compare, and starts the full PostgreSQL pipeline. For more than two years, confirm the extra work before starting. One UI-launched pipeline can run at a time; its progress remains visible even when the form shows another selection. A stopped run can be resumed with the same ticker and years; completed stages are reused by the CLI. The page stays responsive during execution and shows a toast and persistent result when the process ends. The browser must remain open to see the toast; the saved status and log remain available after reloading.
 
-The runner writes `data/pipeline_runs/<ticker>/<years>/status.json`. The UI writes `ui_run.json` and a per-attempt `ui_run_*.log` beside it so preflight errors and process exits are visible even before the runner creates status. A PostgreSQL connection failure shows a reminder to start Docker Desktop, run `docker compose up -d`, and resume. "Loaded to database" appears only after the corresponding save step reports completion. After completion, the overview and explorer use PostgreSQL results in `auto` mode; click "Reload data" if a previously opened page still shows old data. To preview the peer page before real peer output exists, point `SEC_UI_PEER_DIR` at `tests/fixtures/peer_comparison`; the page shows a sample-data banner.
+The runner stores `pipeline_runs/<ticker>/<years>/status.json` and its detailed checkpoints in PostgreSQL's `pipeline_artifacts` table. The UI keeps only its process metadata (`ui_run.json`) and per-attempt activity log (`ui_run_*.log`) locally under `data/pipeline_runs/<ticker>/<years>/`, so preflight errors and process exits are visible even before the runner creates status. A PostgreSQL connection failure shows a reminder to start Docker Desktop, run `docker compose up -d`, and resume. "Loaded to database" appears only after the corresponding save step reports completion, including each year's `save_xbrl` step. Completion waits for synthesis as the sixth phase. After completion, the overview and explorer use PostgreSQL results in `auto` mode; click "Reload data" if a previously opened page still shows old data. To preview the peer page before real peer output exists, point `SEC_UI_PEER_DIR` at `tests/fixtures/peer_comparison`; the page shows a sample-data banner.
+
+Text preprocessing first uses code extraction, then automatically checks unresolved sections with the baseline LLM and page recovery as needed. SEC download timeouts restart extraction with 60-, 180-, then 300-second per-download limits. During recovery and retries the preprocessing phase stays running; its activity log contains the detailed messages. No manual recovery toggle is needed. A completed database save does not certify that every requested Item was recovered; review extractor warnings for missing sections.
+
+For **Peer comparison**, first prepare the target and every peer for the same fiscal year in Run pipeline. At minimum, all companies need stored 10-K filings and extracted disclosures. The default material-changes selection also needs a target disclosure marked material in a completed adjacent-year alignment; synthesis is not a peer prerequisite. The all-disclosures selection does not require materiality. The page explains this requirement and links to Run pipeline.
+
+Choose the target, peers, fiscal year, Items and selection mode, then click **Check prerequisites**. Missing company data or material target disclosures disables launch and shows the backend's reason. Editing the selection requires a fresh check. **Start peer comparison** rechecks inputs and starts `run_peer_comparison_pipeline.py` in a background process; the backend checks again before model requests. One UI-launched peer run is allowed at a time, and launch waits while a UI-launched main pipeline is running. The page polls saved target-comparison counts every three seconds, retains an activity log, and supports resuming stopped/partial runs. It does not automatically run the main pipeline.
+
+Peer reports appear directly from PostgreSQL in the saved-comparison selector in `auto` or `postgres` mode. `SEC_UI_DATA_SOURCE=files` restricts that viewer to local exports and fixtures. Different peer sets, Items and target selections have separate database records. UI process metadata and logs live under `data/peer_runs/`; model caches and progress remain in PostgreSQL. The source is labelled, and fixture reports retain their sample-data warning.
 
 ## 6. Final output JSON structure
 
-The report pages do not write pipeline outputs. The Run pipeline page launches the existing runner, which writes its normal database records and local checkpoints. Dashboard exports are:
+The exploration and synthesis report pages do not write pipeline outputs. Run pipeline launches the main backend; Peer comparison launches the separate peer backend. Both backends save their normal results and checkpoints to PostgreSQL. Dashboard exports are:
 
 - Change CSV and JSON: one row per match with `match_id`, `company`, years, `item`, `sections`, `content_category`, `relationship`, `status`, the lexical, semantic and LLM labels, the final `change_label`, `materiality`, scores, `key_change`, reasons, `previous_disclosure_ids`, `current_disclosure_ids`, `sentence_ids`, `source_urls` and (optional) both texts.
 - Synthesis downloads: Markdown report, evidence CSV (one row per cited sentence with its finding, sentence ID and SEC URL), the original JSON.
@@ -107,7 +116,7 @@ The report pages do not write pipeline outputs. The Run pipeline page launches t
 
 ## 8. Validation and limitations
 
-Dashboard data and page tests are in `tests/test_ui_data.py` and `tests/test_ui_pages.py`. The run-page service has isolated tests in `tests/test_ui_pipeline_runs.py`; they mock process launch and never make SEC, LLM, or PostgreSQL requests. The actual full pipeline has not been launched end to end from the UI in these tests. Earlier checks found that AMD 2024-2025 loads 432 matches (387 aligned + 45 needing review) identically from files and PostgreSQL when `SEC_UI_TEST_POSTGRES=1` and a matching database is available.
+Dashboard data and page tests are in `tests/test_ui_data.py` and `tests/test_ui_pages.py`. The run-page service and headless Streamlit checks in `tests/test_ui_pipeline_runs.py` cover database checkpoint reads, stale local progress, yearly table saves, recovery/retry messages, synthesis, completion, and stopped runs. They mock process launch and PostgreSQL and never make SEC or LLM requests. Run these checks with `PYTHONPATH=src:app .venv/bin/python -m unittest discover -s tests -p 'test_ui_pipeline_runs.py'`. Peer UI checks are in `tests/test_ui_peer_runs.py`, including readiness gates, selection changes, process launch and report rendering. Run them with `PYTHONPATH=src:app .venv/bin/python -m unittest discover -s tests -p 'test_ui_peer_runs.py'`. Neither pipeline has been launched end to end from the UI in these tests. Earlier checks found that AMD 2024-2025 loads 432 matches (387 aligned + 45 needing review) identically from files and PostgreSQL when `SEC_UI_TEST_POSTGRES=1` and a matching database is available.
 
 Limitations:
 

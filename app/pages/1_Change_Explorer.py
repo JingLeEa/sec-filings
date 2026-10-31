@@ -1,5 +1,6 @@
 """Filter all matched disclosures for one company and year pair, then open one to compare."""
 import json
+from html import escape
 
 import pandas as pd
 import streamlit as st
@@ -17,7 +18,11 @@ if not records:
     st.stop()
 
 filtered = components.filters(records, location="page")
-st.caption(f"{config.company_label(company)}: FY{previous} to FY{current}")
+st.markdown(
+    f'<p style="font-size: 1.25rem; font-weight: 600; color: #000000; margin: 0.5rem 0 0.75rem;">'
+    f'{escape(config.company_label(company))}: FY{previous} to FY{current}</p>',
+    unsafe_allow_html=True,
+)
 
 m1, m2, m3 = st.columns(3)
 m1.metric("Showing", f"{len(filtered):,} of {len(records):,}")

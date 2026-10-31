@@ -161,7 +161,7 @@ def filters(records: list, *, location: str = "sidebar"):
             st.header("Filters")
             columns = [st] * 4
         else:
-            st.subheader("Filters")
+            st.markdown("**Filters**")
             columns = st.columns(4)
         sel_items = columns[0].multiselect("SEC Item", items, key="f_items",
                                            format_func=lambda i: config.ITEM_TITLES.get(i, f"Item {i}"))

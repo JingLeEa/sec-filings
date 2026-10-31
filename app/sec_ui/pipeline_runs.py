@@ -15,7 +15,7 @@ from . import config
 
 
 ROOT = config.ROOT
-PHASES = ("preprocessing", "extraction", "alignment", "change-analysis", "materiality")
+PHASES = ("preprocessing", "extraction", "alignment", "change-analysis", "materiality", "synthesis")
 _START_LOCK = Lock()
 
 
@@ -105,7 +105,7 @@ def _finish_job(process: subprocess.Popen, folder: Path, run_id: str) -> None:
                        completed_at=datetime.now(timezone.utc).isoformat())
             _write_json(path, job)
     except (OSError, RunError):
-        # The runner's status.json and console log remain available if this write fails.
+        # PostgreSQL progress and the local console log remain available if this write fails.
         pass
 
 
@@ -148,7 +148,7 @@ def start_run(ticker: str, years) -> dict:
 def read_run(ticker: str, years) -> tuple[dict | None, dict | None]:
     folder = run_folder(ticker, years)
     job = _read_json(folder / "ui_run.json")
-    progress = _read_json(folder / "status.json")
+    progress = _progress_documents(ticker, years).get(_status_key(ticker, years))
     if job and progress and progress.get("last_invocation_at", "") < job.get("started_at", ""):
         progress = None
     if job and job.get("status") in {"starting", "running"}:
@@ -182,7 +182,7 @@ def database_saves(years) -> dict[str, list[tuple[str, str]]]:
     pairs = list(zip(years, years[1:]))
     return {
         "preprocessing": ([(f"FY{year} filing text", f"save_text_{year}") for year in years]
-                          + [("Financial tables", "api_tables_and_save")]),
+                          + [(f"FY{year} financial tables", f"save_xbrl_{year}") for year in years]),
         "extraction": [("Disclosures", "extract_disclosures_and_save")],
         "alignment": [(f"FY{a} to FY{b} alignments", f"align_and_save_{a}_{b}") for a, b in pairs],
         "change-analysis": [output for a, b in pairs for output in (
@@ -190,6 +190,7 @@ def database_saves(years) -> dict[str, list[tuple[str, str]]]:
             (f"FY{a} to FY{b} complete change analysis", f"save_changes_{a}_{b}"),
         )],
         "materiality": [(f"FY{a} to FY{b} materiality", f"save_materiality_{a}_{b}") for a, b in pairs],
+        "synthesis": [("Synthesis report", "synthesis_and_save")],
     }
 
 
@@ -222,6 +223,61 @@ def _optional_json(path: Path):
         return None
 
 
+def _status_key(ticker, years):
+    ticker, years = normalized_selection(ticker, years)
+    return f"pipeline_runs/{ticker}/{'-'.join(map(str, years))}/status.json"
+
+
+def _postgres_documents(keys, jobs_prefix=None):
+    """Read public progress JSON without loading source files or model caches."""
+    from .data import DataError, _postgres_connection
+
+    try:
+        with _postgres_connection() as connection, connection.cursor() as cursor:
+            connection.read_only = True
+            cursor.execute("SELECT to_regclass('pipeline_artifacts')")
+            if cursor.fetchone()[0] is None:
+                return {}
+            cursor.execute(
+                "SELECT path, content FROM pipeline_artifacts "
+                "WHERE namespace = %s AND kind = 'file' AND "
+                "(path = ANY(%s) OR (starts_with(path, %s) AND "
+                "path ~ '/jobs/(matching|verification)_[^/]+\\.json$'))",
+                ("main", list(keys), jobs_prefix or "/__no_jobs__/"),
+            )
+            rows = cursor.fetchall()
+    except DataError:
+        return {}
+    except Exception:
+        raise RunError("Could not read pipeline progress from PostgreSQL. Check the database connection.") from None
+    documents = {}
+    for key, content in rows:
+        try:
+            documents[key] = json.loads(bytes(content))
+        except (TypeError, ValueError):
+            if key == keys[0]:
+                raise RunError("Invalid pipeline progress: status.json.") from None
+    if keys[0] in documents and not isinstance(documents[keys[0]], dict):
+        raise RunError("Invalid pipeline progress: status.json.")
+    return documents
+
+
+def _progress_documents(ticker, years, keys=(), jobs_prefix=None):
+    status_key = _status_key(ticker, years)
+    requested = [status_key, *keys]
+    documents = _postgres_documents(requested, jobs_prefix)
+    # A database run owns its checkpoints, even if stale local files exist.
+    if status_key in documents:
+        return documents
+    documents = {status_key: _read_json(ROOT / "data" / status_key)}
+    documents.update({key: _optional_json(ROOT / "data" / key) for key in keys})
+    if jobs_prefix:
+        for pattern in ("matching_*.json", "verification_*.json"):
+            for path in (ROOT / "data" / jobs_prefix).glob(pattern):
+                documents[str(path.relative_to(ROOT / "data"))] = _optional_json(path)
+    return documents
+
+
 def _progress_row(label: str, done: int | None = None, total: int | None = None,
                   detail: str = "") -> dict:
     return {"label": label, "done": done, "total": total, "detail": detail}
@@ -232,11 +288,15 @@ def stage_progress(ticker: str, years, stage: str) -> list[dict]:
     ticker, years = normalized_selection(ticker, years)
     data = ROOT / "data"
     if stage == "extract_disclosures_and_save":
+        documents = _progress_documents(ticker, years, [
+            f"disclosures/{ticker}/{year}/{name}.json"
+            for year in years for name in ("token_usage", "manifest")
+        ])
         rows = []
         for year in years:
             folder = data / "disclosures" / ticker / str(year)
-            usage = _optional_json(folder / "token_usage.json") or {}
-            manifest = _optional_json(folder / "manifest.json") or {}
+            usage = documents.get(str((folder / "token_usage.json").relative_to(data))) or {}
+            manifest = documents.get(str((folder / "manifest.json").relative_to(data))) or {}
             batches = usage.get("planned_batches") or len(manifest.get("batches", []))
             if not batches:
                 rows.append(_progress_row(f"FY{year}: preparing extraction batches"))
@@ -271,27 +331,33 @@ def stage_progress(ticker: str, years, stage: str) -> list[dict]:
     if match:
         previous, current = match.groups()
         folder = data / "alignments" / ticker / f"{previous}-{current}"
-        report = _optional_json(folder / "alignments.json") or {}
+        prefix = str(folder.relative_to(data))
+        documents = _progress_documents(ticker, years,
+                                        [f"{prefix}/{name}.json" for name in ("alignments", "candidate_matches", "proposed_groups")],
+                                        f"{prefix}/jobs/")
+        report = documents.get(f"{prefix}/alignments.json") or {}
         label = f"FY{previous} to FY{current} alignment"
         if report.get("run_complete"):
             return [_progress_row(label, 1, 1, "Matching and verification done; saving to database")]
-        candidates = _optional_json(folder / "candidate_matches.json")
+        candidates = documents.get(f"{prefix}/candidate_matches.json")
         if not isinstance(candidates, dict):
             return [_progress_row(label, detail="Preparing candidate matches")]
         total = len(candidates)
-        matched = sum(len(saved.get("anchors", [])) for path in (folder / "jobs").glob("matching_*.json")
-                      if (saved := _optional_json(path)) and isinstance(saved.get("anchors"), list))
+        matching = [saved for key, saved in documents.items()
+                    if key.startswith(f"{prefix}/jobs/matching_") and isinstance(saved, dict)]
+        matched = sum(len(saved["anchors"]) for saved in matching if isinstance(saved.get("anchors"), list))
         if matched < total:
-            jobs = len(list((folder / "jobs").glob("matching_*.json")))
+            jobs = len(matching)
             return [_progress_row(label, min(matched, total), total,
                                   f"Matching {matched}/{total} current disclosures · {jobs} batch jobs saved")]
-        groups = _optional_json(folder / "proposed_groups.json")
+        groups = documents.get(f"{prefix}/proposed_groups.json")
         if not isinstance(groups, list):
             return [_progress_row(label, detail="Grouping matched disclosures")]
         if not groups:
             return [_progress_row(label, detail="Finalizing exact matches")]
-        verified = sum(len(saved.get("groups", [])) for path in (folder / "jobs").glob("verification_*.json")
-                       if (saved := _optional_json(path)) and not saved.get("repair_pending")
+        verified = sum(len(saved.get("groups", [])) for key, saved in documents.items()
+                       if key.startswith(f"{prefix}/jobs/verification_") and isinstance(saved, dict)
+                       and not saved.get("repair_pending")
                        and isinstance(saved.get("result"), list))
         return [_progress_row(label, min(verified, len(groups)), len(groups),
                               f"Verified {min(verified, len(groups))}/{len(groups)} disclosure groups")]
@@ -299,8 +365,8 @@ def stage_progress(ticker: str, years, stage: str) -> list[dict]:
     match = re.fullmatch(r"materiality_(\d{4})_(\d{4})", stage)
     if match:
         previous, current = match.groups()
-        summary = _optional_json(data / "alignments" / ticker / f"{previous}-{current}"
-                                 / "materiality" / "summary.json") or {}
+        key = f"alignments/{ticker}/{previous}-{current}/materiality/summary.json"
+        summary = _progress_documents(ticker, years, [key]).get(key) or {}
         total = summary.get("alignment_rows")
         done = summary.get("classified_rows")
         if isinstance(total, int) and total > 0 and isinstance(done, int):
@@ -311,7 +377,8 @@ def stage_progress(ticker: str, years, stage: str) -> list[dict]:
     match = re.fullmatch(r"llm_changes_(\d{4})_(\d{4})", stage)
     if match:
         previous, current = match.groups()
-        report = _optional_json(data / "alignments" / ticker / f"{previous}-{current}" / "alignments.json") or {}
+        key = f"alignments/{ticker}/{previous}-{current}/alignments.json"
+        report = _progress_documents(ticker, years, [key]).get(key) or {}
         summary = report.get("change_analysis_summary") or {}
         total = summary.get("eligible_alignments")
         states = summary.get("by_status") or {}

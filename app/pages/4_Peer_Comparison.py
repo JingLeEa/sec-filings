@@ -1,49 +1,166 @@
 """Compare a company's disclosures with the same-year disclosures of its peers."""
 import json
+import re
 
 import pandas as pd
 import streamlit as st
 
-from sec_ui import components, config, data, reports
+from sec_ui import components, config, data, peer_runs, pipeline_runs, reports
 
 components.setup("Peer comparison")
 st.title("Peer comparison")
 st.caption("How a company's disclosure on a topic compares with its peers' disclosures in the same year and SEC Item.")
 
-files = reports.list_peer_files()
-if not files:
-    st.info("No peer comparison output was found yet.")
-    st.markdown(
-        "The peer comparison agent writes `data/peer_comparison/<TICKER>/<YEAR>/peer_comparison.json`. "
-        "Run it, for example:\n\n"
-        "```\nPYTHONPATH=src python3 scripts/compare_peer_disclosures.py --ticker NVDA --peers AMD AVGO INTC --year 2024 "
-        "--disclosures-dir ../sec-filings-test-data/test_data/disclosures "
-        "--alignments-dir ../sec-filings-test-data/test_data/alignments --env-file .env --max-requests 5\n```\n\n"
-        "Or set `SEC_UI_PEER_DIR` to a folder that already holds results."
-    )
-    st.caption(f"Looked in: {config.peer_dir()}")
+
+@st.fragment(run_every="3s")
+def run_peer_panel(value):
+    running = peer_runs.active_run()
+    try:
+        selected = peer_runs.read_run(value) if value else None
+    except peer_runs.RunError as error:
+        st.error(str(error))
+        selected = None
+    blocked = running is not None or (selected or {}).get("status") in {"starting", "running"}
+    key = peer_runs.selection_key(value) if value else None
+    checked = st.session_state.get("peer_input_check", {})
+
+    if st.button("Check prerequisites", disabled=value is None or blocked):
+        try:
+            with st.spinner("Checking saved disclosures and materiality…"):
+                summary = peer_runs.check_inputs(value)
+            checked = {"key": key, "ready": True, "summary": summary}
+        except peer_runs.RunError as error:
+            message = str(error).replace(
+                "Run scripts/run_full_pipeline.py for each missing ticker/year first.",
+                "Open Run pipeline and prepare each missing company for this fiscal year first.")
+            checked = {"key": key, "ready": False, "message": message}
+        st.session_state["peer_input_check"] = checked
+
+    ready = value is not None and checked.get("key") == key and checked.get("ready")
+    if checked.get("key") == key and key is not None:
+        if ready:
+            summary = checked["summary"]
+            st.success(f"Inputs ready: {summary['target_disclosures']} target disclosures selected. "
+                       "Saved disclosures are available for every peer.")
+        else:
+            st.warning(checked["message"])
+    elif value:
+        st.caption("Check prerequisites for this selection before starting. This check makes no AI requests.")
+
+    main_running = pipeline_runs.active_run()
+    if main_running:
+        st.info("The main pipeline is still running. Wait for it to save its inputs before starting a peer comparison.")
+    label = "Resume peer comparison" if (selected or {}).get("status") == "stopped" else "Start peer comparison"
+    if st.button(label, type="primary", disabled=not ready or blocked or bool(main_running)):
+        try:
+            with st.spinner("Rechecking inputs and starting comparison…"):
+                peer_runs.start_run(value)
+        except peer_runs.RunError as error:
+            st.error(str(error))
+        else:
+            st.rerun()
+
+    job = running or selected
+    if not job:
+        return
+    st.caption(f"{job['ticker'].upper()} | FY{job['year']} | Peers: {', '.join(peer.upper() for peer in job['peers'])}")
+    status = job.get("status")
+    if status in {"starting", "running"}:
+        st.status("Peer comparison running", state="running", expanded=False)
+        try:
+            work = peer_runs.progress(job)
+        except peer_runs.RunError as error:
+            st.warning(str(error))
+            work = None
+        if work and isinstance(work.get("jobs_planned"), int) and work["jobs_planned"] > 0:
+            done = work.get("jobs_completed") or 0
+            st.progress(min(1.0, done / work["jobs_planned"]),
+                        text=f"{done} of {work['jobs_planned']} target disclosures compared")
+        else:
+            st.caption("Preparing saved evidence and comparison jobs.")
+    elif status == "complete":
+        st.success("Peer comparison complete. The report and citations were saved to PostgreSQL.")
+        if st.session_state.get("peer_notified_run") != job["run_id"]:
+            st.session_state["peer_notified_run"] = job["run_id"]
+            st.session_state["peer_finished_selection"] = peer_runs.selection_key(job)
+            st.toast("Peer comparison complete", icon=":material/check_circle:")
+            st.rerun()
+    elif status == "stopped":
+        st.warning("Peer comparison stopped or is incomplete. Saved comparison jobs are retained. "
+                   "Review the activity log, check prerequisites, and resume the same selection.")
+    log = peer_runs.log_tail(job)
+    if log:
+        with st.expander("Peer comparison activity log", expanded=status == "stopped"):
+            st.code(log, language="text")
+
+
+st.subheader("Run a peer comparison")
+st.info("Prepare the target company and every peer in Run pipeline first. Each must have a saved 10-K "
+        "and extracted disclosures for the same fiscal year. Material changes also needs the target's "
+        "adjacent-year materiality results. Peer comparison uses these saved inputs; it does not run the main pipeline.")
+st.page_link("pages/0_Run_Pipeline.py", label="Open Run pipeline", icon=":material/play_circle:")
+left, middle, right = st.columns([1, 2, 1])
+ticker = left.text_input("Target ticker", value="NVDA", max_chars=20).strip().upper()
+peer_text = middle.text_input("Peer tickers", value="AMD, AVGO, INTC", help="Separate tickers with commas or spaces.")
+year = right.number_input("Fiscal year", min_value=1900, max_value=2200, value=2024, step=1)
+items = st.multiselect("Items to compare", peer_runs.ITEMS, default=["1", "1A", "7", "8"])
+mode = st.selectbox("Target disclosures", ["material_changes", "all"],
+                    format_func=lambda value: "Material changes" if value == "material_changes" else "All disclosures")
+if mode == "material_changes":
+    adjacent = int(year) - 1 if year > 1900 else int(year) + 1
+    st.caption(f"For the target, complete Run pipeline through Materiality with FY{year} and an adjacent year "
+               f"(for example FY{adjacent}). Only disclosures marked material will be selected.")
+else:
+    st.caption("All disclosures still requires saved disclosures for every company. Materiality is not required.")
+try:
+    value = peer_runs.selection(ticker, [part for part in re.split(r"[,\s]+", peer_text.strip()) if part],
+                                int(year), items, mode)
+except peer_runs.RunError as error:
+    st.warning(str(error))
+    value = None
+run_peer_panel(value)
+
+st.divider()
+st.subheader("Saved comparisons")
+labelled = {}
+if config.data_source_mode() != "files":
+    try:
+        for ref in peer_runs.saved_reports():
+            label = (f"{ref['ticker']} {ref['year']} vs {', '.join(ref['peers'])} | "
+                     f"Items {', '.join(ref['items'])} | {ref['target_selection'].replace('_', ' ')} | PostgreSQL")
+            labelled[label] = ("postgres", ref)
+            if st.session_state.get("peer_finished_selection") == peer_runs.selection_key(ref):
+                st.session_state["sel_peer"] = label
+                del st.session_state["peer_finished_selection"]
+    except peer_runs.RunError as error:
+        st.warning(str(error))
+for path in reports.list_peer_files():
+    try:
+        label = f"{reports.peer_label(path)} | Local file"
+        if label in labelled:
+            label += f" | {path.parent}"
+        labelled[label] = ("files", path)
+    except data.DataError:
+        continue
+if not labelled:
+    st.info("No peer comparison output was found yet. Check prerequisites and start a comparison above.")
     st.stop()
 
-labelled = {}
-for path in files:
-    try:
-        labelled[f"{reports.peer_label(path)}"] = path
-    except Exception:  # noqa: BLE001
-        continue
 st.sidebar.header("Comparison")
 choice = st.sidebar.selectbox("Target, year and peers", list(labelled), key="sel_peer")
-path = labelled[choice]
+source, ref = labelled[choice]
 try:
-    peer = reports.load_peer(path)
-except data.DataError as error:
+    peer = peer_runs.load_report(ref) if source == "postgres" else reports.load_peer(ref)
+except (data.DataError, peer_runs.RunError) as error:
     st.error(str(error))
     st.stop()
+st.caption("Report source: PostgreSQL" if source == "postgres" else "Report source: local file")
 
 if peer.get("_sample_data"):
     st.warning(components.safe(f"Sample data: {peer['_sample_data']}"))
 if not peer.get("run_complete", True):
     st.warning(f"Partial run: {peer.get('jobs_completed', '?')} of {peer.get('jobs_planned', '?')} target disclosures compared. "
-               "Rerun the agent with the same arguments to continue.")
+               "Use the controls above with the same target, peers, year, Items and target selection to resume.")
 
 rows = reports.peer_rows(peer)
 if not rows:

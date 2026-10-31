@@ -1,10 +1,11 @@
 """Backend launch and progress mapping for the dashboard, without external requests."""
 import json
+import importlib.util
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from sec_ui import pipeline_runs
 
@@ -16,6 +17,9 @@ class PipelineRunUiTests(unittest.TestCase):
         self.root_patch = patch.object(pipeline_runs, "ROOT", Path(self.temp.name))
         self.root_patch.start()
         self.addCleanup(self.root_patch.stop)
+        self.postgres_patch = patch.object(pipeline_runs, "_postgres_documents", return_value={})
+        self.postgres_patch.start()
+        self.addCleanup(self.postgres_patch.stop)
 
     def test_database_progress_only_marks_completed_save_steps(self):
         progress = {"stages": [
@@ -26,7 +30,7 @@ class PipelineRunUiTests(unittest.TestCase):
             {"stage": "llm_changes_2023_2024", "phase": "change-analysis", "status": "complete"},
         ]}
         phases = {phase["phase"]: phase for phase in pipeline_runs.phase_progress([2023, 2024, 2025], progress)}
-        self.assertEqual((phases["preprocessing"]["saved"], phases["preprocessing"]["total"]), (1, 4))
+        self.assertEqual((phases["preprocessing"]["saved"], phases["preprocessing"]["total"]), (1, 6))
         self.assertEqual(phases["preprocessing"]["status"], "running")
         self.assertEqual(phases["alignment"]["saved"], 1)
         self.assertEqual(phases["alignment"]["status"], "running")
@@ -149,6 +153,165 @@ class PipelineRunUiTests(unittest.TestCase):
             with patch.object(pipeline_runs.subprocess, "Popen", return_value=SimpleNamespace(pid=12345)), \
                  patch.object(pipeline_runs, "Thread"):
                 self.assertEqual(pipeline_runs.start_run("nvda", [2023, 2024])["status"], "running")
+
+    def test_database_progress_takes_precedence_over_stale_local_status(self):
+        folder = pipeline_runs.run_folder("amd", [2023, 2024])
+        folder.mkdir(parents=True)
+        (folder / "status.json").write_text(json.dumps({"full_pipeline_complete": True, "stages": []}))
+        current = {"stages": [{"stage": "text_2023", "phase": "preprocessing", "status": "running"}]}
+        key = pipeline_runs._status_key("amd", [2023, 2024])
+        with patch.object(pipeline_runs, "_postgres_documents", return_value={key: current}):
+            _, progress = pipeline_runs.read_run("amd", [2023, 2024])
+        self.assertEqual(progress, current)
+
+    def test_database_checkpoints_do_not_read_stale_local_batches(self):
+        folder = pipeline_runs.ROOT / "data/disclosures/amd/2023"
+        folder.mkdir(parents=True)
+        (folder / "token_usage.json").write_text(json.dumps({"planned_batches": 99, "run_complete": True}))
+        status = pipeline_runs._status_key("amd", [2023, 2024])
+        with patch.object(pipeline_runs, "_postgres_documents", return_value={status: {"stages": []}}):
+            rows = pipeline_runs.stage_progress("amd", [2023, 2024], "extract_disclosures_and_save")
+        self.assertIsNone(rows[0]["total"])
+        with patch.object(pipeline_runs, "_postgres_documents", return_value={
+            status: {"stages": []},
+            "disclosures/amd/2023/token_usage.json": {
+                "planned_batches": 10, "pending_batches": ["b9", "b10"], "failed_batches": [],
+            },
+        }):
+            rows = pipeline_runs.stage_progress("amd", [2023, 2024], "extract_disclosures_and_save")
+        self.assertEqual((rows[0]["done"], rows[0]["total"]), (8, 10))
+
+    def test_database_alignment_jobs_are_counted_without_local_files(self):
+        status = pipeline_runs._status_key("amd", [2023, 2024])
+        prefix = "alignments/amd/2023-2024"
+        documents = {
+            status: {"stages": []},
+            f"{prefix}/candidate_matches.json": {str(i): [] for i in range(5)},
+            f"{prefix}/jobs/matching_001.json": {"anchors": ["0", "1"]},
+        }
+        with patch.object(pipeline_runs, "_postgres_documents", return_value=documents):
+            row = pipeline_runs.stage_progress("amd", [2023, 2024], "align_and_save_2023_2024")[0]
+        self.assertEqual((row["done"], row["total"]), (2, 5))
+        documents[f"{prefix}/jobs/matching_002.json"] = {"anchors": ["2", "3", "4"]}
+        documents[f"{prefix}/proposed_groups.json"] = [{"group_id": i} for i in range(3)]
+        documents[f"{prefix}/jobs/verification_001.json"] = {"groups": [{}], "result": [{}]}
+        with patch.object(pipeline_runs, "_postgres_documents", return_value=documents):
+            row = pipeline_runs.stage_progress("amd", [2023, 2024], "align_and_save_2023_2024")[0]
+        self.assertEqual((row["done"], row["total"]), (1, 3))
+
+    def test_table_progress_waits_for_each_years_database_save(self):
+        progress = {"stages": [{"stage": "api_tables_and_save", "phase": "preprocessing", "status": "complete"}]}
+        phase = pipeline_runs.phase_progress([2023, 2024], progress)[0]
+        self.assertEqual((phase["saved"], phase["total"]), (0, 4))
+        progress["stages"].append({"stage": "save_xbrl_2023", "phase": "preprocessing", "status": "complete"})
+        phase = pipeline_runs.phase_progress([2023, 2024], progress)[0]
+        self.assertEqual((phase["saved"], phase["total"]), (1, 4))
+
+    def test_synthesis_is_running_until_report_has_been_saved(self):
+        progress = {"stages": [{"stage": "synthesis_and_save", "phase": "synthesis", "status": "running"}]}
+        phase = pipeline_runs.phase_progress([2023, 2024], progress)[-1]
+        self.assertEqual((phase["phase"], phase["status"], phase["saved"]), ("synthesis", "running", 0))
+        progress["stages"][0]["status"] = "complete"
+        phase = pipeline_runs.phase_progress([2023, 2024], progress)[-1]
+        self.assertEqual((phase["status"], phase["saved"]), ("complete", 1))
+
+    def test_database_progress_query_is_read_only_and_limited_to_checkpoints(self):
+        from sec_ui import data
+
+        self.postgres_patch.stop()
+        key = pipeline_runs._status_key("amd", [2023, 2024])
+        connection = MagicMock()
+        connection.__enter__.return_value = connection
+        cursor = connection.cursor.return_value.__enter__.return_value
+        cursor.fetchone.return_value = ("pipeline_artifacts",)
+        cursor.fetchall.return_value = [(key, json.dumps({"stages": []}).encode())]
+        with patch.object(data, "_postgres_connection", return_value=connection):
+            documents = pipeline_runs._postgres_documents([key], "alignments/amd/2023-2024/jobs/")
+        self.assertTrue(connection.read_only)
+        self.assertEqual(documents, {key: {"stages": []}})
+        self.assertEqual(cursor.execute.call_args.args[1],
+                         ("main", [key], "alignments/amd/2023-2024/jobs/"))
+        self.assertIn("(matching|verification)", cursor.execute.call_args.args[0])
+
+    def test_invalid_database_status_has_a_readable_error(self):
+        from sec_ui import data
+
+        self.postgres_patch.stop()
+        key = pipeline_runs._status_key("amd", [2023, 2024])
+        connection = MagicMock()
+        connection.__enter__.return_value = connection
+        cursor = connection.cursor.return_value.__enter__.return_value
+        cursor.fetchone.return_value = ("pipeline_artifacts",)
+        cursor.fetchall.return_value = [(key, b'{invalid')]
+        with patch.object(data, "_postgres_connection", return_value=connection), \
+             self.assertRaisesRegex(pipeline_runs.RunError, "Invalid pipeline progress"):
+            pipeline_runs._postgres_documents([key])
+
+
+@unittest.skipUnless(importlib.util.find_spec("streamlit"), "Streamlit is not installed")
+class RunPipelinePageTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        for context in (
+            patch.object(pipeline_runs, "ROOT", Path(self.temp.name)),
+            patch.object(pipeline_runs, "_postgres_documents", return_value={}),
+        ):
+            context.start()
+            self.addCleanup(context.stop)
+
+    def page(self):
+        from streamlit.testing.v1 import AppTest
+
+        path = Path(__file__).resolve().parents[1] / "app/pages/0_Run_Pipeline.py"
+        page = AppTest.from_file(str(path), default_timeout=20).run()
+        self.assertFalse(page.exception, [error.value for error in page.exception])
+        return page
+
+    def test_download_retry_remains_running_and_recovery_is_explained(self):
+        progress = {"stages": [{"stage": "text_2023", "phase": "preprocessing", "status": "running"}]}
+        with patch.object(pipeline_runs, "read_run", return_value=({"status": "running"}, progress)), \
+             patch.object(pipeline_runs, "log_tail", return_value="SEC download timed out; retrying extraction with 180s timeout."):
+            page = self.page()
+        self.assertFalse(page.error)
+        self.assertTrue(any("Missing sections are checked with AI" in message.value for message in page.info))
+        self.assertTrue(any("retrying extraction with 180s" in code.value for code in page.code))
+        self.assertTrue(any(status.state == "running" for status in page.get("status")))
+
+    def test_synthesis_keeps_the_page_at_five_of_six_until_saved(self):
+        years = [2023, 2024, 2025]
+        progress = {"stages": [
+            {"stage": name, "phase": phase, "status": "complete"}
+            for phase, saves in pipeline_runs.database_saves(years).items()
+            if phase != "synthesis" for _, name in saves
+        ] + [{"stage": "synthesis_and_save", "phase": "synthesis", "status": "running"}]}
+        with patch.object(pipeline_runs, "read_run", return_value=({"status": "running"}, progress)):
+            page = self.page()
+        self.assertFalse(page.success)
+        self.assertTrue(any("Preparing the synthesis report" in message.value for message in page.info))
+        self.assertTrue(any("5 of 6 stages complete" in row.text for row in page.get("progress")))
+
+    def test_completed_database_run_shows_all_six_stages(self):
+        years = [2023, 2024, 2025]
+        status = {"full_pipeline_complete": True, "stages": [
+            {"stage": name, "phase": phase, "status": "complete"}
+            for phase, saves in pipeline_runs.database_saves(years).items() for _, name in saves
+        ]}
+        key = pipeline_runs._status_key("amd", years)
+        with patch.object(pipeline_runs, "_postgres_documents", return_value={key: status}):
+            page = self.page()
+        self.assertTrue(any("All 6 stages" in message.value for message in page.success))
+        self.assertTrue(any("6 of 6 stages complete" in row.text for row in page.get("progress")))
+        self.assertTrue(any("6 of 6 outputs loaded" in row.value for row in page.caption))
+
+    def test_exhausted_download_retries_show_stopped_and_resume(self):
+        progress = {"stages": [{"stage": "text_2023", "phase": "preprocessing", "status": "stopped", "exit_code": 75}]}
+        job = {"status": "stopped", "run_id": "timeout", "exit_code": 75}
+        with patch.object(pipeline_runs, "read_run", return_value=(job, progress)):
+            page = self.page()
+        self.assertTrue(any("Pipeline stopped" in message.value for message in page.error))
+        self.assertTrue(any(button.label == "Resume pipeline" for button in page.button))
+        self.assertFalse(page.success)
 
 
 if __name__ == "__main__":

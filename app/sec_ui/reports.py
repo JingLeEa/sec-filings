@@ -192,7 +192,7 @@ def list_peer_files() -> list:
     root = config.peer_dir()
     if not root.is_dir():
         return []
-    return sorted(root.glob("*/*/peer_comparison.json"))
+    return sorted({*root.glob("*/*/peer_comparison.json"), *root.glob("*/*/*/peer_comparison.json")})
 
 
 def load_peer(path) -> dict:
