@@ -14,7 +14,7 @@ from copy import deepcopy
 from decimal import Decimal, InvalidOperation
 import hashlib
 import json
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import sys
 from urllib.parse import urlparse

@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections import defaultdict
 import hashlib
 import io
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 from urllib.request import Request, urlopen
 from zipfile import ZipFile
@@ -141,11 +141,13 @@ def load_dictionary(year, cache=Path('data/taxonomy_cache'), offline=False):
         result = build_dictionary(package, year)
         cache.mkdir(parents=True, exist_ok=True)
         # Do not save failed/partial downloads as valid cached packages.
-        from tempfile import NamedTemporaryFile
-        with NamedTemporaryFile(dir=cache, delete=False) as tmp:
-            temp_path = Path(tmp.name)
-            tmp.write(package)
-        temp_path.replace(package_path)
+        from uuid import uuid4
+        temp_path = package_path.with_name('.' + package_path.name + '.' + uuid4().hex + '.tmp')
+        try:
+            temp_path.write_bytes(package)
+            temp_path.replace(package_path)
+        finally:
+            temp_path.unlink(missing_ok=True)
         api.write_json(result, index_path)
         return result
     package = package_path.read_bytes()

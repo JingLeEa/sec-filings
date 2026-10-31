@@ -5,7 +5,7 @@ import argparse
 import json
 import sys
 from dataclasses import dataclass
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 from .disclosures import ROOT, connection_arguments
 from .pipeline_snapshots import ALIGNMENT_FILES, folder_documents, publish

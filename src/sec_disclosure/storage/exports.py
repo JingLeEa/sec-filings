@@ -5,7 +5,7 @@ import argparse
 from collections import Counter
 import json
 import os
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import sys
 import tempfile

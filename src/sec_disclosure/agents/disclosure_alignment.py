@@ -11,7 +11,7 @@ import sqlite3
 import sys
 from collections import Counter, defaultdict
 from copy import deepcopy
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 from sec_disclosure.llm.client import LLMError
 from sec_disclosure.llm.config import load_config
@@ -405,7 +405,7 @@ def regroup_saved_report(output, data, *, extraction_policy_only=False):
                      "review_candidates.json", "unmatched_previous.json",
                      "unmatched_current.json", "run_summary.json", "regrouping_summary.json", "extraction_policy_summary.json"):
         if (output / filename).exists():
-            shutil.copy2(output / filename, archive / filename)
+            (archive / filename).write_bytes((output / filename).read_bytes())
     write_alignment_reports(output, report, usage)
     summary = {"policy": GROUPING_POLICY, "assignment_policy": ASSIGNMENT_POLICY,
                "additional_api_requests": 0, "additional_api_tokens": 0,
@@ -764,9 +764,10 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
                 raise ValueError("This saved run predates same-Item-only comparison. Start a fresh run with a new --output-dir; legacy cross-Item jobs cannot be resumed or revalidated under this scope.")
             if previous_manifest != manifest:
                 def unchanged(value):
+                    from sec_disclosure.storage.artifacts import canonical_artifact_path
                     comparable = {key: item for key, item in value.items()
                                   if key not in {"implementation_hashes", "orchestration"}}
-                    comparable['input_hashes'] = {str(Path(key).resolve()): item
+                    comparable['input_hashes'] = {canonical_artifact_path(Path(key).resolve()): item
                                                   for key, item in value['input_hashes'].items()}
                     return comparable
                 revalidate = args.revalidate_cache or args.input_source == 'postgres'

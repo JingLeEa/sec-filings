@@ -20,7 +20,7 @@ from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from typing import Any
 from urllib.parse import quote, urlparse
 from urllib.error import HTTPError, URLError
