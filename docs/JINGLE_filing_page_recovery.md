@@ -123,10 +123,11 @@ agent log for cached mapping activity. The enabled flag and output files alone
 do not establish which stage produced the text.
 
 `scripts/run_full_pipeline.py` inherits automatic page fallback from the
-extractor's defaults. It does not expose or forward page-recovery controls.
-Use `extract_filings.py` directly to disable recovery or change the page cache
-directory. Full-pipeline runs use repository `data/filing_page_cache/` even with
-a custom `--data-dir`.
+extractor's defaults. It does not expose page-recovery controls, but internally
+sets the page cache to PostgreSQL `pipeline_artifacts`, under the selected cache
+namespace's `filing_page_cache/` prefix. This remains true with custom
+`--data-dir` and `--save-local-output` options. Use `extract_filings.py` directly
+to disable recovery or choose a standalone cache directory.
 
 ## Boundaries, cache, and limitations
 
@@ -156,8 +157,9 @@ a custom `--data-dir`.
   narrative-block projection contains no text for it. This feature preserves
   the existing narrative table-filtering policy; source-table text can still
   require separate review or the existing table extraction path.
-- A filing-wide page map and successful individual requests are cached under
-  `data/filing_page_cache/`. The key includes source content, configured endpoint
+- A filing-wide page map and successful individual requests are cached in
+  PostgreSQL during full-pipeline runs. Standalone extraction and comparison
+  default to `data/filing_page_cache/`. The key includes source content, configured endpoint
   and model, and mapping-policy version. Credentials are not stored. The request
   cache includes public filing evidence, responses, usage, and actual model.
 - `--page-cache-dir` changes the comparison cache; extraction accepts

@@ -185,10 +185,11 @@ load_to_postgres.py --company <ticker> --year <year> ... --sync
 ```
 
 Both fallback stages are available automatically through the first command.
-The runner relies on the extractor's defaults and does not expose or forward
-page-recovery flags. The page cache uses the extractor's default
-`data/filing_page_cache/` relative to the repository root, including when the
-runner uses a custom `--data-dir`.
+The runner keeps the extractor's recovery defaults and internally passes a
+PostgreSQL-backed `--agent-page-cache-dir`. Page maps, pointer resolutions, and
+cached requests are stored in `pipeline_artifacts`, under the selected cache
+namespace's `filing_page_cache/` prefix. Local exports do not include this cache;
+changing `--data-dir` does not change its active storage location.
 
 SEC timeout retries also live in the extractor. A timed-out download restarts
 that filing's extraction with increasing per-download timeouts of 60, 180, then
@@ -236,8 +237,9 @@ by deterministic code.
 | `Item <n>: recovered by fallback agent ...` | A source-selected replacement passed the extractor's acceptance checks |
 | Missing-Item warning | At least one requested section remains absent |
 
-Page and pointer requests are cached under `data/filing_page_cache/` by default.
-Cached mappings can produce zero new footer requests. Baseline inventory and
+Full-pipeline runs cache page and pointer requests in PostgreSQL. The standalone
+extractor defaults to `data/filing_page_cache/` and accepts an explicit
+`--agent-page-cache-dir`. Cached mappings can produce zero new footer requests. Baseline inventory and
 range-selection requests are not covered by that page cache.
 
 Normal `*_sources.json` files record primary/incorporated document sources, not

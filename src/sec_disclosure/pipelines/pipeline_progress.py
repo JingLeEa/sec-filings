@@ -8,7 +8,7 @@ import hashlib
 import json
 
 
-# Scheduling, credentials used for SEC identification, and admission limits do
+# Storage addresses, scheduling, SEC identification and admission limits do
 # not change a completed result. In particular, raising a budget must preserve
 # completed stages and the unfinished stage's own response caches.
 EXECUTION_OPTIONS = {
@@ -16,6 +16,7 @@ EXECUTION_OPTIONS = {
     "--request-interval", "--rate-limit-cooldown", "--rate-limit-retries",
     "--max-requests", "--max-new-requests", "--max-total-tokens", "--timeout",
     "--retry-timeout", "--user-agent", "--finding-workers",
+    "--agent-page-cache-dir",
 }
 
 

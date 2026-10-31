@@ -447,7 +447,8 @@ class PostgresWorkspace:
         source = source or self.root
         destination = LocalPath(destination)
         excluded = {'requests', 'jobs', 'cache', 'graph', 'archives', 'sec_cache', 'taxonomy_cache',
-                    'change_analysis_cache', 'pipeline_runs', 'embeddings', 'validation_errors', '__storage__'}
+                    'filing_page_cache', 'change_analysis_cache', 'pipeline_runs', 'embeddings',
+                    'validation_errors', '__storage__'}
         exported = 0
         for path in source.rglob('*'):
             relative = path.relative_to(source)

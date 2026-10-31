@@ -21,6 +21,7 @@ class FullPipelineTests(unittest.TestCase):
         self.addCleanup(patch.stopall)
         self.artifacts = MemoryArtifactStore()
         patch.object(runner, 'PostgresWorkspace', side_effect=workspace_factory(self.artifacts)).start()
+        patch.object(runner.Path, 'cwd', return_value=self.root).start()
         patch.dict(os.environ, {}, clear=True).start()
         patch.object(runner, "dotenv_values", return_value={}).start()
         self.arguments = ["--ticker", "AMD", "--years", "2023", "2024", "2025",
@@ -55,21 +56,29 @@ class FullPipelineTests(unittest.TestCase):
         self.assertLess(names.index("align_and_save_2024_2025"), names.index("llm_changes_2023_2024"))
         self.assertLess(names.index("save_changes_2024_2025"), names.index("materiality_2023_2024"))
 
-    def test_text_preprocessing_inherits_extractor_recovery_defaults(self):
+    def test_text_preprocessing_keeps_recovery_defaults_and_uses_postgres_cache(self):
         from sec_disclosure.extraction.sec_10k_extractor import parse_args as extractor_args
+        from sec_disclosure.storage.artifacts import PostgresWorkspace
 
-        stages = runner.build_stages(runner.parse_args(self.arguments))
-        for stage in stages:
-            for flag in ("--agent-page-recovery", "--no-agent-page-recovery", "--agent-page-cache-dir"):
-                self.assertNotIn(flag, stage.arguments)
-            if stage.script == "extract_filings.py":
-                args = extractor_args(list(stage.arguments))
-                self.assertTrue(args.agent_page_recovery)
-                self.assertFalse(args.no_agent_fallback)
-                self.assertEqual(args.agent_page_cache_dir, Path("data/filing_page_cache"))
-                self.assertNotIn("--sec-timeout", stage.arguments)
-                self.assertNotIn("--sec-timeouts", stage.arguments)
-                self.assertEqual(args.sec_timeouts, [60, 180, 300])
+        with PostgresWorkspace('test', store=self.artifacts) as workspace:
+            runtime = runner.parse_args(self.arguments)
+            runtime.data_dir = workspace.root
+            for stage in runner.build_stages(runtime):
+                for flag in ("--agent-page-recovery", "--no-agent-page-recovery"):
+                    self.assertNotIn(flag, stage.arguments)
+                if stage.script == "extract_filings.py":
+                    args = extractor_args(list(stage.arguments))
+                    self.assertTrue(args.agent_page_recovery)
+                    self.assertFalse(args.no_agent_fallback)
+                    self.assertIs(args.agent_page_cache_dir.artifact_store, self.artifacts)
+                    self.assertEqual(args.agent_page_cache_dir.artifact_key, 'filing_page_cache')
+                    index = stage.arguments.index('--agent-page-cache-dir')
+                    legacy = runner.Stage(stage.name, stage.script,
+                                          stage.arguments[:index] + stage.arguments[index + 2:], stage.phase)
+                    self.assertEqual(runner.stage_signature(stage), runner.stage_signature(legacy))
+                    self.assertNotIn("--sec-timeout", stage.arguments)
+                    self.assertNotIn("--sec-timeouts", stage.arguments)
+                    self.assertEqual(args.sec_timeouts, [60, 180, 300])
 
     def test_every_downstream_stage_reads_postgres_and_llm_results_are_saved(self):
         stages = runner.build_stages(runner.parse_args(self.arguments))
@@ -564,6 +573,23 @@ class FullPipelineTests(unittest.TestCase):
         self.assertEqual(legacy.read_bytes(), original)
         self.assertTrue(self.progress_path.exists())
         self.assertEqual(self.run_mock_pipeline(['--data-dir', str(self.root / 'another-machine')])[1], [])
+
+    def test_existing_fallback_cache_imports_once_even_after_company_progress_migrated(self):
+        self.assertEqual(self.run_mock_pipeline()[0], 0)
+        legacy = self.root / 'data/filing_page_cache/source-hash/map.json'
+        legacy.parent.mkdir(parents=True)
+        original = b'{"scan_complete": true}'
+        legacy.write_bytes(original)
+        before = legacy.stat()
+        # A custom export root did not control the old fallback cache location.
+        self.assertEqual(self.run_mock_pipeline(['--data-dir', str(self.root / 'exports')])[1], [])
+        key = 'filing_page_cache/source-hash/map.json'
+        self.assertEqual(self.artifacts.get(key)[1], original)
+        self.assertEqual(legacy.read_bytes(), original)
+        self.assertEqual(legacy.stat().st_mtime_ns, before.st_mtime_ns)
+        self.artifacts.put(key, b'{"newer": "PostgreSQL response"}')
+        self.assertEqual(self.run_mock_pipeline()[1], [])
+        self.assertEqual(self.artifacts.get(key)[1], b'{"newer": "PostgreSQL response"}')
 
     def test_local_export_is_opt_in_and_does_not_include_request_or_progress_cache(self):
         def write_results(stage, **kwargs):

@@ -202,6 +202,13 @@ selection exits without executing stages. Another machine connected to the same
 database can reuse the cache and checkpoints; `--data-dir` only controls optional
 local exports.
 
+The Item fallback also stores page maps, pointer resolutions, and request caches
+in PostgreSQL `pipeline_artifacts`, under `filing_page_cache/` in the selected
+cache namespace. This cache is excluded from local result exports. Existing
+`data/filing_page_cache/` files beneath the working directory are imported once
+into the default namespace; the originals are left untouched. Moving the cache
+does not invalidate completed preprocessing stages.
+
 On the first run after this storage change, existing local artifacts for the
 selected ticker are imported once into PostgreSQL. Completed stage signatures
 are migrated, and old path references are resolved against database artifacts.

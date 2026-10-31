@@ -167,6 +167,58 @@ class PeerComparisonPostgresTests(unittest.TestCase):
             with checkpoint_saver(workspace.root / 'graph/checkpoints.sqlite') as saver:
                 self.assertEqual(saver.conn.execute('SELECT id FROM saved_jobs').fetchone()[0], 7)
 
+    def test_fallback_page_and_pointer_caches_persist_in_postgres_without_local_files(self):
+        from sec_disclosure.pipelines import run_full_pipeline as full
+        from sec_disclosure.extraction import sec_10k_extractor as extractor
+        from sec_disclosure.agents.filing_page_locator import locate_printed_pages, resolve_page_pointers
+        from test_filing_page_locator import CONFIG, footer
+
+        events = extractor.html_to_structure_events(
+            footer('Prior', 36) + '<p>Risk one.</p>' + footer('Risk Factors', 37)
+            + '<p>Risk two.</p>' + footer('Risk Factors', 38))
+        markers = {str(page): next(event.index for event in events if event.text.endswith(str(page)))
+                   for page in (36, 37, 38)}
+        references = [{'item': '1A', 'pages': '37-38', 'title': 'Risk Factors', 'row_id': 'T99-R1'}]
+        quote = "The firm's statements dated February 13, 2026 are included on pages F-1 through F-3."
+        pointer_events = extractor.html_to_structure_events(
+            footer('Prior', 47) + '<h2>Item 8. Financial Statements</h2><p>' + quote + '</p>' + footer('Main', 48))
+        pointer_markers = {'47': pointer_events[0].index, '48': pointer_events[-1].index}
+        pointer_references = [{'item': '8', 'pages': '48', 'title': 'Financial Statements', 'row_id': 'T99-R1'}]
+        responses = [CompletionResult(json.dumps({'markers': [
+            {'page': page, 'source_block_id': source_id} for page, source_id in markers.items()]}),
+            'test-model', 'stop', {'prompt_tokens': 10, 'completion_tokens': 5, 'total_tokens': 15}),
+            CompletionResult(json.dumps({'references': [{'pages': 'F-1-F-3', 'quote': quote}]}),
+                             'test-model', 'stop', None)]
+        namespace = 'fallback-' + uuid.uuid4().hex
+        with patch('sec_disclosure.agents.filing_item_fallback.request_completion', side_effect=responses) as request:
+            for invocation in range(2):
+                with PostgresWorkspace(namespace) as workspace:
+                    with patch.object(full, 'dotenv_values', return_value={}):
+                        runtime = full.parse_args(['--ticker', 'AAA', '--user-agent', 'Test test@example.com'])
+                    runtime.data_dir = workspace.root
+                    command = full.build_stages(runtime)[0]
+                    cache = extractor.parse_args(list(command.arguments)).agent_page_cache_dir
+                    self.assertIs(cache.artifact_store, workspace.store)
+                    mapped = locate_printed_pages(events, references, [], config=CONFIG, cache_dir=cache, retries=0)
+                    self.assertEqual(mapped.markers, markers)
+                    self.assertEqual(mapped.attempts, 1 if invocation == 0 else 0)
+                    recovered, attempts = resolve_page_pointers(
+                        pointer_events, pointer_references, ['8'], pointer_markers, config=CONFIG,
+                        cache_dir=cache, timeout=10)
+                    self.assertEqual(recovered[0]['pages'], 'F-1-F-3')
+                    self.assertEqual(attempts, 1 if invocation == 0 else 0)
+                    self.assertEqual(workspace.export(self.root / 'export'), 0)
+                self.assertEqual(request.call_count, 2)
+                self.assertEqual(list(self.root.iterdir()), [])
+        with psycopg.connect(**self.arguments) as conn:
+            rows = conn.execute("SELECT path,content FROM pipeline_artifacts WHERE namespace=%s AND kind='file'",
+                                (namespace,)).fetchall()
+        self.assertTrue(any(path.endswith('/map.json') for path, _ in rows))
+        self.assertTrue(any('/pointers/' in path for path, _ in rows))
+        requests = [json.loads(bytes(content)) for _, content in rows
+                    if 'requests' in json.loads(bytes(content))]
+        self.assertEqual(requests[0]['requests'][0]['usage']['total_tokens'], 15)
+
     def test_company_lock_prevents_overlapping_runs_in_different_cache_profiles(self):
         first = PostgresArtifactStore('first-profile')
         second = PostgresArtifactStore('second-profile')
@@ -260,6 +312,7 @@ class PeerComparisonPostgresTests(unittest.TestCase):
         args = ['--ticker', 'AMD', '--years', '2024', '2025', '--data-dir', str(self.root),
                 '--user-agent', 'Test test@example.com']
         with ExitStack() as stack:
+            stack.enter_context(patch.object(full.Path, 'cwd', return_value=self.root))
             for module in (full, disclosures, disclosure_alignment, materiality, synthesis):
                 stack.enter_context(patch.object(module, 'load_config', return_value=config))
             for module in (full, alignments, synthesis_storage):

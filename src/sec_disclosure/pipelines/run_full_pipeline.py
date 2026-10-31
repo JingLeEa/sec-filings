@@ -156,7 +156,8 @@ def build_stages(args, *, full=False):
 
     for year in args.years:
         add("preprocessing", f"text_{year}", "extract_filings.py", "--ticker", args.ticker, "--year", year,
-            "--company", args.ticker, "--out-dir", data / "raw", "--user-agent", args.user_agent)
+            "--company", args.ticker, "--out-dir", data / "raw", "--user-agent", args.user_agent,
+            "--agent-page-cache-dir", data / "filing_page_cache")
         # Sync only raw records. --replace deletes the filing and would cascade
         # into completed disclosures, so the full runner never uses that flag.
         add("preprocessing", f"save_text_{year}", "load_to_postgres.py", "--company", args.ticker,
@@ -355,6 +356,11 @@ def main(argv=None):
                         if state:
                             write_json(progress, state)
                         print('Imported existing artifacts into PostgreSQL; original files were retained.')
+                    # This shared cache previously ignored --data-dir and lived
+                    # under the working directory, including for custom exports.
+                    workspace.import_local(Path.cwd() / 'data/filing_page_cache',
+                                           destination=workspace.root / 'filing_page_cache',
+                                           marker='filing-page-cache')
                 code = _main(runtime)
                 if args.save_local_output and not args.dry_run:
                     prefixes = [f'raw/{args.ticker}/{year}/' for year in args.years]

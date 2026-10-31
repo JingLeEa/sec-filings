@@ -88,7 +88,8 @@ class PipelineArtifactTests(unittest.TestCase):
             root = workspace.root
             for name in ('reports/result.json', 'reports/token_usage.json', 'reports/manifest.json',
                          'reports/requests/request.json', 'reports/jobs/job.json',
-                         'reports/graph/checkpoints.sqlite', 'pipeline_runs/a/status.json'):
+                         'reports/graph/checkpoints.sqlite', 'pipeline_runs/a/status.json',
+                         'reports/filing_page_cache/fingerprint/map.json'):
                 path = root / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text('{}')
