@@ -43,6 +43,22 @@ class FullPipelineTests(unittest.TestCase):
         self.assertLess(names.index("align_and_save_2024_2025"), names.index("llm_changes_2023_2024"))
         self.assertLess(names.index("save_changes_2024_2025"), names.index("materiality_2023_2024"))
 
+    def test_text_preprocessing_inherits_extractor_recovery_defaults(self):
+        from sec_disclosure.extraction.sec_10k_extractor import parse_args as extractor_args
+
+        stages = runner.build_stages(runner.parse_args(self.arguments))
+        for stage in stages:
+            for flag in ("--agent-page-recovery", "--no-agent-page-recovery", "--agent-page-cache-dir"):
+                self.assertNotIn(flag, stage.arguments)
+            if stage.script == "extract_filings.py":
+                args = extractor_args(list(stage.arguments))
+                self.assertTrue(args.agent_page_recovery)
+                self.assertFalse(args.no_agent_fallback)
+                self.assertEqual(args.agent_page_cache_dir, Path("data/filing_page_cache"))
+                self.assertNotIn("--sec-timeout", stage.arguments)
+                self.assertNotIn("--sec-timeouts", stage.arguments)
+                self.assertEqual(args.sec_timeouts, [60, 180, 300])
+
     def test_every_downstream_stage_reads_postgres_and_llm_results_are_saved_before_semantic_analysis(self):
         stages = runner.build_stages(runner.parse_args(self.arguments))
         for stage in stages:
@@ -73,6 +89,15 @@ class FullPipelineTests(unittest.TestCase):
         materiality = next(stage for stage in stages if stage.script == "classify_materiality.py")
         self.assertEqual(alignment.arguments[alignment.arguments.index("--workers") + 1], "9")
         self.assertEqual(materiality.arguments[materiality.arguments.index("--concurrency") + 1], "9")
+
+    def test_failed_text_extraction_is_not_retried_or_saved_by_runner(self):
+        for code in (2, 75):
+            with self.subTest(code=code), patch.object(runner, "preflight"), \
+                 patch.object(runner, "execute_stage", return_value=code) as run, \
+                 redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                self.assertEqual(runner.main(self.arguments + ["--until", "preprocessing"]), code)
+            self.assertEqual(run.call_count, 1)
+            self.assertEqual(run.call_args.args[0].script, "extract_filings.py")
 
     def test_extraction_api_cap_tracks_selected_year_and_batch_workers_unless_explicit(self):
         for options, expected in ((["--workers", "2", "--batch-workers", "4"], 8),

@@ -24,6 +24,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import parse_qs, quote, urljoin, urlparse
+from urllib.error import URLError
 from urllib.request import Request, urlopen
 
 
@@ -33,6 +34,9 @@ ITEM_OUTPUT_ORDER = SUPPORTED_ITEMS
 SEC_ARCHIVES_BASE = "https://www.sec.gov/Archives/edgar/data"
 SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 SEC_SUBMISSIONS_BASE = "https://data.sec.gov/submissions"
+DEFAULT_SEC_TIMEOUT = 60
+DEFAULT_SEC_TIMEOUTS = (DEFAULT_SEC_TIMEOUT, 180, 300)
+SEC_TIMEOUT_EXIT_CODE = 75
 AUTO_ITEM15_POINTER_MAX_CHARS = 1800
 ITEM_ENDS = {
     "1": ("1A", "1B", "1C", "2"),
@@ -905,7 +909,8 @@ def normalize_source(source: str) -> str:
     return source
 
 
-def fetch_url_bytes(url: str, user_agent: str, accept: str = "text/html,application/xhtml+xml,text/plain;q=0.9,*/*;q=0.8") -> bytes:
+def fetch_url_bytes(url: str, user_agent: str, accept: str = "text/html,application/xhtml+xml,text/plain;q=0.9,*/*;q=0.8",
+                    *, timeout: float = DEFAULT_SEC_TIMEOUT) -> bytes:
     request = Request(
         url,
         headers={
@@ -914,12 +919,24 @@ def fetch_url_bytes(url: str, user_agent: str, accept: str = "text/html,applicat
             "Accept": accept,
         },
     )
-    with urlopen(request, timeout=60) as response:
+    with urlopen(request, timeout=timeout) as response:
         return response.read()
 
 
-def fetch_json(url: str, user_agent: str) -> dict:
-    data = fetch_url_bytes(url, user_agent, accept="application/json")
+def timeout_option(timeout: float) -> dict[str, float]:
+    """Keep default call signatures compatible with existing extraction callers."""
+    return {"timeout": timeout} if timeout != DEFAULT_SEC_TIMEOUT else {}
+
+
+def is_sec_timeout(error: BaseException) -> bool:
+    """Recognize direct and urllib-wrapped network timeouts."""
+    return isinstance(error, TimeoutError) or (
+        isinstance(error, URLError) and isinstance(error.reason, TimeoutError)
+    )
+
+
+def fetch_json(url: str, user_agent: str, *, timeout: float = DEFAULT_SEC_TIMEOUT) -> dict:
+    data = fetch_url_bytes(url, user_agent, accept="application/json", **timeout_option(timeout))
     try:
         result = json.loads(data)
     except json.JSONDecodeError as exc:
@@ -936,11 +953,11 @@ def normalize_cik(value: str) -> str:
     return f"{int(digits):010d}"
 
 
-def resolve_ticker_cik(ticker: str, user_agent: str) -> str:
+def resolve_ticker_cik(ticker: str, user_agent: str, *, timeout: float = DEFAULT_SEC_TIMEOUT) -> str:
     wanted = ticker.strip().upper()
     if not wanted:
         raise ValueError("Ticker cannot be blank.")
-    directory = fetch_json(SEC_TICKERS_URL, user_agent)
+    directory = fetch_json(SEC_TICKERS_URL, user_agent, **timeout_option(timeout))
     matches = [
         entry
         for entry in directory.values()
@@ -972,8 +989,9 @@ def sec_document_url(cik: str, filing: dict) -> str:
     return f"{SEC_ARCHIVES_BASE}/{int(cik)}/{accession.replace('-', '')}/{quote(document, safe='/')}"
 
 
-def discover_10k_filing(cik: str, fiscal_year: str, user_agent: str) -> dict:
-    submissions = fetch_json(f"{SEC_SUBMISSIONS_BASE}/CIK{cik}.json", user_agent)
+def discover_10k_filing(cik: str, fiscal_year: str, user_agent: str,
+                        *, timeout: float = DEFAULT_SEC_TIMEOUT) -> dict:
+    submissions = fetch_json(f"{SEC_SUBMISSIONS_BASE}/CIK{cik}.json", user_agent, **timeout_option(timeout))
     filings = submissions.get("filings", {})
     recent = filings.get("recent", {})
     rows = submissions_rows(recent)
@@ -986,7 +1004,7 @@ def discover_10k_filing(cik: str, fiscal_year: str, user_agent: str) -> dict:
             name = str(entry.get("name", ""))
             if not re.fullmatch(r"CIK\d{10}-submissions-\d+\.json", name):
                 raise RuntimeError(f"Unrecognized SEC historical submissions filename: {name}")
-            historical = fetch_json(f"{SEC_SUBMISSIONS_BASE}/{name}", user_agent)
+            historical = fetch_json(f"{SEC_SUBMISSIONS_BASE}/{name}", user_agent, **timeout_option(timeout))
             rows.extend(submissions_rows(historical.get("filings", {}).get("recent", historical)))
             loaded_history.append(name)
             candidates = matching_10k_rows(rows, fiscal_year)
@@ -1020,11 +1038,13 @@ def load_filing_from_sec_api(args: argparse.Namespace) -> tuple[str, str, str]:
         raise ValueError("SEC API extraction requires --user-agent or SEC_USER_AGENT with your name/email.")
     if not args.year:
         raise ValueError("SEC API extraction requires --year, e.g. --year 2024.")
-    cik = resolve_ticker_cik(args.ticker, args.user_agent) if args.ticker else normalize_cik(args.cik)
-    filing = discover_10k_filing(cik, args.year, args.user_agent)
+    download_timeout = getattr(args, "sec_timeout", DEFAULT_SEC_TIMEOUT)
+    timeout_kwargs = timeout_option(download_timeout)
+    cik = resolve_ticker_cik(args.ticker, args.user_agent, **timeout_kwargs) if args.ticker else normalize_cik(args.cik)
+    filing = discover_10k_filing(cik, args.year, args.user_agent, **timeout_kwargs)
     source_url = sec_document_url(cik, filing)
     company = (args.company or args.ticker or args.cik or "unknown").lower()
-    html_text = fetch_url_bytes(source_url, args.user_agent).decode("utf-8", errors="replace")
+    html_text = fetch_url_bytes(source_url, args.user_agent, **timeout_kwargs).decode("utf-8", errors="replace")
     return html_text, source_url, company
 
 
@@ -1134,18 +1154,19 @@ def filing_index_source(source: str) -> str:
     return str(indexes[0])
 
 
-def read_html_source(source: str, user_agent: str) -> str:
+def read_html_source(source: str, user_agent: str, *, timeout: float = DEFAULT_SEC_TIMEOUT) -> str:
     if is_url(source):
         if not user_agent.strip():
             raise ValueError("Referenced-report downloads require --user-agent or SEC_USER_AGENT.")
-        return fetch_url_bytes(source, user_agent).decode("utf-8", errors="replace")
+        return fetch_url_bytes(source, user_agent, **timeout_option(timeout)).decode("utf-8", errors="replace")
     return Path(source).read_text(encoding="utf-8", errors="replace")
 
 
-def discover_referenced_report(source: str, user_agent: str) -> tuple[str, dict[str, str]]:
+def discover_referenced_report(source: str, user_agent: str,
+                               *, timeout: float = DEFAULT_SEC_TIMEOUT) -> tuple[str, dict[str, str]]:
     index_source = filing_index_source(source)
     parser = FilingDocumentIndex()
-    parser.feed(read_html_source(index_source, user_agent))
+    parser.feed(read_html_source(index_source, user_agent, **timeout_option(timeout)))
     candidates = [doc for doc in parser.documents if re.fullmatch(r"EX-13(?:\.\d+)?", doc["type"], re.I)]
     if not candidates:
         candidates = [doc for doc in parser.documents if doc["type"].upper().startswith("EX-")
@@ -1535,13 +1556,14 @@ def blocks_for_exact_title(
 
 
 def follow_report_references(section_blocks: dict[str, list[FilingBlock]], source: str,
-                             user_agent: str, include_overlaps: bool = False) -> tuple[dict, dict]:
+                             user_agent: str, include_overlaps: bool = False,
+                             *, timeout: float = DEFAULT_SEC_TIMEOUT) -> tuple[dict, dict]:
     references = {item: reference for item, blocks in section_blocks.items()
                   if (reference := report_reference(blocks)) is not None}
     if not references:
         return section_blocks, {}
-    report_source, document = discover_referenced_report(source, user_agent)
-    events = html_to_structure_events(read_html_source(report_source, user_agent))
+    report_source, document = discover_referenced_report(source, user_agent, **timeout_option(timeout))
+    events = html_to_structure_events(read_html_source(report_source, user_agent, **timeout_option(timeout)))
     paths = [path for ref in references.values() for path in ref["section_paths"]]
     nodes = report_outline(events, paths)
     selections = {item: referenced_section_ranges(nodes, ref["section_paths"]) for item, ref in references.items()}
@@ -2407,6 +2429,27 @@ def item15_reference_trigger(text: str) -> bool:
     page_reference = bool(re.search(r"\bpages?\s+\d{1,4}", normalized))
     glossary_target = "glossary of terms" in normalized
     return pointer_phrase and (financial_target or glossary_target or page_reference)
+
+
+def is_pointer_only_item(item: str, blocks: list[FilingBlock], *, extended: bool = False) -> bool:
+    """Flag a short Item 7/8 navigation paragraph that still lacks its body."""
+    if item not in {"7", "8"} or not blocks or len(blocks) > 3:
+        return False
+    text = re.sub(r"\s+", " ", normalize_typography(section_reference_text(blocks))).strip().casefold()
+    if not text or len(text) > 450:
+        return False
+    lead = re.split(r"(?<=[.!?])\s+", text, maxsplit=1)[0]
+    pointer = re.search(
+        r"\b(?:refer(?:red)? to|see|appears? on pages?|included on pages?|"
+        r"set forth|incorporated by reference)\b", lead,
+    )
+    if extended and not pointer:
+        pointer = re.search(r"\bincluded in\b", lead)
+    destination = re.search(
+        r"\b(?:pages?\s+\d|item\s+\d|management.s discussion|financial statements?|"
+        r"notes? to|annual report|appendix|exhibit)\b", lead,
+    )
+    return bool(pointer and destination)
 
 
 def should_auto_include_item15(section_blocks: dict[str, list[FilingBlock]], requested_items: Iterable[str]) -> bool:
@@ -3721,6 +3764,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Items to extract (space-separated). Default: 1 1A 7 8. Item 15 can be requested explicitly or auto-included when Item 7/8 points to it.",
     )
     parser.add_argument("--out-dir", default="data/raw", help="Directory for extracted TXT/JSON files. Default: data/raw.")
+    timeouts = parser.add_mutually_exclusive_group()
+    timeouts.add_argument("--sec-timeout", type=float,
+                          help="Seconds per SEC download for a single extraction attempt, without timeout retries.")
+    timeouts.add_argument("--sec-timeouts", nargs="+", type=float, metavar="SECONDS",
+                          help="SEC download timeouts for successive extraction attempts (default: 60 180 300). "
+                               "Only download timeouts trigger a longer attempt.")
     parser.add_argument("--raw-dir", help=argparse.SUPPRESS)
     parser.add_argument("--no-follow-references", action="store_true",
                         help="Inspect only the primary filing; do not resolve Items incorporated from another report.")
@@ -3728,16 +3777,116 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
                         help="Keep referenced subsections in both Items. By default, a subsection assigned to a more specific requested Item is excluded from the broader Item.")
     parser.add_argument("--max-chars", type=int, default=1800, help="Maximum characters per disclosure chunk.")
     parser.add_argument("--min-chars", type=int, default=120, help="Small paragraphs are merged until roughly this size.")
+    parser.add_argument("--no-agent-fallback", action="store_true",
+                        help="Disable the LLM fallback for Items missing after deterministic extraction.")
+    parser.add_argument("--agent-check-items", nargs="+", type=normalize_item, choices=SUPPORTED_ITEMS,
+                        default=[], help="Also re-check these Items with the LLM fallback (use for suspect boundaries).")
+    parser.add_argument("--env-file", help="SoCLaaS settings file for the fallback agent; default: user SoCLaaS config.")
+    parser.add_argument("--agent-timeout", type=float, default=180,
+                        help="Seconds per fallback LLM request (default: 180).")
+    parser.add_argument("--agent-max-tokens", type=int, default=1200,
+                        help="Maximum completion tokens per fallback request (default: 1200).")
+    parser.add_argument("--agent-page-recovery", action=argparse.BooleanOptionalAction, default=True,
+                        help="Automatically recover unresolved Item pages with the LLM (default: enabled); --no-agent-page-recovery disables this stage.")
+    parser.add_argument("--agent-page-cache-dir", type=Path, default=Path("data/filing_page_cache"),
+                        help="Cache for experimental printed-page mapping requests.")
     parser.add_argument(
         "--user-agent",
         default=os.environ.get("SEC_USER_AGENT", ""),
         help="SEC download User-Agent. Prefer setting SEC_USER_AGENT='Name email@example.com'.",
     )
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if args.sec_timeout is not None and not 0 < args.sec_timeout < float("inf"):
+        parser.error("--sec-timeout must be positive")
+    if args.sec_timeouts is None:
+        args.sec_timeouts = [args.sec_timeout] if args.sec_timeout is not None else list(DEFAULT_SEC_TIMEOUTS)
+    if any(not 0 < timeout < float("inf") for timeout in args.sec_timeouts) or any(
+            later <= earlier for earlier, later in zip(args.sec_timeouts, args.sec_timeouts[1:])):
+        parser.error("--sec-timeouts must be positive, finite, and strictly increasing")
+    args.sec_timeout = args.sec_timeouts[0]
+    return args
+
+
+def apply_item_fallback(
+    raw_html: str,
+    blocks: list[FilingBlock],
+    section_blocks: dict[str, list[FilingBlock]],
+    targets: list[str],
+    args: argparse.Namespace,
+    *,
+    already_merged: bool = False,
+    warn_missing_config: bool = True,
+) -> set[str]:
+    """Apply only validated, nonoverlapping recovered Items."""
+    if not targets or args.no_agent_fallback:
+        return set()
+    from sec_disclosure.agents.filing_item_locator import ITEMS, locate_item_blocks
+    from sec_disclosure.llm.config import load_config
+
+    targets = [item for item in targets if item in ITEMS]
+    if not targets:
+        return set()
+
+    try:
+        config = load_config(args.env_file)
+    except ValueError as exc:
+        if warn_missing_config:
+            print(f"Warning: Item fallback agent could not start: {exc}", file=sys.stderr)
+        return set()
+    print("Item fallback agent: checking " + ", ".join(targets) + "...", flush=True)
+    try:
+        fallback = locate_item_blocks(
+            raw_html, blocks, targets, config=config, timeout=args.agent_timeout,
+            max_tokens=args.agent_max_tokens, retries=3,
+            page_recovery=getattr(args, "agent_page_recovery", True),
+            page_cache_dir=getattr(args, "agent_page_cache_dir", Path("data/filing_page_cache")),
+        )
+    except (ValueError, RuntimeError, OSError) as exc:
+        print(f"Warning: Item fallback agent could not complete: {exc}", file=sys.stderr)
+        return set()
+    recovered_items = set()
+    for item, recovered in fallback.sections.items():
+        source_indices = {block.index for block in recovered}
+        overlaps = {
+            other_item
+            for other_item, item_blocks in section_blocks.items() if other_item != item
+            if any(block.index in source_indices for block in item_blocks)
+        }
+        if overlaps:
+            # Item 15 is supplementary in this workflow. If the model locates
+            # one of the four requested Items inside it, keep each source block
+            # under its recovered Item only. Overlaps with another core Item
+            # remain unsafe.
+            if overlaps != {"15"}:
+                print(f"Warning: Item {item} agent range overlaps another Item; keeping existing extraction.",
+                      file=sys.stderr)
+                continue
+            remaining = [block for block in section_blocks["15"]
+                         if block.index not in source_indices]
+            if remaining:
+                section_blocks["15"] = remaining
+            else:
+                section_blocks.pop("15")
+        section_blocks[item] = merge_continued_blocks(recovered) if already_merged else recovered
+        recovered_items.add(item)
+        print(f"Item {item}: recovered by fallback agent ({len(recovered)} source blocks).")
+    return recovered_items
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = parse_args(argv or sys.argv[1:])
+    args = parse_args(sys.argv[1:] if argv is None else argv)
+    for attempt, timeout in enumerate(args.sec_timeouts):
+        if attempt:
+            print(f"SEC download timed out; retrying extraction with {timeout:g}s timeout.", flush=True)
+        args.sec_timeout = timeout
+        code = extract_filing(args)
+        if code != SEC_TIMEOUT_EXIT_CODE:
+            return code
+    return SEC_TIMEOUT_EXIT_CODE
+
+
+def extract_filing(args: argparse.Namespace) -> int:
+    """Run one extraction attempt with the configured SEC download timeout."""
     api_mode = bool(args.ticker or args.cik)
 
     try:
@@ -3754,7 +3903,8 @@ def main(argv: list[str] | None = None) -> int:
             if is_url(source):
                 if urlparse(source).netloc.endswith("sec.gov") and not args.user_agent:
                     raise ValueError("SEC URL extraction requires --user-agent or SEC_USER_AGENT with your name/email.")
-                raw_html = fetch_url_bytes(source, args.user_agent).decode("utf-8", errors="replace")
+                raw_html = fetch_url_bytes(source, args.user_agent,
+                                           **timeout_option(args.sec_timeout)).decode("utf-8", errors="replace")
                 company, filename_year = infer_company_year_from_filename(Path(urlparse(source).path))
                 source_label = f"Source URL: {source}"
             else:
@@ -3768,7 +3918,7 @@ def main(argv: list[str] | None = None) -> int:
             company = (args.company or company).lower()
     except (ValueError, RuntimeError, OSError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
-        return 2
+        return SEC_TIMEOUT_EXIT_CODE if is_sec_timeout(exc) else 2
 
     if args.raw_dir:
         print("Warning: --raw-dir is deprecated and ignored; source HTML is no longer saved.", file=sys.stderr)
@@ -3805,6 +3955,13 @@ def main(argv: list[str] | None = None) -> int:
             if "15" not in section_blocks:
                 indexed_item15 = extract_indexed_section_blocks(raw_html, items=("15",))
                 section_blocks.update(indexed_item15)
+    clean_text = html_to_clean_text(raw_html)
+    plain_sections = extract_sections(clean_text, items=active_items) if not section_blocks else {}
+    fallback_targets = [
+        item for item in active_items
+        if (item not in section_blocks and item not in plain_sections) or item in args.agent_check_items
+    ]
+    recovered_items = apply_item_fallback(raw_html, blocks, section_blocks, fallback_targets, args)
     section_blocks = assign_embedded_report_blocks(
         section_blocks, source, {}, include_overlaps=args.include_reference_overlaps,
     )
@@ -3814,17 +3971,26 @@ def main(argv: list[str] | None = None) -> int:
         try:
             section_blocks, reference_audit = follow_report_references(
                 section_blocks, source, args.user_agent, include_overlaps=args.include_reference_overlaps,
+                **timeout_option(args.sec_timeout),
             )
         except (ValueError, RuntimeError, OSError) as exc:
             print(f"Error resolving incorporated report: {exc}", file=sys.stderr)
-            return 2
+            return SEC_TIMEOUT_EXIT_CODE if is_sec_timeout(exc) else 2
     section_blocks = assign_embedded_report_blocks(
         section_blocks, source, reference_audit, include_overlaps=args.include_reference_overlaps,
+    )
+    pointer_targets = [
+        item for item in ("7", "8")
+        if item in requested_items and item not in recovered_items and item not in reference_audit
+        and is_pointer_only_item(item, section_blocks.get(item, []), extended=args.agent_page_recovery)
+    ]
+    apply_item_fallback(
+        raw_html, blocks, section_blocks, pointer_targets, args,
+        already_merged=True, warn_missing_config=False,
     )
     if not args.include_reference_overlaps:
         section_blocks = deduplicate_shared_source_blocks(section_blocks, source, reference_audit)
     section_blocks = resolve_section_footnotes(section_blocks)
-    clean_text = html_to_clean_text(raw_html)
     year = args.year or filename_year or infer_year(raw_html + "\n" + clean_text, source)
 
     if section_blocks:
@@ -3837,7 +4003,7 @@ def main(argv: list[str] | None = None) -> int:
             max_chars=args.max_chars,
         )
     else:
-        sections = extract_sections(clean_text, items=requested_items)
+        sections = plain_sections or extract_sections(clean_text, items=requested_items)
         if should_auto_include_item15_from_sections(sections, requested_items):
             if "15" not in active_items:
                 active_items.append("15")
