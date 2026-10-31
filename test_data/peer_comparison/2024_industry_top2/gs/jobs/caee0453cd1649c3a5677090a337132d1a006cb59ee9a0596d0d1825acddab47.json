@@ -1,0 +1,299 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "1e49c48505e32428c1673a3f79b0a51eb5657eb5bb33aa2ff14ef904198f4e2f",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_8_D068",
+    "item": "8",
+    "target_topic": "Financial Statements Table References",
+    "target_summary": "The filing references tables presenting financial assets and liabilities carried at fair value, along with explanatory notes regarding counterparty netting impacts across hierarchy levels.",
+    "target_source_status": "needs_review",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0842",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures reference tables presenting financial assets and liabilities at fair value and explain the treatment of counterparty and cash collateral netting within the fair value hierarchy levels. The textual content is identical in structure and meaning.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_8_D079",
+            "item": "8",
+            "section": "Accounting Firm > Fair Value Measurements",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provided text references tables summarizing financial assets/liabilities at fair value and Level 3 assets, noting that counterparty netting is included within the same level and counterparty/cash collateral netting impacts derivatives across levels.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D068",
+            "item": "8",
+            "section": "Accounting Firm > Fair Value Measurements",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The filing references tables presenting financial assets and liabilities carried at fair value, along with explanatory notes regarding counterparty netting impacts across hierarchy levels.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0082",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "D068 references the Fair Value table with counterparty netting notes. The search results show D145, D134, D115 which are related to Fair Value/Trading, but none exactly match the specific 'table below presents financial assets... counterparty netting' summary in the required IDs. D134 references Note 4 for policies. D115 is Derivatives. D068 is general Fair Value table. No required ID is a direct counterpart. Thus, unmatched.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D068",
+            "item": "8",
+            "section": "Accounting Firm > Fair Value Measurements",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The filing references tables presenting financial assets and liabilities carried at fair value, along with explanatory notes regarding counterparty netting impacts across hierarchy levels.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -55,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "the",
+              "table",
+              "below",
+              "presents",
+              "financial",
+              "assets",
+              "and",
+              "liabilities",
+              "carried",
+              "at",
+              "fair",
+              "value",
+              "in",
+              "the",
+              "table",
+              "above",
+              "counterparty",
+              "netting",
+              "among",
+              "positions"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.8,
+          "reason": "Removal of specific explanatory notes regarding counterparty netting and collateral impacts on fair value measurements. These notes are critical for investors to understand how reported fair value balances are derived and the extent to which netting agreements mitigate credit risk exposure. Its absence in the extracted disclosures obscures a key aspect of financial risk management and presentation.",
+          "key_change": "Removal of fair value netting impact explanations"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D106",
+            "peer_topic": "Derivative Instrument Presentation and Netting Adjustments",
+            "peer_summary": "The table presents derivative assets and liabilities on a gross basis prior to netting, which are then adjusted to reflect counterparty and cash collateral netting effects from legally enforceable master netting agreements.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.163407,
+            "relationship": "same_topic",
+            "comparison": "Both GS and BAC disclose tables for derivative instruments that explicitly address the impact of counterparty netting and cash collateral on fair value measurements. GS states that 'Counterparty and cash collateral netting represents the impact on derivatives of netting across levels' and presents financial assets and liabilities carried at fair value. Similarly, BAC presents derivative instruments on a gross basis which are then 'adjusted on an aggregate basis to take into consideration the effects of legally enforceable master netting agreements, which include reducing the balance for counterparty netting and cash collateral received or paid.' Both disclosures focus on how legal agreements affect the reported fair value of derivatives, though BAC explicitly details the gross-to-net adjustment mechanism.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D068",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P094_S001",
+                    "paragraph_id": "gs_2024_8_P094",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The table below presents financial assets and liabilities carried at fair value.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P095_S003",
+                    "paragraph_id": "gs_2024_8_P095",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Counterparty and cash collateral netting represents the impact on derivatives of netting across levels.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D106",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P122_S003",
+                    "paragraph_id": "bac_2024_8_P122",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Balances are presented on a gross basis, prior to the application of counterparty and cash collateral netting.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P122_S004",
+                    "paragraph_id": "bac_2024_8_P122",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Total gross derivative assets and liabilities are adjusted on an aggregate basis to take into consideration the effects of legally enforceable master netting agreements, which include reducing the balance for counterparty netting and cash collateral received or paid.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D562",
+            "peer_topic": "Fair value percentage calculation methodology excluding cash collateral",
+            "peer_summary": "Percentages in the fair value tables are calculated based on total assets and liabilities measured at fair value on a recurring basis, excluding cash collateral paid or received on derivatives, because the cash collateral amounts have not been allocated to Level 1, 2, and 3 subtotals.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.104657,
+            "relationship": "same_topic",
+            "comparison": "Both GS and C provide methodological details on how cash collateral impacts the presentation of fair value hierarchy tables. GS notes that 'Counterparty and cash collateral netting represents the impact on derivatives of netting across levels,' implying collateral affects the level classification or netting. C explicitly states that because 'cash collateral paid/received has not been allocated to the Level 1, 2 and 3 subtotals,' percentages are calculated excluding such collateral. Both disclosures highlight the specific treatment of cash collateral in the context of fair value hierarchy reporting.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D068",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P095_S003",
+                    "paragraph_id": "gs_2024_8_P095",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Counterparty and cash collateral netting represents the impact on derivatives of netting across levels.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D562",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P800_S001",
+                    "paragraph_id": "c_2024_8_P800",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(3)Because the amount of the cash collateral paid/received has not been allocated to the Level 1, 2 and 3 subtotals, these percentages are calculated based on total assets and liabilities measured at fair value on a recurring basis, excluding the cash collateral paid/received on derivatives.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidate jpm_2024_8_D101 focuses on fair value hierarchy for instruments NOT carried at fair value on a recurring basis (e.g., loans), whereas the target GS disclosure focuses on financial assets and liabilities CARRIED at fair value. Candidate jpm_2024_8_D277 focuses on assets pledged in securities financing agreements and collateral received, which is a distinct topic from the fair value hierarchy and counterparty netting presentation of derivatives and financial assets/liabilities at fair value detailed in the GS filing."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D208",
+            "peer_topic": "Fair Value Reporting Basis",
+            "peer_summary": "The fair value amounts for these derivatives are reported prior to any adjustments for cash collateral or counterparty netting.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.163481,
+            "relationship": "same_topic",
+            "comparison": "Both GS and MS discuss the presentation of fair value amounts in relation to cash collateral and counterparty netting. GS states that 'Counterparty and cash collateral netting represents the impact on derivatives of netting across levels.' MS states that 'The fair value amounts as shown in the previous tables are prior to cash collateral or counterparty netting.' While GS includes the netting impact in its presented levels and MS explicitly states its figures are prior to such adjustments, both disclosures address the specific accounting treatment and disclosure of fair value amounts in the context of collateral netting.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D068",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P095_S003",
+                    "paragraph_id": "gs_2024_8_P095",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Counterparty and cash collateral netting represents the impact on derivatives of netting across levels.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D208",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P265_S001",
+                    "paragraph_id": "ms_2024_8_P265",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The fair value amounts as shown in the previous tables are prior to cash collateral or counterparty netting.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      }
+    ]
+  }
+}

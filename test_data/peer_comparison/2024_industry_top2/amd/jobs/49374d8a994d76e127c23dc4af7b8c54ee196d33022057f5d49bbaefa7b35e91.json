@@ -1,0 +1,397 @@
+{
+  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
+  "request_hash": "fb53733e368e79699a7cfcfb9c2ad69d5e2ef9067b15e4dbd9fc1331fa2fa43e",
+  "result": {
+    "target_ticker": "AMD",
+    "target_disclosure_id": "amd_2024_7_D004",
+    "item": "7",
+    "target_topic": "Balance Sheet and Debt Position",
+    "target_summary": "As of December 28, 2024, AMD held $5.1 billion in cash, cash equivalents, and short-term investments, with total debt of $1.8 billion, a decrease from $2.5 billion in 2023, following the repayment of $750 million in Senior Notes due 2024.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "amd_2023_2024_M0258",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the company's liquidity position, specifically cash, cash equivalents, short-term investments, and total debt outstanding as of year-end. The evidence confirms matching subjects: Cash ($5.8B vs $5.1B) and Total Debt ($2.5B vs $1.8B).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2023_7_D006",
+            "item": "7",
+            "section": "Overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 30, 2023, AMD held $5.8 billion in cash, cash equivalents, and short-term investments. The aggregate principal amount of total debt was $2.5 billion.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2024_7_D004",
+            "item": "7",
+            "section": "Overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 28, 2024, AMD held $5.1 billion in cash, cash equivalents, and short-term investments, with total debt of $1.8 billion, a decrease from $2.5 billion in 2023, following the repayment of $750 million in Senior Notes due 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.715102,
+            "sequence_match_ratio": 0.598291,
+            "length_ratio": 1.543478,
+            "word_count_delta": 25,
+            "added_tokens_sample": [
+              "28",
+              "2024",
+              "1",
+              "8",
+              "2023",
+              "28",
+              "2024",
+              "1",
+              "8",
+              "billion",
+              "compared",
+              "to",
+              "as",
+              "of",
+              "december",
+              "30",
+              "2023",
+              "we",
+              "repaid",
+              "our"
+            ],
+            "removed_tokens_sample": [
+              "30",
+              "2023",
+              "8",
+              "9",
+              "2022",
+              "30",
+              "2023",
+              "and",
+              "december",
+              "31",
+              "2022"
+            ]
+          },
+          "semantic": {
+            "matched_id": "amd_2023_7_D006",
+            "score": 0.976512,
+            "normalised_score": 0.9765,
+            "label": "Unchanged",
+            "rationale": "Score 97.65% of ceiling — semantically identical despite surface differences (word overlap 52%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The disclosure highlights a meaningful improvement in AMD's liquidity and capital structure, specifically the repayment of $750 million in Senior Notes and a reduction in total debt from $2.5 billion to $1.8 billion. This quantitative change significantly alters the company's financial position and leverage profile compared to the prior year.",
+          "key_change": "Debt repayment and reduction in total liabilities"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "amd_2024_2025_M0241",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "All previous disclosures and the current one report on AMD's financial condition, specifically cash, cash equivalents, short-term investments, and total debt obligations at year-end. D004, D043, and D046 provide the 2024 baseline ($5.1B cash, $1.8B debt), while D004 (2025) reports the 2025 figures ($10.6B cash, $3.3B debt).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2024_7_D004",
+            "item": "7",
+            "section": "Overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 28, 2024, AMD held $5.1 billion in cash, cash equivalents, and short-term investments, with total debt of $1.8 billion, a decrease from $2.5 billion in 2023, following the repayment of $750 million in Senior Notes due 2024.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "amd_2024_7_D043",
+            "item": "7",
+            "section": "FINANCIAL CONDITION > Liquidity and Capital Resources",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 28, 2024, AMD held $5.1 billion in cash, cash equivalents, and short-term investments, a decrease from $5.8 billion as of December 30, 2023, with 90% held domestically compared to 77% previously.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "amd_2024_7_D046",
+            "item": "7",
+            "section": "FINANCIAL CONDITION > Liquidity and Capital Resources",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Aggregate principal debt obligations were $1.8 billion as of December 28, 2024; the $750 million 2.95% Notes were repaid in June 2024, with remaining debt maturing starting in 2030.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2025_7_D004",
+            "item": "7",
+            "section": "Overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 27, 2025, AMD held $10.6 billion in cash, cash equivalents, and short-term investments (up from $5.1 billion in 2024), while total debt stood at $3.3 billion (up from $1.8 billion in 2024).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D063",
+            "peer_topic": "Liquidity sources and availability",
+            "peer_summary": "As of November 3, 2024, the company's primary liquidity sources included $9,348 million in cash and cash equivalents, expected operating cash flows, and $7.5 billion in available capacity under its unsecured revolving credit facility.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.113857,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Broadcom disclose their primary liquidity sources as of fiscal year-end, highlighting cash positions and debt facilities. AMD held $5.1 billion in cash and cash equivalents with $1.8 billion in total debt. Broadcom held significantly higher cash reserves of $9,348 million ($9.3 billion) and emphasized its $7.5 billion unsecured revolving credit facility as a key liquidity source, alongside expected operating cash flows.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D004",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P010_S001",
+                    "paragraph_id": "amd_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Cash, cash equivalents and short-term investments as of December 28, 2024 were $5.1 billion, compared to $5.8 billion at the end of 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P010_S002",
+                    "paragraph_id": "amd_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Our aggregate principal amount of total debt as of December 28, 2024 was $1.8 billion, compared to $2.5 billion as of December 30, 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D063",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P062_S001",
+                    "paragraph_id": "avgo_2024_7_P062",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Our primary sources of liquidity as of November 3, 2024 consisted of: (i) $9,348 million in cash and cash equivalents, (ii) cash we expect to generate from operations and (iii) available capacity under our $7.5 billion unsecured revolving credit facility.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_7_D106",
+            "peer_topic": "Debt Issuance and Credit Facility Updates",
+            "peer_summary": "During 2024, the company issued $2.6 billion in senior notes and remarketed $438 million in other bonds, while expanding its 5-year and 364-day credit facilities to $7.0 billion and $8.0 billion respectively, with the 364-day facility later amended in Jan 2025 to $5.0 billion.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.136463,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Intel actively manage their capital structure through debt issuance and repayment activities in FY2024, though AMD focused on repayment while Intel focused on issuance. AMD reported repaying $750 million in Senior Notes, resulting in a decrease in total debt from $2.5 billion to $1.8 billion. In contrast, Intel issued $2.6 billion in new senior notes and remarketed $438 million in other bonds, expanding its credit facilities, while also settling matured notes.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D004",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P010_S001",
+                    "paragraph_id": "amd_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Cash, cash equivalents and short-term investments as of December 28, 2024 were $5.1 billion, compared to $5.8 billion at the end of 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P010_S002",
+                    "paragraph_id": "amd_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Our aggregate principal amount of total debt as of December 28, 2024 was $1.8 billion, compared to $2.5 billion as of December 30, 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P010_S003",
+                    "paragraph_id": "amd_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We repaid our 2.95% Senior Notes due 2024 with a principal amount of $750 million in June 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D106",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P097_S001",
+                    "paragraph_id": "intc_2024_7_P097",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "During 2024, we issued a total of $2.6 billion aggregate principal amount of senior notes and remarketed $438 million aggregate principal amount of other bonds for general corporate purposes, including, but not limited to, refinancing of outstanding debt and funding for working capital and capital expenditures.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_7_P097_S003",
+                    "paragraph_id": "intc_2024_7_P097",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "In January 2025, we amended our 364-day $8.0 billion credit facility agreement to $5.0 billion, and the maturity date was extended by one year to January 2026.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for Micron (mu_2024_7_D043 and mu_2024_7_D042) disclose financing activities for fiscal years 2022 and 2023, not 2024. The target disclosure concerns AMD's fiscal year 2024 balance sheet position. Therefore, the peer candidates do not provide comparable data for the same fiscal year."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D072",
+            "peer_topic": "Liquidity Position and Future Requirements",
+            "peer_summary": "As of the end of fiscal year 2024, the company held $26.0 billion in cash, cash equivalents, and marketable securities, asserting sufficient liquidity to meet operating requirements, including a $1.3 billion debt repayment in fiscal 2025 and share purchases, for at least the next twelve months.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.16181,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and NVIDIA report their cash and marketable securities positions as of fiscal year-end to demonstrate liquidity. AMD held $5.1 billion in cash, cash equivalents, and short-term investments. NVIDIA held a much larger position of $26.0 billion in cash, cash equivalents, and marketable securities, asserting sufficient liquidity for operations and future debt repayments.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D004",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P010_S001",
+                    "paragraph_id": "amd_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Cash, cash equivalents and short-term investments as of December 28, 2024 were $5.1 billion, compared to $5.8 billion at the end of 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D072",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P076_S001",
+                    "paragraph_id": "nvda_2024_7_P076",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our primary sources of liquidity are our cash, cash equivalents, and marketable securities, and the cash generated by our operations.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P076_S002",
+                    "paragraph_id": "nvda_2024_7_P076",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "At the end of fiscal year 2024, we had $26.0 billion in cash, cash equivalents and marketable securities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "QCOM",
+            "peer_disclosure_id": "qcom_2024_7_D036",
+            "peer_topic": "Liquidity sources and sufficiency",
+            "peer_summary": "The company's principal sources of liquidity include existing cash, cash equivalents, marketable securities, operating cash flows, and debt programs, which are believed sufficient to meet working and capital requirements for at least the next 12 months based on current business plans.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.112974,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Qualcomm identify their cash holdings and operating cash flows as primary liquidity sources. AMD disclosed $5.1 billion in cash, cash equivalents, and short-term investments. Qualcomm stated its principal sources include existing cash, cash equivalents, marketable securities, and cash generated from operations, believing these satisfy requirements for the next 12 months.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D004",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P010_S001",
+                    "paragraph_id": "amd_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Cash, cash equivalents and short-term investments as of December 28, 2024 were $5.1 billion, compared to $5.8 billion at the end of 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D036",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P032_S001",
+                    "paragraph_id": "qcom_2024_7_P032",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Our principal sources of liquidity are our existing cash, cash equivalents and marketable securities, cash generated from operations and cash provided by our debt programs, which we believe will satisfy our working and other capital requirements for at least the next 12 months based on our current business plans.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

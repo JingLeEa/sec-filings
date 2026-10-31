@@ -1,0 +1,334 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "95bbeb85b82ec5c79238d38ae93ddfcbaee7467218ce4e6d0e0260e98a17070c",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D330",
+    "item": "7",
+    "target_topic": "Asset Sensitivity and Net Interest Income Dynamics",
+    "target_summary": "Citi's balance sheet is asset sensitive, resulting in higher net interest income in increasing interest rate scenarios. The estimated impact remained stable year-over-year as of December 31, 2024, with diminishing marginal benefits at higher rate levels due to assumed higher deposit betas.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "c_2023_2024_M0574",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss the 100 bps upward shock impact, the stability/decline over time, and the diminishing marginal benefit at higher rates due to deposit betas. D306 (2023) focuses on the decrease, while D330 (2024) focuses on stability.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "MARKET RISK > MARKET RISK OF NON-TRADING PORTFOLIOS > on AOCI",
+            "summary": "Citi's balance sheet is asset sensitive, resulting in higher net interest income in increasing rate scenarios. The estimated 100 bps upward shock impact decreased quarter-over-quarter and year-over-year due to lower expected gains from realized moves and balance sheet changes. At higher rates, the marginal benefit is lower due to pass-through betas to depositors.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2023_7_D306",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "MARKET RISK > MARKET RISK OF NON-TRADING PORTFOLIOS > on AOCI",
+            "summary": "Citi's balance sheet is asset sensitive, resulting in higher net interest income in increasing interest rate scenarios. The estimated impact remained stable year-over-year as of December 31, 2024, with diminishing marginal benefits at higher rate levels due to assumed higher deposit betas.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D330",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.669118,
+            "change_taxonomy": "Reduced",
+            "word_count_delta": -45,
+            "cosine_similarity": 0.839802,
+            "added_tokens_sample": [
+              "2024",
+              "remained",
+              "relatively",
+              "stable",
+              "for",
+              "a",
+              "100",
+              "bps",
+              "upward",
+              "rate",
+              "shock"
+            ],
+            "sequence_match_ratio": 0.704846,
+            "removed_tokens_sample": [
+              "citi's",
+              "balance",
+              "sheet",
+              "is",
+              "asset",
+              "sensitive",
+              "assets",
+              "reprice",
+              "faster",
+              "than",
+              "liabilities",
+              "resulting",
+              "in",
+              "higher",
+              "net",
+              "interest",
+              "income",
+              "in",
+              "increasing",
+              "interest"
+            ]
+          },
+          "semantic": {
+            "label": "Reduced",
+            "score": 0.95646,
+            "method": "embedding_cosine",
+            "rationale": "Score 95.65% of ceiling — content shrank from ~127 to ~85 words (0.7×).",
+            "matched_id": "c_2023_7_D306",
+            "normalised_score": 0.9565
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.95,
+          "reason": "The disclosure changes the characterization of the 100 bps shock impact from 'decreased quarter-over-quarter and year-over-year' in 2023 to 'remained relatively stable year-over-year' in 2024. This reversal in the direction of the trend is a material change in the disclosed financial condition and risk trajectory.",
+          "key_change": "Trend reversal from decrease to stability"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D103",
+            "peer_topic": "Net interest income decrease",
+            "peer_summary": "Net interest income decreased $1.4 billion to $13.2 billion primarily due to higher deposit costs and lower average loan balances, partially offset by higher average deposit balances.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.108338,
+            "relationship": "related_topic",
+            "comparison": "Both C and BAC attribute changes in net interest income dynamics to higher deposit costs (deposit betas) in rising rate environments, though C specifically highlights 'asset sensitivity' and stable overall sensitivity, while BAC reports a specific decline in net interest income for its specific segment due to these costs. C states its balance sheet is 'asset sensitive' with the estimated impact remaining 'relatively stable' as it passes on more costs to depositors (higher betas), whereas BAC's segment saw a $1.4 billion decrease driven by 'higher deposit costs' alongside lower loan balances. Both disclose the friction of deposit pricing sensitivity, but C focuses on the forward-looking sensitivity stability while BAC reports the realized year-over-year income drop.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D330",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P470_S003",
+                    "paragraph_id": "c_2024_7_P470",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "At progressively higher interest rate levels, the marginal net interest income benefit is lower, as Citi assumes it will pass on a larger share of rate changes to depositors (i.e., higher betas), further reducing Citi's IRE sensitivity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D103",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P112_S001",
+                    "paragraph_id": "bac_2024_7_P112",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest income decreased $1.4 billion to $13.2 billion primarily due to higher deposit costs and lower average loan balances, partially offset by the benefit of higher average deposit balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D050",
+            "peer_topic": "Net Interest Income Growth and Drivers",
+            "peer_summary": "Net interest income for 2024 was $8.06 billion, representing a 27% increase from 2023, driven by higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by a decrease in deposits with banks.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.089436,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures discuss Net Interest Income (NII) drivers in the context of interest rate environments, but differ in trend and composition. Citi emphasizes 'asset sensitivity' where the estimated impact of rate shocks remains stable, focusing on the structural balance sheet position and deposit beta assumptions. Goldman Sachs reports a 27% increase in NII for 2024, driven by higher balances and rates in trading assets and investments. While Citi's metric is a sensitivity analysis of future shocks, GS reports realized historical growth; both, however, identify higher asset yields/balances and deposit dynamics as key components of the interest rate impact on NII.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D330",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P470_S002",
+                    "paragraph_id": "c_2024_7_P470",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The estimated impact to Citi's net interest income in a 100 bps upward rate shock scenario as of December 31, 2024 remained relatively stable year-over-year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P054_S002",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net interest income in the consolidated statements of earnings was $8.06 billion for 2024, 27% higher than 2023, reflecting an increase in interest income, partially offset by an increase in interest expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D461",
+            "peer_topic": "Scenario Updates and Model Enhancements",
+            "peer_summary": "In Q2 2024, the Firm updated deposit rates paid assumptions to reflect recent economic cycle behavior, which increased positive sensitivity in higher rate scenarios and negative sensitivity in lower rate scenarios.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.107612,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and JPMorgan disclose specific updates to their interest rate sensitivity models or assumptions regarding deposit pricing betas in 2024, reflecting a shared industry focus on how customer behavior impacts rate risk. Citi notes that the estimated impact remained stable as it assumes passing on a larger share of rate changes to depositors (higher betas). Similarly, JPMorgan explicitly states that in Q2 2024, it 'updated certain deposit rates paid assumptions' based on observed behavior, which resulted in an 'increase in positive sensitivity in higher interest rate scenarios.' Both reveal that their respective sensitivity metrics (Citi's IRE sensitivity and JPM's earnings-at-risk) were directly influenced by refined assumptions about how deposits reprice in response to rising rates.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D330",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P470_S003",
+                    "paragraph_id": "c_2024_7_P470",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "At progressively higher interest rate levels, the marginal net interest income benefit is lower, as Citi assumes it will pass on a larger share of rate changes to depositors (i.e., higher betas), further reducing Citi's IRE sensitivity.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P470_S004",
+                    "paragraph_id": "c_2024_7_P470",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Currency-specific interest rate changes and balance sheet factors may drive quarter-to-quarter volatility in Citi's estimated IRE for a 100 bps upward rate shock.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D461",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P671_S002",
+                    "paragraph_id": "jpm_2024_7_P671",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "In the second quarter of 2024, the Firm updated certain deposit rates paid assumptions which take into account observed pricing and client and customer behavior during the most recent economic cycle.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P671_S003",
+                    "paragraph_id": "jpm_2024_7_P671",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "These updated deposit rates paid assumptions impacted the U.S. dollar scenarios, resulting in an increase in positive sensitivity in higher interest rate scenarios, and an increase in negative sensitivity in lower interest rate scenarios.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D266",
+            "peer_topic": "Asset Sensitivity and Market Drivers of Wealth Management Net Interest Income",
+            "peer_summary": "The Wealth Management balance sheet is asset sensitive, meaning net interest income increases in higher rate environments and decreases in lower ones, as assets reprice faster than liabilities. Changes in interest rates may also affect deposit levels due to competition and impact client loan demand, contributing to a decrease in net interest income sensitivity at December 31, 2024, compared to the prior year due to shifts in the asset/liability mix and market rates.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.169158,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and Morgan Stanley explicitly describe their respective balance sheets (Citi's non-trading portfolio and MS's Wealth Management segment) as 'asset sensitive,' meaning net interest income increases in higher interest rate environments. However, their 2024 trends differed: Citi reported that its sensitivity remained 'relatively stable year-over-year,' while Morgan Stanley reported that its net interest income sensitivity 'decreased from December 31, 2023,' primarily driven by changes in the mix of assets and liabilities and market rates. Both disclosures link asset sensitivity to the speed at which assets reprice relative to liabilities, but Citi emphasizes the stability of the shock impact while MS highlights a reduction in sensitivity due to mix changes.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D330",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P470_S002",
+                    "paragraph_id": "c_2024_7_P470",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The estimated impact to Citi's net interest income in a 100 bps upward rate shock scenario as of December 31, 2024 remained relatively stable year-over-year.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P470_S003",
+                    "paragraph_id": "c_2024_7_P470",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "At progressively higher interest rate levels, the marginal net interest income benefit is lower, as Citi assumes it will pass on a larger share of rate changes to depositors (i.e., higher betas), further reducing Citi's IRE sensitivity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D266",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P311_S001",
+                    "paragraph_id": "ms_2024_7_P311",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Our Wealth Management business segment balance sheet is asset sensitive, given assets reprice faster than liabilities, resulting in higher net interest income in higher interest rate scenarios and lower net interest income in lower interest rate scenarios.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P311_S005",
+                    "paragraph_id": "ms_2024_7_P311",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net interest income sensitivity to interest rates at December 31, 2024 decreased from December 31, 2023, primarily driven by the effects of changes in the mix of our assets and liabilities and changes in market rates.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

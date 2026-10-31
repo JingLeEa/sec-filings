@@ -1,0 +1,293 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "36a991c36c343ea37e6cdb01113cd14c8427b2f21e9011de515b2ca01bd74dbc",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D106",
+    "item": "7",
+    "target_topic": "Noninterest expense increase",
+    "target_summary": "Noninterest expense increased $509 million to $11.9 billion primarily due to continued investments in people, technology, and operations.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0271",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the total Noninterest expense for the Global Banking segment. The 2023 record cites an increase of $378 million to $11.3 billion driven by technology/hiring investments and FDIC expense. The 2024 record cites an increase of $509 million to $11.9 billion driven by investments in people, technology, and operations. The topic (Global Banking Noninterest Expense) matches.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D096",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense increased by $378 million to $11.3 billion, primarily due to investments in technology and strategic hiring, higher FDIC expense, and prior-year regulatory matters.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D106",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense increased $509 million to $11.9 billion primarily due to continued investments in people, technology, and operations.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.548224,
+            "sequence_match_ratio": 0.5625,
+            "length_ratio": 0.52381,
+            "word_count_delta": -20,
+            "added_tokens_sample": [
+              "509",
+              "9",
+              "people",
+              "operations"
+            ],
+            "removed_tokens_sample": [
+              "378",
+              "3",
+              "strategic",
+              "hiring",
+              "in",
+              "2022",
+              "and",
+              "higher",
+              "fdic",
+              "expense",
+              "partially",
+              "offset",
+              "by",
+              "expenses",
+              "recognized",
+              "for",
+              "certain",
+              "regulatory",
+              "matters",
+              "in"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D096",
+            "score": 0.925588,
+            "normalised_score": 0.9256,
+            "label": "Reduced",
+            "rationale": "Score 92.56% of ceiling — content shrank from ~40 to ~21 words (0.5×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "Noninterest expense increased further ($509M rise to $11.9B) compared to the prior year ($378M rise). The drivers shifted from including regulatory matters and FDIC expense to 'continued investments' in people and technology. The removal of the regulatory matter offset and the continued high level of expense growth are material operational changes.",
+          "key_change": "Increased expense growth and changed driver composition"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0026",
+        "relationship": "previous_only",
+        "status": "needs_review",
+        "review_reasons": [
+          "absence_not_proven_by_retrieval",
+          "conflicting_alignment_assignment"
+        ],
+        "explanation": "No counterpart found for Noninterest Expense. The automatic search found bac_2025_7_D097 and bac_2025_7_D098 which contain Noninterest Expense text, but they are currently linked to PCL and ROAC respectively, suggesting their IDs or groupings are swapped/misallocated. bac_2025_7_D097's sentence is about Expense. bac_2025_7_D098's sentence is about ROAC (though summary mentions Expense, the selected sentence P107_S001 is ROAC). Given the mismatched links above, it is highly probable that bac_2025_7_D097 is the correct counterpart for D106, but it is flagged in another group. As per instructions, I cannot merge across groups if they are distinct proposed groups, but I must verify. The search results show D097 text is 'Noninterest expense increased...'. D106 text is 'Noninterest expense increased...'. They are a match. However, D097 is in group_0155 with D105 (PCL). This is a conflict. I will split. D106 matches D097 (Expense). D105 (PCL) has no valid current counterpart in the provided set (D096 is PCL text but ID mismatch with D104? No, D096 text is PCL. Wait. D096 text is PCL. D104 is Noninterest Income. So D104 has no match. D105 is PCL. D096 is PCL. So D105 matches D096? Let's re",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D106",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense increased $509 million to $11.9 billion primarily due to continued investments in people, technology, and operations.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0328",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "conflicting_alignment_assignment"
+        ],
+        "explanation": "Correct match. Both disclose Noninterest Expense for Global Banking. D106 cites Expense $11.9B. D097 (sentence P106_S001) cites Expense $12.4B. Both are the same specific topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D106",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense increased $509 million to $11.9 billion primarily due to continued investments in people, technology, and operations.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D097",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provision for credit losses increased $60 million to $943 million, driven by the commercial and industrial portfolio, partially offset by improvement within the commercial real estate portfolio.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D088",
+            "peer_topic": "Operations and expense trends",
+            "peer_summary": "Expenses increased 6%, primarily driven by investments in technology, platform modernization, risk controls, and an Argentina-related transaction tax, partially offset by productivity savings.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.117012,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and C cite 'investments in technology' as a primary driver for their respective noninterest/operating expense increases in 2024. BAC attributes its $509 million increase to continued investments in people, technology, and operations. Similarly, C reports a 6% increase in expenses, driven by 'continued investments in technology and platform modernization,' alongside risk controls and other factors. While both highlight technology investment, C provides more granularity on 'platform modernization' and includes specific offsetting factors like productivity savings and unique items like Argentina-related taxes, whereas BAC groups technology with people and operations generally.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D106",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P115_S001",
+                    "paragraph_id": "bac_2024_7_P115",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Noninterest expense increased $509 million to $11.9 billion primarily due to continued investments in the business, including people, technology and operations.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D088",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P101_S001",
+                    "paragraph_id": "c_2024_7_P101",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Expenses increased 6%, primarily driven by continued investments in technology and platform modernization, other risk and controls and product innovation, as well as an Argentina-related transaction tax expense and higher legal expenses, partially offset by the impact of productivity savings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates (gs_2024_7_D122, gs_2024_7_D046) focus on balance sheet asset composition, trading assets, and investment management revenue growth. They do not disclose noninterest expense drivers or trends comparable to the target's topic of noninterest expense increases due to people and technology investments."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D112",
+            "peer_topic": "Noninterest expense increase drivers",
+            "peer_summary": "Noninterest expense rose 9% to $38.0 billion, reflecting First Republic-related expenses aligned to CCB from Corporate starting in Q3 2023, higher revenue-related compensation for advisors and bankers, increased employee headcount including technology, and continued investments in technology and marketing.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.173861,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and JPM disclose increases in noninterest expense for 2024 driven by investments in people and technology. BAC’s noninterest expense rose $509 million due to 'continued investments in the business, including people, technology and operations.' JPM’s noninterest expense rose 9% to $38.0 billion, with drivers including 'higher compensation expense... increase in the number of employees, including in technology' and 'higher noncompensation expense, largely driven by continued investments in technology and marketing.' Both companies explicitly link expense growth to strategic investments in technology and human capital (employees/people), though JPM provides a more detailed breakdown of compensation vs. noncompensation and notes specific impacts like First Republic integration.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D106",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P115_S001",
+                    "paragraph_id": "bac_2024_7_P115",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Noninterest expense increased $509 million to $11.9 billion primarily due to continued investments in the business, including people, technology and operations.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D112",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P156_S001",
+                    "paragraph_id": "jpm_2024_7_P156",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $38.0 billion, up 9%, reflecting First Republic-related expense that was aligned to CCB from Corporate starting in the third quarter of 2023, impacting both compensation and noncompensation expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P157_S002",
+                    "paragraph_id": "jpm_2024_7_P157",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher compensation expense, largely driven by higher revenue-related compensation predominantly for advisors and bankers, and an increase in the number of employees, including in technology, and",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P157_S003",
+                    "paragraph_id": "jpm_2024_7_P157",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher noncompensation expense, largely driven by continued investments in technology and marketing, as well as higher operating losses, partially offset by lower legal expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates (ms_2024_7_D074, ms_2024_7_D034) focus on compensation expense driven by carried interest and financing revenue drivers. They do not disclose noninterest expense trends or specific drivers like technology/people investments comparable to the target's topic."
+      }
+    ]
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "baf7d5e4c013ef22ee159da125256e7641bfd58201756b4114df52cc07b74a98",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D098",
+    "item": "7",
+    "target_topic": "Disaggregation of Income Statement Expenses accounting update",
+    "target_summary": "The company is evaluating an update requiring quantitative and qualitative disclosure of certain expense categories (such as employee compensation, depreciation, and intangible asset amortization) in a tabular format, effective for annual periods beginning January 1, 2027, and interim periods beginning January 1, 2028; no material impact is expected.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0294",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review"
+        ],
+        "explanation": "Both disclosures discuss the evaluation of the specific Income Tax Disclosures accounting update. 2023 D095 cites this as one of two updates expected to have no material impact. 2024 D099 cites this same update, describing the specific disaggregation requirements and effectiveness date (Jan 1, 2025).\n\n2023 D095 mentions Segment Reporting as the second update being evaluated. 2024 D098 introduces a new update on Disaggregation of Income Statement Expenses. While both are 'Accounting Development Updates' in 2023 D095, 2024 D098 is a distinct topic (Expense Disaggregation) not mentioned in 2023 D095. 2023 D095's Segment Reporting update is effective 2024/2025, while 2024 D098's is effective 2027/2028. There is no direct subject match between D095's specific Segment update and D098's Expense Disaggregation update. However, since D095 contains two distinct updates and D099 matches one, D098 matches the *other* slot in the 'Accounting Development Updates' section broadly, but the specific subjects differ. Given the strict topic rule, D095 (Segment Reporting) does not match D098 (Expense Disaggregation). D095 is a composite. The prompt allows splitting. D095's Segment Reporting part has n",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D095",
+            "item": "7",
+            "section": "Accounting Development Updates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company is evaluating updates regarding Income Tax Disclosures and Segment Reporting, expecting no material impact on financial condition or results of operations upon adoption. The Income Tax update is effective for annual periods beginning January 1, 2025, while the Segment Reporting update is effective for fiscal years beginning January 1, 2024, and interim periods beginning January 1, 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D098",
+            "item": "7",
+            "section": "Accounting Development Updates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company is evaluating an update requiring quantitative and qualitative disclosure of certain expense categories (such as employee compensation, depreciation, and intangible asset amortization) in a tabular format, effective for annual periods beginning January 1, 2027, and interim periods beginning January 1, 2028; no material impact is expected.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D099",
+            "item": "7",
+            "section": "Accounting Development Updates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company is evaluating an update enhancing income tax disclosures, including disaggregation of income tax rate reconciliations and taxes paid, effective for annual periods beginning January 1, 2025; no material impact is expected.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0094",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "Previous disclosure D098 discusses the evaluation of ASU regarding Disaggregation of Income Statement Expenses. This specific standard is not mentioned or evaluated in the 2025 current disclosure D001 (which covers different ASUs). Thus, no counterpart was found.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D098",
+            "item": "7",
+            "section": "Accounting Development Updates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company is evaluating an update requiring quantitative and qualitative disclosure of certain expense categories (such as employee compensation, depreciation, and intangible asset amortization) in a tabular format, effective for annual periods beginning January 1, 2027, and interim periods beginning January 1, 2028; no material impact is expected.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -164,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "we",
+              "are",
+              "currently",
+              "evaluating",
+              "the",
+              "following",
+              "accounting",
+              "updates",
+              "however",
+              "we",
+              "do",
+              "not",
+              "expect",
+              "a",
+              "material",
+              "impact",
+              "on",
+              "our",
+              "financial",
+              "condition"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.55,
+          "confidence_score": 0.8,
+          "reason": "The disclosure discussed the evaluation of a specific Accounting Standards Update (ASU) regarding the disaggregation of income statement expenses (employee compensation, depreciation, intangible amortization) with an effective date in 2027. The removal of this specific evaluation, while no material impact was expected, represents a change in the company's regulatory compliance tracking and disclosure readiness for upcoming financial reporting changes. It signals a shift in how the company is presenting its regulatory update status, potentially moving away from pre-adoption evaluation narratives.",
+          "key_change": "Removal of expense disaggregation ASU evaluation"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved addresses the specific topic of accounting updates for disaggregating income statement expenses. BAC's candidates discuss reporting unit definitions for goodwill and non-GAAP measure purposes, which are substantively different from MS's evaluation of new tabular disclosure requirements for expense categories."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved addresses the specific topic of accounting updates for disaggregating income statement expenses. Citi's candidates discuss the impact of wildfires on credit portfolios and the adoption of ASU 2022-02 regarding Troubled Debt Restructurings (TDRs), which are unrelated to the evaluation of expense line-item disaggregation."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D059",
+            "peer_topic": "Factors driving 2024 operating expense decreases and increases",
+            "peer_summary": "Operating expenses decreased relative to 2023 due to lower commercial real estate impairments, GreenSky intangible asset write-downs, consumer platform goodwill impairments, and FDIC fees, partially offset by higher compensation and transaction-based expenses driven by improved performance. An additional $71 million FDIC special assessment fee was recognized in 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.069183,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures address expense composition and trends. Goldman Sachs provides actual expense drivers for 2024, explicitly noting that depreciation and amortization expenses decreased due to lower commercial real estate impairments and GreenSky intangible asset write-downs, which directly relates to the expense categories (depreciation, intangible asset amortization) that MS is evaluating for new disaggregation disclosure requirements. Unlike MS, which is evaluating a future accounting update without expecting a material impact on financial results, GS discloses actual significant impacts on operating expenses from these specific categories in the current period.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D098",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P113_S002",
+                    "paragraph_id": "ms_2024_7_P113",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Disaggregation of Income Statement Expenses. This update requires quantitative and qualitative disclosure of certain expense categories contained within their relevant expense lines in the income statement, including but not limited to: (1) employee compensation; (2) depreciation; and (3) intangible asset amortization. The update requires the disaggregation of these expense lines in a tabular format in the notes to the financial statements, including the separate disclosure of certain other expenses and gains or losses included within these expense lines which are required under existing U.S. GAAP, with all other expenses permitted to be disclosed in an \"other items\" category. Additionally, the update requires disclosure of the total amount and definition of the Firm's selling expenses. The update is effective for annual periods beginning January 1, 2027, and interim reporting periods beginning January 1, 2028, with early adoption permitted.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P061_S001",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Operating expenses, compared with 2023, reflected decreases driven by significantly lower expenses, including impairments ($1.46 billion recognized in 2023), related to commercial real estate in CIEs (largely in depreciation and amortization) and other significant expenses recognized in the prior year, including the write-down of identifiable intangible assets related to GreenSky of $506 million and an impairment of goodwill related to Consumer platforms of $504 million (both in depreciation and amortization), and the FDIC special assessment fee of $529 million (in other expenses).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved addresses the specific topic of accounting updates for disaggregating income statement expenses. JPM's candidates discuss early adoption permissions for other standards and an accounting change for alternative energy tax investments affecting income tax expense classification, which does not align with MS's evaluation of broad income statement expense category disclosure requirements."
+      }
+    ]
+  }
+}

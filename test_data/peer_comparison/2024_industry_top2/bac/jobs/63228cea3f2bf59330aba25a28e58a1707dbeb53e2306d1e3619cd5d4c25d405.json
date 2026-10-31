@@ -1,0 +1,237 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "0785eb370ef9bfafa262b53fd97e1074d7d57eb128b520c2eab27652ae660fff",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D033",
+    "item": "7",
+    "target_topic": "Trading Account Liabilities Composition and Change",
+    "target_summary": "Trading account liabilities consist primarily of short positions in equity and fixed-income securities and decreased by $3.0 billion, primarily due to lower levels of short positions within Global Markets.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0207",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "Both disclosures cover Trading Account Liabilities. The 2023 disclosure reports a $15.1 billion increase due to short positions in Global Markets, while the 2024 disclosure reports a $3.0 billion decrease due to lower short positions in Global Markets. Both define the liabilities as primarily short positions in equity and fixed-income securities.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D032",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Liabilities > Trading Account Liabilities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Trading account liabilities, which consist primarily of short positions in equity and fixed-income securities, increased by $15.1 billion primarily due to higher levels of short positions within Global Markets.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D033",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Liabilities > Trading Account Liabilities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Trading account liabilities consist primarily of short positions in equity and fixed-income securities and decreased by $3.0 billion, primarily due to lower levels of short positions within Global Markets.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0265",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures track year-over-year changes in Trading Account Liabilities within Item 7. 2024 evidence cites $3.0B decrease due to lower short positions in Global Markets; 2025 evidence cites $13.5B increase due to activity in Global Markets. The subject aligns despite the directional change in the balance change.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D033",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Liabilities > Trading Account Liabilities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Trading account liabilities consist primarily of short positions in equity and fixed-income securities and decreased by $3.0 billion, primarily due to lower levels of short positions within Global Markets.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D036",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Liabilities > Trading Account Liabilities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Trading account liabilities, primarily consisting of short positions in equity and fixed-income securities, increased by $13.5 billion, largely driven by activity within Global Markets.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.866237,
+            "sequence_match_ratio": 0.866667,
+            "length_ratio": 0.914894,
+            "word_count_delta": -4,
+            "added_tokens_sample": [
+              "increased",
+              "13",
+              "5",
+              "activity"
+            ],
+            "removed_tokens_sample": [
+              "decreased",
+              "3",
+              "0",
+              "lower",
+              "levels",
+              "of",
+              "short",
+              "positions"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2024_7_D033",
+            "score": 0.9833,
+            "normalised_score": 0.9833,
+            "label": "Unchanged",
+            "rationale": "Score 98.33% of ceiling — semantically identical despite surface differences (word overlap 81%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.95,
+          "reason": "Trading account liabilities reversed direction, moving from a $3.0 billion decrease (due to lower short positions) to a $13.5 billion increase. This reversal from net unwinding of short positions to significant growth driven by Global Markets activity indicates a material change in trading strategy or market exposure.",
+          "key_change": "Reversal from decrease to increase in trading account liabilities"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for Citigroup (c_2024_7_D361, c_2024_7_D350) focus exclusively on the accounting classification and reporting of interest income/expense related to trading liabilities, not the composition, volume changes, or drivers of the trading liabilities principal balances as discussed in the target disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D082",
+            "peer_topic": "Accounting Treatment of Inventory",
+            "peer_summary": "The firm's inventory is recorded as trading assets for long positions or trading liabilities for short positions on its consolidated balance sheets.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.181184,
+            "relationship": "same_topic",
+            "comparison": "Goldman Sachs and Bank of America both define trading liabilities as including short positions, but they emphasize different structural aspects. Goldman Sachs explicitly states that inventory is recorded as trading liabilities specifically for short positions on its consolidated balance sheets, while Bank of America describes the composition of its trading account liabilities as primarily consisting of short positions in equity and fixed-income securities without explicitly mapping the 'inventory' terminology to the balance sheet line item in the same sentence.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D033",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P030_S001",
+                    "paragraph_id": "bac_2024_7_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Trading account liabilities consist primarily of short positions in equity and fixed-income securities including U.S. Treasury and agency securities, non-U.S. sovereign debt and corporate securities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D082",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P081_S004",
+                    "paragraph_id": "gs_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Our inventory is recorded in trading assets (long positions) or trading liabilities (short positions) in our consolidated balance sheets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D063",
+            "peer_topic": "Trading liabilities increase",
+            "peer_summary": "Trading liabilities increased due to client-driven market-making activities primarily in Fixed Income Markets, which resulted in higher levels of short positions in debt instruments.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.255207,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Bank of America disclose changes in trading liabilities driven by short positions in their market-making businesses, but they report opposite trends. JPMorgan reports that trading liabilities increased due to higher levels of short positions in debt instruments within Fixed Income Markets, whereas Bank of America reports that trading account liabilities decreased by $3.0 billion due to lower levels of short positions within Global Markets.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D033",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P030_S002",
+                    "paragraph_id": "bac_2024_7_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Trading account liabilities decreased $3.0 billion primarily due to lower levels of short positions within Global Markets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D063",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P101_S001",
+                    "paragraph_id": "jpm_2024_7_P101",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Trading liabilities increased due to client-driven market-making activities primarily in Fixed Income Markets, which resulted in higher levels of short positions in debt instruments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for Morgan Stanley (ms_2024_7_D001, ms_2024_7_D036) discuss trading revenues and fixed income net revenues within the Wealth Management and Global Markets segments, rather than the composition or balance sheet changes of trading account liabilities themselves."
+      }
+    ]
+  }
+}

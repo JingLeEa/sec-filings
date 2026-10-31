@@ -1,0 +1,328 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "0bc37abc02b0c27123f939e701f40a7da809f3e0cbb32f841423bb1c48c3d2eb",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_1_D022",
+    "item": "1",
+    "target_topic": "Marcus by Goldman Sachs Consumer Deposits",
+    "target_summary": "The company raises deposits from consumers through Marcus by Goldman Sachs (Marcus), which is part of its private banking and lending activities serving wealth management clients.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0264",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Match supported. The 2023 disclosure notes the sale of the Marcus loans portfolio (unsecured consumer loans). The 2024 disclosure notes that the firm raises deposits from consumers through Marcus. Both disclosures center on the Marcus by Goldman Sachs entity's consumer banking activities (loans in 2023, deposits in 2024) within the private banking/wealth management context. While the specific product (loans vs deposits) changed, the entity and business line context are the same specific topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_1_D016",
+            "item": "1",
+            "section": "Our Business Segments > Asset & Wealth Management",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "During 2023, the company completed the sale of substantially all of the Marcus loans portfolio, which previously included unsecured consumer loans.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_1_D022",
+            "item": "1",
+            "section": "Our Business Segments > Asset & Wealth Management",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "The company raises deposits from consumers through Marcus by Goldman Sachs (Marcus), which is part of its private banking and lending activities serving wealth management clients.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.499895,
+            "sequence_match_ratio": 0.511628,
+            "length_ratio": 0.387097,
+            "word_count_delta": -19,
+            "added_tokens_sample": [
+              "from"
+            ],
+            "removed_tokens_sample": [
+              "and",
+              "have",
+              "issued",
+              "unsecured",
+              "loans",
+              "to",
+              "during",
+              "2023",
+              "we",
+              "completed",
+              "the",
+              "sale",
+              "of",
+              "substantially",
+              "all",
+              "of",
+              "the",
+              "marcus",
+              "loans",
+              "portfolio"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2023_1_D016",
+            "score": 0.788464,
+            "normalised_score": 0.7885,
+            "label": "Reduced",
+            "rationale": "Score 78.85% of ceiling — content shrank from ~31 to ~12 words (0.4×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure shifts from reporting the completion of the sale of the Marcus unsecured consumer loans portfolio to stating the ongoing activity of raising consumer deposits through Marcus. This reflects the substantive completion of a major divestiture and the continued/remaining focus on the deposit-raising side of the Marcus business, altering the description of the entity's operational scope.",
+          "key_change": "Completion of Marcus loan sale and focus on deposits"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0301",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the raising of consumer deposits through Marcus by Goldman Sachs within the Asset & Wealth Management segment. The 2024 disclosure is a single sentence on this topic, while the 2025 disclosure includes this detail among other services.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_1_D022",
+            "item": "1",
+            "section": "Our Business Segments > Asset & Wealth Management",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "The company raises deposits from consumers through Marcus by Goldman Sachs (Marcus), which is part of its private banking and lending activities serving wealth management clients.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_1_D035",
+            "item": "1",
+            "section": "Our Business Segments > Asset & Wealth Management",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Services include personalized financial planning, structured execution of securities and derivatives, private banking with loans and deposit alternatives for investment financing, and consumer deposits raised through Marcus by Goldman Sachs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.262503,
+            "sequence_match_ratio": 0.24,
+            "length_ratio": 7.333333,
+            "word_count_delta": 76,
+            "added_tokens_sample": [
+              "we",
+              "offer",
+              "personalized",
+              "financial",
+              "planning",
+              "to",
+              "individuals",
+              "and",
+              "also",
+              "provide",
+              "customized",
+              "investment",
+              "advisory",
+              "solutions",
+              "and",
+              "offer",
+              "structuring",
+              "and",
+              "execution",
+              "capabilities"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "gs_2024_1_D022",
+            "score": 0.86162,
+            "normalised_score": 0.8616,
+            "label": "Expanded",
+            "rationale": "Score 86.16% of ceiling — content grew from ~12 to ~88 words (7.3×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.85,
+          "reason": "The core disclosure regarding raising consumer deposits through Marcus is identical in both years. The 2025 disclosure is part of a broader 'Expanded' category that includes other services, but the specific change to the Marcus-related sentence is non-substantive. The expansion is due to the inclusion of other services in the same bucket, not a change in the Marcus business itself.",
+          "key_change": "No change to Marcus deposit activity"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_1_D005",
+            "peer_topic": "Business Segment Structure",
+            "peer_summary": "The company operates through four business segments: Consumer Banking, Global Wealth & Investment Management (GWIM), Global Banking, and Global Markets, with remaining operations recorded in All Other.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.056446,
+            "relationship": "related_topic",
+            "comparison": "While Goldman Sachs specifically highlights 'Marcus by Goldman Sachs' as the vehicle for raising consumer deposits within its Asset & Wealth Management segment, Bank of America describes its structure more broadly through its 'Consumer Banking' segment. BAC does not name a specific consumer deposit brand in this summary, whereas GS explicitly identifies Marcus as the mechanism for its consumer deposit activity serving wealth management clients.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1_P031_S003",
+                    "paragraph_id": "gs_2024_1_P031",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "We also raise deposits from consumers through Marcus by Goldman Sachs (Marcus).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1_D005",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1_P004_S001",
+                    "paragraph_id": "bac_2024_1_P004",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Through our various bank and nonbank subsidiaries throughout the U.S. and in international markets, we provide a diversified range of banking and nonbank financial services and products through four business segments: Consumer Banking, Global Wealth & Investment Management (GWIM), Global Banking and Global Markets, with the remaining operations recorded in All Other.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate disclosures for Citi focus on high-level strategic vision (preeminent banking partner, global leader) and company history. They do not contain specific details about segment structures or consumer deposit platforms comparable to the specific operational disclosure of Marcus by Goldman Sachs."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_1_D004",
+            "peer_topic": "Reorganization of reportable business segments",
+            "peer_summary": "Effective in Q2 2024, JPMorganChase combined its former Corporate & Investment Bank and Commercial Banking segments to form the Commercial & Investment Bank (CIB), resulting in three reportable segments: Consumer & Community Banking (CCB), CIB, and Asset & Wealth Management (AWM), with remaining activities in Corporate.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.048334,
+            "relationship": "related_topic",
+            "comparison": "Both companies disclose their business segment structures, but they differ in granularity and specific segment names regarding wealth management. Goldman Sachs identifies 'Asset & Wealth Management' as a segment where it raises deposits via Marcus. JPMorgan Chase, having reorganized in Q2 2024, also reports 'Asset & Wealth Management' (AWM) as a reportable segment, though its disclosure focuses on the structural change (combining CIB and Commercial Banking) rather than specific deposit-raising vehicles within AWM.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1_P031_S003",
+                    "paragraph_id": "gs_2024_1_P031",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "We also raise deposits from consumers through Marcus by Goldman Sachs (Marcus).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1_D004",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1_P004_S002",
+                    "paragraph_id": "jpm_2024_1_P004",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "As a result of the reorganization, the Firm has three reportable business segments - Consumer & Community Banking (\"CCB\"), Commercial & Investment Bank (\"CIB\") and Asset & Wealth Management (\"AWM\") - with the remaining activities in Corporate.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_1_D007",
+            "peer_topic": "Global financial services firm with key business segments",
+            "peer_summary": "The company is a global financial services firm with significant market positions in Institutional Securities, Wealth Management, and Investment Management, providing diverse products to corporations, governments, financial institutions, and individuals.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.05201,
+            "relationship": "related_topic",
+            "comparison": "Goldman Sachs and Morgan Stanley both operate 'Wealth Management' as a core business segment. GS specifies that it raises consumer deposits through the 'Marcus' platform within this context. MS describes its 'Wealth Management' segment generally without mentioning a specific branded deposit platform in this sentence, instead noting its position in providing diverse products to clients including individuals.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1_P031_S003",
+                    "paragraph_id": "gs_2024_1_P031",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "We also raise deposits from consumers through Marcus by Goldman Sachs (Marcus).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_1_D007",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_1_P003_S001",
+                    "paragraph_id": "ms_2024_1_P003",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "We are a global financial services firm that maintains significant market positions in each of our business segments: Institutional Securities, Wealth Management and Investment Management.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

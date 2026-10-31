@@ -1,0 +1,385 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "65aba433dcaf963a20f3d0bd2960394e25e27ef6316e013c66b94e29ea13a984",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D236",
+    "item": "7",
+    "target_topic": "Evaluation criteria and credit quality for Wealth classifiably managed loans",
+    "target_summary": "Wealth classifiably managed loans are evaluated for non-accrual status based on internal risk classification rather than delinquency status; 72%, 85%, and 96% of these loans were rated investment grade as of December 31, 2024, 2023, and 2022, respectively.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "c_2023_2024_M0488",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specify that End-of-Period (EOP) classifiably managed Private Bank loans are excluded from the delinquency numerator, denominator, and ratios. The 2024 disclosure (c_2024_7_D235) focuses on this exclusion rule, which matches the primary topic of c_2023_7_D205. Note that c_2023_7_D205 also mentions investment grade ratings, which are detailed in the linked c_2024_7_D236, but the core 'exclusion from delinquency metrics' topic aligns with D235.\n\nThis row captures the specific topic within c_2023_7_D205 regarding Wealth classifiably managed loans: they are evaluated for non-accrual/write-off based on internal risk classification (not solely delinquency) and details their investment grade ratings (85%, 96%, 94% in 2023/2022/2021). This corresponds exactly to the content in c_2024_7_D236, which covers the same evaluation methodology and provides the updated ratings (72%, 85%, 96% in 2024/2023/2022). While both relate to the same source disclosure, they represent distinct sub-topics (general exclusion vs. risk classification/ratings) that are fully captured by splitting into two rows, avoiding a spurious 1-to-1 merge with D235 which lacks the rating data.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "CREDIT RISK > CONSUMER CREDIT > Additional Consumer Credit Details > Consumer Loan Delinquencies Amounts and Ratios",
+            "summary": "Classifiably managed Private Bank loans are excluded from delinquency numerators, denominators, and ratios because they are evaluated for non-accrual status and write-off based on internal risk classification rather than solely on delinquency status. As of December 31, 2023, 2022, and 2021, 85%, 96%, and 94% of these Wealth loans were rated investment grade.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2023_7_D205",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "CREDIT RISK > CONSUMER CREDIT > Additional Consumer Credit Details > Consumer Loan Delinquencies Amounts and Ratios",
+            "summary": "End-of-period classifiably managed Private Bank loans are excluded from the delinquency numerator, denominator, and ratios.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D235",
+            "extraction_status": "source_validated"
+          },
+          {
+            "item": "7",
+            "section": "CREDIT RISK > CONSUMER CREDIT > Additional Consumer Credit Details > Consumer Loan Delinquencies Amounts and Ratios",
+            "summary": "Wealth classifiably managed loans are evaluated for non-accrual status based on internal risk classification rather than delinquency status; 72%, 85%, and 96% of these loans were rated investment grade as of December 31, 2024, 2023, and 2022, respectively.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D236",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 1.0,
+            "change_taxonomy": "Reworded",
+            "word_count_delta": 0,
+            "cosine_similarity": 0.960074,
+            "added_tokens_sample": [
+              "3",
+              "4",
+              "2024",
+              "and",
+              "72",
+              "85"
+            ],
+            "sequence_match_ratio": 0.9375,
+            "removed_tokens_sample": [
+              "5",
+              "6",
+              "2021",
+              "85",
+              "and",
+              "94"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "score": 0.967535,
+            "method": "embedding_cosine",
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 96.75% of ceiling.",
+            "matched_id": "c_2023_7_D205",
+            "normalised_score": 0.9675
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The disclosure provides updated investment grade ratings for Wealth classifiably managed loans, showing a decline from 85% in 2023 to 72% in 2024. This is a material change in the composition of the high-quality portion of this specific loan portfolio, indicating a shift in the risk profile of these internal risk-classified loans.",
+          "key_change": "Decline in investment grade rating of Wealth private bank loans"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0579",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures provide the footnotes explaining the Consumer Loan Delinquencies table calculations and exclusions: EOP loans including interest/fees, ratios based on EOP net of unearned income, exclusion of classifiably managed Private Bank loans, and evaluation of Wealth/classifiably managed loans based on internal risk classification rather than delinquency metrics.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "CREDIT RISK > CONSUMER CREDIT > Additional Consumer Credit Details > Consumer Loan Delinquencies Amounts and Ratios",
+            "summary": "End-of-period loans include interest and fees on credit cards, and delinquency ratios are calculated based on EOP loans net of unearned income.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D234",
+            "extraction_status": "source_validated"
+          },
+          {
+            "item": "7",
+            "section": "CREDIT RISK > CONSUMER CREDIT > Additional Consumer Credit Details > Consumer Loan Delinquencies Amounts and Ratios",
+            "summary": "End-of-period classifiably managed Private Bank loans are excluded from the delinquency numerator, denominator, and ratios.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D235",
+            "extraction_status": "source_validated"
+          },
+          {
+            "item": "7",
+            "section": "CREDIT RISK > CONSUMER CREDIT > Additional Consumer Credit Details > Consumer Loan Delinquencies Amounts and Ratios",
+            "summary": "Wealth classifiably managed loans are evaluated for non-accrual status based on internal risk classification rather than delinquency status; 72%, 85%, and 96% of these loans were rated investment grade as of December 31, 2024, 2023, and 2022, respectively.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D236",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "ALL OTHER-Managed Basis > CREDIT RISK > CONSUMER CREDIT > Additional Consumer Credit Details > Consumer Loan Delinquencies Amounts and Ratios",
+            "summary": "End-of-period loans include interest and fees; delinquency ratios are calculated on EOP loans net of unearned income, excluding classifiably managed Private Bank loans which are evaluated on risk classification rather than delinquency.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2025_7_D202",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Unchanged",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.691729,
+            "change_taxonomy": "Reduced",
+            "word_count_delta": -41,
+            "cosine_similarity": 0.890161,
+            "added_tokens_sample": [],
+            "sequence_match_ratio": 0.817778,
+            "removed_tokens_sample": [
+              "as",
+              "of",
+              "december",
+              "31",
+              "2024",
+              "2023",
+              "and",
+              "2022",
+              "72",
+              "85",
+              "and",
+              "96",
+              "of",
+              "wealth",
+              "classifiably",
+              "managed",
+              "loans",
+              "were",
+              "rated",
+              "investment"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "score": 0.974619,
+            "method": "embedding_cosine",
+            "rationale": "Merge: 3 previous → 1 current. Best pair scored 97.46% of ceiling.",
+            "matched_id": "c_2024_7_D234",
+            "normalised_score": 0.9746
+          },
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.15,
+          "confidence_score": 0.9,
+          "reason": "The disclosure represents a consolidation of previous footnotes. The removal of historical investment-grade rating data (2022-2024) is a removal of static historical reference data that does not change the current calculation methodology or the current status of the loans. The core definitions of how delinquency is calculated and which loans are excluded remain unchanged.",
+          "key_change": "Consolidation of delinquency calculation footnotes and removal of historical ratings"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D246",
+            "peer_topic": "Consumer Loan Portfolio Composition and Credit Quality Statistics",
+            "peer_summary": "The company presents outstanding consumer loans, nonperforming loans, and past-due accruals in Table 19, with outstandings primarily consisting of auto and specialty lending ($54.9 billion), U.S. securities-based lending ($48.7 billion), and non-U.S. consumer loans ($2.8 billion) at December 31, 2024. Residential mortgage loans include fully-insured loans with curtailed interest, and the company excludes fully-insured and fair-value-option loans from certain credit quality statistics to better represent ongoing operations.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.074185,
+            "relationship": "related_topic",
+            "comparison": "Both C and BAC manage consumer loan portfolios with specific credit quality statistics and adjustments for certain loan types. C provides a specific breakdown of credit quality for 'Wealth classifiably managed loans,' noting that 72% were rated investment grade as of December 31, 2024, and excludes these from delinquency metrics. BAC presents outstanding consumer loans and credit quality statistics but excludes fully-insured loans and fair-value-option loans from certain credit quality statistics to better represent ongoing operations, focusing on auto, specialty lending, and securities-based lending.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D236",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P339_S002",
+                    "paragraph_id": "c_2024_7_P339",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "As of December 31, 2024, 2023 and 2022, 72%, 85% and 96% of Wealth classifiably managed loans were rated investment grade.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D246",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P284_S002",
+                    "paragraph_id": "bac_2024_7_P284",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "We believe that the presentation of information adjusted to exclude the impact of the fully-insured loan portfolio and loans accounted for under the fair value option is more representative of the ongoing operations and credit quality of the business.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D313",
+            "peer_topic": "Additional Risk Assessment Metrics",
+            "peer_summary": "The risk assessment process may include reviewing key metrics such as delinquency status, collateral value, FICO credit scores, and other risk factors where applicable.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.10614,
+            "relationship": "same_topic",
+            "comparison": "Both C and GS disclose that delinquency status is a key metric used in their credit risk assessment processes, although the specific application differs. C explicitly states that for its Wealth classifiably managed loans, delinquency metrics are excluded from specific tables because non-accrual status is determined by internal risk classification rather than delinquency status alone. GS broadly discloses that its risk assessment process includes reviewing delinquency status, collateral value, and FICO scores, indicating delinquency remains a relevant factor in their general credit evaluation framework.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D236",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P339_S001",
+                    "paragraph_id": "c_2024_7_P339",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(4)These loans are evaluated for non-accrual status and write-off primarily based on their internal risk classification and not solely on their delinquency status, and, therefore, delinquency metrics are excluded from this table.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D313",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P415_S001",
+                    "paragraph_id": "gs_2024_7_P415",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Our risk assessment process may also include, where applicable, reviewing certain key metrics, including, but not limited to, delinquency status, collateral value, FICO credit scores and other risk factors.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D371",
+            "peer_topic": "Wholesale credit exposure maturity and ratings profile disclosure",
+            "peer_summary": "Tables present the maturity and internal risk ratings profiles of the wholesale credit portfolio as of December 31, 2024 and 2023, with investment grade defined as BBB-/Baa3 or higher.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.101235,
+            "relationship": "same_topic",
+            "comparison": "Both C and JPM define 'investment grade' using internal risk ratings. C states that a significant majority (72%) of its Wealth classifiably managed loans were rated investment grade, relying on internal risk classification. JPM similarly defines investment grade for its wholesale credit portfolio as internal ratings with qualitative characteristics equivalent to BBB-/Baa3 or higher, noting that collateral and structural support are considered in determining these internal risk ratings.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D236",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P339_S002",
+                    "paragraph_id": "c_2024_7_P339",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "As of December 31, 2024, 2023 and 2022, 72%, 85% and 96% of Wealth classifiably managed loans were rated investment grade.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D371",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P539_S002",
+                    "paragraph_id": "jpm_2024_7_P539",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The Firm generally considers internal ratings with qualitative characteristics equivalent to BBB-/Baa3 or higher as investment grade, and takes into consideration collateral and structural support when determining the internal risk rating for each credit facility.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D277",
+            "peer_topic": "Consumer borrower evaluation methods",
+            "peer_summary": "Consumer borrower evaluation is tailored to lending type, with securities-based loans assessed by collateral quality and volatility, and residential real estate loans evaluated using debt-to-income ratios, net worth, and credit scores like FICO.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.077009,
+            "relationship": "same_topic",
+            "comparison": "Both C and MS evaluate consumer credit quality using factors beyond simple delinquency, incorporating collateral and internal assessments. C excludes delinquency metrics for its Wealth classifiably managed loans, relying on internal risk classification and credit ratings (investment grade status). MS evaluates securities-based loans based on collateral quality, volatility, and liquidity, and residential real estate loans using credit-scoring models (e.g., FICO scores) and debt-to-income ratios, indicating a similar reliance on fundamental credit factors and collateral rather than just payment history.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D236",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P339_S001",
+                    "paragraph_id": "c_2024_7_P339",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(4)These loans are evaluated for non-accrual status and write-off primarily based on their internal risk classification and not solely on their delinquency status, and, therefore, delinquency metrics are excluded from this table.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D277",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P320_S002",
+                    "paragraph_id": "ms_2024_7_P320",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Securities-based loans are evaluated based on factors that include, but are not limited to, the amount of the loan and the amount, quality, diversification, price volatility and liquidity of the collateral.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

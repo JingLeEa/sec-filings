@@ -1,0 +1,281 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "a5760a169ac778a2d3ec1ff9f87b186b41bd48d018b2ff55173a426073eca409",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_8_D141",
+    "item": "8",
+    "target_topic": "Valuation techniques for equity margin loans",
+    "target_summary": "Fair value of equity margin loans is determined by discounting future interest cash flows, net of potential losses from downward price movements of collateral, with losses modeled using margin loan rates calibrated from CDS spreads, implied debt yields, or volatility metrics.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0655",
+        "relationship": "one_to_one",
+        "status": "auto_matched",
+        "review_reasons": [],
+        "explanation": "The complete selected original text is identical within the same SEC Item after removing line-leading bullet formatting and normalizing whitespace. Neither LLM agent was used for this link.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_8_D150",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Loans and Lending Commitments > Valuation Techniques:",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The fair value of equity margin loans is determined by discounting future interest cash flows, net of potential losses from downward price movements, modeled using margin loan rates calibrated from market observable CDS spreads and other metrics.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D141",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Loans and Lending Commitments > Valuation Techniques:",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Fair value of equity margin loans is determined by discounting future interest cash flows, net of potential losses from downward price movements of collateral, with losses modeled using margin loan rates calibrated from CDS spreads, implied debt yields, or volatility metrics.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Unchanged",
+            "cosine_similarity": 1.0,
+            "sequence_match_ratio": 1.0,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "ms_2023_8_D150",
+            "score": 1.037117,
+            "normalised_score": 1.0371,
+            "label": "Unchanged",
+            "rationale": "Score 103.71% of ceiling with 100% word overlap — text is effectively identical.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.0,
+          "confidence_score": 1.0,
+          "reason": "The aligned disclosures are exact-text matches under the automatic matching policy, so no meaningful disclosure change is identified.",
+          "key_change": "No substantive change"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0123",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "ms_2024_8_D141 details the fair value of equity margin loans. The search results did not identify a specific 2025 disclosure dedicated solely to equity margin loans. ms_2025_8_D145 mentions equity margin loans in its third sentence, but it is grouped with corporate loans and mortgage loans. Since the proposed group in the input already linked D145 to D138/D139/D140, and D141 is a distinct asset class (Equity Margin Loans vs Corporate/Mortgage), it should not be merged into that same row unless explicitly linked. However, checking the search hits, ms_2025_8_D181 mentions 'Margin Loan Rate' as an input but is not a valuation technique disclosure for equity margin loans. There is no direct counterpart disclosure for Equity Margin Loans in 2025.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D141",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Loans and Lending Commitments > Valuation Techniques:",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Fair value of equity margin loans is determined by discounting future interest cash flows, net of potential losses from downward price movements of collateral, with losses modeled using margin loan rates calibrated from CDS spreads, implied debt yields, or volatility metrics.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -58,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "fair",
+              "value",
+              "of",
+              "equity",
+              "margin",
+              "loans",
+              "is",
+              "determined",
+              "by",
+              "discounting",
+              "future",
+              "interest",
+              "cash",
+              "flows",
+              "net",
+              "of",
+              "potential",
+              "losses",
+              "resulting",
+              "from"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure outlines the specific valuation technique for equity margin loans, including discounting cash flows and modeling losses using CDS spreads and volatility. The absence of a corresponding specific disclosure in 2025 for this asset class indicates a potential change in how these specific loans are valued or reported, or a significant consolidation into broader categories. This affects the transparency of fair value measurements for a specific lending product.",
+          "key_change": "Removal of Equity Margin Loans valuation technique disclosure"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Bank of America's candidates (bac_2024_8_D396, bac_2024_8_D401) focus on valuation techniques for 'loans held-for-sale' and 'asset-backed secured financings' using quoted market prices, broker bids, or origination rates. These topics and specific valuation inputs (origination rates, broker bids) are not substantively comparable to Morgan Stanley's specific disclosure on the fair value valuation and CDS-calibrated loss modeling for 'equity margin loans'."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D108",
+            "peer_topic": "ACL Calculation for Secured Financing Collateral",
+            "peer_summary": "For reverse repurchase agreements, securities borrowing, and margin loans, allowances for credit losses are recorded only when the asset's amortized cost basis exceeds the fair value of the collateral; no ACL is recorded if the collateral value is equal to or exceeds the cost basis.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.08348,
+            "relationship": "same_topic",
+            "comparison": "Both Morgan Stanley and Citi disclose valuation and credit loss considerations for margin loans. Morgan Stanley calculates the fair value of equity margin loans by discounting future interest cash flows, explicitly netting out potential losses modeled using market observable metrics like CDS spreads and volatility to account for downward price movements of the collateral. Citi similarly addresses margin loans by determining Allowances for Credit Losses (ACL) based on the excess of the asset's amortized cost basis over the fair value of the collateral, noting that no ACL is recorded if the collateral value equals or exceeds the cost basis. While Morgan Stanley's disclosure focuses on the fair value measurement technique including specific modeling inputs for loss calibration, Citi's disclosure focuses on the credit loss allowance recognition threshold relative to collateral fair value; both highlight the critical role of collateral fair value and credit risk metrics (CDS) in assessing the risk associated with margin lending.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D141",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P178_S005",
+                    "paragraph_id": "ms_2024_8_P178",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Fair value of equity margin loans is determined by discounting future interest cash flows, net of potential losses resulting from large downward price movements of the underlying margin loan collateral. The potential losses are modeled using the margin loan rate, which is calibrated from market observable CDS spreads, implied debt yields or volatility metrics of the loan collateral.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D108",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P105_S001",
+                    "paragraph_id": "c_2024_8_P105",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Most of Citi's reverse repurchase agreements, securities borrowing arrangements and margin loans require that the borrower continually adjust the amount of the collateral securing Citi's interest, primarily resulting from changes in the fair value of such collateral.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_8_P105_S002",
+                    "paragraph_id": "c_2024_8_P105",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "In such arrangements, ACLs are recorded based only on the amount by which the asset's amortized cost basis exceeds the fair value of the collateral.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_8_P105_S003",
+                    "paragraph_id": "c_2024_8_P105",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "No ACLs are recorded where the fair value of the collateral is equal to or exceeds the asset's amortized cost basis, as Citi does not expect to incur credit losses on such well-collateralized exposures.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Goldman Sachs' candidates (gs_2024_8_D273, gs_2024_8_D278) focus on the Debt Valuation Adjustment (DVA) for financial liabilities and the impact of credit spreads on loans/lending commitments under the fair value option. These disclosures relate to the firm's own credit risk affecting its liabilities or specific fair value option elections, which differs in substance and topic from Morgan Stanley's disclosure on the valuation methodology for margin loan assets and collateral loss modeling."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D102",
+            "peer_topic": "Loan fair value estimation methodology",
+            "peer_summary": "Loan fair value is typically estimated using discounted cash flow models incorporating principal, interest rates, expected credit losses, and market spreads, or based on underlying collateral, with differences from carrying value attributable to market interest rate and liquidity changes.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.087848,
+            "relationship": "same_topic",
+            "comparison": "Both Morgan Stanley and JPMorgan disclose methodologies for estimating the fair value of loans, incorporating risk adjustments and collateral factors. Morgan Stanley determines the fair value of equity margin loans by discounting future interest cash flows, net of potential losses modeled using credit risk metrics like CDS spreads to account for collateral price movements. JPMorgan states that loan fair value is typically estimated using discounted cash flow models that incorporate key inputs such as expected lifetime credit losses and market spreads, or is measured based on the value of underlying collateral. While Morgan Stanley specifies the margin loan context and the use of CDS/volatility for loss modeling in fair value, JPMorgan provides a broader loan fair value methodology that explicitly links fair value to underlying collateral value and credit loss expectations, aligning on the core concepts of discounting cash flows, accounting for credit risk, and considering collateral.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D141",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P178_S005",
+                    "paragraph_id": "ms_2024_8_P178",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Fair value of equity margin loans is determined by discounting future interest cash flows, net of potential losses resulting from large downward price movements of the underlying margin loan collateral. The potential losses are modeled using the margin loan rate, which is calibrated from market observable CDS spreads, implied debt yields or volatility metrics of the loan collateral.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D102",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P171_S001",
+                    "paragraph_id": "jpm_2024_8_P171",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(a)Fair value is typically estimated using a discounted cash flow model that incorporates the characteristics of the underlying loans (including principal, contractual interest rate and contractual fees) and other key inputs, including expected lifetime credit losses, interest rates, prepayment rates, and primary origination or secondary market spreads.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P171_S002",
+                    "paragraph_id": "jpm_2024_8_P171",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "For certain loans, the fair value is measured based on the value of the underlying collateral.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      }
+    ]
+  }
+}

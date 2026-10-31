@@ -1,0 +1,249 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "e482ebd6adcae3f3f4114dac404c3b37cf9a2613b64c474847100492718be5b6",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D263",
+    "item": "7",
+    "target_topic": "Credit Spread Risk Sensitivity Methodology",
+    "target_summary": "The amounts presented represent the potential gain for each 1 basis point widening of the company's credit spread.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0426",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures relate to 'Credit Spread Risk Sensitivity' under Market Risk. The 2023 disclosure (D258) explicitly states the sensitivity increased due to debt issuances and spread tightening. The 2024 disclosure (D263) provides the definition of the metric ('potential gain for each 1 bps widening of our credit spread') which is the standard presentation for this specific footnote/section on credit spread risk sensitivity for borrowings. They share the same specific topic and section heading.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D258",
+            "item": "7",
+            "section": "Market Risk > Non-Trading Risks > Credit Spread Risk Sensitivity [footnote 1]",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Credit spread risk sensitivity for borrowings carried at fair value at December 31, 2023 increased from December 31, 2022, primarily driven by debt issuances and credit spread tightening.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D263",
+            "item": "7",
+            "section": "Market Risk > Non-Trading Risks > Credit Spread Risk Sensitivity [footnote 1]",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The amounts presented represent the potential gain for each 1 basis point widening of the company's credit spread.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.110921,
+            "sequence_match_ratio": 0.093023,
+            "length_ratio": 0.535714,
+            "word_count_delta": -13,
+            "added_tokens_sample": [
+              "1",
+              "amounts",
+              "represent",
+              "the",
+              "potential",
+              "gain",
+              "for",
+              "each",
+              "1",
+              "bps",
+              "widening",
+              "of",
+              "our"
+            ],
+            "removed_tokens_sample": [
+              "risk",
+              "sensitivity",
+              "for",
+              "borrowings",
+              "carried",
+              "at",
+              "fair",
+              "value",
+              "at",
+              "december",
+              "31",
+              "2023",
+              "increased",
+              "from",
+              "december",
+              "31",
+              "2022",
+              "primarily",
+              "driven",
+              "by"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D258",
+            "score": 0.629235,
+            "normalised_score": 0.6292,
+            "label": "Modified",
+            "rationale": "Score 62.92% of ceiling — weak match, possibly a substantial rewrite. Manual review recommended.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.7,
+          "reason": "The disclosure shifts from reporting a specific trend (increase in sensitivity due to debt issuances) to a generic definition of the metric (potential gain per 1 bps widening). The removal of the specific driver (debt issuances) and the resulting directional change (increase) obscures the specific financial event impacting risk exposure, representing a meaningful change in the substance of the disclosed risk information.",
+          "key_change": "Removal of specific sensitivity trend drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0102",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No corresponding disclosure in the 2025 filing was found. The audit hit ms_2025_7_P198_AUDIT contains the same footnote text but is classified as excluded evidence (table footnote/unit definition) rather than a substantive business disclosure. The automatic search yielded no relevant matches.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D263",
+            "item": "7",
+            "section": "Market Risk > Non-Trading Risks > Credit Spread Risk Sensitivity [footnote 1]",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The amounts presented represent the potential gain for each 1 basis point widening of the company's credit spread.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -15,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "1",
+              "amounts",
+              "represent",
+              "the",
+              "potential",
+              "gain",
+              "for",
+              "each",
+              "1",
+              "bps",
+              "widening",
+              "of",
+              "our",
+              "credit",
+              "spread"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.85,
+          "reason": "The removed disclosure is a footnote defining the sensitivity metric ('potential gain for each 1 bps widening'). While the metric itself remains in the financial tables, the standalone definitional footnote text was removed or integrated. This is a formatting or presentation change that does not alter the substance of the credit spread risk exposure or sensitivity analysis.",
+          "key_change": "Removal of sensitivity metric definition footnote"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses credit spread sensitivity on liabilities or own-credit spread risk; the available disclosures cover deposit interest rates and general credit risk definitions."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses credit spread sensitivity on liabilities or own-credit spread risk; the available disclosures cover risk management effects on interest rates and High-Quality Liquid Assets (HQLA) composition."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D302",
+            "peer_topic": "Credit and Funding Spread Sensitivity on Derivatives and Liabilities",
+            "peer_summary": "Sensitivity to a one basis point increase in credit and funding spreads on derivatives resulted in a $2 million loss in 2024 and 2023, while sensitivity to own credit spreads on elected fair value financial liabilities resulted in gains of $43 million and $42 million respectively, subject to liquidity and hedge performance factors.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.068552,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan Chase (MS) and Goldman Sachs (GS) disclose the financial sensitivity of their financial liabilities to changes in their own credit spreads. MS defines the metric as the potential gain for a 1 basis point widening of its credit spread, while GS quantifies the estimated gain from a 1 basis point increase in its own credit spreads on fair value elected liabilities ($43 million in 2024). GS additionally notes that this sensitivity applies to financial liabilities where the fair value option was elected and is influenced by liquidity and hedge performance.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D263",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P306_S001",
+                    "paragraph_id": "ms_2024_7_P306",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "1.Amounts represent the potential gain for each 1 bps widening of our credit spread.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D302",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P402_S004",
+                    "paragraph_id": "gs_2024_7_P402",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In addition, the estimated sensitivity to a one basis point increase in our own credit spreads on financial liabilities for which the fair value option was elected was a gain of $43 million as of December 2024 and $42 million as of December 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P402_S005",
+                    "paragraph_id": "gs_2024_7_P402",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "However, the actual net impact of a change in our own credit spreads is also affected by the liquidity, duration and convexity (as the sensitivity is not linear to changes in yields) of those financial liabilities for which the fair value option was elected, as well as the relative performance of any hedges undertaken.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses the sensitivity of financial liabilities to own credit spread widening; the available disclosures cover adjustments to CVA/Credit Portfolio VaR due to counterparty credit spread widening and capital allocation for credit losses."
+      }
+    ]
+  }
+}

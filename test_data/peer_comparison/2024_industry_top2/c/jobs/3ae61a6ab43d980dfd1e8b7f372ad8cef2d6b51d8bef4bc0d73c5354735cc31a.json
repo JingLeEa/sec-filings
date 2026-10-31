@@ -1,0 +1,230 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "ad070af536ffbd24611a9c30dae775a1aa137abe492e6654ca9b57e4114db046",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D221",
+    "item": "7",
+    "target_topic": "Retail Services Delinquency Rate Trends",
+    "target_summary": "The 90+ days past due delinquency rate was broadly stable quarter-over-quarter but increased year-over-year, primarily due to the maturation of recent loan vintages previously delayed by pandemic stimulus, and driven by macroeconomic pressures affecting lower FICO customers.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0568",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss the 90+ days past due delinquency rate for Retail Services. They share the description of being broadly stable quarter-over-quarter, contrasting in year-over-year trends (increase in 2024 vs decrease in 2025), which reflects changes in portfolio performance but confirms the same subject matter.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "CREDIT RISK > CONSUMER CREDIT > Consumer Credit Trends > Retail Services",
+            "summary": "The 90+ days past due delinquency rate was broadly stable quarter-over-quarter but increased year-over-year, primarily due to the maturation of recent loan vintages previously delayed by pandemic stimulus, and driven by macroeconomic pressures affecting lower FICO customers.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D221",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "ALL OTHER-Managed Basis > CREDIT RISK > CONSUMER CREDIT > Consumer Credit Trends > Retail Services",
+            "summary": "The 90+ days past due delinquency rate was broadly stable quarter-over-quarter and decreased year-over-year, reflecting improvements in portfolio performance.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2025_7_D190",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.319444,
+            "change_taxonomy": "Reduced",
+            "word_count_delta": -49,
+            "cosine_similarity": 0.452101,
+            "added_tokens_sample": [
+              "decreased",
+              "improvements",
+              "portfolio",
+              "performance"
+            ],
+            "sequence_match_ratio": 0.4,
+            "removed_tokens_sample": [
+              "increased",
+              "primarily",
+              "the",
+              "continued",
+              "maturation",
+              "of",
+              "multiple",
+              "cards",
+              "loan",
+              "vintages",
+              "originated",
+              "recent",
+              "years",
+              "the",
+              "maturation",
+              "was",
+              "delayed",
+              "by",
+              "unprecedented",
+              "levels"
+            ]
+          },
+          "semantic": {
+            "label": "Relocated",
+            "score": 0.841356,
+            "method": "embedding_cosine",
+            "rationale": "Score 84.14% of ceiling — content is similar but section changed from 'CREDIT RISK > CONSUMER CREDIT > Consumer Credit Trends > Retail Services' to 'ALL OTHER-Managed Basis > CREDIT RISK > CONSUMER CREDIT > Consumer Credit Trends > Retail Services'.",
+            "matched_id": "c_2024_7_D221",
+            "normalised_score": 0.8414
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The 2025 disclosure reports a year-over-year decrease in the 90+ days past due delinquency rate for Retail Services, whereas 2024 reported an increase driven by vintage maturation and macroeconomic pressures. This reversal from increasing delinquencies to improving delinquency metrics represents a material positive change in the credit quality and risk exposure of the Retail Services portfolio.",
+          "key_change": "Reversal of Retail Services delinquency rate trend"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D264",
+            "peer_topic": "Credit Card Charge-Offs and Delinquencies",
+            "peer_summary": "Net charge-offs increased $1.2 billion to $3.7 billion in 2024 compared to 2023, while loans 30 days or more past due increased $219 million and those 90 days or more past due increased $177 million at December 31, 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.111094,
+            "relationship": "same_topic",
+            "comparison": "Both C and BAC report an increase in credit delinquency and charge-off metrics for 2024. C specifically attributes the year-over-year increase in its 90+ days past due rate to the maturation of recent loan vintages and macroeconomic pressures. Similarly, BAC reports an increase in net charge-offs and loans 90 days or more past due, with its context noting that charge-offs were driven by 'late-stage delinquent loans charged off' in the prior comparable period, indicating a shared trend of deteriorating credit quality in recent vintages. In contrast, C provides specific attribution to 'lower FICO band customers' driving the increase, while BAC reports absolute dollar increases ($177 million for 90+ days past due) without breaking out the demographic driver in the selected text.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D221",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P320_S001",
+                    "paragraph_id": "c_2024_7_P320",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The 90+ days past due delinquency rate was broadly stable quarter-over-quarter and increased year-over-year, primarily reflecting the continued maturation of multiple cards loan vintages originated in recent years.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P320_S003",
+                    "paragraph_id": "c_2024_7_P320",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "In addition, the increase was driven by macroeconomic pressures related to the elevated inflationary and interest rate environment, with lower FICO band customers primarily driving the increase.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D264",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P306_S003",
+                    "paragraph_id": "bac_2024_7_P306",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net charge-offs increased $1.2 billion to $3.7 billion in 2024 compared to 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P306_S004",
+                    "paragraph_id": "bac_2024_7_P306",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Credit card loans 30 days or more past due increased $219 million, and 90 days or more past due increased $177 million at December 31, 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (headcount changes and VaR) are unrelated to consumer credit delinquency trends or card loan performance."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D360",
+            "peer_topic": "Credit card net charge-offs",
+            "peer_summary": "Net charge-offs increased in 2024 relative to the prior year, driven by the seasoning of recent vintages, credit normalization, and balance growth.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.159602,
+            "relationship": "same_topic",
+            "comparison": "Both C and JPM identify the 'seasoning' or 'maturation' of recent loan vintages as a primary driver for increased delinquencies/charge-offs in 2024. C states the increase reflects 'continued maturation of multiple cards loan vintages originated in recent years,' while JPM attributes its net charge-off increase to 'seasoning of vintages originated in recent years.' Additionally, C highlights that macroeconomic pressures related to inflation and interest rates drove the increase among lower FICO customers. JPM broadly attributes its increase to 'credit normalization and balance growth' alongside seasoning, but does not specify the customer credit tier (FICO) in the cited text.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D221",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P320_S001",
+                    "paragraph_id": "c_2024_7_P320",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The 90+ days past due delinquency rate was broadly stable quarter-over-quarter and increased year-over-year, primarily reflecting the continued maturation of multiple cards loan vintages originated in recent years.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P320_S003",
+                    "paragraph_id": "c_2024_7_P320",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "In addition, the increase was driven by macroeconomic pressures related to the elevated inflationary and interest rate environment, with lower FICO band customers primarily driving the increase.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D360",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P528_S003",
+                    "paragraph_id": "jpm_2024_7_P528",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Net charge-offs increased for the year ended December 31, 2024 compared to the prior year reflecting the seasoning of vintages originated in recent years, credit normalization and balance growth.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (transactional revenues and asset management fees) are unrelated to consumer credit delinquency trends or card loan performance."
+      }
+    ]
+  }
+}

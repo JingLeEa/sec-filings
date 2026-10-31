@@ -1,0 +1,342 @@
+{
+  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
+  "request_hash": "4dbcc3a50e9a950743c9c2c722cd5286cebf059a074f5ea18df2b3be8804b594",
+  "result": {
+    "target_ticker": "MU",
+    "target_disclosure_id": "mu_2024_1_D033",
+    "item": "1",
+    "target_topic": "MBU financial results and sales composition",
+    "target_summary": "MBU reported revenue of $6.35 billion in 2024, down from $7.26 billion in 2022, with 2024 sales consisting primarily of LPDDR5 and LPDDR4 DRAM and managed NAND solutions.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "mu_2023_2024_M0145",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the Mobile Business Unit (MBU) revenue for the respective fiscal year and describe the primary product composition (LPDDR DRAM and managed NAND) driving those sales. D020 (2023) reports $3.63B; D033 (2024) reports $6.35B. The subject is specifically MBU financial performance and product mix.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2023_1_D020",
+            "item": "1",
+            "section": "Sales, Markets, and Products > Products by Business Unit and Market > Mobile Business Unit (\"MBU\")",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "MBU reported revenue of $3.63 billion in 2023, down from $7.26 billion in 2022 and $7.20 billion in 2021. Sales primarily consisted of LPDDR4 and LPDDR5 DRAM and managed NAND solutions, supported by increasing 5G penetration which drives higher DRAM and NAND content per device.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2024_1_D033",
+            "item": "1",
+            "section": "Products, Market, and Sales > Products by Business Unit and Market > Mobile Business Unit (\"MBU\")",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "MBU reported revenue of $6.35 billion in 2024, down from $7.26 billion in 2022, with 2024 sales consisting primarily of LPDDR5 and LPDDR4 DRAM and managed NAND solutions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.756095,
+            "sequence_match_ratio": 0.6,
+            "length_ratio": 0.639344,
+            "word_count_delta": -22,
+            "added_tokens_sample": [
+              "6",
+              "35",
+              "billion",
+              "in",
+              "2024",
+              "and",
+              "2024",
+              "lpddr5",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "and",
+              "7",
+              "20",
+              "billion",
+              "in",
+              "2021",
+              "mobile",
+              "2023",
+              "and",
+              "lpddr5",
+              "5g",
+              "enabled",
+              "products",
+              "require",
+              "higher",
+              "dram",
+              "and",
+              "nand",
+              "content",
+              "per"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2023_1_D020",
+            "score": 0.998488,
+            "normalised_score": 0.9985,
+            "label": "Relocated",
+            "rationale": "Score 99.85% of ceiling — content is similar but section changed from 'Sales, Markets, and Products > Products by Business Unit and Market > Mobile Business Unit (\"MBU\")' to 'Products, Market, and Sales > Products by Business Unit and Market > Mobile Business Unit (\"MBU\")'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The disclosure updates financial revenue figures significantly (from $3.63B to $6.35B) and removes the explicit mention of 5G penetration driving higher content per device, while updating the primary product mix to highlight LPDDR5. The combination of significant financial change and removal of a specific growth driver explanation constitutes a material change in the disclosure of financial performance and its underlying causes.",
+          "key_change": "Update of revenue figures and removal of 5G content driver explanation"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "mu_2024_2025_M0152",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Matched 2024 Mobile Business Unit (MBU) to 2025 Mobile and Client Business Unit (MCBU). While MCBU now includes Client SSDs, the core mobile component (LPDDR/Managed NAND) remains consistent with MBU. This is the closest structural counterpart for the mobile segment revenue.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2024_1_D033",
+            "item": "1",
+            "section": "Products, Market, and Sales > Products by Business Unit and Market > Mobile Business Unit (\"MBU\")",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "MBU reported revenue of $6.35 billion in 2024, down from $7.26 billion in 2022, with 2024 sales consisting primarily of LPDDR5 and LPDDR4 DRAM and managed NAND solutions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2025_1_D034",
+            "item": "1",
+            "section": "Products, Market, and Sales > Products by Business Unit and Market > Mobile and Client Business Unit (\"MCBU\")",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "MCBU reported total revenue of $11.86 billion in 2025, $11.67 billion in 2024, and $7.39 billion in 2023, with sales primarily consisting of specific DRAM, NAND, and SSD product lines.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.569735,
+            "sequence_match_ratio": 0.403226,
+            "length_ratio": 2.179487,
+            "word_count_delta": 46,
+            "added_tokens_sample": [
+              "total",
+              "mcbu",
+              "was",
+              "11",
+              "86",
+              "billion",
+              "in",
+              "2025",
+              "11",
+              "67",
+              "and",
+              "7",
+              "39",
+              "mcbu",
+              "2025",
+              "mcbu",
+              "sales",
+              "to",
+              "the",
+              "client"
+            ],
+            "removed_tokens_sample": [
+              "mbu",
+              "of",
+              "6",
+              "35",
+              "3",
+              "63",
+              "and",
+              "7",
+              "26",
+              "billion",
+              "in",
+              "2022",
+              "mbu",
+              "2024"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2024_1_D033",
+            "score": 0.905412,
+            "normalised_score": 0.9054,
+            "label": "Relocated",
+            "rationale": "Score 90.54% of ceiling — content is similar but section changed from 'Products, Market, and Sales > Products by Business Unit and Market > Mobile Business Unit (\"MBU\")' to 'Products, Market, and Sales > Products by Business Unit and Market > Mobile and Client Business Unit (\"MCBU\")'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The revenue figures for the segment change significantly (from $6.35B for MBU in 2024 to $11.67B for MCBU in 2024), reflecting a material reorganization of the business unit structure that merged Mobile and Client segments, fundamentally changing the reporting of financial performance.",
+          "key_change": "Business unit restructuring merging Mobile and Client segments altering revenue reporting"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate disclosures (amd_2024_1_D080, amd_2024_1_D079) address seasonal operating results and order cancellation risks, but do not discuss revenue composition by business unit, mobile market sales, or specific product lines like DRAM/NAND comparable to MU's MBU disclosure."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_1_D091",
+            "peer_topic": "Historical Revenue Seasonality and Drivers",
+            "peer_summary": "The company's net revenue has historically been higher in the second half of the fiscal year, primarily driven by seasonality in wireless communications products linked to OEM mobile device launches.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.040837,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose that a significant portion of their revenue is linked to the mobile market and exhibits seasonality driven by OEM device launches. MU specifically details that its Mobile Business Unit (MBU) sales consist primarily of LPDDR5 and LPDDR4 DRAM for the mobile market. Similarly, AVGO notes that its net revenue is historically higher in the second half of the fiscal year primarily due to seasonality in wireless communications products, which is linked to the launch timing of new mobile devices by OEM customers. Both disclosures identify the mobile/OEM launch cycle as a key driver of revenue timing and composition.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1_D033",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P035_S001",
+                    "paragraph_id": "mu_2024_1_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "MBU reported revenue of $6.35 billion in 2024, $3.63 billion in 2023, and $7.26 billion in 2022.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1_P035_S002",
+                    "paragraph_id": "mu_2024_1_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "MBU sales to the mobile market in 2024 consisted primarily of LPDDR5 and LPDDR4 DRAM and managed NAND solutions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_1_D091",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1_P054_S001",
+                    "paragraph_id": "avgo_2024_1_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Historically, our net revenue has typically been higher in the second half of the fiscal year than in the first half, primarily due to seasonality in our wireless communications products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_1_P054_S002",
+                    "paragraph_id": "avgo_2024_1_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "These products have historically experienced seasonality due to launches of new mobile devices manufactured by our OEM customers.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate disclosures (intc_2024_1_D087, intc_2024_1_D089) relate to risks associated with marketable and non-marketable equity securities investments, which is unrelated to MBU financial results or sales composition."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_1_D036",
+            "peer_topic": "Global Sales and Partner Network Strategy",
+            "peer_summary": "The company's sales and marketing strategy aims to provide high-performance computing platforms and software through a global network of partners including CSPs, OEMs, and ISVs.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.010086,
+            "relationship": "related_topic",
+            "comparison": "Both companies disclose their reliance on a partner network for sales and marketing, though the specific partners and product focus differ. MU's MBU sales are driven by sales to the mobile market involving DRAM and managed NAND solutions, implying a B2B relationship with mobile device manufacturers. NVDA explicitly states its sales and marketing strategy utilizes a global partner network including OEMs, ODMs, and CSPs to distribute its high-performance computing platforms. While MU does not explicitly list 'OEMs' in this specific sentence, its focus on 'mobile market' sales inherently involves OEM relationships similar to NVDA's stated partner ecosystem strategy.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1_D033",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P035_S002",
+                    "paragraph_id": "mu_2024_1_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "MBU sales to the mobile market in 2024 consisted primarily of LPDDR5 and LPDDR4 DRAM and managed NAND solutions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_1_D036",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1_P039_S002",
+                    "paragraph_id": "nvda_2024_1_P039",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our sales and marketing teams, located across our global markets, work closely with end customers and various industry ecosystems through our partner network.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_1_P039_S003",
+                    "paragraph_id": "nvda_2024_1_P039",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our partner network incorporates global, regional and specialized CSPs, OEMs, ODMs, system integrators, independent software vendors, or ISVs, add-in board manufacturers, or AIBs, distributors, automotive manufacturers and tier-1 automotive suppliers, and other ecosystem participants.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate disclosures (qcom_2024_1_D004, qcom_2024_1_D007) describe overall revenue sources (Snapdragon chips and IP licensing) and corporate segment structure. While QCOM also sells to mobile OEMs, these disclosures do not provide the specific financial results (revenue amounts) or product-level sales composition (LPDDR5/4) for a mobile unit comparable to MU's detailed MBU financial disclosure."
+      }
+    ]
+  }
+}

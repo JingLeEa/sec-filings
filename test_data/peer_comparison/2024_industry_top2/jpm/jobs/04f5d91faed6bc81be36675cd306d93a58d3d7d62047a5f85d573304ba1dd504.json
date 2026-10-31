@@ -1,0 +1,312 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "7f7d3cd818e5f1b4ff070fe3c9b6c73c92309a1a12cc388dbe502ad9a31465c8",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D160",
+    "item": "7",
+    "target_topic": "Treasury and CIO investment portfolio composition and size",
+    "target_summary": "As of December 31, 2024, the Treasury and CIO investment securities portfolio, net of allowance for credit losses, totaled $678.3 billion with an average external credit rating of AA+, consisting predominantly of U.S. and non-U.S. government securities, GSEs, MBS, CLOs, and ABS.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0445",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the composition of the Treasury and CIO investment securities portfolio (government securities, MBS, ABS, etc.) and provide the total portfolio value net of credit loss allowances along with the average credit rating (AA+) at year-end.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D170",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > Treasury and CIO overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The investment securities portfolio, predominantly consisting of U.S. and non-U.S. government securities, mortgage-backed securities, and other ABS, was $569.2 billion net of credit loss allowances as of December 31, 2023, with an average external credit rating of AA+.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D160",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > Treasury and CIO overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 31, 2024, the Treasury and CIO investment securities portfolio, net of allowance for credit losses, totaled $678.3 billion with an average external credit rating of AA+, consisting predominantly of U.S. and non-U.S. government securities, GSEs, MBS, CLOs, and ABS.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.948313,
+            "sequence_match_ratio": 0.883249,
+            "length_ratio": 0.841121,
+            "word_count_delta": -17,
+            "added_tokens_sample": [
+              "2024",
+              "678",
+              "3"
+            ],
+            "removed_tokens_sample": [
+              "2023",
+              "569",
+              "2",
+              "refer",
+              "to",
+              "note",
+              "10",
+              "for",
+              "further",
+              "information",
+              "on",
+              "the",
+              "firm's",
+              "investment",
+              "securities",
+              "portfolio",
+              "and",
+              "internal",
+              "risk",
+              "ratings"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_7_D170",
+            "score": 0.984648,
+            "normalised_score": 0.9846,
+            "label": "Relocated",
+            "rationale": "Score 98.46% of ceiling — content is similar but section changed from 'BUSINESS SEGMENT RESULTS > Treasury and CIO overview' to 'BUSINESS SEGMENT & CORPORATE RESULTS > Treasury and CIO overview'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.9,
+          "reason": "The disclosure shows a significant increase in the size of the Treasury and CIO investment securities portfolio, growing from $569.2 billion to $678.3 billion. This $109 billion increase represents a material expansion in the firm's liquidity and funding management resources, altering the scale of the financial position disclosed.",
+          "key_change": "Significant increase in Treasury and CIO investment securities portfolio value"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0382",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "missing_review_metadata",
+          "verifier_requested_review"
+        ],
+        "explanation": "Both disclosures report the composition, total value (net of allowance), and average credit rating of the Treasury and CIO investment securities portfolio as of year-end. The 2024 disclosure cites $678.3 billion with AA+ rating, while the 2025 disclosure cites $774.0 billion with AA+ rating. Both also detail the predominant security types (gov securities, GSEs, MBS, etc.).\n\nDisclosure jpm_2024_7_D162 specifically reports the allowance for credit losses on investment securities for 2024, 2023, and 2022. The 2025 disclosure jpm_2025_7_D152 includes a sentence reporting the allowance for credit losses on investment securities for 2025, 2024, and 2023. While jpm_2025_7_D152 is primarily about portfolio size, it contains the specific evidence for the allowance amount trend, making it the best match for this specific data point among the available candidates. The search results highlighted this hit.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D160",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > Treasury and CIO overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 31, 2024, the Treasury and CIO investment securities portfolio, net of allowance for credit losses, totaled $678.3 billion with an average external credit rating of AA+, consisting predominantly of U.S. and non-U.S. government securities, GSEs, MBS, CLOs, and ABS.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D162",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > Treasury and CIO overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The allowance for credit losses on investment securities was $105 million as of December 31, 2024, compared to $94 million in 2023 and $67 million in 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D152",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > Treasury and CIO overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 31, 2025, the Treasury and CIO investment securities portfolio, net of the $73 million allowance for credit losses, was $774.0 billion with an average credit rating of AA+.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D025",
+            "peer_topic": "Debt Securities Composition and Investment Strategy",
+            "peer_summary": "Debt securities primarily include U.S. Treasury and agency securities, MBS, non-U.S. bonds, corporate bonds, and municipal debt. The company reinvests cash in this portfolio primarily to manage interest rate and liquidity risk.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.111833,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Bank of America disclose the composition of their primary investment/debt securities portfolios, which share common holdings like U.S. Treasuries, Agency securities, MBS, and ABS/municipal debt. However, JPMorgan explicitly quantifies the portfolio size at $678.3 billion with an AA+ rating, whereas Bank of America focuses on the strategic purpose of reinvesting cash to manage interest rate and liquidity risk without providing a total portfolio value in this specific disclosure.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D160",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P248_S001",
+                    "paragraph_id": "jpm_2024_7_P248",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The investment securities portfolio predominantly consists of U.S. and non-U.S. government securities, U.S. GSE and government agency and nonagency mortgage-backed securities, collateralized loan obligations, obligations of U.S. states and municipalities and other ABS.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P248_S002",
+                    "paragraph_id": "jpm_2024_7_P248",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "At December 31, 2024, the Treasury and CIO investment securities portfolio, net of the allowance for credit losses, was $678.3 billion, and the average credit rating of the securities comprising the portfolio was AA+ (based upon external ratings where available and, where not available, based primarily upon internal risk ratings).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P023_S001",
+                    "paragraph_id": "bac_2024_7_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Debt securities primarily include U.S. Treasury and agency securities, mortgage-backed securities (MBS), principally agency MBS, non-U.S. bonds, corporate bonds and municipal debt.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P023_S002",
+                    "paragraph_id": "bac_2024_7_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "We reinvest cash in the debt securities portfolio primarily to manage interest rate and liquidity risk.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D157",
+            "peer_topic": "Corporate/Other Revenue Decline",
+            "peer_summary": "Corporate/Other revenues decreased to $668 million from $2.1 billion, largely driven by net investment securities losses from portfolio repositioning and higher funding costs.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.121605,
+            "relationship": "related_topic",
+            "comparison": "While JPMorgan describes the static composition and rating of its Treasury/CIO portfolio, Citigroup highlights the financial impact of actively repositioning its investment securities portfolio in 2024, which resulted in significant losses. Both disclosures confirm that the investment securities portfolio is a dynamic asset class subject to management actions (repositioning) that can drive revenue/loss outcomes, whereas JPM's disclosure is descriptive of the asset mix rather than the P&L impact of changes.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D160",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P248_S001",
+                    "paragraph_id": "jpm_2024_7_P248",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The investment securities portfolio predominantly consists of U.S. and non-U.S. government securities, U.S. GSE and government agency and nonagency mortgage-backed securities, collateralized loan obligations, obligations of U.S. states and municipalities and other ABS.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D157",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P237_S001",
+                    "paragraph_id": "c_2024_7_P237",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Corporate/Other revenues decreased to $668 million, compared to $2.1 billion in the prior year, largely driven by the net investment securities losses due to the repositioning of the investment securities portfolio and higher funding costs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The available candidates for Goldman Sachs (gs_2024_7_D255, gs_2024_7_D111) describe Group Company Liquidity Assets (GCLA) which focus on parent-level liquidity and cash deposits, or credit loss provisions for consumer portfolios. These do not constitute a comparable disclosure of a Treasury/CIO-style investment securities portfolio composition with similar asset class breadth (MBS, ABS, CLOs) and rating descriptions as seen in JPMorgan."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D140",
+            "peer_topic": "Liquidity Coverage Ratio High-Quality Liquid Assets Composition",
+            "peer_summary": "The High-Quality Liquid Assets (HQLA) primarily include U.S. Treasuries, U.S. agency mortgage-backed securities, sovereign bonds, and investment grade corporate bonds.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.08045,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Morgan Stanley disclose that their high-quality liquid/investment portfolios are predominantly composed of U.S. Treasuries and U.S. agency mortgage-backed securities. JPMorgan includes additional categories like collateralized loan obligations (CLOs) and non-U.S. government securities, while Morgan Stanley’s High-Quality Liquid Assets (HQLA) definition explicitly includes investment grade corporate bonds, which are not highlighted in JPMorgan's specific Treasury/CIO portfolio description.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D160",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P248_S001",
+                    "paragraph_id": "jpm_2024_7_P248",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The investment securities portfolio predominantly consists of U.S. and non-U.S. government securities, U.S. GSE and government agency and nonagency mortgage-backed securities, collateralized loan obligations, obligations of U.S. states and municipalities and other ABS.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D140",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P168_S001",
+                    "paragraph_id": "ms_2024_7_P168",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "1.Primarily includes U.S. Treasuries, U.S. agency mortgage-backed securities, sovereign bonds and investment grade corporate bonds.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

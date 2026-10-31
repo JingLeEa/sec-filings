@@ -1,0 +1,612 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "d654164b27bae5675b66eae2642d1cd2d53c7be969e3154c68176767e21a4a86",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_7_D084",
+    "item": "7",
+    "target_topic": "2024 Impairment and Depreciation Charges Impacting Gross Margin",
+    "target_summary": "Consolidated gross margin decreased by $4.4 billion in 2024 compared to 2023, primarily driven by $3.3 billion in impairment and accelerated depreciation charges related to manufacturing assets exceeding capacity for the Intel 7 process node, as well as $922 million in Gaudi AI accelerator inventory-related charges.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0330",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss factors impacting gross margin related to depreciation and asset charges. D074 explains a useful life change reducing depreciation expense by $4.2B. D084 discusses impairment and accelerated depreciation charges of $3.3B. While the specific nature (useful life change vs. impairment/acceleration) differs, they are the primary disclosures in their respective years regarding significant non-standard depreciation/asset-related impacts on gross margin. However, the specific mechanism and magnitude are quite different (reduction vs. charge). A stricter interpretation might see these as distinct topics (Accounting Estimate Change vs. Asset Impairment). Given the instruction to split spurious links, and that one is a *beneficial* estimate change and the other is a *negative* impairment charge, they are likely distinct topics despite both affecting depreciation. D074 is about an accounting estimate; D084 is about operational/strategic asset write-downs. I will flag this for review or split if allowed, but the prompt allows many-to-one. Let's look closer. D074: 'increased estimated useful life... reduced expense'. D084: 'impaired... accelerated depreciation... charge",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2023_7_D074",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Effective January 2023, Intel increased the estimated useful life of certain production machinery from 5 to 8 years, reducing 2023 depreciation expense by $4.2 billion and increasing gross margin by approximately $2.5 billion; however, due to cost absorption mechanisms, the actual year-over-year impact on operating results is impractical to quantify specifically.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D084",
+            "item": "7",
+            "section": "Consolidated Results of Operations > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Consolidated gross margin decreased by $4.4 billion in 2024 compared to 2023, primarily driven by $3.3 billion in impairment and accelerated depreciation charges related to manufacturing assets exceeding capacity for the Intel 7 process node, as well as $922 million in Gaudi AI accelerator inventory-related charges.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.314776,
+            "sequence_match_ratio": 0.08642,
+            "length_ratio": 0.653061,
+            "word_count_delta": -68,
+            "added_tokens_sample": [
+              "our",
+              "consolidated",
+              "gross",
+              "margin",
+              "in",
+              "2024",
+              "decreased",
+              "by",
+              "4",
+              "4",
+              "billion",
+              "or",
+              "20",
+              "2023",
+              "due",
+              "primarily",
+              "to",
+              "higher",
+              "2024",
+              "impairment"
+            ],
+            "removed_tokens_sample": [
+              "effective",
+              "january",
+              "2023",
+              "we",
+              "increased",
+              "the",
+              "estimated",
+              "useful",
+              "life",
+              "of",
+              "certain",
+              "production",
+              "machinery",
+              "and",
+              "equipment",
+              "from",
+              "5",
+              "to",
+              "8",
+              "years"
+            ]
+          },
+          "semantic": {
+            "matched_id": "intc_2023_7_D074",
+            "score": 0.743065,
+            "normalised_score": 0.7431,
+            "label": "Relocated",
+            "rationale": "Score 74.31% of ceiling — content is similar but section changed from 'Consolidated Results of Operations > Gross Margin' to 'Consolidated Results of Operations > 2024 vs. 2023'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.8,
+          "reason": "Based on the reasoning provided in the alignment explanation (splitting spurious links), this row is treated as having no valid counterpart. Consequently, there is no 'change' to assess between two periods. If assessed as a single-side introduction, it is a specific accounting/operational event (impairment) which is material, but the alignment pair itself is invalid/removed. However, per instructions, I must classify the row. The row represents a 'removed' link. Since the link is spurious, the comparison is void. I will treat this as 'No' materiality for the *alignment change* because the alignment itself is an error that should not have existed, meaning no comparative disclosure change is valid. Alternatively, if forced to judge the 2024 text alone, it's material, but the task is 'alignment row'. The row is a 'one_to_one' status which is incorrect per the reasoning. I will classify as 'No' because the premise of comparison is flawed/removed. *Correction*: The prompt asks to classify the *disclosure change represented by the alignment*. If the alignment is deemed spurious and removed, there is no change. I will mark it as 'No' with low confidence or 'Yes' if I assume the link stands? The reasoning says 'I will split them... D074 is unmatched, D084 is unmatched'. This implies the current row (which holds the pair) should arguably be split or removed. Since I must output a classification for the *supplied* match_id, and the match_id is 'ai_verified' (one_to_one), but the internal reasoning says it's spurious: I will follow the internal reasoning that the link is spurious. A spurious link means the comparison is invalid. Invalid comparisons are not material changes. Score: 0.1. Confidence: 0.9 (based on the strong reasoning provided in the text that they are distinct topics).",
+          "key_change": "Spurious alignment removal"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0357",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "All three 2024 disclosures discuss the specific non-cash impairment and accelerated depreciation charges related to manufacturing assets (specifically Intel 7 node capacity excess) recorded in 2024. The 2025 D009 disclosure reports the analogous 2025 charges for assets with no remaining operational use. They share the specific topic of manufacturing asset impairment/depreciation charges impacting cost of sales.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D006",
+            "item": "7",
+            "section": "Management's Discussion and Analysis > Restructuring",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Intel's 2024 consolidated results were materially impacted by $3.3 billion in charges for non-cash impairments and accelerated depreciation of manufacturing assets, $3.1 billion in non-cash goodwill and intangible asset impairments, and $9.9 billion in non-cash income tax charges related to valuation allowances on net deferred tax assets.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "intc_2024_7_D061",
+            "item": "7",
+            "section": "Operating Segment Trends and Results > Cost of Sales",
+            "taxonomy": "Operations & Capacity",
+            "summary": "Cost of sales increased by $4.1 billion to $25.6 billion in 2024, primarily driven by $3.3 billion in non-cash impairments and accelerated depreciation for manufacturing assets (mostly Intel 7 process node), $1.3 billion in higher intersegment COGS due to volume and advanced tech ramp, and factory start-up costs.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "intc_2024_7_D084",
+            "item": "7",
+            "section": "Consolidated Results of Operations > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Consolidated gross margin decreased by $4.4 billion in 2024 compared to 2023, primarily driven by $3.3 billion in impairment and accelerated depreciation charges related to manufacturing assets exceeding capacity for the Intel 7 process node, as well as $922 million in Gaudi AI accelerator inventory-related charges.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2025_7_D009",
+            "item": "7",
+            "section": "Management's Discussion and Analysis > Significant Events and Trends Impacting Results > Restructuring",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Intel recognized $950 million in non-cash accelerated depreciation and impairment charges for certain manufacturing assets with no remaining operational use, impacting the Intel Foundry segment's cost of sales in 2025 based on process technology capacity evaluations.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.51387,
+            "sequence_match_ratio": 0.099057,
+            "length_ratio": 0.232558,
+            "word_count_delta": -264,
+            "added_tokens_sample": [
+              "2025",
+              "affected",
+              "accelerated",
+              "depreciation",
+              "and",
+              "impairment",
+              "charges",
+              "recognized",
+              "for",
+              "certain",
+              "manufacturing",
+              "assets",
+              "that",
+              "were",
+              "determined",
+              "to",
+              "have",
+              "no",
+              "remaining",
+              "operational"
+            ],
+            "removed_tokens_sample": [
+              "2024",
+              "materially",
+              "impacted",
+              "the",
+              "following",
+              "3",
+              "3",
+              "billion",
+              "substantially",
+              "all",
+              "which",
+              "related",
+              "to",
+              "non",
+              "cash",
+              "impairments",
+              "and",
+              "acceleration",
+              "of",
+              "depreciation"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "intc_2024_7_D006",
+            "score": 0.873494,
+            "normalised_score": 0.8735,
+            "rationale": "Merge: 3 previous → 1 current. Best pair scored 87.35% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The 2025 filing reports $950 million in non-cash impairment and accelerated depreciation charges for manufacturing assets with no remaining operational use. While the amount is lower than the $3.3 billion in 2024, it signifies continued material write-downs and capacity rationalization in the Foundry business.",
+          "key_change": "Manufacturing asset impairment charges"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0424",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D086 (2025) details the critical accounting estimate for PP&E impairment, specifically mentioning non-cash impairment charges for assets exceeding capacity ($494M in 2025, $2.3B in 2024). This matches the 2024 impairment charges described in D084 and the CIP/impairment risk context in D086.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D084",
+            "item": "7",
+            "section": "Consolidated Results of Operations > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Consolidated gross margin decreased by $4.4 billion in 2024 compared to 2023, primarily driven by $3.3 billion in impairment and accelerated depreciation charges related to manufacturing assets exceeding capacity for the Intel 7 process node, as well as $922 million in Gaudi AI accelerator inventory-related charges.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "intc_2024_7_D086",
+            "item": "7",
+            "section": "Consolidated Results of Operations > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 28, 2024, capital investments in construction in progress totaled $50.4 billion, which have not yet begun depreciating; once placed into service, these assets will incur depreciation expense that impacts future production costs, potentially unfavorably affecting gross margin and operating income if revenues do not grow to offset these costs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2025_7_D086",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Liquidity and Capital Resources > Critical Accounting Estimates > Property, Plant and Equipment",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Property, plant, and equipment undergo periodic impairment reviews based on factors such as changes in use or significant under-performance. In 2025 and 2024, non-cash impairment charges of $494 million and $2.3 billion were recorded for assets not yet placed in service that exceeded projected capacity requirements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.454204,
+            "sequence_match_ratio": 0.056818,
+            "length_ratio": 1.137652,
+            "word_count_delta": 34,
+            "added_tokens_sample": [
+              "property",
+              "plant",
+              "and",
+              "equipment",
+              "are",
+              "subject",
+              "to",
+              "periodic",
+              "impairment",
+              "reviews",
+              "factors",
+              "that",
+              "we",
+              "consider",
+              "in",
+              "deciding",
+              "when",
+              "to",
+              "perform",
+              "an"
+            ],
+            "removed_tokens_sample": [
+              "consolidated",
+              "margin",
+              "2024",
+              "decreased",
+              "by",
+              "4",
+              "4",
+              "billion",
+              "or",
+              "20",
+              "compared",
+              "to",
+              "2023",
+              "due",
+              "primarily",
+              "to",
+              "higher",
+              "2024",
+              "impairment",
+              "charges"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "intc_2024_7_D086",
+            "score": 0.706147,
+            "normalised_score": 0.7061,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 70.61% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Reworded",
+          "final_taxonomy": "Reworded"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.95,
+          "reason": "The alignment aggregates specific 2024 financial results (margin decrease drivers, CIP amounts) into a 2025 disclosure that quantifies current and prior year impairment charges ($494M in 2025, $2.3B in 2024) based on capacity vs. projected requirements. The 2025 disclosure introduces a new current-period material charge ($494M) and contextualizes the prior year's massive charges within the same specific impairment framework (excess capacity). This quantification of ongoing impairment trends and current-year material costs is a meaningful change in the disclosure of financial condition and operational execution risks.",
+          "key_change": "Quantification of current and prior year PP&E impairment charges due to excess capacity"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0423",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "D085 details the critical accounting estimate for Property, Plant, and Equipment, specifically noting the shortening of useful lives resulting in accelerated depreciation charges ($456M in 2025, $992M in 2024). This corresponds to the specific asset impairment/depreciation topic in D006 and D084, and the 'Long-lived assets' category in D115.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D006",
+            "item": "7",
+            "section": "Management's Discussion and Analysis > Restructuring",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Intel's 2024 consolidated results were materially impacted by $3.3 billion in charges for non-cash impairments and accelerated depreciation of manufacturing assets, $3.1 billion in non-cash goodwill and intangible asset impairments, and $9.9 billion in non-cash income tax charges related to valuation allowances on net deferred tax assets.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "intc_2024_7_D084",
+            "item": "7",
+            "section": "Consolidated Results of Operations > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Consolidated gross margin decreased by $4.4 billion in 2024 compared to 2023, primarily driven by $3.3 billion in impairment and accelerated depreciation charges related to manufacturing assets exceeding capacity for the Intel 7 process node, as well as $922 million in Gaudi AI accelerator inventory-related charges.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "intc_2024_7_D115",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Critical Accounting Estimates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company identifies inventories (valuation based on lower of cost or net realizable value considering forecasted demand), long-lived assets (impairment and useful life assessments for PP&E and intangibles), and loss contingencies (estimation of probable and estimable losses) as key critical accounting estimates.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2025_7_D085",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Liquidity and Capital Resources > Critical Accounting Estimates > Property, Plant and Equipment",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Intel evaluates the recoverable period for property, plant, and equipment annually, using management judgments on useful lives. In 2025 and 2024, shortening useful lives for certain placed-in-service equipment resulted in accelerated depreciation charges of $456 million and $992 million, respectively, as manufacturing asset portfolios exceeded capacity requirements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates provided by AMD relate to segment operating income declines (Embedded) and gaming revenue drops, which do not address the specific target topic of consolidated gross margin impairment, depreciation, or inventory charges."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D049",
+            "peer_topic": "Gross margin financial results and VMware impact",
+            "peer_summary": "Gross margin increased to $32,509 million in fiscal year 2024 from $24,690 million in fiscal year 2023, primarily due to VMware contributions offset by higher amortization of acquisition-related intangible assets. As a percentage of net revenue, gross margin decreased to 63% from 69%, driven by the same amortization factors, less favorable semiconductor product mix, and offsets from infrastructure software margins.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.133889,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose specific factors driving consolidated gross margin performance in 2024, though the outcomes and drivers differ significantly. Intel reports a decrease in gross margin driven by large non-cash impairment and accelerated depreciation charges ($3.3 billion) related to manufacturing asset capacity and inventory charges ($922 million). In contrast, Broadcom reports an increase in gross margin dollars ($32,509 million) but a decrease in margin percentage (63% vs 69%) driven primarily by higher amortization of acquisition-related intangible assets from the VMware Merger and less favorable semiconductor product mix. Both cite specific charge types (intel: impairment/depreciation; broadcom: amortization) impacting their respective margin metrics.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D084",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P078_S001",
+                    "paragraph_id": "intc_2024_7_P078",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Our consolidated gross margin in 2024 decreased by $4.4 billion, or 20%, compared to 2023 due primarily to higher 2024 impairment charges and accelerated depreciation.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_7_P078_S003",
+                    "paragraph_id": "intc_2024_7_P078",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Upon completing an asset re-use assessment, we impaired certain construction-in-progress assets and accelerated depreciation for certain in-use manufacturing assets that resulted in $3.3 billion of charges in 2024.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_7_P078_S004",
+                    "paragraph_id": "intc_2024_7_P078",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Our 2024 gross margin also decreased due to lower revenue, higher unit cost primarily from an increased mix of Intel 4 and Intel 7 products, higher period charges due to $922 million in Gaudi AI accelerator inventory-related charges recognized in 2024, and higher factory start-up costs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D049",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P047_S001",
+                    "paragraph_id": "avgo_2024_7_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Gross margin was $32,509 million for fiscal year 2024 compared to $24,690 million for fiscal year 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P047_S002",
+                    "paragraph_id": "avgo_2024_7_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase was primarily due to contributions from VMware, partially offset by higher amortization of acquisition-related intangible assets from the VMware Merger.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P048_S001",
+                    "paragraph_id": "avgo_2024_7_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "As a percentage of net revenue, gross margin was 63% and 69% of net revenue for the fiscal years 2024 and 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P048_S002",
+                    "paragraph_id": "avgo_2024_7_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The decrease was primarily due to higher amortization of acquisition-related intangible assets from the VMware Merger.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P048_S003",
+                    "paragraph_id": "avgo_2024_7_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "In addition, gross margin contributions from our infrastructure software segment were partially offset by less favorable margin within the semiconductor solutions segment driven by product mix.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_7_D007",
+            "peer_topic": "Consolidated Gross Margin Performance 2023-2024",
+            "peer_summary": "Consolidated gross margin improved to 22% in 2024 from -9% in 2023, aided by increased average selling prices and manufacturing cost reductions, despite the prior year's inventory write-downs and lower costs from selling previously written-down inventory in 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.138486,
+            "relationship": "same_topic",
+            "comparison": "Both companies discuss inventory-related impacts on gross margin in 2024. Intel cites $922 million in Gaudi AI accelerator inventory-related charges as a driver of decreased gross margin. Micron discloses that while gross margin improved to 22% in 2024 from -9% in 2023, the improvement was aided by lower costs in 2024 from the sale of inventories written down in 2023, indicating a direct link between prior-year write-downs and 2024 cost of sales. Both identify inventory valuation issues (charges/write-downs) as a specific operational factor affecting gross margin metrics.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D084",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P078_S004",
+                    "paragraph_id": "intc_2024_7_P078",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Our 2024 gross margin also decreased due to lower revenue, higher unit cost primarily from an increased mix of Intel 4 and Intel 7 products, higher period charges due to $922 million in Gaudi AI accelerator inventory-related charges recognized in 2024, and higher factory start-up costs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D007",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P010_S002",
+                    "paragraph_id": "mu_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Our consolidated gross margin percentage improved to 22% for 2024 from negative 9% for 2023, as a result of improvements in margins for both DRAM and NAND products, primarily due to increases in average selling prices, and manufacturing cost reductions, the effects of charges to write down inventories to their NRV in 2023 and lower costs in 2024 from the sale of inventories written down in 2023 (as detailed in \"Inventory NRV write-downs\" below).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D056",
+            "peer_topic": "Fiscal 2024 gross margin performance and drivers",
+            "peer_summary": "Overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023, primarily driven by 217% growth in Data Center revenue and lower net inventory provisions as a percentage of revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.106901,
+            "relationship": "same_topic",
+            "comparison": "Both companies attribute significant portions of their 2024 gross margin performance to inventory-related factors, although the direction and magnitude differ. Intel experienced decreased gross margin due to $922 million in Gaudi AI accelerator inventory-related charges. Conversely, NVIDIA reported increased gross margin (to 72.7%) driven by lower net inventory provisions as a percentage of revenue. Both disclosures highlight inventory provisioning/charges as a key comparative driver or offset in their respective gross margin analyses.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D084",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P078_S004",
+                    "paragraph_id": "intc_2024_7_P078",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Our 2024 gross margin also decreased due to lower revenue, higher unit cost primarily from an increased mix of Intel 4 and Intel 7 products, higher period charges due to $922 million in Gaudi AI accelerator inventory-related charges recognized in 2024, and higher factory start-up costs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D056",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P059_S001",
+                    "paragraph_id": "nvda_2024_7_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P059_S002",
+                    "paragraph_id": "nvda_2024_7_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The year over year increase was primarily due to strong Data Center revenue growth of 217% and lower net inventory provisions as a percentage of revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates provided by QCOM relate to gross margin stability (flat percentage) or fiscal 2023 other expenses (restructuring/intangible impairment). These do not provide specific comparable facts regarding 2024 gross margin drivers such as impairment, depreciation, or inventory charges to contrast with Intel's significant $4.4 billion decrease."
+      }
+    ]
+  }
+}

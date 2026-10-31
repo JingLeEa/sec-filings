@@ -1,0 +1,454 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "a19c292386c610525111410be441041a6d2ff8d72eb0959ab272c6a237f19a7b",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_8_D345",
+    "item": "8",
+    "target_topic": "OCC Dividend Declaration Rules for Subsidiary Banks",
+    "target_summary": "Under OCC regulations, a subsidiary bank may declare dividends without approval equal to its current year net profits combined with retained net profits from the preceding two years, where retained net profits are defined as net income less declared dividends.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0836",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the regulatory rule limiting subsidiary bank dividends to current net profits plus retained net profits from the preceding two years. D338 cites OCC definition in 2023; D345 cites same OCC definition in 2024.\n\nD338 provides the specific 2024 dividend capacity for BANA (~$12.0B). D346 provides the specific 2025 dividend capacity for BANA (~$13.0B). Both disclose the forward-looking dividend capacity of the same subsidiary under the same regulatory framework.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_8_D338",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Regulatory rules limit the amount of dividends a subsidiary bank may declare without OCC approval to its current net profits combined with retained net profits from the preceding two years. For 2024, BANA can declare approximately $12.0 billion plus retained net profits, while Bank of America California, N.A. can pay $66 million plus retained net profits.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D345",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Under OCC regulations, a subsidiary bank may declare dividends without approval equal to its current year net profits combined with retained net profits from the preceding two years, where retained net profits are defined as net income less declared dividends.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D346",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "BANA is able to declare and pay dividends of approximately $13.0 billion to the Corporation in 2025, plus an additional amount equal to its retained net profits for 2025 up to the date of any such declaration.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.905512,
+            "sequence_match_ratio": 0.812785,
+            "length_ratio": 0.724409,
+            "word_count_delta": -35,
+            "added_tokens_sample": [
+              "2025",
+              "13",
+              "2025"
+            ],
+            "removed_tokens_sample": [
+              "2024",
+              "12",
+              "2024",
+              "bank",
+              "of",
+              "america",
+              "california",
+              "n",
+              "a",
+              "can",
+              "pay",
+              "dividends",
+              "of",
+              "66",
+              "million",
+              "in",
+              "2024",
+              "plus",
+              "an",
+              "additional"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_8_D338",
+            "score": 0.879368,
+            "normalised_score": 0.8794,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 87.94% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.15,
+          "confidence_score": 0.9,
+          "reason": "The disclosure updates the forward-looking dividend capacity for BANA from approximately $12.0 billion (for 2024) to $13.0 billion (for 2025) and removes the specific figure for Bank of America California, N.A. (likely because it was immaterial or fully retained, or the text was streamlined). The regulatory rule itself is unchanged. The change in capacity is an operational calculation based on earnings, not a fundamental change in risk or strategy.",
+          "key_change": "Update of BANA forward-looking dividend capacity"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0861",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures address OCC regulatory restrictions on subsidiary bank dividend declarations. The 2024 disclosure (D345, D346) explains the formula (current + retained net profits) and provides a 2025 projection for BANA ($13.0B). The 2025 disclosure (D341) repeats the same regulatory formula and provides a 2026 projection for BANA ($6.3B). The specific subject is the calculation and projection of available dividend capacity under OCC rules.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D345",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Under OCC regulations, a subsidiary bank may declare dividends without approval equal to its current year net profits combined with retained net profits from the preceding two years, where retained net profits are defined as net income less declared dividends.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D346",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "BANA is able to declare and pay dividends of approximately $13.0 billion to the Corporation in 2025, plus an additional amount equal to its retained net profits for 2025 up to the date of any such declaration.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_8_D341",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Subsidiary banks can declare dividends without OCC approval based on current and prior two years' retained net profits; specifically, BANA could declare approximately $6.3 billion plus 2026 retained net profits in 2026.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.947984,
+            "sequence_match_ratio": 0.956522,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "2026",
+              "6",
+              "3",
+              "2026"
+            ],
+            "removed_tokens_sample": [
+              "2025",
+              "13",
+              "0",
+              "2025"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2024_8_D345",
+            "score": 0.916617,
+            "normalised_score": 0.9166,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 91.66% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The disclosure updates the projected dividend capacity for BANA from approximately $13.0 billion in 2025 to approximately $6.3 billion in 2026. This decrease in available upstream dividend capacity is a material change in the financial flexibility and capital distribution capabilities of the bank subsidiary.",
+          "key_change": "Decrease in subsidiary dividend capacity projection"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D420",
+            "peer_topic": "Regulatory constraints on subsidiary dividends and capital ratios",
+            "peer_summary": "Legal limitations restrict Citigroup's subsidiary depository institutions from supplying funds to the parent, requiring OCC approval for annual dividends exceeding regulatory thresholds. Dividend determinations must also account for risk-based capital, leverage ratios, and regulatory guidance favoring payment from current operating earnings.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.097961,
+            "relationship": "same_topic",
+            "comparison": "Both Bank of America and Citigroup disclose the general legal framework under which their subsidiary banks may declare dividends without specific OCC approval, citing the combination of current year net profits and retained net profits from the preceding two years as the standard threshold. While BAC explicitly defines retained net profits in its disclosure, Citigroup references the OCC's regulatory specifications generally and adds that dividend determinations must also consider risk-based capital and leverage ratios, a factor not explicitly mentioned in BAC's specific regulatory calculation text.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D345",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P417_S001",
+                    "paragraph_id": "bac_2024_8_P417",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The amount of dividends that a subsidiary bank may declare in a calendar year without OCC approval is the subsidiary bank's net profits for that year combined with its retained net profits for the preceding two years.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P417_S002",
+                    "paragraph_id": "bac_2024_8_P417",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Retained net profits, as defined by the OCC, consist of net income less dividends declared during the period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D420",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P588_S001",
+                    "paragraph_id": "c_2024_8_P588",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "There are various legal limitations on the ability of Citigroup's subsidiary depository institutions to extend credit, pay dividends or otherwise supply funds to Citigroup and its non-bank subsidiaries.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_8_P588_S002",
+                    "paragraph_id": "c_2024_8_P588",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The approval of the Office of the Comptroller of the Currency is required if total dividends declared in any calendar year were to exceed amounts specified by the agency's regulations.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_8_P589_S001",
+                    "paragraph_id": "c_2024_8_P589",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "In determining the dividends, each subsidiary depository institution must also consider its effect on applicable risk-based capital and leverage ratio requirements, as well as policy statements of the federal bank regulatory agencies that indicate that banking organizations should generally pay dividends out of current operating earnings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D456",
+            "peer_topic": "Regulatory Restrictions on Subsidiary Payments",
+            "peer_summary": "Group Inc. may be limited in accessing capital at subsidiaries due to regulatory, tax, or other constraints, including laws requiring prior regulatory approval for dividends. For example, GS Bank USA's dividend payments are capped by earnings and undivided profits tests.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.105724,
+            "relationship": "same_topic",
+            "comparison": "Goldman Sachs and Bank of America both identify regulatory constraints and the requirement for prior regulatory approval as key limitations on subsidiary dividend payments. However, they differ in specificity: BAC defines the exact calculation for dividends allowed without approval (current plus two years of retained net profits), whereas GS Bank USA is described as being limited by the lesser of a recent earnings test and an undivided profits test, rather than the specific two-year net profit formula cited by BAC.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D345",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P417_S001",
+                    "paragraph_id": "bac_2024_8_P417",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The amount of dividends that a subsidiary bank may declare in a calendar year without OCC approval is the subsidiary bank's net profits for that year combined with its retained net profits for the preceding two years.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P417_S002",
+                    "paragraph_id": "bac_2024_8_P417",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Retained net profits, as defined by the OCC, consist of net income less dividends declared during the period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D456",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P592_S001",
+                    "paragraph_id": "gs_2024_8_P592",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Group Inc. may be limited in its ability to access capital held at certain subsidiaries as a result of regulatory, tax or other constraints.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P592_S002",
+                    "paragraph_id": "gs_2024_8_P592",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These limitations include provisions of applicable law and regulations and other regulatory restrictions that limit the ability of those subsidiaries to declare and pay dividends without prior regulatory approval.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P592_S003",
+                    "paragraph_id": "gs_2024_8_P592",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "For example, the amount of dividends that may be paid by GS Bank USA are limited to the lesser of the amounts calculated under a recent earnings test and an undivided profits test.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D546",
+            "peer_topic": "Regulatory Capital Authorities",
+            "peer_summary": "The Federal Reserve and the OCC establish capital requirements and well-capitalized standards for JPMorgan Chase & Co. as a consolidated holding company and its principal IDI subsidiary, respectively.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.073207,
+            "relationship": "related_topic",
+            "comparison": "While Bank of America focuses on the specific mechanics of dividend declaration limits under OCC rules, JPMorgan Chase focuses on the establishment of capital requirements and well-capitalized standards by the Federal Reserve and the OCC. JPM's disclosure explains the regulatory authority structure for its holding company and principal IDI subsidiary, whereas BAC's disclosure details the financial formula (net profits + retained net profits) used to determine dividend capacity without filing for approval.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D345",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P417_S001",
+                    "paragraph_id": "bac_2024_8_P417",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The amount of dividends that a subsidiary bank may declare in a calendar year without OCC approval is the subsidiary bank's net profits for that year combined with its retained net profits for the preceding two years.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P417_S002",
+                    "paragraph_id": "bac_2024_8_P417",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Retained net profits, as defined by the OCC, consist of net income less dividends declared during the period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D546",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P814_S001",
+                    "paragraph_id": "jpm_2024_8_P814",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The Federal Reserve establishes capital requirements, including well-capitalized standards, for the Firm as a consolidated financial holding company.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P814_S002",
+                    "paragraph_id": "jpm_2024_8_P814",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The OCC establishes similar minimum capital requirements and standards for the Firm's principal IDI subsidiary, JPMorgan Chase Bank, N.A.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D383",
+            "peer_topic": "PCA standards and materiality of regulatory actions",
+            "peer_summary": "The U.S. Bank Subsidiaries must maintain 'well-capitalized' status under OCC's Prompt Corrective Action standards to support the Firm's FHC status; failure to meet minimum requirements may trigger mandatory or discretionary regulator actions with direct material effects on financial statements.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.057969,
+            "relationship": "related_topic",
+            "comparison": "Morgan Stanley and Bank of America both discuss OCC regulatory frameworks affecting their U.S. Bank Subsidiaries, but they address different aspects of that framework. BAC describes the dividend distribution formula allowed without prior approval, while Morgan Stanley focuses on the Prompt Corrective Action (PCA) standards and the 'well-capitalized' status requirements needed to maintain Financial Holding Company status, including the consequences of failing to meet capital minimums.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D345",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P417_S001",
+                    "paragraph_id": "bac_2024_8_P417",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The amount of dividends that a subsidiary bank may declare in a calendar year without OCC approval is the subsidiary bank's net profits for that year combined with its retained net profits for the preceding two years.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P417_S002",
+                    "paragraph_id": "bac_2024_8_P417",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Retained net profits, as defined by the OCC, consist of net income less dividends declared during the period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D383",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P481_S001",
+                    "paragraph_id": "ms_2024_8_P481",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The OCC's regulatory capital framework includes Prompt Corrective Action (\"PCA\") standards, including \"well-capitalized\" PCA standards that are based on specified regulatory capital ratio minimums.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P481_S002",
+                    "paragraph_id": "ms_2024_8_P481",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "For the Firm to remain an FHC, its U.S. Bank Subsidiaries must remain well-capitalized in accordance with the OCC's PCA standards.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P481_S003",
+                    "paragraph_id": "ms_2024_8_P481",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In addition, failure by the U.S. Bank Subsidiaries to meet minimum capital requirements may result in certain mandatory and discretionary actions by regulators that, if undertaken, could have a direct material effect on the U.S. Bank Subsidiaries' and the Firm's financial statements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

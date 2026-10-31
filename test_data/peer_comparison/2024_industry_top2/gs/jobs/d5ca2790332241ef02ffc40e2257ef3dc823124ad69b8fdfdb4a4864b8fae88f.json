@@ -1,0 +1,314 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "76433ac51127a211c34ca657fc39d51e7023e3460d68b40c163d97bc5f51ca7d",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_8_D205",
+    "item": "8",
+    "target_topic": "Equity securities measured at NAV",
+    "target_summary": "Equity securities at fair value includes investments in private equity, real estate and hedge funds that are measured at net asset value (NAV).",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0963",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures identify that equity securities at fair value include investments in funds measured at NAV (specifically private equity, real estate, and hedge funds).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_8_D200",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Equity Securities and Debt Instruments, at Fair Value",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Equity securities at fair value included $1.27 billion as of December 2023 and $1.30 billion as of December 2022 of investments in funds measured at NAV.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D205",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Equity Securities and Debt Instruments, at Fair Value",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Equity securities at fair value includes investments in private equity, real estate and hedge funds that are measured at net asset value (NAV).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.364664,
+            "sequence_match_ratio": 0.52,
+            "length_ratio": 0.666667,
+            "word_count_delta": -10,
+            "added_tokens_sample": [
+              "includes",
+              "private",
+              "equity",
+              "real",
+              "estate",
+              "and",
+              "hedge"
+            ],
+            "removed_tokens_sample": [
+              "included",
+              "1",
+              "27",
+              "billion",
+              "as",
+              "of",
+              "december",
+              "2023",
+              "and",
+              "1",
+              "30",
+              "billion",
+              "as",
+              "of",
+              "december",
+              "2022",
+              "of"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2023_8_D200",
+            "score": 0.840573,
+            "normalised_score": 0.8406,
+            "label": "Modified",
+            "rationale": "Score 84.06% of ceiling with 48% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.8,
+          "reason": "The disclosure shifts from providing specific quantitative exposure ($1.27 billion) to a qualitative description of the types of funds (private equity, real estate, hedge funds). While the underlying assets likely remain, the removal of the specific monetary value of the NAV-measured portion of equity securities is a meaningful change in how the company discloses the scale of this specific exposure category.",
+          "key_change": "Removal of quantitative NAV exposure figure"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M1014",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "D203 in 2024 introduces a table presenting information about equity securities at fair value. D196 in 2025 contains the sentence 'The table below presents information about equity securities, at fair value.' (gs_2025_8_P284_S001) and provides the detailed data (further split into D196's financial details). D186 is for Available-for-Sale securities, a different category. D196 is the correct counterpart for the equity securities table introduction and content.\n\nBoth disclosures provide specific amounts for equity securities accounted for under the fair value option (where equity method would otherwise apply) and the corresponding gains/losses recognized in other principal transactions. 2024 D204 cites $5.04B and $(172)M loss; 2025 D196 cites $4.23B and $108M loss, referencing the 2024 figures for comparison.\n\nBoth disclosures state that equity securities at fair value include investments in private equity, real estate, and hedge funds measured at NAV. 2025 D196 includes this specific sentence (gs_2025_8_P285_S003) along with additional details on contractual restrictions.\n\nBoth disclosures specifically address equity securities subject to contractual sale restrictions, stating that t",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D203",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Equity Securities and Debt Instruments, at Fair Value",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The table presents information about equity securities at fair value.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "gs_2024_8_D204",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Equity Securities and Debt Instruments, at Fair Value",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Equity securities at fair value included investments accounted for at fair value under the fair value option of $5.04 billion as of December 2024 and $5.18 billion as of December 2023, with recognized gains/losses of $(172) million for 2024 and $(638) million for 2023 included in other principal transactions.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_8_D205",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Equity Securities and Debt Instruments, at Fair Value",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Equity securities at fair value includes investments in private equity, real estate and hedge funds that are measured at net asset value (NAV).",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_8_D206",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Equity Securities and Debt Instruments, at Fair Value",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Equity securities subject to contractual sale restrictions were not material as of both December 2024 and December 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_8_D196",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Equity Securities and Debt Instruments, at Fair Value",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Equity securities at fair value included $4.23 billion ($5.04 billion in 2024) of investments accounted for under the fair value option (otherwise equity method), resulting in $108 million ($172 million in 2024) of losses included in other principal transactions; also includes private equity, real estate, and hedge fund investments measured at NAV, with no material contractual sale restrictions.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "BAC's disclosed equity securities are valued at fair value ($247 million) or using the measurement alternative ($438 million), and it does not disclose a significant portfolio of investments measured at NAV similar to GS's private equity/real estate/hedge fund focus. The BAC disclosure focuses on liquid equity securities and money market investments, lacking the NAV measurement topic."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D561",
+            "peer_topic": "Fair value table footnotes regarding NAV exclusion and netting",
+            "peer_summary": "Footnotes to the fair value tables indicate that amounts exclude investments measured at net asset value (NAV), specifically $23 million and $25 million in the respective reporting periods, in accordance with ASU 2015-07. Additionally, footnote (1) explains that certain values represent netting of securities repurchase/resale agreements and derivative exposures covered by qualifying master netting agreements.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.150468,
+            "relationship": "same_topic",
+            "comparison": "Both GS and C disclose the inclusion of investments measured at Net Asset Value (NAV) within their equity securities or investment portfolios. C explicitly excludes these NAV investments from the fair value tables and provides specific amounts ($23 million and $25 million) for the periods, whereas GS includes them in the equity securities line item without providing a specific dollar amount or exclusion note in this sentence.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D205",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P289_S003",
+                    "paragraph_id": "gs_2024_8_P289",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Equity securities, at fair value includes investments in private equity, real estate and hedge funds that are measured at NAV.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D561",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P799_S001",
+                    "paragraph_id": "c_2024_8_P799",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(2)Amounts exclude $23 million of investments measured at net asset value (NAV) in accordance with ASU 2015-07, Fair Value Measurement (Topic 820): Disclosures for Investments in Certain Entities That Calculate Net Asset Value per Share (or Its Equivalent).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D061",
+            "peer_topic": "Practical Expedient for Investments Measured at NAV",
+            "peer_summary": "Certain investments, including hedge funds, private equity, and real estate funds with fair values of $1.0 billion as of December 31, 2024 and 2023, are measured using net asset value per share as a practical expedient and are not required to be classified in the fair value hierarchy, primarily reported in other assets.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.254722,
+            "relationship": "same_topic",
+            "comparison": "Both GS and JPM disclose investments in private equity, real estate, and hedge funds that are measured using Net Asset Value (NAV) as a practical expedient. Both companies report a similar aggregate fair value for these NAV-measured investments ($1.0 billion for JPM). However, JPM explicitly notes these amounts are 'primarily reported in other assets' and excludes them from the fair value hierarchy, whereas GS simply lists them as part of equity securities at fair value without specifying the balance sheet line item in this specific sentence.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D205",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P289_S003",
+                    "paragraph_id": "gs_2024_8_P289",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Equity securities, at fair value includes investments in private equity, real estate and hedge funds that are measured at NAV.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D061",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P090_S002",
+                    "paragraph_id": "jpm_2024_8_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "At both December 31, 2024 and 2023, the fair values of these investments, which include certain hedge funds, private equity funds, real estate and other funds, were $1.0 billion, primarily reported in other assets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D175",
+            "peer_topic": "Measurement and liquidity characteristics of private fund investments",
+            "peer_summary": "Investments in Private Equity, Other, and Real Estate funds are measured based on Net Asset Value (NAV) and are generally not redeemable due to their closed-end nature, with distributions received only upon disposal of underlying investments.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.257121,
+            "relationship": "same_topic",
+            "comparison": "Both GS and MS disclose that their equity securities include investments in private equity, real estate, and other funds measured at NAV. MS provides additional detail on the liquidity characteristics, stating these funds are generally not redeemable due to their closed-end nature, while GS does not mention liquidity restrictions in this specific disclosure. MS also specifies that 'Other' funds include private credit, hedge funds, etc., which overlaps with GS's 'hedge funds' category.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D205",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P289_S003",
+                    "paragraph_id": "gs_2024_8_P289",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Equity securities, at fair value includes investments in private equity, real estate and hedge funds that are measured at NAV.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D175",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P223_S001",
+                    "paragraph_id": "ms_2024_8_P223",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Investments in Private Equity and Other funds and Real Estate funds generally are not redeemable due to the closed-end nature of these funds.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

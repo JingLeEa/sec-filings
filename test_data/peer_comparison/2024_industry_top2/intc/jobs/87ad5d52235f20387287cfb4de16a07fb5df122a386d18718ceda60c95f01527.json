@@ -1,0 +1,295 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "2b0a9bbf6dc8872737b3b0e4e3fb9d98ff68c50efc3919f5b3e01fac1b99f585",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_8_D105",
+    "item": "8",
+    "target_topic": "Litigation and Regulatory Charges in Restructuring",
+    "target_summary": "Restructuring charges included $780 million for R2 litigation in 2024, a $1.2 billion benefit from VLSI litigation developments in 2023, a $401 million EC fine and $353 million Tower acquisition termination fee in 2023, and a $1.2 billion benefit in 2022 from an annulled EC fine.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0503",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D097 details the $1.2B VLSI benefit and $401M EC fine in 2023. D105 is a summary of 'Litigation charges and other' that includes these same 2023 items plus 2024 items. Since D105 explicitly covers the specific litigation events mentioned in D097 (VLSI reduction, EC fine) within the 'Litigation charges and other' section, it is the counterpart for the aggregate litigation charge disclosure.\n\nD098 details the $353M Tower termination charge in 2023. D105 includes this specific $353M termination fee in its summary of 'Litigation charges and other'. As D105 is the 2024 counterpart for the aggregate litigation/other charges line item that contained this charge in 2023, it is the matched group for this specific event within that aggregate context.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2023_8_D097",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 7: Restructuring and Other Charges",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "In 2023, Intel recorded a $1.2 billion benefit from reduced accruals in the VLSI litigation and a $401 million charge for an EU Commission-imposed fine, while also noting a prior $1.2 billion benefit in 2022 related to an annulled 2009 fine.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "intc_2023_8_D098",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 7: Restructuring and Other Charges",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Intel paid a $353 million termination charge in 2023 to mutually agree with Tower to end the 2022 acquisition agreement due to the inability to obtain required regulatory approvals in a timely manner.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_8_D105",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 7: Restructuring and Other Charges",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Restructuring charges included $780 million for R2 litigation in 2024, a $1.2 billion benefit from VLSI litigation developments in 2023, a $401 million EC fine and $353 million Tower acquisition termination fee in 2023, and a $1.2 billion benefit in 2022 from an annulled EC fine.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.86546,
+            "sequence_match_ratio": 0.466165,
+            "length_ratio": 0.641975,
+            "word_count_delta": -58,
+            "added_tokens_sample": [
+              "charge",
+              "of",
+              "780",
+              "million",
+              "in",
+              "2024",
+              "arising",
+              "out",
+              "of",
+              "the",
+              "r2",
+              "litigation",
+              "in",
+              "2023",
+              "a",
+              "was",
+              "recorded",
+              "the",
+              "included",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "in",
+              "2023",
+              "a",
+              "2",
+              "2",
+              "billion",
+              "in",
+              "the",
+              "fourth",
+              "quarter",
+              "of",
+              "2023",
+              "include",
+              "resulting",
+              "refer",
+              "to",
+              "note",
+              "19",
+              "commitments",
+              "and"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "intc_2023_8_D097",
+            "score": 0.891413,
+            "normalised_score": 0.8914,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 89.14% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure adds a new material charge of $780 million for 'R2 litigation' in 2024, which was not present in the 2023 disclosure. It also continues to report significant historical items (VLSI benefit, EC fine, Tower fee). The introduction of a new, large litigation charge represents a material change in legal and financial exposure.",
+          "key_change": "Addition of R2 litigation charge"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0551",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "input_extraction_needs_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "D105 is the primary summary of litigation charges in the restructuring note for 2024. It is linked to D144 (2025 litigation charges summary).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_8_D105",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 7: Restructuring and Other Charges",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Restructuring charges included $780 million for R2 litigation in 2024, a $1.2 billion benefit from VLSI litigation developments in 2023, a $401 million EC fine and $353 million Tower acquisition termination fee in 2023, and a $1.2 billion benefit in 2022 from an annulled EC fine.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2025_8_D144",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 7: Restructuring and Other Charges",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Litigation charges in 2025 included a $163 million benefit from the reduction of a previously accrued EC-imposed fine, for which Intel funded a $340 million guarantee in legally restricted accounts due to the fine remaining unpaid on appeal; 2024 charges included $780 million from R2 litigation, while 2023 included a $1.2 billion benefit from VLSI litigation developments, a $353 million termination fee for the Tower acquisition, and a $401 million EC fine charge.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0552",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "input_extraction_needs_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "D144 details 'Litigation charges and other' including EC fine reduction, R2 litigation, VLSI, and Tower fees. It aggregates details found across D105 (yearly breakdown), D187 (R2 charge), and D190 (EC fine).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_8_D105",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 7: Restructuring and Other Charges",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Restructuring charges included $780 million for R2 litigation in 2024, a $1.2 billion benefit from VLSI litigation developments in 2023, a $401 million EC fine and $353 million Tower acquisition termination fee in 2023, and a $1.2 billion benefit in 2022 from an annulled EC fine.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "intc_2024_8_D187",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 19: Commitments and Contingencies > Legal Proceedings",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "In the second quarter of 2024, the company accrued a $780 million charge within restructuring for confidential settlement agreements with R2, Third Point, and TRGP. The remaining unpaid liability was $655 million as of December 28, 2024.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "intc_2024_8_D190",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 19: Commitments and Contingencies > Legal Proceedings > European Commission Competition Matter",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "In September 2023, the EC imposed a €376 million ($401 million) fine based on the 2009 finding that Intel made payments to prevent sales of specific rival products. Intel has appealed this decision, accrued a charge for the fine, and is unable to reasonably estimate potential losses in excess of this amount.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2025_8_D144",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 7: Restructuring and Other Charges",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Litigation charges in 2025 included a $163 million benefit from the reduction of a previously accrued EC-imposed fine, for which Intel funded a $340 million guarantee in legally restricted accounts due to the fine remaining unpaid on appeal; 2024 charges included $780 million from R2 litigation, while 2023 included a $1.2 billion benefit from VLSI litigation developments, a $353 million termination fee for the Tower acquisition, and a $401 million EC fine charge.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "AMD's candidates discuss accrued restructuring charges ($89 million) and acquisition termination fees ($300 million for ZT Systems), but do not disclose specific litigation charges analogous to Intel's R2 or VLSI litigation charges in the same manner. The ZT Systems fee is a contractual termination fee rather than a litigation charge, and the accrued restructuring charges are general accounting classifications without specific litigation attribution in the provided text."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D168",
+            "peer_topic": "2023 Non-recurring IP Litigation Charges",
+            "peer_summary": "Restructuring and other charges for fiscal year 2023 included $204 million in non-recurring charges related to intellectual property litigation.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.135111,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Broadcom disclose specific litigation-related charges included in their restructuring and other charges. Intel reported a $780 million litigation charge in 2024 arising from R2 litigation, whereas Broadcom disclosed $204 million in non-recurring charges related to IP litigation, though this figure specifically relates to fiscal year 2023 in the cited text. This highlights a difference in both the timing of the charges and the nature of the litigation (R2 vs IP), but confirms both peers utilize this line item for significant legal settlements or provisions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D105",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P119_S002",
+                    "paragraph_id": "intc_2024_8_P119",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Litigation charges and other includes a charge of $780 million in 2024 arising out of the R2 litigation.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D168",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P207_S001",
+                    "paragraph_id": "avgo_2024_8_P207",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Restructuring and other charges in our consolidated statement of operations for fiscal year 2023 included $204 million of non-recurring charges related to IP litigation.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Micron's candidates focus on depreciation of property, plant, and equipment and intangible asset amortization estimates. These are unrelated to litigation charges, regulatory fines, or restructuring settlements."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "NVIDIA's candidate is a boilerplate statement regarding the location of information in Item 8 and contains no substantive financial or litigation data."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved for QCOM."
+      }
+    ]
+  }
+}

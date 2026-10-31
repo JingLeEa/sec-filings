@@ -1,0 +1,279 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "986e9df3623b6c06e4e7b6acd1f0f2469ac160ae17a540a83978768b6a3d8b41",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D022",
+    "item": "7",
+    "target_topic": "Services segment net income and expense drivers",
+    "target_summary": "Services net income was $6.5 billion, a 40% increase, driven by higher revenue and lower cost of credit, partially offset by higher expenses of $10.6 billion which increased 6% due to technology investments and Argentina-related taxes.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0029",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "This disclosure concerns 'Services' segment net income ($6.5B, +40%). Search results for this specific segment and metric in 2025 did not identify a matching disclosure. The 2025 summaries found (e.g., c_2025_7_D010 for Expenses, c_2025_7_D048/D049/D050 for Services revenue components) do not cover the specific 'Services net income' line item with the same level of detail or aggregation as the 2024 source. The search returned no candidate with sufficient topical alignment for Services Net Income specifically.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > EXECUTIVE SUMMARY > 2024 Results Summary > Services",
+            "summary": "Services net income was $6.5 billion, a 40% increase, driven by higher revenue and lower cost of credit, partially offset by higher expenses of $10.6 billion which increased 6% due to technology investments and Argentina-related taxes.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D022",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "llm": "Removed",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.0,
+            "change_taxonomy": "Removed",
+            "word_count_delta": -69,
+            "cosine_similarity": 0.0,
+            "added_tokens_sample": [],
+            "sequence_match_ratio": 0.0,
+            "removed_tokens_sample": [
+              "services",
+              "net",
+              "income",
+              "of",
+              "6",
+              "5",
+              "billion",
+              "increased",
+              "40",
+              "as",
+              "higher",
+              "revenue",
+              "and",
+              "lower",
+              "cost",
+              "of",
+              "credit",
+              "were",
+              "partially",
+              "offset"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "method": "alignment_presence",
+            "rationale": "One-sided change established by the finalized alignment.",
+            "matched_id": null,
+            "normalised_score": null
+          },
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.85,
+          "reason": "Removal of specific segment performance data for 'Services' (net income of $6.5B, +40%). Detailed segment financial results are material to understanding the company's diversified business performance and strategic execution.",
+          "key_change": "Removal of segment financial performance data"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D019",
+            "peer_topic": "Noninterest expense increase drivers and prior year comparisons",
+            "peer_summary": "Noninterest expense increased $967 million to $66.8 billion in 2024 compared to 2023, primarily driven by higher revenue-related expenses and investments in people, operations, and technology, partially offset by higher FDIC expense in 2023 (including a $2.1 billion special assessment) and lower expenses from a liquidating business activity.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.208382,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and Bank of America disclose increases in their primary expense categories for 2024, driven by technology investments and revenue-related costs. Citi reports Services expenses increased 6% to $10.6 billion, driven by 'investments in technology and platform modernization' and higher legal expenses. Similarly, Bank of America reports Noninterest expense increased $967 million to $66.8 billion, driven by 'higher revenue-related expenses' and 'investments in people, operations and technology.' While both cite technology as a key driver, Citi specifically highlights an Argentina-related tax, whereas Bank of America notes the offset of lower FDIC expenses in the prior year due to the SVB/Signature special assessment.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P021_S001",
+                    "paragraph_id": "c_2024_7_P021",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Services expenses of $10.6 billion increased 6%, primarily driven by continued investments in technology and platform modernization, other risk and controls and product innovation, as well as an Argentina-related transaction tax expense and higher legal expenses, partially offset by the impact of productivity savings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D019",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P017_S001",
+                    "paragraph_id": "bac_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Noninterest expense increased $967 million to $66.8 billion in 2024 compared to 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P017_S002",
+                    "paragraph_id": "bac_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The increase was primarily driven by higher revenue-related expenses as well as investments in people, operations and technology, partially offset by higher Federal Deposit Insurance Corporation (FDIC) expense in 2023, including $2.1 billion for the estimated special assessment amount arising from the closure of Silicon Valley Bank and Signature Bank, and lower expenses related to a liquidating business activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for Goldman Sachs focus on Net Interest Income growth drivers and Asset & Wealth Management segment performance, rather than the specific corporate-level noninterest expense drivers or Services segment net income/expense composition discussed for Citi. gs_2024_7_D092 discusses Asset & Wealth Management operating expenses decreasing 9%, which is a contrasting financial outcome to Citi's expense increase, but the segment (Asset & Wealth vs. Services) and the nature of the expense discussion (impairments vs. tech/investment) make it not substantively comparable to Citi's primary Services expense disclosure in Item 7."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D112",
+            "peer_topic": "Noninterest expense increase drivers",
+            "peer_summary": "Noninterest expense rose 9% to $38.0 billion, reflecting First Republic-related expenses aligned to CCB from Corporate starting in Q3 2023, higher revenue-related compensation for advisors and bankers, increased employee headcount including technology, and continued investments in technology and marketing.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.157539,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and JPMorgan Chase disclose 2024 expense growth driven by technology investments and revenue-linked compensation, though the drivers differ in scope. Citi’s Services expenses rose 6% due to 'technology investments' and other factors. JPMorgan’s overall Noninterest expense rose 9%, driven by 'higher revenue-related compensation predominantly for advisors and bankers' and 'continued investments in technology and marketing.' Both companies link expense growth to strategic investments in technology and people, but JPMorgan explicitly quantifies the impact of the First Republic acquisition, which Citi does not mention in its Services segment summary.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P021_S001",
+                    "paragraph_id": "c_2024_7_P021",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Services expenses of $10.6 billion increased 6%, primarily driven by continued investments in technology and platform modernization, other risk and controls and product innovation, as well as an Argentina-related transaction tax expense and higher legal expenses, partially offset by the impact of productivity savings.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P017_S001",
+                    "paragraph_id": "c_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Services net income of $6.5 billion increased 40%, as higher revenue and lower cost of credit were partially offset by higher expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D112",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P156_S001",
+                    "paragraph_id": "jpm_2024_7_P156",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $38.0 billion, up 9%, reflecting First Republic-related expense that was aligned to CCB from Corporate starting in the third quarter of 2023, impacting both compensation and noncompensation expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P157_S002",
+                    "paragraph_id": "jpm_2024_7_P157",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher compensation expense, largely driven by higher revenue-related compensation predominantly for advisors and bankers, and an increase in the number of employees, including in technology, and",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P157_S003",
+                    "paragraph_id": "jpm_2024_7_P157",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher noncompensation expense, largely driven by continued investments in technology and marketing, as well as higher operating losses, partially offset by lower legal expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D040",
+            "peer_topic": "Non-interest expense composition and drivers",
+            "peer_summary": "Non-interest expenses totaled $19,129 million in 2024, a 5% increase year-over-year, driven by higher compensation and benefits (primarily discretionary incentive compensation) and higher non-compensation expenses (primarily execution-related and technology spend).",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.160406,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and Morgan Stanley report expense increases in 2024 driven by higher compensation and technology spend. Citi’s Services expenses increased 6% due to technology investments and higher legal expenses. Morgan Stanley’s overall Non-interest expenses increased 5%, driven by 'higher Compensation and benefits expenses' (primarily incentive compensation) and 'higher non-compensation expenses (primarily execution-related and technology spend).' While both cite technology as a cost driver, Morgan Stanley emphasizes revenue-linked compensation payouts, whereas Citi’s driver is broader platform modernization and specific items like Argentina taxes.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P021_S001",
+                    "paragraph_id": "c_2024_7_P021",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Services expenses of $10.6 billion increased 6%, primarily driven by continued investments in technology and platform modernization, other risk and controls and product innovation, as well as an Argentina-related transaction tax expense and higher legal expenses, partially offset by the impact of productivity savings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D040",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P044_S001",
+                    "paragraph_id": "ms_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Non-interest expenses of $19,129 million in 2024 increased 5% compared with the prior year as a result of higher Non-compensation expenses and Compensation and benefits expenses.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P044_S002",
+                    "paragraph_id": "ms_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Compensation and benefits expenses increased primarily reflecting higher discretionary incentive compensation on higher revenues, partially offset by lower severance costs.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P044_S003",
+                    "paragraph_id": "ms_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Non-compensation expenses increased primarily reflecting higher execution-related expenses and increased technology spend, partially offset by lower legal expenses and lower FDIC special assessment cost.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

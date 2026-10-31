@@ -1,0 +1,307 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "bdcdc91a3567ca50faebcbbccf5386dd90c3a2fe6bb5573051fda580ceeab12c",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_8_D070",
+    "item": "8",
+    "target_topic": "Operating expense allocation methodology",
+    "target_summary": "Operating expenses from sales and marketing are allocated to Intel Products segments, while finance and administration expenses are allocated to all segments except Mobileye.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0470",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2023 D072 describes the general allocation of shared functional group expenses (sales, marketing, engineering, finance, admin) to operating segments. 2024 D070 details the specific allocation of these same functional groups (sales/marketing to Intel Products; finance/admin to all except Mobileye). Both disclosures address the allocation of shared functional expenses to segments.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2023_8_D072",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 3: Operating Segments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Expenses for shared sales, marketing, manufacturing, engineering, finance, and administration groups are generally allocated to operating segments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_8_D070",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 3: Operating Segments > All Other",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Operating expenses from sales and marketing are allocated to Intel Products segments, while finance and administration expenses are allocated to all segments except Mobileye.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.431761,
+            "sequence_match_ratio": 0.392857,
+            "length_ratio": 1.545455,
+            "word_count_delta": 12,
+            "added_tokens_sample": [
+              "allocate",
+              "operating",
+              "expenses",
+              "from",
+              "our",
+              "group",
+              "to",
+              "the",
+              "intel",
+              "products",
+              "operating",
+              "segments",
+              "and",
+              "allocate",
+              "operating",
+              "expenses",
+              "from",
+              "our",
+              "all",
+              "of"
+            ],
+            "removed_tokens_sample": [
+              "have",
+              "manufacturing",
+              "engineering",
+              "expenses",
+              "for",
+              "these",
+              "groups",
+              "are",
+              "generally",
+              "allocated",
+              "the"
+            ]
+          },
+          "semantic": {
+            "matched_id": "intc_2023_8_D072",
+            "score": 0.788671,
+            "normalised_score": 0.7887,
+            "label": "Relocated",
+            "rationale": "Score 78.87% of ceiling — content is similar but section changed from 'Notes to Consolidated Financial Statements > Note 3: Operating Segments' to 'Notes to Consolidated Financial Statements > Note 3: Operating Segments > All Other'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The disclosure changes the granularity and specificity of the allocation methodology for shared functional expenses. Previously, the policy was generic (sales/marketing/engineering etc. generally allocated to segments). The 2024 disclosure explicitly states that sales and marketing are allocated only to Intel Products segments, while finance and administration are allocated to all segments except Mobileye. This specificity alters the understanding of how costs are assigned to specific operating segments, particularly regarding the Mobileye segment, which is a material business entity.",
+          "key_change": "Specific allocation of shared expenses by segment and function"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0145",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure specifies that sales and marketing operating expenses are allocated to Intel Products segments and finance/administration expenses are allocated to all segments except Mobileye. No counterpart in 2025 matches this specific allocation detail for S&M expenses; the 2025 All Other disclosure (intc_2025_8_D092) mentions review metrics, and intc_2025_8_P090_AUDIT mentions S&M allocation to Intel Products but is an ungrouped audit hit not assigned to a disclosure in the proposed groups. Since no proposed current ID covers this specific S&M allocation rule, it is left unmatched in this set of required IDs.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_8_D070",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Note 3: Operating Segments > All Other",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Operating expenses from sales and marketing are allocated to Intel Products segments, while finance and administration expenses are allocated to all segments except Mobileye.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -34,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "we",
+              "allocate",
+              "operating",
+              "expenses",
+              "from",
+              "our",
+              "sales",
+              "and",
+              "marketing",
+              "group",
+              "to",
+              "the",
+              "intel",
+              "products",
+              "operating",
+              "segments",
+              "and",
+              "allocate",
+              "operating",
+              "expenses"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure detailed the specific allocation rules for sales and marketing expenses (to Intel Products) and finance/admin expenses (to all except Mobileye). This is a routine operational accounting policy. The removal of this specific detail in the 2025 filing, likely due to reorganization or consolidation of segment notes, does not inherently indicate a change in the allocation logic or financial impact unless contradicted by other disclosures. Without evidence of a change in the allocation mechanism itself, this is treated as a formatting or aggregation change in financial reporting rather than a substantive business change.",
+          "key_change": "Removal of segment expense allocation details"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D053",
+            "peer_topic": "CODM Performance Review Metrics",
+            "peer_summary": "The Chief Operating Decision Maker, who is the Company's CEO, assesses segment operating performance using segment net revenue, consolidated cost of sales and operating expenses, and operating income (loss), with expenses allocated based on management's judgment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.102061,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and AMD disclose how operating expenses are allocated to their operating segments for performance evaluation. Intel specifies that sales and marketing expenses are allocated to Intel Products segments, while finance and administration expenses are allocated to all segments except Mobileye. AMD states that the CODM reviews operating performance using consolidated cost of sales and operating expenses, with these expenses allocated to reportable segments based on management's judgment, without detailing specific functional allocations like Intel does.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D070",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P082_S001",
+                    "paragraph_id": "intc_2024_8_P082",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We allocate operating expenses from our sales and marketing group to the Intel Products operating segments and allocate operating expenses from our finance and administration groups to all of our operating segments, except Mobileye.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D053",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P058_S001",
+                    "paragraph_id": "amd_2024_8_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Management, including the Chief Operating Decision Maker (CODM), who is the Company's Chief Executive Officer, reviews and assesses operating performance using segment net revenue, consolidated cost of sales and operating expenses and operating income (loss).",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P058_S002",
+                    "paragraph_id": "amd_2024_8_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "These performance measures include the allocation of expenses to the reportable segments based on management's judgment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates (avgo_2024_8_D093 on lease expenses and avgo_2024_8_D143 on segment definition factors) do not disclose the methodology for allocating operating expenses to segments, which is the specific topic of the target disclosure."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D119",
+            "peer_topic": "Segment Reporting Methodology and Allocations",
+            "peer_summary": "Direct operating expenses are charged to specific segments, while indirect expenses are allocated based on cost of goods sold or forecasted wafer production. The company does not report assets (other than goodwill), capital expenditures, or certain income/expense items by segment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.125162,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Micron disclose methodologies for allocating operating expenses to segments. Intel allocates sales and marketing expenses to Intel Products segments and finance/administration to all except Mobileye. Micron charges direct operating expenses associated with specific activities to those segments and allocates indirect operating income and expenses based on cost of goods sold or forecasted wafer production.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D070",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P082_S001",
+                    "paragraph_id": "intc_2024_8_P082",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We allocate operating expenses from our sales and marketing group to the Intel Products operating segments and allocate operating expenses from our finance and administration groups to all of our operating segments, except Mobileye.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D119",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P126_S001",
+                    "paragraph_id": "mu_2024_8_P126",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Certain operating expenses directly associated with the activities of a specific segment are charged to that segment.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_8_P126_S002",
+                    "paragraph_id": "mu_2024_8_P126",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Other indirect operating income and expenses are generally allocated to segments based on their respective percentage of cost of goods sold or forecasted wafer production.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      }
+    ]
+  }
+}

@@ -1,0 +1,278 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "79672d360a3ce855c134e3bad65885cb4dc690cc8a687324e468a4e439d55097",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D008",
+    "item": "7",
+    "target_topic": "Quarterly Common Stock Dividend Declaration",
+    "target_summary": "On January 29, 2025, the Board declared a quarterly common stock dividend of $0.26 per share, payable on March 28, 2025 to shareholders of record as of March 7, 2025.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0184",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the declaration of a quarterly common stock dividend, including the per-share amount, payable date, and record date.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D009",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Recent Developments > Capital Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On January 31, 2024, the Board of Directors declared a quarterly common stock dividend of $0.24 per share, payable on March 29, 2024 to shareholders of record as of March 1, 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D008",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Recent Developments > Capital Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On January 29, 2025, the Board declared a quarterly common stock dividend of $0.26 per share, payable on March 28, 2025 to shareholders of record as of March 7, 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.678389,
+            "sequence_match_ratio": 0.805556,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "29",
+              "2025",
+              "26",
+              "28",
+              "2025",
+              "7",
+              "2025"
+            ],
+            "removed_tokens_sample": [
+              "31",
+              "2024",
+              "24",
+              "29",
+              "2024",
+              "1",
+              "2024"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D009",
+            "score": 0.967499,
+            "normalised_score": 0.9675,
+            "label": "Modified",
+            "rationale": "Score 96.75% of ceiling with 68% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.8,
+          "reason": "The change is a routine annual update of dividend declarations (amount increased from $0.24 to $0.26). While the amount increased slightly, quarterly dividend adjustments are standard corporate actions and do not inherently signal a material change in strategic priorities or risk exposure.",
+          "key_change": "Routine update of dividend declaration"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0238",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the declaration of a quarterly common stock dividend under the 'Capital Management' section. The 2024 disclosure specifies the $0.26 per share dividend declared in Jan 2025, while the 2025 disclosure specifies the $0.28 per share dividend declared in Feb 2026. Both cite the Board declaration, payable dates, and record dates.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D008",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Recent Developments > Capital Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On January 29, 2025, the Board declared a quarterly common stock dividend of $0.26 per share, payable on March 28, 2025 to shareholders of record as of March 7, 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D008",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Recent Developments > Capital Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On February 3, 2026, the Board of Directors declared a quarterly common stock dividend of $0.28 per share, payable on March 27, 2026 to shareholders of record as of March 6, 2026.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.629063,
+            "sequence_match_ratio": 0.742857,
+            "length_ratio": 0.944444,
+            "word_count_delta": -2,
+            "added_tokens_sample": [
+              "february",
+              "3",
+              "2026",
+              "28",
+              "27",
+              "2026",
+              "6",
+              "2026"
+            ],
+            "removed_tokens_sample": [
+              "january",
+              "29",
+              "2025",
+              "corporation's",
+              "the",
+              "26",
+              "28",
+              "2025",
+              "7",
+              "2025"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2024_7_D008",
+            "score": 0.974626,
+            "normalised_score": 0.9746,
+            "label": "Unchanged",
+            "rationale": "Score 97.46% of ceiling — semantically identical despite surface differences (word overlap 50%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.9,
+          "reason": "The board declared an increase in the quarterly common stock dividend from $0.26 to $0.28 per share. This is a direct change in the company's capital distribution policy and financial commitment to shareholders, constituting a material change in capital resources.",
+          "key_change": "Increase in quarterly dividend"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates for C focus on dividend payout ratio definitions and share repurchase program authorizations, rather than specific quarterly dividend per-share declarations comparable to BAC's dividend announcement."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates for GS focus on share repurchase program governance, book value per share calculations, and capital plan submissions to the Federal Reserve, lacking a specific comparable declaration of a quarterly common stock dividend amount."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D246",
+            "peer_topic": "Declared Common Stock Dividend Amount",
+            "peer_summary": "On December 9, 2024, the Board of Directors declared a quarterly common stock dividend of $1.25 per share, payable on January 31, 2025.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.597603,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and JPM disclose specific quarterly common stock dividend declarations approved by their Boards of Directors for the same period. BAC declared a quarterly dividend of $0.26 per share payable in March 2025, while JPM announced a quarterly dividend of $1.25 per share payable in January 2025. Both filings identify the Board of Directors as the approving body.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D008",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P008_S001",
+                    "paragraph_id": "bac_2024_7_P008",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "On January 29, 2025, the Corporation's Board of Directors (the Board) declared a quarterly common stock dividend of $0.26 per share, payable on March 28, 2025 to shareholders of record as of March 7, 2025.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D246",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P362_S001",
+                    "paragraph_id": "jpm_2024_7_P362",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "On December 9, 2024, the Firm announced that its Board of Directors had declared a quarterly common stock dividend of $1.25 per share, payable on January 31, 2025.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D191",
+            "peer_topic": "2024 SCB Results and Capital Action",
+            "peer_summary": "For the 2024 cycle, the Federal Reserve's supervisory stress test showed a projected CET1 decline of 4.6% (an increase of 50 basis points from the prior year), resulting in an SCB of 6.0% effective October 1, 2024, which contributes to an aggregate Standardized Approach CET1 ratio of 13.5%; consequently, the company announced a quarterly common stock dividend increase to $0.925 per share effective July 16, 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.16811,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and MS report on the declaration and increase of quarterly common stock dividends. BAC declared a $0.26 per share dividend in January 2025 for March payment. MS disclosed an increase in its quarterly common stock dividend to $0.925 per share effective with the announcement on July 16, 2024. Both disclosures link dividend actions to broader capital management frameworks and regulatory considerations, with MS explicitly noting the dividend increase's impact on its Stress Capital Buffer (SCB).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D008",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P008_S001",
+                    "paragraph_id": "bac_2024_7_P008",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "On January 29, 2025, the Corporation's Board of Directors (the Board) declared a quarterly common stock dividend of $0.26 per share, payable on March 28, 2025 to shareholders of record as of March 7, 2025.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D191",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P239_S001",
+                    "paragraph_id": "ms_2024_7_P239",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "We also disclosed a summary of the results of our company-run stress tests on our Investor Relations website and increased our quarterly common stock dividend to $0.925 per share from $0.85, beginning with the common stock dividend announced on July 16, 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

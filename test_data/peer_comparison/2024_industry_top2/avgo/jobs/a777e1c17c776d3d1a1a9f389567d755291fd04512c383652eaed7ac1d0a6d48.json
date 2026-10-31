@@ -1,0 +1,379 @@
+{
+  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
+  "request_hash": "163c381dd94741f9ff7fb8540e6ff96af14a4449bbc5c3ad5a5b3516da476507",
+  "result": {
+    "target_ticker": "AVGO",
+    "target_disclosure_id": "avgo_2024_8_D059",
+    "item": "8",
+    "target_topic": "Net income per share calculation methods",
+    "target_summary": "Basic EPS uses weighted-average common shares, while diluted EPS includes potentially dilutive shares like unvested RSUs, ESPP rights, and convertible preferred stock, excluding antidilutive shares.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "avgo_2023_2024_M0352",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures define the methodology for computing basic and diluted net income per share, including the inclusion of potentially dilutive shares like equity awards and convertible preferred stock.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2023_8_D059",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 2. Summary of Significant Accounting Policies > Other Policies and Judgments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Basic net income per share uses weighted-average common shares outstanding, while diluted net income per share includes potentially dilutive shares such as unvested RSUs, in-the-money options, ESPP rights, and convertible preferred stock, excluding antidilutive shares.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_8_D059",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 2. Summary of Significant Accounting Policies > Other Policies and Judgments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Basic EPS uses weighted-average common shares, while diluted EPS includes potentially dilutive shares like unvested RSUs, ESPP rights, and convertible preferred stock, excluding antidilutive shares.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.984439,
+            "sequence_match_ratio": 0.947826,
+            "length_ratio": 0.932773,
+            "word_count_delta": -8,
+            "added_tokens_sample": [
+              "potentially",
+              "dilutive"
+            ],
+            "removed_tokens_sample": [
+              "net",
+              "income",
+              "per",
+              "share",
+              "diluted",
+              "in",
+              "the",
+              "money",
+              "stock",
+              "options"
+            ]
+          },
+          "semantic": {
+            "matched_id": "avgo_2023_8_D059",
+            "score": 1.005689,
+            "normalised_score": 1.0057,
+            "label": "Unchanged",
+            "rationale": "Score 100.57% of ceiling with 91% word overlap — text is effectively identical.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.75,
+          "reason": "The 2023 disclosure explicitly includes 'in-the-money stock options' in the list of potentially dilutive shares for EPS calculations. The 2024 disclosure omits 'stock options' from this list, listing only 'unvested RSUs and ESPP rights'. This change suggests that the company may no longer have significant in-the-money options or has changed the composition of dilutive instruments, which meaningfully alters the disclosed basis for diluted EPS.",
+          "key_change": "Omission of stock options from dilutive share list"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "avgo_2024_2025_M0319",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosures D059 and D060 together describe the calculation of Basic and Diluted EPS, including the use of the treasury stock method for equity awards (RSUs/ESPP) and the if-converted method for convertible preferred stock. The 2025 disclosure D062 covers the Basic and Diluted EPS calculation, specifically mentioning the treasury stock method for equity awards. While D062 does not explicitly mention convertible preferred stock in the selected sentences, it shares the core topic of EPS calculation methods for equity awards and the exclusion of antidilutive shares. Given the grouping of D059/D060 in the previous proposal as they both relate to the *methodology* of diluted EPS components, they are grouped here. D062 is the closest match for the EPS policy, although it omits the specific mention of convertible preferred stock in the selected text. The shared topic is the EPS calculation methodology.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_8_D059",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 2. Summary of Significant Accounting Policies > Other Policies and Judgments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Basic EPS uses weighted-average common shares, while diluted EPS includes potentially dilutive shares like unvested RSUs, ESPP rights, and convertible preferred stock, excluding antidilutive shares.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "avgo_2024_8_D060",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 2. Summary of Significant Accounting Policies > Other Policies and Judgments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The dilutive effect of equity awards is calculated using the treasury stock method assuming repurchases with ESPP payments and unrecognized compensation expense, while convertible preferred stock uses the if-converted method.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2025_8_D062",
+            "item": "8",
+            "section": "CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY > 2. Summary of Significant Accounting Policies > Other Policies and Judgments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Basic and diluted net income per share are calculated by dividing net income by weighted-average common shares outstanding, including dilutive unvested RSUs and ESPP rights using the treasury stock method, while excluding antidilutive shares.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.941301,
+            "sequence_match_ratio": 0.849604,
+            "length_ratio": 0.771028,
+            "word_count_delta": -49,
+            "added_tokens_sample": [
+              "net",
+              "income",
+              "per",
+              "share"
+            ],
+            "removed_tokens_sample": [
+              "attributable",
+              "to",
+              "common",
+              "stock",
+              "attributable",
+              "to",
+              "common",
+              "stock",
+              "as",
+              "well",
+              "as",
+              "convertible",
+              "preferred",
+              "stock",
+              "the",
+              "dilutive",
+              "effect",
+              "of",
+              "convertible",
+              "preferred"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "avgo_2024_8_D059",
+            "score": 0.95396,
+            "normalised_score": 0.954,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 95.40% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.3,
+          "confidence_score": 0.75,
+          "reason": "The change involves the removal of text referring to 'convertible preferred stock' in the EPS policy description. While this indicates a potential change in capital structure (no longer having dilutive convertible preferred stock), the disclosure itself is a standard accounting policy description. Without evidence that convertible preferred stock was previously material or present in significant amounts, the textual removal is best classified as a routine update reflecting current capital structure rather than a material change in business strategy or risk.",
+          "key_change": "Omission of convertible preferred stock from EPS policy"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D104",
+            "peer_topic": "Diluted EPS Calculation Methodology",
+            "peer_summary": "Diluted earnings per share includes potentially dilutive shares, determined using the treasury stock method for stock options, RSUs, ESPP common stock, and warrants.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.396331,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and AMD define the numerator for diluted EPS as net income attributable to common stock and include potentially dilutive shares in the denominator. AVGO specifically lists unvested RSUs, ESPP rights, and convertible preferred stock as potential dilutives, whereas AMD uses the treasury stock method to determine the dilutive effect of stock options, RSUs (including PRSUs), ESPP common stock, and warrants. AVGO explicitly states that antidilutive shares are excluded, while AMD's disclosure focuses on the method of calculation without restating the exclusion rule in the same sentence, though both operate under the same GAAP framework.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P086_S003",
+                    "paragraph_id": "avgo_2024_8_P086",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Diluted net income per share is computed by dividing net income attributable to common stock by the weighted-average number of shares of common stock and potentially dilutive shares of common stock outstanding during the period.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P086_S004",
+                    "paragraph_id": "avgo_2024_8_P086",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Potentially dilutive shares outstanding include the dilutive effect of unvested RSUs and ESPP rights (together referred to as \"equity awards\"), as well as convertible preferred stock.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D104",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P109_S001",
+                    "paragraph_id": "amd_2024_8_P109",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Diluted earnings per share is computed based on the weighted-average number of shares outstanding plus potentially dilutive shares outstanding during the period.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P109_S002",
+                    "paragraph_id": "amd_2024_8_P109",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Potentially dilutive shares are determined by applying the treasury stock method to the Company's stock options, RSUs (including PRSUs), common stock to be issued under the ESPP and warrants.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D103",
+            "peer_topic": "Basic EPS Calculation Methodology",
+            "peer_summary": "Basic earnings per share is computed based on the weighted-average number of shares outstanding.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.288737,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and AMD calculate basic EPS using the weighted-average number of shares outstanding. AVGO specifies 'weighted-average number of shares of common stock outstanding,' while AMD states 'weighted-average number of shares outstanding,' implying the same base for their respective net income numerator allocations.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P086_S002",
+                    "paragraph_id": "avgo_2024_8_P086",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Basic net income per share is computed by dividing net income attributable to common stock by the weighted-average number of shares of common stock outstanding during the period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D103",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P108_S001",
+                    "paragraph_id": "amd_2024_8_P108",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Basic earnings per share is computed based on the weighted-average number of shares outstanding.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D088",
+            "peer_topic": "EPS Calculation Methodology",
+            "peer_summary": "Intel computes basic earnings per share based on the weighted average number of shares of common stock outstanding. Diluted earnings per share includes potentially dilutive shares, with the treasury stock method applied to employee equity and the if-converted method for contractual conversion features.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.349502,
+            "relationship": "same_topic",
+            "comparison": "INTC and AVGO both compute basic EPS based on weighted-average common shares outstanding and diluted EPS by adding potentially dilutive shares. Intec explicitly mentions applying the treasury stock method to employee equity (options, RSUs, stock purchase plan) similar to how AVGO includes ESPP rights and RSUs, though INTC also specifies the 'if-converted method' for contractual conversion features, which aligns with AVGO's mention of convertible preferred stock.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P086_S002",
+                    "paragraph_id": "avgo_2024_8_P086",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Basic net income per share is computed by dividing net income attributable to common stock by the weighted-average number of shares of common stock outstanding during the period.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P086_S003",
+                    "paragraph_id": "avgo_2024_8_P086",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Diluted net income per share is computed by dividing net income attributable to common stock by the weighted-average number of shares of common stock and potentially dilutive shares of common stock outstanding during the period.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P086_S004",
+                    "paragraph_id": "avgo_2024_8_P086",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Potentially dilutive shares outstanding include the dilutive effect of unvested RSUs and ESPP rights (together referred to as \"equity awards\"), as well as convertible preferred stock.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D088",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P100_S001",
+                    "paragraph_id": "intc_2024_8_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We computed basic earnings (loss) per share of common stock based on the weighted average number of shares of common stock outstanding during the period.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P100_S002",
+                    "paragraph_id": "intc_2024_8_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We computed diluted earnings (loss) per share of common stock based on the weighted average number of shares of common stock outstanding plus potentially dilutive shares of common stock outstanding during the period, if applicable.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P101_S001",
+                    "paragraph_id": "intc_2024_8_P101",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Potentially dilutive shares of common stock from employee equity incentive plans are determined by applying the treasury stock method to the assumed exercise of outstanding stock options, the assumed vesting of outstanding RSUs, and the assumed issuance of common stock under the stock purchase plan.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for MU focus on ESPP share purchase volumes and equity plan availability rather than the methodology for calculating basic or diluted EPS."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      }
+    ]
+  }
+}

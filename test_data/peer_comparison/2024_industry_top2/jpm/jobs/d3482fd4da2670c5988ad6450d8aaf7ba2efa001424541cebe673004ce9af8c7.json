@@ -1,0 +1,348 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "069a514403c28181dd9c78c768a107abca95381fb1aaf055c2d319632551a4d3",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_8_D456",
+    "item": "8",
+    "target_topic": "Foreign Currency Adjustments to Goodwill",
+    "target_summary": "Footnotes indicate that changes in goodwill carrying amounts are primarily due to foreign currency adjustments.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M1224",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2023 disclosure explicitly identifies 'foreign currency adjustments' as the primary driver of changes in goodwill carrying amount. The 2024 footnote (D456) similarly attributes changes to 'Primarily foreign currency adjustments', confirming the same specific topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_8_D492",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 15 - Goodwill, mortgage servicing rights, and other intangible assets > Goodwill",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Changes in the carrying amount of goodwill include predominantly foreign currency adjustments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D456",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 15 - Goodwill, mortgage servicing rights, and other intangible assets > Goodwill",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnotes indicate that changes in goodwill carrying amounts are primarily due to foreign currency adjustments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.669419,
+            "sequence_match_ratio": 0.8,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "primarily"
+            ],
+            "removed_tokens_sample": [
+              "predominantly"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_8_D492",
+            "score": 1.002975,
+            "normalised_score": 1.003,
+            "label": "Unchanged",
+            "rationale": "Score 100.30% of ceiling — semantically identical despite surface differences (word overlap 60%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The change from 'predominantly' to 'primarily' foreign currency adjustments is a stylistic synonym substitution with no substantive change in the nature or magnitude of the driver for goodwill changes.",
+          "key_change": "Synonym substitution in driver description"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M1185",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail the changes in the goodwill carrying amount during the year, specifically attributing adjustments to foreign currency effects and noting the immaterial goodwill write-off due to impairment in 2025.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D456",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 15 - Goodwill, mortgage servicing rights, and other intangible assets > Goodwill",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnotes indicate that changes in goodwill carrying amounts are primarily due to foreign currency adjustments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_8_D491",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 15 - Goodwill, mortgage servicing rights, and other intangible assets > Goodwill",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Goodwill adjustments in 2025 primarily consist of foreign currency adjustments and an immaterial amount of goodwill written off due to impairment during the third quarter of 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.342871,
+            "sequence_match_ratio": 0.37037,
+            "length_ratio": 4.4,
+            "word_count_delta": 17,
+            "added_tokens_sample": [
+              "and",
+              "an",
+              "immaterial",
+              "amount",
+              "of",
+              "goodwill",
+              "written",
+              "off",
+              "due",
+              "to",
+              "impairment",
+              "during",
+              "the",
+              "third",
+              "quarter",
+              "of",
+              "2025"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_8_D456",
+            "score": 0.756448,
+            "normalised_score": 0.7564,
+            "label": "Expanded",
+            "rationale": "Score 75.64% of ceiling — content grew from ~4 to ~21 words (5.2×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.55,
+          "confidence_score": 0.7,
+          "reason": "The 2024 disclosure attributed goodwill changes primarily to foreign currency. The 2025 disclosure adds that there was an 'immaterial amount of goodwill written off due to impairment'. While explicitly labeled immaterial, the introduction of an impairment event (even if small) is a qualitative change in the composition of goodwill changes compared to the prior year, indicating a specific economic event occurred. It is on the borderline of materiality due to the 'immaterial' qualifier but constitutes a meaningful change in the disclosure substance.",
+          "key_change": "Introduction of impairment write-off"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D290",
+            "peer_topic": "Foreign currency-denominated debt and hedging strategy",
+            "peer_summary": "At December 31, 2024, foreign currency-denominated debt was $43.8 billion, down from $49.8 billion in 2023, with foreign currency contracts potentially used to convert such debt into U.S. dollars.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.166214,
+            "relationship": "related_topic",
+            "comparison": "Both JPMorgan and Bank of America disclose the use of foreign currency-denominated debt and the resulting foreign currency adjustments, but they apply them to different balance sheet items. JPMorgan attributes changes primarily to 'foreign currency adjustments' affecting 'goodwill' (an intangible asset). In contrast, Bank of America explicitly links its foreign currency-denominated debt ($43.8 billion) to 'total long-term debt' and notes the use of foreign currency contracts to convert such debt, rather than linking it to goodwill or net investment hedges in the same manner. While both acknowledge foreign currency adjustments in their financial reporting, the specific asset class and accounting mechanism differ significantly.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D456",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P680_S001",
+                    "paragraph_id": "jpm_2024_8_P680",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(b)Primarily foreign currency adjustments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D290",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P338_S003",
+                    "paragraph_id": "bac_2024_8_P338",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "At December 31, 2024 and 2023, the amount of foreign currency-denominated debt translated into U.S. dollars included in total long-term debt was $43.8 billion and $49.8 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D049",
+            "peer_topic": "Net Investment Hedging Strategy and Instruments",
+            "peer_summary": "Citigroup uses foreign currency forwards, cross-currency swaps, options, and foreign currency-denominated debt instruments to manage the foreign exchange risk of net investments in non-U.S. functional currency subsidiaries, consistent with ASC 830-20 and ASC 815.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.192571,
+            "relationship": "related_topic",
+            "comparison": "JPMorgan and Citigroup both identify foreign currency adjustments as a primary driver of changes in specific financial metrics, but the underlying subject matter differs. JPMorgan's adjustment relates to 'goodwill' carrying amounts. Citigroup, conversely, uses foreign currency instruments (forwards, swaps, debt) specifically to hedge 'net investments in several non-U.S.-dollar-functional-currency foreign subsidiaries,' with the resulting translation adjustments recorded in Accumulated Other Comprehensive Income (AOCI). JPMorgan's disclosure does not mention net investment hedging strategies for goodwill, whereas Citigroup's is explicitly a hedging strategy for equity investments.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D456",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P680_S001",
+                    "paragraph_id": "jpm_2024_8_P680",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(b)Primarily foreign currency adjustments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D049",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P048_S002",
+                    "paragraph_id": "c_2024_8_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Citigroup uses foreign currency forwards, cross-currency swaps, options and foreign currency-denominated debt instruments to manage the foreign exchange risk associated with Citigroup's equity investments in several non-U.S.-dollar-functional-currency foreign subsidiaries.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D182",
+            "peer_topic": "Net Investment Hedging Strategy and Instruments",
+            "peer_summary": "The firm uses foreign currency forward contracts and foreign currency-denominated debt to hedge net investments in non-U.S. operations. Hedge effectiveness is assessed based on changes in forward rates for forwards and spot rates for denominated debt.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.156309,
+            "relationship": "related_topic",
+            "comparison": "Similar to Citigroup, Goldman Sachs utilizes foreign currency instruments to hedge net investments in non-U.S. operations, a strategy distinct from JPMorgan's disclosure regarding goodwill adjustments. JPMorgan notes that changes in goodwill are primarily due to foreign currency adjustments. Goldman Sachs describes using foreign currency forward contracts and debt to 'reduce the impact of fluctuations in foreign exchange rates on its net investments,' with effectiveness assessed against forward and spot rates. JPMorgan's disclosure lacks the explicit hedging strategy context for goodwill found in the peers' net investment hedge disclosures.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D456",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P680_S001",
+                    "paragraph_id": "jpm_2024_8_P680",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(b)Primarily foreign currency adjustments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D182",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P261_S001",
+                    "paragraph_id": "gs_2024_8_P261",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The firm seeks to reduce the impact of fluctuations in foreign exchange rates on its net investments in certain non-U.S. operations through the use of foreign currency forward contracts and foreign currency-denominated debt.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D438",
+            "peer_topic": "Impact of foreign currency exchange rate changes on plan assets",
+            "peer_summary": "Foreign currency exchange rate changes primarily impacted the fair value of plan assets.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.222108,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Morgan Stanley identify foreign currency exchange rate changes as the primary driver impacting a specific carrying amount, though the asset class differs. JPMorgan attributes changes in 'goodwill' primarily to foreign currency adjustments. Morgan Stanley notes that foreign currency exchange rate changes 'primarily impacted the fair value of plan assets.' Both disclosures highlight foreign currency as the dominant factor for the fluctuation in the respective line items (goodwill vs. plan assets).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D456",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P680_S001",
+                    "paragraph_id": "jpm_2024_8_P680",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(b)Primarily foreign currency adjustments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D438",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P546_S001",
+                    "paragraph_id": "ms_2024_8_P546",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.Primarily includes the impact of foreign currency exchange rate changes.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

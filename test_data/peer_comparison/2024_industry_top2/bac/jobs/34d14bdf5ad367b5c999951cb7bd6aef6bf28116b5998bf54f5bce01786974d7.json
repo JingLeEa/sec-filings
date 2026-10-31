@@ -1,0 +1,315 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "59547f0834f219d1359f7ffcce6017b7e372e84a6b524f6c79a9c10107c3dc2c",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_8_D197",
+    "item": "8",
+    "target_topic": "Volume and Financial Impact of 2024 Loan Modifications",
+    "target_summary": "In 2024, modified loans totaled $650 million (0.31% of outstanding loans), resulting in an average interest rate reduction of 18.89% and $113 million in principal forgiveness.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0701",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the volume of modified loans, their aging status, and the financial impact (interest rate reduction and principal forgiveness). The 2024 disclosure (bac_2024_8_D197) provides the 2024 figures ($650M modified, 0.31%, 18.89% rate reduction, $113M forgiveness) compared to the 2023 figures in the previous year's disclosure (bac_2023_8_D192: $598M modified, 0.29%).\n\nBoth disclosures monitor the performance of modified loans and report post-modification default rates and aging distributions. The 2024 disclosure (bac_2024_8_D198) explicitly compares the 2024 aging bucket details ($546M current, $58M 30-89 days, $46M >90 days) against the 2023 details ($491M current, $59M 30-89 days, $48M >90 days) referenced in the 2023 disclosure (bac_2023_8_D192).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_8_D192",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Loan Modifications to Borrowers in Financial Difficulty > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Modified loans are monitored for performance; as of December 31, 2023, post-modification defaults since January 1, 2023 were insignificant. Of the $598 million modified, $491 million were current, $59 million 30-89 days past due, and $48 million greater than 90 days past due, representing 0.29% of outstanding loans.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D197",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Loan Modifications to Borrowers in Financial Difficulty > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2024, modified loans totaled $650 million (0.31% of outstanding loans), resulting in an average interest rate reduction of 18.89% and $113 million in principal forgiveness.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D198",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Loan Modifications to Borrowers in Financial Difficulty > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Defaults on modified loans within 12 months were insignificant in 2024 and 2023; as of December 31, 2024, the $650 million in modified loans included $546 million current, $58 million 30-89 days past due, and $46 million greater than 90 days past due.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.846396,
+            "sequence_match_ratio": 0.412903,
+            "length_ratio": 2.333333,
+            "word_count_delta": 124,
+            "added_tokens_sample": [
+              "the",
+              "december",
+              "31",
+              "2024",
+              "amortized",
+              "cost",
+              "of",
+              "credit",
+              "card",
+              "and",
+              "other",
+              "consumer",
+              "loans",
+              "that",
+              "were",
+              "modified",
+              "through",
+              "these",
+              "programs",
+              "during"
+            ],
+            "removed_tokens_sample": [
+              "modified",
+              "since",
+              "january",
+              "1",
+              "2023",
+              "of",
+              "the",
+              "598",
+              "million",
+              "in",
+              "as",
+              "these",
+              "modifications",
+              "represented",
+              "0",
+              "29",
+              "percent",
+              "of",
+              "outstanding",
+              "credit"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_8_D192",
+            "score": 0.99308,
+            "normalised_score": 0.9931,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 99.31% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure provides updated quantitative metrics for the current year (2024) compared to the prior year (2023). Key changes include: modified loan volume increasing from $598 million to $650 million; percentage of outstanding loans increasing from 0.29% to 0.31%; principal forgiveness nearly doubling from $61 million to $113 million; and aging bucket shifts. These are meaningful changes in the company's financial exposure and credit risk profile for consumer loans.",
+          "key_change": "Increase in modified loan volume and principal forgiveness"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0724",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures report the aggregate amortized cost of credit card and other consumer loans modified during the year, along with the associated financial effects (interest rate reduction and principal forgiveness amounts). The 2025 disclosure explicitly references the 2024 figures ($650 million, 18.89% reduction, $113 million forgiveness) for comparison, confirming the same underlying topic.\n\nBoth disclosures cover the Credit Card and Other Consumer loan modification portfolio. D210 provides data on the TDR portfolio (unpaid principal, carrying value, interest rates) for loans modified in 2022. D182 provides the amortized cost, percentage of outstanding, interest rate reduction, and principal forgiveness for credit card and other consumer loans modified in 2025. They share the specific subject of quantitative disclosure for modified Credit Card and Other Consumer loans.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D197",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Loan Modifications to Borrowers in Financial Difficulty > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2024, modified loans totaled $650 million (0.31% of outstanding loans), resulting in an average interest rate reduction of 18.89% and $113 million in principal forgiveness.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D210",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Prior-period Troubled Debt Restructuring Disclosures > Consumer Real Estate > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "A table provides data on the Credit Card and Other Consumer Troubled Debt Restructuring (TDR) portfolio as of December 31, 2022, including unpaid principal balance, carrying value, and pre- and post-modification interest rates for loans modified in 2022.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_8_D182",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses > Loan Modifications to Borrowers in Financial Difficulty > Credit Card and Other Consumer",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2025, the amortized cost of modified credit card and other consumer loans was $705 million (0.32% of outstanding), resulting in a weighted-average interest rate reduction of 17.77% and $101 million in principal forgiveness, compared to $650 million, 0.31%, 18.89% reduction, and $113 million forgiveness in 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidate c_2024_8_D167 describes new accounting standard (ASU) disclosure requirements rather than specific 2024 modification volumes or financial impacts. The candidate c_2024_8_D462 concerns securitization proceeds and gains, not loan modifications to distressed borrowers. Neither provides comparable factual data on modification amounts, rates, or forgiveness for 2024."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D239",
+            "peer_topic": "Loan Modification Policies and Outcomes",
+            "peer_summary": "The firm may modify terms for borrowers in financial difficulty, primarily via term extensions; modified loans were mostly performing, with negligible defaults in 2024 and ~$100 million charged off in 2023 from previously modified loans.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.15511,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and GS disclose the volume and nature of loan modifications for borrowers in financial difficulty, but they differ significantly in reported volume and specific financial impact metrics. BAC reports $650 million in modified credit card and consumer loans in 2024, highlighting a 18.89% weighted-average interest rate reduction and $113 million in principal forgiveness. In contrast, GS states that modifications were primarily term extensions (increasing term by 19 months) and does not disclose specific volume totals or principal forgiveness amounts in the same sentence structure, noting instead that modified loans represented ~2% of corporate and ~1% of CRE and credit card loans. GS also highlights that defaults on modified loans were not material in 2024, whereas BAC focuses on the immediate financial relief (rate reduction/forgiveness) rather than default rates in the primary volume disclosure.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D197",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P230_S004",
+                    "paragraph_id": "bac_2024_8_P230",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The December 31, 2024 amortized cost of credit card and other consumer loans that were modified through these programs during 2024 was $650 million compared to $598 million in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P230_S006",
+                    "paragraph_id": "bac_2024_8_P230",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "During 2024, the financial effect of modifications resulted in a weighted-average interest rate reduction of 18.89 percent compared to 19.02 percent in 2023, and principal forgiveness of $113 million compared to $61 million in 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D239",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P319_S002",
+                    "paragraph_id": "gs_2024_8_P319",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Loan modifications during both 2024 and 2023 were primarily in the form of term extensions. These extensions increased the weighted average term by 19 months for loans modified during 2024 and by 16 months for loans modified during 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P319_S003",
+                    "paragraph_id": "gs_2024_8_P319",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Substantially all of the modified loans were related to corporate loans, commercial real estate loans and credit cards. Modified loans represented approximately 2% of corporate loans (at amortized cost), and approximately 1% of both commercial real estate loans (at amortized cost) and credit card loans (at amortized cost).",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P319_S005",
+                    "paragraph_id": "gs_2024_8_P319",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• During 2024, loans that defaulted after being modified were not material. During 2023, the firm charged off approximately $100 million of loans that had defaulted after being modified. Substantially all of the remaining modified loans were performing in accordance with the modified contractual terms as of both December 2024 and December 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D329",
+            "peer_topic": "Financial effects of loan modifications for the year ended December 31, 2024",
+            "peer_summary": "For the year ended December 31, 2024, retained residential real estate financial distress modifications (FDMs) totaled $206 million. These modifications, predominantly term extensions and interest rate reductions, extended the weighted-average loan life by 15 years and reduced the weighted-average contractual interest rate from 7.53% to 5.44%.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.121229,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and JPM disclose the financial effects of loan modifications, specifically interest rate reductions, but for different loan portfolios and with different magnitudes. BAC reports on 'credit card and other consumer' loans, noting a $650 million modification volume with an average rate reduction of 18.89%. JPM reports on 'retained residential real estate' FDMs, which totaled $206 million, with a rate reduction from 7.53% to 5.44% (a roughly 2.09 percentage point drop) and a significant extension of loan life by 15 years. While both involve rate reductions for distressed borrowers, BAC's modifications include principal forgiveness ($113 million) not mentioned by JPM, and JPM emphasizes term extension more heavily than BAC in this specific comparison.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D197",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P230_S004",
+                    "paragraph_id": "bac_2024_8_P230",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The December 31, 2024 amortized cost of credit card and other consumer loans that were modified through these programs during 2024 was $650 million compared to $598 million in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P230_S006",
+                    "paragraph_id": "bac_2024_8_P230",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "During 2024, the financial effect of modifications resulted in a weighted-average interest rate reduction of 18.89 percent compared to 19.02 percent in 2023, and principal forgiveness of $113 million compared to $61 million in 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D329",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P494_S001",
+                    "paragraph_id": "jpm_2024_8_P494",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "For the year ended December 31, 2024, retained residential real estate FDMs were $206 million.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P494_S002",
+                    "paragraph_id": "jpm_2024_8_P494",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The financial effects of the FDMs, which were predominantly in the form of term extensions and interest rate reductions, included extending the weighted-average life of the loans by 15 years, and reducing the weighted-average contractual interest rate from 7.53% to 5.44% for the year ended December 31, 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidate ms_2024_8_D253 is a high-level policy statement describing potential modification mechanisms (interest rate reductions, principal forgiveness, etc.) but does not contain specific 2024 volume data, financial impact amounts, or performance metrics comparable to BAC's reported $650 million volume and $113 million forgiveness."
+      }
+    ]
+  }
+}
