@@ -91,7 +91,7 @@ def run_offline(case, queue, observed):
          patch.object(materiality, "load_config", return_value=fake), \
          patch.object(alignment_runtime, "request_completion", side_effect=alignment_provider), \
          patch.object(materiality_runtime, "request_completion", side_effect=materiality_provider), \
-         patch.object(embeddings, "make_embedder", return_value=lambda texts: [[1.0, 0.0] for _ in texts]), \
+         patch.object(embeddings, "make_embedder", side_effect=AssertionError("Review refresh uses LLM change labels only")), \
          redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
         review_jobs.process_queue(queue)
 
@@ -181,6 +181,8 @@ def test_human_reviewed_needs_review_group_reaches_materiality_without_fake_ai_a
     assert result["change_analysis"]["llm"] is None
     assert result["change_analysis"]["final_taxonomy"] == "Modified"
     assert "materiality_analysis" in result
+    assert result["manual_review"]["source_evidence"]
+    assert all(entry["sentences"] for entry in result["manual_review"]["source_evidence"])
 
 
 def test_affected_pairs_include_existing_nonadjacent_comparisons_only_for_reviewed_year():
@@ -272,6 +274,9 @@ def test_pipeline_rejects_superseded_review_without_model_requests(pipeline):
 def test_postgres_refresh_publishes_consistent_snapshots_and_normalized_inputs(pipeline, monkeypatch):
     """Exercise the PostgreSQL handoff with an in-memory transactional store."""
     from sec_disclosure.storage import pipeline_snapshots, disclosures, alignments
+    from sec_disclosure.agents import synthesis
+    from artifact_support import MemoryArtifactStore, workspace_factory
+    from unittest.mock import MagicMock
     case = pipeline
     row = json.loads((case.root / "disclosures/amd/2024/disclosures.json").read_text())["disclosures"][0]
     saved = review.save_disclosure_review({**row, "fiscal_year": 2024}, "Operations & Capacity", "Human.", expected=None)
@@ -282,6 +287,8 @@ def test_postgres_refresh_publishes_consistent_snapshots_and_normalized_inputs(p
     for value in database.values():
         value["revision"] = review_refresh.fingerprint(value["documents"])
     publications = []
+    artifacts = MemoryArtifactStore()
+    synthesized = []
 
     def read(company, scopes, **kwargs):
         assert company == "amd"
@@ -318,6 +325,23 @@ def test_postgres_refresh_publishes_consistent_snapshots_and_normalized_inputs(p
     monkeypatch.setattr(review_refresh.Refresh, "scopes", lambda self: ([2023, 2024], []))
     monkeypatch.setattr(disclosures, "store_disclosures", store_disclosures)
     monkeypatch.setattr(alignments, "store_alignments", store_alignments)
+    monkeypatch.setattr(review_refresh, "PostgresWorkspace", workspace_factory(artifacts))
+    monkeypatch.setattr(review_refresh.Refresh, "synthesis_scopes", lambda self, years: [(2023, 2024)])
+
+    def check_revisions(cur, expected):
+        for (_, kind, previous, current), expected_revision in expected.items():
+            assert database[(kind, str(previous), str(current))]["revision"] == expected_revision
+
+    def synthesize(company, years, **kwargs):
+        assert publications[-1] == ("alignments", 2023, 2024)
+        report = database[("alignments", "2023", "2024")]["documents"]["alignments.json"]["payload"]
+        assert all("materiality_analysis" in row for row in report["alignments"])
+        assert kwargs["allow_empty"] is True
+        kwargs["before_save"](MagicMock())
+        synthesized.append((company, years))
+
+    monkeypatch.setattr(pipeline_snapshots, "check_revisions", check_revisions)
+    monkeypatch.setattr(synthesis, "run_from_database", synthesize)
     run_offline(case, queue, [])
     finished = review_jobs.jobs(queue)[0]
     assert finished["status"] == "complete", finished.get("error")
@@ -326,6 +350,11 @@ def test_postgres_refresh_publishes_consistent_snapshots_and_normalized_inputs(p
                for kind, previous, current in publications[1:])
     result = database[("alignments", "2023", "2024")]["documents"]["alignments.json"]["payload"]
     assert all("materiality_analysis" in row for row in result["alignments"])
+    assert synthesized == [("AMD", [2023, 2024])]
+    assert "synthesis:2023-2024" in finished["completed_steps"]
+    assert finished["phase"] == "Updated through synthesis"
+    assert not (queue / "runs").exists()
+    assert any(path.startswith("review_refresh/") for path in artifacts.rows)
 
 
 def test_snapshot_guard_refuses_to_overwrite_newer_inputs():

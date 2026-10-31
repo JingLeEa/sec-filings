@@ -120,6 +120,19 @@ class SynthesisRetrievalPostgresTests(unittest.TestCase):
             self.assertEqual(len(changes), 1)
             self.assertEqual(changes[0]["taxonomy"], "Expanded")
             self.assertEqual(changes[0]["materiality"]["materiality"], "Yes")
+            with conn.cursor() as cur:
+                cur.execute("UPDATE alignments SET change_analysis=change_analysis || %s::jsonb",
+                            (json.dumps({"final_taxonomy": "Reduced"}),))
+            changes = fetch_change_evidence(conn, "AMD", 2024, 2025)
+            self.assertEqual(changes[0]["taxonomy"], "Reduced")
+            human_evidence = [{"disclosure_id": "synthetic_D001", "sentences": [
+                {"sentence_id": "synthetic_S001", "text": "Human-reviewed source text.",
+                 "paragraph_id": "synthetic_P001", "source_url": "https://example.test"}]}]
+            with conn.cursor() as cur:
+                cur.execute("UPDATE alignments SET extra=extra || %s::jsonb", (json.dumps({
+                    "manual_review": {"source_fingerprint": "test", "source_evidence": human_evidence}}),))
+            changes = fetch_change_evidence(conn, "AMD", 2024, 2025)
+            self.assertEqual(changes[0]["source_evidence"][0]["text"], "Human-reviewed source text.")
 
 
 if __name__ == "__main__":

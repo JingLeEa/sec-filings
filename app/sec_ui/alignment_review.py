@@ -136,12 +136,13 @@ def render(scope):
     if missing_text:
         st.error("Source text is missing for a disclosure in this match. Load its disclosure text before saving a label.")
 
+    endpoint = "synthesis" if comparison["meta"]["source"] == "postgres" else "materiality"
     with st.form("manual_review_form"):
         chosen_label = st.selectbox("Change label", config.CHANGE_LABELS, index=None,
                                     placeholder="Choose a change label", key="manual_label")
         notes = st.text_area("Review notes (optional)", key="manual_notes", placeholder="Explain your change label.")
         st.caption("Choose New, Removed, Expanded, Reduced, Modified, Reworded or Unchanged. "
-                   "Saving refreshes downstream results through materiality. Save before moving to another disclosure.")
+                   f"Saving refreshes affected results through {endpoint}. Save before moving to another disclosure.")
         save_col, next_save_col = st.columns(2)
         save = save_col.form_submit_button("Save review", disabled=missing_text, width="stretch")
         save_next = next_save_col.form_submit_button("Save and next", type="primary", disabled=missing_text, width="stretch")
@@ -160,7 +161,7 @@ def render(scope):
             except data.DataError as error:
                 st.session_state["_manual_refresh_error"] = str(error)
             else:
-                st.session_state["_manual_review_message"] += " Updating downstream results through materiality."
+                st.session_state["_manual_review_message"] += f" Updating downstream results through {endpoint}."
             if save_next:
                 following = ids[position + 1:] + ids[:position]
                 next_id = next((i for i in following if i not in current_reviews), None)

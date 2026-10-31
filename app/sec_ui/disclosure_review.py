@@ -145,11 +145,12 @@ def render(scope):
         st.warning("The selected source text changed since the last review. Review this version and save a new type.")
     if not (row.get("content") or "").strip():
         st.error("Source text is missing for this disclosure. Load its text before saving a type.")
+    endpoint = "synthesis" if mode == "postgres" else "materiality"
     with st.form("disclosure_review_form"):
         chosen = st.selectbox("Disclosure type", config.CONTENT_CATEGORIES, index=None,
                               placeholder="Choose a disclosure type", key="disclosure_type")
         notes = st.text_area("Review notes (optional)", key="disclosure_notes")
-        st.caption("Saving refreshes affected comparisons through materiality. Save before moving to another disclosure.")
+        st.caption(f"Saving refreshes affected comparisons through {endpoint}. Save before moving to another disclosure.")
         left, right = st.columns(2)
         missing = not (row.get("content") or "").strip()
         save = left.form_submit_button("Save review", disabled=missing, width="stretch")
@@ -168,7 +169,7 @@ def render(scope):
             except data.DataError as error:
                 st.session_state["_disclosure_refresh_error"] = str(error)
             else:
-                st.session_state["_disclosure_review_message"] += " Updating affected comparisons through materiality."
+                st.session_state["_disclosure_review_message"] += f" Updating affected comparisons through {endpoint}."
             if save_next:
                 following = ids[position+1:]+ids[:position]
                 st.session_state["_disclosure_review_jump"] = next((value for value in following if value not in current),

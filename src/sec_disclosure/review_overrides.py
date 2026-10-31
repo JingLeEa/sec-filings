@@ -166,7 +166,12 @@ def apply_alignment_reviews(report, records, reviews):
             row.pop("materiality_analysis", None)
         row["manual_review"] = {"stage": "alignment", "change_label": label,
                                 "reviewed_at": saved["reviewed_at"], "notes": saved.get("notes", ""),
-                                "source_fingerprint": fingerprint(view), "original_match_id": saved["match_id"]}
+                                "source_fingerprint": fingerprint(view), "original_match_id": saved["match_id"],
+                                "source_evidence": [{"disclosure_id": key, "sentences": [
+                                    {**sentence, "paragraph_id": source["paragraph_id"],
+                                     "source_url": source["source_url"]}
+                                    for source in records[key]["sources"] for sentence in source["sentences"]]}
+                                    for key in row["previous_ids"] + row["current_ids"]]}
         analysis = row.setdefault("change_analysis", {})
         if analysis.get("llm") is None and saved.get("llm_change_label") in CHANGE_LABELS:
             analysis["llm"] = saved["llm_change_label"]

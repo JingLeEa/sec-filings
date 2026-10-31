@@ -5,7 +5,7 @@ from copy import deepcopy
 import hashlib
 import json
 import os
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path, PostgresWorkspace
 import re
 
 from sec_disclosure.llm.disclosures import write_json
@@ -20,6 +20,10 @@ from sec_disclosure.storage.pipeline_snapshots import (
 
 
 class SupersededReview(RuntimeError):
+    pass
+
+
+class PipelineBusy(RuntimeError):
     pass
 
 
@@ -277,18 +281,8 @@ class Refresh:
         if align([*common, "--change-analysis-only"]) != 0:
             raise RuntimeError("Change analysis did not finish. Retry resumes its saved work.")
         report = self.apply_alignment(output, data)
-        from sec_disclosure.analysis.aligned_changes import enrich_alignment
-        from sec_disclosure.llm.config import load_config
-        from sec_disclosure.llm.embeddings import make_embedder
-        eligible = [row for row in report["alignments"] if row["status"] in FINAL_STATUSES or manual_change_label(row)]
-        working = {**report, "alignments": eligible}
-        embedder = make_embedder(config=load_config(self.env_file), model=self.settings.get("embedding_model", "bge-m3"),
-                                 cache_dir=self.data / "embeddings", progress=True)
-        enriched = enrich_alignment(output, data, embedder=embedder, document=working)
-        analyses = {row["match_id"]: row["change_analysis"] for row in enriched["alignments"]}
-        for row in report["alignments"]:
-            if row["match_id"] in analyses:
-                row["change_analysis"] = analyses[row["match_id"]]
+        # The full pipeline now uses LLM change analysis. Human final labels
+        # were reapplied above and must not be replaced by another classifier.
         write_reports(output, report)
         self.publish("alignments", previous, current, output)
         self.finished(f"change-analysis:{previous}-{current}")
@@ -323,6 +317,50 @@ class Refresh:
         self.publish("alignments", previous, current, output)
         self.finished(f"materiality:{previous}-{current}")
 
+    def synthesis_scopes(self, years):
+        """Refresh existing report selections whose comparisons were affected."""
+        import psycopg
+        from sec_disclosure.storage.disclosures import connection_arguments
+        with psycopg.connect(**connection_arguments(self.env_file)) as conn, conn.cursor() as cur:
+            cur.execute("SELECT to_regclass('synthesis_reports')")
+            if cur.fetchone()[0] is None:
+                saved = []
+            else:
+                cur.execute("SELECT years FROM synthesis_reports WHERE lower(company)=%s", (self.company,))
+                saved = [tuple(row[0]) for row in cur.fetchall()]
+        affected = set(self.pairs)
+        selections = {tuple(sorted(set(map(int, selection)))) for selection in saved}
+        selections = {selection for selection in selections
+                      if affected.intersection(zip(selection, selection[1:]))}
+        if not selections and len(years) >= 2:
+            selections.add(tuple(sorted(set(years))))
+        return sorted(selections)
+
+    def refresh_synthesis(self, years):
+        from sec_disclosure.agents.synthesis import run_from_database
+        from sec_disclosure.storage.pipeline_snapshots import check_revisions
+
+        def before_save(conn):
+            self.check_current()
+            with conn.cursor() as cur:
+                check_revisions(cur, self.expected)
+
+        selections = self.synthesis_scopes(years)
+        self.update(synthesis_scopes=[list(selection) for selection in selections])
+        for selection in selections:
+            self.phase(f"Updating synthesis · FY{selection[0]}–FY{selection[-1]}")
+            for previous, current in zip(selection, selection[1:]):
+                self.fetch("alignments", previous, current)
+            progress = self.data / "pipeline_runs" / self.company / "-".join(map(str, selection)) / "status.json"
+            configuration = json.loads(progress.read_text()).get("synthesis_concurrency", {}) if progress.exists() else {}
+            run_from_database(self.company.upper(), list(selection), env_file=self.env_file,
+                data_dir=self.data, limit_per_pair=500,
+                max_changes=int(self.settings.get("synthesis_max_changes", configuration.get("max_changes", 50))),
+                finding_target=None, finding_batch_size=int(configuration.get("finding_batch_size", 10)),
+                finding_workers=int(configuration.get("finding_workers", 18)), timeout=180, max_tokens=7000,
+                allow_empty=True, before_save=before_save)
+            self.finished("synthesis:" + "-".join(map(str, selection)))
+
     def run(self):
         years, existing = self.scopes()
         self.pairs = (affected_pairs(self.job["previous_year"], years, existing) if self.job["stage"] == "disclosure"
@@ -333,6 +371,8 @@ class Refresh:
             self.apply_disclosures(self.job["previous_year"])
         for pair in self.pairs:
             self.refresh_pair(*pair)
+        if self.mode == "postgres" and self.pairs:
+            self.refresh_synthesis(years)
         self.check_current()
 
 
@@ -340,7 +380,21 @@ def run_job(job, output, update):
     previous = os.environ.get("SEC_UI_MANUAL_REVIEWS_DIR")
     os.environ["SEC_UI_MANUAL_REVIEWS_DIR"] = job["settings"]["reviews_dir"]
     try:
-        Refresh(job, output, update).run()
+        if job["settings"]["input_source"] == "postgres":
+            settings = job["settings"]
+            with PostgresWorkspace(settings.get("cache_namespace", "main"), settings.get("env_file")) as workspace:
+                try:
+                    with workspace.store.lock("pipeline_runs/" + job["company"]):
+                        effective = {**job, "settings": {**settings, "data_dir": str(workspace.root),
+                            "disclosures_dir": str(workspace.root / "disclosures"),
+                            "alignments_dir": str(workspace.root / "alignments")}}
+                        Refresh(effective, workspace.root / "review_refresh" / job["job_id"], update).run()
+                except ValueError as error:
+                    if "already running" in str(error):
+                        raise PipelineBusy(str(error)) from None
+                    raise
+        else:
+            Refresh(job, output, update).run()
     finally:
         if previous is None:
             os.environ.pop("SEC_UI_MANUAL_REVIEWS_DIR", None)

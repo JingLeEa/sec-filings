@@ -22,8 +22,9 @@ def fetch_change_evidence(conn, company: str, previous_year: int,
             SELECT
                 ar.run_id, ar.company, ar.previous_year, ar.current_year,
                 a.match_id, a.status AS alignment_status, a.relationship,
-                a.change_analysis->>'llm' AS change_taxonomy,
+                COALESCE(a.change_analysis->>'final_taxonomy', a.change_analysis->>'llm') AS change_taxonomy,
                 a.extra->'materiality_analysis' AS materiality_analysis,
+                a.extra->'manual_review' AS manual_review,
                 a.evidence
             FROM alignments AS a
             JOIN alignment_runs AS ar ON ar.run_id = a.run_id
@@ -75,7 +76,9 @@ def fetch_change_evidence(conn, company: str, previous_year: int,
     results = []
     for change in changes:
         source_evidence = []
-        for disclosure in change.get("evidence") or []:
+        human = change.get("manual_review") or {}
+        evidence = (human.get("source_evidence") if human.get("source_fingerprint") else None)
+        for disclosure in evidence or change.get("evidence") or []:
             if not isinstance(disclosure, dict):
                 continue
             for sentence in disclosure.get("sentences") or []:

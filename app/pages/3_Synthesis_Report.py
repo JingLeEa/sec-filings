@@ -10,12 +10,16 @@ components.setup("Synthesis report")
 st.title("Synthesis report")
 st.caption("A multi-year summary written by the synthesis agent from material changes and reported financial figures.")
 
-files = reports.list_synthesis_files()
+try:
+    files = reports.list_synthesis_files()
+except data.DataError as error:
+    st.error(str(error))
+    st.stop()
 if not files:
     st.info("No synthesis output was found yet.")
     st.markdown(
-        "The synthesis agent writes a JSON file such as `AMD_2023_2025_synthesis_output.json`. "
-        "Put it in `data/synthesis/` or set `SEC_UI_SYNTHESIS_DIRS` to the folder that holds it, then reload."
+        "Run the full pipeline through synthesis to save a report in PostgreSQL. "
+        "Legacy JSON reports can also be loaded using `SEC_UI_SYNTHESIS_DIRS`."
     )
     st.caption("Looked in: " + ", ".join(str(p) for p in config.synthesis_dirs()))
     st.stop()
@@ -36,6 +40,8 @@ except data.DataError as error:
     st.stop()
 
 report = synth["report"]
+from sec_ui import refresh
+refresh.status_panel(synth.get("company", "").lower(), synth.get("years", []))
 validation = synth.get("validation") or {}
 summary = synth.get("input_summary") or {}
 
@@ -116,4 +122,4 @@ d2.download_button("Evidence (CSV)", reports.rows_to_csv(reports.synthesis_evide
                    mime="text/csv", width="stretch")
 d3.download_button("Full output (JSON)", json.dumps(synth, indent=2, ensure_ascii=False), file_name=path.name,
                    mime="application/json", width="stretch")
-st.caption(f"Source file: {path}")
+st.caption(f"Source: {path}")

@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import time
 
 from sec_disclosure.llm.disclosures import write_json
 
@@ -75,7 +76,7 @@ def launch_worker(queue):
                          stdin=subprocess.DEVNULL, start_new_session=True)
 
 
-def process_queue(queue, *, runner=None):
+def process_queue(queue, *, runner=None, wait_for_pipeline=False):
     """One worker owns the queue; a later invocation resumes a crashed worker."""
     import fcntl
     if runner is None:
@@ -105,13 +106,20 @@ def process_queue(queue, *, runner=None):
             try:
                 runner(job, queue / "runs" / job["job_id"], update)
             except Exception as error:
-                from .review_refresh import SupersededReview
-                if isinstance(error, SupersededReview):
+                from .review_refresh import SupersededReview, PipelineBusy
+                if isinstance(error, PipelineBusy):
+                    update(status="queued", phase="Waiting for the current company pipeline", error=None)
+                    if wait_for_pipeline:
+                        time.sleep(3)
+                        continue
+                    return
+                elif isinstance(error, SupersededReview):
                     update(status="superseded", phase="A newer review replaced this refresh", error=None)
                 else:
                     update(status="failed", phase="Refresh stopped; review is saved",
                            error=f"{type(error).__name__}: {error}"[:1200])
             else:
-                phase = ("Updated through materiality" if job.get("affected_pairs", True)
+                endpoint = "synthesis" if job["settings"]["input_source"] == "postgres" else "materiality"
+                phase = (f"Updated through {endpoint}" if job.get("affected_pairs", True)
                          else "Disclosure updated; no comparison years are available")
                 update(status="complete", phase=phase, completed_at=now())

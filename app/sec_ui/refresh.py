@@ -31,7 +31,8 @@ def request(stage, record, saved, mode, *, force=False):
     settings = {"input_source": mode, "data_dir": str(pipeline_data.resolve()),
                 "disclosures_dir": str(Path(disclosures).resolve()), "alignments_dir": str(Path(alignments).resolve()),
                 "reviews_dir": str(config.manual_reviews_dir().resolve()),
-                "embedding_model": os.environ.get("SEC_UI_EMBEDDING_MODEL", "bge-m3")}
+                "cache_namespace": os.environ.get("SEC_UI_PIPELINE_CACHE_NAMESPACE", "main"),
+                "refresh_policy": "full_pipeline_through_synthesis_v1"}
     if env_file := os.environ.get("SEC_UI_PIPELINE_ENV_FILE"):
         settings["env_file"] = str(Path(env_file).expanduser().resolve())
     jobs = backend()

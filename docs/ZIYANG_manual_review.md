@@ -25,15 +25,16 @@ and JSON/CSV downloads. Alignment reuses the existing side-by-side comparison
 with removed words in red and added words in green.
 
 Saving records a human annotation and automatically queues a background pipeline
-refresh through **materiality**, the current pipeline's final runnable stage.
+refresh through **synthesis** when using PostgreSQL, the full pipeline's final stage.
 Disclosure reviews apply the human type to extraction outputs, then rerun affected
-year comparisons, change analysis, lexical/semantic analysis and materiality.
+year comparisons, LLM change analysis, materiality and affected synthesis reports.
 Alignment reviews apply the human change label to the saved group and continue
-through change analysis and materiality, preserving the human label.
+through change analysis, materiality and synthesis, preserving the human label.
 Overview, Change Explorer and Side by Side use the resulting labels in views,
 filters and exports. Original model labels and source evidence remain available.
-Synthesis/peer reports are not regenerated; their agent runners are absent from
-this checkout. User accounts and authenticated reviewer identity are not implemented.
+Synthesis reports are regenerated from updated material changes. Peer comparison
+remains a separate pipeline command. User accounts and authenticated reviewer
+identity are not implemented.
 
 ## 2. Code and workflow
 
@@ -68,7 +69,8 @@ root, with dependencies installed in `.venv`:
 ```
 
 Open the address printed by Streamlit, then select **Manual Review**. No model
-API key is needed. PostgreSQL mode needs a configured, running database; see
+API key is needed to open the UI; automatic downstream refresh uses the backend's
+SoCLaaS configuration. PostgreSQL mode needs a configured, running database; see
 [database setup](YUVIKA_database_docker_setup.md).
 
 | Environment variable | Purpose |
@@ -77,9 +79,9 @@ API key is needed. PostgreSQL mode needs a configured, running database; see
 | `SEC_UI_DISCLOSURES_DIR` | Extraction JSON root: `<company>/<year>/` |
 | `SEC_UI_ALIGNMENTS_DIR` | Alignment JSON root: `<company>/<previous>-<current>/` |
 | `SEC_UI_MANUAL_REVIEWS_DIR` | Writable annotation root; defaults to `data/manual_reviews` |
-| `SEC_UI_PIPELINE_DATA_DIR` | Pipeline raw-data/embedding-cache root; defaults to `data` in PostgreSQL mode or the extraction folder's parent in file mode |
+| `SEC_UI_PIPELINE_DATA_DIR` | Legacy file-mode raw-data root; PostgreSQL mode uses its database artifact workspace |
 | `SEC_UI_PIPELINE_ENV_FILE` | Optional backend database/model configuration file; otherwise the existing defaults apply |
-| `SEC_UI_EMBEDDING_MODEL` | Refresh embedding model; defaults to `bge-m3` |
+| `SEC_UI_PIPELINE_CACHE_NAMESPACE` | PostgreSQL artifact/cache namespace used by the full pipeline; defaults to `main` |
 | `SEC_UI_REFRESH_AUTOSTART` | Defaults to `1`; set `0` only to use a separately managed worker or offline UI tests |
 
 The review page reads PostgreSQL or JSON through the existing data layer. Human
@@ -170,6 +172,16 @@ with unresolved correspondence warnings remains in `needs_review.json`; its huma
 change label and materiality can be saved without falsely claiming AI approval.
 Materiality receives full selected source sentences for these human-reviewed groups.
 
+With PostgreSQL inputs, affected comparisons continue through synthesis. Existing
+synthesis reports whose year selections include an affected pair are regenerated;
+unrelated company/period reports are left alone. Synthesis uses the effective
+final change label, including a human override. If review removes the last material
+change, an empty validated report replaces the previous findings without a model
+call. The Synthesis Report page reads the latest PostgreSQL report automatically.
+The legacy file-only review workflow ends at materiality.
+Human-reviewed groups supply their full selected source sentences to synthesis;
+the original alignment evidence and unresolved correspondence warnings are retained.
+
 Disclosure types are Strategy & Business Model; Operations & Capacity;
 Technology & AI; Cybersecurity & Data; Supply Chain & Third Parties;
 Regulation, Legal & Compliance; Financial & Capital Resources;
@@ -198,8 +210,12 @@ data/manual_reviews/<company>/<previous>-<current>/manual_reviews.json
 
 Both use `schema_version: 1` and a `reviews` object keyed by disclosure ID or
 match ID. Writes use a temporary file and atomic replacement.
-Refresh jobs, stage workspaces, source backups and the worker log are stored under
-`<manual-reviews-root>/pipeline_refresh/`. One worker owns that queue at a time.
+Refresh queue metadata and the worker log remain under
+`<manual-reviews-root>/pipeline_refresh/`. PostgreSQL-mode stage workspaces,
+source backups, model response caches and checkpoints use `pipeline_artifacts`;
+file-only workspaces remain under the queue directory. One worker owns that queue
+at a time. A PostgreSQL refresh takes the same company lock as the full pipeline
+and waits if that company is already running, including after the browser closes.
 Newer human decisions supersede older queued work; input revisions are checked
 before publishing so a background run cannot replace newer inputs silently.
 Valid reviews follow unchanged source text/membership if alignment renumbers IDs;
@@ -245,8 +261,9 @@ are synthetic test decisions. No real human decisions are committed as fixtures.
 
 Downloaded results retain final human choices alongside original model labels.
 The refresh publishes updated normalized PostgreSQL rows and pipeline snapshots,
-or updated canonical JSON reports in file mode. Backend synthesis integration is
-outside the current runnable pipeline.
+or updated canonical JSON reports in file mode. PostgreSQL refreshes also publish
+updated synthesis reports to `synthesis_reports`. This automatic-review feature
+is maintained on `ui-manual-review`.
 
 ## 8. Validation and limitations
 
