@@ -4,7 +4,7 @@ from __future__ import annotations
 from copy import deepcopy
 import hashlib
 import json
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 
 ROOT = Path(__file__).resolve().parents[3]

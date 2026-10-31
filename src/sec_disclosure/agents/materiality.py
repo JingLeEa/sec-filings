@@ -12,8 +12,8 @@ import sys
 from collections import Counter, deque
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from datetime import datetime, timezone
-from pathlib import Path
 from sec_disclosure.review_overrides import manual_change_label
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from threading import RLock
 from uuid import uuid4
 

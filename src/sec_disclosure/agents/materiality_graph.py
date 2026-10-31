@@ -7,6 +7,7 @@ from copy import deepcopy
 from typing import TypedDict
 
 from langgraph.checkpoint.sqlite import SqliteSaver
+from sec_disclosure.storage.artifacts import checkpoint_saver
 from langgraph.graph import END, START, StateGraph
 
 from sec_disclosure.llm.disclosures import digest, write_json
@@ -152,7 +153,7 @@ class MaterialityAgentGraph:
             if self.runtime.args.concurrency == 1
             else directory / f"{self.job_id}.sqlite"
         )
-        with SqliteSaver.from_conn_string(str(database)) as saver:
+        with checkpoint_saver(database) as saver:
             graph = self.build(saver)
             snapshot = graph.get_state(config)
             if snapshot.values and snapshot.values["identity"] != identity:

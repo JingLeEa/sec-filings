@@ -14,7 +14,7 @@ import argparse
 from collections import defaultdict
 from datetime import date
 import json
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import sys
 from urllib.error import URLError

@@ -6,7 +6,7 @@ parsing, incorporated reports and resource sharing use the existing helpers.
 from dataclasses import dataclass, field
 import hashlib
 import json
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from urllib.parse import urlparse
 
 from sec_disclosure.table_extraction import api_filing_documents as documents

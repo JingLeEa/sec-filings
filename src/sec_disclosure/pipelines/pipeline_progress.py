@@ -8,14 +8,15 @@ import hashlib
 import json
 
 
-# Scheduling, credentials used for SEC identification, and admission limits do
+# Storage addresses, scheduling, SEC identification and admission limits do
 # not change a completed result. In particular, raising a budget must preserve
 # completed stages and the unfinished stage's own response caches.
 EXECUTION_OPTIONS = {
     "--workers", "--batch-workers", "--max-concurrent-requests", "--concurrency",
     "--request-interval", "--rate-limit-cooldown", "--rate-limit-retries",
     "--max-requests", "--max-new-requests", "--max-total-tokens", "--timeout",
-    "--retry-timeout", "--user-agent",
+    "--retry-timeout", "--user-agent", "--finding-workers",
+    "--agent-page-cache-dir",
 }
 
 
@@ -55,20 +56,22 @@ def stage_dependencies(stages):
     for stage in stages:
         if stage.name.startswith("save_text_"):
             parents = {stage.name.removeprefix("save_")}
+        elif stage.name.startswith("save_xbrl_"):
+            parents = {"api_tables_and_save"}
         elif stage.phase == "extraction":
             parents = raw_saves | {"api_tables_and_save"}
         elif stage.phase == "preprocessing":
             parents = set()
+        elif stage.phase == "synthesis":
+            parents = {s.name for s in stages if s.name.startswith(("save_materiality_", "save_xbrl_"))}
         else:
             suffix = "_".join(stage.comparison)
             if stage.phase == "alignment":
                 parents = {"extract_disclosures_and_save"}
             elif stage.name.startswith("llm_changes_"):
                 parents = {f"align_and_save_{suffix}"}
-            elif stage.name.startswith("lexical_semantic_"):
-                parents = {f"llm_changes_{suffix}"}
             elif stage.name.startswith("save_changes_"):
-                parents = {f"lexical_semantic_{suffix}"}
+                parents = {f"llm_changes_{suffix}"}
             elif stage.name.startswith("save_materiality_"):
                 parents = {f"materiality_{suffix}"}
             else:
@@ -103,6 +106,10 @@ def resumable_entries(previous, all_stages, selected, *, resume=True):
 @contextmanager
 def invocation_lock(folder):
     """Only one runner may update a company's year-selection checkpoint."""
+    if hasattr(folder, 'artifact_store'):
+        with folder.artifact_store.lock(folder.artifact_key):
+            yield
+        return
     folder.mkdir(parents=True, exist_ok=True)
     with (folder / ".run.lock").open("a") as handle:
         try:

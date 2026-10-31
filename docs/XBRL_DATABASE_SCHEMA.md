@@ -98,8 +98,12 @@ establish printed table boundaries, so there is no table-layout entity here.
 | `extra` | jsonb | Unmapped value properties, excluding `source_labels` |
 
 Use `Decimal` when parsing/converting amounts. Do not pass them through a binary
-float. Values are already in their XBRL unit: **`decimals` describes accuracy and
-must not multiply the amount**. Text accuracy values such as `"INF"` remain valid.
+float for retrieval or calculations. Synthesis retains `Decimal` through trend
+calculations; its JSON report converts `Decimal` values to JSON numbers (binary
+floats) only when writing the output. The original `value_text` remains available
+for the exact source amount. Values are already in their XBRL unit: **`decimals`
+describes accuracy and must not multiply the amount**. Text accuracy values such
+as `"INF"` remain valid.
 SQL NULL in an accuracy column means the key was absent; JSON `null` means it was
 explicitly present with a null value.
 
@@ -113,6 +117,9 @@ value's reporting dates and the extraction's taxonomy year. For example, a FY202
 filing can report a 2023 duration. Keep every such comparative record.
 The metric's `period_type` describes the taxonomy concept; the actual value's
 period is stored independently, as the exporter currently does.
+For instant facts, synthesis labels the reporting year using the calendar year of
+`instant_date`. The available view does not provide a verified issuer fiscal-year-
+end date, so synthesis cannot establish whether an instant is at fiscal year end.
 
 There is deliberately no uniqueness constraint on concept/period/unit/dimensions:
 the exporter can retain conflicting amounts or different accuracy records in the

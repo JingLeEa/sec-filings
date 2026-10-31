@@ -14,7 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import sys
 
 from sec_disclosure.table_extraction import api_filing_documents as filing_docs

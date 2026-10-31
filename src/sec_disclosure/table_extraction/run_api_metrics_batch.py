@@ -14,7 +14,7 @@ Add --merge to also combine all yearly outputs by concept after a complete batch
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import sys
 
 from sec_disclosure.table_extraction import run_api_metrics_pipeline as pipeline

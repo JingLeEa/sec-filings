@@ -13,7 +13,7 @@ import csv
 from decimal import Decimal
 from functools import partial
 import json
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import sys
 
 from sec_disclosure.table_extraction import load_xbrl_to_postgres as database

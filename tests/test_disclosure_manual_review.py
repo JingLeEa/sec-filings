@@ -59,17 +59,16 @@ def click(at, text):
     return next(button for button in at.button if button.label == text).click().run()
 
 
-def test_disclosure_queue_does_not_require_alignment_and_honors_pipeline_flags(inputs, monkeypatch, tmp_path):
+def test_disclosure_queue_does_not_require_alignment_and_honors_pipeline_policy(inputs, monkeypatch, tmp_path):
     monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(tmp_path / "no_alignment"))
     source = disclosure_data.discover_source()
     assert source.years("amd") == [2023, 2024]
     records = disclosure_data.load_disclosures("amd", 2024, source)
-    assert [row["disclosure_id"] for row in records] == [row["disclosure_id"] for row in inputs[:3]]
-    assert [row["verification"]["review_reasons"] for row in records] == [
-        row["verification"]["review_reasons"] for row in inputs[:3]]
+    assert [row["disclosure_id"] for row in records] == [row["disclosure_id"] for row in inputs[1:3]]
+    assert all(row["verification"]["review_reasons"] == ["model_requested_review"] for row in records)
     at = app()
     assert not at.exception and not at.error
-    assert {m.label: m.value for m in at.metric} == {"Review queue": "3", "Reviewed": "0", "Pending": "3"}
+    assert {m.label: m.value for m in at.metric} == {"Review queue": "2", "Reviewed": "0", "Pending": "2"}
 
 
 def test_disclosure_type_validation_persistence_editing_and_stage_isolation(inputs):
@@ -136,7 +135,8 @@ def test_alignment_queue_accepts_uncertain_change_analysis_but_not_unstarted_sta
 
 def test_validated_disclosures_are_editable_and_can_return_to_llm(inputs):
     records = disclosure_data.load_disclosures("amd", 2024, include_all=True)
-    row = next(row for row in records if not row["needs_review"])
+    row = next(row for row in records if row["disclosure_id"] == inputs[3]["disclosure_id"])
+    assert not row["needs_review"]
     assert row["disclosure_id"] == inputs[3]["disclosure_id"]
     default = review.final_disclosure(row, {})
     assert default["final_label_source"] == "llm" and default["final_disclosure_type"] == row["taxonomy"]
@@ -158,7 +158,7 @@ def test_disclosure_ai_approved_scope_shows_type_and_manual_only_form(inputs):
     assert all(radio.label != "Final label source" for radio in at.radio)
     assert not at.selectbox(key="disclosure_type").disabled
     at.segmented_control(key="review_scope").select("AI approved").run()
-    assert next(metric.value for metric in at.metric if metric.label == "Review queue") == "1"
+    assert next(metric.value for metric in at.metric if metric.label == "Review queue") == "2"
     at.selectbox(key="disclosure_selected").select(inputs[3]["disclosure_id"]).run()
     ai_type = inputs[3]["taxonomy"]
     assert any(f"AI-approved disclosure type: **{ai_type}**" in message.value for message in at.success)
@@ -168,7 +168,7 @@ def test_disclosure_ai_approved_scope_shows_type_and_manual_only_form(inputs):
     assert not at.exception and not at.error
     assert at.selectbox(key="disclosure_type").value == "Operations & Capacity"
     at.segmented_control(key="review_scope").select("Needs review").run()
-    assert next(metric.value for metric in at.metric if metric.label == "Review queue") == "3"
+    assert next(metric.value for metric in at.metric if metric.label == "Review queue") == "2"
     assert all(not label.startswith(inputs[3]["disclosure_id"].rsplit("_", 1)[-1] + " |")
                for label in at.selectbox(key="disclosure_selected").options)
 

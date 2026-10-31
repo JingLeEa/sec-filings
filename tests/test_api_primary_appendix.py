@@ -64,9 +64,12 @@ class PrimaryAppendixTests(unittest.TestCase):
         self.assertEqual(sum(h['item'] == '1' for h in layout.headings), 1)
         self.assertEqual(layout.membership(doc.ids['balance_fact'])[2], ['8'])
         data = appendix(nested=True).replace(b'Item 1. Financial Statements', b'Item 1. Business')
-        _, layout = self.layout(data)
-        with self.assertRaisesRegex(ValueError, 'Multiple body headings'):
-            layout.validate(('1', '8'))
+        doc, layout = self.layout(data)
+        # The text selector retains the first complete Business section;
+        # a later appendix heading with no closing Item 1A is not its rival.
+        layout.validate(('1', '8'))
+        self.assertEqual(sum(h['item'] == '1' for h in layout.headings), 1)
+        self.assertEqual(layout.membership(doc.ids['balance_fact'])[2], ['8'])
 
     def test_explicit_item8_schedule_incorporation_requires_its_own_index(self):
         reference = ('The consolidated financial statements and the Financial Statement Schedule listed '

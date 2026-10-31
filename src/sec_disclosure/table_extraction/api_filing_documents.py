@@ -6,7 +6,7 @@ may be shared within the verified document set; ambiguous shared resources fail.
 from __future__ import annotations
 
 from collections import defaultdict
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 from urllib.parse import parse_qs, urljoin, urlparse
 

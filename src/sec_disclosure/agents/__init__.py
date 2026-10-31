@@ -1,1 +1,1 @@
-"""Bounded, evidence-grounded disclosure alignment agents."""
+"""Bounded, evidence-grounded disclosure comparison agents."""

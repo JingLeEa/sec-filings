@@ -26,7 +26,7 @@ from decimal import Decimal, InvalidOperation
 import hashlib
 import json
 import os
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import sys
 from urllib.parse import urljoin, urlparse, urldefrag
@@ -35,7 +35,7 @@ from lxml import etree
 from sec_disclosure.comparison import compare_html_tables as html_tables
 from sec_disclosure.table_extraction import filing_sections as narrative
 
-VERSION = '1.9.0'
+VERSION = '1.10.0'
 DEFAULT_ITEMS = ('1', '1A', '7', '8')
 XHTML = 'http://www.w3.org/1999/xhtml'
 XBRLI = 'http://www.xbrl.org/2003/instance'
@@ -594,6 +594,16 @@ class Layout:
                     self.footers.append((pos, str(page_key(match.group(1)))))
         self.footers.sort()
         self.footer_positions = [p for p, _ in self.footers]
+        from sec_disclosure.table_extraction.item_boundaries import detect
+        text_headings, self.item_boundaries = detect(doc, self.headings)
+        selected = {b['item']: b['start'] for b in self.item_boundaries}
+        headings = {(h['item'], h['position']): h for h in self.headings + text_headings
+                    if h['item'] not in selected or h['position'] == selected[h['item']]}
+        self.headings = sorted(headings.values(), key=lambda h: h['position'])
+        known_blocks = {pos for pos, _, _ in self.blocks}
+        self.blocks.extend((h['position'], h['text'], doc.nodes[h['position']])
+                           for h in self.headings if h['position'] not in known_blocks)
+        self.blocks.sort(key=lambda b: b[0])
         self.index_references = self.read_index() if not self.headings else []
         self.references.extend(self.index_references)
         self.image_gaps = self.read_image_gaps()
@@ -728,6 +738,8 @@ class Layout:
 
     def body(self, heading):
         start = heading['position']
+        # Reference discovery may need an Item 15 index after signatures.
+        # Its verified destinations can lie outside the direct text boundary.
         end = next((h['position'] for h in self.headings if h['position'] > start), len(self.doc.nodes))
         # Text-node scanning also includes inline prose following layout-table
         # Item headings, which ordinary paragraph-only extraction loses.
@@ -1434,6 +1446,13 @@ class Layout:
     def membership(self, node):
         pos, page = self.doc.order[node], self.page(node)
         physical = next((h['item'] for h in reversed(self.headings) if h['position'] < pos), None)
+        active = {(h['item'], h['position']) for h in self.headings}
+        boundaries = [b for b in self.item_boundaries if (b['item'], b['start']) in active]
+        boundary = next((b for b in reversed(boundaries) if b['start'] <= pos < b['end']), None)
+        if boundary:
+            physical = boundary['item']
+        elif any(b['item'] == physical for b in boundaries):
+            physical = None
         referenced = [e['item'] for e in self.references if page and page_key(page) in e['pages']]
         referenced += [e['item'] for e in self.ranges if e['start'] <= pos < e['end']]
         members = list(dict.fromkeys(referenced or ([physical] if physical else [])))
@@ -2396,7 +2415,8 @@ def collect_tables(layout, document_id, company, year, items, financial_only=Tru
                 'namespaces': {k or 'html': v for k, v in doc.root.nsmap.items()},
                 'contexts': {k: v for k, v in doc.contexts.items() if k in used_contexts},
                 'units': {k: v for k, v in doc.units.items() if k in used_units}, 'facts': selected_facts,
-                'scope': {'headings': layout.headings, 'page_references': layout.references,
+                'scope': {'headings': layout.headings, 'item_boundaries': layout.item_boundaries,
+                          'page_references': layout.references,
                           'incorporated_sections': layout.ranges, 'external_references': layout.external},
                 'diagnostics': {'total_inline_facts': len(doc.fact_nodes), 'exported_table_facts': len(selected_facts),
                                 'excluded_tables': dict(excluded), 'image_only_pages': layout.image_gaps,
@@ -2475,17 +2495,15 @@ def write_result(result, output, strict=False):
     output.parent.mkdir(parents=True, exist_ok=True)
     # Atomic replacement prevents a failed extraction/serialization truncating
     # a previously successful result.
-    import tempfile
-    temporary = None
+    from uuid import uuid4
+    temporary = output.with_name('.' + output.name + '.' + uuid4().hex + '.tmp')
     try:
-        with tempfile.NamedTemporaryFile('w', encoding='utf-8', dir=output.parent, delete=False) as handle:
-            temporary = Path(handle.name)
+        with temporary.open('w', encoding='utf-8') as handle:
             json.dump(result, handle, ensure_ascii=False, indent=2, allow_nan=False)
             handle.write('\n')
         temporary.replace(output)
     finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
+        temporary.unlink(missing_ok=True)
 
 
 def main(argv=None):

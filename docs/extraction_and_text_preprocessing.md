@@ -1,6 +1,6 @@
-# Current Text Preprocessing Flow
+# Extraction and Text Preprocessing Flow
 
-This document records the current preprocessing behavior in:
+This document records the current extraction and preprocessing behavior in:
 
 - `src/sec_disclosure/extraction/sec_10k_extractor.py`
 - `src/sec_disclosure/comparison/lexical_diff.py`
@@ -14,6 +14,7 @@ SEC 10-K source
   -> download or read HTML
   -> parse visible HTML blocks
   -> detect Items
+  -> if an Item is still missing, try the SoCLaaS/Qwen boundary fallback
   -> optionally follow incorporated annual/financial report references
   -> merge continued narrative blocks
   -> resolve inline footnotes
@@ -27,6 +28,77 @@ SEC 10-K source
 ```
 
 The lexical comparison stage starts only after extraction has written `<year>_chunks.json`.
+
+### Missing-Item fallback
+
+The normal heading and cross-reference/page-index extractors run first. If Item
+1, 1A, 7, or 8 is missing, `src/sec_disclosure/agents/filing_item_locator.py`
+locates its body independently from the filing HTML. A short Item 7/8 paragraph
+that only points elsewhere is also rechecked after referenced-report resolution.
+
+The locator reuses generic HTML parsing to number source blocks, preserve table
+rows, and map printed page numbers. Qwen first identifies navigation tables
+from a compact inventory of **all** parsed tables, then reads their rows in
+windows of 45. For a multi-page index reference, code maps the model-selected
+printed pages to source blocks. If two Items reference the same page span, Qwen
+chooses its owner from the index titles and source excerpts. A single index page
+is treated as a start hint rather than the Item's entire body. When there is no
+full page index, Qwen selects block ranges from a compact filing-wide heading
+map. The heading map uses the index's own titles and neighboring Item headings
+to keep boundary choices manageable when a filing has hundreds of subheadings.
+A short Item heading that only points to content elsewhere is not offered as a
+body start; the later report heading remains available. Page-reference
+paragraphs such as "appears on pages 52-167" are treated as pointers, not
+complete Item bodies. A body may end at a prominent section heading directly
+before the next numbered Item. If the heading map
+cannot supply boundaries, the locator uses numbered outline windows. Item 7A,
+9, and 15 may serve as boundary clues;
+only Items 1, 1A, 7, and 8 are recovered. Code validates source IDs, page scope,
+section order, overlap, broad index-page coverage, and explicit Item crossings
+before passing the original blocks to the normal merge, footnote, chunk, and
+sentence steps. The model does
+not write chunk text. The agent does not read deterministic Item sections.
+
+The fallback uses the configured `SOCLAAS_MODEL` (the project's Qwen model when
+that setting points to Qwen). Pass `--env-file .env` to read local SoCLaaS
+settings. Invalid responses and retryable API failures get up to **three retries
+after the first attempt**. If recovery is unsuccessful, the usual missing-Item
+warning remains; existing deterministic results are retained. The fallback
+does not require LLM configuration on filings where it is not needed.
+
+Printed-page mapping is enabled by default as an automatic fallback after the baseline locator. It runs for unresolved Items or qualifying printed-page pointers, retains layout tables in model evidence, and caches a filing-wide page map. Use `--no-agent-page-recovery` to disable just that stage, or `--no-agent-fallback` to disable both Item-agent paths. See [recovery and comparison commands](JINGLE_filing_page_recovery.md).
+
+For a known suspect Item that the deterministic extractor did return, use
+`--agent-check-items 7` to ask the fallback to re-check it. Use
+`--no-agent-fallback` to run deterministic extraction only. `--agent-timeout`
+and `--agent-max-tokens` control each fallback request. The agent currently
+selects blocks from the primary filing HTML; the existing referenced-report
+resolver remains responsible for separate incorporated documents.
+
+To test boundary selection without the normal Item extractor supplying missing
+sections, run the local diagnostic with a cached filing:
+
+```bash
+.venv/bin/python scripts/.compare_filing_item_fallback.py \
+  --ticker nvda --year 2023 --items 1 1A 7 8 \
+  --use-cached-html --env-file .env
+```
+
+The diagnostic builds the agent-side output only from model-selected, validated
+ranges. It does not add local Item ranges or automatic Item 15 content to that
+side. The comparison report includes Item 15 when either side wrote it, without
+requiring the agent to recover it. Both sides still share the HTML block parser
+and chunk/sentence writer.
+Check the new timestamped `report.json` and `agent.log`; an unrecovered Item
+has no agent-side Item file. The diagnostic compares only the primary filing,
+not a separate incorporated report.
+
+The agent rejects a range that crosses an explicit different Item heading. A
+pointer-only Item 8 can be located later in the filing under its financial
+report heading. When recovered content was initially assigned to Item 15 by
+normal extraction, accepted agent blocks move to their recovered Item to avoid
+duplicate chunks.
+A filing without defensible source boundaries leaves the Item unrecovered.
 
 ## 2. Input Sources
 

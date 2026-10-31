@@ -15,7 +15,7 @@ import argparse
 from collections import defaultdict
 from copy import deepcopy
 import json
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import sys
 
 from lxml import etree
