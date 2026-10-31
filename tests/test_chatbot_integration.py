@@ -319,7 +319,8 @@ class ChatbotIntegrationTests(unittest.TestCase):
         bot = Chatbot(db=DB, completer=completer, use_embeddings=False)
         reply = bot.ask("Summarise the key changes for BAC 2023 to 2024")
         self.assertEqual(reply.mode, "offline")
-        self.assertIn("Summary for Bank of America", reply.answer)
+        self.assertTrue(reply.warnings and "LLM answer unavailable" in reply.warnings[0])
+        self.assertIn("Bank of America", reply.answer)   # templated: SQL summary or the synthesis report
 
 
 if __name__ == "__main__":

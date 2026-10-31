@@ -2,7 +2,7 @@
 
 The synthesis agent saves each report to synthesis_reports(company, years, report jsonb) (its
 db/init/06_synthesis_reports.sql and storage/synthesis.py); the chatbot reads that table through the
-chatbot_synthesis_* views in db/init/08_synthesis_reports.sql.
+chatbot_synthesis_* views in db/init/11_chatbot_synthesis.sql.
 
 Uses the agent's sample output in test_data/synthesis/amd_2023_2025_synthesis_output.json. The report is upserted
 for the tests and removed afterwards unless it was already in the table. Skipped when the database is
@@ -120,7 +120,7 @@ class SynthesisChatbotIntegrationTests(unittest.TestCase):
         self.assertEqual(n, 1)
 
     def test_schema_file_is_idempotent(self):
-        sql = (ROOT / "db" / "init" / "08_synthesis_reports.sql").read_text(encoding="utf-8")
+        sql = (ROOT / "db" / "init" / "11_chatbot_synthesis.sql").read_text(encoding="utf-8")
         with _connect() as conn:
             conn.execute(sql)
             n = conn.execute(f"SELECT count(*) FROM synthesis_reports WHERE {KEY}").fetchone()[0]
@@ -149,17 +149,31 @@ class SynthesisChatbotIntegrationTests(unittest.TestCase):
         if next(r for r in reply.results if r.name.startswith("synthesis_findings")).name == "synthesis_findings":
             self.assertLess(len(findings), len(self.report["report"]["key_findings"]))
 
+    def uncovered_run(self):
+        """A loaded alignment run that no synthesis report covers (reports exist for most companies now)."""
+        covered = DB.query("t", "SELECT company, start_year, end_year FROM chatbot_synthesis_reports").rows
+        for run in DB.runs():
+            if not any(r["company"] == run.company and r["start_year"] <= run.previous_year
+                       and r["end_year"] >= run.current_year for r in covered):
+                return run
+        self.skipTest("every loaded alignment run is covered by a synthesis report")
+
     def test_company_without_report_falls_back_to_alignment_summary(self):
-        reply = self.bot.ask("Summarise the key changes for BAC 2023 to 2024")
+        run = self.uncovered_run()
+        reply = self.bot.ask(f"Summarise the key changes for {run.company.upper()} {run.previous_year} to {run.current_year}")
         self.assertEqual(reply.retrieval_method, "alignment summary (no synthesis report)")
-        self.assertTrue(any("no synthesis report loaded for BAC" in n for n in reply.notes))
+        self.assertTrue(any(f"no synthesis report loaded for {run.company.upper()}" in n for n in reply.notes))
         self.assertTrue(next(r for r in reply.results if r.name == "change_type_by_run").rows)
 
     def test_mixed_companies_use_report_and_fallback(self):
-        reply = self.bot.ask("Summarise the key changes for AMD and BAC")
+        run = self.uncovered_run()
+        if run.company == "amd" or (run.previous_year, run.current_year) not in ((2023, 2024), (2024, 2025)):
+            self.skipTest("needs an uncovered company other than AMD in a window AMD's report covers")
+        reply = self.bot.ask(f"Summarise the key changes for AMD and {run.company.upper()} "
+                             f"{run.previous_year} to {run.current_year}")
         self.assertEqual(reply.retrieval_method, "synthesis_report + fallback: alignment summary")
         fallback = next(r for r in reply.results if r.name == "fallback_change_type_by_run").rows
-        self.assertEqual({r["company"] for r in fallback}, {"bac"})
+        self.assertEqual({r["company"] for r in fallback}, {run.company})
 
     def test_years_outside_the_report_fall_back(self):
         from sec_disclosure.chatbot.entities import parse_filters

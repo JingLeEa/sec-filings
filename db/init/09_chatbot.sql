@@ -1,7 +1,7 @@
 -- Read model for the disclosure-change chatbot (schema version 6).
 -- Safe to run more than once. The chatbot applies it automatically on start-up when the view is missing,
 -- or apply it by hand on an existing database:
---   docker compose exec -T db psql -U sec -d sec_disclosure < db/init/06_chatbot.sql
+--   docker compose exec -T db psql -U sec -d sec_disclosure < db/init/09_chatbot.sql
 -- Needs 01_schema.sql (embedding_models) and 02_disclosures_alignments.sql (alignments) first.
 
 -- One row per alignment decision with the JSONB analysis flattened into typed columns.

@@ -602,7 +602,7 @@ class SynthesisRoutingTests(unittest.TestCase):
         current = {key: version for _, key, version in SCHEMAS}
         self.assertEqual(outdated(current), [])
         old_peer = {**current, "peer_comparison_schema_version": "1"}
-        self.assertEqual([p.name for p in outdated(old_peer)], ["07_peer_comparisons.sql"])
+        self.assertEqual([p.name for p in outdated(old_peer)], ["10_chatbot_peer_comparisons.sql"])
         for path, _, _ in SCHEMAS:
             self.assertTrue(path.is_file(), path)
 
@@ -638,10 +638,10 @@ class SynthesisLoaderValidationTests(unittest.TestCase):
         from sec_disclosure.storage.chatbot_schema import SCHEMAS, outdated
         current = {key: version for _, key, version in SCHEMAS}
         self.assertEqual([p.name for p in outdated({**current, "synthesis_schema_version": "1"})],
-                         ["08_synthesis_reports.sql"])
+                         ["11_chatbot_synthesis.sql"])
 
     def test_schema_matches_the_agents_table(self):
-        sql = (ROOT / "db" / "init" / "08_synthesis_reports.sql").read_text(encoding="utf-8")
+        sql = (ROOT / "db" / "init" / "11_chatbot_synthesis.sql").read_text(encoding="utf-8")
         for line in ("company       TEXT NOT NULL CHECK (company = upper(company))",
                      "years         INTEGER[] NOT NULL CHECK (cardinality(years) >= 2)",
                      "report        JSONB NOT NULL CHECK (jsonb_typeof(report) = 'object')",

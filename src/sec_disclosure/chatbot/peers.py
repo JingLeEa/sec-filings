@@ -128,7 +128,7 @@ class PeerStore:
         for a, b in out.covered_pairs:
             params = {"pa": a, "pb": b, "year": year, "items": filters.items or None, "tsq": tsq or None}
             where = (f"{_pair_condition()} AND (%(year)s::int IS NULL OR v.fiscal_year = %(year)s) "
-                     "AND (%(items)s::text[] IS NULL OR v.item = ANY(%(items)s))")
+                     "AND (%(items)s::text[] IS NULL OR v.item = ANY(%(items)s)) AND NOT v.superseded")
             if tsq:
                 sql = f"""
                     SELECT v.*, round(ts_rank_cd({PAIR_DOCUMENT}, to_tsquery('english', %(tsq)s), 32)::numeric, 4) AS relevance
@@ -153,6 +153,12 @@ class PeerStore:
                 JOIN peer_comparison_targets t USING (peer_run_id, target_disclosure_id)
                 JOIN peer_comparison_runs r USING (peer_run_id)
                 WHERE res.status <> 'compared'
+                  AND NOT EXISTS (   -- a more recently saved run has a result for the same disclosure and peer
+                      SELECT 1 FROM peer_comparison_results res2 JOIN peer_comparison_runs r2 USING (peer_run_id)
+                      WHERE res2.target_disclosure_id = res.target_disclosure_id AND res2.peer = res.peer
+                        AND res2.peer_run_id <> res.peer_run_id
+                        AND (coalesce(r2.source_saved_at, r2.loaded_at), r2.peer_run_id)
+                            > (coalesce(r.source_saved_at, r.loaded_at), r.peer_run_id))
                   AND ((r.target = %(pa)s AND res.peer = %(pb)s) OR (r.target = %(pb)s AND res.peer = %(pa)s))
                   AND (%(year)s::int IS NULL OR r.fiscal_year = %(year)s)
                   AND (%(items)s::text[] IS NULL OR t.item = ANY(%(items)s))

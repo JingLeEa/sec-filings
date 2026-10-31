@@ -3,7 +3,7 @@
 A synthesis report (agents/synthesis.py) covers one company over a span of fiscal years: an executive summary,
 key findings that cite alignment match_ids, a longitudinal and a financial analysis, and financial trends
 computed in code from XBRL facts. The agent saves each report to synthesis_reports (company, years, report
-jsonb); the chatbot reads it through the chatbot_synthesis_* views (db/init/08_synthesis_reports.sql).
+jsonb); the chatbot reads it through the chatbot_synthesis_* views (db/init/11_chatbot_synthesis.sql).
 Report files made elsewhere load with scripts/load_synthesis_to_postgres.py.
 
 Summary questions use the report covering the asked company and years; without one the chatbot falls back to

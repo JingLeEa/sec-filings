@@ -1,11 +1,10 @@
 -- Chatbot read model over the synthesis agent's reports (schema version 2).
 -- Safe to run more than once. The chatbot and scripts/load_synthesis_to_postgres.py apply it automatically when
 -- its version is missing or older, or apply it by hand:
---   docker compose exec -T db psql -U sec -d sec_disclosure < db/init/08_synthesis_reports.sql
+--   docker compose exec -T db psql -U sec -d sec_disclosure < db/init/11_chatbot_synthesis.sql
 --
 -- The synthesis agent (agents/synthesis.py, storage/synthesis.py) is the source of truth: after every run it
--- upserts the whole report JSON into synthesis_reports (db/init/06_synthesis_reports.sql on the synthesis-agent
--- branch). The chatbot only reads that table, through the views below.
+-- upserts the whole report JSON into synthesis_reports (db/init/06_synthesis_reports.sql on main). The chatbot only reads that table, through the views below.
 
 -- v1 of this file created a chatbot-owned synthesis_reports with a different layout (report_id, ...), which
 -- collides with the agent's table. Drop it if present; reload any report files with load_synthesis_to_postgres.py.
@@ -18,7 +17,7 @@ BEGIN
     END IF;
 END $$;
 
--- Must stay identical to db/init/06_synthesis_reports.sql (synthesis-agent branch); whichever runs first wins.
+-- Identical to db/init/06_synthesis_reports.sql (main), for databases created before that file existed.
 CREATE TABLE IF NOT EXISTS synthesis_reports (
     company       TEXT NOT NULL CHECK (company = upper(company)),
     years         INTEGER[] NOT NULL CHECK (cardinality(years) >= 2),

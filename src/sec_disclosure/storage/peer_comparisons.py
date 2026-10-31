@@ -1,4 +1,10 @@
-"""Validate and atomically store peer-comparison agent reports (peer_comparison.json, schema "2") in PostgreSQL.
+"""Peer-comparison reports (schema "2") for the chatbot: load report files and keep the chatbot's tables in sync.
+
+The peer comparison pipeline (main: scripts/run_peer_comparison_pipeline.py, storage/peer_comparison.py) saves each
+whole report to peer_comparison_reports. That table is the source of truth. The chatbot reads a normalised copy
+(db/init/10_chatbot_peer_comparisons.sql) that ``sync_peer_reports`` rebuilds for every report added or re-saved
+there; the chatbot runs it on start-up. ``store_peer_comparison`` loads a report file (e.g. test_data) into
+peer_comparison_reports exactly as the pipeline does, then syncs it.
 
 Partial runs (``run_complete: false``) are accepted and flagged: they hold every target disclosure the agent
 finished, and the chatbot says when an answer comes from a partial run.
@@ -40,6 +46,14 @@ class PeerComparisonImport:
     evidence: int
 
 
+def expand_paths(path: Path) -> list[Path]:
+    """A report file, a run folder, or a parent folder: every peer_comparison.json beneath it."""
+    path = Path(path)
+    if path.is_dir() and not (path / "peer_comparison.json").exists():
+        return sorted(p.parent for p in path.rglob("peer_comparison.json"))
+    return [path]
+
+
 def resolve_report(path: Path) -> Path:
     path = Path(path)
     return path / "peer_comparison.json" if path.is_dir() else path
@@ -49,6 +63,12 @@ def read_report(path: Path) -> tuple[dict, bytes]:
     """Parse and validate the whole report before any database work."""
     raw = resolve_report(path).read_bytes()
     report = json.loads(raw.decode("utf-8"))
+    validate_report(report)
+    return report, raw
+
+
+def validate_report(report) -> None:
+    """Raise ValueError listing what is wrong with a peer_comparison.json report."""
     problems: list[str] = []
     if not isinstance(report, dict):
         raise ValueError("peer_comparison.json must contain a JSON object")
@@ -101,7 +121,6 @@ def read_report(path: Path) -> tuple[dict, bytes]:
                     problems.append(f"{tid}/{peer}: evidence must cite both the target and the peer")
     if problems:
         raise ValueError("; ".join(problems[:10]) + (f" (+{len(problems) - 10} more)" if len(problems) > 10 else ""))
-    return report, raw
 
 
 def rows_for(report: dict) -> tuple[list[dict], list[dict], list[tuple[dict, list[dict]]]]:
@@ -161,13 +180,119 @@ VALUES (%(comparison_id)s, %(side)s, %(ticker)s, %(disclosure_id)s, %(ordinal)s,
 ON CONFLICT DO NOTHING"""
 
 
-def store_peer_comparison(path: Path, *, env_file: Path | None = None) -> PeerComparisonImport:
-    """Replace one (target, year, peer set) run and all its rows in a single transaction."""
-    report, raw = read_report(path)
+def source_key(report: dict) -> tuple[str, int, list[str], list[str], str]:
+    """peer_comparison_reports primary key, as the pipeline writes it (upper-case tickers, sorted lists)."""
+    return (str(report["target"]).upper(), int(report["fiscal_year"]),
+            sorted({str(p).upper() for p in report["peers"]}), sorted({str(i) for i in report["items"]}),
+            report.get("target_selection") or "all")
+
+
+UPSERT_REPORT = """
+INSERT INTO peer_comparison_reports
+    (target_ticker, fiscal_year, peer_tickers, items, target_selection, run_complete, report)
+VALUES (%s, %s, %s, %s, %s, %s, %s::jsonb)
+ON CONFLICT (target_ticker, fiscal_year, peer_tickers, items, target_selection)
+DO UPDATE SET run_complete = EXCLUDED.run_complete, report = EXCLUDED.report, saved_at = now()
+RETURNING saved_at"""
+
+
+def _insert_run(cur, report: dict, *, source_file: str, sha256: str, saved_at) -> PeerComparisonImport:
+    """Replace the cached copy of one report (same key) with its normalised rows."""
     targets, results, comparisons = rows_for(report)
     target, year = report["target"].lower(), int(report["fiscal_year"])
     peers = sorted({p.lower() for p in report["peers"]})
+    items = sorted({str(i) for i in report.get("items") or []})
+    selection = report.get("target_selection") or "all"
     policies = {k: report[k] for k in ("candidate_policy", "alignment_context_policy", "agent_policy") if k in report}
+    cur.execute("DELETE FROM peer_comparison_runs WHERE target = %s AND fiscal_year = %s AND peers = %s "
+                "AND items = %s AND target_selection = %s", (target, year, peers, items, selection))
+    cur.execute("""
+        INSERT INTO peer_comparison_runs (target, fiscal_year, peers, items, schema_version, run_complete,
+            jobs_completed, jobs_planned, policies, token_usage, source_file, source_sha256, target_selection,
+            source_saved_at)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s::jsonb, %s::jsonb, %s, %s, %s, %s) RETURNING peer_run_id""",
+                (target, year, peers, items, str(report["schema_version"]), bool(report.get("run_complete")),
+                 int(report["jobs_completed"]), int(report.get("jobs_planned") or report["jobs_completed"]),
+                 json.dumps(policies), json.dumps(report.get("token_usage") or {}), source_file, sha256, selection,
+                 saved_at))
+    run_id = cur.fetchone()[0]
+    for row in targets + results:
+        row["peer_run_id"] = run_id
+    if targets:
+        cur.executemany(INSERT_TARGET, targets)
+    if results:
+        cur.executemany(INSERT_RESULT, results)
+    evidence_count = 0
+    for comparison, evidence in comparisons:
+        cur.execute(INSERT_COMPARISON, {**comparison, "peer_run_id": run_id})
+        comparison_id = cur.fetchone()[0]
+        if evidence:
+            cur.executemany(INSERT_EVIDENCE, [{**e, "comparison_id": comparison_id} for e in evidence])
+            evidence_count += len(evidence)
+    return PeerComparisonImport(target, year, peers, run_id, bool(report.get("run_complete")), len(targets),
+                                len(results), len(comparisons), evidence_count)
+
+
+@dataclass
+class PeerSync:
+    synced: list[str]
+    removed: int
+    skipped: list[str]
+
+
+def sync_peer_reports(cur) -> PeerSync:
+    """Rebuild the chatbot's copy of every report added or re-saved in peer_comparison_reports since the last sync,
+    and drop copies whose report is gone. Invalid reports are skipped (and named), never half-loaded."""
+    cur.execute("""
+        SELECT r.target_ticker, r.fiscal_year, r.peer_tickers, r.items, r.target_selection, r.saved_at
+        FROM peer_comparison_reports r
+        LEFT JOIN peer_comparison_runs c
+          ON c.target = lower(r.target_ticker) AND c.fiscal_year = r.fiscal_year
+         AND c.peers = ARRAY(SELECT lower(p) FROM unnest(r.peer_tickers) p ORDER BY 1)
+         AND c.items = ARRAY(SELECT i FROM unnest(r.items) i ORDER BY 1)
+         AND c.target_selection = r.target_selection
+        WHERE c.peer_run_id IS NULL OR c.source_saved_at IS DISTINCT FROM r.saved_at""")
+    stale = cur.fetchall()
+    synced, skipped = [], []
+    for key in stale:
+        label = f"{key[0]} {key[1]} vs {', '.join(key[2])}"
+        cur.execute("SELECT report::text FROM peer_comparison_reports WHERE target_ticker = %s AND fiscal_year = %s "
+                    "AND peer_tickers = %s AND items = %s AND target_selection = %s", key[:5])
+        text = cur.fetchone()[0]
+        report = json.loads(text)
+        try:
+            validate_report(report)
+        except (ValueError, KeyError, TypeError, AttributeError) as error:
+            skipped.append(f"{label}: {str(error)[:200]}")
+            continue
+        _insert_run(cur, report, source_file=f"peer_comparison_reports: {label}",
+                    sha256=hashlib.sha256(text.encode("utf-8")).hexdigest(), saved_at=key[5])
+        synced.append(label)
+    cur.execute("""
+        DELETE FROM peer_comparison_runs c
+        WHERE NOT EXISTS (
+            SELECT 1 FROM peer_comparison_reports r
+            WHERE c.target = lower(r.target_ticker) AND c.fiscal_year = r.fiscal_year
+              AND c.peers = ARRAY(SELECT lower(p) FROM unnest(r.peer_tickers) p ORDER BY 1)
+              AND c.items = ARRAY(SELECT i FROM unnest(r.items) i ORDER BY 1)
+              AND c.target_selection = r.target_selection)""")
+    return PeerSync(synced, cur.rowcount, skipped)
+
+
+def peer_sync_needed(cur) -> bool:
+    """Cheap check: does any report differ from the chatbot's copy (new, re-saved or removed)?"""
+    cur.execute("""
+        SELECT (SELECT count(*) FROM peer_comparison_reports) <> (SELECT count(*) FROM peer_comparison_runs)
+            OR EXISTS (SELECT 1 FROM peer_comparison_reports r
+                       WHERE NOT EXISTS (SELECT 1 FROM peer_comparison_runs c
+                                         WHERE c.target = lower(r.target_ticker) AND c.fiscal_year = r.fiscal_year
+                                           AND c.source_saved_at = r.saved_at))""")
+    return bool(cur.fetchone()[0])
+
+
+def store_peer_comparison(path: Path, *, env_file: Path | None = None) -> PeerComparisonImport:
+    """Save a report file to peer_comparison_reports (as the pipeline does) and rebuild its chatbot copy, atomically."""
+    report, raw = read_report(path)
     try:
         import psycopg
     except ImportError:
@@ -175,50 +300,32 @@ def store_peer_comparison(path: Path, *, env_file: Path | None = None) -> PeerCo
     try:
         with psycopg.connect(**connection_arguments(env_file)) as conn, conn.cursor() as cur:
             apply_outdated(cur)
-            cur.execute("DELETE FROM peer_comparison_runs WHERE target = %s AND fiscal_year = %s AND peers = %s",
-                        (target, year, peers))
-            cur.execute("""
-                INSERT INTO peer_comparison_runs (target, fiscal_year, peers, items, schema_version, run_complete,
-                    jobs_completed, jobs_planned, policies, token_usage, source_file, source_sha256, target_selection)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s::jsonb, %s::jsonb, %s, %s, %s) RETURNING peer_run_id""",
-                        (target, year, peers, [str(i) for i in report.get("items") or []], str(report["schema_version"]),
-                         bool(report.get("run_complete")), int(report["jobs_completed"]),
-                         int(report.get("jobs_planned") or report["jobs_completed"]), json.dumps(policies),
-                         json.dumps(report.get("token_usage") or {}), str(resolve_report(path)),
-                         hashlib.sha256(raw).hexdigest(), report.get("target_selection") or "all"))
-            run_id = cur.fetchone()[0]
-            for row in targets:
-                row["peer_run_id"] = run_id
-            for row in results:
-                row["peer_run_id"] = run_id
-            if targets:
-                cur.executemany(INSERT_TARGET, targets)
-            if results:
-                cur.executemany(INSERT_RESULT, results)
-            evidence_count = 0
-            for comparison, evidence in comparisons:
-                cur.execute(INSERT_COMPARISON, {**comparison, "peer_run_id": run_id})
-                comparison_id = cur.fetchone()[0]
-                if evidence:
-                    cur.executemany(INSERT_EVIDENCE, [{**e, "comparison_id": comparison_id} for e in evidence])
-                    evidence_count += len(evidence)
+            cur.execute(UPSERT_REPORT, (*source_key(report), bool(report.get("run_complete")),
+                                        json.dumps(report, ensure_ascii=False)))
+            saved_at = cur.fetchone()[0]
+            result = _insert_run(cur, report, source_file=str(resolve_report(path)),
+                                 sha256=hashlib.sha256(raw).hexdigest(), saved_at=saved_at)
     except Exception as error:
         raise PeerComparisonStorageError(
             f"PostgreSQL peer-comparison import failed ({type(error).__name__}). Check that the database is running "
             "and POSTGRES_* or DATABASE_URL settings are correct.") from None
-    return PeerComparisonImport(target, year, peers, run_id, bool(report.get("run_complete")), len(targets),
-                                len(results), len(comparisons), evidence_count)
+    return result
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("paths", nargs="+", type=Path,
-                        help="peer_comparison.json files or their folders, e.g. data/peer_comparison/nvda/2024")
+                        help="peer_comparison.json files or their folders, or a parent folder holding several "
+                             "(e.g. test_data/peer_comparison)")
     parser.add_argument("--env-file", type=Path, help="Database settings file (default: repository .env)")
     parser.add_argument("--dry-run", action="store_true", help="Validate reports without connecting to PostgreSQL")
     args = parser.parse_args(argv)
     status = 0
-    for path in args.paths:
+    paths = [p for given in args.paths for p in expand_paths(given)]
+    if not paths:
+        print("No peer_comparison.json files found.", file=sys.stderr)
+        return 1
+    for path in paths:
         try:
             if args.dry_run:
                 report, _ = read_report(path)

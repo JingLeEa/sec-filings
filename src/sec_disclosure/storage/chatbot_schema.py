@@ -11,9 +11,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 INIT = ROOT / "db" / "init"
 SCHEMAS: list[tuple[Path, str, str]] = [
-    (INIT / "06_chatbot.sql", "chatbot_schema_version", "1"),
-    (INIT / "07_peer_comparisons.sql", "peer_comparison_schema_version", "2"),
-    (INIT / "08_synthesis_reports.sql", "synthesis_schema_version", "2"),
+    (INIT / "09_chatbot.sql", "chatbot_schema_version", "1"),
+    (INIT / "10_chatbot_peer_comparisons.sql", "peer_comparison_schema_version", "3"),
+    (INIT / "11_chatbot_synthesis.sql", "synthesis_schema_version", "2"),
 ]
 
 

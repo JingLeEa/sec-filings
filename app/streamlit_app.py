@@ -96,6 +96,11 @@ with st.sidebar:
         st.error(str(error))
         st.stop()
     st.caption(f"Answers: {bot.llm_description}")
+    sync = bot.db.peer_sync
+    if sync and sync.synced:
+        st.caption(f"Peer reports synced from the pipeline: {len(sync.synced)}")
+    if sync and sync.skipped:
+        st.warning("Peer reports not loaded (invalid): " + "; ".join(sync.skipped))
     try:
         sources = bot.db.embedding_sources()
         st.caption(f"Vectors: {sources['evidence']:,} evidence · {sources['disclosures']:,} disclosure")

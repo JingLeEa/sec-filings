@@ -11,8 +11,8 @@ from ..storage.chatbot_schema import SCHEMAS, apply_outdated, outdated
 from ..storage.disclosures import connection_arguments
 
 ROOT = Path(__file__).resolve().parents[3]
-CHATBOT_SCHEMA = ROOT / "db" / "init" / "06_chatbot.sql"
-PEER_SCHEMA = ROOT / "db" / "init" / "07_peer_comparisons.sql"
+CHATBOT_SCHEMA = ROOT / "db" / "init" / "09_chatbot.sql"
+PEER_SCHEMA = ROOT / "db" / "init" / "10_chatbot_peer_comparisons.sql"
 STATEMENT_TIMEOUT_MS = 15000
 
 
@@ -58,6 +58,7 @@ class Database:
         self._conn = None
         self._lock = threading.Lock()          # Streamlit may call from more than one thread
         self.connect_ms: float | None = None   # time the last connection took to open
+        self.peer_sync = None                  # result of the last peer-report sync (None: nothing to sync)
 
     def _connect(self, *, read_only: bool):
         try:
@@ -109,22 +110,41 @@ class Database:
                            elapsed_ms=(time.perf_counter() - started) * 1000)
 
     def ensure_schema(self) -> bool:
-        """Apply chatbot/agent schema files whose recorded version is missing or old (see storage.chatbot_schema)."""
+        """Apply chatbot/agent schema files whose recorded version is missing or old (see storage.chatbot_schema),
+        then bring the chatbot's peer-comparison tables up to date with peer_comparison_reports."""
         rows = self.query("schema_versions", "SELECT key, value FROM schema_info WHERE key = ANY(%s)",
                           ([key for _, key, _ in SCHEMAS],)).rows
         stale = outdated({r["key"]: r["value"] for r in rows})
-        if not stale:
-            return False
+        if stale:
+            self._write(lambda cur: apply_outdated(cur), "Could not update the chatbot schema. Apply "
+                        + ", ".join(str(p.relative_to(ROOT)) for p in stale) + " manually.")
+        self.sync_peer_reports()
+        return bool(stale)
+
+    def sync_peer_reports(self):
+        """Rebuild the chatbot's copy of peer reports added or re-saved by the peer comparison pipeline."""
+        from ..storage.peer_comparisons import peer_sync_needed, sync_peer_reports
+        result = None
+
+        def sync(cur):
+            nonlocal result
+            if peer_sync_needed(cur):
+                result = sync_peer_reports(cur)
+        self._write(sync, "Could not sync peer comparisons from peer_comparison_reports. Run "
+                          "scripts/load_peer_comparisons_to_postgres.py or check the database.")
+        self.peer_sync = result
+        return result
+
+    def _write(self, action, message: str) -> None:
+        from psycopg.rows import tuple_row
         conn = self._connect(read_only=False)
         try:
-            with conn, conn.cursor() as cur:
-                apply_outdated(cur)
+            with conn, conn.cursor(row_factory=tuple_row) as cur:   # storage helpers read rows by position
+                action(cur)
         except Exception as error:
-            raise DatabaseError(f"Could not update the chatbot schema ({type(error).__name__}). Apply "
-                                f"{', '.join(str(p.relative_to(ROOT)) for p in stale)} manually.") from None
+            raise DatabaseError(f"{message} ({type(error).__name__})") from None
         finally:
             conn.close()
-        return True
 
     def runs(self, refresh: bool = False) -> list[Run]:
         if self._runs is None or refresh:

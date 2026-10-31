@@ -1,4 +1,4 @@
-"""Parameterised SQL for each intent, written against the ``alignment_changes`` view (db/init/06_chatbot.sql).
+"""Parameterised SQL for each intent, written against the ``alignment_changes`` view (db/init/09_chatbot.sql).
 
 Every value from the question reaches PostgreSQL as a bound parameter, never as SQL text.
 """

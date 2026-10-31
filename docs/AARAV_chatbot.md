@@ -25,16 +25,22 @@ Grounding check (grounding.py)     cited IDs must exist, quotes must appear in t
 ```bash
 # 1. Database (pgvector/pg16, schema auto-applied on first start)
 docker compose up -d
-
-# 2. Fixtures (test-data branch)
-git checkout test-data
 pip install -r requirements.txt -r app/requirements.txt
-for c in bac intc jpm; do
+
+# 2. Data: either run the pipeline on main (everything is saved to PostgreSQL) ...
+python scripts/run_full_pipeline.py --ticker AMD --years 2023 2024 2025       # alignments, materiality, synthesis
+python scripts/run_full_pipeline.py --ticker NVDA --years 2023 2024 2025
+python scripts/run_peer_comparison_pipeline.py --ticker AMD --peers NVDA --year 2024
+
+# ... or load the team's saved outputs from the test-data branch (merged into the chatbot branch)
+for c in amd avgo bac c gs intc jpm ms mu nvda qcom; do
   for p in 2023-2024 2024-2025; do
     python scripts/load_alignments_to_postgres.py --company $c \
       --previous-year ${p%-*} --current-year ${p#*-} --dir test_data/alignments/$c/$p
   done
 done
+python scripts/load_peer_comparisons_to_postgres.py test_data/peer_comparison
+python scripts/load_synthesis_to_postgres.py test_data/synthesis
 
 # 3. Chat
 streamlit run app/streamlit_app.py                       # web UI
@@ -42,12 +48,18 @@ PYTHONPATH=src python -m sec_disclosure.chatbot          # interactive CLI
 PYTHONPATH=src python -m sec_disclosure.chatbot --show-sql "How many new risk factors did Intel add in 2025?"
 ```
 
+All data processing lives on `main` (see [Full PostgreSQL Pipeline](ZIYANG_full_pipeline.md) and
+[Peer comparison pipeline](ARIEL_ZIYANG_peer_company_comparison_agent.md)). The pipeline saves alignments,
+materiality, synthesis reports and peer comparisons straight to PostgreSQL, and the chatbot reads them from
+there: nothing needs loading after a pipeline run. The loaders are only for output files made elsewhere, such as
+the samples in `test_data`.
+
 On Windows PowerShell, run the loader once per folder, e.g.
 `python scripts/load_alignments_to_postgres.py --company bac --previous-year 2023 --current-year 2024 --dir test_data/alignments/bac/2023-2024`,
 and set `$env:PYTHONPATH="src"` before `python -m sec_disclosure.chatbot`.
 
-The chatbot creates its view (`db/init/06_chatbot.sql`) on start-up if your Docker volume predates it.
-To apply it by hand: `docker compose exec -T db psql -U sec -d sec_disclosure < db/init/06_chatbot.sql`.
+The chatbot creates its view (`db/init/09_chatbot.sql`) on start-up if your Docker volume predates it.
+To apply it by hand: `docker compose exec -T db psql -U sec -d sec_disclosure < db/init/09_chatbot.sql`.
 
 ### LLM answers (SoCLaaS)
 
@@ -116,25 +128,31 @@ Year convention: years are 10-K fiscal years. "2024 10-K" means `current_year = 
 ## Peer comparisons (peer-agent output first)
 
 Questions about how two or more companies disclose the same topic are answered from the peer-comparison
-agent's precomputed output (`agents/peer_comparison.py`, peer-comparison branch) before touching the
-alignments. A lookup is one indexed query (~30 ms on the fixtures, vs ~0.5 s for a full-text search over
-all alignments), and it answers something alignments cannot: alignments compare a company with itself
-across years, the peer agent compares companies with each other in the same year.
+agent's precomputed output (`agents/peer_comparison.py` on main) before touching the alignments. A lookup is one
+indexed query (~30 ms on the fixtures, vs ~0.5 s for a full-text search over all alignments), and it answers
+something alignments cannot: alignments compare a company with itself across years, the peer agent compares
+companies with each other in the same year.
 
-Load each agent report after a run:
+**Where the data comes from.** The peer comparison pipeline (`scripts/run_peer_comparison_pipeline.py` on main)
+saves each whole report to `peer_comparison_reports` (`db/init/07_peer_comparison_reports.sql`). That table is
+the source of truth. For fast queries the chatbot keeps a normalised copy in its own tables
+(`db/init/10_chatbot_peer_comparisons.sql`): on start-up it rebuilds the copy for every report added or re-saved
+since the last start, and drops copies whose report is gone. Report files made elsewhere are saved to the same
+table, exactly as the pipeline saves them, with:
 
 ```bash
-python scripts/load_peer_comparisons_to_postgres.py test_data/peer_comparison/nvda/2024_amd_material_pilot
+python scripts/load_peer_comparisons_to_postgres.py test_data/peer_comparison   # every run under the folder
 python scripts/load_peer_comparisons_to_postgres.py data/peer_comparison/nvda/2024 --dry-run   # validate only
 ```
 
-Tables (`db/init/07_peer_comparisons.sql`, created automatically): `peer_comparison_runs` (one per target,
-year and peer set; partial runs allowed and flagged), `peer_comparison_targets`, `peer_comparison_results`
-(compared / no_comparable_candidate / no_candidate_retrieved per peer), `peer_comparisons` and
-`peer_comparison_evidence` (cited sentences), plus the `peer_comparison_pairs` view (both companies side by side
-with quotes). Reloading the same target/year/peer set replaces it. `target_selection` records whether the agent
-compared only the target's disclosures marked material (`material_changes`, the agent's default since policy v3)
-or all of them; answers from a material-only run say so, because a topic missing there may still be disclosed.
+The chatbot's tables: `peer_comparison_runs` (one per report: target, year, peer set, Items and target
+selection; partial runs allowed and flagged), `peer_comparison_targets`, `peer_comparison_results` (compared /
+no_comparable_candidate / no_candidate_retrieved per peer), `peer_comparisons` and `peer_comparison_evidence`
+(cited sentences), plus the `peer_comparison_pairs` view (both companies side by side with quotes).
+`target_selection` records whether the agent compared only the target's disclosures marked material
+(`material_changes`, the default) or all of them; answers from a material-only run say so, because a topic missing
+there may still be disclosed. When two runs hold the same comparison (the NVDA–AMD pilot and the 2024 industry
+run), only the copy from the most recently saved report is shown.
 
 How a peer question is answered:
 
@@ -154,36 +172,45 @@ Answers cite both disclosure IDs (`[nvda_2024_1A_D002 ↔ amd_2024_1A_D063]`) an
 grounding check removes sentence IDs that are not in the retrieved peer evidence. Partial runs and missing
 pairs are stated in the answer.
 
-Tests and demos use Ariel's real pilot on the test-data branch,
-`test_data/peer_comparison/nvda/2024_amd_material_pilot`: NVDA vs AMD, fiscal 2024, 105 material NVDA disclosures,
-108 API calls, 109 supported comparisons and 8 "no comparable candidate" decisions.
+Loaded peer data on the test-data branch (`test_data/peer_comparison`):
+
+- `2024_industry_top2/<ticker>`: 11 runs for fiscal 2024, each company against its industry. Banks (BAC, C, GS,
+  JPM, MS) against each other; chipmakers (AMD, AVGO, INTC, MU, NVDA, QCOM) against each other. Disclosures
+  marked material only, all complete: 2,345 target disclosures and 6,720 supported comparisons.
+- `nvda/2024_amd_material_pilot`: the first NVDA vs AMD pilot (105 disclosures, 109 comparisons, 8 "no comparable
+  candidate" decisions), used by the integration tests.
+
+Peer runs stay within an industry, so a bank-vs-chipmaker question ("NVDA vs JPMorgan") falls back to each
+company's own alignments.
 
 ## Synthesis reports (summary and financial questions)
 
-The synthesis agent (`agents/synthesis.py`, synthesis-agent branch) writes one report per company and span of
-years to `data/synthesis/<COMPANY>_<first>_<last>_synthesis_output.json`: an executive summary, key findings
-citing alignment match_ids, a longitudinal and a financial analysis, limitations, and financial trends computed
-in code from XBRL facts.
+The synthesis agent (`agents/synthesis.py` on main, run as the last stage of `scripts/run_full_pipeline.py`) writes
+one report per company and span of years: an executive summary, key findings citing alignment match_ids, a
+longitudinal and a financial analysis, limitations, and financial trends computed in code from XBRL facts.
 
-The synthesis agent saves every report it generates into its own table, `synthesis_reports(company, years,
-report jsonb)` (`db/init/06_synthesis_reports.sql` on the synthesis-agent branch), so after a pipeline run there
-is nothing to load. The chatbot only reads that table, through three views in `db/init/08_synthesis_reports.sql`
-(created automatically): `chatbot_synthesis_reports` (one row per report, keyed `amd_2023_2024_2025`),
-`chatbot_synthesis_findings` (one row per key finding, with the match_ids and XBRL fact IDs it cites) and
-`chatbot_synthesis_trends` (growth and ratio rows). A report counts as out of date when the alignments for its
-years were reloaded after its `generated_at`.
+The pipeline saves every report to `synthesis_reports(company, years, report jsonb)`
+(`db/init/06_synthesis_reports.sql`), so after a pipeline run there is nothing to load. The chatbot only reads
+that table, through three views in `db/init/11_chatbot_synthesis.sql` (created automatically):
 
-Report files made elsewhere (a teammate's run, the samples in `test_data/synthesis`) are upserted into the same
-table with:
+- `chatbot_synthesis_reports`: one row per report, keyed `amd_2023_2024_2025`.
+- `chatbot_synthesis_findings`: one row per key finding, with the match_ids and XBRL fact IDs it cites.
+- `chatbot_synthesis_trends`: growth and ratio rows.
+
+A report counts as out of date when the alignments for its years were reloaded after its `generated_at`.
+
+Report files made elsewhere (the samples in `test_data/synthesis`) are saved to the same table with:
 
 ```bash
-python scripts/load_synthesis_to_postgres.py test_data/synthesis     # AMD 2023-2025 and GS 2023-2024 samples
-python scripts/load_synthesis_to_postgres.py data/synthesis
+python scripts/load_synthesis_to_postgres.py test_data/synthesis
 ```
 
-Schema version 1 of `08_synthesis_reports.sql` created a chatbot-owned `synthesis_reports` with a different
-layout that would have broken the agent's save; version 2 drops that old layout automatically (reload any report
-files afterwards).
+The samples cover 2023-2025 for AMD, AVGO, BAC, INTC, JPM, MS, MU, NVDA and QCOM, and 2023-2024 for GS. Only AMD
+and GS include financial trends (the others were generated without XBRL facts loaded), so financial questions
+about the other companies say no computed figures are loaded.
+
+Schema version 1 of `11_chatbot_synthesis.sql` created a chatbot-owned `synthesis_reports` with a different
+layout; version 2 drops that old layout automatically (reload any report files afterwards).
 
 - **Summary questions** ("Summarise the key changes for AMD from 2023 to 2025") use the report whose span covers
   the asked years (none asked = the latest); a topic ("…about data center") narrows the findings. Each cited
@@ -197,12 +224,13 @@ files afterwards).
 - **Staleness**: if a company's alignments were reloaded after its report, the answer warns that the report may be
   out of date; a report that failed the agent's own validation is flagged too.
 
-Tests use the agent's samples in `test_data/synthesis`. AMD 2023-2025: all 180 match_ids it cites exist in
+Tests use the AMD sample in `test_data/synthesis`. AMD 2023-2025: all 180 match_ids it cites exist in
 test_data and are marked material. GS 2023-2024: 179 of 180 exist, but only 37 of them are marked material in the
 test_data alignments, so GS answers can show a cited finding next to an "Unchanged" or "needs review" label.
 
-Schema files 06–08 record a version in `schema_info`; the chatbot and both loaders re-apply any file whose
-version is missing or older, so an existing Docker volume picks up new columns and tables without a reset.
+The chatbot's schema files (09–11, after main's 01–08) record a version in `schema_info`; the chatbot and the
+loaders re-apply any file whose version is missing or older, so an existing Docker volume picks up new columns,
+tables and views without a reset. (They were numbered 06–08 before main added its own 06–08.)
 
 ## Data model
 
@@ -231,7 +259,7 @@ documented in [AARAV_chatbot_evaluation.md](AARAV_chatbot_evaluation.md).
 ```bash
 python -m pytest tests/test_chatbot.py                # no database needed
 python -m pytest tests/test_chatbot_integration.py    # needs the six fixture runs loaded; skips otherwise
-python -m pytest tests/test_peer_chatbot_integration.py       # real NVDA/AMD pilot; needs NVDA and AMD alignments
+python -m pytest tests/test_peer_chatbot_integration.py       # real NVDA/AMD pilot + pipeline-save sync; needs NVDA and AMD alignments
 python -m pytest tests/test_synthesis_chatbot_integration.py  # AMD 2023-2025 report; needs AMD alignments
 ```
 
@@ -256,13 +284,13 @@ src/sec_disclosure/chatbot/
   config.py      SOCLAAS_* settings and where each came from
   __main__.py    CLI
 app/streamlit_app.py                 web UI
-db/init/06_chatbot.sql               alignment_changes view, chatbot_evidence_embeddings table
+db/init/09_chatbot.sql               alignment_changes view, chatbot_evidence_embeddings table
 scripts/embed_alignment_evidence.py  optional bge-m3 vectors for pgvector search
-db/init/07_peer_comparisons.sql      peer-comparison tables and peer_comparison_pairs view
-src/sec_disclosure/storage/peer_comparisons.py, scripts/load_peer_comparisons_to_postgres.py   loader
+db/init/10_chatbot_peer_comparisons.sql      peer-comparison tables and peer_comparison_pairs view
+src/sec_disclosure/storage/peer_comparisons.py   sync from peer_comparison_reports; file loader (scripts/load_peer_comparisons_to_postgres.py)
 src/sec_disclosure/chatbot/peers.py  peer lookup, year-over-year join, fallback filters
 src/sec_disclosure/chatbot/reports.py  synthesis-report lookup: summaries, findings evidence, financial trends
-db/init/08_synthesis_reports.sql     chatbot_synthesis_* views over the agent's synthesis_reports
+db/init/11_chatbot_synthesis.sql     chatbot_synthesis_* views over the agent's synthesis_reports
 src/sec_disclosure/storage/synthesis_reports.py, scripts/load_synthesis_to_postgres.py   loader
-src/sec_disclosure/storage/chatbot_schema.py   versioned schema files 06-08
+src/sec_disclosure/storage/chatbot_schema.py   versioned schema files 09-11
 ```
