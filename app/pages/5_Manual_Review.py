@@ -30,8 +30,12 @@ def retain_selection(key):
 with st.container(border=True, key="manual_review_controls"):
     scope = st.segmented_control("Review scope", ["Needs review", "AI approved"], key="review_scope",
                                  width="stretch", on_change=retain_selection, args=("review_scope",))
+    st.caption("Choose which records to view. **Needs review** shows items flagged for a person to check. "
+               "**AI approved** shows items accepted by the AI; you can still review and change their labels.")
     section = st.segmented_control("Review section", ["Disclosure", "Alignment"], key="manual_section",
                                    width="stretch", on_change=retain_selection, args=("manual_section",))
+    st.caption("Choose what to label. **Disclosure** lets you check the disclosure type within one filing. "
+               "**Alignment** lets you check how disclosures changed between two filing years.")
 
 if section == "Disclosure":
     disclosure_review.render(scope)
