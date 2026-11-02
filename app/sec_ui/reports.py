@@ -75,7 +75,7 @@ def load_synthesis(path) -> dict:
     try:
         if isinstance(path, DatabaseSynthesis):
             with _postgres_connection() as conn, conn.cursor() as cur:
-                cur.execute("SELECT report FROM synthesis_reports WHERE company=%s AND years=%s",
+                cur.execute("SELECT report FROM synthesis_reports WHERE company=%s AND years=%s::integer[]",
                             (path.company, list(path.years)))
                 row = cur.fetchone()
             if row is None:

@@ -1,6 +1,7 @@
 """A synthesis report is published only after PostgreSQL commits it."""
 
 from contextlib import redirect_stderr, redirect_stdout
+from contextlib import contextmanager
 import io
 import json
 import os
@@ -94,6 +95,25 @@ class SynthesisStorageTests(unittest.TestCase):
 
 @unittest.skipUnless(os.environ.get("SEC_SYNTHESIS_DB_INTEGRATION") == "1", "Requires PostgreSQL")
 class SynthesisRetrievalPostgresTests(unittest.TestCase):
+    def test_report_loader_handles_small_year_values_in_integer_array_column(self):
+        from sec_ui import reports
+        with psycopg.connect(**storage.connection_arguments()) as conn:
+            with conn.cursor() as cur:
+                cur.execute("""CREATE TEMP TABLE synthesis_reports (
+                    company text, years integer[], report jsonb) ON COMMIT DROP""")
+                cur.execute("INSERT INTO synthesis_reports VALUES (%s, ARRAY[2023,2024,2025], %s::jsonb)",
+                            ("TEST", json.dumps({"company": "TEST", "years": [2023, 2024, 2025],
+                             "report": {"executive_summary": "Saved report", "key_findings": []}})))
+
+            @contextmanager
+            def connection():
+                yield conn
+
+            with patch.object(reports, "_postgres_connection", side_effect=connection):
+                result = reports.load_synthesis(reports.DatabaseSynthesis("TEST", (2023, 2024, 2025)))
+            self.assertEqual(result["report"]["executive_summary"], "Saved report")
+            self.assertEqual(result["years"], [2023, 2024, 2025])
+
     def test_llm_only_change_label_is_retrieved_when_enrichment_fields_are_null(self):
         # Temporary tables shadow the production relations for this connection;
         # all test records disappear when the transaction ends.
