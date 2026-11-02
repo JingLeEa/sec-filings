@@ -9,6 +9,8 @@ from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 from .disclosures import ROOT, connection_arguments
 from .pipeline_snapshots import ALIGNMENT_FILES, folder_documents, publish
+from .alignment_cleanup import replace_document
+from sec_disclosure.alignment_policy import exclude_from_reports
 
 
 SUPPORTED_SCHEMA = "8"
@@ -142,6 +144,8 @@ def read_alignments(folder: Path, company: str, previous: int, current: int, *, 
         problems.append("a match_id appears more than once across the two files")
     if problems:
         raise ValueError("; ".join(problems))
+    partitions = {name + ".json": report for name, report in reports.items()}
+    exclude_from_reports(partitions)
     return reports
 
 
@@ -187,8 +191,10 @@ def store_alignments(folder: Path, company: str, previous: int, current: int, *,
             member_count = cur.fetchone()[0]
             if stored != len(alignment_rows) or member_count != len(members):
                 raise ValueError("Imported alignment snapshot has inconsistent row counts")
-            publish(cur, company, "alignments", previous, current,
-                    folder_documents(folder, ALIGNMENT_FILES, include_change_cache=True))
+            documents = folder_documents(folder, ALIGNMENT_FILES, include_change_cache=True)
+            for name, report in reports.items():
+                replace_document(documents, name + ".json", report)
+            publish(cur, company, "alignments", previous, current, documents)
     except Exception as error:
         raise AlignmentStorageError(f"PostgreSQL alignment import failed ({type(error).__name__}). "
             "Check that the database is running, the tables exist and POSTGRES_* or DATABASE_URL settings are correct. "

@@ -102,8 +102,10 @@ def render(scope, controls):
     def label(disclosure_id):
         row = by_id[disclosure_id]
         ai_type = row.get("llm_disclosure_type", row.get("taxonomy")) or data.NOT_CLASSIFIED
+        final_type = review.final_disclosure(row, saved_reviews)["final_disclosure_type"] or data.NOT_CLASSIFIED
+        decision = components.human_review_status(current.get(disclosure_id), final_type)
         summary = " ".join((row.get("summary") or "").split())
-        title = f"{disclosure_id.rsplit('_', 1)[-1]} | Item {row['item']} | AI type: {ai_type}"
+        title = f"{disclosure_id.rsplit('_', 1)[-1]} | Item {row['item']} | {decision} | AI type: {ai_type}"
         return f"{title} | {summary}" if summary else title
 
     top, previous_col, next_col = st.columns([6, 1, 1], vertical_alignment="bottom")
@@ -113,13 +115,12 @@ def render(scope, controls):
     next_col.button("Next", on_click=step, args=(1,), disabled=position == len(ids)-1, width="stretch")
     row = by_id[st.session_state["disclosure_selected"]]
     saved = current.get(row["disclosure_id"])
+    final_type = review.final_disclosure(row, saved_reviews)["final_disclosure_type"] or data.NOT_CLASSIFIED
     components.chips((scope, "ok" if scope == "AI approved" else "warn"),
-                     ("Human reviewed" if saved else "Not manually reviewed", "ok" if saved else ""),
+                     (components.human_review_status(saved, final_type), "ok" if saved else ""),
                      (config.ITEM_TITLES.get(row["item"], f"Item {row['item']}"), ""), (row.get("taxonomy", ""), ""))
-    if scope == "AI approved":
-        st.success(components.safe(f"AI-approved disclosure type: **{row.get('llm_disclosure_type', row['taxonomy'])}**"))
-    else:
-        st.info(components.safe(f"AI disclosure type: **{row.get('llm_disclosure_type', row.get('taxonomy')) or data.NOT_CLASSIFIED}**"))
+    ai_type = row.get("llm_disclosure_type", row.get("taxonomy")) or data.NOT_CLASSIFIED
+    components.review_decision(ai_type, final_type, saved, kind="disclosure type")
     verification = row.get("verification") or {}
     reason = verification.get("model_review_reason") or "; ".join(verification.get("review_reasons", []))
     if reason:
@@ -128,8 +129,8 @@ def render(scope, controls):
         st.write(components.safe(row["summary"]))
     components.disclosure_text(row)
 
-    st.subheader("Final disclosure type")
-    st.caption("Manual — choose a type and save to override the current final type.")
+    st.subheader("Human review decision")
+    st.caption("Choose a human type below. Changes take effect after you save the review.")
     context = (company, year, row["disclosure_id"], review.disclosure_fingerprint(row))
     if (st.session_state.get("_disclosure_review_context") != context
             or any(key not in st.session_state for key in ("disclosure_type", "disclosure_notes"))):
@@ -137,15 +138,13 @@ def render(scope, controls):
         st.session_state["_disclosure_review_expected"] = saved_reviews.get(row["disclosure_id"])
         st.session_state["disclosure_type"] = saved.get("manual_disclosure_type", saved["disclosure_type"]) if saved else None
         st.session_state["disclosure_notes"] = saved["notes"] if saved else ""
-    if saved and review.label_source(saved) == "manual":
-        st.caption(f"Saved manual type: {saved['disclosure_type']} | Last saved: {saved['reviewed_at']}")
-    elif not saved and row["disclosure_id"] in saved_reviews:
+    if not saved and row["disclosure_id"] in saved_reviews:
         st.warning("The selected source text changed since the last review. Review this version and save a new type.")
     if not (row.get("content") or "").strip():
         st.error("Source text is missing for this disclosure. Load its text before saving a type.")
     endpoint = "synthesis" if mode == "postgres" else "materiality"
     with st.form("disclosure_review_form"):
-        chosen = st.selectbox("Disclosure type", config.CONTENT_CATEGORIES, index=None,
+        chosen = st.selectbox("Human disclosure type", config.CONTENT_CATEGORIES, index=None,
                               placeholder="Choose a disclosure type", key="disclosure_type")
         notes = st.text_area("Review notes (optional)", key="disclosure_notes")
         st.caption(f"Saving refreshes affected comparisons through {endpoint}. Save before moving to another disclosure.")

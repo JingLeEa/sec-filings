@@ -9,9 +9,12 @@ import io
 import json
 from pathlib import Path
 import subprocess
+import sys
 import tarfile
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+from sec_disclosure.alignment_policy import EXCLUSION_POLICY, exclude_from_reports
 
 
 def bundle(ref, destination):
@@ -26,14 +29,26 @@ def bundle(ref, destination):
     order = {"disclosures": 0, "alignments": 1, "synthesis": 2, "peer_comparison": 3}
     selected.sort(key=lambda name: (order[name.split("/")[1]], name))
     destination.mkdir(parents=True, exist_ok=True)
-    manifest = {"version": 1, "source_branch": "test-data", "source_commit": commit, "files": []}
+    manifest = {"version": 1, "source_branch": "test-data", "source_commit": commit,
+                "alignment_exclusion_policy": EXCLUSION_POLICY, "excluded_unreviewable_alignments": 0, "files": []}
     companies = set()
+    alignment_group, alignment_reports = None, {}
     with (destination / "reports.tar.gz").open("wb") as output, \
             gzip.GzipFile(fileobj=output, mode="wb", filename="", mtime=0) as compressed, \
             tarfile.open(fileobj=compressed, mode="w|", format=tarfile.PAX_FORMAT) as archive:
         for original in selected:
-            raw = subprocess.check_output(["git", "show", f"{commit}:{original}"], cwd=ROOT)
-            report = json.loads(raw)
+            if original.startswith("test_data/alignments/"):
+                group_path = str(Path(original).parent)
+                if alignment_group != group_path:
+                    alignment_group = group_path
+                    alignment_reports = {name: json.loads(subprocess.check_output(
+                        ["git", "show", f"{commit}:{group_path}/{name}"], cwd=ROOT))
+                        for name in sorted(names["alignments"]) if f"{group_path}/{name}" in selected}
+                    manifest["excluded_unreviewable_alignments"] += len(exclude_from_reports(alignment_reports))
+                report = alignment_reports[Path(original).name]
+            else:
+                raw = subprocess.check_output(["git", "show", f"{commit}:{original}"], cwd=ROOT)
+                report = json.loads(raw)
             raw = json.dumps(report, ensure_ascii=False, separators=(",", ":")).encode()
             name = original.removeprefix("test_data/")
             info = tarfile.TarInfo(name)

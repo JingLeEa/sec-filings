@@ -289,7 +289,7 @@ def test_broken_alignment_file_shows_error_message(monkeypatch, tmp_path):
 
 def test_manual_review_only_shows_needs_review_queue():
     at = manual_review()
-    assert metrics(at) == {"Review queue": "45", "Reviewed": "0", "Pending": "45"}
+    assert metrics(at) == {"Review queue": "38", "Reviewed": "0", "Pending": "38"}
     assert at.selectbox(key="manual_label").value is None
     html = " ".join(m.value for m in at.markdown)
     assert "FY2024 (earlier)" in html and "FY2025 (later)" in html
@@ -310,12 +310,15 @@ def test_ai_approved_scope_shows_labels_and_allows_manual_override_across_pages(
     match_id, llm = record["match_id"], record["methods"]["llm"]
     at.selectbox(key="manual_selected").select(match_id).run()
     assert not at.selectbox(key="manual_label").disabled
-    assert any(f"AI-approved change label: **{llm}**" in message.value for message in at.success)
+    assert any(message.value == f"**{llm}**" for message in at.markdown)
+    assert any("No human review saved" in message.value for message in at.caption)
     assert any(f"AI label: {llm}" in label for label in at.selectbox(key="manual_selected").options)
     manual = "Reduced" if llm != "Reduced" else "Expanded"
     at.selectbox(key="manual_label").select(manual)
     next(button for button in at.button if button.label == "Save review").click().run()
     assert not at.exception and not at.error
+    assert any(f"Human-reviewed change label: {manual}" in message.value for message in at.success)
+    assert any(f"Human label: {manual}" in label for label in at.selectbox(key="manual_selected").options)
     (final,) = [row for row in data.load_comparison("amd", 2024, 2025)["records"] if row["match_id"] == match_id]
     assert final["change_label"] == manual
     assert next(row for row in cached["records"] if row["match_id"] == match_id)["change_label"] == llm
@@ -328,7 +331,8 @@ def test_ai_approved_scope_shows_labels_and_allows_manual_override_across_pages(
     fresh.segmented_control(key="review_scope").select("AI approved").run()
     fresh.selectbox(key="manual_selected").select(match_id).run()
     assert fresh.selectbox(key="manual_label").value == manual
-    assert any(f"AI-approved change label: **{llm}**" in message.value for message in fresh.success)
+    assert any(message.value == f"**{llm}**" for message in fresh.markdown)
+    assert any(f"Human-reviewed change label: {manual}" in message.value for message in fresh.success)
     assert not fresh.exception and not fresh.error
     final = next(row for row in data.load_comparison("amd", 2024, 2025)["records"] if row["match_id"] == match_id)
     assert final["change_label"] == manual and final["final_label_source"] == "manual"
@@ -428,7 +432,7 @@ def test_manual_review_save_and_next_does_not_copy_labels():
     assert at.selectbox(key="manual_selected").value != first
     assert at.selectbox(key="manual_label").value is None
     assert at.text_area(key="manual_notes").value == ""
-    assert metrics(at)["Pending"] == "44"
+    assert metrics(at)["Pending"] == "37"
     at.selectbox(key="manual_status").select("Reviewed").run()
     assert at.selectbox(key="manual_selected").value == first
     assert at.selectbox(key="manual_label").value == "Expanded"
@@ -502,12 +506,16 @@ def test_manual_review_finishing_pending_queue_keeps_exports(monkeypatch, tmp_pa
     assert len(at.get("download_button")) == 2
 
 
-def test_manual_review_does_not_label_missing_source_text():
+def test_manual_review_does_not_label_missing_source_text(monkeypatch):
     from sec_ui import components
     at = manual_review()
     comparison = components.cached_comparison("amd", 2024, 2025, "files")
+    from copy import deepcopy
+    comparison = deepcopy(comparison)
     missing = next(r for r in comparison["records"] if r["source_file"] == "needs_review.json"
-                   and any(r[f"{side}_ids"] and not r[f"{side}_text"].strip() for side in ("previous", "current")))
+                   and r["previous_ids"] and r["current_ids"])
+    missing["previous_text"] = ""
+    monkeypatch.setattr(components, "cached_comparison", lambda *args: comparison)
     at.selectbox(key="manual_selected").select(missing["match_id"]).run()
     assert not at.exception
     assert any("Source text is missing" in e.value for e in at.error)

@@ -10,6 +10,8 @@ import tarfile
 from . import alignments, disclosures, peer_comparisons
 from .chatbot_schema import apply_outdated
 from .pipeline_snapshots import publish
+from .alignment_cleanup import cleanup_existing, replace_document
+from sec_disclosure.alignment_policy import exclude_from_reports
 
 ROOT = Path(__file__).resolve().parents[3]
 BUNDLE = ROOT / "starter_data"
@@ -112,6 +114,10 @@ def import_disclosures(cur, company, year, documents):
 
 def import_alignments(cur, company, years, documents):
     previous, current = years
+    reports = {name: documents[name]["payload"] for name in ("alignments.json", "needs_review.json") if name in documents}
+    if exclude_from_reports(reports):
+        for name, report in reports.items():
+            replace_document(documents, name, report)
     report = documents["alignments.json"]["payload"]
     cur.execute("INSERT INTO alignment_runs (company,previous_year,current_year,schema_version,run_complete,comparison_scope,note) "
                 "VALUES (%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING RETURNING run_id",
@@ -160,9 +166,12 @@ def seed_connection(conn, bundle=BUNDLE):
     with conn.cursor() as cur:
         cur.execute("SELECT pg_advisory_xact_lock(80808009)")
         wanted = {scope_key(entry["scope"]) for entry in manifest["files"]}
+        pending = set()
+        excluded = cleanup_existing(cur, pending=pending)
         missing = wanted - existing_scopes(cur)
         if not missing:
-            return {"imported": {}, "skipped": len(wanted), "companies": manifest["companies"]}
+            return {"imported": {}, "skipped": len(wanted), "companies": manifest["companies"],
+                    "excluded_alignments": excluded, "cleanup_pending": sorted(pending)}
         apply_outdated(cur)
         for key, documents in report_groups(bundle, manifest, missing):
             kind, company, years, *_ = key
@@ -177,7 +186,7 @@ def seed_connection(conn, bundle=BUNDLE):
                 saved = import_report(cur, kind, next(iter(documents.values())))
             imported[kind] += bool(saved)
         return {"imported": dict(imported), "skipped": len(wanted) - sum(imported.values()),
-                "companies": manifest["companies"]}
+                "companies": manifest["companies"], "excluded_alignments": excluded, "cleanup_pending": sorted(pending)}
 
 
 def seed_database(*, bundle=BUNDLE, env_file=None):

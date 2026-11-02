@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import sys
+import subprocess
 
 import streamlit as st
 
@@ -22,8 +23,12 @@ def backend():
 @st.cache_resource(show_spinner="Preparing starter data in PostgreSQL...")
 def _prepare(database_key, dataset_key):
     result = backend().seed_database()
-    if sum(result["imported"].values()):
+    if sum(result["imported"].values()) or result.get("excluded_alignments"):
         st.cache_data.clear()
+    if result.get("cleanup_pending") and os.environ.get("SEC_UI_REFRESH_AUTOSTART", "1") != "0":
+        subprocess.Popen([sys.executable, str(config.ROOT / "scripts/cleanup_alignment_reviews.py"), "--wait"],
+                         cwd=config.ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                         stderr=subprocess.DEVNULL, start_new_session=True)
     return result
 
 
@@ -37,6 +42,12 @@ def ensure_starter_data():
         settings = storage.disclosures.connection_arguments()
         database_key = hashlib.sha256(json.dumps(settings, sort_keys=True).encode()).hexdigest()
         result = _prepare(database_key, manifest["archive_sha256"])
+        if result.get("cleanup_pending"):
+            # Retry on the next full page run, including after the worker finishes.
+            st.session_state["_alignment_cleanup_pending"] = True
+            _prepare.clear()
+        elif st.session_state.pop("_alignment_cleanup_pending", False):
+            st.cache_data.clear()
     except (storage.StarterDataError, OSError, ValueError) as error:
         st.error(str(error) if isinstance(error, storage.StarterDataError) else
                  "The bundled starter dataset is missing or invalid. Restore starter_data from this branch and reload.")

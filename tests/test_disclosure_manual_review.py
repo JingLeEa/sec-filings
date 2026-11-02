@@ -179,12 +179,15 @@ def test_disclosure_ai_approved_scope_shows_type_and_manual_only_form(inputs):
     assert next(metric.value for metric in at.metric if metric.label == "Review queue") == "2"
     at.selectbox(key="disclosure_selected").select(inputs[3]["disclosure_id"]).run()
     ai_type = inputs[3]["taxonomy"]
-    assert any(f"AI-approved disclosure type: **{ai_type}**" in message.value for message in at.success)
+    assert any(message.value == f"**{ai_type}**" for message in at.markdown)
+    assert any("No human review saved" in message.value for message in at.caption)
     assert any(f"AI type: {ai_type}" in label for label in at.selectbox(key="disclosure_selected").options)
     at.selectbox(key="disclosure_type").select("Operations & Capacity")
     click(at, "Save review")
     assert not at.exception and not at.error
     assert at.selectbox(key="disclosure_type").value == "Operations & Capacity"
+    assert any("Human-reviewed disclosure type: Operations & Capacity" in message.value for message in at.success)
+    assert any("Human label: Operations & Capacity" in label for label in at.selectbox(key="disclosure_selected").options)
     at.segmented_control(key="review_scope").select("Needs review").run()
     assert next(metric.value for metric in at.metric if metric.label == "Review queue") == "2"
     assert all(not label.startswith(inputs[3]["disclosure_id"].rsplit("_", 1)[-1] + " |")

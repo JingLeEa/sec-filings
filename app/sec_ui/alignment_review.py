@@ -21,7 +21,8 @@ def render(scope, controls):
         st.error(str(error))
         st.stop()
     all_records = comparison["records"]
-    records = [r for r in all_records if (review.ai_approved_change(r) if scope == "AI approved" else
+    records = [r for r in all_records if (r["previous_ids"] and r["current_ids"] or review.ai_approved_change(r)) and
+               (review.ai_approved_change(r) if scope == "AI approved" else
                not review.ai_approved_change(r) and (review.requires_change_review(r)
                                                     or review.current_review(r, saved_reviews)))]
     if not records:
@@ -78,8 +79,10 @@ def render(scope, controls):
     def label(match_id):
         record = by_id[match_id]
         ai_label = record["methods"].get("llm") or data.NOT_LABELLED
+        final_label = review.final_change(record, saved_reviews)["final_change_label"] or data.NOT_LABELLED
+        decision = components.human_review_status(current_reviews.get(match_id), final_label)
         summary = " ".join((record["current_summary"] or record["previous_summary"] or "").split())
-        title = f"{match_id.rsplit('_', 1)[-1]} | Item {record['item']} | AI label: {ai_label}"
+        title = f"{match_id.rsplit('_', 1)[-1]} | Item {record['item']} | {decision} | AI label: {ai_label}"
         return f"{title} | {summary}" if summary else title
 
 
@@ -96,17 +99,15 @@ def render(scope, controls):
 
     record = by_id[st.session_state["manual_selected"]]
     saved = current_reviews.get(record["match_id"])
+    final_label = review.final_change(record, saved_reviews)["final_change_label"] or data.NOT_LABELLED
     components.chips(
         (scope, "ok" if scope == "AI approved" else "warn"),
-        ("Human reviewed" if saved else "Not manually reviewed", "ok" if saved else ""),
+        (components.human_review_status(saved, final_label), "ok" if saved else ""),
         (config.ITEM_TITLES.get(record["item"], f"Item {record['item']}"), ""),
         (record["category"], ""),
     )
     llm_label = record["methods"].get("llm")
-    if scope == "AI approved":
-        st.success(f"AI-approved change label: **{llm_label}**")
-    else:
-        st.info(f"AI change label: **{llm_label}**" if llm_label else "AI change label: Not labelled")
+    components.review_decision(llm_label or data.NOT_LABELLED, final_label, saved, kind="change label")
     reason = record["verifier_review_reason"] or "; ".join(record["review_reasons"])
     if reason:
         st.warning(components.safe("Reason for review: " + reason))
@@ -115,11 +116,9 @@ def render(scope, controls):
         with st.expander("Match reasoning"):
             st.write(components.safe(record["explanation"]))
 
-    st.subheader("Final change label")
-    st.caption("Manual — choose a label and save to override the current final label.")
-    if saved and review.label_source(saved) == "manual":
-        st.caption(f"Saved manual label: {saved['change_label']} | Last saved: {saved['reviewed_at']}")
-    elif not saved and record["match_id"] in saved_reviews:
+    st.subheader("Human review decision")
+    st.caption("Choose a human label below. Changes take effect after you save the review.")
+    if not saved and record["match_id"] in saved_reviews:
         st.warning("The disclosure text or matched members changed since the last review. Review this version and save a new label.")
 
     context = (company, previous, current, record["match_id"], review.fingerprint(record))
@@ -136,7 +135,7 @@ def render(scope, controls):
 
     endpoint = "synthesis" if comparison["meta"]["source"] == "postgres" else "materiality"
     with st.form("manual_review_form"):
-        chosen_label = st.selectbox("Change label", config.CHANGE_LABELS, index=None,
+        chosen_label = st.selectbox("Human change label", config.CHANGE_LABELS, index=None,
                                     placeholder="Choose a change label", key="manual_label")
         notes = st.text_area("Review notes (optional)", key="manual_notes", placeholder="Explain your change label.")
         st.caption("Choose New, Removed, Expanded, Reduced, Modified, Reworded or Unchanged. "

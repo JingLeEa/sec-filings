@@ -18,6 +18,7 @@ from sec_disclosure.llm.config import load_config
 from sec_disclosure.llm.disclosures import SOURCE_UNIT_POLICY, digest, write_json
 from sec_disclosure.llm.request_pacing import RequestPacer
 from sec_disclosure.storage.alignments import AlignmentStorageError, store_alignments
+from sec_disclosure.alignment_policy import exclude_unreviewable
 from .alignment_data import AlignmentData
 from .alignment_exact import EXACT_POLICY, accepted_status, exact_matches
 from .alignment_prompts import MATCHING_PROMPT, VERIFICATION_PROMPT
@@ -506,6 +507,7 @@ def refresh_report_statuses(report):
 def write_alignment_json_reports(output, report, *, preserve_change_analysis=True, previous_rows=None):
     """Partition all decisions into exactly two final result files, without model calls."""
     refresh_report_statuses(report)
+    exclude_unreviewable(report)
     unknown = set(report["counts"]) - {"auto_matched", "ai_verified", "unmatched", "needs_review"}
     if unknown:
         raise ValueError(f"Cannot export unknown alignment statuses: {sorted(unknown)}.")

@@ -26,8 +26,8 @@ def write_reports(folder):
                                      "llm": "Modified", "final_taxonomy": None},
                  "evidence": [{"disclosure_id": "amd_2023_7_D001", "sentences": []}],
                  "grouping": {"source_alignments": [{"match_method": "llm"}]}, "future": {"keep": True}}
-    review = {"match_id": "amd_2023_2024_M0002", "status": "needs_review", "relationship": "previous_only",
-              "previous_ids": ["amd_2023_7_D002"], "current_ids": [], "review_reasons": ["uncertain_source"],
+    review = {"match_id": "amd_2023_2024_M0002", "status": "needs_review", "relationship": "one_to_one",
+              "previous_ids": ["amd_2023_7_D002"], "current_ids": ["amd_2024_7_D002"], "review_reasons": ["uncertain_source"],
               "change_analysis": {"status": "not_started"}}
     common = {"schema_version": "8", "company": "amd", "previous_year": "2023", "current_year": "2024",
               "comparison_scope": "same_item", "run_complete": True, "error": None,
@@ -48,7 +48,7 @@ class AlignmentStorageTests(unittest.TestCase):
         self.cur = MagicMock()
         self.cur.__enter__.return_value = self.cur
         self.conn.cursor.return_value = self.cur
-        self.cur.fetchone.side_effect = [(7,), (2,), (3,)]
+        self.cur.fetchone.side_effect = [(7,), (2,), (4,)]
         self.connect = MagicMock(return_value=self.conn)
         self.driver = SimpleNamespace(connect=self.connect)
 
@@ -59,7 +59,7 @@ class AlignmentStorageTests(unittest.TestCase):
 
     def test_finalized_and_review_decisions_include_analysis_evidence_and_members(self):
         result = self.store()
-        self.assertEqual((result.stored, result.finalized, result.review, result.members), (2, 1, 1, 3))
+        self.assertEqual((result.stored, result.finalized, result.review, result.members), (2, 1, 1, 4))
         rows = self.cur.executemany.call_args_list[0].args[1]
         self.assertEqual(json.loads(rows[0]["change_analysis"]), self.records[0]["change_analysis"])
         self.assertEqual(json.loads(rows[0]["grouping"]), self.records[0]["grouping"])
@@ -148,7 +148,7 @@ class AlignmentPostgresTests(unittest.TestCase):
         self.assertEqual(first.run_id, second.run_id)
         self.assertEqual(self.sql("SELECT count(*) FROM alignment_runs;"), "1")
         self.assertEqual(self.sql("SELECT count(*) FROM alignments;"), "2")
-        self.assertEqual(self.sql("SELECT count(*) FROM alignment_members;"), "3")
+        self.assertEqual(self.sql("SELECT count(*) FROM alignment_members;"), "4")
 
         original = self.sql("SELECT change_analysis::text FROM alignments ORDER BY match_id;")
         mapper = storage.member_rows
@@ -162,7 +162,7 @@ class AlignmentPostgresTests(unittest.TestCase):
         with patch.object(storage, "member_rows", side_effect=invalid_member), self.assertRaises(storage.AlignmentStorageError):
             storage.store_alignments(self.folder, "amd", 2023, 2024)
         self.assertEqual(self.sql("SELECT change_analysis::text FROM alignments ORDER BY match_id;"), original)
-        self.assertEqual(self.sql("SELECT count(*) FROM alignment_members;"), "3")
+        self.assertEqual(self.sql("SELECT count(*) FROM alignment_members;"), "4")
 
     def test_export_joins_normalized_rows_after_sources_are_removed_and_reads_sql_updates(self):
         from sec_disclosure.storage import disclosures, exports

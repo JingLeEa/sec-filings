@@ -20,7 +20,8 @@ def main(argv=None):
         print(str(error), file=sys.stderr)
         return 1
     print(f"Starter data ready for {len(result['companies'])} companies. "
-          f"Imported {sum(result['imported'].values())} scopes; preserved {result['skipped']} existing scopes.")
+          f"Imported {sum(result['imported'].values())} scopes; preserved {result['skipped']} existing scopes. "
+          f"Excluded {result.get('excluded_alignments', 0)} unresolved one-sided alignments.")
     return 0
 
 

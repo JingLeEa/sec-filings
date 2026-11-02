@@ -201,6 +201,13 @@ class AlignmentTests(unittest.TestCase):
             self.assertEqual(self.run_cli("--refresh-extraction-policy", store_postgres=True), (0, 0))
             self.assertEqual(store.call_count, 3)
 
+    def flagged_response(self, prompt, **kwargs):
+        result = self.response(prompt, **kwargs)
+        payload = json.loads(result.text)
+        for row in payload.get("alignments", []):
+            row.update(needs_review=True, review_reason="Human must check the matched disclosures.")
+        return CompletionResult(json.dumps(payload), result.model, "stop", result.usage)
+
     def response(self, prompt, **kwargs):
         payload = json.loads(prompt)
         if "anchors" in payload:
@@ -891,7 +898,7 @@ class AlignmentTests(unittest.TestCase):
         report = module.save_report(output, data, {}, [], [], decisions, runtime, complete=True)
         exported = []
         for name, statuses, count in (("alignments.json", {"ai_verified", "auto_matched", "unmatched"}, 3),
-                                      ("needs_review.json", {"needs_review"}, 1)):
+                                      ("needs_review.json", {"needs_review"}, 0)):
             doc = self.output(name)
             self.assertEqual(doc["alignment_count"], count)
             self.assertEqual(set(doc["included_statuses"]), statuses)
@@ -916,12 +923,12 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(self.unmatched_rows(), [])
         self.assertEqual(self.output("alignments.json")["counts"], {"auto_matched": 1, "ai_verified": 1})
         self.assertFalse(self.output("alignments.json")["run_complete"])
-        self.assertEqual(self.output("needs_review.json")["alignment_count"], 2)
+        self.assertEqual(self.output("needs_review.json")["alignment_count"], 1)
         self.assertTrue(all("unmatched_type" not in row for row in report["alignments"]))
         report["run_complete"] = True
         module.write_alignment_json_reports(output, report)
         self.assertEqual(self.unmatched_rows()[0]["unmatched_type"], "removed_disclosure")
-        self.assertEqual(self.output("needs_review.json")["alignment_count"], 1)
+        self.assertEqual(self.output("needs_review.json")["alignment_count"], 0)
         json_only = self.root / "json_only"
         module.write_alignment_json_reports(json_only, report)
         self.assertEqual({path.name for path in json_only.glob("*.json")}, {"alignments.json", "needs_review.json"})
@@ -965,7 +972,7 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(self.saved_report()["alignments"][0]["change_analysis"], analysis)
 
     def test_review_change_analysis_survives_cached_rerun(self):
-        self.assertEqual(self.run_cli("--max-steps", "1", response=self.invalid_citation_response), (0, 2))
+        self.assertEqual(self.run_cli(response=self.flagged_response), (0, 2))
         output = self.root / "alignments/amd/2023-2024"
         report = self.saved_report()
         row = next(row for row in report["alignments"] if row["status"] == "needs_review")
@@ -973,7 +980,7 @@ class AlignmentTests(unittest.TestCase):
         analysis = {**module.empty_change_analysis(), "status": "completed", "llm": "Modified"}
         row["change_analysis"] = analysis
         module.write_alignment_json_reports(output, report)
-        self.assertEqual(self.run_cli("--max-steps", "1", response=self.invalid_citation_response), (0, 0))
+        self.assertEqual(self.run_cli(response=self.flagged_response), (0, 0))
         saved = next(row for row in self.output("needs_review.json")["alignments"] if row["match_id"] == match_id)
         self.assertEqual(saved["change_analysis"], compact_change_analysis(analysis))
 
@@ -1561,7 +1568,8 @@ class AlignmentTests(unittest.TestCase):
             return CompletionResult("invalid json", "test-model", "stop", {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125})
         self.assertEqual(self.run_cli("--max-steps", "1", response=malformed), (0, 3))
         report = self.saved_report()
-        self.assertEqual(report["counts"], {"needs_review": 6})
+        self.assertEqual(report["counts"], {})
+        self.assertEqual(len(report["excluded_alignments"]), 6)
         self.assertEqual(self.output("token_usage.json")["reported_tokens"]["total_tokens"], 375)
         for side in ("previous", "current"):
             self.assertEqual(sum(len(row[side + "_ids"]) for row in self.unmatched_rows(side)), 0)
@@ -1768,15 +1776,15 @@ class AlignmentTests(unittest.TestCase):
                                     {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125})
         self.assertEqual(self.run_cli(response=response), (0, 6))
         report = self.saved_report()
-        self.assertEqual(len(report["alignments"]), 6)
-        self.assertEqual(report["counts"], {"unmatched": 5, "needs_review": 1})
+        self.assertEqual(len(report["alignments"]), 5)
+        self.assertEqual(report["counts"], {"unmatched": 5})
         combined = self.output("alignments.json")
         self.assertEqual(combined["alignment_count"], 5)
         self.assertEqual({r["relationship"] for r in combined["alignments"]}, {"previous_only", "current_only"})
         self.assertEqual(combined["alignments"], [r for r in report["alignments"] if r["status"] == "unmatched"])
         review = self.output("needs_review.json")["alignments"]
-        self.assertEqual(len(review), 1)
-        self.assertEqual(review[0]["current_ids"], ["amd_2024_7_D002"])
+        self.assertEqual(review, [])
+        self.assertEqual(report["excluded_alignments"][0]["current_ids"], ["amd_2024_7_D002"])
         for side, year, expected_count in (("previous", "2023", 3), ("current", "2024", 2)):
             rows = self.unmatched_rows(side)
             self.assertEqual(len(rows), expected_count)
@@ -1797,7 +1805,7 @@ class AlignmentTests(unittest.TestCase):
         module.write_alignment_json_reports(self.root / "alignments/amd/2023-2024", report)
         self.assertFalse(self.output("alignments.json")["run_complete"])
         self.assertEqual(self.unmatched_rows(), [])
-        self.assertEqual(self.output("needs_review.json")["alignment_count"], 6)
+        self.assertEqual(self.output("needs_review.json")["alignment_count"], 5)
 
     def test_unmatched_export_requires_unique_assignment_and_complete_evidence(self):
         data = self.data()
@@ -1823,12 +1831,14 @@ class AlignmentTests(unittest.TestCase):
         module.write_alignment_json_reports(output, report)
         self.assertEqual(self.unmatched_rows("previous"), [])
         # A sole row still requires selected original evidence for every member.
-        single = next(row for row in report["alignments"] if row["previous_ids"] == [before] and not row["current_ids"])
+        single = deepcopy(decisions[0])
+        single["match_id"] = "amd_2023_2024_M9999"
         single["evidence"] = []
         report["alignments"] = [single]
         module.write_alignment_json_reports(output, report)
         self.assertEqual(self.unmatched_rows("previous"), [])
         self.assertEqual(single["status"], "needs_review")
+        self.assertEqual(report["alignments"], [])
 
     def test_unmatched_export_counts_all_disclosures_in_a_group(self):
         data = self.data()
@@ -1865,8 +1875,9 @@ class AlignmentTests(unittest.TestCase):
         for field in ("evidence", "explanation", "metadata_repairs", "verifier_review_reason"):
             self.assertEqual(row[field], original[field])
         self.assertEqual(decisions[0], original)
-        self.assertEqual(report["counts"], {"unmatched": 1, "needs_review": 5})
-        self.assertEqual(len(self.output("needs_review.json")["alignments"]), 5)
+        self.assertEqual(report["counts"], {"unmatched": 1})
+        self.assertEqual(len(report["excluded_alignments"]), 5)
+        self.assertEqual(len(self.output("needs_review.json")["alignments"]), 0)
         self.assertEqual(len(self.unmatched_rows("previous")), 1)
         saved = json.dumps(report)
         module.write_alignment_reports(output, report, runtime.report())
@@ -1953,9 +1964,9 @@ class AlignmentTests(unittest.TestCase):
     def test_partial_verification_survives_turn_limit(self):
         self.assertEqual(self.run_cli("--max-steps", "1", response=self.invalid_citation_response), (0, 2))
         report = self.saved_report()
-        self.assertEqual(report["counts"], {"needs_review": 2, "ai_verified": 2})
-        pending = [r for r in report["alignments"] if r["status"] == "needs_review"]
-        self.assertTrue(all(r["validation_errors"][0]["errors"][0]["invalid_value"] == ["invented_sentence"] for r in pending))
+        self.assertEqual(report["counts"], {"ai_verified": 2})
+        self.assertEqual(len(report["excluded_alignments"]), 2)
+        self.assertTrue(self.output("validation_errors.json")["jobs"])
         self.assertEqual(self.unmatched_rows("previous"), [])
 
     def test_missing_metadata_does_not_bypass_bad_citations(self):

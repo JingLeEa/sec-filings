@@ -167,7 +167,7 @@ def test_alignment_review_keeps_human_label_and_reruns_only_downstream(pipeline)
 
 def test_human_reviewed_needs_review_group_reaches_materiality_without_fake_ai_approval(pipeline):
     case = pipeline
-    assert case.run_cli("--max-steps", "1", response=case.invalid_citation_response)[0] == 0
+    assert case.run_cli(response=case.flagged_response)[0] == 0
     record = next(row for row in data.load_comparison("amd", 2023, 2024)["records"]
                   if row["source_file"] == "needs_review.json" and (row["previous_text"] or row["current_text"]))
     saved = review.save_review(record, "Modified", "Human reviewed selected source.", expected=None)

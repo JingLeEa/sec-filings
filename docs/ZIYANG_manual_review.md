@@ -119,6 +119,21 @@ separate: an approved record does not join Needs review merely because a user
 saved an override. All/Pending/Reviewed describes human review progress; an
 AI-approved record can already have a final label without a human review.
 
+Unresolved alignment groups without a previous-year or current-year counterpart
+are excluded from the final pipeline results and the Needs review queue. A human
+cannot compare both sides of those groups. Accepted New/Removed results remain
+available. The bundled starter data uses the same rule, and startup cleans older
+loaded results without deleting saved human decisions. Partial pipeline work is
+retained for resume until the run finishes. Completed reports record excluded
+IDs/reasons in `excluded_alignments` and `coverage.excluded_disclosure_ids`.
+
+Above the selected record's evidence, a decision panel shows the original AI
+label alongside the final label. A saved manual decision is highlighted as
+**Human-reviewed change label** or **Human-reviewed disclosure type**, with its
+save time and notes. Record selectors and status badges also show
+**Human label: <label>**. Records without a saved decision say **Not human reviewed**;
+editing the form does not change this saved status until **Save review** is used.
+
 **Disclosure** reads `disclosures.json` and `review_candidates.json` from
 [disclosure extraction](ZIYANG_disclosure_extraction.md). PostgreSQL discovery
 requires a completed extraction snapshot for the company/year. An alignment run

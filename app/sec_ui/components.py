@@ -73,6 +73,35 @@ def chips(*items) -> None:
     st.markdown("".join(chip(*i) if isinstance(i, tuple) else chip(i) for i in items), unsafe_allow_html=True)
 
 
+def human_review_status(saved, final_label):
+    if not saved:
+        return "Not human reviewed"
+    if review.label_source(saved) == "manual":
+        return f"Human label: {final_label}"
+    return "Human reviewed · AI label retained"
+
+
+def review_decision(ai_label, final_label, saved, *, kind):
+    """Put the saved decision and its source above the evidence, before editing."""
+    with st.container(border=True, key="human_review_decision"):
+        original, final = st.columns([1, 2], gap="large")
+        with original:
+            st.caption(f"Original AI {kind}")
+            st.markdown(f"**{safe(ai_label)}**")
+        with final:
+            if saved:
+                title = (f"Human-reviewed {kind}" if review.label_source(saved) == "manual"
+                         else f"Human reviewed · AI {kind} retained")
+                st.success(safe(f"**{title}: {final_label}**"), icon=":material/how_to_reg:")
+                st.caption(f"Final {kind} used in reports · Saved {saved['reviewed_at']}")
+            else:
+                st.info(safe(f"**Final {kind}: {final_label}**"))
+                st.caption("No human review saved. Save a decision below to apply your label.")
+        if saved and saved.get("notes"):
+            st.markdown("**Saved review notes**")
+            st.write(safe(saved["notes"]))
+
+
 def tone_for_status(status: str) -> str:
     return {"ai_verified": "ok", "auto_matched": "ok", "needs_review": "warn", "unmatched": "bad"}.get(status, "")
 

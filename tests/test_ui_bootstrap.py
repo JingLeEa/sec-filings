@@ -68,3 +68,19 @@ def test_switching_database_configuration_rechecks_seed(storage):
     storage.disclosures.connection_arguments.return_value = {"host": "another-test-database"}
     assert not AppTest.from_function(startup_page).run().exception
     assert storage.seed_database.call_count == 2
+
+
+def test_active_pipeline_cleanup_starts_worker_and_rechecks_on_next_page(storage, monkeypatch):
+    from unittest.mock import patch
+    monkeypatch.setenv("SEC_UI_REFRESH_AUTOSTART", "1")
+    ready = {"imported": {}, "companies": ["amd"], "skipped": 77}
+    storage.seed_database.side_effect = [{**ready, "cleanup_pending": ["amd"]}, ready]
+    with patch.object(bootstrap.subprocess, "Popen") as worker:
+        at = AppTest.from_function(startup_page).run()
+        assert not at.exception and not at.error
+        assert worker.call_args.args[0][-1] == "--wait"
+        at.run()
+        at.run()
+        assert not at.exception and not at.error
+        assert storage.seed_database.call_count == 2
+        worker.assert_called_once()

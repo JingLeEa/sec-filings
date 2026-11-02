@@ -192,6 +192,9 @@ def apply_alignment_reviews(report, records, reviews):
 
 
 def split_reports(report):
+    from sec_disclosure.alignment_policy import exclude_unreviewable
+    report = deepcopy(report)
+    exclude_unreviewable(report)
     reports = {}
     counts = dict(Counter(row["status"] for row in report["alignments"]))
     for name, statuses in (("alignments.json", FINAL_STATUSES), ("needs_review.json", ["needs_review"])):
