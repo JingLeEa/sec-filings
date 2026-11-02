@@ -124,7 +124,8 @@ class AlignmentWorkflow:
                     action, shown, needed, records, self.exact_ids), self.core.review_row)
             try:
                 result, trace, reason = self.runtime.verification(job_id, VERIFICATION_PROMPT, payload, self.data, visible, repair,
-                    seed=planned.get("seed"), source_request=planned.get("source_request"), offline=self.args.offline_repair)
+                    seed=planned.get("seed"), source_request=planned.get("source_request"),
+                    imported_actions=planned.get("imported_actions"), offline=self.args.offline_repair)
             except (RunLimit, OSError, sqlite3.Error, ValueError, RuntimeError, LLMError):
                 write_json(checkpoint, {"result": repair.results("Automatic repair paused; corrections are pending."),
                            "error": "Automatic repair paused.", "groups": batch, "repair_pending": True})

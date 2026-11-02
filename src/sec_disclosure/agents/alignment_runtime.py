@@ -199,11 +199,13 @@ class Runtime:
         visible.update(runner.visible)
         return result
 
-    def verification(self, job_id, system, payload, data, visible, repair, *, seed=None, source_request=None, offline=False):
+    def verification(self, job_id, system, payload, data, visible, repair, *, seed=None, source_request=None,
+                     imported_actions=None, offline=False):
         from .alignment_graph import AlignmentAgentGraph
 
         runner = AlignmentAgentGraph(self, "verification", job_id, system, payload, data, visible,
-                                     repair=repair, seed=seed, source_request=source_request, offline=offline)
+                                     repair=repair, seed=seed, source_request=source_request,
+                                     imported_actions=imported_actions, offline=offline)
         result = runner.run()
         visible.update(runner.visible)
         return result

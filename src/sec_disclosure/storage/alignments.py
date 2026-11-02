@@ -146,7 +146,7 @@ def read_alignments(folder: Path, company: str, previous: int, current: int, *, 
 
 
 def store_alignments(folder: Path, company: str, previous: int, current: int, *, env_file: Path | None = None,
-                     require_complete: bool = True) -> AlignmentImport:
+                     require_complete: bool = True, expected_snapshots=None) -> AlignmentImport:
     """Replace one comparison's decisions and members in a single transaction."""
     reports = read_alignments(Path(folder), company, previous, current, require_complete=require_complete)
     # Finish mapping before any DELETE; malformed evidence cannot erase a prior run.
@@ -160,6 +160,8 @@ def store_alignments(folder: Path, company: str, previous: int, current: int, *,
         raise AlignmentStorageError("psycopg is not installed. Run: .venv/bin/python -m pip install -r requirements.txt") from None
     try:
         with psycopg.connect(**arguments) as conn, conn.cursor() as cur:
+            from .pipeline_snapshots import check_revisions
+            check_revisions(cur, expected_snapshots)
             head = reports["alignments"]
             cur.execute("""
                 INSERT INTO alignment_runs (company, previous_year, current_year, schema_version, run_complete,

@@ -60,6 +60,8 @@ except data.DataError as error:
     st.stop()
 
 report = synth["report"]
+from sec_ui import refresh
+refresh.status_panel(synth.get("company", "").lower(), synth.get("years", []))
 validation = synth.get("validation") or {}
 summary = synth.get("input_summary") or {}
 

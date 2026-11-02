@@ -669,7 +669,8 @@ def _adapt_change(item: dict) -> dict:
 def run_from_database(company: str, years: list[int], *, env_file: Path | None,
                       data_dir: Path, limit_per_pair: int, max_changes: int,
                       finding_target: int | None, finding_batch_size: int,
-                      finding_workers: int, timeout: float, max_tokens: int) -> Path:
+                      finding_workers: int, timeout: float, max_tokens: int,
+                      allow_empty: bool = False, before_save=None) -> Path:
     company = company.strip().upper()
     years = sorted(set(years))
     if len(years) < 2:
@@ -709,7 +710,7 @@ def run_from_database(company: str, years: list[int], *, env_file: Path | None,
             selected.extend(remaining[:max_changes - len(selected)])
         financial_metrics = fetch_financial_metrics(conn, company, years)
 
-    if not selected:
+    if not selected and not allow_empty:
         raise ValueError("No explicitly material changes were found for this company and period.")
     changes = [_adapt_change(item) for item in selected]
     request = {
@@ -735,7 +736,22 @@ def run_from_database(company: str, years: list[int], *, env_file: Path | None,
         max_tokens,
         request_pacer=RequestPacer(2.0, 60.0, finding_workers),
     )
-    result = synthesize(request, calls)
+    if selected:
+        result = synthesize(request, calls)
+    else:
+        # A human correction can remove the last material change. Replace the
+        # previous findings with an explicit empty report instead of leaving
+        # stale findings visible or inventing new material changes.
+        calls._save_usage()
+        result = {"report": {
+            "executive_summary": "No explicitly material disclosure changes remain after review.",
+            "longitudinal_analysis": "No material disclosure changes were selected for these comparisons.",
+            "financial_analysis": "Reported financial figures and calculated trends are retained below.",
+            "limitations": ["No narrative findings were generated because no changes met the materiality selection rule."],
+            "key_findings": []}, "financial_trends": calculate_trends(financial_metrics),
+            "validation": {"valid": True, "invalid_evidence_ids": [], "finding_target": 0,
+                "finding_count": 0, "material_change_coverage": 0,
+                "uncited_material_change_ids": [], "issues": []}}
     source_catalog = {
         item["match_id"]: {
             "company": item["company"],
@@ -760,7 +776,7 @@ def run_from_database(company: str, years: list[int], *, env_file: Path | None,
         "selected_material_changes": len(selected_ids),
         "cited_material_changes": len(selected_ids & cited_ids),
         "uncited_material_changes": len(uncited_ids),
-        "citation_coverage_pct": round(len(selected_ids & cited_ids) / len(selected_ids) * 100, 2),
+        "citation_coverage_pct": round(len(selected_ids & cited_ids) / len(selected_ids) * 100, 2) if selected_ids else 100.0,
     }
     result["coverage_gaps"] = [
         {"match_id": identifier, **source_catalog[identifier],
@@ -786,6 +802,8 @@ def run_from_database(company: str, years: list[int], *, env_file: Path | None,
     })
     result["token_usage"] = json.loads(calls.usage_path.read_text(encoding="utf-8"))
     with synthesis_connection(env_file) as conn:
+        if before_save is not None:
+            before_save(conn)
         report_json = json.dumps(
             _json_compatible(result), ensure_ascii=False, default=str,
         )

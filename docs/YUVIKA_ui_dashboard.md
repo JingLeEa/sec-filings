@@ -1,6 +1,6 @@
 # YUVIKA: UI dashboard
 
-**Maintainer:** YUVIKA — contact YUVIKA for questions about the dashboard. 
+**Maintainer:** YUVIKA — contact YUVIKA for questions about the dashboard.
 
 **Run pipeline + Peer Comparison UI:** JING LE
 

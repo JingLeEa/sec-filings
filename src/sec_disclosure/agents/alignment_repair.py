@@ -46,6 +46,41 @@ def normalize_proposal(raw):
     return row, repairs
 
 
+def separate_audit_context(row, data):
+    """Keep valid auxiliary audit citations outside selected disclosure evidence.
+
+    Only an explicitly uncertain proposal can use this normalization. Every
+    audit sentence must be real and from the same Item; normal membership and
+    selected-sentence validation still apply to the remaining evidence.
+    """
+    reason = row.get("review_reason")
+    if row.get("needs_review") is not True or not isinstance(reason, str) or not reason.strip():
+        return row, []
+    members = set(row["previous_ids"] + row["current_ids"])
+    if not members or not members <= data.records.keys():
+        return row, []
+    item = data.item_for(members)
+    evidence, context = [], []
+    for citation in row.get("evidence", []):
+        key = citation["disclosure_id"]
+        audit = getattr(data, "audit", {}).get(key)
+        if key in members or audit is None:
+            evidence.append(citation)
+            continue
+        sentences = {sentence["sentence_id"]: sentence for sentence in audit["sentences"]}
+        selected = citation["sentence_ids"]
+        if (audit["item"] != item or not selected or any(sid not in sentences for sid in selected)):
+            raise ProposalError("Audit context must cite real sentences from the same SEC Item.",
+                                "evidence", citation, "invalid_audit_context")
+        context.append({"audit_id": key, "paragraph_id": audit["paragraph_id"],
+                        "item": item, "fiscal_year": audit["fiscal_year"], "context_only": True,
+                        "sentences": [copy.deepcopy(sentences[sid]) for sid in selected]})
+    if context:
+        row = copy.deepcopy(row)
+        row["evidence"] = evidence
+    return row, context
+
+
 def explain_error(error, row, visible, data):
     """Locate the first failing check on this proposal, never copy batch errors."""
     if isinstance(error, ProposalError):
@@ -98,6 +133,7 @@ class VerificationRepair:
         self.validate, self.fallback = validate, fallback
         self.accepted, self.events, self.latest_errors = [], [], []
         self.started = False
+        self.allow_audit_context = True
 
     @property
     def covered(self):
@@ -124,11 +160,16 @@ class VerificationRepair:
             row = raw
             try:
                 row, repairs = normalize_proposal(raw)
+                row, audit_context = separate_audit_context(row, self.data) if self.allow_audit_context else (row, [])
                 signature = (tuple(row["previous_ids"]), tuple(row["current_ids"]))
                 if signature in signatures:
                     event.update(outcome="preserved_existing_proposal", errors=[])
                 else:
                     valid = self.validate({"action": "finalize", "alignments": [row]}, visible, members & self.required, self.data)[0]
+                    if audit_context:
+                        valid["audit_context"] = audit_context
+                        valid["status"] = "needs_review"
+                        valid["review_reasons"].append("audit_context_requires_review")
                     if repairs:
                         valid["status"] = "needs_review"
                         valid["review_reasons"].append("missing_review_metadata")
@@ -146,6 +187,27 @@ class VerificationRepair:
                      "invalid_value": key, "message": "Required disclosure was omitted from the final proposals."}]}
             self.events.append(event)
             self.latest_errors.append(event)
+
+    def recover_audit_context(self, visible):
+        """Normalize only the latest still-unresolved audit-context proposals.
+
+        Earlier rejected guesses must not shadow a later valid match during
+        replay of a historical run.
+        """
+        candidates = []
+        for event in self.latest_errors:
+            raw = event.get("original_proposal")
+            if not isinstance(raw, dict) or not set(event["affected_required_ids"]) & self.pending:
+                continue
+            try:
+                row, _ = normalize_proposal(raw)
+                _, context = separate_audit_context(row, self.data)
+            except (ValueError, KeyError, TypeError):
+                continue
+            if context:
+                candidates.append(raw)
+        if candidates:
+            self.receive({"action": "finalize", "alignments": candidates}, visible)
 
     def correction_payload(self, original):
         item_scope = self.data.item_for(self.required)
@@ -202,7 +264,13 @@ class VerificationRepair:
 
 
 class RepairSource:
-    """Import exact cached responses; historical token usage stays in its own ledger."""
+    """Import exact verifier actions without losing decisions accepted in earlier turns.
+
+    A correction request contains only the unresolved part of a job and its
+    conversational history may have been reset. Neither is the original job
+    scope. Keep that scope from its first full request and replay every saved
+    finalization against the evidence visible when it was made.
+    """
     def __init__(self, folder, data):
         self.folder, self.hashes = Path(folder), {}
         manifest = self.read(self.folder / "manifest.json")
@@ -225,48 +293,90 @@ class RepairSource:
         self.matches = self.read(self.folder / "matching_proposals.json")
         self.groups = self.read(self.folder / "proposed_groups.json")
         self.usage = self.read(self.folder / "token_usage.json")
-        requests = []
+        requests = {}
         for path in sorted((self.folder / "requests").glob("*.json")):
             record = self.read(path)
             if record["agent"] == "verification" and record["status"] == "completed":
-                requests.append((path, record))
-        self.jobs = []
+                requests[str(path.resolve())] = (path.resolve(), record)
+        self.jobs, self.saved_results, self.report_rows = [], {}, []
+        for name in ("alignments.json", "needs_review.json"):
+            path = self.folder / name
+            if path.is_file():
+                self.report_rows.extend(self.read(path).get("alignments", []))
         for path in sorted((self.folder / "jobs").glob("verification_*.json")):
             job = self.read(path)
             trace = self.read(self.folder / "traces" / path.name)
-            seed = trace[-1].get("action") if trace else None
-            if not isinstance(seed, dict) or seed.get("action") != "finalize":
-                seed = None
-            choices = []
-            for request_path, record in requests:
-                if record["job_id"] != path.stem:
+            required = {k for g in job["groups"] for k in g["previous_ids"] + g["current_ids"]} - exact_ids
+            item = data.item_for(required)
+            # A prior recovery may have made no new requests for a completed
+            # job. Its imported trace points to the exact original response.
+            for entry in trace:
+                source = entry.get("source_request")
+                if source:
+                    request_path = Path(source).expanduser()
+                    if not request_path.is_absolute():
+                        request_path = self.folder / request_path
+                    request_path = request_path.resolve()
+                    key = str(request_path)
+                    if key not in requests:
+                        requests[key] = (request_path, self.read(request_path))
+            available = []
+            for request_path, record in requests.values():
+                if (record.get("agent") != "verification" or record.get("status") != "completed"
+                        or record.get("job_id") != path.stem):
                     continue
                 payload = json.loads(record["prompt"])
-                if seed is not None:
-                    try:
-                        if json.loads(record["result"]["text"]) != seed or payload["history"] != trace[:-1]:
-                            continue
-                    except ValueError:
-                        continue
-                choices.append((record.get("started_at", ""), request_path, payload))
-            if not choices:
-                raise ValueError(f"No exact saved verifier request found for {path.stem}.")
-            _, request_path, payload = sorted(choices)[-1]
-            visible = set(payload["required_ids"]) | {row["disclosure_id"] for row in payload["records"]}
-            for search in payload.get("automatic_absence_searches", []):
-                visible.update(h["disclosure_id"] for h in search["hits"])
+                request_required = set(payload.get("required_ids", []))
+                if not request_required <= required or payload.get("item") != item:
+                    raise ValueError("Invalid saved verifier scope.")
+                available.append((record.get("started_at", ""), request_path, record, payload))
+            originals = [entry for entry in available if set(entry[3].get("required_ids", [])) == required]
+            if not originals:
+                raise ValueError(f"No full-scope saved verifier request found for {path.stem}.")
+            # In a fully unresolved job all turns have the full scope; prefer
+            # its original request, rather than a later repair-only payload.
+            _, original_path, _, original = min(originals,
+                key=lambda entry: (bool(entry[3].get("repair_mode")), entry[0], str(entry[1])))
+            payload = copy.deepcopy(original)
+            visible = self._request_visible(payload)
+            self._check_visible(data, visible | required, item)
+            initial_visible = set(visible)
+            imported_actions = []
             for entry in trace:
-                for search in entry.get("observation", {}).get("search_results", []):
-                    visible.update(h["disclosure_id"] for h in search["hits"])
-            required = {k for g in job["groups"] for k in g["previous_ids"] + g["current_ids"]} - exact_ids
-            if required != set(payload["required_ids"]) or not visible <= data.records.keys():
-                raise ValueError("Invalid saved verifier scope.")
-            if data.item_for(visible | required) != payload.get("item"):
-                raise ValueError("Saved verifier evidence crosses its SEC Item scope.")
+                action = entry.get("action")
+                if isinstance(action, dict) and action.get("action") == "finalize":
+                    matches = []
+                    explicit = entry.get("source_request")
+                    for request in available:
+                        _, request_path, record, request_payload = request
+                        if explicit:
+                            explicit_path = Path(explicit).expanduser()
+                            if not explicit_path.is_absolute():
+                                explicit_path = self.folder / explicit_path
+                            if request_path != explicit_path.resolve():
+                                continue
+                        result = record.get("result") or {}
+                        try:
+                            exact = result.get("finish_reason") == "stop" and json.loads(result.get("text", "")) == action
+                        except (ValueError, TypeError):
+                            exact = False
+                        if exact:
+                            matches.append(request)
+                    if not matches:
+                        raise ValueError(f"No exact saved verifier request found for {path.stem}.")
+                    _, request_path, _, _ = min(matches, key=lambda value: (value[0], str(value[1])))
+                    shown = set(entry.get("visible_disclosure_ids", visible))
+                    self._check_visible(data, shown | required, item)
+                    imported_actions.append({"action": copy.deepcopy(action), "visible": shown,
+                                             "source_request": str(request_path)})
+                visible.update(self._observation_visible(entry.get("observation") or {}))
+                self._check_visible(data, visible | required, item)
             payload.pop("history", None)
             payload.pop("remaining_turns_including_this_one", None)
             self.jobs.append({"job_id": path.stem, "groups": job["groups"], "payload": payload,
-                              "visible": visible, "seed": seed, "source_request": str(request_path)})
+                              "visible": initial_visible, "imported_actions": imported_actions,
+                              "source_request": str(original_path)})
+            self.saved_results[path.stem] = copy.deepcopy(job.get("result") or [])
         required_ids = [k for job in self.jobs for k in job["payload"]["required_ids"]]
         if set(required_ids) | exact_ids != data.records.keys() or any(n != 1 for n in Counter(required_ids).values()):
             raise ValueError("Repair source verification jobs do not cover disclosures exactly once.")
@@ -275,3 +385,25 @@ class RepairSource:
         content = path.read_bytes()
         self.hashes[str(path.resolve())] = digest(content)
         return json.loads(content)
+
+    @staticmethod
+    def _request_visible(payload):
+        visible = set(payload.get("required_ids", [])) | {row["disclosure_id"] for row in payload.get("records", [])}
+        for search in payload.get("automatic_absence_searches", []):
+            visible.update(hit["disclosure_id"] for hit in search.get("hits", []))
+        return visible
+
+    @staticmethod
+    def _observation_visible(observation):
+        visible = {hit["disclosure_id"] for search in observation.get("search_results", [])
+                   for hit in search.get("hits", [])}
+        for context in observation.get("context_results", []):
+            visible.update(row["disclosure_id"] for row in context.get("eligible_disclosures", []))
+        return visible
+
+    @staticmethod
+    def _check_visible(data, visible, item):
+        if not visible <= data.records.keys():
+            raise ValueError("Invalid saved verifier scope.")
+        if data.item_for(visible) != item:
+            raise ValueError("Saved verifier evidence crosses its SEC Item scope.")

@@ -569,6 +569,9 @@ def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: li
     pending_consolidations = [c["id"] for c in consolidation_audit if c["status"] == "pending"]
     failed_consolidations = [{"consolidation_id": c["id"], "item": c["item"], "error": c["error"]}
                             for c in consolidation_audit if c["status"] == "failed"]
+    from sec_disclosure.review_overrides import apply_disclosure_review, read_reviews, review_root
+    human_reviews = read_reviews(review_root(), filing.company, "disclosure", filing.year)
+    disclosures = [apply_disclosure_review(row, human_reviews.get(row["disclosure_id"])) for row in disclosures]
     accepted = [d for d in disclosures if d["verification"]["status"] == "source_validated"]
     review = [d for d in disclosures if d["verification"]["status"] == "needs_review"]
     coverage = {"input_sentence_records": len(filing.units),

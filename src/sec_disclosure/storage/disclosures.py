@@ -125,7 +125,7 @@ def connection_arguments(env_file: Path | None = None) -> dict:
 
 
 def store_disclosures(folder: Path, company: str, year: int, *, env_file: Path | None = None,
-                      require_complete: bool = False, replace: bool = False) -> DisclosureImport:
+                      require_complete: bool = False, replace: bool = False, expected_snapshots=None) -> DisclosureImport:
     """Atomically import a filing; replacement removes only obsolete disclosures for that filing."""
     loaded = read_disclosures(Path(folder), company, year, require_complete=require_complete or replace)
     arguments = connection_arguments(env_file)
@@ -135,6 +135,8 @@ def store_disclosures(folder: Path, company: str, year: int, *, env_file: Path |
         raise DisclosureStorageError("psycopg is not installed. Run: .venv/bin/python -m pip install -r requirements.txt") from None
     try:
         with psycopg.connect(**arguments) as conn, conn.cursor() as cur:
+            from .pipeline_snapshots import check_revisions
+            check_revisions(cur, expected_snapshots)
             cur.execute(UPSERT_FILING, (company, year))
             filing_id = cur.fetchone()[0]
             for status, records in loaded:

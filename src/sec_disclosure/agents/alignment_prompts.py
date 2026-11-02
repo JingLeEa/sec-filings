@@ -36,6 +36,16 @@ Search is restricted to the job's supplied item, including review candidates and
 unassigned/excluded source evidence from that same Item. It returns up to 8 disclosure candidates and 4 audit paragraphs
 per query. Offset paginates disclosure results. Context returns full selected
 sentences and neighboring original paragraphs; neighbors are context only.
+Audit hits already contain their ungrouped/excluded source sentences. You may
+request context using an exact audit ID ending in _AUDIT (or its exact paragraph
+ID) to inspect the raw paragraph and any eligible selected disclosures from it.
+Audit IDs and raw paragraph IDs are NEVER alignment members, and unselected audit
+sentences are NEVER valid alignment citations. Audit context explicitly marks
+context_only and lists eligible_disclosures with the exact IDs and selected
+sentence IDs that may be used. If counterpart content exists only in audit text,
+do not invent a disclosure ID. The matching agent should return previous_ids:[]
+with the extraction gap in its rationale; the verifier should explain the gap
+and flag needs_review:true.
 At most 3 queries or 4 context IDs per action. Use supplied years and IDs only.
 Tools consume a bounded round. If evidence remains insufficient, flag review.
 Never invent IDs or mistake shared generic words/taxonomy for the same subject.
@@ -93,6 +103,13 @@ Each row must have at least one side. Cite at least one SELECTED original senten
 for EACH disclosure in that row, and enough sentences to support your explanation.
 Use exact IDs from full sentence evidence, never cite neighboring context as if it
 belonged to the selected disclosure. Do not reproduce source text in your response.
+Keep explanations compact: one or two specific sentences, without repeating source
+text or the instructions. When max_proposals_this_turn is supplied, return at most
+that many COMPLETE alignment rows in this finalize action. You may cover only a
+subset of required_ids this turn; Python preserves accepted rows and supplies the
+remaining required IDs on the next turn. Never truncate citations or turn a supported
+split/merge into incomplete rows to satisfy this limit: one complete grouped row
+may include several disclosures, each with its selected sentence references.
 
 Verify topic correspondence only; do not assign change labels. Different wording,
 figures or factual status can still describe the same specific underlying topic.
@@ -112,7 +129,8 @@ bad fields, citations, and omissions. Do not repeat preserved_proposals or chang
 their decisions. Use the supplied selected sentence IDs exactly; audit paragraph
 IDs are search context, not disclosure IDs. If the correct counterpart overlaps
 a preserved matched proposal, keep that counterpart and explain the supported
-link. Flag substantive uncertainty, not overlap alone. Cover every remaining required ID, including explicit
-single-sided decisions when no counterpart is found. Include needs_review and
+link. Flag substantive uncertainty, not overlap alone. Cover the remaining required IDs across bounded turns,
+including explicit single-sided decisions when no counterpart is found. Respect max_proposals_this_turn
+when supplied. Include needs_review and
 review_reason on every corrected proposal. Search/context remain available.
 """ + TOOLS

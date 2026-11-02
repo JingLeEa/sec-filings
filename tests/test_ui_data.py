@@ -11,12 +11,13 @@ REAL_DATA = Path(__file__).resolve().parents[2] / "sec-filings-test-data" / "tes
 
 
 @pytest.fixture(autouse=True)
-def file_mode(monkeypatch):
+def file_mode(monkeypatch, tmp_path):
     monkeypatch.setenv("SEC_UI_DATA_SOURCE", "files")
     monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(FIXTURES / "alignments"))
     monkeypatch.setenv("SEC_UI_DISCLOSURES_DIR", str(FIXTURES / "no_disclosures_here"))
     monkeypatch.setenv("SEC_UI_SYNTHESIS_DIRS", str(FIXTURES / "synthesis"))
     monkeypatch.setenv("SEC_UI_PEER_DIR", str(FIXTURES / "peer_comparison"))
+    monkeypatch.setenv("SEC_UI_MANUAL_REVIEWS_DIR", str(tmp_path / "reviews"))
 
 
 @pytest.fixture()
@@ -130,6 +131,15 @@ def test_materiality_and_labels_are_not_invented():
     assert record["change_label"] == data.NOT_LABELLED
     assert record["materiality"] == data.NOT_ASSESSED
     assert record["category"] == data.NOT_CLASSIFIED
+
+
+def test_default_final_uses_llm_instead_of_an_empty_or_different_pipeline_final():
+    for final in (None, "Reduced"):
+        record = data.normalise({"change_analysis": {"status": "completed", "llm": "Expanded",
+                                 "final_taxonomy": final}}, {}, "amd", 2024, 2025)
+        assert record["change_label"] == record["final_change_label"] == "Expanded"
+        assert record["pipeline_change_label"] == final
+        assert record["final_label_source"] == "llm"
 
 
 @pytest.mark.skipif(not REAL_DATA.is_dir(), reason="test-data worktree not available")

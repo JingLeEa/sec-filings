@@ -306,7 +306,7 @@ Historical cross-Item runs cannot be resumed/imported under the same-Item policy
 | `--max-requests` | No request cap by default (`-1`); a positive value caps cumulative paid attempts, including prior runs of the same output directory |
 | `--max-new-requests` | Optional limit on new attempts this invocation |
 | `--max-total-tokens` | 30,000,000 per year pair by default; `-1` removes the cap |
-| `--max-tokens`, `--timeout` | 6,000 completion tokens; 180-second total deadline per API attempt, including response reads |
+| `--max-tokens`, `--timeout` | 12,000 completion tokens; 180-second total deadline per API attempt, including response reads |
 | `--max-prompt-chars` | 150,000 combined characters; oversized context is not silently truncated |
 | `--retry-failed` | Explicitly acknowledge prior failed/interrupted attempts and allow another paid attempt |
 | `--fault-tolerant` | Automatically retry recoverable API failures and resume recoverable failed/interrupted requests |
@@ -371,6 +371,33 @@ to permit paid targeted corrections, with the same other arguments. Each repair
 job gets its own bounded new turns. Historical source usage appears separately
 as `source_run_reported_tokens`; do not count it twice. Repair preserves its
 source run's exact-routing policy rather than inventing new exact decisions.
+
+Recovery replays every exact saved finalization in order, including decisions
+accepted before a correction or a later search/context action. It reconstructs
+the original whole-job scope; a correction's smaller `required_ids` does not
+replace it. Jobs fully covered by the imported decisions make no model calls.
+Only remaining IDs enter new correction turns. Re-import a finished recovery
+into a new output folder when deliberately allowing another bounded pass;
+ordinary restarts continue using completed job checkpoints.
+
+For a live recovery, use `--max-steps 8 --max-tokens 12000 --timeout 300` and
+omit `--offline-repair`. Verification requests ask for at most eight complete
+proposal rows per turn; accepted partial coverage is preserved for later turns.
+Audit paragraphs can be requested as context using an exact `_AUDIT` ID or its
+original paragraph ID. They remain context only; only selected disclosures and
+their selected sentence IDs can become alignment members and citations.
+If an explicitly review-flagged proposal also cites real same-Item audit
+sentences, those auxiliary references are retained under `audit_context`, outside
+the selected disclosure `evidence`. Such a row stays in review and cannot be
+certified as an unmatched/new/removed disclosure. Invalid audit IDs or sentences
+still fail validation. Historical replay preserves accepted decisions first;
+only the latest still-unresolved audit-context proposals receive this repair.
+
+With PostgreSQL inputs, recovery verifies the stored upstream hashes and
+preserves existing change/materiality analyses for identical decisions and
+evidence, even when regenerated match IDs shift. Changed groups do not inherit
+old analyses. Add `--skip-change-analysis` to stop after alignment. The completed
+recovery is stored to PostgreSQL by default; `--no-store-postgres` keeps it local.
 
 ## 6. Final output JSON structure
 
@@ -509,14 +536,30 @@ by logic and by the model both use the `llm` field:
   "lexical": null,
   "semantic": null,
   "llm": "Removed",
-  "final_taxonomy": null
+  "final_taxonomy": "Removed"
 }
 ```
 
-`lexical`, `semantic` and `final_taxonomy` always remain null. `llm` is a single
-label string, or null while pending/under review. `status` is `not_started`,
+The base classifier leaves `lexical` and `semantic` null. `final_taxonomy`
+defaults to the completed `llm` label and stays null while pending/under review.
+Legacy paid label caches with a null final field are normalized locally without
+another model call. Optional lexical/semantic enrichment fields remain intact.
+`llm` is a single label string, or null while pending/under review. `status` is `not_started`,
 `completed` or `needs_review`. No method, fingerprint, explanation or citation
 object is added inside this result.
+
+The [Manual Review page](ZIYANG_manual_review.md) separates **AI approved** results
+from **Needs review** groups and displays the original AI change label clearly.
+AI labels are the default final results. A manual-only form lets a user save an
+override, including for an approved result. Dashboard views and downloads apply
+the override while preserving the model label and original pipeline evidence.
+Disclosure types have the same workflow in the separate Disclosure section.
+Saving a disclosure review now applies that type and refreshes affected year
+comparisons through materiality. Saving an alignment change label preserves the
+group and human final label, then refreshes downstream analysis/materiality.
+Background progress and retry controls appear in the dashboard. Published
+PostgreSQL rows/snapshots or canonical file reports include the human correction;
+original model labels and evidence are retained.
 
 `New`/`Removed` describe the saved comparison's disclosure coverage, not filing-wide
 absence or the start/end of a real-world event. Qualifications remain on the

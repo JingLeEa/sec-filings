@@ -174,6 +174,16 @@ cache. Automatic legacy import applies only to the default `main` namespace.
 
 ## Resume an interrupted run
 
+The dashboard also starts automatic refreshes after a human saves a review. A
+disclosure-type review updates that extraction result and reruns only comparisons
+containing its filing year. An alignment change-label review keeps the saved group
+and human label, then updates downstream analysis and materiality. These jobs use
+a durable background queue with progress, failure/retry controls and source-bound
+human decisions; see [manual review](ZIYANG_manual_review.md). Their workspaces are
+separate from full-run checkpoints, and unchanged request/embedding results can be
+reused. PostgreSQL refreshes continue through synthesis. Legacy file-only
+refreshes end at materiality.
+
 Resume is enabled by default. Rerun the same command, for example:
 
 ```bash
