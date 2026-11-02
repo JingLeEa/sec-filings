@@ -11,6 +11,7 @@ from pathlib import Path
 import streamlit as st
 
 PAGES_DIR = Path(__file__).resolve().parents[1] / "pages"
+INTRO_VIDEO = Path(__file__).resolve().parents[1] / "assets" / "sec-filings-intro.mp4"
 
 BLUE, TEAL, PURPLE, AMBER, GREEN, ROSE, INDIGO, GREY = (
     "#2563eb", "#0d9488", "#7c3aed", "#d97706", "#16a34a", "#e11d48", "#4f46e5", "#64748b")
@@ -66,6 +67,8 @@ STATUS_INFO = {
 }
 
 CSS = """
+.st-key-home_intro video { border-radius: 14px; border: 1px solid rgba(128,128,128,0.28);
+                           background: #f4f1e8; }
 .hero { padding: 1.4rem 1.6rem; border-radius: 14px; margin-bottom: 1rem;
         border: 1px solid rgba(128,128,128,0.28);
         background: linear-gradient(135deg, rgba(37,99,235,0.13), rgba(124,58,237,0.10) 55%, rgba(13,148,136,0.10)); }
@@ -119,6 +122,13 @@ def feature_css() -> str:
 
 def inject_css() -> None:
     st.markdown(feature_css(), unsafe_allow_html=True)
+
+
+def render_intro() -> None:
+    """Play the bundled project introduction above the home-page content."""
+    if INTRO_VIDEO.is_file():
+        with st.container(key="home_intro"):
+            st.video(str(INTRO_VIDEO), autoplay=True, muted=True, loop=True)
 
 
 def available_features() -> list:

@@ -15,6 +15,7 @@ CHAT_PAGE = "2_Chatbot.py"
 STEPS = [(landing.BLUE, "Prepare a company"), (landing.TEAL, "Explore the changes"), (landing.PURPLE, "Read the evidence"),
          (landing.AMBER, "Get the summary"), (landing.INDIGO, "Ask questions")]
 
+landing.render_intro()
 st.markdown(landing.hero_html(STEPS), unsafe_allow_html=True)
 
 
