@@ -1,0 +1,259 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "83182d5c1f6c902f587ffbd39a55a74ed788ca8ef2b6060c6d97c089c4d8b14b",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D030",
+    "item": "7",
+    "target_topic": "Equity and Fixed Income Net Revenues composition - Part 1",
+    "target_summary": "The Equity and Fixed Income Net Revenues metric includes Commissions and fees and Asset management revenues.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0238",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2023 disclosure D030 defines the components of 'Equity and Fixed Income Net Revenues' as including Commissions/fees, Asset management, funding costs, and Investments/Other. The 2024 disclosures split these components into separate disclosures: D030 covers Commissions/fees and Asset management; D031 covers funding costs; D032 covers Investments/Other. All are from the same section and define the same aggregate metric.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D030",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Equity and Fixed Income Net Revenues include commissions, fees, asset management revenues, allocated funding costs, and investments and other revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D030",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes Commissions and fees and Asset management revenues.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D031",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes funding costs, which are allocated to the businesses based on funding usage.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D032",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes Investments and Other revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Unchanged",
+            "cosine_similarity": 1.0,
+            "sequence_match_ratio": 1.0,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "ms_2023_7_D030",
+            "score": 0.898005,
+            "normalised_score": 0.898,
+            "rationale": "Split: 1 previous → 3 current. Best pair scored 89.80% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The 2024 disclosures split a single 2023 definition into three separate disclosures for clarity. The components (Commissions/fees, Asset management, Funding costs, Investments/Other) and their definitions remain exactly the same. No substantive change in how the metric is calculated or reported.",
+          "key_change": "Formatting split of metric components"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0033",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in Item 7 for 2025. The 2024 disclosure defines the composition of Equity and Fixed Income Net Revenues (including Commissions and fees and Asset management revenues). The 2025 search did not return a disclosure defining this specific metric's composition. Hits like D175 discuss Asset Management Revenue Sensitivity, and D168 discusses Daily Net Trading Revenues, but none match the specific definition of the Equity and Fixed Income Net Revenues metric components.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D030",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes Commissions and fees and Asset management revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -9,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "1",
+              "includes",
+              "commissions",
+              "and",
+              "fees",
+              "and",
+              "asset",
+              "management",
+              "revenues"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure explicitly defines the components of the 'Equity and Fixed Income Net Revenues' metric (Commissions/fees and Asset management revenues). Its removal in 2025 eliminates transparency regarding how this key revenue stream is constructed, which is a meaningful change in financial disclosure substance.",
+          "key_change": "Removal of revenue metric component definition"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosures (bac_2024_7_D095, bac_2024_7_D090) focus on 'Merrill Wealth Management revenue' and 'Noninterest income' as aggregated buckets driven by asset management fees and brokerage fees. While these overlap with MS's topic of 'Equity and Fixed Income Net Revenues' which includes asset management, the specific MS disclosure is a narrow definition of a combined metric (Equity and Fixed Income) including commissions and asset management, whereas BAC's candidates focus on specific wealth management sub-segments or broader noninterest income. More importantly, BAC's disclosures do not discuss the specific 'Equity and Fixed Income Net Revenues' metric or its direct composition of commissions vs asset management in the same specific line-item definition manner as MS's target sentence. The BAC candidates describe drivers of specific business unit revenues rather than the definition of the combined 'Equity and Fixed Income' revenue line item."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosures (c_2024_7_D086, c_2024_7_D034) describe 'Services revenue' generation mechanisms and 'Spread products' revenue drivers. While c_2024_7_D086 mentions 'Commissions and fees', it categorizes them under 'Services revenue' generated from transactional services, distinct from the 'Equity and Fixed Income Net Revenues' metric described in the MS target. MS's target sentence defines a specific combined metric, whereas C's disclosure defines revenue streams by product type (spread vs fee) and accounting treatment (NII vs commissions) without referencing a combined 'Equity and Fixed Income' line item with the same composition scope."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D047",
+            "peer_topic": "Commissions and Fees and GM Credit Card Transition",
+            "peer_summary": "Commissions and fees were $4.09 billion in 2024, an 8% increase from 2023, driven by higher commissions and fees in Equities due to higher market volumes and increased transaction fees, partially offset by a loss related to the planned transition of the GM credit card program.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.191334,
+            "relationship": "same_topic",
+            "comparison": "Both MS and GS disclose specific line items for 'Commissions and fees' as a component of their revenue structures. However, GS provides explicit dollar amounts ($4.09 billion) and year-over-year growth (8%), attributing the increase to higher equity market volumes. MS only provides a textual definition of what is included in the metric (Commissions and fees and Asset management revenues) without providing the specific revenue composition amounts or growth drivers in this specific sentence.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P036_S001",
+                    "paragraph_id": "ms_2024_7_P036",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "1.Includes Commissions and fees and Asset management revenues.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D047",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P051_S001",
+                    "paragraph_id": "gs_2024_7_P051",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Commissions and fees in the consolidated statements of earnings were $4.09 billion for 2024, 8% higher than 2023, due to higher commissions and fees in Equities, reflecting generally higher market volumes and increased transaction fees, partially offset by a loss related to the planned transition of the GM credit card program to another issuer.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D034",
+            "peer_topic": "Commissions and Other Fee Drivers",
+            "peer_summary": "Commissions and other fees increased due to higher brokerage commissions and custody fees on higher volume in CIB and AWM, as well as higher annuity sales commissions in CCB.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.165411,
+            "relationship": "same_topic",
+            "comparison": "Both MS and JPM identify 'Commissions' as a key revenue driver. JPM provides specific detail on the volume and type of commissions (higher brokerage commissions, custody fees, annuity sales) driving increases in its segments. MS defines its 'Equity and Fixed Income Net Revenues' to include 'Commissions and fees' but does not break out the specific drivers or amounts for commissions in the provided text, whereas JPM explicitly links commission growth to transaction volume.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P036_S001",
+                    "paragraph_id": "ms_2024_7_P036",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "1.Includes Commissions and fees and Asset management revenues.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D034",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P055_S001",
+                    "paragraph_id": "jpm_2024_7_P055",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Commissions and other fees increased, predominantly due to higher brokerage commissions and fees on higher volume, and higher custody fees, in both CIB and AWM, as well as higher annuity sales commissions in CCB.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,346 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "33f6e519900e5e656e1a8be197215b0172e5c517de93ac510b4332ef0f896b87",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D112",
+    "item": "7",
+    "target_topic": "Average Deposits Increase",
+    "target_summary": "Average deposits of $545.8 billion increased by eight percent in 2024 compared to 2023 due to growth in both domestic and international balances.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0276",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specifically report on the change in average loans and leases for the Global Corporate, Commercial, and Business Banking segment. Bac_2023_7_D101 cites a 1% increase due to client demand, while bac_2024_7_D111 cites a 1% decrease due to lower client demand. They share the specific topic of loan/lease volume trends in this segment.\n\nWhile bac_2023_7_D101 covers both loans and deposits, bac_2024_7_D112 isolates the average deposits topic for the same segment (Global Corporate, Commercial, and Business Banking). Bac_2023_7_D101 reports a 1% decrease in deposits due to domestic balance declines, whereas bac_2024_7_D112 reports an 8% increase due to domestic and international growth. They share the specific topic of deposit volume trends in this segment.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D101",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average loans and leases increased by one percent in 2023 compared to 2022 due to client demand, while average deposits decreased by one percent due to declines in domestic balances.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D111",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average loans and leases of $373.1 billion decreased by one percent in 2024 compared to 2023 due to lower client demand.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_7_D112",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average deposits of $545.8 billion increased by eight percent in 2024 compared to 2023 due to growth in both domestic and international balances.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.697185,
+            "sequence_match_ratio": 0.631579,
+            "length_ratio": 1.375,
+            "word_count_delta": 12,
+            "added_tokens_sample": [
+              "of",
+              "373",
+              "1",
+              "billion",
+              "decreased",
+              "2024",
+              "2023",
+              "lower",
+              "of",
+              "545",
+              "8",
+              "billion",
+              "increased",
+              "eight",
+              "2024",
+              "2023",
+              "growth",
+              "both",
+              "and",
+              "international"
+            ],
+            "removed_tokens_sample": [
+              "increased",
+              "2023",
+              "2022",
+              "decreased",
+              "one",
+              "2023",
+              "2022",
+              "declines"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_7_D101",
+            "score": 0.851128,
+            "normalised_score": 0.8511,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 85.11% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.85,
+          "reason": "Average loans and leases shifted from a 1% increase to a 1% decrease, and average deposits shifted from a 1% decrease to an 8% increase. These opposing trends in core balance sheet items significantly change the company's liquidity and lending posture.",
+          "key_change": "Reversal in loan volume and deposit growth trends"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0333",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The previous year has two separate disclosures for Average Loans/Leases and Average Deposits. The current year combines both metrics into a single disclosure (D102) discussing the growth in both average loans and leases and average deposits. This represents a many-to-one mapping where the single 2025 disclosure covers the topics of both 2024 disclosures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D111",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average loans and leases of $373.1 billion decreased by one percent in 2024 compared to 2023 due to lower client demand.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_7_D112",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average deposits of $545.8 billion increased by eight percent in 2024 compared to 2023 due to growth in both domestic and international balances.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D102",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average loans and leases grew 3% to $385.3 billion and average deposits grew 13% to $616.8 billion in 2025 compared to 2024, attributed to client demand and growth from existing and new clients.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.675128,
+            "sequence_match_ratio": 0.623656,
+            "length_ratio": 1.113636,
+            "word_count_delta": 5,
+            "added_tokens_sample": [
+              "385",
+              "3",
+              "increased",
+              "three",
+              "2025",
+              "2024",
+              "616",
+              "13",
+              "2025",
+              "2024",
+              "deposit",
+              "balances",
+              "from",
+              "existing",
+              "clients",
+              "the",
+              "addition",
+              "of",
+              "new",
+              "clients"
+            ],
+            "removed_tokens_sample": [
+              "373",
+              "1",
+              "decreased",
+              "one",
+              "2024",
+              "2023",
+              "lower",
+              "545",
+              "eight",
+              "2024",
+              "2023",
+              "both",
+              "domestic",
+              "international",
+              "balances"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2024_7_D112",
+            "score": 0.840928,
+            "normalised_score": 0.8409,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 84.09% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.15,
+          "confidence_score": 0.9,
+          "reason": "The alignment merges two separate disclosures into one. The content itself (average loans/deposits figures and growth rates) is routine financial data. The merger of disclosures is a presentational change. The underlying data points are standard balance sheet metrics updated annually.",
+          "key_change": "Merger of separate loan and deposit disclosures into one"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D122",
+            "peer_topic": "Deposit and Loan Volume Changes",
+            "peer_summary": "Average deposits increased 2%, influenced by $17 billion in transfers from USPB, while average loans decreased 1% as the business optimized capital usage.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.108965,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and C reported year-over-year increases in average deposits for 2024, but they diverged significantly in magnitude and drivers. BAC reported an eight percent increase in average deposits to $545.8 billion due to general growth in domestic and international balances. In contrast, Citi reported a much smaller two percent increase in average deposits, which was driven specifically by the transfer of $17 billion in deposits from USPB, partially offset by a shift in deposits to higher-yielding investments on Citi's platform.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D112",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P120_S002",
+                    "paragraph_id": "bac_2024_7_P120",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Average deposits of $545.8 billion increased eight percent in 2024 compared to 2023 due to growth in both domestic and international balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D122",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P177_S001",
+                    "paragraph_id": "c_2024_7_P177",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Average deposits increased 2%, reflecting the transfers of relationships and the associated deposits from USPB ($17 billion at the time of transfer over the last 12 months), partially offset by a shift in deposits to higher-yielding investments on Citi's platform.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved GS candidates (gs_2024_7_D134, gs_2024_7_D051) focus on deposit composition details (insurance coverage, consumer platforms) and net interest income expense drivers, rather than specific period-over-period average deposit volume growth trends comparable to BAC's reported eight percent increase."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D299",
+            "peer_topic": "Deposit balance trends and drivers for 2024",
+            "peer_summary": "Average deposits increased in 2024 compared to 2023 due to growth in CIB (driven by Payments and structured notes) and AWM (higher-yielding products offset by migration), while CCB declined due to increased spending; period-end deposits similarly rose in CIB and AWM but fell in CCB.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.125158,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and JPM reported an increase in average deposits for 2024 compared to 2023. However, the scale and drivers differed: BAC’s average deposits of $545.8 billion grew by eight percent due to domestic and international balance growth. JPM’s firmwide average deposits rose by only one percent to $2.4 trillion, driven by increases in CIB (Payments/structured notes) and AWM, which were partially offset by declines in CCB due to increased customer spending.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D112",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P120_S002",
+                    "paragraph_id": "bac_2024_7_P120",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Average deposits of $545.8 billion increased eight percent in 2024 compared to 2023 due to growth in both domestic and international balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D299",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P430_S001",
+                    "paragraph_id": "jpm_2024_7_P430",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Average deposits increased for the year ended December 31, 2024 compared to the year ended December 31, 2023, reflecting:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P430_S002",
+                    "paragraph_id": "jpm_2024_7_P430",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• an increase in CIB due to net inflows predominantly in Payments and net issuances of structured notes as a result of client demand in Markets, partially offset by deposit attrition, which included actions taken to reduce certain deposits,",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P430_S004",
+                    "paragraph_id": "jpm_2024_7_P430",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• an increase in AWM as a result of growth in balances in new and existing client accounts, reflecting the impact of higher-yielding product offerings, largely offset by continued migration into other investments, and",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P430_S005",
+                    "paragraph_id": "jpm_2024_7_P430",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• a decline in CCB primarily driven by a decrease in balances in existing accounts due to increased customer spending, largely offset by new accounts.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved MS candidates (ms_2024_7_D179, ms_2024_7_D061) focus on Risk-Weighted Asset (RWA) increases and Wealth Management net interest revenue performance. They do not contain comparable data on firmwide average deposit volume changes for 2024."
+      }
+    ]
+  }
+}

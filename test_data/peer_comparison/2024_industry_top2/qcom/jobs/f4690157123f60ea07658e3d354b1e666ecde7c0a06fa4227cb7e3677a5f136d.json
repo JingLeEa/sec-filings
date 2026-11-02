@@ -1,0 +1,415 @@
+{
+  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
+  "request_hash": "7583bf6f9e86da12af6c6120a9d1669af19cd31cd5afe32643311af403fc6124",
+  "result": {
+    "target_ticker": "QCOM",
+    "target_disclosure_id": "qcom_2024_1A_D010",
+    "item": "1A",
+    "target_topic": "Cash Flow Impact from Revenue Reduction",
+    "target_summary": "Any reduction in revenues would impact cash resources available for other purposes, such as research and development.",
+    "target_source_status": "needs_review",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "qcom_2023_2024_M0041",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure (D010) states that revenue reduction impacts cash resources for R&D. The 2023 disclosure D001 mentions business/results negatively affected, but does not specify cash resources for R&D. D051 (2023) mentions R&D cuts due to legal outcomes. D010 (2024) is about revenue reduction impacting cash. There is no 2023 disclosure specifically linking revenue reduction from concentration to R&D cash resources. Thus, unmatched.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_1A_D010",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Any reduction in revenues would impact cash resources available for other purposes, such as research and development.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 20,
+            "added_tokens_sample": [
+              "any",
+              "such",
+              "reduction",
+              "in",
+              "revenues",
+              "would",
+              "also",
+              "impact",
+              "our",
+              "cash",
+              "resources",
+              "available",
+              "for",
+              "other",
+              "purposes",
+              "such",
+              "as",
+              "research",
+              "and",
+              "development"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.8,
+          "reason": "Links revenue reduction directly to constraints on cash resources for R&D. This creates a specific financial feedback loop risk (revenue drop -> less R&D cash) that was not explicitly articulated in the previous year's risk factors.",
+          "key_change": "Revenue impact on R&D liquidity"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "qcom_2024_2025_M0071",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review",
+          "verifier_requested_review"
+        ],
+        "explanation": "qcom_2024_1A_D002 describes the concentration of device share in the mobile industry, particularly at the premium tier, and the increase in share of certain Chinese OEMs from whom Qualcomm derives significant revenue. qcom_2025_1A_D024 addresses the impact of this concentration, noting that declines in premium-tier device sales and shifting consumer demand (including to refurbished devices) reduce revenues. It also mentions the pricing power of OEMs. While the specific mention of 'Chinese OEMs increasing share' is not in the 2025 summary text provided, the context of 'concentration of device share among a few companies' and the resulting revenue risk aligns with the topic of D002. The audit hits for D002 did not yield a better specific match for the 'Chinese OEM share increase' aspect, but D024 is the closest match for the 'premium tier concentration' aspect. However, looking at qcom_2025_1A_D073, it mentions 'China' and 'premium-tier handset products' in the context of smartphone penetration maturity. But D024's explicit mention of 'concentration of device share' links closer to D002's 'concentration of device share'. Let's verify if D024 covers the Chinese OEM aspect. The text fo",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_1A_D002",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "The mobile industry is experiencing concentration of device share among a few companies, particularly at the premium tier, and certain Chinese OEMs have increased their share, from whom Qualcomm derives significant revenue.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "qcom_2024_1A_D008",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Operations & Capacity",
+            "summary": "Qualcomm spends significant resources understanding customer feedback; these efforts may not result in purchase commitments, leading to lower-than-expected purchases, unanticipated revenues, or non-recoverable costs.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "qcom_2024_1A_D009",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Loss of significant customers, reduction in purchases, or cancellation of purchases due to vertical integration, government restrictions, economic conditions, consumer demand shifts, or inventory levels would reduce revenues and harm results of operations.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "qcom_2024_1A_D010",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Any reduction in revenues would impact cash resources available for other purposes, such as research and development.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "qcom_2024_1A_D011",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Concentration of device share among few companies may result in lower prices for products, adversely affecting revenues and margins.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "qcom_2024_1A_D012",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Timing and size of purchases may be impacted by customer product introductions, over which Qualcomm has no control, causing revenues and results of operations to fluctuate.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "qcom_2024_1A_D015",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Reductions in sales of premium-tier integrated circuit products, shifts in share away from OEMs utilizing premium-tier products, or shifts to refurbished devices would reduce revenues, margins, and impact cash resources for R&D.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2025_1A_D024",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Qualcomm’s revenues, cash flows, and margins are significantly impacted by customer purchasing timing, product development cycles, and the concentration of device share among a few companies. Declines in premium-tier device sales, shifting consumer demand to refurbished devices, and the resulting pricing power of OEMs may lead to lower prices and reduced revenue contributions from premium integrated circuit products. Engineering efforts to incorporate customer feedback may not result in purchase commitments or recoverable costs, while delays in significant purchases further reduce revenues and available cash resources.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1A_D038",
+            "peer_topic": "Arm ecosystem and R&D investment risks",
+            "peer_summary": "Increased adoption of Arm-based semiconductor designs could lead to further growth of the Arm ecosystem, while AMD may face delays or disruptions in R&D efforts or be required to invest significantly greater resources in R&D than anticipated.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.064864,
+            "relationship": "related_topic",
+            "comparison": "Both QCOM and AMD disclose risks that their cash resources and R&D capabilities are vulnerable to external market shifts and strategic uncertainties. QCOM specifically highlights that revenue reductions directly constrain cash available for R&D, whereas AMD highlights that adoption trends in the Arm ecosystem may force AMD to invest significantly greater R&D resources than anticipated, or face delays. Both link operational/strategic pressures directly to R&D resource constraints.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1A_D010",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P007_S003",
+                    "paragraph_id": "qcom_2024_1A_P007",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Any such reduction in revenues would also impact our cash resources available for other purposes, such as research and development.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_1A_D038",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1A_P015_S007",
+                    "paragraph_id": "amd_2024_1A_P015",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We may also face delays or disruptions in research and development efforts, or we may be required to invest significantly greater resources in research and development than anticipated.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_1A_D054",
+            "peer_topic": "R&D Investment Risks and AI Technology Development",
+            "peer_summary": "Significant investments in research and development carry the risk of slow or unsuccessful returns, particularly in developing advanced technologies like custom AI accelerators and XPUs; failure to timely develop these or focus on non-adopted technologies could impair competitive position and negatively impact financial results.",
+            "peer_taxonomy": "Technology & AI",
+            "retrieval_score": 0.066402,
+            "relationship": "same_topic",
+            "comparison": "Both companies identify research and development investment as a critical area where financial outcomes are at risk due to execution or market adoption. QCOM frames this through the lens of revenue reduction impacting cash for R&D, while AVGO explicitly states that slow or unsuccessful returns on R&D investments (specifically in AI accelerators) could adversely affect financial results. Both acknowledge the necessity of significant R&D spend and the associated financial risk if those investments do not yield expected returns or revenue.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1A_D010",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P007_S003",
+                    "paragraph_id": "qcom_2024_1A_P007",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Any such reduction in revenues would also impact our cash resources available for other purposes, such as research and development.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_1A_D054",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1A_P044_S006",
+                    "paragraph_id": "avgo_2024_1A_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Increased investments in research and development, or slow or unsuccessful research and development efforts, would have a negative impact on our financial results.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_1A_D010",
+            "peer_topic": "Risks of Smart Capital Strategy, Financing, and Government Grants",
+            "peer_summary": "Intel's Smart Capital approach, including joint investments with partners like Brookfield and Apollo and reliance on government grants like CHIPS Act funding, faces risks such as unfavorable terms, failure to meet metrics, partner default, and compliance restrictions that could materially adversely affect the business.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.042258,
+            "relationship": "same_topic",
+            "comparison": "Both QCOM and INTC disclose risks where specific business strategies or external dependencies threaten the company's ability to maintain sufficient cash flows for capital needs like R&D. QCOM warns that revenue reductions limit cash for R&D, while INTC warns that its 'Smart Capital' approach and reliance on government grants may fail to provide sufficient capital for required investments. Both highlight that failure to secure adequate capital or revenue can materially impact their ability to fund core business activities.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1A_D010",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P007_S003",
+                    "paragraph_id": "qcom_2024_1A_P007",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Any such reduction in revenues would also impact our cash resources available for other purposes, such as research and development.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_1A_D010",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1A_P023_S003",
+                    "paragraph_id": "intc_2024_1A_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "However, any amounts, if any, we may receive under any agreements enabled by such legislation may not be sufficient in amount or timeliness to support our capital investment plans and offset the higher costs of operations in many of the locations of our facilities as compared to those of many of our competitors, we may be unable to comply with the requirements and limitations of any such grants and incentives, or such agreements may contain restrictions that limit our flexibility to pursue changes in business strategy or transactions that may enhance stockholder value.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_1A_D066",
+            "peer_topic": "Share repurchase program specifics",
+            "peer_summary": "Share repurchases may fluctuate based on cash flow and priorities; expenditures were $300 million in 2024, and the Board has authorized up to $10 billion in repurchases, though there is no obligation to purchase any specific amount or enhance shareholder value.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.086488,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures concern the impact of cash allocation decisions on available resources. QCOM states that revenue reductions negatively impact cash available for R&D, while MU states that share repurchases diminish cash reserves and reduce availability of cash for other business purposes like investments. Both highlight the trade-off between returning capital to shareholders (or losing it due to revenue drops) and maintaining liquidity for operational growth and R&D.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1A_D010",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P007_S003",
+                    "paragraph_id": "qcom_2024_1A_P007",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Any such reduction in revenues would also impact our cash resources available for other purposes, such as research and development.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1A_D066",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1A_P133_S003",
+                    "paragraph_id": "mu_2024_1A_P133",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In addition, this program is a use of cash, which may reduce the availability of cash for other business purposes, including investments, acquisitions, dividends, or repayment of indebtedness.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_1A_D043",
+            "peer_topic": "Operating Results Fluctuation and Payment Terms",
+            "peer_summary": "Operating results have fluctuated and may continue to fluctuate due to factors such as product development cycles, vendor payment requirements, and extended customer payment terms. These arrangements, particularly during economic downturns, can impact cash flow availability and collection risk, potentially leading to stock price volatility if results miss expectations.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.072953,
+            "relationship": "same_topic",
+            "comparison": "Both QCOM and NVDA disclose that factors impacting their operating results and cash flows can reduce the cash available for general business operations, including R&D and development. QCOM specifically cites revenue reductions impacting cash for R&D, while NVDA cites extended payment terms and vendor requirements that reduce cash available for operations. Both emphasize the sensitivity of their operational liquidity to revenue collection and payment cycle dynamics.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1A_D010",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P007_S003",
+                    "paragraph_id": "qcom_2024_1A_P007",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Any such reduction in revenues would also impact our cash resources available for other purposes, such as research and development.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_1A_D043",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1A_P065_S004",
+                    "paragraph_id": "nvda_2024_1A_P065",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "These arrangements reduce the cash we have available for general business operations.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,361 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "9352becbd8c81a02ea90c9d1ac70cc1bf93e83a6b5a74d08f0a1d11a33688bcc",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_8_D155",
+    "item": "8",
+    "target_topic": "Fair value option loans 2024",
+    "target_summary": "Footnote (3) for the 2024 period lists consumer loans accounted for under the fair value option, including residential mortgage and home equity loans, as well as commercial loans under the fair value option.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0668",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures correspond to footnote (3) listing consumer and commercial loans accounted for under the fair value option. D170 provides 2023 data, D155 provides 2024 data. They share the specific subject matter.\n\nD170 (2023) matches D161 (2023 data in 2024 filing) as both contain footnote (3) data for the year 2023. This is a same-year comparison link.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_8_D170",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans accounted for under the fair value option included specific amounts of residential mortgage, home equity, and commercial loans for both consumer and commercial segments in 2023 and 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D155",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (3) for the 2024 period lists consumer loans accounted for under the fair value option, including residential mortgage and home equity loans, as well as commercial loans under the fair value option.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D161",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (3) for the 2023 period lists consumer loans accounted for under the fair value option, including residential mortgage and home equity loans, as well as commercial loans under the fair value option.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.983648,
+            "sequence_match_ratio": 0.5,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "3",
+              "consumer",
+              "loans",
+              "accounted",
+              "for",
+              "under",
+              "the",
+              "fair",
+              "value",
+              "option",
+              "includes",
+              "residential",
+              "mortgage",
+              "loans",
+              "of",
+              "59",
+              "million",
+              "and",
+              "home",
+              "equity"
+            ],
+            "removed_tokens_sample": [
+              "3",
+              "consumer",
+              "loans",
+              "accounted",
+              "for",
+              "under",
+              "the",
+              "fair",
+              "value",
+              "option",
+              "includes",
+              "residential",
+              "mortgage",
+              "loans",
+              "of",
+              "71",
+              "million",
+              "and",
+              "home",
+              "equity"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_8_D170",
+            "score": 1.006724,
+            "normalised_score": 1.0067,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 100.67% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.55,
+          "confidence_score": 0.95,
+          "reason": "The disclosure updates the fair value option loan balances, noting a decrease in residential mortgage loans ($66M to $59M) and an increase in U.S. commercial loans ($2.2B to $2.8B). These changes reflect shifts in the specific portfolio segments accounted for under the fair value option, altering the company's reported fair value exposure.",
+          "key_change": "Updated fair value option loan balances"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0701",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "missing_review_metadata",
+          "verifier_requested_review"
+        ],
+        "explanation": "Both disclosures detail the composition of loans accounted for under the fair value option. The 2024 disclosure (D155) cites consumer loans ($59M residential, $162M home equity) and commercial loans ($2.8B US, $1.3B non-US). The 2025 disclosure (D159) cites corresponding consumer loans ($58M residential, $107M home equity) and commercial loans ($2.1B US, $1.2B non-US) in footnotes (3) of the same section. Although D159 is a composite disclosure, it contains the specific fair value option data that matches D155's topic.\n\nThe 2024 disclosure (D160) reports the composition of total outstandings for auto/securities-based/non-US consumer loans ($53.9B, $46.0B, $2.8B). The 2025 disclosure (D159) reports the same components for the current year ($55.3B, $55.0B, $3.0B) in footnote (2). This is a direct year-over-year comparison of the same specific outstandings topic.\n\nThe 2024 disclosure (D157) reports U.S. and non-U.S. commercial real estate loan outstandings ($59.6B, $6.1B). The 2025 disclosure (D159) reports the corresponding amounts ($62.7B, $6.0B) in footnote (4). They share the same specific subject: CRE loan outstandings.\n\nThe 2024 disclosure (D162) reports U.S. and non-U.S. commer",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D154",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (2) for the 2024 period identifies that total outstandings primarily include auto and specialty lending loans of $54.9 billion, U.S. securities-based lending loans of $48.7 billion, and non-U.S. consumer loans of $2.8 billion.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D155",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (3) for the 2024 period lists consumer loans accounted for under the fair value option, including residential mortgage and home equity loans, as well as commercial loans under the fair value option.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D157",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (4) for the 2024 period reports that total outstandings include U.S. commercial real estate loans of $59.6 billion and non-U.S. commercial real estate loans of $6.1 billion.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D160",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (2) for the 2023 period identifies that total outstandings primarily include auto and specialty lending loans of $53.9 billion, U.S. securities-based lending loans of $46.0 billion, and non-U.S. consumer loans of $2.8 billion.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D162",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (4) for the 2023 period reports that total outstandings include U.S. commercial real estate loans of $66.8 billion and non-U.S. commercial real estate loans of $6.1 billion.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_8_D159",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total outstandings for Other Consumer and Commercial segments primarily comprised $55.3 billion in auto and specialty lending loans and leases, $55.0 billion in U.S. securities-based lending, and $3.0 billion in non-U.S. consumer loans. U.S. commercial real estate loans totaled $62.7 billion and non-U.S. commercial real estate loans were $6.0 billion. Loans and leases pledged as collateral amounted to $39.5 billion, with an additional $313.7 billion pledged to secure potential borrowing capacity with the Federal Reserve Bank and Federal Home Loan Bank.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for Citigroup (C) discuss equity method accounting for significant influence and held-for-investment loans accounted for on an amortized cost basis. These topics are conceptually inverse to the target's topic (fair value option loans) and do not disclose instruments accounted for under the fair value option, making them substantively incomparable to the specific fair value election disclosures in the target."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D325",
+            "peer_topic": "Time deposits accounted for at fair value",
+            "peer_summary": "Time deposits included $44.86 billion as of December 2024 and $29.46 billion as of December 2023 accounted for at fair value under the fair value option.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.23365,
+            "relationship": "same_topic",
+            "comparison": "Both Bank of America (BAC) and Goldman Sachs (GS) disclose specific line items that have elected the fair value option, providing quantitative breakdowns. BAC specifically lists consumer loans (residential mortgage and home equity) and commercial loans under this option. GS provides similar specificity for liabilities, disclosing that time deposits included $44.86 billion as of December 2024 were accounted for at fair value under the fair value option.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D155",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P191_S001",
+                    "paragraph_id": "bac_2024_8_P191",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "(3)Consumer loans accounted for under the fair value option includes residential mortgage loans of $59 million and home equity loans of $162 million.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P191_S002",
+                    "paragraph_id": "bac_2024_8_P191",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Commercial loans accounted for under the fair value option includes U.S. commercial loans of $2.8 billion and non-U.S. commercial loans of $1.3 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D325",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P428_S003",
+                    "paragraph_id": "gs_2024_8_P428",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Time deposits included $44.86 billion as of December 2024 and $29.46 billion as of December 2023 of deposits accounted for at fair value under the fair value option. See Note 10 for further information about deposits accounted for at fair value.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D117",
+            "peer_topic": "Fair value option election for lending-related commitments",
+            "peer_summary": "As of December 31, 2024 and 2023, the contractual amount of lending-related commitments for which the fair value option was elected was $12.2 billion and $9.7 billion, respectively, with corresponding fair values of $50 million and $97 million.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.149844,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and JPMorgan Chase (JPM) utilize the fair value option for lending-related instruments, though BAC reports on outstanding loan balances while JPM reports on lending-related commitments. BAC lists consumer and commercial loans under the fair value option, whereas JPM discloses that the contractual amount of lending-related commitments for which the fair value option was elected was $12.2 billion as of December 31, 2024.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D155",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P191_S001",
+                    "paragraph_id": "bac_2024_8_P191",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "(3)Consumer loans accounted for under the fair value option includes residential mortgage loans of $59 million and home equity loans of $162 million.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D117",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P194_S001",
+                    "paragraph_id": "jpm_2024_8_P194",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "At December 31, 2024 and 2023, the contractual amount of lending-related commitments for which the fair value option was elected was $12.2 billion and $9.7 billion, respectively, with a corresponding fair value of $50 million and $97 million, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D079",
+            "peer_topic": "Accounting treatment of loans at fair value",
+            "peer_summary": "Loans for which the fair value option is elected are carried at fair value within Trading assets, with changes recognized in earnings. This accounting treatment excludes these loans from the allowance for credit losses and charge-off policies.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.136855,
+            "relationship": "same_topic",
+            "comparison": "BAC and Morgan Stanley (MS) both disclose the accounting treatment for loans where the fair value option is elected, noting that these instruments are reported at fair value. BAC's footnote details the composition of these loans, while MS explicitly states that such loans are included in Trading assets and that changes in fair value are recognized in earnings, excluding them from allowance for credit losses policies.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D155",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P191_S002",
+                    "paragraph_id": "bac_2024_8_P191",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Commercial loans accounted for under the fair value option includes U.S. commercial loans of $2.8 billion and non-U.S. commercial loans of $1.3 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D079",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P104_S001",
+                    "paragraph_id": "ms_2024_8_P104",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Loans for which the fair value option is elected are carried at fair value and included in Trading assets in the balance sheet, with changes in fair value recognized in earnings.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P106_S001",
+                    "paragraph_id": "ms_2024_8_P106",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Because such loans and lending commitments are reported at fair value, the allowance for credit losses and charge-off policies do not apply to these loans.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

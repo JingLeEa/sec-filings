@@ -8,55 +8,18 @@ from __future__ import annotations
 import csv
 import io
 import json
-from dataclasses import dataclass
 from pathlib import Path
 
-from . import config
-from .data import DataError, _postgres_connection
+from . import config, data as ui_data
+from .data import DataError
 
 
 # --------------------------------------------------------------------------- synthesis
 
 
-@dataclass(frozen=True)
-class DatabaseSynthesis:
-    company: str
-    years: tuple
-
-    @property
-    def name(self):
-        return f"{self.company}_{min(self.years)}_{max(self.years)}_synthesis_output.json"
-
-    @property
-    def stem(self):
-        return Path(self.name).stem
-
-    def __str__(self):
-        return f"PostgreSQL · {self.company} · {','.join(map(str, self.years))}"
-
-
-def _database_synthesis():
-    try:
-        with _postgres_connection() as conn, conn.cursor() as cur:
-            cur.execute("SELECT to_regclass('synthesis_reports')")
-            if cur.fetchone()[0] is None:
-                return []
-            cur.execute("SELECT company,years FROM synthesis_reports ORDER BY company,years")
-            return [DatabaseSynthesis(company, tuple(years)) for company, years in cur.fetchall() if years]
-    except Exception as error:
-        raise DataError(f"Could not read synthesis reports from PostgreSQL ({type(error).__name__}).") from None
-
-
 def list_synthesis_files() -> list:
-    """Prefer current database reports, with legacy JSON reports when configured."""
+    """Synthesis output JSON files found in the configured folders."""
     found = []
-    if config.data_source_mode() in {"auto", "postgres"}:
-        try:
-            found.extend(_database_synthesis())
-        except DataError:
-            if config.data_source_mode() == "postgres":
-                raise
-    database_scopes = {(entry.company.upper(), entry.years) for entry in found}
     for folder in config.synthesis_dirs():
         if not folder.is_dir():
             continue
@@ -66,30 +29,22 @@ def list_synthesis_files() -> list:
             except (OSError, ValueError):
                 continue
             if isinstance(head, dict) and "report" in head and "source_catalog" in head:
-                if (str(head.get("company", "")).upper(), tuple(head.get("years", []))) not in database_scopes:
-                    found.append(path)
+                found.append(path)
     return found
 
 
 def load_synthesis(path) -> dict:
+    path = Path(path)
     try:
-        if isinstance(path, DatabaseSynthesis):
-            with _postgres_connection() as conn, conn.cursor() as cur:
-                cur.execute("SELECT report FROM synthesis_reports WHERE company=%s AND years=%s::integer[]",
-                            (path.company, list(path.years)))
-                row = cur.fetchone()
-            if row is None:
-                raise DataError("This synthesis report is no longer available. Reload the report list.")
-            data = row[0] if isinstance(row[0], dict) else json.loads(row[0])
-        else:
-            path = Path(path)
-            data = json.loads(path.read_text(encoding="utf-8"))
-    except DataError:
-        raise
-    except Exception as error:
-        raise DataError(f"Could not read synthesis output ({type(error).__name__}).") from None
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        raise DataError(f"Could not read {path.name}: {error}") from error
+    return _normalise_synthesis(data, path.name)
+
+
+def _normalise_synthesis(data, name: str) -> dict:
     if not isinstance(data, dict) or not isinstance(data.get("report"), dict):
-        raise DataError(f"{path.name} does not look like a synthesis output (no 'report' section).")
+        raise DataError(f"{name} does not look like a synthesis output (no 'report' section).")
     data.setdefault("source_catalog", {})
     data.setdefault("financial_trends", [])
     data.setdefault("financial_metrics", [])
@@ -100,17 +55,51 @@ def load_synthesis(path) -> dict:
     return data
 
 
+def _synthesis_query(sql: str, parameters=()) -> list:
+    try:
+        with ui_data._postgres_connection() as conn, conn.cursor() as cursor:
+            conn.read_only = True
+            cursor.execute("SELECT to_regclass(%s)", ("synthesis_reports",))
+            if cursor.fetchone()[0] is None:
+                return []
+            cursor.execute(sql, parameters)
+            return cursor.fetchall()
+    except DataError:
+        raise
+    except Exception:
+        raise DataError("Could not read synthesis reports from PostgreSQL. Check the database connection and schema.") from None
+
+
+def list_synthesis_reports() -> list[dict]:
+    """Database report metadata, newest first, without fetching every report body."""
+    rows = _synthesis_query(
+        "SELECT company, years, generated_at FROM synthesis_reports "
+        "ORDER BY generated_at DESC, company, years"
+    )
+    return [dict(company=company, years=years, generated_at=generated_at)
+            for company, years, generated_at in rows]
+
+
+def load_synthesis_report(company: str, years: list[int]) -> dict:
+    """Read the same complete output that the synthesis backend saves."""
+    rows = _synthesis_query(
+        "SELECT report FROM synthesis_reports WHERE company=%s AND years=%s::integer[]",
+        (company.upper(), list(years)),
+    )
+    if not rows:
+        raise DataError("The selected synthesis report is no longer available. Reload saved reports.")
+    return _normalise_synthesis(rows[0][0], f"{company.upper()} synthesis report")
+
+
 def synthesis_label(path, data=None) -> str:
     if data is None:
         try:
             data = load_synthesis(path)
         except DataError:
-            return path.name if isinstance(path, DatabaseSynthesis) else Path(path).name
+            return Path(path).name
     years = data.get("years") or []
     span = f"{min(years)}-{max(years)}" if years else "years not stated"
-    if years and isinstance(path, DatabaseSynthesis):
-        span = ", ".join(map(str, years))
-    return f"{data.get('company', path.stem if isinstance(path, DatabaseSynthesis) else Path(path).stem)} {span}"
+    return f"{data.get('company', Path(path).stem)} {span}"
 
 
 def evidence_for(data: dict, evidence_id: str) -> dict | None:
@@ -243,7 +232,7 @@ def list_peer_files() -> list:
     root = config.peer_dir()
     if not root.is_dir():
         return []
-    return sorted(root.glob("*/*/peer_comparison.json"))
+    return sorted({*root.glob("*/*/peer_comparison.json"), *root.glob("*/*/*/peer_comparison.json")})
 
 
 def load_peer(path) -> dict:

@@ -1,0 +1,326 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "df8e0b50bade7da388f140117b0dc0b44c0b8fa271af59113d7d9c5a510e8806",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_1A_D012",
+    "item": "1A",
+    "target_topic": "Climate Change Impact on Credit Risk",
+    "target_summary": "Climate change may negatively impact client financial conditions, decreasing revenues and increasing credit risk associated with loans and other exposures.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0100",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specifically address the longer-term impact of climate change on client financial conditions, noting that it may decrease revenues and increase credit risk associated with loans and other exposures. This is a distinct topic from the general credit risk models or collateral foreclosure risks.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_1A_D013",
+            "item": "1A",
+            "section": "Risk Factors > Credit Risk",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Sudden declines in collateral value or liquidity can result in significant losses even with monitoring and over-collateralization, and climate change may negatively impact client financial conditions, thereby increasing associated credit risk.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_1A_D012",
+            "item": "1A",
+            "section": "Risk Factors > Credit Risk",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Climate change may negatively impact client financial conditions, decreasing revenues and increasing credit risk associated with loans and other exposures.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.680669,
+            "sequence_match_ratio": 0.583333,
+            "length_ratio": 0.411765,
+            "word_count_delta": -60,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "in",
+              "cases",
+              "where",
+              "we",
+              "foreclose",
+              "on",
+              "collateral",
+              "sudden",
+              "declines",
+              "in",
+              "the",
+              "value",
+              "or",
+              "liquidity",
+              "of",
+              "collateral",
+              "may",
+              "result",
+              "in",
+              "significant"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_1A_D013",
+            "score": 0.868253,
+            "normalised_score": 0.8683,
+            "label": "Reduced",
+            "rationale": "Score 86.83% of ceiling — content shrank from ~101 to ~42 words (0.4×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure removes the first sentence regarding sudden declines in collateral value or liquidity, retaining only the sentence about climate change. However, the retained sentence regarding climate change is identical to the corresponding sentence in 2023. The removal of the collateral liquidity risk here likely reflects a move to a different disclosure section (as seen in M0099 where collateral risk was discussed with valuation models), rather than a removal of the risk itself from the filing. The specific climate change risk disclosed remains unchanged.",
+          "key_change": "Isolation of climate change credit risk disclosure"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0001",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in 2025. The 2024 disclosure specifically addresses climate change's negative impact on client financial conditions and credit risk. While 2025 has disclosures on climate risk (D062, D063), they focus on reputational harm, regulatory uncertainty, and data/methodology challenges rather than the direct impact on client financial conditions and credit risk from climate change itself. The search results did not identify a 2025 disclosure matching this specific credit risk pathway.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_1A_D012",
+            "item": "1A",
+            "section": "Risk Factors > Credit Risk",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Climate change may negatively impact client financial conditions, decreasing revenues and increasing credit risk associated with loans and other exposures.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -42,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "in",
+              "addition",
+              "in",
+              "the",
+              "longer",
+              "term",
+              "climate",
+              "change",
+              "may",
+              "have",
+              "a",
+              "negative",
+              "impact",
+              "on",
+              "the",
+              "financial",
+              "condition",
+              "of",
+              "our",
+              "clients"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "Removal of the specific disclosure linking climate change to client financial conditions and credit risk. While general climate risk remains, the explicit connection to loan/credit exposure losses is no longer stated, materially narrowing the disclosed risk scope.",
+          "key_change": "Removal of climate-to-credit-risk linkage"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_1A_D018",
+            "peer_topic": "Consumer and commercial real estate concentrations",
+            "peer_summary": "Significant credit risk concentrations exist in consumer real estate, consumer credit cards, and commercial real estate and asset manager portfolios, which could face higher losses from declining valuations, climate change impacts, and economic weaknesses.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.103592,
+            "relationship": "same_topic",
+            "comparison": "Both MS and BAC disclose that climate change impacts (such as extreme weather and rising temperatures/sea levels) can negatively affect collateral valuations and borrower ability to pay, leading to increased credit risk. MS broadly states that climate change increases 'credit risk associated with loans'. BAC provides specific mechanisms within its concentration risks, noting that 'impacts of... climate change... could negatively impact collateral, the valuations of home or commercial real estate or our clients' ability and/or willingness to pay... outstanding loans'. While MS does not specify real estate collateral in the cited sentence, the shared topic is the transmission of climate risk to credit losses via borrower health and collateral value.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_1A_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_1A_P018_S005",
+                    "paragraph_id": "ms_2024_1A_P018",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In addition, in the longer term, climate change may have a negative impact on the financial condition of our clients, which may decrease revenues from those clients and increase the credit risk associated with loans and other credit exposures to those clients.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1A_D018",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1A_P045_S003",
+                    "paragraph_id": "bac_2024_1A_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The impacts of earthquakes, as well as climate change, such as rising average global temperatures and sea levels, and the increasing frequency and severity of extreme weather events and natural disasters, including droughts, floods, wildfires and hurricanes, could negatively impact collateral, the valuations of home or commercial real estate or our clients' ability and/or willingness to pay fees, outstanding loans or afford new products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_1A_D009",
+            "peer_topic": "Climate change risks",
+            "peer_summary": "Climate change presents physical risks (acute and chronic events damaging assets and supply chains) and transition risks (regulatory and market shifts affecting asset values and revenues in carbon-intensive sectors). These risks impact Citi's credit exposures and business strategy. Additionally, Citi faces regulatory and litigation risks related to its sustainability commitments and disclosures, which may be scrutinized if perceived as overstated. Data limitations and evolving modeling capabilities further hamper the ability to analyze and comply with climate risk requirements.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.086788,
+            "relationship": "same_topic",
+            "comparison": "Both MS and Citi (C) discuss how climate change, specifically through physical risks, impacts credit exposures. MS notes the general increase in 'credit risk associated with loans' due to client financial conditions. Citi elaborates that 'Physical risks can also impact Citi's credit risk exposures, for example, in its mortgage and commercial real estate lending businesses.' Both companies link climate events to credit risk, with Citi providing more specific detail on the asset classes (mortgage and CRE) affected by physical risks compared to MS's general statement.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_1A_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_1A_P018_S005",
+                    "paragraph_id": "ms_2024_1A_P018",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In addition, in the longer term, climate change may have a negative impact on the financial condition of our clients, which may decrease revenues from those clients and increase the credit risk associated with loans and other credit exposures to those clients.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1A_D009",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1A_P029_S004",
+                    "paragraph_id": "c_2024_1A_P029",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Physical risks can also impact Citi's credit risk exposures, for example, in its mortgage and commercial real estate lending businesses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_1A_D112",
+            "peer_topic": "Climate Change Physical and Transition Risks",
+            "peer_summary": "Climate change may disrupt operations, reduce insurance availability, and negatively impact client and counterparty financial conditions, thereby decreasing revenues and increasing credit risk, while also potentially affecting broader economic stability.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.386383,
+            "relationship": "same_topic",
+            "comparison": "Both Morgan Stanley (MS) and Goldman Sachs (GS) explicitly identify climate change as a factor that may negatively impact the financial condition of clients, thereby increasing credit risk associated with loans and exposures. MS states generally that climate change 'may have a negative impact on the financial condition of our clients... and increase the credit risk associated with loans'. GS similarly specifies that climate change 'may have a negative impact on the operations or financial condition of our clients and counterparties, which may decrease revenues from those clients and counterparties and increase the credit risk associated with loans'. GS also highlights operational disruptions and insurance costs as additional channels for climate risk, whereas MS focuses the cited text specifically on the client financial condition outcome.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_1A_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_1A_P018_S005",
+                    "paragraph_id": "ms_2024_1A_P018",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In addition, in the longer term, climate change may have a negative impact on the financial condition of our clients, which may decrease revenues from those clients and increase the credit risk associated with loans and other credit exposures to those clients.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1A_D112",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1A_P188_S002",
+                    "paragraph_id": "gs_2024_1A_P188",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Climate change and the transition to a less carbon-dependent economy may also have a negative impact on the operations or financial condition of our clients and counterparties, which may decrease revenues from those clients and counterparties and increase the credit risk associated with loans and other credit exposures to those clients and counterparties.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of JPMorgan's candidate disclosures (jpm_2024_1A_D005, jpm_2024_1A_D037) mention climate change. They define credit risk in terms of general financial condition changes, collateral declines, and concentration risks without the specific climate-related drivers found in the MS disclosure. Without climate context, there is no substantive comparison on the specific topic of Climate Change Impact on Credit Risk."
+      }
+    ]
+  }
+}

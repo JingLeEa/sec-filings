@@ -1,0 +1,264 @@
+{
+  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
+  "request_hash": "95411c2de72d806cabe7c6bbf32dfc95a5b32ec9796346081195c2fd1bf1d84d",
+  "result": {
+    "target_ticker": "AMD",
+    "target_disclosure_id": "amd_2024_1A_D003",
+    "item": "1A",
+    "target_topic": "Dependency on significant customers",
+    "target_summary": "The loss of a significant customer could have a material adverse effect on AMD's business.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "amd_2023_2024_M0057",
+        "relationship": "one_to_one",
+        "status": "auto_matched",
+        "review_reasons": [],
+        "explanation": "The complete selected original text is identical within the same SEC Item after removing line-leading bullet formatting and normalizing whitespace. Neither LLM agent was used for this link.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2023_1A_D005",
+            "item": "1A",
+            "section": "Economic and Strategic Risks",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "The loss of a significant customer may have a material adverse effect on the company.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2024_1A_D003",
+            "item": "1A",
+            "section": "Economic and Strategic Risks",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "The loss of a significant customer could have a material adverse effect on AMD's business.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Unchanged",
+            "cosine_similarity": 1.0,
+            "sequence_match_ratio": 1.0,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "amd_2023_1A_D005",
+            "score": 0.990181,
+            "normalised_score": 0.9902,
+            "label": "Unchanged",
+            "rationale": "Score 99.02% of ceiling — semantically identical despite surface differences (word overlap 80%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.0,
+          "confidence_score": 1.0,
+          "reason": "The aligned disclosures are exact-text matches under the automatic matching policy, so no meaningful disclosure change is identified.",
+          "key_change": "No substantive change"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "amd_2024_2025_M0077",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures focus on the specific risk that the loss or financial distress of a significant/small number of key customers could have a material adverse effect on AMD's business. D003 explicitly states the loss of a significant customer may have a material adverse effect. D052 expands on this by stating dependence on a small number of customers for substantial revenue and the adverse effect if they stop buying or fail to pay. D039 combines these concepts, citing the loss of a significant customer and dependence on a small number of customers for substantial revenue and receivables.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2024_1A_D003",
+            "item": "1A",
+            "section": "Economic and Strategic Risks",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "The loss of a significant customer could have a material adverse effect on AMD's business.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "amd_2024_1A_D052",
+            "item": "1A",
+            "section": "Economic and Strategic Risks",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "AMD depends on a small number of customers for a substantial portion of its business, making it vulnerable to material adverse effects if any key customer stops buying, reduces operations, or fails to pay liabilities.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2025_1A_D039",
+            "item": "1A",
+            "section": "Economic and Strategic Risks",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "AMD depends on a small number of customers for a substantial portion of its business and revenue; the loss or financial distress of these key customers would materially adversely affect the company. This risk is heightened by uncertain global economic conditions, which may cause customers to delay purchases, fail to pay receivables, or become insolvent, while also increasing supplier risks and borrowing costs for AMD.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.728272,
+            "sequence_match_ratio": 0.303694,
+            "length_ratio": 4.848,
+            "word_count_delta": 481,
+            "added_tokens_sample": [
+              "economic",
+              "and",
+              "market",
+              "uncertainty",
+              "may",
+              "adversely",
+              "impact",
+              "our",
+              "business",
+              "and",
+              "operating",
+              "results",
+              "uncertain",
+              "global",
+              "or",
+              "regional",
+              "economic",
+              "conditions",
+              "have",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "the",
+              "loss",
+              "of",
+              "a",
+              "significant",
+              "customer",
+              "may",
+              "have",
+              "a",
+              "material",
+              "adverse",
+              "effect",
+              "on",
+              "us"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "amd_2024_1A_D052",
+            "score": 0.918301,
+            "normalised_score": 0.9183,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 91.83% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The 2025 disclosure expands the customer concentration risk by adding specific macroeconomic sensitivities: 'uncertain global economic conditions' potentially causing customers to delay purchases, fail to pay receivables, or become insolvent, and increasing supplier/borrowing risks.",
+          "key_change": "Expansion of customer default risks due to macro conditions"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved shares the specific topic of customer concentration risk; candidates relate to operational disruption or software security."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_1A_D038",
+            "peer_topic": "Concentration of revenue among limited customers",
+            "peer_summary": "A small number of customers, including three largest customers accounting for 40-45% of net revenue from 2022-2024, represent a significant portion of Intel's revenue, creating risk of revenue reduction and volatility upon loss or reduction of sales to them.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.050496,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Intel disclose that the loss or reduction of sales to a small number of significant customers could have a material adverse effect on their business. While AMD provides a qualitative warning that 'The loss of a significant customer may have a material adverse effect on us', Intel provides specific quantitative data, noting that 'Collectively, our three largest customers accounted for 45% of our net revenue in 2024' and that the loss of such key customers can 'lead to a reduction in our revenue' and harm financial condition.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_1A_D003",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1A_P003_S007",
+                    "paragraph_id": "amd_2024_1A_P003",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "◦The loss of a significant customer may have a material adverse effect on us.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_1A_D038",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1A_P078_S001",
+                    "paragraph_id": "intc_2024_1A_P078",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We receive a significant portion of our revenue from a limited number of customers.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_1A_P078_S002",
+                    "paragraph_id": "intc_2024_1A_P078",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Collectively, our three largest customers accounted for 45% of our net revenue in 2024, 40% of our net revenue in 2023 and 42% of our net revenue in 2022.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_1A_P078_S004",
+                    "paragraph_id": "intc_2024_1A_P078",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "The loss of key customers, a substantial reduction in sales to them, or changes in the timing of their orders can lead to a reduction in our revenue, increase the volatility of our results, and harm our results of operations and financial condition.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved shares the specific topic of customer concentration risk; candidates relate to technology development or legal proceedings."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved shares the specific topic of customer concentration risk; candidates relate to international business or product defects."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved shares the specific topic of customer concentration risk; candidates relate to product defects or litigation."
+      }
+    ]
+  }
+}

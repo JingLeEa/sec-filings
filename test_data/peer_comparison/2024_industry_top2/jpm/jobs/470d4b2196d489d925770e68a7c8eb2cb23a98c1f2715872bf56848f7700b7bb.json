@@ -1,0 +1,338 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "bf6047e396a482847d7ebf6993397a36426529f14b49e3952d8801a6b9736465",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D152",
+    "item": "7",
+    "target_topic": "Net interest income drivers",
+    "target_summary": "Net interest income rose 24% to $9.8 billion, driven by balance sheet actions such as reinvestments in the investment securities portfolio, partially offset by rate impacts.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0440",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The matching rationale incorrectly groups D145 and D152. D145 is Commercial Banking Net Interest Income drivers. D152 is likely another segment's NII or Revenue. D152 (2023) cites NII $6.3B (up 20%). D145 (2023) cites NII $12.1B (up 47%). They are different numbers, so they are different segments/topics. D152 matches the 2023 NII figure for a specific segment (likely Asset Management or Corporate based on values, but actually D152 text says Net Revenue $19.8B, NII $6.3B, Noninterest $13.6B. D145 is Commercial Banking NII $12.1B. They are distinct. The proposed group merges two distinct previous disclosures. D152 (2023) and D152 (2024) both discuss NII of $6.3B/$9.8B. D152 (2024) has NII $9.8B (up 24%). D152 (2023) has NII $6.3B (up 20%). These match on the NII topic for the same segment (likely Global Private Bank or similar, though IDs are generic). D145 (Commercial Banking) is a separate topic. So D145 should be split off. D152 (2023) matches D152 (2024). D145 (2023) is Commercial Banking NII, no 2024 Commercial Banking NII in required IDs.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D145",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > 2023 compared with 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income was $12.1 billion, up 47%, driven by deposit margin expansion on higher rates and higher average loans, including the impact from First Republic.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2023_7_D152",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > 2023 compared with 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net revenue rose 12% to $19.8 billion, comprising $6.3 billion in net interest income (up 20%) and $13.6 billion in noninterest revenue (up 8%).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D152",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income rose 24% to $9.8 billion, driven by balance sheet actions such as reinvestments in the investment securities portfolio, partially offset by rate impacts.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.380402,
+            "sequence_match_ratio": 0.288889,
+            "length_ratio": 0.551724,
+            "word_count_delta": -26,
+            "added_tokens_sample": [
+              "9",
+              "8",
+              "24",
+              "the",
+              "impact",
+              "of",
+              "balance",
+              "sheet",
+              "actions",
+              "primarily",
+              "reinvestments",
+              "in",
+              "the",
+              "investment",
+              "securities",
+              "portfolio",
+              "net",
+              "of",
+              "rates"
+            ],
+            "removed_tokens_sample": [
+              "12",
+              "1",
+              "47",
+              "deposit",
+              "margin",
+              "expansion",
+              "on",
+              "higher",
+              "rates",
+              "lower",
+              "average",
+              "deposits",
+              "and",
+              "higher",
+              "average",
+              "loans",
+              "including",
+              "from",
+              "first",
+              "republic"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2023_7_D152",
+            "score": 0.909723,
+            "normalised_score": 0.9097,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 90.97% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure for the relevant segment (aligned D152) shows a substantial increase in Net Interest Income from $6.3 billion to $9.8 billion (up 24%) and the introduction of 'balance sheet actions' and 'reinvestments in the investment securities portfolio' as primary drivers. This indicates a significant change in the operational drivers and financial results of the segment compared to the prior year's growth drivers.",
+          "key_change": "Shift to balance sheet actions and securities reinvestments driving NII growth"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0374",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures analyze the change in Net Interest Income for the Corporate segment, attributing the variance to balance sheet actions, investment securities portfolio reinvestments/activity, and interest rate impacts.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D152",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income rose 24% to $9.8 billion, driven by balance sheet actions such as reinvestments in the investment securities portfolio, partially offset by rate impacts.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D144",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2025 compared with 2024",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income was $6.1 billion, a decrease of $3.7 billion, driven by lower rates and consumer deposit FTP changes, partially offset by investment securities activity.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.436977,
+            "sequence_match_ratio": 0.425,
+            "length_ratio": 1.5,
+            "word_count_delta": 16,
+            "added_tokens_sample": [
+              "6",
+              "1",
+              "down",
+              "3",
+              "7",
+              "billion",
+              "lower",
+              "rates",
+              "and",
+              "changes",
+              "ftp",
+              "for",
+              "consumer",
+              "deposits",
+              "investment",
+              "securities",
+              "activity",
+              "refer",
+              "to",
+              "business"
+            ],
+            "removed_tokens_sample": [
+              "9",
+              "8",
+              "up",
+              "24",
+              "balance",
+              "sheet",
+              "actions",
+              "primarily",
+              "reinvestments",
+              "the",
+              "investment",
+              "securities",
+              "portfolio",
+              "net",
+              "rates"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_7_D152",
+            "score": 0.855654,
+            "normalised_score": 0.8557,
+            "label": "Relocated",
+            "rationale": "Score 85.57% of ceiling — content is similar but section changed from 'BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023' to 'BUSINESS SEGMENT & CORPORATE RESULTS > 2025 compared with 2024'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.3,
+          "confidence_score": 0.9,
+          "reason": "Similar to M0373, this is a standard year-over-year comparison of Net Interest Income. While the drivers changed (lower rates, FTP changes vs balance sheet actions), this is a routine explanation of financial performance variance. It does not introduce a new risk, strategy, or operational dependency. It is a standard component of the segment results discussion.",
+          "key_change": "Routine update of NII variance drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D082",
+            "peer_topic": "Consumer Lending net income and revenue drivers",
+            "peer_summary": "Net income for Consumer Lending increased $334 million to $3.2 billion, driven primarily by higher revenue including a $717 million increase in net interest income and an $85 million increase in noninterest income.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.155356,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Bank of America reported significant growth in Net Interest Income (NII) for 2024, but they attributed this growth to different primary drivers. JPM's NII rose 24% primarily due to balance sheet actions, specifically reinvestments in the investment securities portfolio. In contrast, Bank of America's Consumer Lending segment saw NII increase by $717 million (to $11.9 billion), driven primarily by the impact of higher loan balances rather than reinvestment strategies.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D152",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P237_S001",
+                    "paragraph_id": "jpm_2024_7_P237",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Net interest income was $9.8 billion, up 24%, driven by the impact of balance sheet actions, primarily reinvestments in the investment securities portfolio, partially offset by the net impact of rates.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D082",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P084_S002",
+                    "paragraph_id": "bac_2024_7_P084",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest income increased $717 million to $11.9 billion primarily due to the impact of higher loan balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Citi reported a decrease in Net Interest Income driven by higher funding costs, which is directionally opposite to JPMorgan's significant increase. While both mention reinvestment, Citi's reinvestment gains were offset by other negative factors not present in JPM's primary driver explanation."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D050",
+            "peer_topic": "Net Interest Income Growth and Drivers",
+            "peer_summary": "Net interest income for 2024 was $8.06 billion, representing a 27% increase from 2023, driven by higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by a decrease in deposits with banks.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.151623,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Goldman Sachs reported substantial percentage increases in Net Interest Income for 2024, driven by a combination of rate impacts and balance sheet dynamics. JPMorgan's NII increased 24% driven by balance sheet actions (reinvestments in securities) partially offset by rates. Goldman Sachs' NII increased 27%, driven by higher interest income from trading assets and investments reflecting higher average balances and higher average interest rates, partially offset by lower deposit income.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D152",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P237_S001",
+                    "paragraph_id": "jpm_2024_7_P237",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Net interest income was $9.8 billion, up 24%, driven by the impact of balance sheet actions, primarily reinvestments in the investment securities portfolio, partially offset by the net impact of rates.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P054_S002",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net interest income in the consolidated statements of earnings was $8.06 billion for 2024, 27% higher than 2023, reflecting an increase in interest income, partially offset by an increase in interest expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P054_S003",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in interest income primarily related to trading assets and investments (each reflecting the impact of higher average balances and higher average interest rates), collateralized agreements and other interest-earning assets (each reflecting the impact of higher average interest rates), partially offset by a decrease in interest income related to deposits with banks (reflecting the impact of lower average balances).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The primary candidate for MS (ms_2024_7_D061) relates specifically to the Wealth Management segment and reports a 10% decrease in net interest revenues, which is not comparable to the firm-wide 24% increase reported by JPMorgan in Item 7."
+      }
+    ]
+  }
+}

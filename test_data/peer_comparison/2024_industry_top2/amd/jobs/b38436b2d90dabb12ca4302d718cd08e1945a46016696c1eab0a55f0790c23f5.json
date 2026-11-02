@@ -1,0 +1,283 @@
+{
+  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
+  "request_hash": "b9ac732e24067adc4707350e7c0dfe0f5237c2964e5797e32e848be2b916b983",
+  "result": {
+    "target_ticker": "AMD",
+    "target_disclosure_id": "amd_2024_7_D027",
+    "item": "7",
+    "target_topic": "Gaming Segment Operating Income Decline",
+    "target_summary": "Gaming operating income decreased to $290 million in 2024 from $971 million in 2023, primarily driven by lower revenue.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "amd_2023_2024_M0273",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures cover Gaming segment operating income. D020 cites $971M income vs $953M in 2022, driven by product mix offset by R&D. D027 cites $290M income vs $971M in 2023, driven by lower revenue. The subject is the same specific topic: Gaming segment operating income performance.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2023_7_D020",
+            "item": "7",
+            "section": "Results of Operations > Gaming",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gaming operating income increased to $971 million in 2023 from $953 million in 2022, driven by product mix but partially offset by higher R&D investment.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2024_7_D027",
+            "item": "7",
+            "section": "Results of Operations > Gaming",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gaming operating income decreased to $290 million in 2024 from $971 million in 2023, primarily driven by lower revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.743632,
+            "sequence_match_ratio": 0.666667,
+            "length_ratio": 0.8,
+            "word_count_delta": -7,
+            "added_tokens_sample": [
+              "290",
+              "2024",
+              "971",
+              "2023",
+              "decrease",
+              "lower",
+              "revenue"
+            ],
+            "removed_tokens_sample": [
+              "971",
+              "2023",
+              "953",
+              "2022",
+              "increase",
+              "product",
+              "mix",
+              "partially",
+              "offset",
+              "by",
+              "higher",
+              "r",
+              "d",
+              "investment"
+            ]
+          },
+          "semantic": {
+            "matched_id": "amd_2023_7_D020",
+            "score": 0.977111,
+            "normalised_score": 0.9771,
+            "label": "Unchanged",
+            "rationale": "Score 97.71% of ceiling — semantically identical despite surface differences (word overlap 45%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.95,
+          "confidence_score": 0.95,
+          "reason": "The Gaming segment operating income decreased by approximately 70% ($971M to $290M) due to lower revenue. This represents a significant deterioration in the performance of a core business segment, materially changing the company's reported financial condition and operational outlook for that segment.",
+          "key_change": "Severe decline in Gaming segment operating income"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "amd_2024_2025_M0262",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2024 Client (D025) and Gaming (D027) operating income disclosures are merged into the 2025 Client and Gaming operating income disclosure (D025). The evidence shows 2024 Client operating income of $897M (D025) and Gaming operating income of $290M (D027), totaling $1.187B (~$1.2B). The 2025 disclosure reports Client and Gaming operating income of $2.9B, explicitly combining these two segments which were previously reported separately.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2024_7_D025",
+            "item": "7",
+            "section": "Results of Operations > Client",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Client operating income improved to an $897 million profit in 2024 from a $46 million operating loss in 2023, primarily due to higher revenue partially offset by higher operating expenses.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "amd_2024_7_D027",
+            "item": "7",
+            "section": "Results of Operations > Gaming",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gaming operating income decreased to $290 million in 2024 from $971 million in 2023, primarily driven by lower revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2025_7_D025",
+            "item": "7",
+            "section": "Results of Operations > Client and Gaming",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Client and Gaming operating income increased to $2.9 billion in 2025 from $1.2 billion in 2024, primarily due to higher revenue partially offset by higher cost of sales and operating expenses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.678681,
+            "sequence_match_ratio": 0.480769,
+            "length_ratio": 0.677419,
+            "word_count_delta": -20,
+            "added_tokens_sample": [
+              "and",
+              "gaming",
+              "2",
+              "9",
+              "billion",
+              "2025",
+              "income",
+              "1",
+              "2",
+              "billion",
+              "2024",
+              "driven",
+              "by",
+              "cost",
+              "of",
+              "sales",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "897",
+              "million",
+              "2024",
+              "loss",
+              "46",
+              "million",
+              "2023",
+              "due",
+              "to",
+              "gaming",
+              "operating",
+              "income",
+              "was",
+              "290",
+              "million",
+              "in",
+              "2024",
+              "compared",
+              "to",
+              "operating"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "amd_2024_7_D027",
+            "score": 0.880699,
+            "normalised_score": 0.8807,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 88.07% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.95,
+          "confidence_score": 0.95,
+          "reason": "Two separate operating income disclosures (Client and Gaming) from 2024 are merged into a single 'Client and Gaming' operating income disclosure in 2025. This consolidation eliminates the ability to assess the profitability of the Gaming segment independently from the Client segment in the primary operating results, representing a material change in financial reporting granularity.",
+          "key_change": "Merger of Client and Gaming operating income disclosures"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates discuss operating income increases driven by VMware contributions (infrastructure software) or decreases in 'other income' (non-operating items) due to lower interest income. These do not share the specific topic of a primary business segment's operating income decline driven by lower revenue or pricing."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates discuss operating expense increases driven by process technology investments or cost of sales decreases in an 'all other' aggregate category. They do not address a specific named segment's operating income decline analogous to AMD's Gaming segment."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_7_D014",
+            "peer_topic": "EBU operating income change 2024",
+            "peer_summary": "EBU operating income decreased in 2024 compared to 2023, primarily due to declines in average selling prices, partially offset by higher bit shipments and cost reductions.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.170403,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Micron report a decline in segment operating income in fiscal year 2024 driven by lower revenue or pricing pressures. AMD's Gaming segment operating income decreased to $290 million from $971 million in 2023, primarily due to lower revenue. Similarly, Micron's Embedded Business Unit (EBU) operating income decreased in 2024 compared to 2023, primarily due to declines in average selling prices, which was partially offset by higher bit shipments and cost reductions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D027",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P039_S001",
+                    "paragraph_id": "amd_2024_7_P039",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Gaming operating income was $290 million in 2024, compared to operating income of $971 million in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P039_S002",
+                    "paragraph_id": "amd_2024_7_P039",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The decrease in operating income was primarily driven by lower revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D014",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P017_S004",
+                    "paragraph_id": "mu_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "• EBU operating income decreased primarily due to declines in average selling prices, partially offset by higher bit shipments and cost reductions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates report an increase in segment operating income driven by higher revenue (Compute & Networking and Graphics), which is the opposite of the decline topic found in the target disclosure."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates focus on drivers for increased R&D expenses (share-based compensation, restructuring) and other expenses related to restructuring charges. These do not constitute a comparable discussion of a specific business segment's operating income decline driven by commercial performance factors like revenue or pricing."
+      }
+    ]
+  }
+}

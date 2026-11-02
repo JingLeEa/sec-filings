@@ -105,11 +105,11 @@ def test_synthesis_report_loader_reads_new_database_results_each_time(monkeypatc
     (tmp_path / "old.json").write_text(json.dumps({**document, "report": {"executive_summary": "Stale file"}}))
     connection = MagicMock()
     cursor = connection.__enter__.return_value.cursor.return_value.__enter__.return_value
-    cursor.fetchone.side_effect = [("synthesis_reports",), (deepcopy(document),),
-                                  ({**deepcopy(document), "report": {"executive_summary": "Second review"}},)]
-    cursor.fetchall.return_value = [("AMD", [2023, 2024])]
-    monkeypatch.setattr(reports, "_postgres_connection", Mock(return_value=connection))
-    entries = reports.list_synthesis_files()
-    assert len(entries) == 1 and isinstance(entries[0], reports.DatabaseSynthesis)
-    assert reports.load_synthesis(entries[0])["report"]["executive_summary"] == "Updated after review"
-    assert reports.load_synthesis(entries[0])["report"]["executive_summary"] == "Second review"
+    cursor.fetchone.return_value = ("synthesis_reports",)
+    cursor.fetchall.side_effect = [[("AMD", [2023, 2024], "now")], [(deepcopy(document),)],
+                                  [({**deepcopy(document), "report": {"executive_summary": "Second review"}},)]]
+    monkeypatch.setattr(reports.ui_data, "_postgres_connection", Mock(return_value=connection))
+    entries = reports.list_synthesis_reports()
+    assert entries == [{"company": "AMD", "years": [2023, 2024], "generated_at": "now"}]
+    assert reports.load_synthesis_report("AMD", [2023, 2024])["report"]["executive_summary"] == "Updated after review"
+    assert reports.load_synthesis_report("AMD", [2023, 2024])["report"]["executive_summary"] == "Second review"

@@ -1,0 +1,238 @@
+{
+  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
+  "request_hash": "41d91e31ef7da9294523c1238505e08bd3882622b1cbd16788e8264b410cc7e2",
+  "result": {
+    "target_ticker": "QCOM",
+    "target_disclosure_id": "qcom_2024_1A_D029",
+    "item": "1A",
+    "target_topic": "China Revenue and Sourcing Concentration",
+    "target_summary": "Qualcomm derives significant revenue from Chinese OEMs and non-Chinese OEMs selling into China, and also sources critical integrated circuit products from suppliers in China.",
+    "target_source_status": "needs_review",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "qcom_2023_2024_M0054",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure (D029) discusses revenue from Chinese OEMs and non-Chinese OEMs selling into China, and sourcing ICs from China. The 2023 disclosure D001 mentions 'Certain Chinese OEMs' and deriving revenue from them (P003_S003), but does not mention sourcing ICs from China. D029 is a mix of customer concentration (partial match to D001) and supply chain risk (no match). The supply chain part is new. The customer part is covered by D001. Since the disclosure contains a significant new topic (sourcing from China), it is not a perfect match for D001. However, the prompt allows splitting. If I split, D029's first sentence matches D001. The second sentence (sourcing) is unmatched. But I can only return one row per alignment. I should mark D029 as unmatched or partially unmatched? The instructions say 'remove spurious links by splitting'. If a disclosure has multiple topics, and only one matches, I should likely flag it or split it. But I can't return one disclosure in two rows with different counterparts unless they are separate alignments. I can have D001->D029 for the first sentence. But D029 also has sourcing. I will mark D029 as unmatched because it introduces a new distinct to",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_1A_D029",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Qualcomm derives significant revenue from Chinese OEMs and non-Chinese OEMs selling into China, and also sources critical integrated circuit products from suppliers in China.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 51,
+            "added_tokens_sample": [
+              "we",
+              "derive",
+              "a",
+              "significant",
+              "portion",
+              "of",
+              "our",
+              "revenues",
+              "from",
+              "chinese",
+              "oems",
+              "and",
+              "from",
+              "non",
+              "chinese",
+              "oems",
+              "that",
+              "utilize",
+              "our",
+              "integrated"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.8,
+          "reason": "The 2024 filing adds a new disclosure point regarding the sourcing of critical integrated circuit products from suppliers in China. While revenue from Chinese OEMs was known, the supply chain dependency on Chinese manufacturers is a new, specific geopolitical and operational risk exposure not detailed in the 2023 filing.",
+          "key_change": "Introduction of Chinese IC supplier sourcing risk"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "qcom_2024_2025_M0007",
+        "relationship": "previous_only",
+        "status": "needs_review",
+        "review_reasons": [
+          "agent_did_not_finish"
+        ],
+        "explanation": "Automatic repair turn limit reached; remaining disclosures need review.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_1A_D029",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Qualcomm derives significant revenue from Chinese OEMs and non-Chinese OEMs selling into China, and also sources critical integrated circuit products from suppliers in China.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate amd_2024_1A_D058 focuses on limited suppliers for equipment and materials without mentioning China. Candidate amd_2024_1A_D099 discusses global operations and assembly in China but does not identify China-specific sourcing risks or trade tensions as a distinct risk factor comparable to Qualcomm's disclosure of sourcing critical products from China and deriving significant revenue from Chinese OEMs."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_1A_D056",
+            "peer_topic": "Materials Supplier Concentration and Geopolitical Risks",
+            "peer_summary": "The company purchases ~two-thirds of manufacturing materials from five suppliers, some single-source, with no long-term contracts; supply constraints due to extended lead times, limited supplies, or U.S.-China trade tensions could disrupt supply and adversely impact operations.",
+            "peer_taxonomy": "Supply Chain & Third Parties",
+            "retrieval_score": 0.060604,
+            "relationship": "same_topic",
+            "comparison": "Qualcomm and Avago both highlight the risk of supply chain disruption stemming from US-China trade tensions. While Qualcomm notes sourcing from Chinese suppliers as a general operational risk, Avago provides more granular detail, stating that supply may be negatively impacted by 'increased trade tensions between the U.S. and its trading partners, particularly China.' Both disclosures recognize the broader geopolitical friction as a material driver of supply uncertainty.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1A_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P020_S002",
+                    "paragraph_id": "qcom_2024_1A_P020",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "We also source certain critical integrated circuit products from suppliers in China.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_1A_D056",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1A_P054_S006",
+                    "paragraph_id": "avgo_2024_1A_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Additionally, the supply of these materials may be negatively impacted by increased trade tensions between the U.S. and its trading partners, particularly China.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate intc_2024_1A_D014 focuses on the risk of hostilities in Taiwan disrupting the supply of compute dies, which is distinct from Qualcomm's focus on sourcing from mainland China. Candidate intc_2024_1A_D038 concerns customer revenue concentration, not supply sourcing."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_1A_D029",
+            "peer_topic": "Supply chain dependency and material availability",
+            "peer_summary": "The supply chain depends on third-party providers and exacting material standards, with limited sources for certain components. Shortages of raw materials, chemicals, or silicon wafers, along with inflationary pressures and lack of long-term capacity commitments in contracts, may limit bit shipments, increase costs, or disrupt operations. Additionally, reliance on China for rare earth elements poses a risk if exports are restricted.",
+            "peer_taxonomy": "Supply Chain & Third Parties",
+            "retrieval_score": 0.072556,
+            "relationship": "same_topic",
+            "comparison": "Both Qualcomm and Micron disclose specific supply chain risks linked to China. Qualcomm identifies sourcing critical integrated circuit products from Chinese suppliers as a risk factor, while Micron explicitly cites China's predominance in rare earth materials and the risk of export restrictions. Both firms face exposure to the geopolitical and logistical vulnerabilities associated with sourcing from or within China, though Qualcomm focuses on IC products while Micron highlights raw materials like rare earths.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1A_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P020_S002",
+                    "paragraph_id": "qcom_2024_1A_P020",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "We also source certain critical integrated circuit products from suppliers in China.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1A_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1A_P047_S003",
+                    "paragraph_id": "mu_2024_1A_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Although these rare earth and other materials are generally available from multiple suppliers, China is the predominant producer of these materials.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1A_P047_S004",
+                    "paragraph_id": "mu_2024_1A_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "If China were to restrict or stop exporting these materials, our suppliers' ability to obtain such supply may be constrained, and we may be unable to obtain sufficient quantities, or obtain supply in a timely manner, or at a commercially reasonable cost.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate nvda_2024_1A_D025 discusses general third-party supply chain risks and geopolitical tensions involving Taiwan and China but does not specify sourcing risks from China or revenue concentration with Chinese OEMs as the primary disclosure topic. Candidate nvda_2024_1A_D045 focuses on Chinese government restrictions on sales, which is a demand-side regulatory risk, whereas Qualcomm's disclosure focuses on supply sourcing and revenue derivation from the Chinese market."
+      }
+    ]
+  }
+}

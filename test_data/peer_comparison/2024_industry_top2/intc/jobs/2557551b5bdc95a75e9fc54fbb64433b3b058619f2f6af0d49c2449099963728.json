@@ -1,0 +1,253 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "8c4ebf869ce29872fbf81547b7401bceb5aee9c2b6dae1cc133e20547e71a531",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_7_D132",
+    "item": "7",
+    "target_topic": "Reputational and Insurance Risks from Product Issues",
+    "target_summary": "Product issues can damage reputation, reduce demand, and create legal liability; further, insurance coverage may have exclusions or providers may refuse to pay claims, leaving Intel exposed to large uninsured losses.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0374",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specifically address the financial and legal consequences of product defects, including reputation damage, demand loss, and legal liability. Crucially, both explicitly state that liability insurance coverage may have exclusions or that providers may be unable or unwilling to pay claims, leaving the company exposed to large uninsured losses. This specific combination of topics (product issues + insurance limitations) confirms the match.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2023_7_D135",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Risk Factors and Other Key Information > Risk Factors",
+            "taxonomy": "Operations & Capacity",
+            "summary": "Intel faces significant costs from product defects and errata, including inventory write-offs and litigation, while mitigation techniques may be delayed or ineffective. Assessments of these issues can change with new information, and liability insurance may have exclusions or be unable to cover large losses, further harming financial condition.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D132",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Risk Factors and Other Key Information > Risk Factors",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Product issues can damage reputation, reduce demand, and create legal liability; further, insurance coverage may have exclusions or providers may refuse to pay claims, leaving Intel exposed to large uninsured losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.729703,
+            "sequence_match_ratio": 0.463054,
+            "length_ratio": 0.301282,
+            "word_count_delta": -218,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "costs",
+              "from",
+              "defects",
+              "errata",
+              "or",
+              "other",
+              "product",
+              "issues",
+              "could",
+              "include",
+              "writing",
+              "off",
+              "some",
+              "or",
+              "all",
+              "of",
+              "the",
+              "value",
+              "of",
+              "inventory"
+            ]
+          },
+          "semantic": {
+            "matched_id": "intc_2023_7_D135",
+            "score": 0.860589,
+            "normalised_score": 0.8606,
+            "label": "Reduced",
+            "rationale": "Score 86.06% of ceiling — content shrank from ~307 to ~94 words (0.3×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.25,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure removes the specific listing of costs from defects (e.g., inventory write-offs) found in the 2023 version but retains the core risk narrative regarding reputation, demand loss, and insurance exclusions. The remaining text is substantially similar to the previous year. The removal of the specific cost list does not materially change the underlying risk exposure regarding insurance inadequacy or reputation, nor does it introduce new financial quantifications.",
+          "key_change": "Removal of specific defect cost examples without new quantification"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0109",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure addresses product issue liability and specifically highlights insurance coverage exclusions and provider refusal to pay. The 2025 candidate (intc_2025_7_D090) discusses loss contingencies for product defects but does not mention insurance coverage, exclusions, or payment refusals. Thus, no direct counterpart was found for this specific insurance risk aspect.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D132",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Risk Factors and Other Key Information > Risk Factors",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Product issues can damage reputation, reduce demand, and create legal liability; further, insurance coverage may have exclusions or providers may refuse to pay claims, leaving Intel exposed to large uninsured losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -94,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "product",
+              "issues",
+              "can",
+              "damage",
+              "our",
+              "reputation",
+              "negatively",
+              "affect",
+              "product",
+              "demand",
+              "delay",
+              "product",
+              "releases",
+              "or",
+              "deployment",
+              "result",
+              "in",
+              "legal",
+              "liability",
+              "or"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The 2024 text explicitly warns that insurance providers may refuse to pay claims and that exclusions may leave Intel exposed to large uninsured losses. The removal of this specific financial safeguard risk changes the disclosed financial exposure regarding potential large-scale product liability claims.",
+          "key_change": "Removal of insurance coverage exclusion and payment risk"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D009",
+            "peer_topic": "Product return rights estimation",
+            "peer_summary": "Limited product return rights are provided to certain OEMs and most distribution customers, with revenue adjustments estimated using trended historical return rates and adjusted for known information or events.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.036166,
+            "relationship": "related_topic",
+            "comparison": "Intel and AMD both disclose risks and policies related to product performance and customer obligations, but focus on different mechanisms. Intel's disclosure centers on product issues causing reputational damage and legal liability, exacerbated by potential gaps in insurance coverage. In contrast, AMD's disclosure addresses the estimation of revenue adjustments for limited product return rights provided to OEMs and distributors, relying on historical return rates rather than focusing on liability or insurance risks from defects.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D132",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P159_S001",
+                    "paragraph_id": "intc_2024_7_P159",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Product issues can damage our reputation, negatively affect product demand, delay product releases or deployment, result in legal liability, or make our products less competitive, which could harm our business and financial results.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_7_P159_S003",
+                    "paragraph_id": "intc_2024_7_P159",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "In addition, our liability insurance coverage has certain exclusions or may not adequately cover liabilities incurred.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D009",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P020_S001",
+                    "paragraph_id": "amd_2024_7_P020",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We also provide limited product return rights to certain OEMs and to most distribution customers.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P020_S003",
+                    "paragraph_id": "amd_2024_7_P020",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "In order to estimate adjustments to revenue to account for these returns, including product restocking rights provided to distributor and OEM customers, we utilize relevant, trended actual historical product return rate information gathered, adjusted for actual known information or events, as applicable.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of the retrieved candidates (Segment Revenue Drivers, General estimation risk) address product issues, reputational risk, or insurance liability, which are the specific topics of Intel's disclosure."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of the retrieved candidates (General nature of critical accounting estimates, Inventory NRV Write-Downs) address product issues, reputational risk, or insurance liability. Inventory write-downs relate to pricing declines, not product defects or liability insurance."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of the retrieved candidates (Causes of Inventory Excess, Tax Contingency Liability) address product issues, reputational risk, or insurance liability. Inventory excess causes are operational/market-driven, distinct from product defect liability."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of the retrieved candidates (Impairment assessment of non-marketable equity investments, Liquidity financial information table reference) address product issues, reputational risk, or insurance liability."
+      }
+    ]
+  }
+}

@@ -1,0 +1,308 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "2bd517f9ae6f2af36db885a14456ec66ddc706db7d86ba717f4766d387abca41",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D075",
+    "item": "7",
+    "target_topic": "Non-Compensation Expense Driver",
+    "target_summary": "Non-compensation expenses increased primarily due to higher distribution expenses linked to higher Assets Under Management (AUM).",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0277",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss 'Non-compensation expenses' in the Investment Management segment. The 2023 disclosure states they were relatively unchanged, while the 2024 disclosure states they increased due to higher distribution expenses on higher AUM. They address the same specific line item and its drivers.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D074",
+            "item": "7",
+            "section": "Investment Management > Non-Interest Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Non-compensation expenses remained relatively unchanged during the current year.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D075",
+            "item": "7",
+            "section": "Investment Management > Non-Interest Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Non-compensation expenses increased primarily due to higher distribution expenses linked to higher Assets Under Management (AUM).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.185177,
+            "sequence_match_ratio": 0.26087,
+            "length_ratio": 1.3,
+            "word_count_delta": 3,
+            "added_tokens_sample": [
+              "increased",
+              "primarily",
+              "due",
+              "to",
+              "higher",
+              "distribution",
+              "expenses",
+              "on",
+              "higher",
+              "aum"
+            ],
+            "removed_tokens_sample": [
+              "were",
+              "relatively",
+              "unchanged",
+              "for",
+              "the",
+              "current",
+              "year"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D074",
+            "score": 0.671664,
+            "normalised_score": 0.6717,
+            "label": "Modified",
+            "rationale": "Score 67.17% of ceiling — weak match, possibly a substantial rewrite. Manual review recommended.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.95,
+          "reason": "The disclosure changes from 'relatively unchanged' to 'increased', providing a specific driver (higher distribution expenses due to higher AUM). This quantifies a change in the composition and trajectory of non-compensation expenses, which is a meaningful financial detail for investors analyzing cost efficiency and fee correlation.",
+          "key_change": "Change from static expense level to increased expense driven by AUM growth"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0075",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in 2025 Item 7. Search results for 'Non-compensation expenses... distribution expenses... AUM' returned unrelated RWA, funding, and market risk disclosures. No 2025 disclosure specifically addresses Investment Management non-compensation expense drivers linked to AUM.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D075",
+            "item": "7",
+            "section": "Investment Management > Non-Interest Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Non-compensation expenses increased primarily due to higher distribution expenses linked to higher Assets Under Management (AUM).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -13,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "non",
+              "compensation",
+              "expenses",
+              "increased",
+              "primarily",
+              "due",
+              "to",
+              "higher",
+              "distribution",
+              "expenses",
+              "on",
+              "higher",
+              "aum"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The disclosure linked non-compensation expenses directly to Assets Under Management (AUM) via distribution expenses. This establishes the operating leverage and cost sensitivity of the segment to its core business metric. Removing this link hides the variable cost structure.",
+          "key_change": "Removal of AUM-linked non-compensation expense driver"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D091",
+            "peer_topic": "GWIM Noninterest Expense",
+            "peer_summary": "Noninterest expense increased $1.4 billion to $17.2 billion, primarily due to higher revenue-related incentives.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.185056,
+            "relationship": "same_topic",
+            "comparison": "Both MS and BAC reported increases in non-compensation/noninterest expenses. However, the primary driver differed: MS attributed its increase to 'higher distribution expenses on higher AUM,' while BAC cited 'higher revenue-related incentives' as the primary cause for its $1.4 billion increase.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D075",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P081_S003",
+                    "paragraph_id": "ms_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Non-compensation expenses increased primarily due to higher distribution expenses on higher AUM.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D091",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P102_S001",
+                    "paragraph_id": "bac_2024_7_P102",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Noninterest expense increased $1.4 billion to $17.2 billion primarily due to higher revenue-related incentives.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "While C disclosed overall expense trends, it stated expenses were 'largely unchanged' due to offsetting factors (higher legal/volume expenses vs productivity savings) and did not identify AUM-linked distribution expenses or similar specific non-compensation drivers as a net increase factor comparable to MS's specific disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D046",
+            "peer_topic": "Investment Management Revenue Growth",
+            "peer_summary": "Investment management revenues totaled $10.60 billion in 2024, an 11% increase over 2023, primarily due to higher management and other fees reflecting the impact of higher average assets under supervision (AUS).",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.156454,
+            "relationship": "related_topic",
+            "comparison": "MS and GS both highlighted the growth of their asset management businesses in 2024. MS focused on the cost side, noting that 'higher AUM' drove up non-compensation expenses through distribution costs. In contrast, GS focused on the revenue side, stating that 'higher average assets under supervision (AUS)' drove an 11% increase in investment management revenues.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D075",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P081_S003",
+                    "paragraph_id": "ms_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Non-compensation expenses increased primarily due to higher distribution expenses on higher AUM.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D046",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P050_S001",
+                    "paragraph_id": "gs_2024_7_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Investment management revenues in the consolidated statements of earnings were $10.60 billion for 2024, 11% higher than 2023, primarily due to higher management and other fees, primarily reflecting the impact of higher average assets under supervision (AUS).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D142",
+            "peer_topic": "Global Private Bank Expense and Credit Provision",
+            "peer_summary": "Noninterest expense was $14.4 billion, up 13%, predominantly driven by higher compensation (including revenue-related compensation and growth in private banking advisor teams) and higher distribution fees and legal expense; the provision for credit losses was a net benefit of $68 million compared to a $159 million provision in the prior year, which included a $146 million addition to the allowance for First Republic loans.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.12312,
+            "relationship": "same_topic",
+            "comparison": "Both MS and JPM (specifically its Global Private Bank segment) identified distribution-related costs as a key driver for increased non-compensation expenses. MS stated that 'higher distribution expenses on higher AUM' increased its non-compensation expenses, while JPM's segment reported that 'higher distribution fees' contributed to a 13% rise in noninterest expense.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D075",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P081_S003",
+                    "paragraph_id": "ms_2024_7_P081",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Non-compensation expenses increased primarily due to higher distribution expenses on higher AUM.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D142",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P215_S003",
+                    "paragraph_id": "jpm_2024_7_P215",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher distribution fees and legal expense,",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

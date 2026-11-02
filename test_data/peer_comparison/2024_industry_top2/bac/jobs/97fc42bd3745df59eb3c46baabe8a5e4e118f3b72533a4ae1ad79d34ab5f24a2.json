@@ -1,0 +1,307 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "e6882d2bcaa10df32fcbc98c874561659154c258bf5a17e509c6043b4f92041f",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_8_D346",
+    "item": "8",
+    "target_topic": "BANA 2025 Dividend Capacity",
+    "target_summary": "BANA is able to declare and pay dividends of approximately $13.0 billion to the Corporation in 2025, plus an additional amount equal to its retained net profits for 2025 up to the date of any such declaration.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0836",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the regulatory rule limiting subsidiary bank dividends to current net profits plus retained net profits from the preceding two years. D338 cites OCC definition in 2023; D345 cites same OCC definition in 2024.\n\nD338 provides the specific 2024 dividend capacity for BANA (~$12.0B). D346 provides the specific 2025 dividend capacity for BANA (~$13.0B). Both disclose the forward-looking dividend capacity of the same subsidiary under the same regulatory framework.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_8_D338",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Regulatory rules limit the amount of dividends a subsidiary bank may declare without OCC approval to its current net profits combined with retained net profits from the preceding two years. For 2024, BANA can declare approximately $12.0 billion plus retained net profits, while Bank of America California, N.A. can pay $66 million plus retained net profits.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D345",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Under OCC regulations, a subsidiary bank may declare dividends without approval equal to its current year net profits combined with retained net profits from the preceding two years, where retained net profits are defined as net income less declared dividends.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D346",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "BANA is able to declare and pay dividends of approximately $13.0 billion to the Corporation in 2025, plus an additional amount equal to its retained net profits for 2025 up to the date of any such declaration.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.905512,
+            "sequence_match_ratio": 0.812785,
+            "length_ratio": 0.724409,
+            "word_count_delta": -35,
+            "added_tokens_sample": [
+              "2025",
+              "13",
+              "2025"
+            ],
+            "removed_tokens_sample": [
+              "2024",
+              "12",
+              "2024",
+              "bank",
+              "of",
+              "america",
+              "california",
+              "n",
+              "a",
+              "can",
+              "pay",
+              "dividends",
+              "of",
+              "66",
+              "million",
+              "in",
+              "2024",
+              "plus",
+              "an",
+              "additional"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_8_D338",
+            "score": 0.879368,
+            "normalised_score": 0.8794,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 87.94% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.15,
+          "confidence_score": 0.9,
+          "reason": "The disclosure updates the forward-looking dividend capacity for BANA from approximately $12.0 billion (for 2024) to $13.0 billion (for 2025) and removes the specific figure for Bank of America California, N.A. (likely because it was immaterial or fully retained, or the text was streamlined). The regulatory rule itself is unchanged. The change in capacity is an operational calculation based on earnings, not a fundamental change in risk or strategy.",
+          "key_change": "Update of BANA forward-looking dividend capacity"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0861",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures address OCC regulatory restrictions on subsidiary bank dividend declarations. The 2024 disclosure (D345, D346) explains the formula (current + retained net profits) and provides a 2025 projection for BANA ($13.0B). The 2025 disclosure (D341) repeats the same regulatory formula and provides a 2026 projection for BANA ($6.3B). The specific subject is the calculation and projection of available dividend capacity under OCC rules.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D345",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Under OCC regulations, a subsidiary bank may declare dividends without approval equal to its current year net profits combined with retained net profits from the preceding two years, where retained net profits are defined as net income less declared dividends.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D346",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "BANA is able to declare and pay dividends of approximately $13.0 billion to the Corporation in 2025, plus an additional amount equal to its retained net profits for 2025 up to the date of any such declaration.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_8_D341",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions > Bank Subsidiary Distributions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Subsidiary banks can declare dividends without OCC approval based on current and prior two years' retained net profits; specifically, BANA could declare approximately $6.3 billion plus 2026 retained net profits in 2026.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.947984,
+            "sequence_match_ratio": 0.956522,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "2026",
+              "6",
+              "3",
+              "2026"
+            ],
+            "removed_tokens_sample": [
+              "2025",
+              "13",
+              "0",
+              "2025"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2024_8_D345",
+            "score": 0.916617,
+            "normalised_score": 0.9166,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 91.66% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The disclosure updates the projected dividend capacity for BANA from approximately $13.0 billion in 2025 to approximately $6.3 billion in 2026. This decrease in available upstream dividend capacity is a material change in the financial flexibility and capital distribution capabilities of the bank subsidiary.",
+          "key_change": "Decrease in subsidiary dividend capacity projection"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate c_2024_8_D207 concerns U.K. revenue figures and c_2024_8_D286 concerns restructuring charges; neither addresses subsidiary dividend capacity or regulatory restrictions on intercompany payments."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D456",
+            "peer_topic": "Regulatory Restrictions on Subsidiary Payments",
+            "peer_summary": "Group Inc. may be limited in accessing capital at subsidiaries due to regulatory, tax, or other constraints, including laws requiring prior regulatory approval for dividends. For example, GS Bank USA's dividend payments are capped by earnings and undivided profits tests.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.102015,
+            "relationship": "related_topic",
+            "comparison": "While BAC quantifies its specific 2025 dividend capacity, GS discusses the regulatory constraints that limit such capacities generally. GS highlights that regulatory requirements, such as earnings and undivided profits tests for GS Bank USA, cap the ability to declare dividends without prior approval, which is the same regulatory mechanism underlying BAC's disclosed capacity.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D346",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P417_S003",
+                    "paragraph_id": "bac_2024_8_P417",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "In 2025, BANA can declare and pay dividends of approximately $13.0 billion to the Corporation plus an additional amount equal to its retained net profits for 2025 up to the date of any such dividend declaration.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D456",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P592_S002",
+                    "paragraph_id": "gs_2024_8_P592",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These limitations include provisions of applicable law and regulations and other regulatory restrictions that limit the ability of those subsidiaries to declare and pay dividends without prior regulatory approval.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P592_S003",
+                    "paragraph_id": "gs_2024_8_P592",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "For example, the amount of dividends that may be paid by GS Bank USA are limited to the lesser of the amounts calculated under a recent earnings test and an undivided profits test.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D545",
+            "peer_topic": "Available dividend capacity",
+            "peer_summary": "At January 1, 2025, the Parent Company's banking subsidiaries had approximately $15.5 billion in undistributed dividends available without regulatory approval, supplemented by 2025 earnings.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.074033,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and JPM disclose specific dollar amounts of dividend capacity available to their parent companies in 2025, which consists of a base amount of undistributed dividends supplemented by current year earnings. BANA declares approximately $13.0 billion plus retained net profits, while JPM's subsidiaries have approximately $15.5 billion plus earnings available. Both disclosures frame this capacity as the amount available without requiring prior regulatory approval.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D346",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P417_S003",
+                    "paragraph_id": "bac_2024_8_P417",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "In 2025, BANA can declare and pay dividends of approximately $13.0 billion to the Corporation plus an additional amount equal to its retained net profits for 2025 up to the date of any such dividend declaration.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D545",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P813_S001",
+                    "paragraph_id": "jpm_2024_8_P813",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "At January 1, 2025, the Parent Company's banking subsidiaries could pay, in the aggregate, approximately $15.5 billion in dividends to their respective bank holding companies without the prior approval of their relevant banking regulators.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P813_S002",
+                    "paragraph_id": "jpm_2024_8_P813",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The capacity to pay dividends in 2025 will be supplemented by the banking subsidiaries' earnings during the year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates ms_2024_8_D396 and ms_2024_8_D395 concern redemption terms for preferred stock series, which is distinct from the capacity of banking subsidiaries to pay common dividends to the parent holding company."
+      }
+    ]
+  }
+}

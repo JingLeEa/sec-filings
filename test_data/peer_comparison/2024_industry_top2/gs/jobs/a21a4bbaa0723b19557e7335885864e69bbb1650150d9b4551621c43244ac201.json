@@ -1,0 +1,292 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "3570bcaa7b927104371ccfc8efae3b88f45df86de6e1fe04e7e84c327c3f58ae",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_7_D187",
+    "item": "7",
+    "target_topic": "GSBE Swap Dealer Capital Compliance",
+    "target_summary": "As a registered swap dealer and security-based swap dealer, GSBE was in compliance with applicable capital requirements for these roles as of both December 2024 and December 2023.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0592",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures state that GSBE, as a registered swap dealer and security-based swap dealer, was in compliance with applicable capital requirements as of both the current and prior year-ends. Same specific topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_7_D190",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Subsidiary Capital Requirements > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "GSBE was in compliance with central bank reserve requirements and applicable capital requirements for swap dealers and security-based swap dealers as of both December 2023 and December 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D187",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Subsidiary Capital Requirements > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As a registered swap dealer and security-based swap dealer, GSBE was in compliance with applicable capital requirements for these roles as of both December 2024 and December 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.859632,
+            "sequence_match_ratio": 0.698413,
+            "length_ratio": 0.575,
+            "word_count_delta": -34,
+            "added_tokens_sample": [
+              "2024",
+              "2023"
+            ],
+            "removed_tokens_sample": [
+              "gsbe",
+              "is",
+              "subject",
+              "to",
+              "minimum",
+              "reserve",
+              "requirements",
+              "at",
+              "central",
+              "banks",
+              "in",
+              "certain",
+              "of",
+              "the",
+              "jurisdictions",
+              "in",
+              "which",
+              "it",
+              "operates",
+              "as"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2023_7_D190",
+            "score": 0.98711,
+            "normalised_score": 0.9871,
+            "label": "Unchanged",
+            "rationale": "Score 98.71% of ceiling — semantically identical despite surface differences (word overlap 63%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The change involves only the update of year-end dates (Dec 2023/2022 to Dec 2024/2023) for GSBE's compliance with swap dealer capital requirements. No change in the nature of the requirement or compliance status.",
+          "key_change": "Annual date update for compliance status"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0051",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "Previous disclosure states GSBE was in compliance with swap dealer capital requirements. While gs_2025_7_D212 addresses GSI's compliance, no 2025 disclosure explicitly addresses GSBE's swap dealer compliance in the selected sentences.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D187",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Subsidiary Capital Requirements > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As a registered swap dealer and security-based swap dealer, GSBE was in compliance with applicable capital requirements for these roles as of both December 2024 and December 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -46,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "gsbe",
+              "is",
+              "a",
+              "registered",
+              "swap",
+              "dealer",
+              "with",
+              "the",
+              "cftc",
+              "and",
+              "a",
+              "registered",
+              "security",
+              "based",
+              "swap",
+              "dealer",
+              "with",
+              "the",
+              "sec",
+              "as"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.8,
+          "reason": "Removal of the explicit statement confirming GSBE's compliance with swap dealer capital requirements. This disclosure provided specific regulatory validation for a key legal entity; its absence in the 2025 filing, without a direct equivalent confirmation for GSBE in the provided evidence, creates uncertainty regarding the status of this specific regulatory compliance assertion.",
+          "key_change": "Removal of GSBE swap dealer capital compliance statement"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D198",
+            "peer_topic": "European Entities Swap Dealer Registration and Capital",
+            "peer_summary": "MLI and BofASE remained conditionally registered with the SEC as security-based swap dealers and registered with the CFTC as swap dealers, maintaining net liquid assets and capital levels that exceeded applicable minimum requirements at December 31, 2024.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.305013,
+            "relationship": "same_topic",
+            "comparison": "Both GS and BAC disclose compliance with capital requirements for their entities registered as swap dealers and security-based swap dealers. GS states that GSBE was in compliance with applicable capital requirements for these roles as of December 2024 and 2023. Similarly, BAC reports that its entities (MLI and BofASE) were registered as swap dealers with the CFTC and met applicable capital requirements as of December 31, 2024. While GS focuses on the general compliance status for its specific subsidiary GSBE, BAC details that its entities maintained net liquid assets exceeding minimum requirements and explicitly met capital requirements, highlighting a shared topic of swap dealer capital compliance.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D187",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P261_S002",
+                    "paragraph_id": "gs_2024_7_P261",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "As of both December 2024 and December 2023, GSBE was subject to and in compliance with applicable capital requirements for swap dealers and security-based swap dealers.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D198",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P220_S001",
+                    "paragraph_id": "bac_2024_7_P220",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "In addition, MLI and BofASE remained conditionally registered with the SEC as security-based swap dealers, and maintained net liquid assets at December 31, 2024 that exceeded the applicable minimum requirements under the Exchange Act.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P220_S002",
+                    "paragraph_id": "bac_2024_7_P220",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The entities are also registered as swap dealers with the CFTC and met applicable capital requirements at December 31, 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for C focus on Liquidity Coverage Ratio (LCR) drivers and short-term borrowing growth, which do not directly address the specific topic of swap dealer and security-based swap dealer capital compliance requirements found in the GS disclosure."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D259",
+            "peer_topic": "Regulatory capital requirements for J.P. Morgan Securities",
+            "peer_summary": "J.P. Morgan Securities is subject to net capital requirements under the SEC's Net Capital Rule (Rule 15c3-1), has elected to compute minimum net capital using Alternative Net Capital Requirements, and as a registered swap dealer and security-based swap dealer, must maintain tentative net capital above $5.0 billion and notify regulators if it falls below $6.0 billion.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.296775,
+            "relationship": "same_topic",
+            "comparison": "Both GS and JPM discuss the specific capital requirements applicable to their subsidiaries registered as swap dealers and security-based swap dealers. GS confirms that its subsidiary GSBE was in compliance with these requirements. JPM provides more granular detail, stating that J.P. Morgan Securities, registered as a security-based swap dealer and swap dealer, is subject to alternative minimum net capital requirements and must hold tentative net capital in excess of $5.0 billion. This represents a shared topic of swap dealer capital regulation, with JPM specifying the absolute capital thresholds required compared to GS's general compliance statement.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D187",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P261_S002",
+                    "paragraph_id": "gs_2024_7_P261",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "As of both December 2024 and December 2023, GSBE was subject to and in compliance with applicable capital requirements for swap dealers and security-based swap dealers.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D259",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P385_S001",
+                    "paragraph_id": "jpm_2024_7_P385",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "J.P. Morgan Securities is registered with the SEC as a security-based swap dealer and with the CFTC as a swap dealer.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P385_S002",
+                    "paragraph_id": "jpm_2024_7_P385",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "As a result of additional SEC and CFTC capital and financial reporting requirements for security-based swap dealers and swap dealers, J.P. Morgan Securities is subject to alternative minimum net capital requirements and required to hold \"tentative net capital\" in excess of $5.0 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for MS discuss the general regulatory capital framework (Basel III) and TLAC compliance status. While MS mentions that subsidiaries registered as swap dealers are subject to regulatory capital requirements, it does not provide specific details on swap dealer capital compliance or compliance status comparable to GS's specific disclosure on GSBE's swap dealer capital compliance."
+      }
+    ]
+  }
+}

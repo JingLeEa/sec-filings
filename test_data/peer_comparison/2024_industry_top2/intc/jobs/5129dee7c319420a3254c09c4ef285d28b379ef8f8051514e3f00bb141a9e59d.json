@@ -1,0 +1,244 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "442565c293c0fa3f992de7deb4ffb7838c7158a61a9e922da474ec6953aebc9f",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_7_D019",
+    "item": "7",
+    "target_topic": "Product Portfolio Composition",
+    "target_summary": "The company provides an extensive portfolio of silicon and software products, including CPUs and accelerators, supported by a software development environment that enables workload mobility across heterogeneous architectures.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0261",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe Intel's portfolio of silicon and software products. The 2023 disclosure (D022) lists CPUs, GPUs, domain-specific accelerators, and FPGAs, supported by a software development environment for workload mobility. The 2024 disclosure (D019) lists CPUs and accelerators (grouping GPUs/FPGAs into 'accelerators' or simplifying the list), supported by a similar software development environment enabling workload mobility across heterogeneous architectures. The core topic of product portfolio and software support for mobility is consistent.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2023_7_D022",
+            "item": "7",
+            "section": "Management's Discussion and Analysis > Our Products > Market and Business Overview > Products and Competition",
+            "taxonomy": "Technology & AI",
+            "summary": "Intel provides an extensive portfolio of silicon and software products, including CPUs, GPUs, domain-specific accelerators, and FPGAs, supported by a software development environment for workload mobility.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D019",
+            "item": "7",
+            "section": "Operating Segment Trends and Results > Data Center and AI > Market and Business Overview > Products and Competition",
+            "taxonomy": "Technology & AI",
+            "summary": "The company provides an extensive portfolio of silicon and software products, including CPUs and accelerators, supported by a software development environment that enables workload mobility across heterogeneous architectures.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.953495,
+            "sequence_match_ratio": 0.939024,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "primarily",
+              "and",
+              "also",
+              "includes",
+              "all"
+            ],
+            "removed_tokens_sample": [
+              "gpus",
+              "domain",
+              "specific",
+              "and",
+              "fpgas"
+            ]
+          },
+          "semantic": {
+            "matched_id": "intc_2023_7_D022",
+            "score": 0.985311,
+            "normalised_score": 0.9853,
+            "label": "Relocated",
+            "rationale": "Score 98.53% of ceiling — content is similar but section changed from 'Management's Discussion and Analysis > Our Products > Market and Business Overview > Products and Competition' to 'Operating Segment Trends and Results > Data Center and AI > Market and Business Overview > Products and Competition'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Reworded",
+          "final_taxonomy": "Reworded"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure explicitly removes specific product categories 'GPUs' and 'FPGAs' from the hardware portfolio description, replacing them with the broader term 'accelerators'. This signifies a meaningful change in how the company categorizes and presents its product strategy, likely reflecting a shift in product grouping or strategic emphasis away from distinct GPU/FPGA branding in this context.",
+          "key_change": "Product portfolio categorization change"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0050",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "intc_2024_7_D019 describes an extensive portfolio of silicon and software products (CPUs, accelerators) and a software development environment for workload mobility. The search found intc_2025_7_D021 (DCAI solutions) and intc_2025_7_D019 (Intel Products segment definition). Neither captures the specific 'software development environment enabling workload mobility' aspect of D019. intc_2025_7_D021 focuses on DCAI hardware/solutions, and D019 is a high-level segment definition. Thus, no exact topic match is available in the provided current disclosures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D019",
+            "item": "7",
+            "section": "Operating Segment Trends and Results > Data Center and AI > Market and Business Overview > Products and Competition",
+            "taxonomy": "Technology & AI",
+            "summary": "The company provides an extensive portfolio of silicon and software products, including CPUs and accelerators, supported by a software development environment that enables workload mobility across heterogeneous architectures.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -82,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "our",
+              "products",
+              "and",
+              "services",
+              "include",
+              "we",
+              "provide",
+              "our",
+              "customers",
+              "with",
+              "an",
+              "extensive",
+              "portfolio",
+              "of",
+              "silicon",
+              "and",
+              "software",
+              "products",
+              "engineered",
+              "to"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.25,
+          "confidence_score": 0.85,
+          "reason": "Removal of description regarding software development environment for workload mobility is a technical/product detail removal. The core product portfolio (silicon/software) remains described in other disclosures (D019/D021). This change is likely informational rather than material to financial position or key risks.",
+          "key_change": "Removal of software mobility capability"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was substantively comparable to Intel's disclosure on 'Product Portfolio Composition' which focuses on the broad range of silicon (CPUs and accelerators) and the enabling software environment for workload mobility. AMD's candidates focus specifically on 'AI Software Ecosystem' strategies (acquisitions, ROCm optimization) or 'Adaptive Computing/Embedded Systems' expansion, rather than the general portfolio composition of hardware and software foundations for heterogeneous computing."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was substantively comparable to Intel's disclosure. AVGO's candidates describe the company's global scope as a 'technology leader' supplying a broad range of semiconductors and infrastructure software, or define its 'reportable business segments'. These are high-level organizational or reporting structure descriptions, whereas Intel's disclosure specifics the composition of its silicon (CPUs, accelerators) and the function of its software environment for workload mobility."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was substantively comparable to Intel's disclosure. MU's candidates discuss market conditions (pricing, margins, AI-driven demand) and manufacturing capacity expansion (fabs, assembly sites), which are operational and financial metrics rather than product portfolio composition."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D002",
+            "peer_topic": "Core Business Focus and Platform Evolution",
+            "peer_summary": "NVIDIA pioneered accelerated computing and has expanded from its original PC graphics focus to serve computationally intensive fields, leveraging GPU architecture for AI, data science, AV, and other platforms.",
+            "peer_taxonomy": "Technology & AI",
+            "retrieval_score": 0.039133,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and NVIDIA describe their product portfolios in the context of computational hardware evolution for AI and intensive workloads. Intel highlights an extensive portfolio of silicon products including CPUs and accelerators, supported by software for workload mobility. Similarly, NVIDIA describes its leveraged GPU architecture to create platforms for AI and accelerated computing, expanding beyond graphics. Both disclosures focus on the integration of hardware and software to support specific computational demands, though Intel emphasizes heterogeneity and workload mobility across architectures while NVIDIA emphasizes the singular leveraging of GPU architecture for accelerated computing platforms.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D019",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P020_S002",
+                    "paragraph_id": "intc_2024_7_P020",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We provide our customers with an extensive portfolio of silicon and software products, engineered to deliver workload-optimized performance.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_7_P020_S003",
+                    "paragraph_id": "intc_2024_7_P020",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Our hardware portfolio primarily comprises CPUs and also includes accelerators, all designed to support the performance, agility, and security that our customers demand.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D002",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P002_S002",
+                    "paragraph_id": "nvda_2024_7_P002",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Since our original focus on PC graphics, we have expanded to several other large and important computationally intensive fields.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P002_S003",
+                    "paragraph_id": "nvda_2024_7_P002",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "NVIDIA has leveraged its GPU architecture to create platforms for accelerated computing, AI solutions, scientific computing, data science, AV, robotics, metaverse and 3D internet applications.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was substantively comparable to Intel's disclosure. QCOM's candidates focus on revenue sources (IC products and IP licensing) and tax provisions, which are financial and legal topics, not the technical composition of the silicon and software product portfolio."
+      }
+    ]
+  }
+}

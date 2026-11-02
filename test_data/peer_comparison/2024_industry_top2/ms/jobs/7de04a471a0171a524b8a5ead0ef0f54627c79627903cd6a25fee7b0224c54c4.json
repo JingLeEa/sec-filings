@@ -1,0 +1,324 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "d5d26e7c1cd3a809d79a139b031754f6a7f4be5d4a3491378149ab0b62877ec8",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D035",
+    "item": "7",
+    "target_topic": "Execution Services Revenue Increase",
+    "target_summary": "Execution services revenues increased primarily due to higher gains on inventory held to facilitate client activity and increased client activity in derivatives and cash equities.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0241",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures explain the drivers behind the change in Execution services revenues. The 2023 record attributes a decrease to lower gains on inventory and lower client activity (ms_2023_7_P039_S003), while the 2024 record attributes an increase to higher gains on inventory and increased client activity (ms_2024_7_P039_S003).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D033",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Execution services revenues decreased primarily due to lower gains on inventory held to facilitate client activity in derivatives and cash equities and lower client activity in cash equities, partially offset by mark-to-market gains on business-related investments compared with losses in the prior year.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D035",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Execution services revenues increased primarily due to higher gains on inventory held to facilitate client activity and increased client activity in derivatives and cash equities.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.625576,
+            "sequence_match_ratio": 0.535211,
+            "length_ratio": 0.543478,
+            "word_count_delta": -21,
+            "added_tokens_sample": [
+              "increased",
+              "higher",
+              "and",
+              "increased",
+              "client",
+              "activity"
+            ],
+            "removed_tokens_sample": [
+              "decreased",
+              "lower",
+              "and",
+              "lower",
+              "client",
+              "activity",
+              "in",
+              "cash",
+              "equities",
+              "partially",
+              "offset",
+              "by",
+              "mark",
+              "to",
+              "market",
+              "gains",
+              "on",
+              "business",
+              "related",
+              "investments"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D033",
+            "score": 0.908332,
+            "normalised_score": 0.9083,
+            "label": "Reduced",
+            "rationale": "Score 90.83% of ceiling — content shrank from ~44 to ~26 words (0.6×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The disclosure indicates a material improvement in Execution services revenues, reversing the previous year's decline. The 2024 increase is driven by higher gains on inventory and increased client activity. The 2023 disclosure also included a specific offset item (mark-to-market gains on investments) which is absent in 2024, further confirming a substantive shift in the composition and performance of this revenue stream.",
+          "key_change": "Reversal in Execution services revenue performance"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0038",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure reports Execution services revenues drivers (higher gains on inventory, increased client activity in derivatives/cash equities) within Institutional Securities Equity. No 2025 counterpart was found specifically detailing these Equity Execution revenue drivers; available hits relate to RWA (operational risk losses) or general trading VaR, not the specific revenue component.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D035",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Execution services revenues increased primarily due to higher gains on inventory held to facilitate client activity and increased client activity in derivatives and cash equities.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -25,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "execution",
+              "services",
+              "revenues",
+              "increased",
+              "primarily",
+              "due",
+              "to",
+              "higher",
+              "gains",
+              "on",
+              "inventory",
+              "held",
+              "to",
+              "facilitate",
+              "client",
+              "activity",
+              "and",
+              "increased",
+              "client",
+              "activity"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.85,
+          "reason": "The specific drivers for Execution services revenues (inventory gains, client activity) are removed. This eliminates critical insight into the trading strategies and client demand dynamics driving revenue in the Equity segment.",
+          "key_change": "Removal of execution services revenue drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D127",
+            "peer_topic": "Revenue increases in FICC and Equities driven by trading performance",
+            "peer_summary": "FICC revenue increased by $475 million (including DVA) and $346 million (excluding DVA) due to improved mortgage trading, while Equities revenue increased by $956 million and $962 million due to increased client activity and improved cash and derivatives trading.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.16749,
+            "relationship": "same_topic",
+            "comparison": "MS and BAC both report revenue increases in Equity markets driven by a combination of client activity and improved trading/inventory performance. MS notes its execution services revenue increase was due to 'higher gains on inventory held to facilitate client activity and increased client activity in derivatives and cash equities.' BAC reports that Equities revenue increased $956 million (including net DVA) driven by 'increased client activity and improved trading performance in cash and derivatives.' Both disclosures link the revenue growth in equity markets directly to client volume and the firm's ability to capture value from inventory or trading conditions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D035",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P039_S003",
+                    "paragraph_id": "ms_2024_7_P039",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Execution services revenues increased primarily due to higher gains on inventory held to facilitate client activity and increased client activity in derivatives and cash equities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D127",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P134_S002",
+                    "paragraph_id": "bac_2024_7_P134",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Including and excluding net DVA, Equities revenue increased $956 million and $962 million driven by increased client activity and improved trading performance in cash and derivatives.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D031",
+            "peer_topic": "Equity Markets revenue drivers",
+            "peer_summary": "The increase in Equity Markets revenue was primarily driven by growth in cash equities due to higher client activity and volumes, equity derivatives on higher volatility, and an episodic gain from the Visa B exchange.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.218607,
+            "relationship": "same_topic",
+            "comparison": "Both MS and C attribute increases in equity-related execution/trading revenues to higher client activity in cash equities and derivatives. MS specifies that execution services revenues increased due to 'higher gains on inventory held to facilitate client activity and increased client activity in derivatives and cash equities,' while C states its Equity Markets increase was 'primarily driven by growth in cash equities, due to higher client activity and volumes, and equity derivatives on higher volatility.' Both highlight the dual drivers of client activity levels and inventory/trading performance in the same asset classes.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D035",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P039_S003",
+                    "paragraph_id": "ms_2024_7_P039",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Execution services revenues increased primarily due to higher gains on inventory held to facilitate client activity and increased client activity in derivatives and cash equities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P024_S002",
+                    "paragraph_id": "c_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The increase in Equity Markets was primarily driven by growth in cash equities, due to higher client activity and volumes, and equity derivatives on higher volatility, which also included the impact from an episodic gain related to the Visa B exchange.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosures for GS focus on general structural drivers of market-making revenue (client activity vs. inventory changes) or investment management fees, rather than specific year-over-year revenue increases in equity execution services driven by inventory gains and client activity. GS's disclosure (gs_2024_7_D083) explains *how* revenues are influenced by interconnected drivers but does not report the specific equity execution revenue increase and its specific drivers (inventory gains + client activity in cash/derivatives) seen in the MS disclosure."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D133",
+            "peer_topic": "Principal transactions revenue sources and drivers",
+            "peer_summary": "Principal transactions revenue derives from client-driven market-making, including new transaction execution and inventory-related gains/losses, driven by client activity, bid-offer spreads, liquidity, and macroeconomic conditions.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.11101,
+            "relationship": "same_topic",
+            "comparison": "MS and JPM both disclose that their trading/equity-related revenues are driven by client activity and the performance of inventory held to service that activity. MS states execution revenues increased due to 'higher gains on inventory held to facilitate client activity.' JPM defines Principal transactions (the source of Markets revenue) as including 'inventory-related revenue,' which is 'recognized from gains and losses on derivatives and other instruments that the Firm has been holding in anticipation of, or in response to, client demand.' Both firms explicitly connect the generation of trading gains to the act of holding inventory to facilitate or respond to client demand.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D035",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P039_S003",
+                    "paragraph_id": "ms_2024_7_P039",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Execution services revenues increased primarily due to higher gains on inventory held to facilitate client activity and increased client activity in derivatives and cash equities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D133",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P198_S002",
+                    "paragraph_id": "jpm_2024_7_P198",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Principal transactions revenue includes amounts recognized upon executing new transactions with market participants, as well as \"inventory-related revenue,\" which is revenue recognized from gains and losses on derivatives and other instruments that the Firm has been holding in anticipation of, or in response to, client demand, and changes in the fair value of instruments used by the Firm to actively manage the risk exposure arising from such inventory.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

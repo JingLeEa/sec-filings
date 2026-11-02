@@ -1,0 +1,302 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "edf0e05c6797f080c5dc6b6aadd53b2425e880130b1fdfb8c3c2f0dbe3edbb39",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_8_D393",
+    "item": "8",
+    "target_topic": "Referenced notes for additional allowance information",
+    "target_summary": "The filing references Note 10 for allowance information on investment securities and Note 1 for further details on the adoption of accounting guidance.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M1171",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D433 (2023) describes the impact of adopting ASC 326 (Credit Losses) and references Note 1. D393 (2024) is a footnote/referral sentence referencing Note 10 for investment securities and Note 1 for further details. The 'Note 1' reference in D393 aligns with the Note 1 reference in D433 regarding the adoption guidance basis. While D393 also references Note 10, the shared specific link is the reference to Note 1 for the accounting guidance adoption context. D032 (VIEs) is unrelated to credit losses and was incorrectly grouped in the proposal; it is unmatched here as its counterpart D034 is in established_exact_links.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_8_D433",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 13 - Allowance for credit losses > Allowance for credit losses and related information",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Item (a) represents the impact to the allowance for loan losses upon the adoption of the Financial Instruments - Credit Losses: Troubled Debt Restructurings accounting guidance. Refer to Note 1 for further information.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D393",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 13 - Allowance for credit losses > Allowance for credit losses and related information",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The filing references Note 10 for allowance information on investment securities and Note 1 for further details on the adoption of accounting guidance.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.49323,
+            "sequence_match_ratio": 0.481481,
+            "length_ratio": 0.741935,
+            "word_count_delta": -8,
+            "added_tokens_sample": [
+              "refer",
+              "note",
+              "10",
+              "for",
+              "further",
+              "information",
+              "on",
+              "on",
+              "investment",
+              "securities"
+            ],
+            "removed_tokens_sample": [
+              "a",
+              "represents",
+              "the",
+              "impact",
+              "loan",
+              "losses",
+              "upon",
+              "the",
+              "adoption",
+              "of",
+              "the",
+              "financial",
+              "instruments",
+              "troubled",
+              "debt",
+              "restructurings",
+              "accounting",
+              "guidance"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_8_D433",
+            "score": 0.780138,
+            "normalised_score": 0.7801,
+            "label": "Modified",
+            "rationale": "Score 78.01% of ceiling with 31% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.8,
+          "reason": "The 2023 disclosure explicitly describes the impact of ASC 326 adoption on the allowance for loan losses. The 2024 disclosure removes this specific description of the adoption impact and reduces it to a generic reference note. This removes a disclosure element that contextualizes the balance sheet's composition relative to a major accounting change, which can be material for understanding financial position changes.",
+          "key_change": "Removal of ASC 326 adoption impact description"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M1125",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures introduce the summary table of allowances for credit losses and explicitly mention the breakdown of loans and lending-related commitments by impairment methodology. The 2025 disclosure additionally references Note 10 for investment securities, which is consistent with the broader note structure.\n\nThe 2024 disclosure D393 is a cross-reference specifically directing readers to Note 10 for information on the 'allowance for credit losses on investment securities'. The 2025 disclosure D420 (Note 13) contains the identical specific cross-reference in sentence S002 ('Refer to Note 10 for further information on the allowance for credit losses on investment securities'). Despite D420 being marked needs_review, the sentence content provides the exact semantic match required for D393. D421 is incorrect as it refers to adoption impact and Note 1.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D392",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 13 - Allowance for credit losses > Allowance for credit losses and related information",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The accompanying table summarizes information about allowances for credit losses, including a breakdown of loans and lending-related commitments by impairment methodology.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D393",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 13 - Allowance for credit losses > Allowance for credit losses and related information",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The filing references Note 10 for allowance information on investment securities and Note 1 for further details on the adoption of accounting guidance.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_8_D420",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 13 - Allowance for credit losses > Allowance for credit losses and related information",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The table summarizes allowances for credit losses, including a breakdown of loans and lending-related commitments by impairment methodology, with further details on investment securities available in Note 10.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D224",
+            "peer_topic": "Reference to Allowance Detail Table",
+            "peer_summary": "Changes in the allowance for credit losses, including net charge-offs and provision for loan and lease losses, are detailed in a referenced table.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.103088,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC disclose cross-references to specific notes or tables for detailed information on the allowance for credit losses. JPM explicitly directs readers to Note 10 for allowance information specifically regarding investment securities. Similarly, BAC details that changes in the allowance for credit losses, including net charge-offs and provisions, are found in a referenced table, indicating a similar structural approach to segregating detailed allowance data from the primary report section.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D393",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P584_S002",
+                    "paragraph_id": "jpm_2024_8_P584",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Refer to Note 10 for further information on the allowance for credit losses on investment securities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D224",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P259_S001",
+                    "paragraph_id": "bac_2024_8_P259",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The changes in the allowance for credit losses, including net charge-offs and provision for loan and lease losses, are detailed in the following table.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The available candidates for C relate to tax provisions (Note 10) and securities repurchase agreements (Note 12), which are different topics than the allowance for credit losses referenced in the JPM disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D246",
+            "peer_topic": "Reference to Lending Commitments Detail",
+            "peer_summary": "Further information regarding lending commitments is provided in Note 18.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.288068,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and GS use cross-references to direct readers to specific notes for further details on financial instruments and credit exposures. JPM references Note 10 for investment securities credit losses. GS references Note 18 for further information on lending commitments. Both disclosures serve to point the reader to the specific accounting note containing the granular data supporting the reported figures.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D393",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P584_S002",
+                    "paragraph_id": "jpm_2024_8_P584",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Refer to Note 10 for further information on the allowance for credit losses on investment securities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D246",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P328_S001",
+                    "paragraph_id": "gs_2024_8_P328",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "See Note 18 for further information about lending commitments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D073",
+            "peer_topic": "Reference to Allowance for Credit Losses",
+            "peer_summary": "Information regarding the allowance for credit losses is referenced in the Allowance for Credit Losses section of the notes.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.210852,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and MS provide direct references to specific sections or notes for information regarding the allowance for credit losses. JPM references Note 10 for allowance information on investment securities. MS refers readers to the 'Allowance for Credit Losses' section of the notes for more information on the allowance. Both disclosures function to locate the detailed credit loss provisioning data.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D393",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P584_S002",
+                    "paragraph_id": "jpm_2024_8_P584",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Refer to Note 10 for further information on the allowance for credit losses on investment securities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D073",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P098_S001",
+                    "paragraph_id": "ms_2024_8_P098",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "For more information regarding allowance for credit losses, refer to \"Allowance for Credit Losses\" herein.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

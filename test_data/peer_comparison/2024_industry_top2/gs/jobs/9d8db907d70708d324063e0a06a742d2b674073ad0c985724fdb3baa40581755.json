@@ -1,0 +1,334 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "6e5958ab5e0380ee9a9e781eda00df63f4f24f81f1c770eb47ccd2a392bc4663",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_7_D060",
+    "item": "7",
+    "target_topic": "Litigation and regulatory provision expenses",
+    "target_summary": "Net provisions for litigation and regulatory proceedings were $166 million in 2024, compared to $115 million in 2023.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0484",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail the primary drivers of operating expense changes year-over-year, specifically citing commercial real estate impairments, GreenSky intangible write-downs, Consumer platform goodwill impairments, and the FDIC special assessment fee. gs_2023_7_D060 lists these as drivers of the *increase* in 2023 expenses vs 2022. gs_2024_7_D059 lists these same items as drivers of the *decrease* in 2024 expenses vs 2023 (due to lower expenses in the prior year). The specific underlying topic is the reconciliation of operating expenses driven by these specific one-time/impairment items.\n\nBoth disclosures specifically report the net provisions for litigation and regulatory proceedings. gs_2023_7_D060 mentions $115 million for 2023. gs_2024_7_D060 explicitly compares 2024 ($166 million) to 2023 ($115 million). While gs_2023_7_D060 is a multi-topic disclosure, this specific sentence constitutes a distinct topic regarding litigation provisions.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in operating expenses compared to 2022 was primarily driven by $1.46 billion in commercial real estate impairments within CIEs, a $506 million write-down of GreenSky intangible assets, a $504 million goodwill impairment in Consumer platforms, and a $529 million FDIC special assessment fee, partially offset by lower net provisions for litigation and regulatory proceedings of $115 million in 2023 versus $576 million in 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D059",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses decreased relative to 2023 due to lower commercial real estate impairments, GreenSky intangible asset write-downs, consumer platform goodwill impairments, and FDIC fees, partially offset by higher compensation and transaction-based expenses driven by improved performance. An additional $71 million FDIC special assessment fee was recognized in 2024.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net provisions for litigation and regulatory proceedings were $166 million in 2024, compared to $115 million in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.772791,
+            "sequence_match_ratio": 0.446154,
+            "length_ratio": 1.954545,
+            "word_count_delta": 84,
+            "added_tokens_sample": [
+              "2023",
+              "decreases",
+              "driven",
+              "by",
+              "lower",
+              "expenses",
+              "including",
+              "related",
+              "to",
+              "commercial",
+              "real",
+              "estate",
+              "in",
+              "cies",
+              "largely",
+              "in",
+              "depreciation",
+              "and",
+              "amortization",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "the",
+              "increase",
+              "in",
+              "2022",
+              "primarily",
+              "higher",
+              "related",
+              "to",
+              "commercial",
+              "real",
+              "estate",
+              "within",
+              "cies",
+              "a",
+              "related",
+              "to",
+              "greensky",
+              "of",
+              "504",
+              "million"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2023_7_D060",
+            "score": 0.922189,
+            "normalised_score": 0.9222,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 92.22% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The change reflects a reversal in the primary drivers of operating expenses: the prior year was driven by significant impairments and fees (increases), while the current year is driven by lower impairments (decreases). This structural change in expense composition and direction (increase vs decrease) meaningfully alters the understanding of cost performance and risk exposure.",
+          "key_change": "Reversal in primary operating expense drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0510",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2024 D060 reports net provisions for litigation and regulatory proceedings ($166M). This specific line item is also reported in 2025 D060 ($215M). While D060 is grouped with OpEx drivers in the proposed group, the specific topic of 'Litigation Provisions' is present in both. However, since D060 (2024) is strictly litigation and D060 (2025) is a mix, we must ensure the litigation part is covered. The prompt allows splitting. D060 (2024) matches the litigation component of D060 (2025).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net provisions for litigation and regulatory proceedings were $166 million in 2024, compared to $115 million in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased 11% to $37.54 billion in 2025 from 2024, primarily driven by higher compensation and benefits due to improved operating performance and higher transaction-based expenses. The efficiency ratio rose to 64.4% from 63.1%, and net provisions for litigation and regulatory proceedings increased to $215 million from $166 million, partially offset by a $75 million reduction in FDIC special assessment fees.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.397629,
+            "sequence_match_ratio": 0.192308,
+            "length_ratio": 7.666667,
+            "word_count_delta": 120,
+            "added_tokens_sample": [
+              "2025",
+              "versus",
+              "2024",
+              "operating",
+              "expenses",
+              "in",
+              "the",
+              "consolidated",
+              "statements",
+              "of",
+              "earnings",
+              "were",
+              "37",
+              "54",
+              "billion",
+              "for",
+              "2025",
+              "11",
+              "higher",
+              "than"
+            ],
+            "removed_tokens_sample": [
+              "115",
+              "for",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2024_7_D060",
+            "score": 0.764206,
+            "normalised_score": 0.7642,
+            "label": "Expanded",
+            "rationale": "Score 76.42% of ceiling — content grew from ~18 to ~135 words (7.5×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The disclosure reports a 29% increase in net provisions for litigation and regulatory proceedings from $166 million to $215 million. This is a quantifiable material change in financial position and risk exposure.",
+          "key_change": "Increase in litigation provisions"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0513",
+        "relationship": "one_to_one",
+        "status": "auto_matched",
+        "review_reasons": [],
+        "explanation": "The complete selected original text is identical within the same SEC Item after removing line-leading bullet formatting and normalizing whitespace. Neither LLM agent was used for this link.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net provisions for litigation and regulatory proceedings were $166 million in 2024, compared to $115 million in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_7_D064",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net provisions for litigation and regulatory proceedings were $166 million for 2024, an increase from $115 million in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Unchanged",
+            "cosine_similarity": 1.0,
+            "sequence_match_ratio": 1.0,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "gs_2024_7_D060",
+            "score": 1.043585,
+            "normalised_score": 1.0436,
+            "label": "Unchanged",
+            "rationale": "Score 104.36% of ceiling with 100% word overlap — text is effectively identical.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.0,
+          "confidence_score": 1.0,
+          "reason": "The aligned disclosures are exact-text matches under the automatic matching policy, so no meaningful disclosure change is identified.",
+          "key_change": "No substantive change"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates (bac_2024_7_D267 on consumer charge-offs and bac_2024_7_D117 on Global Markets income) do not address litigation, regulatory provisions, or general operating expense provisions comparable to GS's disclosure. Charge-offs are credit losses, not litigation/regulatory provisions."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D089",
+            "peer_topic": "Credit loss provisions and allowance for credit losses",
+            "peer_summary": "Provisions for credit losses were $276 million, compared to $950 million in the prior year, primarily due to a lower net ACL build of $228 million (vs $910 million prior year) associated with transfer risk for exposures outside the U.S.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.226568,
+            "relationship": "related_topic",
+            "comparison": "Both Goldman Sachs (GS) and Citigroup (C) disclose specific provisions for non-credit operating risks in their 2024 operating expenses. GS reports net provisions for litigation and regulatory proceedings of $166 million, an increase from $115 million in 2023. C reports provisions for credit losses (which include transfer risk and other asset allowances) of $276 million, a significant decrease from $950 million in the prior year. While GS cites litigation/regulatory matters, C cites macroeconomic assumptions and transfer risk for exposures outside the U.S. as the drivers for their respective provision changes, highlighting different risk exposures within the broader 'provisions' expense category.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P061_S004",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net provisions for litigation and regulatory proceedings were $166 million for 2024 compared with $115 million for 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D089",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P102_S001",
+                    "paragraph_id": "c_2024_7_P102",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Provisions were $276 million, compared to $950 million in the prior year, primarily driven by a lower ACL build on other assets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates (jpm_2024_7_D162 on investment securities allowance and jpm_2024_7_D155 on credit loss provision) focus on credit risk and specific loan exposures. They do not disclose litigation or regulatory provisions comparable to GS's $166 million litigation/regulatory expense."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates (ms_2024_7_D037 on other net revenues and ms_2024_7_D033 on equity net revenues) focus on revenue drivers and market performance. They do not disclose litigation or regulatory provisions comparable to GS's disclosure."
+      }
+    ]
+  }
+}

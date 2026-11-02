@@ -430,9 +430,8 @@ def _summarize_usage(request_dir: Path) -> dict:
     return summary
 
 
-def run(args, *, database_inputs=None) -> dict:
-    if database_inputs is None:
-        database_inputs = read_peer_inputs(args.ticker, args.peers, int(args.year), env_file=args.env_file)
+def prepare_comparison_inputs(args, database_inputs):
+    """Validate saved evidence and select targets without model calls or writes."""
     targets_all = load_company(None, args.ticker, args.year, reports=database_inputs["disclosures"][args.ticker])
     peer_rows = {ticker: load_company(None, ticker, args.year, reports=database_inputs["disclosures"][ticker])
                  for ticker in args.peers}
@@ -454,6 +453,14 @@ def run(args, *, database_inputs=None) -> dict:
         targets = select_material_change_targets(targets)
         if not targets:
             raise ValueError("No target disclosures have stage 5 materiality='Yes' for the selected year and Items. Check that completed adjacent-year materiality alignments are available.")
+    return targets, peers, alignment_hashes, all_target_count
+
+
+def run(args, *, database_inputs=None) -> dict:
+    if database_inputs is None:
+        database_inputs = read_peer_inputs(args.ticker, args.peers, int(args.year), env_file=args.env_file)
+    targets, peers, alignment_hashes, all_target_count = prepare_comparison_inputs(args, database_inputs)
+    selection = getattr(args, "target_selection", "all")
     candidates = make_candidates(targets, peers, args.top_k)
     input_hash = _input_fingerprint(targets, peers, alignment_hashes)
     output = args.output_dir or args.data_dir / "peer_comparison" / args.ticker.lower() / args.year

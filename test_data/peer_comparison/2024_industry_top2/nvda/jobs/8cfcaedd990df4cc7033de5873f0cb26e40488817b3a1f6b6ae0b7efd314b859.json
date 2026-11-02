@@ -1,0 +1,367 @@
+{
+  "input_fingerprint": "0b38b2ffd36541924c6794ab50b702e4a1c712ba048b7ca1d5c7e4702bfc3742",
+  "request_hash": "173ed6f05ae65d19385178c99d1be693750a988df267b8c39d76ca8f62f50052",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_7_D048",
+    "item": "7",
+    "target_topic": "All Other Operating Loss Variance",
+    "target_summary": "The year-on-year decrease in All Other operating loss was due to a $1.4 billion Arm acquisition termination cost in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0343",
+        "relationship": "many_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "These 2023 disclosures all center on the $1.35 billion Arm acquisition termination cost recorded in FY2023. NVDA 2024 D048 and D059 explicitly reference this same $1.4 billion cost as a prior-year item affecting FY2023 results (D048 explains the decrease in All Other operating loss due to the prior year charge; D059 records the cost). They share the specific topic of the Arm acquisition termination charge. NVDA 2024 D023 also mentions it but focuses on FY24 OpEx growth drivers, while D048/D059 focus on the specific impact/reference of the charge itself. NVDA 2024 D068 and D069 discuss cash flow and working capital components without focusing on the Arm charge.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_7_D018",
+            "item": "7",
+            "section": "Termination of the Arm Share Purchase Agreement",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "NVIDIA and SoftBank terminated the Share Purchase Agreement for the acquisition of Arm in February 2022 due to significant regulatory challenges, resulting in a $1.35 billion acquisition termination cost recorded in fiscal year 2023.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2023_7_D027",
+            "item": "7",
+            "section": "Fiscal Year 2023 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased 50% year-over-year to include a $1.35 billion acquisition termination charge for the Arm transaction, alongside increased compensation, data center infrastructure, and engineering development costs.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2023_7_D062",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "NVIDIA recorded an acquisition termination cost of $1.35 billion in fiscal year 2023 related to the Arm transaction, reflecting the write-off of the prepayment provided at signing.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2023_7_D074",
+            "item": "7",
+            "section": "Liquidity and Capital Resources",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Cash provided by operating activities decreased in fiscal year 2023 compared to 2022, primarily due to a decrease in net income adjusted for non-cash items (including a $1.35 billion Arm acquisition termination cost) and higher tax payments, partially offset by changes in working capital driven by lower accounts receivable.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D048",
+            "item": "7",
+            "section": "Results of Operations > Operating Income by Reportable Segments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The year-on-year decrease in All Other operating loss was due to a $1.4 billion Arm acquisition termination cost in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_7_D059",
+            "item": "7",
+            "section": "Results of Operations > Acquisition Termination Cost",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company recorded an acquisition termination cost of $1.4 billion in fiscal year 2023 related to the Arm transaction, reflecting the write-off of the prepayment provided at signing.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.69957,
+            "sequence_match_ratio": 0.203008,
+            "length_ratio": 0.350254,
+            "word_count_delta": -128,
+            "added_tokens_sample": [
+              "all",
+              "other",
+              "operating",
+              "loss",
+              "year",
+              "on",
+              "year",
+              "decrease",
+              "was",
+              "1",
+              "4",
+              "billion",
+              "arm",
+              "acquisition",
+              "termination",
+              "cost",
+              "in",
+              "fiscal",
+              "year",
+              "2023"
+            ],
+            "removed_tokens_sample": [
+              "in",
+              "february",
+              "2022",
+              "nvidia",
+              "and",
+              "softbank",
+              "announced",
+              "termination",
+              "of",
+              "the",
+              "share",
+              "purchase",
+              "agreement",
+              "whereby",
+              "nvidia",
+              "would",
+              "have",
+              "acquired",
+              "arm",
+              "from"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "nvda_2023_7_D062",
+            "score": 0.968654,
+            "normalised_score": 0.9687,
+            "rationale": "Regroup: 4 previous → 2 current. Best pair scored 96.87% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.8,
+          "reason": "The 2024 disclosures merely reference a past event (FY2023 termination cost) that is already closed. The amount is consistent ($1.35B vs $1.4B due to rounding/foreign exchange). The 2023 disclosures provided the full context of the termination (regulatory challenges, prepayment write-off). The 2024 disclosures serve primarily as a comparative explanation for current period operating results, adding no new strategic or risk information.",
+          "key_change": "Reclassification of prior period cost"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0327",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures analyze the variance in 'All Other' operating income/loss, attributing the change to stock-based compensation expense (and prior-year acquisition termination charges in 2024). nvda_2025_7_D043 discusses Graphics operating income, which does not match the 'All Other' segment topic of nvda_2024_7_D048.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D048",
+            "item": "7",
+            "section": "Results of Operations > Operating Income by Reportable Segments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The year-on-year decrease in All Other operating loss was due to a $1.4 billion Arm acquisition termination cost in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D044",
+            "item": "7",
+            "section": "Results of Operations > Operating Income by Reportable Segments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The year-over-year increase in All Other operating loss was due to an increase in stock-based compensation expense reflecting employee growth and compensation increases.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.483372,
+            "sequence_match_ratio": 0.492308,
+            "length_ratio": 0.625,
+            "word_count_delta": -15,
+            "added_tokens_sample": [
+              "over",
+              "increase",
+              "an",
+              "reflecting",
+              "employee",
+              "growth",
+              "and",
+              "compensation",
+              "increases"
+            ],
+            "removed_tokens_sample": [
+              "on",
+              "decrease",
+              "the",
+              "1",
+              "4",
+              "billion",
+              "arm",
+              "acquisition",
+              "termination",
+              "cost",
+              "in",
+              "fiscal",
+              "year",
+              "2023",
+              "partially",
+              "offset",
+              "by",
+              "a",
+              "839",
+              "million"
+            ]
+          },
+          "semantic": {
+            "matched_id": "nvda_2024_7_D048",
+            "score": 0.805034,
+            "normalised_score": 0.805,
+            "label": "Reduced",
+            "rationale": "Score 80.50% of ceiling — content shrank from ~37 to ~25 words (0.7×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The disclosure changes from attributing the All Other loss variance to a specific $1.4 billion non-recurring item (Arm termination cost) in the prior year to attributing it to recurring stock-based compensation increases driven by employee/compensation growth in the current year. This represents a meaningful shift from a one-time acquisition event to ongoing operational HR cost structures.",
+          "key_change": "Shift from acquisition cost to recurring compensation"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D030",
+            "peer_topic": "All Other operating loss breakdown for 2024 and 2023",
+            "peer_summary": "All Other operating loss was $4.2 billion in 2024 and $4.4 billion in 2023, primarily consisting of amortization of acquisition-related intangibles and stock-based compensation expense.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.304447,
+            "relationship": "same_topic",
+            "comparison": "Both NVIDIA and AMD disclose the primary drivers for their respective 'All Other' operating loss/expense categories, highlighting significant impacts from both amortization of acquisition-related intangibles and stock-based compensation (SBC). NVIDIA attributes its year-on-year variance specifically to a one-time $1.4 billion Arm acquisition termination cost in the prior year, whereas AMD’s 'All Other' loss is driven by ongoing amortization ($2.4 billion) and similar SBC scales ($1.4 billion), without mentioning a comparable one-time termination charge in the variance explanation.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D048",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P051_S001",
+                    "paragraph_id": "nvda_2024_7_P051",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "All Other operating loss - The year-on-year decrease was due to the $1.4 billion Arm acquisition termination cost in fiscal year 2023, partially offset by a $839 million increase in stock-based compensation expense in fiscal year 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P042_S001",
+                    "paragraph_id": "amd_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "All Other operating loss of $4.2 billion in 2024 primarily consisted of $2.4 billion of amortization of acquisition-related intangibles and $1.4 billion of stock-based compensation expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P042_S002",
+                    "paragraph_id": "amd_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "All Other operating loss of $4.4 billion in 2023 primarily consisted of $2.8 billion of amortization of acquisition-related intangibles and $1.4 billion of stock-based compensation expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D059",
+            "peer_topic": "Unallocated expenses composition and increase",
+            "peer_summary": "Unallocated expenses increased 192% in fiscal year 2024, primarily due to higher amortization of acquisition-related intangible assets, stock-based compensation expense, and restructuring and other charges, with increases largely attributed to the VMware Merger and higher grant-date fair values of annual employee equity awards.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.205166,
+            "relationship": "same_topic",
+            "comparison": "Both NVIDIA and Broadcom (via its 'Unallocated expenses') report significant increases in stock-based compensation expense and amortization of acquisition-related intangible assets as key components of their non-segment or 'All Other' operating losses. However, Broadcom attributes a massive 192% increase in these unallocated expenses primarily to the VMware Merger, including higher grant-date fair values, while NVIDIA attributes its variance to a specific $1.4 billion Arm acquisition termination cost in the prior year.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D048",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P051_S001",
+                    "paragraph_id": "nvda_2024_7_P051",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "All Other operating loss - The year-on-year decrease was due to the $1.4 billion Arm acquisition termination cost in fiscal year 2023, partially offset by a $839 million increase in stock-based compensation expense in fiscal year 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P057_S002",
+                    "paragraph_id": "avgo_2024_7_P057",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Unallocated expenses increased 192% in fiscal year 2024, compared to the prior fiscal year, primarily due to higher amortization of acquisition-related intangible assets, stock-based compensation expense and restructuring and other charges.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P057_S004",
+                    "paragraph_id": "avgo_2024_7_P057",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase in stock-based compensation expense was also due to annual employee equity awards granted at higher grant-date fair values.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosure (intc_2024_7_D073) only states that 'All other operating expenses' were flat year-over-year without providing the specific component drivers (such as stock-based compensation or amortization) that are central to NVIDIA's disclosure of variance causes."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosures relate to EBU operating income drivers (ASP declines, bit shipments) and operating cash flow, which do not match the specific topic of 'All Other' operating loss variance composition regarding acquisition costs and stock-based compensation."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosures focus on drivers for SG&A and R&D expenses individually (e.g., sales and marketing, deferred compensation revaluation), rather than an aggregated 'All Other' operating loss category with the specific composition of amortization and stock-based compensation described for NVIDIA."
+      }
+    ]
+  }
+}

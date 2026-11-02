@@ -1,0 +1,241 @@
+{
+  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
+  "request_hash": "0a276ec64e5d807ae133cea3b9fc6c349860cdc7779dabbe75488fdaa7be6e39",
+  "result": {
+    "target_ticker": "QCOM",
+    "target_disclosure_id": "qcom_2024_7_D007",
+    "item": "7",
+    "target_topic": "QTL revenue drivers in fiscal 2024",
+    "target_summary": "QTL revenues increased by 5% in fiscal 2024 compared to the prior year, primarily due to an increase in estimated sales of 3G/4G/5G-based multimode products.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "qcom_2023_2024_M0179",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the year-over-year percentage change in QTL revenues. 2023 D008 cites a 17% decrease; 2024 D007 cites a 5% increase due to 3G/4G/5G product sales. They cover the same specific subject: QTL revenue performance drivers.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2023_7_D008",
+            "item": "7",
+            "section": "Fiscal 2023 Overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL revenues decreased by 17% in fiscal 2023 compared to the prior year.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_7_D007",
+            "item": "7",
+            "section": "Fiscal 2024 Overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL revenues increased by 5% in fiscal 2024 compared to the prior year, primarily due to an increase in estimated sales of 3G/4G/5G-based multimode products.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.435813,
+            "sequence_match_ratio": 0.487805,
+            "length_ratio": 2.153846,
+            "word_count_delta": 15,
+            "added_tokens_sample": [
+              "increased",
+              "5",
+              "2024",
+              "primarily",
+              "due",
+              "to",
+              "an",
+              "increase",
+              "in",
+              "estimated",
+              "sales",
+              "of",
+              "3g",
+              "4g",
+              "5g",
+              "based",
+              "multimode",
+              "products"
+            ],
+            "removed_tokens_sample": [
+              "decreased",
+              "17",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "matched_id": "qcom_2023_7_D008",
+            "score": 0.743617,
+            "normalised_score": 0.7436,
+            "label": "Relocated",
+            "rationale": "Score 74.36% of ceiling — content is similar but section changed from 'Fiscal 2023 Overview' to 'Fiscal 2024 Overview'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The disclosure reports a significant change in the QTL segment's performance, with revenues increasing 5% after a 17% decrease. The addition of specific drivers ('estimated sales of 3G/4G/5G-based multimode products') quantifies the recovery in the licensing business, which is a critical part of the company's strategic model. This is a material change in financial exposure and segment performance.",
+          "key_change": "QTL segment revenue recovery and driver disclosure"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "qcom_2024_2025_M0033",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The previous disclosure details the year-over-year change in QTL segment revenues (increased by 5%). The current fiscal year overview (qcom_2025_7_D005) mentions QTL revenues remained flat but does not provide a specific disclosure solely dedicated to QTL segment performance changes in the same granular way. No other current disclosure in Item 7 specifically isolates QTL revenue changes with the same level of detail or grouping. The search for a counterpart yielded no exact match for a standalone QTL revenue change disclosure in the 2025 overview or segment results sections provided.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_7_D007",
+            "item": "7",
+            "section": "Fiscal 2024 Overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL revenues increased by 5% in fiscal 2024 compared to the prior year, primarily due to an increase in estimated sales of 3G/4G/5G-based multimode products.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -28,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "qtl",
+              "revenues",
+              "increased",
+              "by",
+              "5",
+              "in",
+              "fiscal",
+              "2024",
+              "compared",
+              "to",
+              "the",
+              "prior",
+              "year",
+              "primarily",
+              "due",
+              "to",
+              "an",
+              "increase",
+              "in",
+              "estimated"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.8,
+          "reason": "The change is the removal of a specific sentence detailing a 5% increase in QTL revenues. While financial results are material, the alignment indicates this specific textual disclosure was removed/renumbered/replaced. Without the current counterpart showing the new figures or narrative, and given this is likely part of a restructured 'Overview' section rather than a disappearance of the financial data itself, the specific text removal is not independently material compared to the consolidated financial statements. It is a routine update to the narrative presentation of results.",
+          "key_change": "Removal of QTL revenue growth detail"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates for AMD (D033, D032) disclose drivers for operating expenses (MG&A and R&D) rather than revenue growth drivers. The target disclosure concerns QTL revenue increases, making the expense-focused candidates on unrelated financial metrics incomparable."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates for Avago (D052, D051) disclose drivers for non-revenue line items (amortization of intangibles and SG&A expenses) related to the VMware merger. These do not compare to the target's focus on specific product-based revenue drivers."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_7_D081",
+            "peer_topic": "CCG Revenue Composition Changes",
+            "peer_summary": "CCG revenue increased 4% from 2023 primarily due to higher notebook volume, which was partially offset by lower desktop revenue due to lower demand and lower other CCG revenue resulting from the exit of legacy businesses.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.080615,
+            "relationship": "same_topic",
+            "comparison": "Both Qualcomm and Intel disclose specific drivers for their respective segment revenue changes in fiscal 2024, focusing on product volume and demand shifts. Qualcomm attributes its QTL revenue increase to estimated sales of 3G/4G/5G-based multimode products, whereas Intel attributes its CCG revenue increase to higher notebook volume, partially offset by lower desktop revenue due to demand decreases. Both disclosures highlight the interplay between specific product categories (multimode chips vs. notebooks/desktops) and end-market demand as key financial drivers.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D007",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P007_S004",
+                    "paragraph_id": "qcom_2024_7_P007",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "• QTL revenues increased by 5% in fiscal 2024 compared to the prior year, primarily due to an increase in estimated sales of 3G/4G/5G-based multimode products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D081",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P076_S005",
+                    "paragraph_id": "intc_2024_7_P076",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "CCG revenue increased 4% from 2023 primarily due to higher notebook volume compared to 2023 and was partially offset by lower other CCG revenue, which decreased from 2023 due to the exit of legacy businesses, and lower desktop revenue, which decreased on lower demand compared to 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates for Micron (D021, D005) disclose drivers for SG&A expenses and total revenue growth (DRAM/NAND bits and ASPs). While D005 discusses revenue, it focuses on memory product dynamics (bits/ASP) which differs from Qualcomm's specific mobile connectivity product sales context. D021 is expense-focused. Thus, no candidate is sufficiently comparable in topic specificity."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates for NVIDIA (D068, D022) disclose drivers for cash flow from operations and gross margin trends. These financial measures and their drivers are distinct from the target's disclosure of specific revenue volume drivers for a product segment."
+      }
+    ]
+  }
+}

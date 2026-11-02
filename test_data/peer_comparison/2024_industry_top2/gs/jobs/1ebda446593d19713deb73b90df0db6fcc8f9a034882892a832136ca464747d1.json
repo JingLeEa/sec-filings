@@ -1,0 +1,317 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "e3e3fcfcbfbc432c31d9ff8230a33bfcd517619c1cb1ab0bddb0d75a2710ab1c",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_7_D153",
+    "item": "7",
+    "target_topic": "Segment Operating Results Reference",
+    "target_summary": "See referenced section for information on average quarterly attributed equity by segment.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0563",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures relate to the 'Segment Operating Results' section and specifically reference average quarterly attributed equity. D067 introduces the table for segment operating results (where this data resides), while D153 explicitly points to that section for the equity data.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_7_D067",
+            "item": "7",
+            "section": "Results of Operations > Segment Assets and Operating Results",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The table presents segment operating results, with a reference to Note 25 for further information on business segments.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D153",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Capital Management > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "See referenced section for information on average quarterly attributed equity by segment.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0608",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosures D152 and D153 together cover the specific changes in attributed equity allocations by segment (D152) and the cross-reference to segment operating results for average quarterly data (D153). The 2025 disclosure D162 combines the specific allocation changes for Jan 1, 2026 and Jan 1, 2025 with the same cross-reference to segment operating results, covering the same underlying subject matter.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D152",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Capital Management > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In January 2024, attributed equity increased by $1.6 billion for Platform Solutions, while decreasing by $1.2 billion for Asset & Wealth Management and $0.4 billion for Global Banking & Markets; in January 2025, Global Banking & Markets increased by $0.4 billion, while Asset & Wealth Management and Platform Solutions decreased by $0.3 billion and $0.1 billion respectively.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D153",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Capital Management > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "See referenced section for information on average quarterly attributed equity by segment.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_7_D162",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Capital Management > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Attributed equity allocations changed on January 1, 2026, with decreases for Asset & Wealth Management ($0.5B) and increases for Global Banking & Markets ($0.4B) and Platform Solutions ($0.1B); prior changes occurred on January 1, 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.931737,
+            "sequence_match_ratio": 0.768166,
+            "length_ratio": 0.795031,
+            "word_count_delta": -33,
+            "added_tokens_sample": [
+              "2026",
+              "2025",
+              "0",
+              "5",
+              "while",
+              "attributed",
+              "equity",
+              "increased",
+              "by",
+              "and",
+              "approximately",
+              "0",
+              "1",
+              "billion",
+              "for",
+              "platform",
+              "solutions"
+            ],
+            "removed_tokens_sample": [
+              "we",
+              "review",
+              "and",
+              "make",
+              "any",
+              "necessary",
+              "adjustments",
+              "to",
+              "our",
+              "attributed",
+              "equity",
+              "in",
+              "january",
+              "each",
+              "year",
+              "to",
+              "reflect",
+              "among",
+              "other",
+              "things"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2024_7_D152",
+            "score": 0.974054,
+            "normalised_score": 0.9741,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 97.41% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.8,
+          "reason": "The 2024 disclosure provided specific attributed equity changes for January 2024 and January 2025. The 2025 disclosure provides specific changes for January 2026 and January 2025. This represents a shift in the disclosed financial allocation data, moving the 'current' annual adjustment from 2025 to 2026. While the methodology is unchanged, the specific capital allocation decisions by segment ($0.5B decrease in Asset & Wealth vs prior year shifts) represent new operational capital decisions that investors would review to understand intra-company capital flow changes.",
+          "key_change": "Update of specific segment attributed equity allocations"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D093",
+            "peer_topic": "GWIM Capital Allocation Reference",
+            "peer_summary": "For information on capital allocated to the business segments, see Business Segment Operations on page 35.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.122299,
+            "relationship": "same_topic",
+            "comparison": "Both GS and BAC provide cross-references to specific sections within their Management’s Discussion and Analysis for detailed capital or equity metrics by business segment. GS refers readers to 'Segment Operating Results' for 'average quarterly attributed equity by segment,' while BAC refers readers to 'Business Segment Operations' for information on 'capital allocated to the business segments.' Both serve as navigational disclosures directing investors to segment-level capital data.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D153",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P227_S004",
+                    "paragraph_id": "gs_2024_7_P227",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "See \"Results of Operations - Segment Assets and Operating Results - Segment Operating Results\" for information about our average quarterly attributed equity by segment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D093",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P103_S002",
+                    "paragraph_id": "bac_2024_7_P103",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "For information on capital allocated to the business segments, see Business Segment Operations on page 35.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D045",
+            "peer_topic": "Location of consolidated and segment KPI data",
+            "peer_summary": "Consolidated key performance indicators, including equity and credit metrics, are presented in Tables 1, 6, and 7, while key segment performance metrics are detailed in the Business Segment Operations section.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.085624,
+            "relationship": "same_topic",
+            "comparison": "Similar to GS, which references 'Segment Operating Results' for segment-level equity information, BAC provides a general reference to 'Business Segment Operations' for 'key segment performance metrics.' Both disclosures act as index points for investors to find detailed breakdowns of segment performance rather than presenting the data directly in the parent sentence.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D153",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P227_S004",
+                    "paragraph_id": "gs_2024_7_P227",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "See \"Results of Operations - Segment Assets and Operating Results - Segment Operating Results\" for information about our average quarterly attributed equity by segment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D045",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P044_S001",
+                    "paragraph_id": "bac_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "For information on key segment performance metrics, see Business Segment Operations on page 35.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved is sufficiently comparable. Citi's candidates reference deposit trends by business and general management use of segment information, but do not provide the specific cross-reference to segment operating results or attributed capital metrics similar to GS's disclosure of average quarterly attributed equity."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D024",
+            "peer_topic": "Scope and Referential Structure of Consolidated Results",
+            "peer_summary": "The section compares JPMorganChase's consolidated results for the two-year period ended December 31, 2024, referencing the 2023 Form 10-K for prior year comparisons and directing segment-specific details and critical accounting estimates to other sections.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.10219,
+            "relationship": "same_topic",
+            "comparison": "Both GS and JPMorgan use Item 7 to direct readers to specific sections for granular segment or operational results. GS references 'Segment Operating Results' for attributed equity, while JPMorgan references the 'Consolidated Results of Operations' for year-over-year comparisons and directs segment-specific factors to individual segment discussions. Both are structural references guiding investors to the detailed segment analysis within the 10-K.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D153",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P227_S004",
+                    "paragraph_id": "gs_2024_7_P227",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "See \"Results of Operations - Segment Assets and Operating Results - Segment Operating Results\" for information about our average quarterly attributed equity by segment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D024",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P041_S001",
+                    "paragraph_id": "jpm_2024_7_P041",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "This section provides a comparative discussion of JPMorganChase's Consolidated Results of Operations on a reported basis for the two-year period ended December 31, 2024, unless otherwise specified.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P041_S003",
+                    "paragraph_id": "jpm_2024_7_P041",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Factors that relate primarily to a single business segment or Corporate are discussed in more detail in the results of that segment or Corporate.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved is sufficiently comparable. Morgan Stanley's candidates reference accounting notes for goodwill/intangibles and collateral transactions, which are financial statement note references rather than navigational references to segment operating results or capital allocation metrics within the MD&A."
+      }
+    ]
+  }
+}

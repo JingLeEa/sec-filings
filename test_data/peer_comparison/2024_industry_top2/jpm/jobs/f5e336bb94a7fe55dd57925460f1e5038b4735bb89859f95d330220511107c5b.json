@@ -1,0 +1,370 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "ab200b0c4406e326c819d20b1cd313dfc8f5d4c93104494375abca476c4a0424",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_8_D535",
+    "item": "8",
+    "target_topic": "Unrecognized tax benefits balance and potential tax rate impact",
+    "target_summary": "At December 31, 2024, JPMorganChase's unrecognized tax benefits were $6.2 billion, of which $4.4 billion would reduce the annual effective tax rate if recognized, with $1.7 billion also accrued for related interest and penalties.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M1301",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the total balance of unrecognized tax benefits (excluding interest and penalties) and the specific portion that would reduce the annual effective tax rate if recognized. 2023 D587 reports $5.4B total/$3.9B reducible (P816 S001). 2024 D535 reports $6.2B total/$4.4B reducible (P799 S001). The structure and subject matter are identical.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_8_D587",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 25 - Income taxes > Unrecognized tax benefits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "At December 31, 2023, 2022, and 2021, JPMorgan Chase's unrecognized tax benefits (excluding interest and penalties) were $5.4 billion, $5.0 billion, and $4.6 billion, respectively. Of these amounts, $3.9 billion, $3.8 billion, and $3.4 billion would have reduced the annual effective tax rate if recognized.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D535",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 25 - Income taxes > Unrecognized tax benefits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "At December 31, 2024, JPMorganChase's unrecognized tax benefits were $6.2 billion, of which $4.4 billion would reduce the annual effective tax rate if recognized, with $1.7 billion also accrued for related interest and penalties.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.947481,
+            "sequence_match_ratio": 0.811881,
+            "length_ratio": 1.244444,
+            "word_count_delta": 33,
+            "added_tokens_sample": [
+              "2024",
+              "and",
+              "jpmorganchase's",
+              "6",
+              "2",
+              "billion",
+              "and",
+              "4",
+              "4",
+              "billion",
+              "and",
+              "at",
+              "december",
+              "31",
+              "2024",
+              "and",
+              "2023",
+              "in",
+              "addition",
+              "to"
+            ],
+            "removed_tokens_sample": [
+              "and",
+              "2021",
+              "jpmorgan",
+              "chase's",
+              "billion",
+              "and",
+              "4",
+              "6",
+              "billion",
+              "and",
+              "3",
+              "4"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_8_D587",
+            "score": 1.016773,
+            "normalised_score": 1.0168,
+            "label": "Unchanged",
+            "rationale": "Score 101.68% of ceiling — semantically identical despite surface differences (word overlap 75%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.5,
+          "confidence_score": 0.85,
+          "reason": "The disclosure shows a material increase in unrecognized tax benefits, rising from $5.4 billion to $6.2 billion, and a corresponding increase in the portion that would reduce the effective tax rate from $3.9 billion to $4.4 billion. These are significant quantitative changes in the company's tax exposure and liability position.",
+          "key_change": "Increase in unrecognized tax benefits"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M1254",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures report the total amount of unrecognized tax benefits (UTB) and the portion that would reduce the annual effective tax rate if recognized. D535 (2024) reports $6.2B total/$4.4B rate-reducing. D576 (2025) reports $5.6B total/$4.6B rate-reducing. They cover the same specific UTB balance topic.\n\nBoth disclosures explain that certain items included in the unrecognized tax benefits balance do not affect the effective tax rate if recognized, listing specific types like temporary differences and offsetting benefits. They share the same specific topic of 'UTB Items Not Affecting Effective Tax Rate'.\n\nD535 (2024) contains the primary Unrecognized Tax Benefits (UTB) balance information and component descriptions. D580 (2025) introduces the UTB reconciliation table which details these balances. While D535 does not explicitly mention 'reconciliation', it is the source disclosure for the UTB balances presented in the table. However, strict subject matching suggests D535 is 'UTB Balance' while D580 is 'Reconciliation Table Intro'. Given the previous rejection of this link due to lack of specific 'reconciliation' text in D535, and the fact that D535 is the only candidate covering ",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D535",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 25 - Income taxes > Unrecognized tax benefits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "At December 31, 2024, JPMorganChase's unrecognized tax benefits were $6.2 billion, of which $4.4 billion would reduce the annual effective tax rate if recognized, with $1.7 billion also accrued for related interest and penalties.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_8_D576",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 25 - Income taxes > Unrecognized tax benefits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "At December 31, 2025, JPMorganChase's unrecognized tax benefits were $5.6 billion, with $4.6 billion of these amounts potentially reducing the annual effective tax rate if recognized.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2025_8_D577",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 25 - Income taxes > Unrecognized tax benefits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The unrecognized tax benefits balance includes items that would not affect the effective tax rate, such as tax effects of temporary differences and offsets from other jurisdictions.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2025_8_D580",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 25 - Income taxes > Unrecognized tax benefits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "A table presents the reconciliation of the beginning and ending amounts of unrecognized tax benefits.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D380",
+            "peer_topic": "Unrecognized tax benefits (UTB) and interest/penalties",
+            "peer_summary": "UTB balances affecting the effective tax rate were $573 million at December 31, 2024, with a possible decrease of up to $217 million in the next 12 months. The Corporation recognized an interest benefit of $9 million in 2024 and had accruals for interest and penalties of $105 million at year-end 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.290504,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan Chase and Bank of America disclose the specific amount of unrecognized tax benefits (UTB) that would impact the effective tax rate if recognized, alongside the total liability and related interest/penalty accruals. JPMorgan Chase reported a significantly larger UTB balance affecting the tax rate ($4.4 billion) compared to Bank of America ($573 million) as of December 31, 2024. Additionally, both firms accrue interest and penalties separately from the UTB balance, with JPMorgan Chase accruing $1.7 billion and Bank of America $105 million. Both disclosures note that certain UTB items do not affect the effective tax rate due to offsets from temporary differences or other jurisdictions.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D535",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P799_S001",
+                    "paragraph_id": "jpm_2024_8_P799",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "At December 31, 2024, 2023 and 2022, JPMorganChase's unrecognized tax benefits, excluding related interest expense and penalties, were $6.2 billion, $5.4 billion and $5.0 billion, respectively, of which $4.4 billion, $3.9 billion and $3.8 billion, respectively, if recognized, would reduce the annual effective tax rate.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P802_S001",
+                    "paragraph_id": "jpm_2024_8_P802",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "At December 31, 2024 and 2023, in addition to the liability for unrecognized tax benefits, the Firm had accrued $1.7 billion and $1.6 billion, respectively, for income tax-related interest and penalties.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P799_S003",
+                    "paragraph_id": "jpm_2024_8_P799",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "These unrecognized items include the tax effect of certain temporary differences, the portion of gross state and local unrecognized tax benefits that would be offset by the benefit from associated U.S. federal income tax deductions, and the portion of gross non-U.S. unrecognized tax benefits that would have offsets in other jurisdictions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D380",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P456_S001",
+                    "paragraph_id": "bac_2024_8_P456",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "At December 31, 2024, 2023 and 2022, the balance of the Corporation's UTBs which would, if recognized, affect the Corporation's effective tax rate was $573 million, $671 million and $709 million, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P458_S002",
+                    "paragraph_id": "bac_2024_8_P458",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "At December 31, 2024 and 2023, the Corporation's accrual for interest and penalties that related to income taxes, net of taxes and remittances, was $105 million and $134 million.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P456_S002",
+                    "paragraph_id": "bac_2024_8_P456",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Included in the UTB balance are some items the recognition of which would not affect the effective tax rate, such as the tax effect of certain temporary differences, the portion of gross state UTBs that would be offset by the tax benefit of the associated federal deduction and the portion of gross non-U.S. UTBs that would be offset by tax reductions in other jurisdictions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D292",
+            "peer_topic": "Rollforward and amount of unrecognized tax benefits",
+            "peer_summary": "The company reports a rollforward of unrecognized tax benefits, with $1.0 billion of the total potentially affecting tax expense if recognized in 2022, 2023, and 2024, while remaining positions have offsetting amounts or are temporary differences.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.286633,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan Chase and Citigroup disclose the portion of unrecognized tax benefits that would affect the effective tax rate if recognized. JPMorgan Chase reported $4.4 billion impacting the rate, whereas Citigroup reported $1.0 billion for the same period. Both companies explain that the remaining unrecognized tax benefits do not affect the effective tax rate because they consist of offsetting amounts in other jurisdictions or temporary differences.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D535",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P799_S001",
+                    "paragraph_id": "jpm_2024_8_P799",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "At December 31, 2024, 2023 and 2022, JPMorganChase's unrecognized tax benefits, excluding related interest expense and penalties, were $6.2 billion, $5.4 billion and $5.0 billion, respectively, of which $4.4 billion, $3.9 billion and $3.8 billion, respectively, if recognized, would reduce the annual effective tax rate.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P799_S003",
+                    "paragraph_id": "jpm_2024_8_P799",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "These unrecognized items include the tax effect of certain temporary differences, the portion of gross state and local unrecognized tax benefits that would be offset by the benefit from associated U.S. federal income tax deductions, and the portion of gross non-U.S. unrecognized tax benefits that would have offsets in other jurisdictions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D292",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P345_S002",
+                    "paragraph_id": "c_2024_8_P345",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The portions of the total unrecognized tax benefits at December 31, 2024, 2023 and 2022 that, if recognized, would affect Citi's tax expense is $1.0 billion in each of the respective years.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_8_P345_S003",
+                    "paragraph_id": "c_2024_8_P345",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The remaining uncertain tax positions have offsetting amounts in other jurisdictions or are temporary differences.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D484",
+            "peer_topic": "Liability for Unrecognized Tax Benefits and Tax Rate Impact",
+            "peer_summary": "The liability for unrecognized tax benefits was $1.8 billion as of December 2024, including $1.8 billion that would reduce the annual effective tax rate if recognized; remaining benefits have jurisdictional offsets or relate to temporary differences.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.478365,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan Chase and Goldman Sachs provide disclosures on the liability for unrecognized tax benefits and the specific amount that would reduce the annual effective tax rate if recognized. JPMorgan Chase's impact amount was $4.4 billion, while Goldman Sachs reported $1.8 billion. Similar to JPMorgan Chase, Goldman Sachs notes that the remaining unrecognized tax benefits would not affect the annual tax rate due to jurisdictional offsets or temporary differences.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D535",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P799_S001",
+                    "paragraph_id": "jpm_2024_8_P799",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "At December 31, 2024, 2023 and 2022, JPMorganChase's unrecognized tax benefits, excluding related interest expense and penalties, were $6.2 billion, $5.4 billion and $5.0 billion, respectively, of which $4.4 billion, $3.9 billion and $3.8 billion, respectively, if recognized, would reduce the annual effective tax rate.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P799_S003",
+                    "paragraph_id": "jpm_2024_8_P799",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "These unrecognized items include the tax effect of certain temporary differences, the portion of gross state and local unrecognized tax benefits that would be offset by the benefit from associated U.S. federal income tax deductions, and the portion of gross non-U.S. unrecognized tax benefits that would have offsets in other jurisdictions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D484",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P626_S001",
+                    "paragraph_id": "gs_2024_8_P626",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In the table above, the liability for unrecognized tax benefits included $1.8 billion as of December 2024, $1.4 billion as of December 2023 and $1.2 billion as of December 2022 of unrecognized tax benefits which, if recognized, would reduce the annual effective tax rate.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P626_S002",
+                    "paragraph_id": "gs_2024_8_P626",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The remaining unrecognized tax benefits in the table above would not affect the annual tax rate, as such benefits have jurisdictional offsets or relate to temporary differences.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided peer candidates for Morgan Stanley (MS) focus on the general accounting policy for interest and penalties (recognized in provision for income taxes) and the possibility of significant changes in the UTB balance over the next 12 months. Unlike JPMorgan Chase, BAC, C, and GS, MS disclosures do not provide a specific quantitative amount for unrecognized tax benefits that would impact the effective tax rate if recognized, nor do they quantify the related interest/penalty accruals in a directly comparable sentence for the 2024 fiscal year end. The candidate ms_2024_8_D458 addresses the policy of recognizing interest/penalties in the provision, while ms_2024_8_D457 addresses the uncertainty of future changes, neither offering the specific balance sheet impact data comparable to JPMorgan Chase's detailed UTB and interest/penalty liability disclosure."
+      }
+    ]
+  }
+}

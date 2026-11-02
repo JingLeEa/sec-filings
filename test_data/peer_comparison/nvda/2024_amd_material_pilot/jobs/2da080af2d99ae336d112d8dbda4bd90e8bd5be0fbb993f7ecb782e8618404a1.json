@@ -1,0 +1,209 @@
+{
+  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
+  "request_hash": "5e53c66792bbb5aa7abb601fe9353a528d072a11272a83f1c09c915a3d814797",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_1_D060",
+    "item": "1",
+    "target_topic": "Employee Headcount and Distribution",
+    "target_summary": "As of the end of fiscal year 2024, NVIDIA had approximately 29,600 employees in 36 countries, with 22,200 engaged in research and development and 7,400 in sales, marketing, operations, and administrative positions.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0289",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2023 D073 covers two distinct topics: the philosophical view that employees are assets (matched by 2024 D059) and the specific headcount/functional breakdown (matched by 2024 D060). These are presented as separate disclosures in the current year, splitting the original group appropriately.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_1_D073",
+            "item": "1",
+            "section": "Human Capital Management",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "As of the end of fiscal year 2023, NVIDIA had 26,196 employees across 35 countries, with 19,532 in research and development and 6,664 in sales, marketing, operations, and administrative roles.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1_D059",
+            "item": "1",
+            "section": "Human Capital Management",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "The company believes employees are its greatest assets and play a key role in creating long-term value for stakeholders.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_1_D060",
+            "item": "1",
+            "section": "Human Capital Management",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "As of the end of fiscal year 2024, NVIDIA had approximately 29,600 employees in 36 countries, with 22,200 engaged in research and development and 7,400 in sales, marketing, operations, and administrative positions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.775345,
+            "sequence_match_ratio": 0.728571,
+            "length_ratio": 1.372881,
+            "word_count_delta": 22,
+            "added_tokens_sample": [
+              "2024",
+              "approximately",
+              "29",
+              "600",
+              "36",
+              "22",
+              "200",
+              "7",
+              "400",
+              "the",
+              "compensation",
+              "committee",
+              "of",
+              "our",
+              "board",
+              "of",
+              "directors",
+              "assists",
+              "in",
+              "the"
+            ],
+            "removed_tokens_sample": [
+              "2023",
+              "26",
+              "196",
+              "35",
+              "19",
+              "532",
+              "6",
+              "664"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "nvda_2023_1_D073",
+            "score": 0.917048,
+            "normalised_score": 0.917,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 91.70% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.92,
+          "reason": "While the philosophical statement is unchanged, the disclosure splits to update specific headcount figures. The increase in total employees (from 26,196 to ~29,600) and R&D staff (from 19,532 to 22,200) represents a significant change in the company's operational scale and human capital resource base, which is material information regarding the company's size and growth.",
+          "key_change": "Significant headcount increase"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0270",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "The 2024 D060 contains two distinct pieces of information: (1) employee headcount/demographics (29,600 employees, 36 countries, R&D/Sales breakdown) and (2) Compensation Committee oversight. The 2025 filing splits these: D067 covers the updated headcount (36,000 employees, 38 countries, R&D/Sales breakdown), and D068 covers the Compensation Committee oversight. Thus, D060 maps to both D067 and D068.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1_D060",
+            "item": "1",
+            "section": "Human Capital Management",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "As of the end of fiscal year 2024, NVIDIA had approximately 29,600 employees in 36 countries, with 22,200 engaged in research and development and 7,400 in sales, marketing, operations, and administrative positions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_1_D067",
+            "item": "1",
+            "section": "Human Capital Management",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "As of the end of fiscal year 2025, NVIDIA had approximately 36,000 employees in 38 countries, with 27,100 engaged in research and development and 8,900 in sales, marketing, operations, and administrative positions.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_1_D068",
+            "item": "1",
+            "section": "Human Capital Management",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "The Compensation Committee of the Board of Directors assists in overseeing policies and strategies relating to human capital management.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1_D081",
+            "peer_topic": "Global Workforce Headcount",
+            "peer_summary": "As of December 28, 2024, AMD had approximately 28,000 employees in its global workforce.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.169906,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose their total employee headcount for fiscal year 2024, but NVIDIA provides a specific breakdown between R&D and other functions, whereas AMD reports only the aggregate global workforce figure. NVIDIA reported approximately 29,600 employees, with 22,200 in research and development, while AMD reported approximately 28,000 employees in its global workforce without a functional breakdown.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_1_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1_P063_S002",
+                    "paragraph_id": "nvda_2024_1_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "As of the end of fiscal year 2024, we had approximately 29,600 employees in 36 countries, 22,200 were engaged in research and development and 7,400 were engaged in sales, marketing, operations, and administrative positions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_1_D081",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1_P076_S001",
+                    "paragraph_id": "amd_2024_1_P076",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "As of December 28, 2024, we had approximately 28,000 employees in our global workforce.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

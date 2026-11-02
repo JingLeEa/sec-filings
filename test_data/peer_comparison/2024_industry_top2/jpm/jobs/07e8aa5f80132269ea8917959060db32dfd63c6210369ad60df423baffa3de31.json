@@ -1,0 +1,300 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "0463fc13a6e4a8023f4535fc191dd85b7c2afb645122919f201dd4a3f23e554c",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D049",
+    "item": "7",
+    "target_topic": "Federal funds and resale agreements increase",
+    "target_summary": "Federal funds sold and securities purchased under resale agreements increased, driven by Markets activities reflecting higher client-driven market-making activities.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0355",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2023 D068 discusses changes in 'Federal funds sold and securities purchased under resale agreements' (decrease) and 'Securities borrowed' (increase). 2024 D049 addresses the increase in 'Federal funds sold and securities purchased under resale agreements'. 2024 D050 addresses the increase in 'Securities borrowed'. The 2023 disclosure covers two distinct line items that are split into separate 2024 disclosures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D068",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated balance sheets analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Federal funds sold and securities purchased under resale agreements decreased due to reduced client-driven market-making, while securities borrowed increased due to higher demand for covering short positions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D049",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated balance sheets analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Federal funds sold and securities purchased under resale agreements increased, driven by Markets activities reflecting higher client-driven market-making activities.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D050",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated balance sheets analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Securities borrowed increased, driven by Markets, reflecting a higher demand for securities to cover short positions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.804616,
+            "sequence_match_ratio": 0.729412,
+            "length_ratio": 0.734694,
+            "word_count_delta": -13,
+            "added_tokens_sample": [
+              "increased",
+              "driven",
+              "by",
+              "markets",
+              "higher"
+            ],
+            "removed_tokens_sample": [
+              "decreased",
+              "a",
+              "reduction",
+              "in",
+              "partially",
+              "offset",
+              "by",
+              "higher",
+              "cash",
+              "deployment",
+              "in",
+              "treasury",
+              "and",
+              "cio",
+              "and",
+              "client",
+              "driven",
+              "activities"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2023_7_D068",
+            "score": 0.923999,
+            "normalised_score": 0.924,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 92.40% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.35,
+          "confidence_score": 0.85,
+          "reason": "The change reflects standard business cycle fluctuations in Market Making activities (reversal from decrease to increase) and short selling demand. The drivers (client-driven activities, short positions) are core, recurring operational factors, not material structural changes to the business or risk profile.",
+          "key_change": "Reversal from decrease to increase in market-making and borrowing balances"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0286",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures cover the increase in 'Federal funds sold and securities purchased under resale agreements' driven by Markets activities. The 2024 record cites client-driven market-making, while 2025 cites lower netting, collateral requirements, and short position coverage, but the core subject (the specific balance sheet line item and Market driver) remains consistent.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D049",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated balance sheets analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Federal funds sold and securities purchased under resale agreements increased, driven by Markets activities reflecting higher client-driven market-making activities.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D045",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > CONSOLIDATED BALANCE SHEETS AND CASH FLOWS ANALYSIS > Consolidated balance sheets analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Federal funds sold and securities purchased under resale agreements increased due to Markets activities, reflecting lower netting levels, higher collateral requirements, and higher demand for securities to cover short positions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.491988,
+            "sequence_match_ratio": 0.566038,
+            "length_ratio": 1.65,
+            "word_count_delta": 13,
+            "added_tokens_sample": [
+              "the",
+              "impact",
+              "of",
+              "lower",
+              "levels",
+              "of",
+              "netting",
+              "collateral",
+              "requirements",
+              "and",
+              "higher",
+              "demand",
+              "for",
+              "securities",
+              "to",
+              "cover",
+              "short",
+              "positions"
+            ],
+            "removed_tokens_sample": [
+              "client",
+              "driven",
+              "market",
+              "making",
+              "activities"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_7_D049",
+            "score": 0.944196,
+            "normalised_score": 0.9442,
+            "label": "Expanded",
+            "rationale": "Score 94.42% of ceiling — content grew from ~18 to ~33 words (1.8×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.8,
+          "reason": "The driver for the increase in resale agreements changed from 'client-driven market-making' to structural factors like 'lower netting levels' and 'higher collateral requirements'. This shift reveals a change in the operational mechanics and regulatory environment affecting the company's market-making activities.",
+          "key_change": "Change in resale agreement growth drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D023",
+            "peer_topic": "Federal Funds Sold and Securities Borrowed/Purchased Under Agreements to Resell activity and change",
+            "peer_summary": "Federal funds sold and securities borrowed or purchased under agreements to resell decreased by $5.9 billion, primarily driven by increased investments in debt securities for balance sheet and liquidity positioning. These transactions involve short-term lending of reserve balances and collateralized lending to accommodate customer transactions, earn spreads, and obtain securities for settlement.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.225252,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC disclose movements in 'Federal funds sold and securities purchased under agreements to resell' within their balance sheet analysis. However, they report opposite directional trends and drivers: JPM reports an increase driven by higher client-driven market-making activities in Markets, whereas BAC reports a $5.9 billion decrease primarily due to increased investments in debt securities for balance sheet and liquidity positioning purposes. Additionally, BAC distinguishes this activity from 'Securities borrowed,' while JPM groups them together in this specific disclosure item but separately discusses 'Securities borrowed' increases in a separate candidate.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D049",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P083_S001",
+                    "paragraph_id": "jpm_2024_7_P083",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Federal funds sold and securities purchased under resale agreements increased driven by Markets, reflecting higher client-driven market-making activities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P021_S003",
+                    "paragraph_id": "bac_2024_7_P021",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Federal funds sold and securities borrowed or purchased under agreements to resell decreased $5.9 billion primarily due to increased investments in debt securities for balance sheet and liquidity positioning purposes.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Peer candidates discuss 'Markets revenues' and 'Markets net income' growth drivers, which are income statement performance metrics rather than balance sheet position changes in federal funds or resale agreements. While both involve the 'Markets' segment, the specific financial measure (balance sheet lending vs. revenue generation) and disclosure intent differ significantly from JPM's balance sheet analysis of federal funds and resale agreements."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Peer candidates discuss 'Market-Making Revenue Drivers' and 'Market Making Revenue Composition,' which are income statement disclosures regarding net revenue performance and volatility. JPM's disclosure concerns the volume and drivers of specific balance sheet assets (federal funds sold and resale agreements). GS candidates do not address the specific balance sheet line items or their quantitative changes/reasons for change in the same manner."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D011",
+            "peer_topic": "Institutional Securities net interest drivers",
+            "peer_summary": "Within the Institutional Securities segment, net interest is driven by market-making strategies, client activity, and interest rate conditions, with income earned on held securities and lending activities offset by interest expense from borrowings.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.15092,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and MS link their balance sheet lending and repo activities (specifically 'Securities purchased under agreements to resell' for MS and 'securities purchased under resale agreements' for JPM) directly to market-making strategies and client activity. JPM explicitly states that the increase in these federal funds and resale agreements was driven by 'Markets, reflecting higher client-driven market-making activities.' Similarly, MS notes that net interest from these activities is a function of 'market-making strategies, client activity,' and prevailing interest rates, confirming a shared business driver for this specific line item.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D049",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P083_S001",
+                    "paragraph_id": "jpm_2024_7_P083",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Federal funds sold and securities purchased under resale agreements increased driven by Markets, reflecting higher client-driven market-making activities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D011",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P012_S002",
+                    "paragraph_id": "ms_2024_7_P012",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net interest is impacted by market-making, lending and financing activities as we generally earn interest on securities held by the Firm, Securities borrowed, Securities purchased under agreements to resell, Loans and margin loans, while Borrowings, Securities loaned and Securities sold under agreements to repurchase generally incur interest expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

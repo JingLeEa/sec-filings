@@ -1,0 +1,381 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "244e85ec57f9aafe7db14dfa94411bb36d1538da27938df7582aa65c885156ef",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_8_D216",
+    "item": "8",
+    "target_topic": "Loan Portfolio Composition and Deferrals",
+    "target_summary": "Loans held for investment at amortized cost include net deferred fees and unamortized premiums/discounts, which were less than 1% of such loans in December 2024 and 2023. Substantially all loans had floating interest rates in both periods.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0972",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures cover loans held for investment. Previous D222 details amortized cost components (fees, premiums, discounts) being <1% of loans, and D227 states substantially all loans had floating rates. Current D216 combines these specific points into one disclosure, citing P301_S002 and P301_S003.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_8_D222",
+            "item": "8",
+            "section": "Accounting Firm > Loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans held for investment at amortized cost include net deferred fees, costs, and unamortized premiums and discounts, which were less than 1% of such loans as of December 2023 and December 2022.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2023_8_D227",
+            "item": "8",
+            "section": "Accounting Firm > Loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Substantially all loans held floating interest rates as of both December 2023 and December 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D216",
+            "item": "8",
+            "section": "Accounting Firm > Loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans held for investment at amortized cost include net deferred fees and unamortized premiums/discounts, which were less than 1% of such loans in December 2024 and 2023. Substantially all loans had floating interest rates in both periods.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.927888,
+            "sequence_match_ratio": 0.913043,
+            "length_ratio": 1.059701,
+            "word_count_delta": 4,
+            "added_tokens_sample": [
+              "in",
+              "the",
+              "table",
+              "above",
+              "2024",
+              "2023",
+              "2024",
+              "2023"
+            ],
+            "removed_tokens_sample": [
+              "2023",
+              "2022",
+              "2023",
+              "2022"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2023_8_D222",
+            "score": 0.99814,
+            "normalised_score": 0.9981,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 99.81% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.9,
+          "reason": "The change is a merge of two prior disclosures (loan composition and interest rate structure) and a standard update of the reporting period. The underlying financial characteristics (less than 1% deferred fees, substantially all floating rate) remain unchanged.",
+          "key_change": "Reorganization of loan attributes disclosure"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M1026",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe loans held for investment at amortized cost, noting that deferred fees/premiums/discounts were less than 1% and that substantially all loans had floating interest rates. gs_2024 cites P301_S002/S003; gs_2025 cites P298_S002/S003. Note: gs_2025 also includes Apple Card transfer info, but the core loan characteristics match.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D216",
+            "item": "8",
+            "section": "Accounting Firm > Loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans held for investment at amortized cost include net deferred fees and unamortized premiums/discounts, which were less than 1% of such loans in December 2024 and 2023. Substantially all loans had floating interest rates in both periods.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_8_D206",
+            "item": "8",
+            "section": "Accounting Firm > Loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Substantially all loans had floating interest rates, with deferred fees and premiums/discounts comprising less than 1% of amortized cost loans. In Dec 2025, the $21.26 billion Apple Card portfolio was transferred to held for sale, resulting in a $2.48 billion reduction in loan loss reserves partially offset by a $2.26 billion reduction in net revenues from markdowns and termination obligations.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.673215,
+            "sequence_match_ratio": 0.517375,
+            "length_ratio": 2.647887,
+            "word_count_delta": 117,
+            "added_tokens_sample": [
+              "2025",
+              "2024",
+              "2025",
+              "2024",
+              "in",
+              "december",
+              "2025",
+              "the",
+              "firm",
+              "transferred",
+              "the",
+              "apple",
+              "card",
+              "loan",
+              "portfolio",
+              "of",
+              "21",
+              "26",
+              "billion",
+              "19"
+            ],
+            "removed_tokens_sample": [
+              "2024",
+              "2023",
+              "2024",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2024_8_D216",
+            "score": 0.873274,
+            "normalised_score": 0.8733,
+            "label": "Expanded",
+            "rationale": "Score 87.33% of ceiling — content grew from ~73 to ~187 words (2.6×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "While the general accounting characteristics (floating rates, deferred fees <1%) remain consistent, the disclosure is materially expanded to include the specific impact of the Apple Card portfolio transfer. It quantifies a $21.26 billion transfer to held for sale and notes a $2.48 billion reduction in loan loss reserves. This introduces significant new financial data and strategic context regarding a major portfolio divestiture.",
+          "key_change": "Disclosure of Apple Card portfolio transfer and reserve impact"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D037",
+            "peer_topic": "Accounting measurement and fee recognition for loans",
+            "peer_summary": "Loans are reported at outstanding principal net of unearned income, charge-offs, and deferred fees, with origination fees and direct costs deferred and recognized over the loan life using a constant effective yield methodology.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.183721,
+            "relationship": "same_topic",
+            "comparison": "Both GS and Bank of America (BAC) describe loans held for investment as being accounted for at amortized cost, which includes net deferred fees and unamortized premiums/discounts. GS quantifies these adjustments as less than 1% of the loans, while BAC describes the methodology of deferring origination fees and direct costs to be recognized over the loan life using a constant effective yield methodology, without providing a specific relative magnitude.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D216",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P301_S002",
+                    "paragraph_id": "gs_2024_8_P301",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Loans held for investment that are accounted for at amortized cost include net deferred fees and costs, and unamortized premiums and discounts, which are amortized over the life of the loan. These amounts were less than 1% of loans accounted for at amortized cost as of both December 2024 and December 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D037",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P052_S001",
+                    "paragraph_id": "bac_2024_8_P052",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Loans, with the exception of loans accounted for under the fair value option, are reported at their outstanding principal balances net of any unearned income, charge-offs, unamortized deferred fees and costs on originated loans, and for purchased loans, net of any unamortized premiums or discounts.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P052_S002",
+                    "paragraph_id": "bac_2024_8_P052",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Loan origination fees and certain direct origination costs are deferred and recognized as adjustments to interest income over the lives of the related loans.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D354",
+            "peer_topic": "Definition of recorded investment in loans",
+            "peer_summary": "Recorded investment in a loan includes net deferred loan fees and costs, unamortized premium or discount, less any direct write-downs.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.17061,
+            "relationship": "same_topic",
+            "comparison": "Both GS and Citigroup (C) define the composition of the recorded investment in loans held for investment, specifically noting the inclusion of net deferred loan fees/costs and unamortized premiums/discounts. GS highlights that these items were less than 1% of the total, while C provides the definition of recorded investment including these same components but without the quantitative disclosure regarding their relative size.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D216",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P301_S002",
+                    "paragraph_id": "gs_2024_8_P301",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Loans held for investment that are accounted for at amortized cost include net deferred fees and costs, and unamortized premiums and discounts, which are amortized over the life of the loan. These amounts were less than 1% of loans accounted for at amortized cost as of both December 2024 and December 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D354",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P453_S001",
+                    "paragraph_id": "c_2024_8_P453",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(1)Recorded investment in a loan includes net deferred loan fees and costs, unamortized premium or discount, less any direct write-downs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D282",
+            "peer_topic": "Loans held-for-investment accounting basis and components",
+            "peer_summary": "Originated or purchased loans held-for-investment are recorded at amortized cost, reflecting the principal amount outstanding net of unamortized fees, costs, premiums, discounts, charge-offs, cash collections, and foreign exchange effects, with credit card loans additionally including billed finance charges and fees.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.213714,
+            "relationship": "same_topic",
+            "comparison": "Both GS and JPMorgan (JPM) identify that loans held for investment are recorded at amortized cost, which reflects the principal amount net of unamortized deferred loan fees, costs, premiums, or discounts. GS notes that these specific components (fees/premiums/discounts) comprised less than 1% of the amortized cost loans in both periods, whereas JPM lists these items as standard deductions from the outstanding principal in its accounting policy without providing a materiality threshold or percentage.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D216",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P301_S002",
+                    "paragraph_id": "gs_2024_8_P301",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Loans held for investment that are accounted for at amortized cost include net deferred fees and costs, and unamortized premiums and discounts, which are amortized over the life of the loan. These amounts were less than 1% of loans accounted for at amortized cost as of both December 2024 and December 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D282",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P428_S001",
+                    "paragraph_id": "jpm_2024_8_P428",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Originated or purchased loans held-for-investment, including PCD, are recorded at amortized cost, reflecting the principal amount outstanding, net of the following: unamortized deferred loan fees, costs, premiums or discounts; charge-offs; collection of cash; and foreign exchange.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D070",
+            "peer_topic": "Loans Held for Investment Valuation Basis",
+            "peer_summary": "Loans held for investment are reported at amortized cost, which consists of the outstanding principal balance adjusted for charge-offs, allowance for credit losses, and unamortized deferred fees, costs, premiums, or discounts.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.28403,
+            "relationship": "same_topic",
+            "comparison": "Both Goldman Sachs (GS) and Morgan Stanley (MS) disclose that their loans held for investment are accounted for at amortized cost and include adjustments for unamortized deferred fees, costs, premiums, or discounts. GS explicitly states these amounts were less than 1% of such loans in both 2024 and 2023, while MS provides the general valuation basis without quantifying the percentage of these adjustments relative to the loan portfolio.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D216",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P301_S002",
+                    "paragraph_id": "gs_2024_8_P301",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Loans held for investment that are accounted for at amortized cost include net deferred fees and costs, and unamortized premiums and discounts, which are amortized over the life of the loan. These amounts were less than 1% of loans accounted for at amortized cost as of both December 2024 and December 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D070",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P095_S001",
+                    "paragraph_id": "ms_2024_8_P095",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Loans held for investment are reported at amortized cost, which consists of the outstanding principle balance adjusted for any charge-offs, the allowance for credit losses, any unamortized deferred fees or costs for originated loans, and any unamortized premiums or discounts for purchased loans.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

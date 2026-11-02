@@ -1,5 +1,6 @@
 """Filter all matched disclosures for one company and year pair, then open one to compare."""
 import json
+from html import escape
 
 import pandas as pd
 import streamlit as st
@@ -16,8 +17,12 @@ if not records:
     st.info("This comparison has no records yet. Pick another company or year pair.")
     st.stop()
 
-filtered = components.filters(records)
-st.caption(f"{config.company_label(company)}: FY{previous} to FY{current}")
+filtered = components.filters(records, location="page")
+st.markdown(
+    f'<p style="font-size: 1.25rem; font-weight: 600; color: inherit; margin: 0.5rem 0 0.75rem;">'
+    f'{escape(config.company_label(company))}: FY{previous} to FY{current}</p>',
+    unsafe_allow_html=True,
+)
 
 m1, m2, m3 = st.columns(3)
 m1.metric("Showing", f"{len(filtered):,} of {len(records):,}")
@@ -25,7 +30,7 @@ m2.metric("Material", f"{sum(r['materiality'] == 'Material' for r in filtered):,
 m3.metric("Need review", f"{sum(r['status'] == 'needs_review' for r in filtered):,}")
 
 if not filtered:
-    st.info("No disclosures match these filters. Clear a filter in the sidebar to see more.")
+    st.info("No disclosures match these filters. Clear a filter above to see more.")
     st.stop()
 
 frame = pd.DataFrame([data.table_row(r) for r in filtered], columns=data.TABLE_COLUMNS)

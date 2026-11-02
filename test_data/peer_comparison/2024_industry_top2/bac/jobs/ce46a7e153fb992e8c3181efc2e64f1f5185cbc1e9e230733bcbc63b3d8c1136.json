@@ -1,0 +1,290 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "e8603fa3e61f55638c09cd9b01a74421ea35fe519a0149280e1547ae23b7dfee",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D102",
+    "item": "7",
+    "target_topic": "Global Banking net income decrease and drivers",
+    "target_summary": "Net income for Global Banking decreased $2.1 billion to $8.1 billion, driven by higher provision for credit losses, lower revenue, and higher noninterest expense.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0267",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report Net Income for the Global Banking segment. The 2023 disclosure cites a $2.4 billion increase to $10.2 billion driven by revenue and provision, while the 2024 disclosure cites a $2.1 billion decrease to $8.1 billion driven by provision, revenue, and expense.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D092",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net income for Global Banking increased by $2.4 billion to $10.2 billion, driven by higher revenue and lower provision for credit losses, partially offset by higher noninterest expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D102",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net income for Global Banking decreased $2.1 billion to $8.1 billion, driven by higher provision for credit losses, lower revenue, and higher noninterest expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.71743,
+            "sequence_match_ratio": 0.690909,
+            "length_ratio": 0.896552,
+            "word_count_delta": -3,
+            "added_tokens_sample": [
+              "decreased",
+              "1",
+              "8",
+              "1",
+              "lower",
+              "revenue",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "increased",
+              "4",
+              "10",
+              "2",
+              "revenue",
+              "and",
+              "lower",
+              "partially",
+              "offset",
+              "by"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D092",
+            "score": 0.95259,
+            "normalised_score": 0.9526,
+            "label": "Modified",
+            "rationale": "Score 95.26% of ceiling with 69% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The disclosure reports a significant reversal in Net Income trend for Global Banking, changing from a $2.4 billion increase to a $2.1 billion decrease. The drivers also flipped: 2023 was driven by higher revenue/lower provision, while 2024 was driven by higher provision/lower revenue. This indicates a material shift in the segment's profitability and risk profile (credit losses).",
+          "key_change": "Reversal of net income trend from increase to decrease due to credit losses"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0323",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review"
+        ],
+        "explanation": "Both disclosures report Net Income for the Global Banking segment. The 2024 disclosure reports a decrease of $2.1 billion to $8.1 billion, while the 2025 disclosure reports a decrease of $191 million to $7.8 billion. Despite the change in direction of revenue impact, the specific financial metric (Net Income) and segment are identical.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D102",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net income for Global Banking decreased $2.1 billion to $8.1 billion, driven by higher provision for credit losses, lower revenue, and higher noninterest expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D094",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net income for Global Banking decreased $191 million to $7.8 billion, driven by higher noninterest expense and provision for credit losses, partially offset by higher revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D044",
+            "peer_topic": "USPB Net Income Performance",
+            "peer_summary": "USPB net income was $1.4 billion, a 24% decrease from the prior year, primarily driven by higher cost of credit which was partially offset by higher revenues and lower expenses.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.230834,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and C report decreases in their respective banking/wealth management segment net income driven primarily by higher credit costs. BAC's Global Banking net income fell $2.1 billion to $8.1 billion, citing 'higher provision for credit losses' as a key driver. Similarly, C's USPB (a wealth and private banking segment) net income decreased 24% to $1.4 billion, also 'driven by higher cost of credit'. However, BAC's decline was compounded by 'lower revenue and higher noninterest expense,' whereas C's decline was partially offset by 'higher revenues and lower expenses.'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D102",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P111_S001",
+                    "paragraph_id": "bac_2024_7_P111",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net income for Global Banking decreased $2.1 billion to $8.1 billion driven by higher provision for credit losses, lower revenue and higher noninterest expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D044",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P035_S001",
+                    "paragraph_id": "c_2024_7_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "USPB net income of $1.4 billion decreased 24%, driven by higher cost of credit, partially offset by higher revenues and lower expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D111",
+            "peer_topic": "Platform Solutions Credit Loss Provisions 2024",
+            "peer_summary": "Provision for credit losses increased to $1.54 billion in 2024 from $1.14 billion in 2023, primarily driven by net charge-offs in the credit card portfolio.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.154776,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures discuss provision for credit losses as a significant operational metric impacting financial results. BAC explicitly cites 'higher provision for credit losses' as a driver for its Global Banking net income decline. GS details that its Platform Solutions provision for credit losses increased to $1.54 billion from $1.14 billion, 'primarily driven by net charge-offs in the credit card portfolio.' While BAC provides a high-level driver for the provision increase (without specifying the portfolio source in this sentence), GS provides specific portfolio attribution (credit card net charge-offs). Both highlight that credit quality/loss provisions were a negative factor for earnings in the respective segments.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D102",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P111_S001",
+                    "paragraph_id": "bac_2024_7_P111",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net income for Global Banking decreased $2.1 billion to $8.1 billion driven by higher provision for credit losses, lower revenue and higher noninterest expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D111",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P174_S001",
+                    "paragraph_id": "gs_2024_7_P174",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Provision for credit losses was $1.54 billion for 2024, compared with $1.14 billion for 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P174_S002",
+                    "paragraph_id": "gs_2024_7_P174",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Provisions for 2024 reflected net provisions related to the credit card portfolio (primarily driven by net charge-offs).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D128",
+            "peer_topic": "Noninterest Expense Drivers",
+            "peer_summary": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense (including revenue-related compensation and increased headcount) and higher technology and brokerage expense, partially offset by lower legal expense.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.212099,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and JPM report higher noninterest expense as a driver of their segment financial performance. BAC's Global Banking net income decrease included 'higher noninterest expense' as a contributing factor. JPM’s broader noninterest expense increased 4% to $35.4 billion, 'driven by higher compensation expense... and higher technology and brokerage expense'. While BAC does not break down the expense drivers in the target sentence, JPM specifies compensation and technology/ brokerage costs. Both filings reflect industry-wide trends of rising operational costs impacting net income.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D102",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P111_S001",
+                    "paragraph_id": "bac_2024_7_P111",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net income for Global Banking decreased $2.1 billion to $8.1 billion driven by higher provision for credit losses, lower revenue and higher noninterest expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D128",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P181_S001",
+                    "paragraph_id": "jpm_2024_7_P181",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense, including revenue-related compensation and an increase in the number of employees, as well as higher technology and brokerage expense partially offset by lower legal expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates do not match the topic. ms_2024_7_D015 defines the scope of provision for credit losses but does not discuss income performance or drivers. ms_2024_7_D068 discusses Asset Management revenue growth, which is unrelated to the Global Banking net income decrease and expense/credit drivers detailed in BAC's disclosure."
+      }
+    ]
+  }
+}

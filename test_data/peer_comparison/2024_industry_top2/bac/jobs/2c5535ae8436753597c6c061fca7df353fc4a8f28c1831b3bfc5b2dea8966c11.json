@@ -1,0 +1,218 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "bb4339dcd453669fc6463da3dc0a4f6317489118ddaa463b00676695ac40dfa2",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D012",
+    "item": "7",
+    "target_topic": "Card Income Drivers",
+    "target_summary": "Card income increased $230 million primarily due to higher late fees, annual fees and card transfer fees.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0188",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "2024 D012 details Card Income changes ($230M increase). The 2023 records (specifically D014) list Service Charges, Investment/Brokerage, Investment Banking, and Market Making, but do not include a specific disclosure for Card Income. Therefore, no direct counterpart was found in the 2023 selected disclosures.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D012",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Financial Highlights > Noninterest Income",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Card income increased $230 million primarily due to higher late fees, annual fees and card transfer fees.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 17,
+            "added_tokens_sample": [
+              "card",
+              "income",
+              "increased",
+              "230",
+              "million",
+              "primarily",
+              "due",
+              "to",
+              "higher",
+              "late",
+              "fees",
+              "annual",
+              "fees",
+              "and",
+              "card",
+              "transfer",
+              "fees"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.7,
+          "reason": "This is a newly introduced disclosure of Card Income changes ($230 million increase). While the absolute amount is relatively small compared to total Noninterest Income, the introduction of specific line-item granularity for Card Income (late fees, annual fees) in the Executive Summary highlights a specific operational driver that was previously implicit or aggregated. It represents a disclosure change that adds specific transparency to a revenue stream.",
+          "key_change": "Introduction of specific Card Income revenue drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0012",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in the 2025 filing for Card Income changes. The automatic search yielded no relevant matches in the 2025 Noninterest Income highlights or segment operations for card-specific fee drivers like late fees or annual fees.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D012",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Financial Highlights > Noninterest Income",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Card income increased $230 million primarily due to higher late fees, annual fees and card transfer fees.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -17,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "card",
+              "income",
+              "increased",
+              "230",
+              "million",
+              "primarily",
+              "due",
+              "to",
+              "higher",
+              "late",
+              "fees",
+              "annual",
+              "fees",
+              "and",
+              "card",
+              "transfer",
+              "fees"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.8,
+          "reason": "The 2024 disclosure explains a $230 million increase in card income due to specific fee drivers (late fees, annual fees). The removal of this specific line item in 2025 indicates a change in financial reporting granularity or a shift in how noninterest income is presented (e.g., aggregation). While the financial metric changed, the removal of this specific explanatory text does not inherently indicate a material change in the business strategy or risk profile itself, but rather a presentation difference or the fact that these specific drivers were not the primary focus/positive driver in the subsequent year's highlights. Without the 2025 counterpart to compare magnitude, the removal alone is not definitively material to the user's understanding of long-term strategic shifts, but it is a financial data point. However, given the 'Removed' status and lack of new specific disclosure, it's likely a reporting convention change or minor variation. Scored low because it's a single year financial variance explanation removal, not a structural business change.",
+          "key_change": "Removal of specific card income variance explanation"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved with a topic sufficiently comparable to 'Card Income Drivers'. Candidate c_2024_7_D156 focuses on Legacy Holdings Assets, and c_2024_7_D027 focuses on Securities Services revenue, neither of which address card income drivers."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved with a topic sufficiently comparable to 'Card Income Drivers'. Candidate gs_2024_7_D047 mentions a loss related to the GM credit card program transition as a minor offset within a broader Commissions and Fees discussion, rather than analyzing card income drivers comprehensively like the target. Candidate gs_2024_7_D046 focuses on Investment Management Revenue."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D037",
+            "peer_topic": "Card Income Drivers",
+            "peer_summary": "Card income increased, reflecting higher net interchange on increased debit and credit card sales volume, as well as higher annual fees in CCB, partially offset by an increase in amortization related to new account origination costs.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.24138,
+            "relationship": "same_topic",
+            "comparison": "Both Bank of America (BAC) and JPMorgan (JPM) report an increase in card income for 2024, but they attribute the growth to different primary drivers. BAC cites an increase of $230 million driven by higher late fees, annual fees, and card transfer fees. In contrast, JPM attributes its card income increase to higher net interchange resulting from increased debit and credit card sales volume, as well as higher annual fees, partially offset by increased amortization of new account origination costs. While both mention annual fees as a contributing factor, BAC emphasizes fee-based revenues (late, transfer) while JPM emphasizes volume-driven interchange and cost amortization.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P015_S003",
+                    "paragraph_id": "bac_2024_7_P015",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "● Card income increased $230 million primarily due to higher late fees, annual fees and card transfer fees.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D037",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P058_S001",
+                    "paragraph_id": "jpm_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Card income increased, reflecting higher net interchange on increased debit and credit card sales volume, as well as higher annual fees in CCB, partially offset by an increase in amortization related to new account origination costs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved with a topic sufficiently comparable to 'Card Income Drivers'. Candidate ms_2024_7_D074 discusses Compensation Expense, and ms_2024_7_D034 discusses Financing Revenue. Neither candidate addresses card income or related consumer banking fee drivers."
+      }
+    ]
+  }
+}

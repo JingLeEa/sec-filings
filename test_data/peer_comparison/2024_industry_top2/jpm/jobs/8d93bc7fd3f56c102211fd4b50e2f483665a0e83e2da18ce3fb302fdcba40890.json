@@ -1,0 +1,333 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "d78ef892b2710fe670b23bfa0df2bd0f1683de32ee01b1ff44e3456a3cb29441",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_8_D226",
+    "item": "8",
+    "target_topic": "Accretion of Purchase Discount on First Republic Acquisitions",
+    "target_summary": "Footnote (d) includes the accretion of the purchase discount on certain acquired loans and investment securities associated with First Republic, with additional information in Note 34.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M1020",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "These 2023 disclosures all explicitly refer to Note 34 for details on the First Republic acquisition's impact on Investment Securities (D306), Long-term Debt (D533), and International Operations (D672). D226 (2024) details the accretion of the purchase discount on acquired loans and investment securities associated with First Republic, also referencing Note 34. They share the specific topic of the First Republic acquisition's accounting impact.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_8_D306",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 10 - Investment securities > Selected impacts of investment securities on the Consolidated statements of income > Contractual maturities and yields",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The investment securities portfolio includes Available-for-Sale (AFS) securities associated with First Republic, which are primarily due after 10 years.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2023_8_D533",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 20 - Long-term debt",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Long-term debt includes a purchase money note associated with the First Republic acquisition, with additional details in Note 34.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2023_8_D672",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 31 - International operations",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The data includes the impact of First Republic, with additional information available in Note 34.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D226",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 7 - Interest income and interest expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (d) includes the accretion of the purchase discount on certain acquired loans and investment securities associated with First Republic, with additional information in Note 34.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.628933,
+            "sequence_match_ratio": 0.35443,
+            "length_ratio": 0.490566,
+            "word_count_delta": -27,
+            "added_tokens_sample": [
+              "the",
+              "accretion",
+              "of",
+              "the",
+              "purchase",
+              "discount",
+              "on",
+              "certain",
+              "acquired",
+              "loans",
+              "and",
+              "investment"
+            ],
+            "removed_tokens_sample": [
+              "afs",
+              "first",
+              "republic",
+              "primarily",
+              "due",
+              "after",
+              "10",
+              "years",
+              "refer",
+              "to",
+              "note",
+              "34",
+              "for",
+              "additional",
+              "information",
+              "a",
+              "reflects",
+              "the",
+              "purchase",
+              "money"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2023_8_D533",
+            "score": 0.862164,
+            "normalised_score": 0.8622,
+            "rationale": "Merge: 3 previous → 1 current. Best pair scored 86.22% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure replaces vague references to the 'impact of First Republic' with specific accounting terminology: 'accretion of the purchase discount on certain acquired loans and investment securities.' This quantifies and specifies the nature of the ongoing financial integration impact, changing the disclosure from a general reference to a specific, material accounting event affecting earnings.",
+          "key_change": "Specification of First Republic purchase discount accretion"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0974",
+        "relationship": "many_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "The 2024 disclosures (D223-D226, D658-D666) and 2025 disclosures (D246, D696) all relate to Note 7 (Interest) and Supplementary Information tables within Item 8. Specifically, D246 and D696 aggregate the footnote definitions found in the 2024 records. D246 corresponds to the 2024 D223-D226 cluster (table footnotes a-d), while D696 corresponds to the 2024 D658-D666 cluster (table footnotes a-i). They share the same specific topic of 'components and footnotes for interest income/expense tables'.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D223",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 7 - Interest income and interest expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "A table presents the components of interest income and interest expense, with footnote (a) indicating securities that are tax-exempt for U.S. federal income tax purposes.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D224",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 7 - Interest income and interest expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (b) clarifies that interest earned on brokerage-related held-for-investment customer receivables is classified in accrued interest and accounts receivable, while all other interest-earning assets are classified in other assets.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D225",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 7 - Interest income and interest expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (c) states that all other interest-bearing liabilities include interest expense on brokerage-related customer payables.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D226",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 7 - Interest income and interest expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (d) includes the accretion of the purchase discount on certain acquired loans and investment securities associated with First Republic, with additional information in Note 34.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D658",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Supplementary Information: Distribution of assets, liabilities and stockholders' equity; interest rates and interest differentials > Consolidated average balance sheets, interest and rates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The disclosure defines the category of securities that are tax-exempt for U.S. federal income tax purposes.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D659",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Supplementary Information: Distribution of assets, liabilities and stockholders' equity; interest rates and interest differentials > Consolidated average balance sheets, interest and rates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Brokerage-related held-for-investment customer receivables are classified in accrued interest and accounts receivable, while all other interest-earning assets are classified in other assets.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D660",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Supplementary Information: Distribution of assets, liabilities and stockholders' equity; interest rates and interest differentials > Consolidated average balance sheets, interest and rates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Interest rates reflect the impact of interest earned on cash collateral where such collateral has been netted against certain derivative payables.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D661",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Supplementary Information: Distribution of assets, liabilities and stockholders' equity; interest rates and interest differentials > Consolidated average balance sheets, interest and rates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Other interest-bearing liabilities include brokerage-related customer payables.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D662",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Supplementary Information: Distribution of assets, liabilities and stockholders' equity; interest rates and interest differentials > Consolidated average balance sheets, interest and rates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The combined balance of trading liabilities for debt and equity instruments was $185.4 billion, $153.3 billion, and $138.1 billion for the years ended December 31, 2024, 2023, and 2022, respectively.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D663",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Supplementary Information: Distribution of assets, liabilities and stockholders' equity; interest rates and interest differentials > Consolidated average balance sheets, interest and rates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The summary includes the effect of derivatives qualifying for hedge accounting where applicable, using taxable-equivalent amounts, with further details referenced in Note 5.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D665",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Supplementary Information: Distribution of assets, liabilities and stockholders' equity; interest rates and interest differentials > Consolidated average balance sheets, interest and rates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Fees and commissions on loans included were $3.6 billion, $2.2 billion, and $1.8 billion for the years ended December 31, 2024, 2023, and 2022, respectively.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D666",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Supplementary Information: Distribution of assets, liabilities and stockholders' equity; interest rates and interest differentials > Consolidated average balance sheets, interest and rates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The annualized rate for securities based on amortized cost was 3.79%, 3.09%, and 1.75% for the years ended December 31, 2024, 2023, and 2022, respectively, excluding fair value changes in AOCI.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_8_D246",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 7 - Interest income and interest expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The presentation of interest income and expense components includes specific footnotes defining items such as accretion of purchase discounts from First Republic acquisitions, tax-exempt securities, and interest on brokerage-related receivables and payables.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "jpm_2025_8_D696",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Supplementary Information: Distribution of assets, liabilities and stockholders' equity; interest rates and interest differentials > Consolidated average balance sheets, interest and rates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Various footnotes define specific components such as tax-exempt securities, brokerage receivables, cash collateral impact on rates, trading liabilities, hedge accounting effects, loan fees, and securities yields based on amortized cost.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D035",
+            "peer_topic": "Interest income and gain/loss recognition for debt securities",
+            "peer_summary": "Interest on debt securities, including premium amortization and discount accretion, is included in interest income using the constant effective yield method. Realized gains and losses from sales or dispositions are determined using the specific identification method.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.069152,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC disclose the treatment of discount accretion within interest income. JPM specifies that its interest income includes accretion related to First Republic acquisitions, while BAC provides a general accounting policy stating that interest on debt securities includes the accretion of discounts calculated using the constant effective yield method.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D226",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P352_S001",
+                    "paragraph_id": "jpm_2024_8_P352",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(d)Includes the accretion of the purchase discount on certain acquired loans and investment securities associated with First Republic.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D035",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P050_S001",
+                    "paragraph_id": "bac_2024_8_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Interest on debt securities, including amortization of premiums and accretion of discounts, is included in interest income.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P050_S002",
+                    "paragraph_id": "bac_2024_8_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Premiums and discounts are amortized or accreted to interest income at a constant effective yield over the contractual lives of the securities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved discusses discount accretion or First Republic acquisition accounting; candidates focus on restricted cash and goodwill impairment."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved discusses discount accretion; candidates are generic note references without substantive accounting policy details comparable to the target."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved discusses discount accretion; candidates focus on portfolio layer method hedging and share repurchase programs."
+      }
+    ]
+  }
+}

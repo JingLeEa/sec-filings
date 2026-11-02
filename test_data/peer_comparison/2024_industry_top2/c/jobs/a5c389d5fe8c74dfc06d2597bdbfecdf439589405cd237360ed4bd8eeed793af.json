@@ -1,0 +1,371 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "c1feb297d7977ed33aaca25323784c8607f664fa437ff82673b66c4052468ce5",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_1_D003",
+    "item": "1",
+    "target_topic": "Full-time employee headcount",
+    "target_summary": "At December 31, 2024, Citigroup had approximately 229,000 full-time employees, a decrease from approximately 239,000 at the end of 2023.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "c_2023_2024_M0206",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report Citigroup's full-time employee count at the end of the fiscal year, serving as the primary human capital metric for the year. The 2024 disclosure explicitly compares the 2024 figure (229,000) to the 2023 figure (239,000).",
+        "previous_disclosures": [
+          {
+            "item": "1",
+            "section": "OVERVIEW",
+            "summary": "As of December 31, 2023, Citi employed approximately 239,000 full-time employees, which was largely unchanged from the prior year.",
+            "taxonomy": "Human Capital & Organization",
+            "disclosure_id": "c_2023_1_D003",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "1",
+            "section": "OVERVIEW",
+            "summary": "At December 31, 2024, Citigroup had approximately 229,000 full-time employees, a decrease from approximately 239,000 at the end of 2023.",
+            "taxonomy": "Human Capital & Organization",
+            "disclosure_id": "c_2024_1_D003",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 1.166667,
+            "change_taxonomy": "Modified",
+            "word_count_delta": 3,
+            "cosine_similarity": 0.698453,
+            "added_tokens_sample": [
+              "at",
+              "december",
+              "31",
+              "2024",
+              "citi",
+              "had",
+              "approximately",
+              "229",
+              "000",
+              "full",
+              "time",
+              "employees",
+              "compared",
+              "to",
+              "approximately",
+              "239",
+              "000"
+            ],
+            "sequence_match_ratio": 0.205128,
+            "removed_tokens_sample": [
+              "citi",
+              "had",
+              "approximately",
+              "239",
+              "000",
+              "full",
+              "time",
+              "employees",
+              "largely",
+              "unchanged",
+              "from",
+              "december",
+              "31",
+              "2022"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "score": 0.962956,
+            "method": "embedding_cosine",
+            "rationale": "Score 96.30% of ceiling with 45% word overlap — same disclosure, wording changed.",
+            "matched_id": "c_2023_1_D003",
+            "normalised_score": 0.963
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.85,
+          "reason": "The disclosure reports a material reduction in full-time employee count (approximately 239,000 to 229,000, a ~4% decrease). While turnover is routine, a drop of 10,000 employees is a significant operational change indicating workforce reduction or restructuring, which is a meaningful human capital metric.",
+          "key_change": "Significant decrease in full-time employee count"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0008",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure reports specific headcount (229,000 employees at Dec 31, 2024). The search in Item 1 for 2025 did not find a disclosure with similar employee count data or human capital overview in the Overview section. Other 2025 disclosures found (e.g., D059, D055) relate to financial/tax assets, not HR.",
+        "previous_disclosures": [
+          {
+            "item": "1",
+            "section": "OVERVIEW",
+            "summary": "At December 31, 2024, Citigroup had approximately 229,000 full-time employees, a decrease from approximately 239,000 at the end of 2023.",
+            "taxonomy": "Human Capital & Organization",
+            "disclosure_id": "c_2024_1_D003",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "llm": "Removed",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.0,
+            "change_taxonomy": "Removed",
+            "word_count_delta": -21,
+            "cosine_similarity": 0.0,
+            "added_tokens_sample": [],
+            "sequence_match_ratio": 0.0,
+            "removed_tokens_sample": [
+              "at",
+              "december",
+              "31",
+              "2024",
+              "citi",
+              "had",
+              "approximately",
+              "229",
+              "000",
+              "full",
+              "time",
+              "employees",
+              "compared",
+              "to",
+              "approximately",
+              "239",
+              "000",
+              "at",
+              "december",
+              "31"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "method": "alignment_presence",
+            "rationale": "One-sided change established by the finalized alignment.",
+            "matched_id": null,
+            "normalised_score": null
+          },
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure provides specific headcount data (229,000 employees) and a year-over-year comparison, which is a key human capital metric. The absence of a corresponding disclosure in the 2025 filing represents a material omission of standard operational and organizational information that affects the assessment of the company's size, scale, and labor resources.",
+          "key_change": "Removal of specific employee headcount and trend data"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_1_D011",
+            "peer_topic": "Employee headcount and union status",
+            "peer_summary": "The Corporation employed approximately 213,000 employees as of December 31, 2024 and 2023, with 78% located in the U.S., none of whom are subject to collective bargaining agreements.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.092489,
+            "relationship": "same_topic",
+            "comparison": "Both C and BAC disclose total employee headcount as of December 31, 2024. Citi reports a decrease in headcount from 239,000 to 229,000, whereas Bank of America reports a stable headcount of approximately 213,000 for both 2024 and 2023. Additionally, BAC specifies that none of its U.S. employees are subject to collective bargaining agreements, a detail not present in Citi's headcount disclosure.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1_D003",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1_P004_S001",
+                    "paragraph_id": "c_2024_1_P004",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "At December 31, 2024, Citi had approximately 229,000 full-time employees, compared to approximately 239,000 at December 31, 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1_D011",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1_P009_S001",
+                    "paragraph_id": "bac_2024_1_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "At both December 31, 2024 and 2023, the Corporation employed approximately 213,000 employees, of which 78 percent were located in the U.S. None of our U.S. employees are subject to a collective bargaining agreement.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_1_D038",
+            "peer_topic": "Employee Tenure and Hiring Sources",
+            "peer_summary": "As of December 2024, the average tenure for Management Committee members was approximately 24 years and for all employees approximately 6 years, with over 40% of partners being campus hires.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.097634,
+            "relationship": "related_topic",
+            "comparison": "While Citi provides a total aggregate employee count (229,000), Goldman Sachs discloses workforce composition metrics, specifically average tenure (6 years for all employees) rather than total headcount. This represents a different granularity of human capital disclosure within the same industry context, contrasting Citi's volume-focused reporting with GS's tenurial focus.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1_D003",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1_P004_S001",
+                    "paragraph_id": "c_2024_1_P004",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "At December 31, 2024, Citi had approximately 229,000 full-time employees, compared to approximately 239,000 at December 31, 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1_D038",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1_P045_S003",
+                    "paragraph_id": "gs_2024_1_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "As of December 2024, the average tenure of the members of our Management Committee was approximately 24 years, and that of all of our employees was approximately 6 years.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_1_D047",
+            "peer_topic": "Global workforce headcount and growth",
+            "peer_summary": "As of December 31, 2024, JPMorganChase had 317,233 employees globally, an increase of 7,307 employees from the prior year, primarily driven by growth in front office and technology staff.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.069062,
+            "relationship": "same_topic",
+            "comparison": "Both C and JPM disclose exact total employee headcounts and year-over-year changes for 2024. Citi reported a decrease of 10,000 employees (from 239,000 to 229,000), while JPMorganChase reported an increase of 7,307 employees (to 317,233). The primary difference is the direction of headcount movement and the magnitude of the workforce size, with JPM being significantly larger.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1_D003",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1_P004_S001",
+                    "paragraph_id": "c_2024_1_P004",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "At December 31, 2024, Citi had approximately 229,000 full-time employees, compared to approximately 239,000 at December 31, 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1_D047",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1_P049_S001",
+                    "paragraph_id": "jpm_2024_1_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "As of December 31, 2024, JPMorganChase had 317,233 employees globally, an increase of 7,307 employees from the prior year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_1_D048",
+            "peer_topic": "Global employee headcount and geographic presence",
+            "peer_summary": "As of December 31, 2024, the company had approximately 80 thousand employees across offices in 42 countries, relying on this global workforce to build value for clients and shareholders.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.081573,
+            "relationship": "same_topic",
+            "comparison": "Both C and MS disclose total global employee headcounts as of December 31, 2024. Citi had approximately 229,000 employees (a decrease from 2023), while Morgan Stanley had approximately 80,000 employees. MS does not disclose a year-over-year change in its selected sentence, whereas Citi explicitly notes the reduction in its workforce.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1_D003",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1_P004_S001",
+                    "paragraph_id": "c_2024_1_P004",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "At December 31, 2024, Citi had approximately 229,000 full-time employees, compared to approximately 239,000 at December 31, 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_1_D048",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_1_P058_S002",
+                    "paragraph_id": "ms_2024_1_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "With offices in 42 countries, we had approximately 80 thousand employees across the globe as of December 31, 2024, whom we depend on to build value for our clients and shareholders.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

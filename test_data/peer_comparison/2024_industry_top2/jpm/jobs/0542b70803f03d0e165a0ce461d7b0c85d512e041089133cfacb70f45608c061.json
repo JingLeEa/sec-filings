@@ -1,0 +1,264 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "f3c3de294c1e00b07795a912b77ad244aa457f38160e854b7325aaefb7a98210",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_8_D508",
+    "item": "8",
+    "target_topic": "New Share Repurchase Program Authorization",
+    "target_summary": "On June 28, 2024, the Board of Directors authorized a new $30 billion common share repurchase program effective July 1, 2024, replacing the previous $30 billion program announced on April 13, 2022.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M1275",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "D556 discloses the authorization and operational policy of the $30 billion common share repurchase program (effective May 2022). In 2024, this program was replaced by a new $30 billion program (D508) with similar operational policies (D509). D556 maps to D508 as the authorization event and to D509 as the policy description.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_8_D556",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 22 - Common stock",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Effective May 1, 2022, the Firm is authorized to purchase up to $30 billion under its common share repurchase program, which does not establish specific price targets or timetables and may be executed through open market purchases, privately negotiated transactions, or Rule 10b5-1 plans, with the program subject to suspension at management's discretion based on factors including market conditions, regulatory considerations, and capital position.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D508",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 22 - Common stock",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On June 28, 2024, the Board of Directors authorized a new $30 billion common share repurchase program effective July 1, 2024, replacing the previous $30 billion program announced on April 13, 2022.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D509",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 22 - Common stock",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Repurchases are at management's discretion without specific price targets or timetables, considering factors such as market conditions, legal/regulatory considerations, capital position, and investment opportunities, and may be suspended at any time.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M1228",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the authorization of a new common share repurchase program replacing the previous one, specifying the new amount ($50 billion vs $30 billion) and effective date.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D508",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 22 - Common stock",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On June 28, 2024, the Board of Directors authorized a new $30 billion common share repurchase program effective July 1, 2024, replacing the previous $30 billion program announced on April 13, 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_8_D548",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 22 - Common stock",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "On July 1, 2025, the Firm's Board of Directors authorized a new $50 billion common share repurchase program effective immediately, while prior authorization for $30 billion expired on June 30, 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.854946,
+            "sequence_match_ratio": 0.844828,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "july",
+              "1",
+              "2025",
+              "50",
+              "2025",
+              "2025",
+              "june",
+              "28",
+              "2024"
+            ],
+            "removed_tokens_sample": [
+              "june",
+              "28",
+              "2024",
+              "30",
+              "2024",
+              "2024",
+              "april",
+              "13",
+              "2022"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_8_D508",
+            "score": 0.98963,
+            "normalised_score": 0.9896,
+            "label": "Unchanged",
+            "rationale": "Score 98.96% of ceiling — semantically identical despite surface differences (word overlap 84%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.95,
+          "reason": "The company authorized a new share repurchase program of $50 billion, replacing the previous $30 billion program. This represents a 66% increase in the available capital for share repurchases, indicating a significant change in capital allocation strategy and financial commitment. This is a material quantitative change to the company's capital resources.",
+          "key_change": "Increase in share repurchase authorization to $50 billion"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for Bank of America focus on Book Value calculation and Earnings Per Share methodology, which are distinct topics from the specific share repurchase authorization disclosed by JPMorgan."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for Citigroup focus on the dividend payout ratio calculation and authorized shares available for grant under stock incentive plans, neither of which constitutes a comparable share repurchase program authorization disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D401",
+            "peer_topic": "Share Repurchase Program Policy",
+            "peer_summary": "The firm's share repurchase program aims to maintain appropriate common equity levels and is effected through open-market purchases and accelerated share repurchases, with amounts and timing determined by capital position, deployment opportunities, regulatory requirements, market conditions, and stock price.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.159902,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Goldman Sachs disclosed share repurchase programs in their 2024 filings, but the nature of the disclosure differs. JPMorgan specifically reported a new $30 billion Board authorization effective July 1, 2024. In contrast, Goldman Sachs described the general policy of its program intended to maintain common equity levels, utilizing open-market purchases and accelerated share repurchases, without explicitly detailing a new specific dollar authorization amount in the same manner as JPMorgan's announcement.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D508",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P767_S001",
+                    "paragraph_id": "jpm_2024_8_P767",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "On June 28, 2024, the Firm announced that its Board of Directors had authorized a new $30 billion common share repurchase program, effective July 1, 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D401",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P534_S001",
+                    "paragraph_id": "gs_2024_8_P534",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The firm's share repurchase program is intended to help maintain the appropriate level of common equity.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P534_S002",
+                    "paragraph_id": "gs_2024_8_P534",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The share repurchase program is effected primarily through regular open-market purchases (which may include repurchase plans designed to comply with Rule 10b5-1 and accelerated share repurchases), the amounts and timing of which are determined primarily by the firm's current and projected capital position, and capital deployment opportunities, but which may also be influenced by the evolution of current and future regulatory capital requirements, general market conditions and the prevailing price and trading volumes of the firm's common stock.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D404",
+            "peer_topic": "Share Repurchase Authorization and Program Criteria",
+            "peer_summary": "On June 28, 2024, the Board authorized a multi-year $20 billion common stock repurchase program starting in Q3 2024 without an expiration date, with the Firm considering segment capital needs and benefit plan obligations in its execution.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.286163,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Morgan Stanley disclosed new share repurchase authorizations on June 28, 2024, representing a synchronous event among peers. However, the programs differ in scale and structure: JPMorgan authorized a $30 billion program effective July 1, 2024, which replaced a prior $30 billion program, whereas Morgan Stanley authorized a $20 billion multi-year program starting in Q3 2024 with no expiration date.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D508",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P767_S001",
+                    "paragraph_id": "jpm_2024_8_P767",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "On June 28, 2024, the Firm announced that its Board of Directors had authorized a new $30 billion common share repurchase program, effective July 1, 2024.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P767_S002",
+                    "paragraph_id": "jpm_2024_8_P767",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Through June 30, 2024, the Firm was authorized to purchase up to $30 billion of common shares under its previously-approved common share repurchase program that was announced on April 13, 2022.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D404",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P502_S001",
+                    "paragraph_id": "ms_2024_8_P502",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "On June 28, 2024, the Firm announced that its Board of Directors reauthorized a multi-year repurchase program of up to $20 billion of outstanding common stock (the \"Share Repurchase Authorization\"), without a set expiration date, beginning in the third quarter of 2024, which will be exercised from time to time as conditions warrant.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

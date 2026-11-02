@@ -1,0 +1,377 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "a9b30d9379817db22bc18b0b6afa2f05ad24ac4996e4ea12a08710c9513d9262",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D041",
+    "item": "7",
+    "target_topic": "Interest Earning Assets Yield and Volume",
+    "target_summary": "The Firm's average interest-earning assets were $3.5 trillion, up $212 billion, with a yield of 5.50% (up 36 bps); the net yield on an FTE basis was 2.63% (down 7 bps), while net yield excluding Markets was 3.84% (flat).",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0350",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2023 vs 2024 Net Interest Income (NII) drivers. Both disclosures detail the factors driving the change in NII, including balance sheet actions, Card revolving balances, First Republic impact, and offsetting factors like deposit margin compression or lower average deposit balances.\n\n2023 vs 2024 Net Interest Income yield metrics. Both disclosures report the Firm's average interest-earning assets, yield, net yield on an FTE basis, and net yield excluding Markets for comparative analysis.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D059",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > 2023 compared with 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income increased driven by higher rates, the impact of First Republic, and higher revolving balances in Card Services, partially offset by lower Markets net interest income and average deposit balances. Average interest-earning assets were $3.3 trillion with a yield of 5.14%, and net yield excluding Markets was 3.85%.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D040",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income increased, driven by balance sheet actions including reinvestments in investment securities, higher revolving card balances, the timing impact of First Republic, higher wholesale deposit balances, and higher Markets net interest income, largely offset by deposit margin compression and lower average deposit balances in CCB.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D041",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Firm's average interest-earning assets were $3.5 trillion, up $212 billion, with a yield of 5.50% (up 36 bps); the net yield on an FTE basis was 2.63% (down 7 bps), while net yield excluding Markets was 3.84% (flat).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.767105,
+            "sequence_match_ratio": 0.607843,
+            "length_ratio": 1.372093,
+            "word_count_delta": 32,
+            "added_tokens_sample": [
+              "balance",
+              "sheet",
+              "actions",
+              "primarily",
+              "reinvestments",
+              "in",
+              "the",
+              "investment",
+              "securities",
+              "portfolio",
+              "the",
+              "timing",
+              "impact",
+              "of",
+              "first",
+              "republic",
+              "higher",
+              "wholesale",
+              "deposit",
+              "balances"
+            ],
+            "removed_tokens_sample": [
+              "higher",
+              "rates",
+              "first",
+              "republic",
+              "and",
+              "partially",
+              "offset",
+              "by",
+              "lower",
+              "3",
+              "down",
+              "23",
+              "14",
+              "236",
+              "basis",
+              "points",
+              "70",
+              "an",
+              "increase",
+              "70"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2023_7_D059",
+            "score": 0.912304,
+            "normalised_score": 0.9123,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 91.23% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The disclosure identifies 'balance sheet actions' and 'higher wholesale deposit balances' as primary drivers, which are strategic operational decisions and significant shifts in funding sources compared to the prior year's focus on rates and First Republic. It also provides updated yield metrics reflecting significant balance sheet growth and margin compression, materially changing the view on Net Interest Income quality.",
+          "key_change": "Shift to balance sheet actions and wholesale deposits as NII drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0281",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "jpm_2024_7_D040 details Net Interest Income (NII) drivers (balance sheet actions, securities reinvestments, card balances, wholesale deposits, Markets NII) and offsets (deposit margin compression, lower deposit balances). jpm_2025_7_D039 details NII drivers (Markets NII, card balances, wholesale deposits, securities activity) and offsets (deposit margin compression, lower rates). These disclose the same specific topic: Consolidated NII performance drivers and offsets.\n\njpm_2024_7_D041 focuses on average interest-earning assets ($3.5T), yield (5.50%), and net yields (FTE 2.63%, ex-Markets 3.84%). jpm_2025_7_D039 includes a section on average interest-earning assets ($3.8T), yield (5.05%), and net yields (FTE 2.50%, ex-Markets 3.75%). These disclose the same specific topic: Consolidated interest-earning asset metrics and yields. This forms a many-to-one relationship with jpm_2025_7_D039.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D040",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income increased, driven by balance sheet actions including reinvestments in investment securities, higher revolving card balances, the timing impact of First Republic, higher wholesale deposit balances, and higher Markets net interest income, largely offset by deposit margin compression and lower average deposit balances in CCB.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D041",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Firm's average interest-earning assets were $3.5 trillion, up $212 billion, with a yield of 5.50% (up 36 bps); the net yield on an FTE basis was 2.63% (down 7 bps), while net yield excluding Markets was 3.84% (flat).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D039",
+            "item": "7",
+            "section": "CONSOLIDATED RESULTS OF OPERATIONS > 2025 compared with 2024",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income increased driven by higher Markets net interest income, higher revolving card balances, higher wholesale deposit balances, and investment securities activity, largely offset by deposit margin compression and lower rates. Average interest-earning assets rose $297 billion to $3.8 trillion with a 5.05% yield, while net yield on an FTE basis decreased to 2.50%.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.776745,
+            "sequence_match_ratio": 0.545455,
+            "length_ratio": 1.330508,
+            "word_count_delta": 39,
+            "added_tokens_sample": [
+              "higher",
+              "markets",
+              "net",
+              "interest",
+              "income",
+              "the",
+              "impact",
+              "of",
+              "investment",
+              "securities",
+              "activity",
+              "and",
+              "impact",
+              "rates",
+              "8",
+              "297",
+              "05",
+              "down",
+              "45",
+              "50"
+            ],
+            "removed_tokens_sample": [
+              "the",
+              "impact",
+              "of",
+              "balance",
+              "sheet",
+              "actions",
+              "primarily",
+              "reinvestments",
+              "in",
+              "the",
+              "investment",
+              "securities",
+              "portfolio",
+              "the",
+              "timing",
+              "impact",
+              "of",
+              "first",
+              "republic",
+              "higher"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2024_7_D041",
+            "score": 0.915717,
+            "normalised_score": 0.9157,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 91.57% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.3,
+          "confidence_score": 0.8,
+          "reason": "Net Interest Income drivers shifted from balance sheet actions/reinvestments/First Republic timing to Markets NII/card balances/wholesale deposits. The net yield also decreased. These are routine fluctuations in interest rates, deposit margins, and business mix. The merger of two disclosures does not create new material risks but consolidates the presentation of standard banking metrics.",
+          "key_change": "Shift in NII drivers and yield decline"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D010",
+            "peer_topic": "Net interest income and yield performance in 2024",
+            "peer_summary": "Net interest income decreased by $871 million to $56.1 billion in 2024 compared to 2023, with net interest yield on a fully taxable-equivalent basis dropping 13 basis points to 1.95 percent. These declines were primarily driven by higher deposit costs, which were partially offset by higher asset yields and increased net interest income from Global Markets activity.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.12826,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC report on the performance of their net interest yield (a key measure of interest-earning assets) in 2024, but they present opposing trends in yield direction and underlying drivers. JPM reported that its net yield on an FTE basis decreased by 7 basis points to 2.63%, driven by balance sheet actions and reinvestments, whereas BAC reported a larger decrease of 13 basis points to 1.95%, primarily driven by higher deposit costs. JPM explicitly notes its net yield excluding Markets was flat, while BAC highlights that higher asset yields partially offset the deposit cost increases.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D041",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P064_S002",
+                    "paragraph_id": "jpm_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The net yield on these assets, on an FTE basis, was 2.63%, a decrease of 7 bps.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P064_S001",
+                    "paragraph_id": "jpm_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The Firm's average interest-earning assets were $3.5 trillion, up $212 billion, and the yield was 5.50%, up 36 bps.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D010",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P014_S002",
+                    "paragraph_id": "bac_2024_7_P014",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest yield on a fully taxable-equivalent (FTE) basis decreased 13 basis points (bps) to 1.95 percent for 2024.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P014_S001",
+                    "paragraph_id": "bac_2024_7_P014",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest income decreased $871 million to $56.1 billion in 2024 compared to 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P014_S003",
+                    "paragraph_id": "bac_2024_7_P014",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The decreases were primarily driven by higher deposit costs, partially offset by higher asset yields and higher net interest income related to Global Markets activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was substantively comparable; C's candidates (c_2024_7_D340, c_2024_7_D349) disclose methodology for Net Interest Margin calculation and derivative accounting respectively, lacking the specific 2024 performance data (yields, volumes, or NII trends) found in JPM's disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D050",
+            "peer_topic": "Net Interest Income Growth and Drivers",
+            "peer_summary": "Net interest income for 2024 was $8.06 billion, representing a 27% increase from 2023, driven by higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by a decrease in deposits with banks.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.098398,
+            "relationship": "same_topic",
+            "comparison": "JPM and GS both disclose the movement in their net interest metrics for 2024, but they highlight opposite directions for Net Interest Income (NII). JPM’s disclosure context indicates NII increased, supported by a higher yield on average interest-earning assets (up 36 bps to 5.50%). In contrast, GS reports its NII increased by 27% to $8.06 billion, driven by higher interest income from trading assets and investments due to higher rates and balances, but does not report an asset yield increase in the same sentence; instead, GS emphasizes that this income growth was partly offset by an increase in interest expense related to collateralized financings and deposits.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D041",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P064_S001",
+                    "paragraph_id": "jpm_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The Firm's average interest-earning assets were $3.5 trillion, up $212 billion, and the yield was 5.50%, up 36 bps.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P064_S002",
+                    "paragraph_id": "jpm_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The net yield on these assets, on an FTE basis, was 2.63%, a decrease of 7 bps.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P054_S002",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net interest income in the consolidated statements of earnings was $8.06 billion for 2024, 27% higher than 2023, reflecting an increase in interest income, partially offset by an increase in interest expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P054_S003",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in interest income primarily related to trading assets and investments (each reflecting the impact of higher average balances and higher average interest rates), collateralized agreements and other interest-earning assets (each reflecting the impact of higher average interest rates), partially offset by a decrease in interest income related to deposits with banks (reflecting the impact of lower average balances).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was substantively comparable; MS's candidates (ms_2024_7_D061, ms_2024_7_D068) report net interest revenue specifically for the Wealth Management segment and asset management fees, which are too narrow/specific compared to JPM's consolidated interest-earning asset yield and net yield performance."
+      }
+    ]
+  }
+}

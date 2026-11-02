@@ -1,0 +1,272 @@
+{
+  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
+  "request_hash": "48046f60d547e034a318d54c70ddacfb4b2ff2910a4d68f14148753f56abbfe8",
+  "result": {
+    "target_ticker": "MU",
+    "target_disclosure_id": "mu_2024_1A_D060",
+    "item": "1A",
+    "target_topic": "Capital expenditure estimates",
+    "target_summary": "The company estimates capital expenditures for 2025 in the mid-30% range of revenue, net of government incentives, to support technology development and operational efficiency.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "mu_2023_2024_M0107",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures address the reliance on semiconductor product metrics (volume, pricing) for cash flows and the need for significant capital investments for technology and efficiency. The 2023 disclosure estimates 2024 capex slightly above $7B, while the 2024 disclosure estimates 2025 capex in the mid-30% of revenue range. Both fall under the same specific topic of capital investment and cash flow dependency in Item 1A.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2023_1A_D069",
+            "item": "1A",
+            "section": "Risks Related to Capitalization and Financial Markets",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Cash flows depend on semiconductor product volume, pricing, and costs, while significant capital investments are required for growth and efficiency, with 2024 capital expenditures estimated slightly above $7 billion net of partner contributions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2024_1A_D060",
+            "item": "1A",
+            "section": "Risks Related to Capitalization and Financial Markets",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company estimates capital expenditures for 2025 in the mid-30% range of revenue, net of government incentives, to support technology development and operational efficiency.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.891498,
+            "sequence_match_ratio": 0.874251,
+            "length_ratio": 1.0875,
+            "word_count_delta": 7,
+            "added_tokens_sample": [
+              "2025",
+              "proceeds",
+              "from",
+              "government",
+              "incentives",
+              "around",
+              "mid",
+              "30",
+              "range",
+              "of",
+              "revenue",
+              "for",
+              "the",
+              "year"
+            ],
+            "removed_tokens_sample": [
+              "2024",
+              "partner",
+              "contributions",
+              "slightly",
+              "above",
+              "7",
+              "billion"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2023_1A_D069",
+            "score": 0.912883,
+            "normalised_score": 0.9129,
+            "label": "Modified",
+            "rationale": "Score 91.29% of ceiling with 78% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The company changed its capital expenditure guidance from a fixed dollar amount ('slightly above $7 billion') in 2023 to a percentage of revenue ('mid-30% range of revenue') in 2024. This change in metric indicates a shift in how the company views the scalability and magnitude of its investment relative to its top line, and the removal of the fixed cap suggests a potentially higher or more variable investment commitment. Additionally, the source of offset changed from 'partner contributions' to 'government incentives,' altering the nature of the net cost assumption.",
+          "key_change": "Shift from fixed dollar capex to percentage of revenue guidance"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "mu_2024_2025_M0111",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review"
+        ],
+        "explanation": "The previous disclosure mu_2024_1A_D060 focuses on the need for significant capital investments and estimates specific capital expenditures. The current disclosure mu_2025_1A_D070 focuses on the risk of being unable to generate sufficient cash flows or obtain financing to fund these operations and capital investments. While related, they address different aspects (estimation vs. funding risk) of the Capitalization topic. However, given the grouping in proposed_groups and the shared context of capital investments in both, this alignment is plausible but less direct than the others. A stricter view might separate them, but they share the specific subject of funding capital investments.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2024_1A_D060",
+            "item": "1A",
+            "section": "Risks Related to Capitalization and Financial Markets",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company estimates capital expenditures for 2025 in the mid-30% range of revenue, net of government incentives, to support technology development and operational efficiency.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2025_1A_D070",
+            "item": "1A",
+            "section": "Risks Related to Capitalization and Financial Markets",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company may be unable to generate sufficient cash flows or obtain external financing to fund operations, debt payments, dividends, and capital investments, with cash flows depending on semiconductor sales volumes, prices, and manufacturing costs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of AMD's candidate disclosures address capital expenditure estimates or the specific financial commitment to manufacturing/R&D infrastructure comparable to MU's mid-30% revenue estimate. AMD's candidates focus on stock price volatility and competitive disadvantages regarding government incentives, which are not substantively comparable to MU's capital investment estimation topic."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_1A_D066",
+            "peer_topic": "Operating results fluctuations",
+            "peer_summary": "Operating results are subject to substantial quarterly and annual fluctuations due to factors beyond the company's control, including customer demand timing, inventory levels, shifts to cloud solutions, and R&D expenditure timing; fixed operating expenses may magnify revenue shortfalls, and failure to meet analyst expectations could significantly decline stock price.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.052382,
+            "relationship": "related_topic",
+            "comparison": "While MU focuses on the forward-looking magnitude of capital investment as a percentage of revenue, AVGO emphasizes the risk that the timing of large R&D and new product expenditures, combined with fixed operating expenses, can magnify adverse impacts if revenue shortfalls occur. Both companies acknowledge the necessity of significant spending for innovation, but AVGO specifically warns that 'failure to adjust spending quickly enough to compensate for a revenue shortfall could magnify the adverse impact,' whereas MU frames its expenditure estimate as a necessary driver for quality and efficiency.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1A_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1A_P119_S003",
+                    "paragraph_id": "mu_2024_1A_P119",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We estimate capital expenditures in 2025 for property, plant, and equipment, net of proceeds from government incentives, to be around mid-30% range of revenue for the year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_1A_D066",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1A_P086_S014",
+                    "paragraph_id": "avgo_2024_1A_P086",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "• timing and amount of research and development and related new product expenditures, and the timing of receipt of any research and development grant monies; and",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_1A_P087_S003",
+                    "paragraph_id": "avgo_2024_1A_P087",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Any failure to adjust spending quickly enough to compensate for a revenue shortfall could magnify the adverse impact of such revenue shortfall on our results of operations.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_1A_D002",
+            "peer_topic": "Capital Expenditure and Facility Risks",
+            "peer_summary": "Process technology and manufacturing investments require capital expenditures above historical levels due to high-tech fabrication facilities and EUV lithography costs. High fixed costs expose gross margin and operating income to demand decreases, leading to potential write-offs, impairments, such as the $3.1 billion charge recorded in Q3 2024 related to the Intel 7 node.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.084567,
+            "relationship": "same_topic",
+            "comparison": "Both MU and INTC disclose high capital expenditure requirements driven by the need to advance process technology and manufacturing capabilities, but they differ in how they frame the magnitude and nature of these costs. MU estimates specific 2025 capital expenditures to be in the mid-30% range of revenue to support technology development and operational efficiency. In contrast, INTC highlights that capital expenditures are already 'above our historical levels' specifically due to the significant costs associated with high-tech fabrication facilities and EUV lithography tools, noting that these costs are 'fixed or difficult to reduce in the short term.'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1A_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1A_P119_S003",
+                    "paragraph_id": "mu_2024_1A_P119",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We estimate capital expenditures in 2025 for property, plant, and equipment, net of proceeds from government incentives, to be around mid-30% range of revenue for the year.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1A_P119_S002",
+                    "paragraph_id": "mu_2024_1A_P119",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "To develop new product and process technology, support future growth, achieve operating efficiencies, and maintain product quality, we must make significant capital investments in manufacturing technology, capital equipment, facilities, R&D, and product and process technology.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_1A_D002",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1A_P010_S001",
+                    "paragraph_id": "intc_2024_1A_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "The investments required for our process technology roadmap and our worldwide manufacturing and assembly and test require capital expenditures above our historical levels.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_1A_P010_S003",
+                    "paragraph_id": "intc_2024_1A_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Our ownership and operation of such high-tech fabrication facilities, and our need to build new and expand existing facilities in anticipation of future demand, has resulted and will continue to result in us incurring large capital outlays and high costs that are fixed or difficult to reduce in the short term.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of NVDA's candidate disclosures address capital expenditure estimates or manufacturing investment scale. NVDA's candidates focus on risks related to indebtedness and refinancing, which do not overlap with MU's disclosure regarding the specific magnitude of capital expenditures relative to revenue."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of QCOM's candidate disclosures address capital expenditure estimates. QCOM's candidates focus on licensing revenue sensitivity to pricing and volume and competitive pricing pressures on chipset products, which are unrelated to MU's capital investment planning for manufacturing technology and facilities."
+      }
+    ]
+  }
+}

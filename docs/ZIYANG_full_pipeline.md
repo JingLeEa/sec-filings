@@ -181,7 +181,8 @@ and human label, then updates downstream analysis and materiality. These jobs us
 a durable background queue with progress, failure/retry controls and source-bound
 human decisions; see [manual review](ZIYANG_manual_review.md). Their workspaces are
 separate from full-run checkpoints, and unchanged request/embedding results can be
-reused. The automatic endpoint is materiality.
+reused. PostgreSQL refreshes continue through synthesis. Legacy file-only
+refreshes end at materiality.
 
 Resume is enabled by default. Rerun the same command, for example:
 
@@ -195,6 +196,23 @@ materiality work and its PostgreSQL save. Each year pair is tracked separately:
 if one pair already finished and saved, only the other pair resumes. An unfinished
 stage uses its existing batch/response caches. Raising the materiality budget or
 changing worker counts preserves completed stages.
+
+If the stopped stage asks for `--retry-failed`, inspect the error and resolve
+the connection or provider issue first. Then resume with:
+
+```bash
+.venv/bin/python scripts/run_full_pipeline.py \
+  --ticker NVDA --years 2024 2025 --retry-failed
+```
+
+This flag is forwarded to disclosure extraction, alignment, change analysis
+and materiality, and does not invalidate completed stage checkpoints. Successful
+responses and earlier attempts stay cached; request/token limits and estimated
+allowances for unknown usage still apply. The UI exposes the same action as
+**Retry failed AI requests on resume** when the log requests this flag. Select
+it before **Resume pipeline**. Another paid attempt is allowed for that
+invocation; this does not create an unlimited pipeline restart loop. Synthesis
+uses its own response cache and does not accept this flag.
 
 Synthesis is tracked as `synthesis_and_save`. A failed synthesis request or
 PostgreSQL save leaves that stage incomplete; rerunning retries synthesis while
@@ -313,6 +331,7 @@ budgets remain enforced per pair.
 | `--cache-namespace NAME` | PostgreSQL cache scope; default `main`. Use another name for an intentional fresh model/configuration run |
 | `--from-stage STAGE` | Skip earlier stages and read saved PostgreSQL inputs; default `preprocessing` |
 | `--resume` / `--no-resume` | Skip completed stages by default, or deliberately execute the selected stages using their internal caches |
+| `--retry-failed` | Permit new attempts for failed/interrupted requests in unfinished extraction, alignment, change analysis and materiality; preserve successful caches and existing budgets |
 | `--user-agent "Name email@example.com"` | Override the SEC contact |
 | `--workers N` / `--year-workers N` | Concurrent disclosure-extraction years; default `3` |
 | `--batch-workers N` | Extraction/consolidation batch workers per year; default `6` |

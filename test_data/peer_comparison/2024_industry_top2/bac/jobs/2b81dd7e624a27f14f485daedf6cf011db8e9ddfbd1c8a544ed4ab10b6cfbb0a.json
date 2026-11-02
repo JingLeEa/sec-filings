@@ -1,0 +1,263 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "e2a45dbde5b11081dc600a8e2729401479f1d31bb32231faf37ffc5591d6532b",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_8_D162",
+    "item": "8",
+    "target_topic": "Commercial real estate outstandings 2023",
+    "target_summary": "Footnote (4) for the 2023 period reports that total outstandings include U.S. commercial real estate loans of $66.8 billion and non-U.S. commercial real estate loans of $6.1 billion.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0671",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report footnote (4) regarding the composition of total outstandings specifically for U.S. and non-U.S. commercial real estate loans. The 2023 data ($66.8B/$6.1B) is matched with the 2024 data ($59.6B/$6.1B) as they represent the same footnote topic in the respective years.\n\nBoth disclosures describe the specific breakdown of commercial real estate loans within total outstandings for the reported period. D171 cites 2023 figures ($66.8B US, $6.1B non-US) and D162 cites 2024 figures ($66.8B US, $6.1B non-US) with identical labeling and structure, indicating a direct correspondence.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_8_D171",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total outstandings included specific amounts of U.S. and non-U.S. commercial real estate loans, with figures provided for both 2023 and 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D157",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (4) for the 2024 period reports that total outstandings include U.S. commercial real estate loans of $59.6 billion and non-U.S. commercial real estate loans of $6.1 billion.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D162",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (4) for the 2023 period reports that total outstandings include U.S. commercial real estate loans of $66.8 billion and non-U.S. commercial real estate loans of $6.1 billion.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.96164,
+            "sequence_match_ratio": 0.5,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "4",
+              "total",
+              "outstandings",
+              "includes",
+              "u",
+              "s",
+              "commercial",
+              "real",
+              "estate",
+              "loans",
+              "of",
+              "59",
+              "6",
+              "billion",
+              "and",
+              "non",
+              "u",
+              "s",
+              "commercial",
+              "real"
+            ],
+            "removed_tokens_sample": [
+              "4",
+              "total",
+              "outstandings",
+              "includes",
+              "u",
+              "s",
+              "commercial",
+              "real",
+              "estate",
+              "loans",
+              "of",
+              "64",
+              "9",
+              "billion",
+              "and",
+              "non",
+              "u",
+              "s",
+              "commercial",
+              "real"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_8_D171",
+            "score": 1.002804,
+            "normalised_score": 1.0028,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 100.28% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.95,
+          "reason": "The disclosure reports a significant reduction in U.S. commercial real estate loan outstandings from $66.8 billion to $59.6 billion. This represents a material change in the size of the company's CRE portfolio, directly impacting its credit risk exposure and concentration metrics, even if the structural disclosure remains the same.",
+          "key_change": "Significant reduction in U.S. commercial real estate outstandings"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0701",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "missing_review_metadata",
+          "verifier_requested_review"
+        ],
+        "explanation": "Both disclosures detail the composition of loans accounted for under the fair value option. The 2024 disclosure (D155) cites consumer loans ($59M residential, $162M home equity) and commercial loans ($2.8B US, $1.3B non-US). The 2025 disclosure (D159) cites corresponding consumer loans ($58M residential, $107M home equity) and commercial loans ($2.1B US, $1.2B non-US) in footnotes (3) of the same section. Although D159 is a composite disclosure, it contains the specific fair value option data that matches D155's topic.\n\nThe 2024 disclosure (D160) reports the composition of total outstandings for auto/securities-based/non-US consumer loans ($53.9B, $46.0B, $2.8B). The 2025 disclosure (D159) reports the same components for the current year ($55.3B, $55.0B, $3.0B) in footnote (2). This is a direct year-over-year comparison of the same specific outstandings topic.\n\nThe 2024 disclosure (D157) reports U.S. and non-U.S. commercial real estate loan outstandings ($59.6B, $6.1B). The 2025 disclosure (D159) reports the corresponding amounts ($62.7B, $6.0B) in footnote (4). They share the same specific subject: CRE loan outstandings.\n\nThe 2024 disclosure (D162) reports U.S. and non-U.S. commer",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D154",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (2) for the 2024 period identifies that total outstandings primarily include auto and specialty lending loans of $54.9 billion, U.S. securities-based lending loans of $48.7 billion, and non-U.S. consumer loans of $2.8 billion.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D155",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (3) for the 2024 period lists consumer loans accounted for under the fair value option, including residential mortgage and home equity loans, as well as commercial loans under the fair value option.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D157",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (4) for the 2024 period reports that total outstandings include U.S. commercial real estate loans of $59.6 billion and non-U.S. commercial real estate loans of $6.1 billion.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D160",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (2) for the 2023 period identifies that total outstandings primarily include auto and specialty lending loans of $53.9 billion, U.S. securities-based lending loans of $46.0 billion, and non-U.S. consumer loans of $2.8 billion.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D162",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnote (4) for the 2023 period reports that total outstandings include U.S. commercial real estate loans of $66.8 billion and non-U.S. commercial real estate loans of $6.1 billion.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_8_D159",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 5 Outstanding Loans and Leases and Allowance for Credit Losses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total outstandings for Other Consumer and Commercial segments primarily comprised $55.3 billion in auto and specialty lending loans and leases, $55.0 billion in U.S. securities-based lending, and $3.0 billion in non-U.S. consumer loans. U.S. commercial real estate loans totaled $62.7 billion and non-U.S. commercial real estate loans were $6.0 billion. Loans and leases pledged as collateral amounted to $39.5 billion, with an additional $313.7 billion pledged to secure potential borrowing capacity with the Federal Reserve Bank and Federal Home Loan Bank.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate disclosures focus on loans at fair value and fair value hedge basis adjustments, which are distinct from the topic of total CRE outstandings and composition reported by BAC."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D222",
+            "peer_topic": "Definition and composition of Commercial Real Estate loans",
+            "peer_summary": "Commercial real estate loans consist of originated and purchased loans directly or indirectly secured by hotels, retail stores, multifamily housing complexes, and commercial/industrial properties, as well as loans to clients warehousing assets backed by commercial real estate.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.301254,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and GS disclose specific data and definitions related to Commercial Real Estate (CRE) loans. BAC quantifies its 2023 CRE outstandings at $66.8 billion for U.S. and $6.1 billion for non-U.S. exposures. GS defines its CRE loans as including originated and purchased loans secured by hotels, retail stores, multifamily housing, and commercial/industrial properties, as well as warehoused assets. While BAC provides aggregate outstanding balances, GS provides the structural definition of what constitutes a CRE loan in its portfolio.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D162",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P197_S001",
+                    "paragraph_id": "bac_2024_8_P197",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "(4)Total outstandings includes U.S. commercial real estate loans of $66.8 billion and non-U.S. commercial real estate loans of $6.1 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D222",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P302_S003",
+                    "paragraph_id": "gs_2024_8_P302",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Commercial Real Estate. Commercial real estate loans includes originated loans that are directly or indirectly secured by hotels, retail stores, multifamily housing complexes and commercial and industrial properties. Commercial real estate loans also includes loans extended to clients who warehouse assets that are directly or indirectly backed by commercial real estate. In addition, commercial real estate includes loans purchased by the firm.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate disclosures focus on residential real estate delinquency indicators and foreclosure status, which differ from the topic of total commercial real estate outstandings reported by BAC."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate disclosures focus on Allowance for Credit Losses (ACL) trends and credit quality indicators (such as internal risk ratings and FICO scores), rather than the specific CRE loan outstandings balances reported by BAC."
+      }
+    ]
+  }
+}

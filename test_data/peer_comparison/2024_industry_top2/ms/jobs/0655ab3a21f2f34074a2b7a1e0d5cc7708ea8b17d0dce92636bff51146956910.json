@@ -1,0 +1,232 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "1c1853e7a5d0418b382bc3692bf5e0fe5096f046be70e243e8beeece6dbd502a",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D057",
+    "item": "7",
+    "target_topic": "Definition of stock plan unvested assets",
+    "target_summary": "Stock plan unvested assets represent the market value of public company securities at the end of the period.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0261",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures concern Stock Plan Unvested Assets within the Workplace Channel. The 2023 disclosure defines unvested assets and reports vested retention rates, while the 2024 disclosure explicitly defines unvested assets. They share the specific subject of defining/reporting stock plan unvested assets.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D059",
+            "item": "7",
+            "section": "Wealth Management > Net New Assets (NNA) > Workplace Channel [footnote 1]",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Stock plan vested asset retention rates were 29% in 2023, 34% in 2022, and 24% in 2021, calculated by dividing net inflows by previous year's inflows.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D057",
+            "item": "7",
+            "section": "Wealth Management > Net New Assets (NNA) > Workplace Channel [footnote 1]",
+            "taxonomy": "Other / Unclassified",
+            "summary": "Stock plan unvested assets represent the market value of public company securities at the end of the period.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.620828,
+            "sequence_match_ratio": 0.339286,
+            "length_ratio": 0.204301,
+            "word_count_delta": -74,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "the",
+              "stock",
+              "plan",
+              "vested",
+              "asset",
+              "retention",
+              "rate",
+              "within",
+              "the",
+              "workplace",
+              "channel",
+              "which",
+              "represents",
+              "the",
+              "percentage",
+              "of",
+              "stock",
+              "plan",
+              "assets",
+              "retained"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D059",
+            "score": 0.741128,
+            "normalised_score": 0.7411,
+            "label": "Reduced",
+            "rationale": "Score 74.11% of ceiling — content shrank from ~90 to ~18 words (0.2×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Reduced",
+          "final_taxonomy": "Reduced"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The 2023 disclosure included specific historical data on 'stock plan vested asset retention rates' (29%, 34%, 24%) which is completely removed in the 2024 disclosure. This removes a specific operational metric regarding employee stock plan behavior, representing a material reduction in disclosed information.",
+          "key_change": "Removal of retention rate metrics"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0058",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in Item 7 for the 2025 filing. The disclosure defines 'Stock plan unvested assets'. Search results returned low-scoring hits on general market fluctuations or other balance sheet items (e.g., margin loans, liquidity resources) which are distinct topics. The specific definition of unvested stock plan assets in the Workplace Channel is not present in the provided 2025 Item 7 disclosures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D057",
+            "item": "7",
+            "section": "Wealth Management > Net New Assets (NNA) > Workplace Channel [footnote 1]",
+            "taxonomy": "Other / Unclassified",
+            "summary": "Stock plan unvested assets represent the market value of public company securities at the end of the period.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -19,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "2",
+              "stock",
+              "plan",
+              "unvested",
+              "assets",
+              "represent",
+              "the",
+              "market",
+              "value",
+              "of",
+              "public",
+              "company",
+              "securities",
+              "at",
+              "the",
+              "end",
+              "of",
+              "the",
+              "period"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The 2024 filing defined 'Stock plan unvested assets' as a key metric for the Workplace Channel. The complete removal of this definition in the 2025 filing indicates a change in how the company measures or reports its wealth management activities, specifically regarding the valuation of assets held in trust for employees/executives. This impacts the transparency of the business model's asset base.",
+          "key_change": "Removal of unvested assets metric definition"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosures for BAC focus on shareholders' equity changes and net client AUM flows definition, which are distinct from the specific definition of stock plan unvested assets provided by MS."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosures for C focus on end-of-period loans/deposits and investment securities composition, which do not address stock plan assets or related definitions."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D158",
+            "peer_topic": "Federal Excise Tax Impact",
+            "peer_summary": "The company is subject to a 1% non-deductible federal excise tax on share repurchases, which did not have a material impact on its financial condition, results of operations, or cash flows in 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.045676,
+            "relationship": "related_topic",
+            "comparison": "While MS defines specific accounting attributes of stock plan assets (unvested securities market value), GS discusses a related but distinct regulatory tax impact on stock-based compensation mechanics, specifically the federal excise tax applicable to share repurchases. Both disclosures involve the financial treatment of corporate securities issued or held, but MS focuses on the definition of internal assets for wealth management reporting, whereas GS focuses on external tax liabilities associated with capital return strategies.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D057",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P059_S001",
+                    "paragraph_id": "ms_2024_7_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.Stock plan unvested assets represent the market value of public company securities at the end of the period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D158",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P231_S001",
+                    "paragraph_id": "gs_2024_7_P231",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "We are subject to a one percent non-deductible federal excise tax (buyback tax) that is applicable to the fair market value of certain corporate share repurchases.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosures for JPM focus on liquidity sources (HQLA) and available cash/securities, which are unrelated to the definition of stock plan unvested assets."
+      }
+    ]
+  }
+}

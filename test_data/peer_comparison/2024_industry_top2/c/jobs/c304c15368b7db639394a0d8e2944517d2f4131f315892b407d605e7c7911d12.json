@@ -1,0 +1,312 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "5f94a09c79ec93d83c99bef4f9f61e17134f749486b6db80e462cafa537e75f2",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D446",
+    "item": "7",
+    "target_topic": "Definition of other funded exposures",
+    "target_summary": "Other funded exposures include Legacy Franchises and direct exposures such as accounts receivable, loans held for sale, other corporate/other loans, and equity method investments.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "c_2023_2024_M0677",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures define 'Other funded' exposures, listing accounts receivable and equity method investments. The 2024 disclosure adds Legacy Franchises and loans HFS.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "OTHER RISKS > Country Risk > Top 25 Country Exposures",
+            "summary": "Wealth loans include Private Bank loans net of unearned income (totaling $19.3 billion in top 25 countries as of Dec 31, 2023); other funded exposures include accounts receivable and equity method investments; unfunded exposure includes corporate lending commitments, letters of credit, and contingencies.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2023_7_D423",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "OTHER RISKS > Country Risk > Top 25 Country Exposures",
+            "summary": "Other funded exposures include Legacy Franchises and direct exposures such as accounts receivable, loans held for sale, other corporate/other loans, and equity method investments.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D446",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Unchanged",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.58,
+            "change_taxonomy": "Reduced",
+            "word_count_delta": -21,
+            "cosine_similarity": 0.582787,
+            "added_tokens_sample": [
+              "legacy",
+              "franchises",
+              "and",
+              "loans",
+              "hfs",
+              "other",
+              "loans",
+              "in",
+              "corporate",
+              "other"
+            ],
+            "sequence_match_ratio": 0.481013,
+            "removed_tokens_sample": [
+              "1",
+              "wealth",
+              "loans",
+              "reflect",
+              "funded",
+              "loans",
+              "including",
+              "those",
+              "related",
+              "to",
+              "the",
+              "private",
+              "bank",
+              "net",
+              "of",
+              "unearned",
+              "income",
+              "3",
+              "unfunded",
+              "exposure"
+            ]
+          },
+          "semantic": {
+            "label": "Reduced",
+            "score": 0.781479,
+            "method": "embedding_cosine",
+            "rationale": "Score 78.15% of ceiling — content shrank from ~50 to ~28 words (0.6×).",
+            "matched_id": "c_2023_7_D423",
+            "normalised_score": 0.7815
+          },
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure materially alters the composition of 'Other funded' exposures by adding 'Legacy Franchises', 'loans HFS', and 'other loans in Corporate/Other' to the definition. This expands the scope of reported exposures and changes the substance of the financial data presented, differing significantly from the 2023 definition which listed only accounts receivable and equity method investments.",
+          "key_change": "Addition of new exposure categories to definition"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that compares to the definition of other funded exposures. BAC's candidates focus on non-U.S. exposure definitions (which is a geographic/risk basis, not a component definition of 'other funded') and the valuation of nonperforming loans (a distinct credit quality metric). Neither candidate addresses the specific composition of 'other funded' categories like equity method investments, legacy franchises, or held-for-sale loans as defined by Citigroup."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D304",
+            "peer_topic": "Accounting for available-for-sale and held-to-maturity securities",
+            "peer_summary": "The company makes investments in securities accounted for as available-for-sale, held-to-maturity, or under the equity method, which are included in investments on the consolidated balance sheets.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.143295,
+            "relationship": "same_topic",
+            "comparison": "Both Citigroup and Goldman Sachs explicitly identify equity method investments as a component of their broader 'other' or direct exposure definitions. Citigroup defines 'other funded exposures' to include 'investments accounted for under the equity method' alongside legacy franchises and direct loan exposures. Similarly, Goldman Sachs states that it makes investments accounted for 'under the equity method' which are included in its consolidated balance sheets. Both disclosures highlight equity method accounting as a distinct classification within their reported asset bases.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D446",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P620_S001",
+                    "paragraph_id": "c_2024_7_P620",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(2) Other funded includes Legacy Franchises and other direct exposures such as accounts receivable, loans HFS, other loans in Corporate/Other and investments accounted for under the equity method.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D304",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P405_S001",
+                    "paragraph_id": "gs_2024_7_P405",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "We make investments in securities that are accounted for as available-for-sale, held-to-maturity or under the equity method which are included in investments in the consolidated balance sheets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D101",
+            "peer_topic": "Other Alternative Investments including Tax Credits and CIEs",
+            "peer_summary": "Other investments include tax credit investments of $3.2 billion as of December 2024. Additionally, Constant Involvement Entities (CIEs) held assets of $2.4 billion funded by $1.2 billion in nonrecourse liabilities as of December 2024, reducing equity at risk.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.134746,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures address the composition of specific 'other' investment or funding categories, specifically noting Constant Involvement Entities (CIEs) and their funding structures. Goldman Sachs discloses that its other investments include CIEs funded by liabilities, substantially all of which were nonrecourse, reducing equity at risk. While Citigroup's definition of 'other funded exposures' does not explicitly mention CIEs, it includes 'Legacy Franchises' and 'equity method investments,' which often encompass structured entities. However, the more direct comparison is the structural definition of complex funded exposures. Goldman Sachs provides specific dollar amounts for these 'other' components (e.g., $3.2 billion in tax credits, $2.4 billion in CIE assets), whereas Citigroup provides a qualitative definition of the components included in 'other funded' without specific amounts in this sentence. Both illustrate how financial institutions define and segment complex or less conventional funded positions within their risk and capital reporting.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D446",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P620_S001",
+                    "paragraph_id": "c_2024_7_P620",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(2) Other funded includes Legacy Franchises and other direct exposures such as accounts receivable, loans HFS, other loans in Corporate/Other and investments accounted for under the equity method.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D101",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P159_S002",
+                    "paragraph_id": "gs_2024_7_P159",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Other investments include tax credit investments (accounted for under the proportional amortization method of accounting) of $3.2 billion as of December 2024 and $3.4 billion as of December 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P159_S003",
+                    "paragraph_id": "gs_2024_7_P159",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Additionally, other investments includes CIEs, which held assets (generally accounted for at historical cost less depreciation) of $2.4 billion as of December 2024 and $5.9 billion as of December 2023, and were funded with liabilities of approximately $1.2 billion as of December 2024 and $3.5 billion as of December 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P159_S004",
+                    "paragraph_id": "gs_2024_7_P159",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Substantially all such liabilities were nonrecourse, thereby reducing our equity at risk.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D334",
+            "peer_topic": "Receivables from Customers",
+            "peer_summary": "Receivables from customers reflect held-for-investment margin loans to brokerage clients across CIB, CCB, and AWM, reported within accrued interest and accounts receivable.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.100581,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures address the treatment of receivables and loans within specific accounting or risk categories. Citigroup explicitly includes 'accounts receivable' and 'loans held for sale' in its definition of 'other funded exposures.' JPMorgan discloses that 'Receivables from customers' (specifically margin loans) are reported within 'accrued interest and accounts receivable.' Both firms distinguish between types of receivables/loans (e.g., held for sale vs. held for investment/margin loans) when defining their balance sheet line items or exposure categories. While Citigroup groups accounts receivable with funded exposures, JPMorgan maps its customer receivables to the accounts receivable line item, showing a parallel focus on the composition of these asset classes.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D446",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P620_S001",
+                    "paragraph_id": "c_2024_7_P620",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(2) Other funded includes Legacy Franchises and other direct exposures such as accounts receivable, loans HFS, other loans in Corporate/Other and investments accounted for under the equity method.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D334",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P491_S001",
+                    "paragraph_id": "jpm_2024_7_P491",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(a) Receivables from customers reflect held-for-investment margin loans to brokerage clients in CIB, CCB and AWM; these are reported within accrued interest and accounts receivable on the Consolidated balance sheets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D013",
+            "peer_topic": "Institutional Securities Other Revenue Composition",
+            "peer_summary": "Other revenues for Institutional Securities encompass revenues and losses from equity method investments, fees associated with lending activities, mark-to-market gains/losses on loans and lending commitments held for sale, and gains/losses on economic derivative hedges for certain loans and commitments.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.102562,
+            "relationship": "same_topic",
+            "comparison": "Both Citigroup and Morgan Stanley identify equity method investments and held-for-sale items as key components of their respective 'other' or alternative exposure categories. Citigroup includes 'investments accounted for under the equity method' and 'loans held for sale' in its definition of 'other funded exposures.' Morgan Stanley similarly includes 'revenues and losses from equity method investments' and 'mark-to-market gains and losses on loans and lending commitments held for sale' within its 'Other revenues for Institutional Securities' category. Both firms recognize that their 'other' buckets contain a mix of equity investments and trading-related loan exposures held for sale.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D446",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P620_S001",
+                    "paragraph_id": "c_2024_7_P620",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(2) Other funded includes Legacy Franchises and other direct exposures such as accounts receivable, loans HFS, other loans in Corporate/Other and investments accounted for under the equity method.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D013",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P014_S001",
+                    "paragraph_id": "ms_2024_7_P014",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Other revenues for Institutional Securities include revenues and losses from equity method investments, fees earned in association with lending activities, mark-to-market gains and losses on loans and lending commitments held for sale, as well as gains and losses on economic derivative hedges associated with certain held-for-sale and held-for-investment loans and lending commitments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}
