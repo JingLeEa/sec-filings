@@ -1,0 +1,168 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "6fa118e8417677d881a5032b0dcfc9e931eaf865ba732f3d6acd6652cefe0d04",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D224",
+    "item": "7",
+    "target_topic": "Q4 2024 Net Credit Loss Trends",
+    "target_summary": "In the fourth quarter of 2024, the net credit loss rate in Retail Banking increased both quarter-over-quarter and year-over-year, primarily driven by consumer overdraft loans.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0570",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report on the Q4 net credit loss rate for Retail Banking, specifically identifying consumer overdraft loans/losses as a key driver of the quarter-over-quarter increase.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "CREDIT RISK > CONSUMER CREDIT > Consumer Credit Trends > Retail Banking",
+            "summary": "In the fourth quarter of 2024, the net credit loss rate in Retail Banking increased both quarter-over-quarter and year-over-year, primarily driven by consumer overdraft loans.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D224",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "ALL OTHER-Managed Basis > CREDIT RISK > CONSUMER CREDIT > Consumer Credit Trends > Retail Banking",
+            "summary": "The fourth quarter of 2025 net credit loss rate for Retail Banking increased quarter-over-quarter, driven by consumer overdraft losses, but remained broadly stable year-over-year.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2025_7_D192",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 1.0625,
+            "change_taxonomy": "Modified",
+            "word_count_delta": 2,
+            "cosine_similarity": 0.814013,
+            "added_tokens_sample": [
+              "2025",
+              "for",
+              "losses",
+              "and",
+              "was",
+              "broadly",
+              "stable",
+              "year",
+              "over",
+              "year"
+            ],
+            "sequence_match_ratio": 0.727273,
+            "removed_tokens_sample": [
+              "2024",
+              "in",
+              "and",
+              "year",
+              "over",
+              "year",
+              "primarily",
+              "loans"
+            ]
+          },
+          "semantic": {
+            "label": "Relocated",
+            "score": 0.99408,
+            "method": "embedding_cosine",
+            "rationale": "Score 99.41% of ceiling — content is similar but section changed from 'CREDIT RISK > CONSUMER CREDIT > Consumer Credit Trends > Retail Banking' to 'ALL OTHER-Managed Basis > CREDIT RISK > CONSUMER CREDIT > Consumer Credit Trends > Retail Banking'.",
+            "matched_id": "c_2024_7_D224",
+            "normalised_score": 0.9941
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The disclosure indicates a change in the year-over-year performance of the Retail Banking net credit loss rate, shifting from an increase in 2024 to stability in 2025. While the quarter-over-quarter increase driven by overdraft losses persists, the stabilization of the year-over-year metric suggests a moderation in the severity of credit deterioration, representing a meaningful, albeit less dramatic, change in financial exposure compared to the previous year's growth in losses.",
+          "key_change": "Stabilization of Retail Banking year-over-year credit loss rate"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D267",
+            "peer_topic": "Other Consumer portfolio composition and charge-offs",
+            "peer_summary": "Other consumer primarily consists of deposit overdraft balances. Net charge-offs decreased $185 million to $295 million in 2024 compared to 2023, primarily driven by lower overdraft losses from fraud activity.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.13232,
+            "relationship": "related_topic",
+            "comparison": "Both Citigroup and Bank of America disclose credit loss metrics specifically driven by consumer overdraft loans. However, the trends were opposite in the comparable periods: Citigroup reported an increase in its net credit loss rate driven by overdraft loans in Q4 2024, whereas Bank of America reported that net charge-offs for its deposit overdraft balances (which consist primarily of overdrafts) decreased in 2024, primarily due to lower fraud-related losses.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D224",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P323_S001",
+                    "paragraph_id": "c_2024_7_P323",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "As presented in the chart above, the fourth quarter of 2024 net credit loss rate in Retail Banking increased quarter-over-quarter and year-over-year, primarily driven by consumer overdraft loans.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D267",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P311_S001",
+                    "paragraph_id": "bac_2024_7_P311",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Other consumer primarily consists of deposit overdraft balances.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P311_S002",
+                    "paragraph_id": "bac_2024_7_P311",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net charge-offs decreased $185 million to $295 million in 2024 compared to 2023, primarily driven by lower overdraft losses from fraud activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No sufficiently comparable candidate retrieved. The target disclosure concerns consumer credit loss trends in Retail Banking (specifically overdrafts), while Goldman Sachs' candidates focus on its Platform Solutions credit loss provisions, which are driven by credit card portfolio charge-offs rather than deposit overdrafts."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No sufficiently comparable candidate retrieved. The target disclosure addresses net credit loss rates and trends for consumer credit products. The available JPM candidates discuss FTP updates for consumer deposits (a funding mechanism) and structured notes issuance (a liability), neither of which pertains to consumer credit loss metrics or trends."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No sufficiently comparable candidate retrieved. The target disclosure concerns net credit loss rates in Retail Banking. The available MS candidates discuss Asset Management fee revenue and Wealth Management net interest revenue drivers, which are income statement components unrelated to credit loss provisions or charge-off trends."
+      }
+    ]
+  }
+}

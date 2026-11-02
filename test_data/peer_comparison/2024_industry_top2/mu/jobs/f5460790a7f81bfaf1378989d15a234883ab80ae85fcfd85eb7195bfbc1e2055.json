@@ -1,0 +1,386 @@
+{
+  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
+  "request_hash": "8bae4f860f8d94bfed7e417f596de0504adcfaabc6381bae696ae373702cd350",
+  "result": {
+    "target_ticker": "MU",
+    "target_disclosure_id": "mu_2024_1_D078",
+    "item": "1",
+    "target_topic": "Board of Directors gender and ethnic diversity composition",
+    "target_summary": "As of August 29, 2024, the Board comprised five men and four women, including one Asian member, one African-American member, and seven White members.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "mu_2023_2024_M0185",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the specific composition of the Board of Directors regarding gender and racial/ethnic diversity as of the fiscal year-end. D066 cites 2023 data (4M/4W, 1 Asian, 1 African-American, 6 White, 1 Vet) and D078 cites 2024 data (5M/4W, 1 Asian, 1 African-American, 7 White).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2023_1_D066",
+            "item": "1",
+            "section": "Human Capital",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "As of August 31, 2023, the Board comprised four men and four women, including one Asian member, one African-American member, six White members, and one U.S. military veteran.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2024_1_D078",
+            "item": "1",
+            "section": "Human Capital",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "As of August 29, 2024, the Board comprised five men and four women, including one Asian member, one African-American member, and seven White members.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.820607,
+            "sequence_match_ratio": 0.752294,
+            "length_ratio": 0.758065,
+            "word_count_delta": -15,
+            "added_tokens_sample": [
+              "five",
+              "29",
+              "2024",
+              "29",
+              "2024",
+              "seven"
+            ],
+            "removed_tokens_sample": [
+              "four",
+              "31",
+              "2023",
+              "31",
+              "2023",
+              "six",
+              "one",
+              "member",
+              "of",
+              "our",
+              "board",
+              "of",
+              "directors",
+              "is",
+              "a",
+              "veteran",
+              "of",
+              "the",
+              "u",
+              "s"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2023_1_D066",
+            "score": 0.97564,
+            "normalised_score": 0.9756,
+            "label": "Unchanged",
+            "rationale": "Score 97.56% of ceiling — semantically identical despite surface differences (word overlap 63%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.35,
+          "confidence_score": 0.85,
+          "reason": "The Board composition changes include an increase in white members and a decrease in the veteran member, while gender and other racial diversity metrics remain stable. This is a routine annual update to board demographics without indicating a meaningful shift in board diversity strategy or composition balance that would alter governance risk or dynamics.",
+          "key_change": "Routine annual update to board diversity metrics"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "mu_2024_2025_M0006",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No 2025 counterpart found. 2024 D078 details Board composition (men/women, ethnicity). Search results for Board diversity in 2025 returned no matching disclosures covering Board member demographics. The 2025 filings do not appear to contain a corresponding disclosure on Board diversity.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2024_1_D078",
+            "item": "1",
+            "section": "Human Capital",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "As of August 29, 2024, the Board comprised five men and four women, including one Asian member, one African-American member, and seven White members.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -47,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "our",
+              "board",
+              "of",
+              "directors",
+              "was",
+              "comprised",
+              "of",
+              "five",
+              "men",
+              "and",
+              "four",
+              "women",
+              "as",
+              "of",
+              "august",
+              "29",
+              "2024",
+              "in",
+              "addition",
+              "as"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.8,
+          "reason": "The 2024 disclosure explicitly details Board composition by gender and ethnicity. The alignment states no corresponding 2025 disclosure exists for Board diversity. The removal of Board diversity demographics is a material change in corporate governance disclosure, as investors rely on this information for governance oversight assessment. The absence of any 2025 equivalent is a significant omission in the human capital/governance section.",
+          "key_change": "Removal of Board diversity demographics"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The available AMD candidates (amd_2024_1_D087 on female engineering community development and amd_2024_1_D084 on general culture surveys) focus on specific employee development programs and engagement metrics rather than the demographic composition or diversity statistics of the Board or workforce that match the target's topic of Board gender and ethnic diversity."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The available AVGO candidates (avgo_2024_1_D085 on attrition rates and avgo_2024_1_D067 on customer concentration) address employee retention metrics and business revenue risks, which are not comparable to the target's topic of Board gender and ethnic diversity composition."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_1_D063",
+            "peer_topic": "2024 diversity workforce demographics",
+            "peer_summary": "In 2024, women represented 27.9% of global employees and 25.3% of technical positions, while underrepresented minorities comprised 17.8% of US employees and 8.7% of US senior leadership positions.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.091445,
+            "relationship": "same_topic",
+            "comparison": "Both MU and INTC disclose specific demographic compositions for their workforces or leadership bodies regarding gender and ethnicity. MU reports self-identified race and gender composition specifically for its Board of Directors (5 men, 4 women; 1 Asian, 1 African-American, 7 White), whereas INTC reports similar demographic metrics (27.9% women, 17.8% underrepresented minorities) for its broader global employee base and senior leadership. Both disclosures provide granular breakdowns of diversity statistics within the Human Capital section.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1_D078",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P072_S001",
+                    "paragraph_id": "mu_2024_1_P072",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Our Board of Directors was comprised of five men and four women as of August 29, 2024.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1_P072_S002",
+                    "paragraph_id": "mu_2024_1_P072",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In addition, as of August 29, 2024, based on self-identification, one member of our Board of Directors is Asian, one member is African-American, and seven members are White.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_1_D063",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1_P059_S001",
+                    "paragraph_id": "intc_2024_1_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "In 2024, women represented 27.9% of our global employees, 18.3% of our senior leadership positions [footnote 2: Senior leadership is defined as salary grades 10+ or equivalent grades.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_1_P059_S002",
+                    "paragraph_id": "intc_2024_1_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Population includes all regular Intel employees but does not include Mobileye and other non-integrated subsidiaries employees.] , and 25.3% of our technical positions.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_1_P059_S003",
+                    "paragraph_id": "intc_2024_1_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Underrepresented minorities [footnote 3: Underrepresented minority population includes all regular Intel employees but does not include Mobileye and other non-integrated subsidiaries employees.] , including Black/African American employees, Hispanic, and Native American employees, represented 17.8% of our US employees and 8.7% of our US senior leadership positions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_1_D071",
+            "peer_topic": "Diversity and Inclusion Strategy and Initiatives",
+            "peer_summary": "NVIDIA is committed to creating an inclusive culture and building a diverse talent pipeline, particularly for women and underrepresented minorities in technology. To achieve this, the company partners with diverse institutions, embeds recruiting teams, supports women's leadership development, provides executive sponsors, trains managers on diversity, and tracks metrics on retention, pay, and engagement.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.057529,
+            "relationship": "same_topic",
+            "comparison": "Both MU and NVDA articulate a commitment to diversity and inclusion, with NVDA explicitly listing progress on diversity metrics as a key initiative. MU's disclosure provides static headcounts of diverse members on its Board of Directors, while NVDA details strategic efforts to build a diverse talent pipeline for women and underrepresented minorities, including supporting women's leadership development and training managers on diversity. Both topics fall under the management of human capital diversity.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1_D078",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P072_S002",
+                    "paragraph_id": "mu_2024_1_P072",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In addition, as of August 29, 2024, based on self-identification, one member of our Board of Directors is Asian, one member is African-American, and seven members are White.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_1_D071",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1_P073_S001",
+                    "paragraph_id": "nvda_2024_1_P073",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "When recruiting for new talent or developing our current employees, we strive to build a diverse talent pipeline that includes those underrepresented in the technology field, including women, Black/African American, and Hispanic/Latino candidates.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_1_P074_S001",
+                    "paragraph_id": "nvda_2024_1_P074",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "To this end, we have been:",
+                    "visible_in_prompt": false
+                  },
+                  {
+                    "sentence_id": "nvda_2024_1_P074_S004",
+                    "paragraph_id": "nvda_2024_1_P074",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "• Supporting the development of women employees through programs aimed at building a pipeline of future leaders;",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "QCOM",
+            "peer_disclosure_id": "qcom_2024_1_D061",
+            "peer_topic": "Diversity, Equity, and Inclusion (DEI) Strategy",
+            "peer_summary": "Qualcomm focuses DEI efforts on inspiring innovation through inclusive culture, recruiting diverse talent, and identifying strategic partners, supported by global employee network groups and engagement with diverse communities.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.105613,
+            "relationship": "same_topic",
+            "comparison": "Both MU and QCOM disclose commitments to an inclusive and diverse workforce. MU demonstrates this through the specific ethnic and gender composition of its Board of Directors, while QCOM describes its strategic focus on inspiring innovation through an inclusive culture, expanding recruitment of diverse talent, and maintaining employee network groups for women and underrepresented populations. Both disclosures address diversity as a core component of their organizational structure.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1_D078",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P072_S001",
+                    "paragraph_id": "mu_2024_1_P072",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Our Board of Directors was comprised of five men and four women as of August 29, 2024.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1_P072_S002",
+                    "paragraph_id": "mu_2024_1_P072",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In addition, as of August 29, 2024, based on self-identification, one member of our Board of Directors is Asian, one member is African-American, and seven members are White.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1_D061",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1_P066_S002",
+                    "paragraph_id": "qcom_2024_1_P066",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "We believe that a diverse workforce is important to our success, and we continue to focus on making Qualcomm a great place to work for everyone, including women and underrepresented populations.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_1_P066_S003",
+                    "paragraph_id": "qcom_2024_1_P066",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Our recent efforts have been focused in three areas: inspiring innovation through an inclusive and diverse culture; expanding our efforts to recruit world-class diverse talent; and identifying strategic partners to accelerate our programs.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_1_P067_S001",
+                    "paragraph_id": "qcom_2024_1_P067",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "We have employee networks that enhance our inclusive and diverse culture, including global network groups focused on supporting women, LGBTQ+ employees and employees with disabilities, in addition to U.S.-based employee networks that focus on Asian American and Pacific Islander employees, Black and African American employees, Hispanic and Latinx employees and U.S. military members and veterans.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

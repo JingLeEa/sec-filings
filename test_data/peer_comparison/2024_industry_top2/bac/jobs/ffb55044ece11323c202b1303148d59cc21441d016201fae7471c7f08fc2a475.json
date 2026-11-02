@@ -1,0 +1,347 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "4c86de12d27899f08a49f4c46230ffec76d87a9d2c534b9656f2eb0333e45b00",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_1A_D012",
+    "item": "1A",
+    "target_topic": "Recessionary and sector-specific credit risks",
+    "target_summary": "A recessionary environment, rising unemployment, inflation, and elevated interest rates could impair borrowers' ability to meet obligations, with specific risks identified in sectors like commercial real estate and office properties due to shifts in demand and tight financial conditions.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0080",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2023 disclosure (D028) covers credit concentrations in consumer/commercial real estate and asset managers/funds, along with broader macroeconomic risks affecting these portfolios. The 2024 year splits this into: D018 which specifically details the concentrations in real estate and asset managers/funds plus climate/valuation risks; and D012 which details the broader macroeconomic environment (recession, unemployment, inflation) impacting borrower ability to pay, with specific mention of commercial real estate risks. Both 2024 disclosures are supported by different facets of the 2023 source text.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_1A_D028",
+            "item": "1A",
+            "section": "Credit",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The bank holds significant credit concentrations in consumer real estate, commercial real estate, asset managers, and funds; declining valuations, extreme weather, climate change, and insurability risks in these sectors could increase credit losses and servicing expenses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_1A_D012",
+            "item": "1A",
+            "section": "Credit",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "A recessionary environment, rising unemployment, inflation, and elevated interest rates could impair borrowers' ability to meet obligations, with specific risks identified in sectors like commercial real estate and office properties due to shifts in demand and tight financial conditions.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_1A_D018",
+            "item": "1A",
+            "section": "Credit",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Significant credit risk concentrations exist in consumer real estate, consumer credit cards, and commercial real estate and asset manager portfolios, which could face higher losses from declining valuations, climate change impacts, and economic weaknesses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.928268,
+            "sequence_match_ratio": 0.750388,
+            "length_ratio": 1.643443,
+            "word_count_delta": 157,
+            "added_tokens_sample": [
+              "a",
+              "recessionary",
+              "environment",
+              "and",
+              "or",
+              "a",
+              "rise",
+              "in",
+              "unemployment",
+              "could",
+              "adversely",
+              "impact",
+              "the",
+              "ability",
+              "of",
+              "our",
+              "consumer",
+              "and",
+              "or",
+              "commercial"
+            ],
+            "removed_tokens_sample": [
+              "customers",
+              "customers"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_1A_D028",
+            "score": 1.001794,
+            "normalised_score": 1.0018,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 100.18% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure explicitly introduces the risk of a 'recessionary environment' and 'rise in unemployment' as specific drivers for credit impairment, and highlights 'elevated interest rates' impacting debt servicing costs. The 2023 disclosure focused on general 'economic weaknesses' and 'inflation' without specifically isolating recession and unemployment rates as primary near-term headwinds, representing a meaningful shift in the identified macroeconomic risk profile.",
+          "key_change": "Explicit inclusion of recession and unemployment risks"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0130",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "missing_review_metadata",
+          "verifier_requested_review"
+        ],
+        "explanation": "D011 2024 covers economic disruptions and credit risk generally. D020 2025 covers macroeconomic conditions, recessions, and sector risks. D020 is the direct counterpart to the 'Credit' risk topic, covering the broader economic impacts on credit portfolio.\n\nD012 2024 covers recession, unemployment, and specific sector risks (CRE). D020 2025 covers the same specific topics: recession, unemployment, and CRE sector risk. D020 merges the general credit (D011) and specific recession/sector (D012) topics from 2024. This is a valid many-to-one relationship where D020 is the counterpart for both.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_1A_D011",
+            "item": "1A",
+            "section": "Credit",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Economic or market disruptions, including declines in GDP, property values, and increases in unemployment or inflation, along with geopolitical events and climate change impacts, could negatively impact borrower credit quality and increase credit losses.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_1A_D012",
+            "item": "1A",
+            "section": "Credit",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "A recessionary environment, rising unemployment, inflation, and elevated interest rates could impair borrowers' ability to meet obligations, with specific risks identified in sectors like commercial real estate and office properties due to shifts in demand and tight financial conditions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_1A_D020",
+            "item": "1A",
+            "section": "Credit",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Macroeconomic conditions, including recessions, inflation, rising interest rates, and unemployment, may adversely impact borrower ability to repay and increase credit losses. Specific sector risks include commercial real estate (particularly office) and consumer sensitivity to living costs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_1A_D027",
+            "peer_topic": "Borrower default and collateral risk",
+            "peer_summary": "Defaults or credit downgrades by borrowers or counterparties, or declines in collateral value, expose Citi to credit risk, which may be worsened by macroeconomic factors affecting borrowers' repayment ability and collateral liquidation.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.073181,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and C disclose that macroeconomic weaknesses, specifically recessionary environments, can impair borrowers' ability to repay obligations. BAC explicitly links this to a 'rise in unemployment' and 'recessionary environment' impacting the credit portfolio. C similarly states that 'weakening of economic conditions can adversely affect borrowers' ability to repay their obligations' and notes that macroeconomic factors can increase credit risk, particularly for vulnerable sectors. BAC further specifies risks in commercial real estate, while C highlights general collateral value declines.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1A_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1A_P037_S001",
+                    "paragraph_id": "bac_2024_1A_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "A recessionary environment and/or a rise in unemployment could adversely impact the ability of our consumer and/or commercial borrowers or counterparties to meet their financial obligations and negatively impact our credit portfolio.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_1A_P037_S003",
+                    "paragraph_id": "bac_2024_1A_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Elevated interest rates, which have increased debt servicing costs for some businesses and households, may adversely impact credit quality, particularly in a recessionary environment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1A_D027",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1A_P105_S002",
+                    "paragraph_id": "c_2024_1A_P105",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Additionally, despite Citi's target client strategy, various macroeconomic, geopolitical, market and other factors, among other things, can increase Citi's credit risk and credit costs, particularly for vulnerable sectors, industries or countries (see the macroeconomic challenges and uncertainties and co-branding and private label credit card risk factors above and the emerging markets risk factor below).",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_1A_P105_S003",
+                    "paragraph_id": "c_2024_1A_P105",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "For example, a weakening of economic conditions can adversely affect borrowers' ability to repay their obligations, as well as result in Citi being unable to liquidate the collateral it holds or forced to liquidate the collateral at prices that do not cover the full amount owed to Citi.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_1A_D009",
+            "peer_topic": "General Credit Risk Exposure",
+            "peer_summary": "The firm's businesses, profitability, and liquidity face adverse effects from third-party credit deterioration or defaults. Concentration of risk heightens the potential for significant losses in market-making, underwriting, investing, and financing activities. Derivative transactions, along with delayed documentation or settlements, expose the firm to unexpected credit risks and potential losses.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.076041,
+            "relationship": "related_topic",
+            "comparison": "BAC and GS both identify third-party credit deterioration and defaults as a primary risk to the firm's financial performance. BAC focuses on how a recessionary environment impacts the 'ability of our consumer and/or commercial borrowers... to meet their financial obligations.' GS broadly states that 'deterioration in the credit quality of or defaults by third parties' adversely affects businesses and profitability. While BAC emphasizes the macroeconomic drivers (recession, unemployment), GS emphasizes the concentration of risk in market-making and financing activities. Both cite credit deterioration as a direct threat to portfolio health.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1A_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1A_P037_S001",
+                    "paragraph_id": "bac_2024_1A_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "A recessionary environment and/or a rise in unemployment could adversely impact the ability of our consumer and/or commercial borrowers or counterparties to meet their financial obligations and negatively impact our credit portfolio.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_1A_P037_S006",
+                    "paragraph_id": "bac_2024_1A_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "If the macroeconomic environment or certain sectors worsen, our credit portfolio, net charge-offs, provision and allowance for credit losses could be adversely impacted.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1A_D009",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1A_P006_S001",
+                    "paragraph_id": "gs_2024_1A_P006",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Our businesses, profitability and liquidity may be adversely affected by deterioration in the credit quality of or defaults by third parties.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_1A_P006_S002",
+                    "paragraph_id": "gs_2024_1A_P006",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Concentration of risk increases the potential for significant losses in our market-making, underwriting, investing and financing activities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_1A_D030",
+            "peer_topic": "Consumer business sensitivity to economic conditions and governmental policies",
+            "peer_summary": "JPMorganChase's consumer businesses are negatively affected by adverse economic conditions, including unemployment, interest rates, and housing prices, which reduce demand and increase credit losses. Additionally, governmental policies regarding insurance, housing, taxes, and financial regulations can reduce consumer disposable income and adversely impact consumer business earnings.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.100971,
+            "relationship": "same_topic",
+            "comparison": "BAC and JPM both highlight how unemployment and recessionary conditions negatively impact borrower repayment capacity and credit performance. BAC states that a 'rise in unemployment' and 'recessionary environment' could impair borrowers' ability to meet obligations. JPM mirrors this by stating that 'heightened levels of unemployment' and 'recessionary conditions' negatively affect consumer credit performance and diminish demand. BAC identifies commercial real estate as a specific sector at risk, whereas JPM focuses on consumer businesses and notes that widespread defaults could lead to recessionary conditions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1A_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1A_P037_S001",
+                    "paragraph_id": "bac_2024_1A_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "A recessionary environment and/or a rise in unemployment could adversely impact the ability of our consumer and/or commercial borrowers or counterparties to meet their financial obligations and negatively impact our credit portfolio.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_1A_P037_S003",
+                    "paragraph_id": "bac_2024_1A_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Elevated interest rates, which have increased debt servicing costs for some businesses and households, may adversely impact credit quality, particularly in a recessionary environment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1A_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1A_P056_S001",
+                    "paragraph_id": "jpm_2024_1A_P056",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Heightened levels of unemployment or underemployment that result in reduced personal and household income could negatively affect consumer credit performance to the extent that consumers are less able to service their debts.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_1A_P056_S002",
+                    "paragraph_id": "jpm_2024_1A_P056",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "In addition, sustained low growth, low or negative interest rates, inflationary pressures or recessionary conditions could diminish customer demand for the products and services offered by JPMorganChase's consumer businesses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "MS disclosures focus on liquidity risk (ability to raise funding, market access, and asset liquidation difficulties) rather than credit risk driven by macroeconomic downturns affecting borrower repayment ability. While MS notes that economic turbulence affects liquidity, it does not discuss borrower default rates, credit portfolio impairments, or specific sector credit risks (like CRE) in the same manner as BAC's credit risk disclosures."
+      }
+    ]
+  }
+}

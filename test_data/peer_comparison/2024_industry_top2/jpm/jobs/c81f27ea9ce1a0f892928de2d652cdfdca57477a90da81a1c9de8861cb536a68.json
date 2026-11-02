@@ -1,0 +1,403 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "443bbfa36be0ce5cdb433ca8624d1db8a37e31163d021361468fb9c607973f2a",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_1A_D025",
+    "item": "1A",
+    "target_topic": "Potential Macroeconomic and Market Outcomes",
+    "target_summary": "Political factors could lead to slower growth, inflation, recession, labor market disruptions, credit contraction, currency fluctuations, and supply chain disruptions.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0193",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures enumerate macroeconomic consequences of political factors, including slower growth, rising inflation, recession, market volatility, credit contraction, reduced commercial activity, and dissolution of political/economic alliances. Evidence: 2023 D029 lists these specific market dislocations; 2024 D025 lists the same with additions like labor market disruptions and supply chain issues.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_1A_D029",
+            "item": "1A",
+            "section": "Political",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Political factors can lead to slower growth, recession, inflation, credit contraction, diminished confidence, reduced commercial activity, currency redenomination, alliance dissolution, asset expropriation, or regional economic spread.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_1A_D025",
+            "item": "1A",
+            "section": "Political",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Political factors could lead to slower growth, inflation, recession, labor market disruptions, credit contraction, currency fluctuations, and supply chain disruptions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.834433,
+            "sequence_match_ratio": 0.660793,
+            "length_ratio": 0.656934,
+            "word_count_delta": -47,
+            "added_tokens_sample": [
+              "disruptions",
+              "in",
+              "labor",
+              "markets",
+              "u",
+              "s",
+              "dollar",
+              "currency",
+              "fluctuations",
+              "or",
+              "disruptions",
+              "to",
+              "supply",
+              "chains",
+              "or"
+            ],
+            "removed_tokens_sample": [
+              "erosion",
+              "of",
+              "adequate",
+              "risk",
+              "premium",
+              "on",
+              "certain",
+              "financial",
+              "assets",
+              "diminished",
+              "investor",
+              "and",
+              "consumer",
+              "confidence",
+              "in",
+              "the",
+              "u",
+              "s",
+              "and",
+              "other"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_1A_D029",
+            "score": 0.991531,
+            "normalised_score": 0.9915,
+            "label": "Unchanged",
+            "rationale": "Score 99.15% of ceiling — semantically identical despite surface differences (word overlap 59%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.8,
+          "reason": "The 2024 disclosure removes 'erosion of adequate risk premium on certain financial assets' and 'diminished investor and consumer confidence' (though consumer confidence is mentioned in M0190, it's absent here) and 'currency redenomination' and 'asset expropriation'. It adds 'labor market disruptions' and 'supply chain disruptions'. The removal of 'asset expropriation' and 'currency redenomination' narrows the geopolitical risk to more localized economic effects (supply chain, labor), while removing 'risk premium' erosion changes the financial market impact description. This represents a shift in the specific types of macroeconomic consequences highlighted, reflecting a change in the company's current risk focus or the regulatory environment's emphasis.",
+          "key_change": "Shift from financial asset risks to supply chain and labor market disruptions"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0001",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "D025 lists specific economic consequences of political factors (slower growth, inflation, recession, labor disruptions, credit contraction, currency fluctuations, supply chain disruptions, alliance dissolution). While D009 in 2025 contains overlapping consequences (slower growth, inflation, recession, labor disruptions, credit contraction, currency fluctuations, supply chain disruptions, alliance changes), it is already matched to the broader political uncertainty group (D022/D023/D024). D025 represents a distinct subset of consequences focused on macroeconomic outcomes rather than the political drivers/confidence aspects of the first group. However, since D009 *does* contain the specific consequences listed in D025 (P048_S001-S010 in 2025 match P046_S001-S010 in 2024), it is more accurate to treat D025 as part of the same comprehensive topic as D022-D024, rather than a separate unmatched disclosure. The 2025 document consolidates these consequences into D009. Therefore, D025 is covered by the match to D009 via the shared consequences evidence. I will merge D025 into the first group to ensure coverage and avoid an unmatched row for a disclosure whose content is fully contained in t",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_1A_D025",
+            "item": "1A",
+            "section": "Political",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Political factors could lead to slower growth, inflation, recession, labor market disruptions, credit contraction, currency fluctuations, and supply chain disruptions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -90,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "these",
+              "factors",
+              "could",
+              "lead",
+              "to",
+              "slower",
+              "growth",
+              "rates",
+              "rising",
+              "inflation",
+              "or",
+              "recession",
+              "disruptions",
+              "in",
+              "labor",
+              "markets",
+              "greater",
+              "market",
+              "volatility",
+              "a"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.95,
+          "confidence_score": 0.95,
+          "reason": "Removal of a distinct disclosure regarding specific macroeconomic consequences of political factors (growth, inflation, recession, credit contraction). Although the content appears in the consolidated 2025 disclosure D009, the 2024 filing isolated these specific financial/operational risks from the broader political driver discussion, making their removal from a standalone segment a meaningful change in how the risk landscape is presented and prioritized for investors.",
+          "key_change": "Consolidation of macroeconomic consequence risks"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_1A_D031",
+            "peer_topic": "U.S. fiscal policy uncertainty and its global spillover effects",
+            "peer_summary": "U.S. political uncertainty regarding the debt ceiling, budget deficits, and potential shutdowns could weaken the dollar and impact global banking, while changes in U.S. monetary policy and interest rates affect emerging markets and non-U.S. market conditions.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.085625,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Bank of America disclose that political and fiscal policy uncertainties in the U.S. can lead to broader economic disruptions, including slower growth, inflation, and credit market issues. JPMorgan explicitly lists 'slower growth rates, rising inflation or recession' and 'a contraction of available credit' as outcomes of political factors. Bank of America similarly cites 'higher inflation' and 'recessionary conditions' resulting from changes in fiscal/monetary policy and U.S. interest rates, noting that political uncertainty around the debt ceiling could 'adversely affect our financial condition' and 'liquidity'.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1A_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1A_P046_S002",
+                    "paragraph_id": "jpm_2024_1A_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• slower growth rates, rising inflation or recession",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_1A_P046_S005",
+                    "paragraph_id": "jpm_2024_1A_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• a contraction of available credit and the widening of credit spreads",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1A_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1A_P061_S002",
+                    "paragraph_id": "bac_2024_1A_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Also, changes in fiscal, monetary, regulatory, trade and/or foreign policy, labor shortages, wage pressures, supply chain disruptions and higher inflation, could increase our compliance costs and adversely affect our business operations, organizational structure and results of operations.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_1A_P061_S004",
+                    "paragraph_id": "bac_2024_1A_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Also, elevated or rising U.S. interest rate levels or high tariff rates, could result in additional currency volatility and recessionary conditions in a number of non-U.S. markets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_1A_D004",
+            "peer_topic": "Geopolitical and Other Uncertainties",
+            "peer_summary": "Additional uncertainties affecting Citi include geopolitical conflicts (Russia-Ukraine, Middle East), policies from the new U.S. administration, economic challenges in China (real estate, trade tensions), high government debt levels, financial market volatility, natural disasters, and pandemics.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.060829,
+            "relationship": "same_topic",
+            "comparison": "JPMorgan and Citi both highlight that U.S. political changes and high government debt levels are key sources of uncertainty impacting financial stability and markets. JPMorgan identifies political factors leading to 'rising inflation or recession' and 'U.S. dollar currency fluctuations.' Citi points to 'high and rising government debt levels in the U.S.' and 'potential policies and priorities resulting from the new U.S. administration' as areas of uncertainty, while also noting 'significant volatility and disruptions in financial markets, including foreign currency volatility'.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1A_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1A_P046_S002",
+                    "paragraph_id": "jpm_2024_1A_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• slower growth rates, rising inflation or recession",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_1A_P046_S006",
+                    "paragraph_id": "jpm_2024_1A_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• U.S. dollar currency fluctuations",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1A_D004",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1A_P006_S001",
+                    "paragraph_id": "c_2024_1A_P006",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Additional areas of uncertainty include, among others, geopolitical challenges, tensions and conflicts, including those related to the Russia-Ukraine war (see below) and conflicts in the Middle East; potential policies and priorities resulting from the new U.S. administration; economic and geopolitical challenges related to China, including weak economic growth, related policy actions, challenges in the Chinese real estate sector, banking and credit markets, trade restrictions, and tensions or conflicts between China and Taiwan and/or China and the U.S.; high and rising government debt levels in the U.S. and other countries; significant volatility and disruptions in financial markets, including foreign currency volatility and devaluations; natural disasters; and pandemics.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_1A_D121",
+            "peer_topic": "Geopolitical Conflict Consequences",
+            "peer_summary": "Escalation of conflicts could lead to cyber attacks, settlement failures, supply chain disruptions, inflation, lower consumer demand, and market volatility.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.127273,
+            "relationship": "same_topic",
+            "comparison": "JPMorgan and Goldman Sachs both identify inflation and market volatility as consequences of broader geopolitical and political instability. JPMorgan notes that political factors could lead to 'rising inflation' and implicitly to market instability through credit contraction and currency fluctuations. Goldman Sachs explicitly states that the escalation of conflicts could result in 'higher inflation' and 'increased volatility in commodity, currency and other financial markets.'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1A_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1A_P046_S002",
+                    "paragraph_id": "jpm_2024_1A_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• slower growth rates, rising inflation or recession",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_1A_P046_S006",
+                    "paragraph_id": "jpm_2024_1A_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• U.S. dollar currency fluctuations",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1A_D121",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1A_P196_S001",
+                    "paragraph_id": "gs_2024_1A_P196",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The escalation or continuation of these conflicts or other hostilities could result in, among other things, an increased risk of cyber attacks, an increased frequency and volume of failures to settle securities transactions, supply chain disruptions, higher inflation, lower consumer demand and increased volatility in commodity, currency and other financial markets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_1A_D057",
+            "peer_topic": "Emerging market financial and security risks",
+            "peer_summary": "Emerging market countries may experience political, economic, or financial disruptions such as currency devaluation, sovereign debt defaults, inflation, or issues with crime and corruption, which could adversely impact business.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.078493,
+            "relationship": "related_topic",
+            "comparison": "JPMorgan and Morgan Stanley both discuss the risk of inflation and economic slowdown as part of broader macroeconomic and political disruptions. JPMorgan specifically lists 'slower growth rates, rising inflation or recession' as outcomes of political factors. Morgan Stanley describes 'severe political, economic or financial disruptions' in emerging markets including 'high rates of inflation and low or negative growth rates,' which could increase volatility in financial markets generally.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1A_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1A_P046_S002",
+                    "paragraph_id": "jpm_2024_1A_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• slower growth rates, rising inflation or recession",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_1A_D057",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_1A_P109_S001",
+                    "paragraph_id": "ms_2024_1A_P109",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Various emerging market countries have experienced severe political, economic or financial disruptions, including significant devaluations of their currencies, defaults or potential defaults on sovereign debt, capital and currency exchange controls, high rates of inflation and low or negative growth rates in their economies.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

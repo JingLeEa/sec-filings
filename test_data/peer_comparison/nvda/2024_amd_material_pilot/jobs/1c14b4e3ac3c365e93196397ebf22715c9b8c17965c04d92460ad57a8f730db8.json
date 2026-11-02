@@ -1,0 +1,279 @@
+{
+  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
+  "request_hash": "d1f1ecd1d8fe71cd328ce13c0475a557c3e230c9fc60a4784a231476e47e8552",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_7_D077",
+    "item": "7",
+    "target_topic": "Cash Dividend Payments in Fiscal 2024",
+    "target_summary": "During fiscal year 2024, the company paid $395 million in quarterly cash dividends.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0370",
+        "relationship": "many_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2023 disclosures cover total capital return to shareholders ($10.44B, D029) and breakdown of repurchases/dividends ($10.04B+$398M, D082). 2024 disclosures cover total dividends paid ($395M, D077) and tax implications on repurchases (D081). While D081 discusses tax, it is under the same 'Capital Return' section and relates to the repurchase activity mentioned in D029/D082. D077 matches the dividend component of D029/D082. The group represents the broader 'Capital Return to Shareholders' topic, including specific figures and regulatory updates affecting that topic. Note: D081's tax focus is a sub-topic of capital return mechanics. D029/D082 are comprehensive return stats. D077 is dividend specific. D081 is tax specific. A tighter split might be D029/D082 -> D077 (dividends) and D029 -> Single (total return), but D081 is the only 2024 counterpart discussing the mechanics of repurchases (via tax). The proposed grouping is acceptable as a 'Capital Return' cluster, but D029 (Total Return) matches best with D077 (Dividends) + implied repurchases? Actually, D029 total $10.44B. D077 is $395M dividends. D081 is tax. There is no 2024 disclosure in the list for total capital return. D029/D082 ",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_7_D029",
+            "item": "7",
+            "section": "Fiscal Year 2023 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company returned $10.44 billion to shareholders through share repurchases and cash dividends in fiscal year 2023, with $7.23 billion remaining under the repurchase authorization through December 2023.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2023_7_D082",
+            "item": "7",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "During fiscal year 2023, the company returned $10.04 billion through share repurchases and $398 million in quarterly cash dividends to shareholders.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D077",
+            "item": "7",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "During fiscal year 2024, the company paid $395 million in quarterly cash dividends.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_7_D081",
+            "item": "7",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The U.S. Inflation Reduction Act imposes a 1% excise tax on certain share repurchases, which was not material for fiscal year 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.315614,
+            "sequence_match_ratio": 0.162162,
+            "length_ratio": 0.819672,
+            "word_count_delta": -11,
+            "added_tokens_sample": [
+              "2024",
+              "paid",
+              "395",
+              "the",
+              "u",
+              "s",
+              "inflation",
+              "reduction",
+              "act",
+              "of",
+              "2022",
+              "requires",
+              "a",
+              "1",
+              "excise",
+              "tax",
+              "on",
+              "certain",
+              "share",
+              "repurchases"
+            ],
+            "removed_tokens_sample": [
+              "2023",
+              "returned",
+              "10",
+              "44",
+              "billion",
+              "to",
+              "shareholders",
+              "in",
+              "the",
+              "form",
+              "of",
+              "share",
+              "repurchases",
+              "and",
+              "cash",
+              "dividends",
+              "as",
+              "of",
+              "the",
+              "end"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "nvda_2023_7_D082",
+            "score": 0.852162,
+            "normalised_score": 0.8522,
+            "rationale": "Regroup: 2 previous → 2 current. Best pair scored 85.22% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.35,
+          "confidence_score": 0.8,
+          "reason": "While the total capital return amounts decreased, the primary material change identified is the introduction of a disclosure regarding the Inflation Reduction Act excise tax. However, the disclosure explicitly states the tax was 'not material' for the fiscal year. The absence of a detailed repurchase breakdown compared to the prior year is a presentation change, not a substantive change in risk or strategy. The tax implication is a compliance update with stated immateriality.",
+          "key_change": "Addition of immaterial tax compliance disclosure"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0353",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures relate to cash dividends paid to shareholders. The 2024 disclosure reports $395 million paid in FY2024. The 2025 disclosure reports $834 million paid in FY2025. They share the specific topic of historical cash dividend payments, which is part of the 'Capital Return to Shareholders' section in both years.\n\nBoth disclosures discuss the Board of Directors' discretion and determination regarding future cash dividend payments. The 2024 disclosure explicitly states the program is subject to the Board's determination of being in shareholders' best interests. The 2025 disclosure mirrors this language in the same section ('Capital Return to Shareholders'), making nvda_2025_7_D069 a multi-faceted match covering both past payments and future policy, similar to how nvda_2024_7_D078 covered policy while D077 covered payments. To ensure all required IDs are covered and specific links are preserved, D077 and D078 are matched to the same current D069 which contains both aspects, or D078 is matched to D069's policy sentence. Since D069 contains both, it is a valid match for the topic of dividend policy/policy statement present in D078.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D077",
+            "item": "7",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "During fiscal year 2024, the company paid $395 million in quarterly cash dividends.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_7_D078",
+            "item": "7",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The cash dividend program and future payments are subject to the Board of Directors' continuing determination that they are in the best interests of shareholders.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D069",
+            "item": "7",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company paid $834 million in cash dividends to shareholders in fiscal year 2025, with future payments subject to the Board's determination of being in the best interests of shareholders.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.705985,
+            "sequence_match_ratio": 0.694737,
+            "length_ratio": 0.792453,
+            "word_count_delta": -11,
+            "added_tokens_sample": [
+              "in",
+              "2025",
+              "to",
+              "shareholders",
+              "of",
+              "834",
+              "million",
+              "is",
+              "is"
+            ],
+            "removed_tokens_sample": [
+              "during",
+              "2024",
+              "395",
+              "million",
+              "in",
+              "quarterly",
+              "cash",
+              "dividend",
+              "program",
+              "and",
+              "under",
+              "that",
+              "program",
+              "are",
+              "dividend",
+              "program",
+              "and",
+              "the",
+              "thereunder",
+              "are"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "nvda_2024_7_D077",
+            "score": 0.858031,
+            "normalised_score": 0.858,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 85.80% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.95,
+          "reason": "The disclosure changes from reporting $395 million in cash dividends for FY2024 to $834 million for FY2025. This represents a more than doubling of the cash outflow for shareholder returns, which is a significant quantitative change in the company's capital resource allocation and financial position.",
+          "key_change": "Doubling of cash dividend payments"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D044",
+            "peer_topic": "Revolving Credit Facility Availability",
+            "peer_summary": "AMD has $3.0 billion available under an unsecured revolving credit facility expiring April 29, 2027, with no funds drawn during the year ended December 28, 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.07587,
+            "relationship": "related_topic",
+            "comparison": "While NVDA discloses specific cash outflows for shareholder returns in the form of dividends, AMD discloses its liquidity position and credit facility status instead. NVDA provides a precise figure for capital return ($395 million in cash dividends) for the fiscal year, whereas AMD highlights the availability of backup liquidity ($3.0 billion under an unsecured revolving credit facility) with no draws, indicating a different approach to managing near-term capital resources without specifying dividend payments in this context.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D077",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P080_S001",
+                    "paragraph_id": "nvda_2024_7_P080",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "During fiscal year 2024, we paid $395 million in quarterly cash dividends.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D044",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P057_S002",
+                    "paragraph_id": "amd_2024_7_P057",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We have $3.0 billion available under an unsecured revolving credit facility that expires on April 29, 2027.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

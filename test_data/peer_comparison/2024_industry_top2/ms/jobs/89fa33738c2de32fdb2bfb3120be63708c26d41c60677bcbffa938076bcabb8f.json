@@ -1,0 +1,288 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "a735efa10e7ef29a9bfff6ad25fbf7cefe818a740fae4344965b52846d64c4c1",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_8_D275",
+    "item": "8",
+    "target_topic": "Unfunded equity contributions and liabilities",
+    "target_summary": "As of December 31, 2024 and 2023, the company had unfunded equity contributions of $613 million and $661 million, respectively, with corresponding liabilities recorded in Other liabilities and accrued expenses, most of which are expected to be funded within 5 years.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0777",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No corresponding 2023 disclosure exists for tax equity investments and unfunded equity contributions. The 2023 disclosures in the Loans section (D078, D081, D085) refer to loan commitments, not equity contributions. ms_2024_8_D275 is a new topic not present in the required 2023 list.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D275",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > 11. Other Assets and Leases > Tax Equity Investments > Tax Equity Investments under the Proportional Amortization Method",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 31, 2024 and 2023, the company had unfunded equity contributions of $613 million and $661 million, respectively, with corresponding liabilities recorded in Other liabilities and accrued expenses, most of which are expected to be funded within 5 years.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 54,
+            "added_tokens_sample": [
+              "1",
+              "amounts",
+              "include",
+              "unfunded",
+              "equity",
+              "contributions",
+              "of",
+              "613",
+              "million",
+              "and",
+              "661",
+              "million",
+              "as",
+              "of",
+              "december",
+              "31",
+              "2024",
+              "and",
+              "december",
+              "31"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "This is a new disclosure introducing quantified financial data regarding 'unfunded equity contributions' ($613 million) and corresponding liabilities with a 5-year funding horizon. In the prior year, the alignment search failed to find a direct counterpart in equity contributions, suggesting this specific quantitative breakdown of unfunded commitments was not previously disclosed or was buried in less specific loan commitments. The introduction of specific liability amounts and funding timelines for these equity investments represents a material change in the granularity of financial position disclosure.",
+          "key_change": "Introduction of specific unfunded equity contribution liabilities and funding timeline"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0769",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report unfunded equity contributions for tax equity investments under the proportional amortization method and the corresponding liabilities recorded in 'Other liabilities and accrued expenses'. The 2025 disclosure (ms_2025_8_D278) reports $707 million, consistent with the 2024 disclosure (ms_2024_8_D275) which reported $613 million (also cited in 2025 as the prior year figure).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D275",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > 11. Other Assets and Leases > Tax Equity Investments > Tax Equity Investments under the Proportional Amortization Method",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of December 31, 2024 and 2023, the company had unfunded equity contributions of $613 million and $661 million, respectively, with corresponding liabilities recorded in Other liabilities and accrued expenses, most of which are expected to be funded within 5 years.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2025_8_D278",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Tax Equity Investments under the Proportional Amortization Method",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company has unfunded equity contributions of $707 million as of December 31, 2025, which are expected to be funded within 5 years, with corresponding liabilities recorded in Other liabilities and accrued expenses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.95795,
+            "sequence_match_ratio": 0.925926,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "707",
+              "613",
+              "2025",
+              "2024"
+            ],
+            "removed_tokens_sample": [
+              "613",
+              "661",
+              "2024",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2024_8_D275",
+            "score": 1.018594,
+            "normalised_score": 1.0186,
+            "label": "Relocated",
+            "rationale": "Score 101.86% of ceiling — content is similar but section changed from 'Notes to Consolidated Financial Statements > 11. Other Assets and Leases > Tax Equity Investments > Tax Equity Investments under the Proportional Amortization Method' to 'Notes to Consolidated Financial Statements > Tax Equity Investments under the Proportional Amortization Method'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.9,
+          "reason": "The disclosure reports a change in the carrying amount of unfunded equity contributions from $613 million in 2024 to $707 million in 2025. This is an approximately 15.5% increase in commitments, representing a meaningful change in the company's financial obligations and exposure to future cash outflows.",
+          "key_change": "Increase in unfunded equity contribution commitments"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D303",
+            "peer_topic": "Unfunded equity investment commitments",
+            "peer_summary": "As of December 31, 2024 and 2023, the Corporation had unfunded equity investment commitments of $787 million and $477 million.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.220057,
+            "relationship": "same_topic",
+            "comparison": "Both Microsoft and Bank of America disclose specific unfunded equity contribution/commitment amounts and the corresponding liabilities recorded on the balance sheet. Microsoft reports $613 million in unfunded equity contributions as of Dec 31, 2024, with liabilities in Other liabilities and accrued expenses, expecting funding within 5 years. Bank of America reports a higher amount of $787 million in unfunded equity investment commitments as of Dec 31, 2024. While both track similar off-balance sheet equity funding obligations, Bank of America's total is significantly larger than Microsoft's.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D275",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P347_S001",
+                    "paragraph_id": "ms_2024_8_P347",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "1.Amounts include unfunded equity contributions of $613 million and $661 million as of December 31, 2024 and December 31, 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P347_S003",
+                    "paragraph_id": "ms_2024_8_P347",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The majority of these commitments are expected to be funded within 5 years.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D303",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P352_S001",
+                    "paragraph_id": "bac_2024_8_P352",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "At December 31, 2024 and 2023, the Corporation had unfunded equity investment commitments of $787 million and $477 million.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate c_2024_8_D397 concerns reserves for unfunded *lending* commitments and letters of credit, which are credit-related loan commitments, not equity investment contributions."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D369",
+            "peer_topic": "Proportional amortization method investment values and unfunded commitments",
+            "peer_summary": "Investments in qualified affordable housing and renewable energy projects meeting the proportional amortization criteria were presented in a table, including $2.15 billion (Dec 2024) and $2.26 billion (Dec 2023) of accrued unfunded commitments, with a majority expected to be funded by year-end 2026.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.142002,
+            "relationship": "same_topic",
+            "comparison": "Goldman Sachs and Microsoft both utilize the proportional amortization method for tax equity investments and disclose accrued unfunded commitments associated with these investments. Goldman Sachs reports $2.15 billion in accrued unfunded commitments as of Dec 2024, with a majority expected to be funded by year-end 2026. Microsoft reports a smaller amount of $613 million in unfunded equity contributions as of Dec 31, 2024, with a majority expected to be funded within 5 years. Both companies present these unfunded amounts as accrued liabilities/commitments linked to tax equity investments under the proportional amortization method.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D275",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P347_S001",
+                    "paragraph_id": "ms_2024_8_P347",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "1.Amounts include unfunded equity contributions of $613 million and $661 million as of December 31, 2024 and December 31, 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P347_S003",
+                    "paragraph_id": "ms_2024_8_P347",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The majority of these commitments are expected to be funded within 5 years.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D369",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P490_S001",
+                    "paragraph_id": "gs_2024_8_P490",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In the table above, investments included $2.15 billion as of December 2024 and $2.26 billion as of December 2023 of accrued unfunded commitments.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P490_S002",
+                    "paragraph_id": "gs_2024_8_P490",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "As of December 2024, a majority of such accrued unfunded commitments were expected to be funded by year-end 2026.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidates jpm_2024_8_D117 and jpm_2024_8_D472 concern fair value option lending commitments and general amortization expense, neither of which matches the specific topic of unfunded equity contributions under the proportional amortization method."
+      }
+    ]
+  }
+}

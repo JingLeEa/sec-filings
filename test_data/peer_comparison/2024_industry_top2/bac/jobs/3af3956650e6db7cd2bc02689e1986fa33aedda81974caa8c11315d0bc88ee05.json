@@ -1,0 +1,367 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "b2ffee7dab9606fc99605ac1851b3cb3b17f0478a36e325fca818e0f5f4e5498",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D111",
+    "item": "7",
+    "target_topic": "Average Loans and Leases Decrease",
+    "target_summary": "Average loans and leases of $373.1 billion decreased by one percent in 2024 compared to 2023 due to lower client demand.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0276",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specifically report on the change in average loans and leases for the Global Corporate, Commercial, and Business Banking segment. Bac_2023_7_D101 cites a 1% increase due to client demand, while bac_2024_7_D111 cites a 1% decrease due to lower client demand. They share the specific topic of loan/lease volume trends in this segment.\n\nWhile bac_2023_7_D101 covers both loans and deposits, bac_2024_7_D112 isolates the average deposits topic for the same segment (Global Corporate, Commercial, and Business Banking). Bac_2023_7_D101 reports a 1% decrease in deposits due to domestic balance declines, whereas bac_2024_7_D112 reports an 8% increase due to domestic and international growth. They share the specific topic of deposit volume trends in this segment.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D101",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average loans and leases increased by one percent in 2023 compared to 2022 due to client demand, while average deposits decreased by one percent due to declines in domestic balances.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D111",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average loans and leases of $373.1 billion decreased by one percent in 2024 compared to 2023 due to lower client demand.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_7_D112",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average deposits of $545.8 billion increased by eight percent in 2024 compared to 2023 due to growth in both domestic and international balances.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.697185,
+            "sequence_match_ratio": 0.631579,
+            "length_ratio": 1.375,
+            "word_count_delta": 12,
+            "added_tokens_sample": [
+              "of",
+              "373",
+              "1",
+              "billion",
+              "decreased",
+              "2024",
+              "2023",
+              "lower",
+              "of",
+              "545",
+              "8",
+              "billion",
+              "increased",
+              "eight",
+              "2024",
+              "2023",
+              "growth",
+              "both",
+              "and",
+              "international"
+            ],
+            "removed_tokens_sample": [
+              "increased",
+              "2023",
+              "2022",
+              "decreased",
+              "one",
+              "2023",
+              "2022",
+              "declines"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_7_D101",
+            "score": 0.851128,
+            "normalised_score": 0.8511,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 85.11% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.85,
+          "reason": "Average loans and leases shifted from a 1% increase to a 1% decrease, and average deposits shifted from a 1% decrease to an 8% increase. These opposing trends in core balance sheet items significantly change the company's liquidity and lending posture.",
+          "key_change": "Reversal in loan volume and deposit growth trends"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0333",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The previous year has two separate disclosures for Average Loans/Leases and Average Deposits. The current year combines both metrics into a single disclosure (D102) discussing the growth in both average loans and leases and average deposits. This represents a many-to-one mapping where the single 2025 disclosure covers the topics of both 2024 disclosures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D111",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average loans and leases of $373.1 billion decreased by one percent in 2024 compared to 2023 due to lower client demand.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_7_D112",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average deposits of $545.8 billion increased by eight percent in 2024 compared to 2023 due to growth in both domestic and international balances.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D102",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average loans and leases grew 3% to $385.3 billion and average deposits grew 13% to $616.8 billion in 2025 compared to 2024, attributed to client demand and growth from existing and new clients.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.675128,
+            "sequence_match_ratio": 0.623656,
+            "length_ratio": 1.113636,
+            "word_count_delta": 5,
+            "added_tokens_sample": [
+              "385",
+              "3",
+              "increased",
+              "three",
+              "2025",
+              "2024",
+              "616",
+              "13",
+              "2025",
+              "2024",
+              "deposit",
+              "balances",
+              "from",
+              "existing",
+              "clients",
+              "the",
+              "addition",
+              "of",
+              "new",
+              "clients"
+            ],
+            "removed_tokens_sample": [
+              "373",
+              "1",
+              "decreased",
+              "one",
+              "2024",
+              "2023",
+              "lower",
+              "545",
+              "eight",
+              "2024",
+              "2023",
+              "both",
+              "domestic",
+              "international",
+              "balances"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2024_7_D112",
+            "score": 0.840928,
+            "normalised_score": 0.8409,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 84.09% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.15,
+          "confidence_score": 0.9,
+          "reason": "The alignment merges two separate disclosures into one. The content itself (average loans/deposits figures and growth rates) is routine financial data. The merger of disclosures is a presentational change. The underlying data points are standard balance sheet metrics updated annually.",
+          "key_change": "Merger of separate loan and deposit disclosures into one"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D132",
+            "peer_topic": "Retail Services Performance",
+            "peer_summary": "Retail Services revenues increased 8%, driven by higher non-interest revenue from lower partner payments (due to higher net credit losses) and growth in interest-earning balances, while average loans increased 3% and spend volume decreased 5% due to lower in-store foot traffic.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.13451,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and C discuss average loan growth trends for the year. While both are in the banking sector and report on average loans, they show divergent performance: C's Retail Services average loans increased by 3%, whereas BAC's Global Banking average loans and leases decreased by 1%.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D111",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P120_S001",
+                    "paragraph_id": "bac_2024_7_P120",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Average loans and leases of $373.1 billion decreased one percent in 2024 compared to 2023 due to lower client demand.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D132",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P202_S002",
+                    "paragraph_id": "c_2024_7_P202",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Retail Services average loans increased 3%, largely reflecting lower card payment rates, partially offset by lower card spend volume.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D107",
+            "peer_topic": "Platform Solutions average gross loans amounts",
+            "peer_summary": "Average Platform Solutions gross loans were $20.48 billion for 2024 and $21.48 billion for 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.089651,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and GS report on the performance of average loans/leases for 2024 compared to 2023. Both companies experienced a decrease in these metrics: BAC's Global Banking average loans and leases decreased by one percent ($373.1 billion), while GS's Platform Solutions average gross loans decreased from $21.48 billion to $20.48 billion.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D111",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P120_S001",
+                    "paragraph_id": "bac_2024_7_P120",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Average loans and leases of $373.1 billion decreased one percent in 2024 compared to 2023 due to lower client demand.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D107",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P167_S001",
+                    "paragraph_id": "gs_2024_7_P167",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The average Platform Solutions gross loans were $20.48 billion for 2024 and $21.48 billion for 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D305",
+            "peer_topic": "Structured Notes Issuance Driver",
+            "peer_summary": "The increase in structured notes at December 31, 2024, compared to the prior year, was primarily driven by net issuances in Markets due to client demand.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.149489,
+            "relationship": "related_topic",
+            "comparison": "Both BAC and JPM cite 'client demand' as the primary driver for changes in financing activities in their Global Banking/Markets segments during 2024. However, the specific instruments and direction differ: BAC reports a decrease in average loans and leases (-1%) due to lower client demand, whereas JPM reports an increase in structured notes due to net issuances driven by client demand.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D111",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P120_S001",
+                    "paragraph_id": "bac_2024_7_P120",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Average loans and leases of $373.1 billion decreased one percent in 2024 compared to 2023 due to lower client demand.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D305",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P456_S004",
+                    "paragraph_id": "jpm_2024_7_P456",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The increase in structured notes at December 31, 2024 from December 31, 2023, and for the average year ended December 31, 2024, compared to the prior year period, was primarily driven by net issuances of structured notes in Markets due to client demand.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided MS candidates (D061 on Wealth Management net interest revenue and D256 on VaR) do not address average loans or leases volume, which is the specific topic of the BAC disclosure. D061 focuses on revenue drivers (sweep deposits) rather than loan balances, and D256 focuses on market risk metrics (VaR)."
+      }
+    ]
+  }
+}

@@ -1,0 +1,318 @@
+{
+  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
+  "request_hash": "ff54bb7cc215ae1b849629a537b79256ec4c2bce89acc848dedb97f6fb867563",
+  "result": {
+    "target_ticker": "MU",
+    "target_disclosure_id": "mu_2024_8_D122",
+    "item": "8",
+    "target_topic": "Customer Concentration Risk: 2024 Single Customer",
+    "target_summary": "One customer accounted for 10% of total revenue in 2024, primarily within the MBU, EBU, and CNBU segments, while no single customer reached the 10% threshold in 2023.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "mu_2023_2024_M0370",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "The 2023 disclosure (D122) covers customer concentrations, stating no single customer exceeded 10% in 2023, while citing historical concentrations for Kingston (12% in 2022) and WPG (11% in 2022/13%). The 2024 filings split this topic: D121 introduces the segment revenue table (contextual, but part of the concentration discussion structure); D122 states the current 2024 status (one customer at 10%) and reiterates the 2023 status (no customer >=10%); D123 provides the historical 2022 context (12% and 11% customers) which directly corresponds to the Kingston and WPG data in the 2023 record. These three 2024 disclosures collectively cover the same specific subject matter of customer revenue concentration thresholds and historical comparisons as the 2023 record.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2023_8_D122",
+            "item": "8",
+            "section": "Certain Concentrations",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "No single customer accounted for 10% or more of total revenue in 2023, but historically revenue was significantly concentrated with Kingston Technology (12% in 2022) and WPG Holdings (11% in 2022, 13% in 2021). Sales to these key customers were distributed across various business segments including CNBU, SBU, MBU, and EBU.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2024_8_D121",
+            "item": "8",
+            "section": "Certain Concentrations",
+            "taxonomy": "Other / Unclassified",
+            "summary": "Revenue by market segment is presented in a table, with percentages rounded to the nearest 5% and potentially not totaling 100% due to rounding.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "mu_2024_8_D122",
+            "item": "8",
+            "section": "Certain Concentrations",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "One customer accounted for 10% of total revenue in 2024, primarily within the MBU, EBU, and CNBU segments, while no single customer reached the 10% threshold in 2023.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "mu_2024_8_D123",
+            "item": "8",
+            "section": "Certain Concentrations",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2022, one customer accounted for 12% of total revenue (primarily CNBU and SBU) and another for 11% (primarily MBU, CNBU, and EBU).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "mu_2024_2025_M0375",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "2024 D122 and 2025 D128 both specifically disclose the concentration of revenue from a single customer exceeding 10% of total revenue for the respective fiscal years (2024 and 2025). 2025 D128 further clarifies the 2024 figure, aligning with the 2024 disclosure's specific year.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2024_8_D122",
+            "item": "8",
+            "section": "Certain Concentrations",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "One customer accounted for 10% of total revenue in 2024, primarily within the MBU, EBU, and CNBU segments, while no single customer reached the 10% threshold in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2025_8_D128",
+            "item": "8",
+            "section": "Note 28. Certain Concentrations",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Revenue from one customer accounted for 17% of total revenue in 2025 and 10% in 2024, with no single customer reaching 10% or more in 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.822853,
+            "sequence_match_ratio": 0.7,
+            "length_ratio": 1.580645,
+            "word_count_delta": 18,
+            "added_tokens_sample": [
+              "revenue",
+              "from",
+              "one",
+              "customer",
+              "was",
+              "17",
+              "primarily",
+              "included",
+              "in",
+              "the",
+              "cmbu",
+              "segment",
+              "of",
+              "total",
+              "revenue",
+              "for",
+              "2025",
+              "the",
+              "mcbu",
+              "aebu"
+            ],
+            "removed_tokens_sample": [
+              "mbu",
+              "ebu",
+              "cnbu"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2024_8_D122",
+            "score": 0.954091,
+            "normalised_score": 0.9541,
+            "label": "Relocated",
+            "rationale": "Score 95.41% of ceiling — content is similar but section changed from 'Certain Concentrations' to 'Note 28. Certain Concentrations'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "While the 2024 figure is repeated, the 2025 disclosure introduces a new material fact: revenue from one customer increased to 17% of total revenue in 2025 (up from 10% in 2024). A concentration exceeding 10% is a significant risk factor, and the increase in magnitude signals a heightened dependency on a single customer, representing a meaningful change in customer concentration risk.",
+          "key_change": "Increase in single customer revenue concentration to 17%"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D101",
+            "peer_topic": "Concentration of Trade Receivables",
+            "peer_summary": "As of December 28, 2024 and December 30, 2023, one customer accounted for approximately 24% and another for 16% of total consolidated accounts receivable, though the Company does not believe these balances represent significant credit risk due to past collection experience.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.159508,
+            "relationship": "same_topic",
+            "comparison": "Both MU and AMD disclose significant customer concentration, but they measure it against different bases. MU reports that one customer accounted for 10% of total revenue in 2024, whereas AMD discloses that one customer accounted for approximately 24% of total consolidated accounts receivable as of the end of 2024. While both indicate reliance on major clients, MU's metric is revenue-based while AMD's is balance-sheet (receivables) based.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D122",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P129_S001",
+                    "paragraph_id": "mu_2024_8_P129",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Revenue from one customer was 10% (primarily included in MBU, EBU, and CNBU segments) of total revenue for 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D101",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P106_S002",
+                    "paragraph_id": "amd_2024_8_P106",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "One customer accounted for approximately 24% and another customer accounted for 16% of the total consolidated accounts receivable balance as of December 28, 2024 and December 30, 2023, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D155",
+            "peer_topic": "Significant Customer Concentration in Revenue and Receivables",
+            "peer_summary": "One customer accounted for 18% and 21% of net accounts receivable as of November 3, 2024 and October 29, 2023, respectively, and represented 28%, 21%, and 20% of net revenue in fiscal years 2024, 2023, and 2022. This customer's revenue was included in the semiconductor solutions segment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.189229,
+            "relationship": "same_topic",
+            "comparison": "AVGO discloses a more extreme concentration risk than MU regarding both revenue and receivables. In fiscal 2024, one customer accounted for 28% of AVGO's net revenue and 18% of its net accounts receivable, compared to MU's single customer contributing 10% of total revenue. AVGO also explicitly notes this customer is within the semiconductor solutions segment, aligning with the semiconductor nature of the industry.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D122",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P129_S001",
+                    "paragraph_id": "mu_2024_8_P129",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Revenue from one customer was 10% (primarily included in MBU, EBU, and CNBU segments) of total revenue for 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D155",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P194_S003",
+                    "paragraph_id": "avgo_2024_8_P194",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "During fiscal years 2024, 2023 and 2022, one customer accounted for 28%, 21% and 20% of our net revenue, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P194_S002",
+                    "paragraph_id": "avgo_2024_8_P194",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "One customer accounted for 18% and 21% of our net accounts receivable balance as of November 3, 2024 and October 29, 2023, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D077",
+            "peer_topic": "Concentration of revenue with largest customers",
+            "peer_summary": "In 2024, substantially all revenue from the three largest customers originated from the sale of platforms and other components by Intel Products operating segments.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.053642,
+            "relationship": "related_topic",
+            "comparison": "INTC discusses concentration among its top three largest customers but focuses on the source of that revenue (platforms and components) rather than providing specific percentage thresholds like MU. MU explicitly quantifies the concentration with one customer at 10% of total revenue. In contrast, INTC states 'substantially all' revenue from its three largest customers came from Intel Products segments, indicating high concentration without disclosing the exact percentage of total revenue attributable to them.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D122",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P129_S001",
+                    "paragraph_id": "mu_2024_8_P129",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Revenue from one customer was 10% (primarily included in MBU, EBU, and CNBU segments) of total revenue for 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D077",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P091_S001",
+                    "paragraph_id": "intc_2024_8_P091",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "In 2024, substantially all of the revenue from our three largest customers was from the sale of platforms and other components by our Intel Products operating segments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      }
+    ]
+  }
+}

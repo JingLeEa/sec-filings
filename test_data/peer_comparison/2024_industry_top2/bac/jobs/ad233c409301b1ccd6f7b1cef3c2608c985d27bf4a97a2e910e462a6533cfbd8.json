@@ -1,0 +1,371 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "c72cfdaf35d6b7a2ff9a17b9afb68fa2d31596e77bebf0ffc5495d58bc1e6387",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_1_D035",
+    "item": "1",
+    "target_topic": "FDIC Insurance Coverage Limits",
+    "target_summary": "Deposits at U.S. domiciled banks are insured by the FDIC up to $250,000 per depositor, per insured bank, for each account ownership category pursuant to the Financial Reform Act.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0152",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures state that deposits at U.S. domiciled banks are insured by the FDIC up to $250,000 per depositor, per insured bank, for each account ownership category, pursuant to the Financial Reform Act.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_1_D034",
+            "item": "1",
+            "section": "Deposit Insurance",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Deposits at U.S. banks are insured up to $250,000 per depositor, and all insured institutions must pay FDIC assessments to fund the Deposit Insurance Fund (DIF).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_1_D035",
+            "item": "1",
+            "section": "Deposit Insurance",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Deposits at U.S. domiciled banks are insured by the FDIC up to $250,000 per depositor, per insured bank, for each account ownership category pursuant to the Financial Reform Act.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.881576,
+            "sequence_match_ratio": 0.839286,
+            "length_ratio": 0.723077,
+            "word_count_delta": -18,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "all",
+              "insured",
+              "depository",
+              "institutions",
+              "are",
+              "required",
+              "to",
+              "pay",
+              "assessments",
+              "to",
+              "the",
+              "fdic",
+              "in",
+              "order",
+              "to",
+              "fund",
+              "the",
+              "dif"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_1_D034",
+            "score": 1.0006,
+            "normalised_score": 1.0006,
+            "label": "Unchanged",
+            "rationale": "Score 100.06% of ceiling — semantically identical despite surface differences (word overlap 79%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The 2024 disclosure omits the requirement for insured institutions to pay assessments to fund the DIF, which was present in the 2023 disclosure. However, the current year's separate disclosure (M0153/M0154 context) likely captures this, and the omission here appears to be a reallocation or simplification rather than a meaningful change in the company's legal exposure or status. The remaining text is a direct copy.",
+          "key_change": "Removal of assessment requirement text"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0206",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures cover FDIC deposit insurance coverage limits ($250,000 per depositor) for U.S. domiciled banks. The 2024 D035 focuses solely on the coverage limit, while 2025 D032 combines this with the assessment requirement. The shared specific topic of coverage limits supports the link.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_1_D035",
+            "item": "1",
+            "section": "Deposit Insurance",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Deposits at U.S. domiciled banks are insured by the FDIC up to $250,000 per depositor, per insured bank, for each account ownership category pursuant to the Financial Reform Act.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_1_D032",
+            "item": "1",
+            "section": "Deposit Insurance",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Deposits at U.S. banks are insured by the FDIC up to $250,000 per depositor, with all institutions required to pay assessments to fund the Deposit Insurance Fund (DIF).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.881576,
+            "sequence_match_ratio": 0.839286,
+            "length_ratio": 1.382979,
+            "word_count_delta": 18,
+            "added_tokens_sample": [
+              "all",
+              "insured",
+              "depository",
+              "institutions",
+              "are",
+              "required",
+              "to",
+              "pay",
+              "assessments",
+              "to",
+              "the",
+              "fdic",
+              "in",
+              "order",
+              "to",
+              "fund",
+              "the",
+              "dif"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "bac_2024_1_D035",
+            "score": 1.003877,
+            "normalised_score": 1.0039,
+            "label": "Unchanged",
+            "rationale": "Score 100.39% of ceiling — semantically identical despite surface differences (word overlap 79%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.7,
+          "reason": "The disclosure expands to explicitly state that all insured depository institutions are required to pay assessments to fund the Deposit Insurance Fund (DIF). Adding this explicit reference to the assessment obligation, which implies a financial liability/cost, meaningfully changes the disclosure from merely stating coverage limits.",
+          "key_change": "Addition of explicit DIF assessment obligation"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved for FDIC Insurance Coverage Limits. C's candidates (c_2024_1_D061 and c_2024_1_D054) relate to forward-looking statements and disclosure controls, which are not comparable to BAC's FDIC deposit insurance disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_1_D097",
+            "peer_topic": "Deposit Insurance Coverage and Assessments",
+            "peer_summary": "Deposits at GS Bank USA are insured by the FDIC, funded by assessments based on average consolidated assets less tangible equity, supervisory ratings, and forward-looking financial measures. GSBE participates in both German statutory and voluntary deposit protection programs, while deposits at GSIB and the London branch of GS Bank USA are covered by the U.K. Financial Services Compensation Scheme. The FDIC may recover losses via special assessments.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.102685,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and GS disclose that deposits at their U.S. domiciled banks are insured by the FDIC. BAC specifically references the $250,000 coverage limit per depositor per ownership category under the Financial Reform Act. GS confirms its deposits have the benefit of FDIC insurance up to applicable limits and provides additional detail on how FDIC assessments are calculated for GS Bank USA (based on assets less tangible equity and forward-looking measures), whereas BAC's summary focuses primarily on the coverage limit rather than the assessment methodology.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1_D035",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1_P030_S001",
+                    "paragraph_id": "bac_2024_1_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Deposits placed at U.S. domiciled banks are insured by the FDIC, subject to limits and conditions of applicable law and the FDIC's regulations.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_1_P030_S002",
+                    "paragraph_id": "bac_2024_1_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Pursuant to the Financial Reform Act, FDIC insurance coverage limits are $250,000 per depositor, per insured bank for each account ownership category.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1_D097",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1_P139_S002",
+                    "paragraph_id": "gs_2024_1_P139",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Deposits at GS Bank USA have the benefit of FDIC insurance up to the applicable limits.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_1_P139_S004",
+                    "paragraph_id": "gs_2024_1_P139",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "GS Bank USA's assessment (subject to adjustment by the FDIC) is currently based on its average total consolidated assets less its average tangible equity during the assessment period, its supervisory ratings and specified forward-looking financial measures used to calculate the assessment rate.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_1_D014",
+            "peer_topic": "FDIC Deposit Insurance Reserve Ratio Plan",
+            "peer_summary": "The FDIC deposit insurance reserve ratio is currently below the 1.35% statutory minimum, prompting a final rule to raise assessments and a restoration plan to reach the minimum by September 30, 2028, with a longer-term target of 2%.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.083436,
+            "relationship": "related_topic",
+            "comparison": "Both BAC and JPM disclose the existence of FDIC deposit insurance and the requirement for institutions to pay assessments to fund the Deposit Insurance Fund (DIF). BAC summarizes that deposits are insured up to $250,000 per the Financial Reform Act. JPM expands on the funding mechanism, noting that the FDIC deposit insurance fund is funded through assessments and detailing a specific restoration plan to reach a 1.35% reserve ratio by September 2028 due to the fund being below the statutory minimum at the time.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1_D035",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1_P030_S001",
+                    "paragraph_id": "bac_2024_1_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Deposits placed at U.S. domiciled banks are insured by the FDIC, subject to limits and conditions of applicable law and the FDIC's regulations.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_1_P030_S002",
+                    "paragraph_id": "bac_2024_1_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Pursuant to the Financial Reform Act, FDIC insurance coverage limits are $250,000 per depositor, per insured bank for each account ownership category.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1_D014",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1_P023_S002",
+                    "paragraph_id": "jpm_2024_1_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The FDIC deposit insurance fund provides insurance coverage for certain deposits and is funded through assessments on banks, including JPMorgan Chase Bank, N.A. The FDIC is required to maintain a minimum reserve ratio, which measures the balance of reserves in the deposit insurance fund against an estimate of FDIC-insured deposits, of 1.35%.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_1_P023_S003",
+                    "paragraph_id": "jpm_2024_1_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The reserve ratio is currently below the statutory minimum and, in October 2022, the FDIC adopted a final rule to raise bank assessments and accelerate the time by which the reserve ratio would meet the statutory minimum.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_1_P023_S004",
+                    "paragraph_id": "jpm_2024_1_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "As a result, the FDIC has adopted a restoration plan to bring the reserve ratio up to the required 1.35% by September 30, 2028, with a longer-term target of maintaining a reserve ratio of 2%.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_1_D016",
+            "peer_topic": "U.S. Bank Subsidiary Supervision and Capital Standards",
+            "peer_summary": "Morgan Stanley's U.S. Bank Subsidiaries are FDIC-insured depository institutions supervised by the OCC, subject to risk governance guidelines, prompt corrective action standards, and the requirement to serve as a source of strength to their bank subsidiaries.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.063572,
+            "relationship": "related_topic",
+            "comparison": "Both BAC and MS disclose that their U.S. bank subsidiaries are FDIC-insured depository institutions. BAC specifies the coverage limit of $250,000 per depositor. MS focuses on the regulatory supervision of these FDIC-insured institutions by the OCC, including risk governance guidelines and prompt corrective action standards, rather than detailing the specific dollar amount of coverage limits.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1_D035",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1_P030_S001",
+                    "paragraph_id": "bac_2024_1_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Deposits placed at U.S. domiciled banks are insured by the FDIC, subject to limits and conditions of applicable law and the FDIC's regulations.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_1_P030_S002",
+                    "paragraph_id": "bac_2024_1_P030",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Pursuant to the Financial Reform Act, FDIC insurance coverage limits are $250,000 per depositor, per insured bank for each account ownership category.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_1_D016",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_1_P035_S002",
+                    "paragraph_id": "ms_2024_1_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Our U.S. Bank Subsidiaries are FDIC-insured depository institutions subject to supervision, regulation and examination by the OCC and are subject to the OCC's risk governance guidelines, which establish heightened standards for a large IDI's risk governance framework and the oversight of that framework by the IDI's board of directors.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_1_P035_S003",
+                    "paragraph_id": "ms_2024_1_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Our U.S. Bank Subsidiaries are also subject to prompt corrective action standards, which require the relevant federal banking regulator to take prompt corrective action with respect to a depository institution if that institution does not meet certain capital adequacy standards.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

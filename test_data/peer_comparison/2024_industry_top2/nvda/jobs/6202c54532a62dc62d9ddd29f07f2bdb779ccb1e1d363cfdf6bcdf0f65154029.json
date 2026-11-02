@@ -1,0 +1,524 @@
+{
+  "input_fingerprint": "0b38b2ffd36541924c6794ab50b702e4a1c712ba048b7ca1d5c7e4702bfc3742",
+  "request_hash": "78ab1cff41bbb3095dafef7171c706b9d9183fa9faf4f7a8acce94597f885176",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_7_D023",
+    "item": "7",
+    "target_topic": "Operating Expenses and Acquisition Charge",
+    "target_summary": "Operating expenses increased in fiscal year 2024 due to employee growth and compensation increases; fiscal year 2023 included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0322",
+        "relationship": "current_only",
+        "status": "needs_review",
+        "review_reasons": [
+          "invalid_or_omitted_verifier_proposal"
+        ],
+        "explanation": "Automatic repair turn limit reached; remaining disclosures need review.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D023",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased in fiscal year 2024 due to employee growth and compensation increases; fiscal year 2023 included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0308",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss the increase in operating expenses for the fiscal year, driven by employee growth and compensation increases. nvda_2024_7_D023 cites FY24 OpEx growth due to employee/compensation and mentions the Arm charge (unique historical context). nvda_2025_7_D024 cites FY25 OpEx growth of 45% primarily due to higher compensation/benefits from employee growth, matching the primary driver identified in the 2024 summary.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D023",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased in fiscal year 2024 due to employee growth and compensation increases; fiscal year 2023 included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D024",
+            "item": "7",
+            "section": "Fiscal Year 2025 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased 45% primarily due to higher compensation and benefits from employee growth and increases, as well as engineering development, compute, and infrastructure costs for new product introductions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.358238,
+            "sequence_match_ratio": 0.309859,
+            "length_ratio": 1.151515,
+            "word_count_delta": 5,
+            "added_tokens_sample": [
+              "2025",
+              "were",
+              "up",
+              "45",
+              "from",
+              "a",
+              "year",
+              "ago",
+              "higher",
+              "compensation",
+              "and",
+              "benefits",
+              "expenses",
+              "due",
+              "to",
+              "employee",
+              "and",
+              "engineering",
+              "development",
+              "compute"
+            ],
+            "removed_tokens_sample": [
+              "increased",
+              "2024",
+              "in",
+              "employees",
+              "fiscal",
+              "year",
+              "2023",
+              "also",
+              "included",
+              "a",
+              "1",
+              "4",
+              "billion",
+              "acquisition",
+              "termination",
+              "charge",
+              "related",
+              "to",
+              "the",
+              "proposed"
+            ]
+          },
+          "semantic": {
+            "matched_id": "nvda_2024_7_D023",
+            "score": 0.766787,
+            "normalised_score": 0.7668,
+            "label": "Relocated",
+            "rationale": "Score 76.68% of ceiling — content is similar but section changed from 'Fiscal Year 2024 Summary' to 'Fiscal Year 2025 Summary'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.9,
+          "reason": "Operating expenses surged 45% in FY25, a specific quantitative escalation not present in the FY24 summary (which noted growth but no specific rate). The FY25 disclosure explicitly adds 'engineering development, compute, and infrastructure costs for new product introductions' to the drivers (compensation/employee growth) seen in FY24. This quantifies a significant increase in investment intensity for future products.",
+          "key_change": "Quantified 45% OpEx increase with added infrastructure/compute cost drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D034",
+            "peer_topic": "Amortization of Acquisition-Related Intangibles",
+            "peer_summary": "Amortization of acquisition-related intangibles was $2.4 billion for 2024, a decrease of 15% from $2.8 billion in 2023, primarily due to certain intangibles being fully amortized in the prior fiscal year.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.112614,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AMD report on operating expense components influenced by acquisitions, but the nature and direction of the charges differ. NVDA highlights a specific one-time $1.4 billion acquisition termination charge in the prior year (FY2023) related to the Arm deal, which inflated comparative operating costs, while its FY2024 increase is driven by employee growth. In contrast, AMD reports on the ongoing amortization of acquisition-related intangibles, which decreased from $2.8 billion in 2023 to $2.4 billion in 2024 due to intangibles becoming fully amortized. While both mention acquisition-related impacts on expenses, NVDA's relates to a terminated deal charge in a prior period, whereas AMD's relates to the systematic write-down of acquired assets in the current period.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P024_S001",
+                    "paragraph_id": "nvda_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Operating expenses increased for fiscal year 2024, driven by growth in employees and compensation increases.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P024_S002",
+                    "paragraph_id": "nvda_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Fiscal year 2023 also included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D034",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P047_S001",
+                    "paragraph_id": "amd_2024_7_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Amortization of acquisition-related intangibles of $2.4 billion for 2024 decreased by $417 million, or 15%, compared to $2.8 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P047_S002",
+                    "paragraph_id": "amd_2024_7_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The decrease was primarily due to certain acquisition-related intangibles being fully amortized in the prior fiscal year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D030",
+            "peer_topic": "All Other operating loss breakdown for 2024 and 2023",
+            "peer_summary": "All Other operating loss was $4.2 billion in 2024 and $4.4 billion in 2023, primarily consisting of amortization of acquisition-related intangibles and stock-based compensation expense.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.0847,
+            "relationship": "same_topic",
+            "comparison": "NVDA and AMD both identify stock-based compensation and employee growth/compensation as drivers of operating expense increases. NVDA states its FY2024 operating expense increase was driven by 'growth in employees and compensation increases.' AMD's 'All Other' operating loss, a significant expense component, included $1.4 billion of stock-based compensation expense in both 2024 and 2023. Both disclosures highlight personnel costs (compensation and equity awards) as a persistent and material driver of their respective expense structures.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P024_S001",
+                    "paragraph_id": "nvda_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Operating expenses increased for fiscal year 2024, driven by growth in employees and compensation increases.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P042_S001",
+                    "paragraph_id": "amd_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "All Other operating loss of $4.2 billion in 2024 primarily consisted of $2.4 billion of amortization of acquisition-related intangibles and $1.4 billion of stock-based compensation expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P042_S002",
+                    "paragraph_id": "amd_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "All Other operating loss of $4.4 billion in 2023 primarily consisted of $2.8 billion of amortization of acquisition-related intangibles and $1.4 billion of stock-based compensation expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D052",
+            "peer_topic": "Amortization of Acquisition-Related Intangible Assets Increase",
+            "peer_summary": "Amortization of acquisition-related intangible assets recognized in operating expenses increased by $1,850 million, or 133%, in fiscal year 2024 compared to the prior fiscal year. This increase was primarily due to higher amortization of customer-related intangible assets resulting from the VMware Merger.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.193486,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AVGO discuss acquisition-related impacts on operating expenses, though AVGO's is driven by active acquisition integration while NVDA's involved a terminated acquisition. AVGO reports a $1,850 million (133%) increase in amortization of acquisition-related intangible assets in FY2024, primarily due to the VMware Merger. NVDA mentions a $1.4 billion acquisition termination charge in FY2023 for the proposed Arm transaction. Both disclosures link significant non-routine or acquisition-related expenses to major M&A activities, with AVGO showing current period amplification from an active merger and NVDA showing a prior period hit from a failed merger.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P024_S002",
+                    "paragraph_id": "nvda_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Fiscal year 2023 also included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D052",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P051_S001",
+                    "paragraph_id": "avgo_2024_7_P051",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Amortization of acquisition-related intangible assets recognized in operating expenses increased $1,850 million, or 133%, in fiscal year 2024, compared to the prior fiscal year primarily due to higher amortization of customer-related intangible assets from the VMware Merger.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D059",
+            "peer_topic": "Unallocated expenses composition and increase",
+            "peer_summary": "Unallocated expenses increased 192% in fiscal year 2024, primarily due to higher amortization of acquisition-related intangible assets, stock-based compensation expense, and restructuring and other charges, with increases largely attributed to the VMware Merger and higher grant-date fair values of annual employee equity awards.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.162543,
+            "relationship": "same_topic",
+            "comparison": "NVDA and AVGO both cite employee compensation and acquisition-related charges as primary drivers of expense changes, with AVGO explicitly combining these factors. NVDA attributes its FY2024 operating expense increase to 'growth in employees and compensation increases.' AVGO states its unallocated expenses increased 192% in FY2024 due to 'higher amortization of acquisition-related intangible assets, stock-based compensation expense... primarily due to the VMware Merger and higher grant-date fair values of annual employee equity awards.' Both companies face rising personnel-related costs, with AVGO further burdened by specific post-merger amortization and stock value increases.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P024_S001",
+                    "paragraph_id": "nvda_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Operating expenses increased for fiscal year 2024, driven by growth in employees and compensation increases.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P057_S002",
+                    "paragraph_id": "avgo_2024_7_P057",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Unallocated expenses increased 192% in fiscal year 2024, compared to the prior fiscal year, primarily due to higher amortization of acquisition-related intangible assets, stock-based compensation expense and restructuring and other charges.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P057_S003",
+                    "paragraph_id": "avgo_2024_7_P057",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "These increases were primarily due to the VMware Merger.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P057_S004",
+                    "paragraph_id": "avgo_2024_7_P057",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase in stock-based compensation expense was also due to annual employee equity awards granted at higher grant-date fair values.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_7_D063",
+            "peer_topic": "Operating expenses increase driven by process technology investments",
+            "peer_summary": "Operating expenses were $5.4 billion, up $961 million from 2023, primarily driven by increased investments in process technology.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.122047,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and INTC report operating expense increases in FY2024, but attribute them to different strategic priorities. NVDA's operating expenses increased due to 'growth in employees and compensation increases,' reflecting hiring and pay raises. INTC's operating expenses increased by $961 million to $5.4 billion, 'primarily driven by increased investments in process technology.' While both show rising costs, NVDA's is labor-driven, whereas INTC's is capital/technology investment-driven.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P024_S001",
+                    "paragraph_id": "nvda_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Operating expenses increased for fiscal year 2024, driven by growth in employees and compensation increases.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D063",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P058_S001",
+                    "paragraph_id": "intc_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Operating expenses were $5.4 billion, up $961 million from 2023, primarily driven by increased investments in process technology.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_7_D021",
+            "peer_topic": "SG&A Expense Trends",
+            "peer_summary": "SG&A expenses increased 23% in 2024 compared to 2023 primarily due to higher employee compensation, whereas 2023 expenses were 14% lower than 2022 due to decreases in compensation, legal fees, advertising, and professional services.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.098695,
+            "relationship": "same_topic",
+            "comparison": "NVDA and MU both identify employee compensation as a primary driver for increased operating or SG&A expenses in FY2024. NVDA states operating expenses increased due to 'growth in employees and compensation increases.' Similarly, MU reports SG&A expenses increased 23% in 2024 'primarily due to an increase in employee compensation.' Both disclosures reflect a common industry trend of rising personnel costs impacting operational efficiency metrics.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P024_S001",
+                    "paragraph_id": "nvda_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Operating expenses increased for fiscal year 2024, driven by growth in employees and compensation increases.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D021",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P021_S001",
+                    "paragraph_id": "mu_2024_7_P021",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Selling, General, and Administrative: SG&A expenses for 2024 increased 23% as compared to 2023 primarily due to an increase in employee compensation.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "QCOM",
+            "peer_disclosure_id": "qcom_2024_7_D013",
+            "peer_topic": "SG&A Expense Drivers",
+            "peer_summary": "Fiscal 2024 SG&A expenses increased primarily due to $99 million in higher sales and marketing expenses, $42 million in deferred compensation revaluation, and $39 million in share-based compensation.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.098885,
+            "relationship": "same_topic",
+            "comparison": "NVDA and QCOM both report increases in operating expenses driven by compensation-related costs, including stock-based compensation. NVDA attributes its operating expense increase to 'growth in employees and compensation increases.' QCOM's SG&A expense increase was driven by '$39 million increase in share-based compensation expense' and '$99 million increase in sales and marketing expenses.' Both companies demonstrate that rising personnel costs, including equity awards, are a key factor in their FY2024 expense growth.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P024_S001",
+                    "paragraph_id": "nvda_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Operating expenses increased for fiscal year 2024, driven by growth in employees and compensation increases.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D013",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P011_S001",
+                    "paragraph_id": "qcom_2024_7_P011",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "The increase in selling, general and administrative expenses in fiscal 2024 was primarily due to:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_7_P011_S002",
+                    "paragraph_id": "qcom_2024_7_P011",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "+ $99 million increase in sales and marketing expenses",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_7_P011_S004",
+                    "paragraph_id": "qcom_2024_7_P011",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "+ $39 million increase in share-based compensation expense",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      }
+    ]
+  }
+}

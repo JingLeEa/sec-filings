@@ -1,0 +1,412 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "de931bb348f053f705fe3457f901979a76cb0685b6576f632c89661ff556da61",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D135",
+    "item": "7",
+    "target_topic": "Definition of loss days in Markets business",
+    "target_summary": "Loss days represent days where Markets recorded total net revenue losses, differing from backtesting measures which include VaR positions and may offset gains or losses.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0424",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "D135 defines 'Loss days' for Markets. No 2023 disclosure in the required set or proposed groups defines this specific metric. The 2023 D140 previously defined it but was unmapped in the preserved proposals (single-sided 2023), and is not a required ID to match here, nor is it in the required IDs. Since D135 has no required counterpart and no valid match was proposed/found in the required set, it is single-sided.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D135",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > Markets revenue",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loss days represent days where Markets recorded total net revenue losses, differing from backtesting measures which include VaR positions and may offset gains or losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 111,
+            "added_tokens_sample": [
+              "b",
+              "markets",
+              "consists",
+              "of",
+              "fixed",
+              "income",
+              "markets",
+              "and",
+              "equity",
+              "markets",
+              "loss",
+              "days",
+              "represent",
+              "the",
+              "number",
+              "of",
+              "days",
+              "for",
+              "which",
+              "markets"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "Introduction of a new risk metric ('Loss days') for the Markets segment. This defines a specific operational measure of trading losses that differs from standard backtesting/VaR measures, providing new context for understanding market risk and performance volatility not previously disclosed in this specific definitional manner.",
+          "key_change": "Introduction of Markets 'Loss days' metric definition"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0355",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures define 'Loss days' for the Markets business as days with losses in total net revenue and explicitly distinguish this measure from Daily backtesting gains and losses used for Risk Management VaR measures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D135",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > Markets revenue",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loss days represent days where Markets recorded total net revenue losses, differing from backtesting measures which include VaR positions and may offset gains or losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D122",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > Markets revenue",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2025, Markets recorded two loss days out of the year; these are distinct from daily backtesting gains and losses used for Risk Management VaR measures, as the latter excludes certain components of total net revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.909175,
+            "sequence_match_ratio": 0.874494,
+            "length_ratio": 1.225225,
+            "word_count_delta": 25,
+            "added_tokens_sample": [
+              "a",
+              "the",
+              "year",
+              "ended",
+              "december",
+              "31",
+              "2025",
+              "had",
+              "two",
+              "loss",
+              "days",
+              "including",
+              "one",
+              "loss",
+              "day",
+              "on",
+              "december",
+              "25",
+              "2025",
+              "from"
+            ],
+            "removed_tokens_sample": [
+              "b",
+              "143",
+              "145"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_7_D135",
+            "score": 0.934091,
+            "normalised_score": 0.9341,
+            "label": "Modified",
+            "rationale": "Score 93.41% of ceiling with 78% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.8,
+          "reason": "The disclosure introduces the specific count of 'loss days' (two) for the year 2025 and provides a specific detail about one loss day (Dec 25, 2025). While the definition remains the same, the quantification of a risk metric (loss frequency) is a meaningful update to the disclosure of operational performance and risk exposure.",
+          "key_change": "Quantification of annual loss days"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D351",
+            "peer_topic": "Backtesting governance and 2024 performance",
+            "peer_summary": "Daily backtesting results are reported to senior management for review; in 2024, there was one instance where trading revenue losses exceeded the total covered portfolio VaR.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.13344,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC disclose specific instances in 2024 where trading losses exceeded their respective VaR thresholds, using these exceptions to illustrate the relationship between backtesting metrics and actual revenue performance. JPM defines 'loss days' in the Markets segment to differentiate from backtesting measures, noting that backtesting includes VaR positions which may offset gains or losses, whereas BAC reports a specific day where trading revenue losses exceeded the total covered portfolio VaR, with results reported to senior management for review.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D135",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P201_S002",
+                    "paragraph_id": "jpm_2024_7_P201",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Loss days represent the number of days for which Markets recorded losses in total net revenue, which includes revenue related to both trading and non-trading positions.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P201_S004",
+                    "paragraph_id": "jpm_2024_7_P201",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Daily backtesting gains and losses include positions in the Firm's Risk Management value-at-risk (\"VaR\") measure and exclude certain components of total net revenue, which may more than offset backtesting gains or losses on a particular day.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D351",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P422_S001",
+                    "paragraph_id": "bac_2024_7_P422",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "During 2024, there was one day where this subset of trading revenue had losses that exceeded our total covered portfolio VaR, utilizing a one-day holding period.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P421_S002",
+                    "paragraph_id": "bac_2024_7_P421",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "These results are reported to senior management, who regularly review and evaluate the results of these tests.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D386",
+            "peer_topic": "Difference Between VaR and Trading Revenue Metrics",
+            "peer_summary": "The difference between days with buy-and-hold gains (58.8%) and days with trading revenue (98.5%) reflects that significant revenue is not generated from daily price movements on covered positions and involves portfolio composition differences.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.107991,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures address the divergence between VaR-based backtesting metrics and actual trading revenue outcomes, highlighting how revenue generation differs from daily price movement gains. JPM notes that loss days for Markets total net revenue differ from backtesting because the latter excludes certain revenue components and includes VaR positions, while Citi quantifies this difference by stating that only 58.8% of days had buy-and-hold gains for Regulatory VaR compared to 98.5% of days with positive trading revenue, attributing the gap to revenue not generated from daily price movements and portfolio composition differences.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D135",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P201_S003",
+                    "paragraph_id": "jpm_2024_7_P201",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The loss days determined under this measure differ from the measure used to determine backtesting gains and losses.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P201_S004",
+                    "paragraph_id": "jpm_2024_7_P201",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Daily backtesting gains and losses include positions in the Firm's Risk Management value-at-risk (\"VaR\") measure and exclude certain components of total net revenue, which may more than offset backtesting gains or losses on a particular day.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D386",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P552_S001",
+                    "paragraph_id": "c_2024_7_P552",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The difference between the 58.8% of days with buy-and-hold gains for Regulatory VaR back-testing and the 98.5% of days with trading, net interest and other revenue associated with Citi's trading businesses, presented in the histogram of daily trading-related revenue below, reflects, among other things, that a significant portion of Citi's trading-related revenue is not generated from daily price movements on these positions and exposures, as well as differences in the portfolio composition of Regulatory VaR and Risk Management VaR.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D297",
+            "peer_topic": "VaR exception frequency and business model impact",
+            "peer_summary": "Net losses exceeding the 95% one-day VaR (exceptions) occurred on two occasions in 2024 and one occasion in 2023; the frequency of exceptions correlates with net revenue performance, with fewer exceptions expected during periods of significant positive net revenue days.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.146372,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and Goldman Sachs (GS) disclose the frequency of 'loss' or 'exception' days in 2024, linking these metrics to their broader net revenue performance. JPM reports 'loss days' in the Markets segment and distinguishes them from backtesting measures, while GS reports two VaR exceptions (net losses exceeding 95% one-day VaR) in 2024 and explains that exception frequency correlates with the ratio of positive to negative net revenue days, noting that intraday activity often results in positive bid/offer revenues.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D135",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P201_S002",
+                    "paragraph_id": "jpm_2024_7_P201",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Loss days represent the number of days for which Markets recorded losses in total net revenue, which includes revenue related to both trading and non-trading positions.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P201_S005",
+                    "paragraph_id": "jpm_2024_7_P201",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "For more information on daily backtesting gains and losses, refer to the VaR discussion on pages 143-145.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D297",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P396_S002",
+                    "paragraph_id": "gs_2024_7_P396",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net losses incurred on a single day for such positions exceeded our 95% one-day VaR (i.e., a VaR exception) on two occasions during 2024 and on one occasion during 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P397_S003",
+                    "paragraph_id": "gs_2024_7_P397",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The daily net revenues for positions included in VaR used to determine VaR exceptions reflect the impact of any intraday activity, including bid/offer net revenues, which are more likely than not to be positive by their nature.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D257",
+            "peer_topic": "VaR Model Evaluation and 2024 Exceedance Statistics",
+            "peer_summary": "The firm evaluates its VaR model by comparing potential declines with actual trading results and examining drivers for losses exceeding the statistic. In 2024, there were 11 trading loss days, none exceeding 95% Total Management VaR, compared to 16 days in 2023 with one exceeding the limit.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.118189,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and Morgan Stanley (MS) report the specific count of trading loss days in 2024 and provide context on how these relate to VaR metrics. JPM states that 'Loss days represent the number of days for which Markets recorded losses in total net revenue' and contrasts this with backtesting measures, while MS reports 11 trading loss days in 2024, none of which exceeded the 95% Total Management VaR, and explains that the firm examines loss drivers on exceedance days to evaluate VaR model accuracy.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D135",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P201_S002",
+                    "paragraph_id": "jpm_2024_7_P201",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Loss days represent the number of days for which Markets recorded losses in total net revenue, which includes revenue related to both trading and non-trading positions.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P201_S003",
+                    "paragraph_id": "jpm_2024_7_P201",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The loss days determined under this measure differ from the measure used to determine backtesting gains and losses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D257",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P302_S002",
+                    "paragraph_id": "ms_2024_7_P302",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "For days where losses exceed the VaR statistic, we examine the drivers of trading losses to evaluate the VaR model's accuracy.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P302_S003",
+                    "paragraph_id": "ms_2024_7_P302",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "There were 11 trading loss days in 2024, none of which exceeded 95% Total Management VaR, compared to 16 trading loss days in 2023, one of which exceeded 95% Total Management VaR.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

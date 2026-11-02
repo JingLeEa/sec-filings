@@ -1,0 +1,234 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "11bc11acc2b64bbb1c84f315eeac2c8f8ea577ec1967fa85f960aac28aaa4abb",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D254",
+    "item": "7",
+    "target_topic": "Reference to subordinated debt details",
+    "target_summary": "The filing directs readers to the Long-term funding section on page 114 and Note 20 for additional information regarding the Firm's subordinated debt.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0529",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "jpm_2024_7_D254 is a cross-reference to subordinated debt and the long-term funding section. In the 2023 filing, the specific discussion of subordinated debt as a distinct capital component or detailed issuance table is not present in the required candidates' selected sentences for D305 (which is general funding plan) or other obvious counterparts. D254 is a specific disclosure about subordinated debt location/reference, and without a 2023 disclosure explicitly titled or primarily focused on 'Subordinated Debt' with matching specific content in the required set, it is left unmatched.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D254",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CAPITAL RISK MANAGEMENT > Capital actions > Subordinated Debt",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The filing directs readers to the Long-term funding section on page 114 and Note 20 for additional information regarding the Firm's subordinated debt.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 19,
+            "added_tokens_sample": [
+              "refer",
+              "to",
+              "long",
+              "term",
+              "funding",
+              "on",
+              "page",
+              "114",
+              "and",
+              "note",
+              "20",
+              "for",
+              "additional",
+              "information",
+              "on",
+              "the",
+              "firm's",
+              "subordinated",
+              "debt"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.9,
+          "reason": "The disclosure is purely a navigational cross-reference directing readers to 'Long-term funding' and Note 20. It contains no substantive financial or operational information itself and does not change the company's disclosed position.",
+          "key_change": "Introduction of navigational cross-reference"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0457",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures relate to subordinated debt. D254 provides a general reference to long-term funding and Note 20 for subordinated debt information. D247 reports a specific capital change including the issuance of $4.0 billion of subordinated notes due 2036 and also references long-term funding and Note 20. While D254 is a navigational reference and D247 is a specific transaction record within the capital rollforward, they share the same specific underlying topic of subordinated debt capital actions/information and reference the same external notes/sections, justifying the link within Item 7.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D254",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CAPITAL RISK MANAGEMENT > Capital actions > Subordinated Debt",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The filing directs readers to the Long-term funding section on page 114 and Note 20 for additional information regarding the Firm's subordinated debt.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D247",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CAPITAL RISK MANAGEMENT > Selected capital and RWA data > Capital rollforward",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Capital changes include the issuance of $4.0 billion of subordinated notes due 2036, detailed in the Long-term funding section and Note 20.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.629422,
+            "sequence_match_ratio": 0.72,
+            "length_ratio": 1.631579,
+            "word_count_delta": 12,
+            "added_tokens_sample": [
+              "c",
+              "includes",
+              "issuance",
+              "of",
+              "4",
+              "0",
+              "billion",
+              "of",
+              "subordinated",
+              "notes",
+              "due",
+              "2036",
+              "106"
+            ],
+            "removed_tokens_sample": [
+              "114"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_7_D254",
+            "score": 0.784462,
+            "normalised_score": 0.7845,
+            "label": "Relocated",
+            "rationale": "Score 78.45% of ceiling — content is similar but section changed from 'BUSINESS SEGMENT & CORPORATE RESULTS > CAPITAL RISK MANAGEMENT > Capital actions > Subordinated Debt' to 'BUSINESS SEGMENT & CORPORATE RESULTS > CAPITAL RISK MANAGEMENT > Selected capital and RWA data > Capital rollforward'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Expanded",
+          "final_taxonomy": "Expanded"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The current disclosure explicitly records the issuance of $4.0 billion of subordinated notes due 2036. This is a significant capital raising activity that alters the company's capital structure and long-term funding profile, compared to the previous year's navigational reference which did not detail specific recent issuances in this summary.",
+          "key_change": "Issuance of $4.0B subordinated notes"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D221",
+            "peer_topic": "Unsecured Funding Profile and Credit Rating Covenants",
+            "peer_summary": "The company issues long-term unsecured debt to manage maturity profiles and mitigate refinancing risk, noting that while funding costs may be impacted by market conditions, substantially all debt obligations lack provisions triggering early repayment or additional collateral requirements based on adverse changes in credit ratings or financial ratios.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.119435,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC disclose information regarding their long-term unsecured debt funding and direct readers to specific notes for further details on subordinated and other long-term debt structures. JPM explicitly references subordinated debt and points to Note 20, while BAC describes its strategy of issuing long-term unsecured debt (including subordinated obligations) to manage maturity profiles and explicitly references Note 11 for details on long-term debt funding. Both filings highlight the role of subordinated/unsecured debt in their capital management and provide cross-references to financial statement notes for deeper disclosure.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D254",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P374_S001",
+                    "paragraph_id": "jpm_2024_7_P374",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Refer to Long-term funding on page 114 and Note 20 for additional information on the Firm's subordinated debt.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D221",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P246_S001",
+                    "paragraph_id": "bac_2024_7_P246",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "We issue long-term unsecured debt in a variety of maturities and currencies to achieve cost-efficient funding and to maintain an appropriate maturity profile.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P247_S002",
+                    "paragraph_id": "bac_2024_7_P247",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "For more information on long-term debt funding, including issuances and maturities and redemptions, see Note 11 - Long-term Debt to the Consolidated Financial Statements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that specifically addresses subordinated debt or long-term unsecured funding details comparable to JPM's disclosure. Citi's candidates reference corporate credit portfolio (Note 15) and accounting policies for credit losses (Note 1), which are not substantively comparable to the specific reference to subordinated debt mechanics and funding details found in JPM's filing."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that specifically addresses subordinated debt details comparable to JPM's disclosure. Goldman Sachs' candidates focus on general balance sheet management processes for secured/unsecured funding requirements and the composition of TLAC/eligible long-term debt definitions, but do not provide the specific cross-reference to subordinated debt details in a similar manner to JPM's direct pointer to Note 20 for subordinated debt information."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that specifically addresses subordinated debt details comparable to JPM's disclosure. Morgan Stanley's candidates reference TLAC/long-term debt sections generally and collateralized transactions (Note 8), but do not contain a specific disclosure reference to subordinated debt details analogous to JPM's reference to Note 20."
+      }
+    ]
+  }
+}

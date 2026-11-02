@@ -1,0 +1,424 @@
+{
+  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
+  "request_hash": "75d1f2f04ffaed5a9403e77bfcb6af74e2f992593bfdd7f2d4c47630d5555cdb",
+  "result": {
+    "target_ticker": "AMD",
+    "target_disclosure_id": "amd_2024_7_D031",
+    "item": "7",
+    "target_topic": "Gross Margin Performance 2024",
+    "target_summary": "Gross margin as a percentage of net revenue increased to 49% in 2024 from 46% in 2023. This increase was primarily driven by a favorable shift in revenue mix towards higher Data Center and Client revenues, as well as lower Gaming revenue, which was partially offset by the impact of lower Embedded revenue.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "amd_2023_2024_M0277",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report on Gross Margin percentage and the drivers of change (revenue mix and specific segment performance).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2023_7_D024",
+            "item": "7",
+            "section": "Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margin was 46% in 2023, up from 45% in 2022, primarily driven by higher Embedded segment revenue and lower amortization of acquisition-related intangible assets, partially offset by lower Client segment revenue and product mix.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2024_7_D031",
+            "item": "7",
+            "section": "Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margin as a percentage of net revenue increased to 49% in 2024 from 46% in 2023. This increase was primarily driven by a favorable shift in revenue mix towards higher Data Center and Client revenues, as well as lower Gaming revenue, which was partially offset by the impact of lower Embedded revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.715421,
+            "sequence_match_ratio": 0.510204,
+            "length_ratio": 1.041667,
+            "word_count_delta": 2,
+            "added_tokens_sample": [
+              "49",
+              "in",
+              "2024",
+              "compared",
+              "to",
+              "due",
+              "to",
+              "a",
+              "favorable",
+              "shift",
+              "in",
+              "revenue",
+              "mix",
+              "of",
+              "data",
+              "center",
+              "and",
+              "client",
+              "revenues",
+              "lower"
+            ],
+            "removed_tokens_sample": [
+              "compared",
+              "to",
+              "45",
+              "in",
+              "2022",
+              "primarily",
+              "driven",
+              "by",
+              "embedded",
+              "segment",
+              "and",
+              "lower",
+              "amortization",
+              "of",
+              "acquisition",
+              "related",
+              "intangible",
+              "assets",
+              "client",
+              "segment"
+            ]
+          },
+          "semantic": {
+            "matched_id": "amd_2023_7_D024",
+            "score": 0.961888,
+            "normalised_score": 0.9619,
+            "label": "Modified",
+            "rationale": "Score 96.19% of ceiling with 47% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.8,
+          "reason": "Gross margin increased from 46% to 49%. While positive, the drivers changed significantly: the 2023 increase was driven by Embedded revenue and lower amortization, whereas 2024 was driven by a favorable shift towards Data Center/Client revenues and lower Gaming revenue, offset by lower Embedded revenue. The change in the *drivers* of margin expansion (from cost/structural factors to revenue mix) is a meaningful update to the understanding of profitability quality.",
+          "key_change": "Change in primary drivers of gross margin expansion"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "amd_2024_2025_M0240",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the overall Gross Margin percentage for the fiscal year. The 2024 disclosure (D031) reports 49% gross margin. The 2025 disclosure (D003) reports 50% gross margin, noting an increase from 49% in 2024. The topic (overall gross margin) is identical.\n\nThe 2024 Gross Margin disclosure (D031) is also linked to the 2025 Gross Margin disclosure (D030). D030 repeats the exact same content as D003 (50% margin, up 1% from 49%, offset by $440M export control charges). Since D003 and D030 are effectively duplicates for the same data point, linking D031 to D030 is valid. However, D003 is the primary 'Overview' reference. The prompt allows many-to-many. D031 supports both current disclosures as they both cite the 49% 2024 baseline. To avoid redundancy in the final output while covering required IDs, I have linked D031 to D003. D030 is the same subject as D003. Wait, the proposed groups had D031 -> [D003, D030]. I must verify if D030 is a distinct disclosure or a duplicate. The records show D003 is 'Overview' and D030 is 'Gross Margin'. They contain the same text. I will treat them as separate IDs covering the same topic. The instruction says 'Keep their specific links; do ",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2024_7_D031",
+            "item": "7",
+            "section": "Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margin as a percentage of net revenue increased to 49% in 2024 from 46% in 2023. This increase was primarily driven by a favorable shift in revenue mix towards higher Data Center and Client revenues, as well as lower Gaming revenue, which was partially offset by the impact of lower Embedded revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2025_7_D003",
+            "item": "7",
+            "section": "Overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margin was 50% in 2025, an increase of 1% from 2024, primarily due to product mix, partially offset by approximately $440 million of net inventory and related charges associated with U.S. government export controls on AMD Instinct MI308 Data Center GPU products.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "amd_2025_7_D030",
+            "item": "7",
+            "section": "Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "AMD's gross margin was 50% in 2025, an increase of 1% from 49% in 2024, primarily driven by product mix but partially offset by approximately $440 million in net inventory and related charges linked to U.S. government export controls on AMD Instinct MI308 products.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.330499,
+            "sequence_match_ratio": 0.2,
+            "length_ratio": 1.8,
+            "word_count_delta": 40,
+            "added_tokens_sample": [
+              "50",
+              "increased",
+              "by",
+              "1",
+              "compared",
+              "to",
+              "primarily",
+              "product",
+              "approximately",
+              "440",
+              "million",
+              "of",
+              "net",
+              "inventory",
+              "and",
+              "related",
+              "charges",
+              "associated",
+              "with",
+              "u"
+            ],
+            "removed_tokens_sample": [
+              "as",
+              "a",
+              "percentage",
+              "net",
+              "revenue",
+              "was",
+              "compared",
+              "to",
+              "46",
+              "in",
+              "2023",
+              "the",
+              "increase",
+              "in",
+              "gross",
+              "margin",
+              "was",
+              "a",
+              "favorable",
+              "shift"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "amd_2024_7_D031",
+            "score": 0.834995,
+            "normalised_score": 0.835,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 83.50% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.98,
+          "reason": "The gross margin disclosure now includes a specific, quantified negative impact (~$440 million) from U.S. government export controls on a specific product (MI308). This introduces a new, specific regulatory/legal risk exposure and quantifies its financial impact, which is a material change compared to the previous year's discussion of margin drivers (mix vs. embedded revenue).",
+          "key_change": "Export control impact on gross margin"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D049",
+            "peer_topic": "Gross margin financial results and VMware impact",
+            "peer_summary": "Gross margin increased to $32,509 million in fiscal year 2024 from $24,690 million in fiscal year 2023, primarily due to VMware contributions offset by higher amortization of acquisition-related intangible assets. As a percentage of net revenue, gross margin decreased to 63% from 69%, driven by the same amortization factors, less favorable semiconductor product mix, and offsets from infrastructure software margins.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.251318,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Broadcom report on their 2024 gross margin percentage changes, but they experienced opposite directional movements with different primary drivers. AMD's gross margin increased to 49% from 46%, driven by a favorable shift in revenue mix towards higher Data Center and Client revenues. In contrast, Broadcom's gross margin decreased to 63% from 69%, primarily due to higher amortization of acquisition-related intangible assets from the VMware Merger, less favorable semiconductor product mix, and infrastructure software margin offsets, despite an increase in total gross margin dollars from VMware contributions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P044_S001",
+                    "paragraph_id": "amd_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Gross margin as a percentage of net revenue was 49% in 2024 compared to 46% in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P044_S002",
+                    "paragraph_id": "amd_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in gross margin was due to a favorable shift in revenue mix of higher Data Center and Client revenues, lower Gaming revenue, partially offset by the impact of lower Embedded revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D049",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P048_S001",
+                    "paragraph_id": "avgo_2024_7_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "As a percentage of net revenue, gross margin was 63% and 69% of net revenue for the fiscal years 2024 and 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P048_S002",
+                    "paragraph_id": "avgo_2024_7_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The decrease was primarily due to higher amortization of acquisition-related intangible assets from the VMware Merger.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P048_S003",
+                    "paragraph_id": "avgo_2024_7_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "In addition, gross margin contributions from our infrastructure software segment were partially offset by less favorable margin within the semiconductor solutions segment driven by product mix.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The primary candidate (intc_2024_7_D077) discusses total revenue drivers rather than gross margin performance. The secondary candidate (intc_2024_7_D085) describes offsets to unfavorable gross margin impacts but does not state the resulting gross margin percentage or performance trend comparable to AMD's reported positive margin expansion and mix shift. Therefore, no sufficiently comparable gross margin performance disclosure was found."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_7_D007",
+            "peer_topic": "Consolidated Gross Margin Performance 2023-2024",
+            "peer_summary": "Consolidated gross margin improved to 22% in 2024 from -9% in 2023, aided by increased average selling prices and manufacturing cost reductions, despite the prior year's inventory write-downs and lower costs from selling previously written-down inventory in 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.11485,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Micron disclose improvements in consolidated gross margin for fiscal year 2024, though the magnitude and underlying drivers differ significantly. AMD reported a modest increase in gross margin percentage from 46% to 49%, attributed to a favorable shift in revenue mix toward Data Center and Client segments. Micron reported a substantial improvement in gross margin percentage from -9% to 22%, driven by increases in average selling prices and manufacturing cost reductions, which recovered from prior year inventory write-down charges.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P044_S001",
+                    "paragraph_id": "amd_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Gross margin as a percentage of net revenue was 49% in 2024 compared to 46% in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P044_S002",
+                    "paragraph_id": "amd_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in gross margin was due to a favorable shift in revenue mix of higher Data Center and Client revenues, lower Gaming revenue, partially offset by the impact of lower Embedded revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D007",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P010_S002",
+                    "paragraph_id": "mu_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Our consolidated gross margin percentage improved to 22% for 2024 from negative 9% for 2023, as a result of improvements in margins for both DRAM and NAND products, primarily due to increases in average selling prices, and manufacturing cost reductions, the effects of charges to write down inventories to their NRV in 2023 and lower costs in 2024 from the sale of inventories written down in 2023 (as detailed in \"Inventory NRV write-downs\" below).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D056",
+            "peer_topic": "Fiscal 2024 gross margin performance and drivers",
+            "peer_summary": "Overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023, primarily driven by 217% growth in Data Center revenue and lower net inventory provisions as a percentage of revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.218737,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and NVIDIA attribute their 2024 gross margin increases to favorable revenue mix shifts, particularly in the Data Center segment, although the scale and specific factors differ. AMD's gross margin rose to 49% from 46% due to higher Data Center and Client revenues, partially offset by lower Gaming and Embedded revenue. NVIDIA's gross margin increased more dramatically to 72.7% from 56.9%, driven by 217% growth in Data Center revenue and lower net inventory provisions as a percentage of revenue.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P044_S001",
+                    "paragraph_id": "amd_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Gross margin as a percentage of net revenue was 49% in 2024 compared to 46% in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P044_S002",
+                    "paragraph_id": "amd_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in gross margin was due to a favorable shift in revenue mix of higher Data Center and Client revenues, lower Gaming revenue, partially offset by the impact of lower Embedded revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D056",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P059_S001",
+                    "paragraph_id": "nvda_2024_7_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P059_S002",
+                    "paragraph_id": "nvda_2024_7_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The year over year increase was primarily due to strong Data Center revenue growth of 217% and lower net inventory provisions as a percentage of revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidates (qcom_2024_7_D024 and qcom_2024_7_D011) report that QCOM's gross margin percentage remained flat in fiscal 2024. This lacks the specific explanatory details of revenue mix shifts or margin percentage changes (e.g., 'increased to X% from Y%') that characterize AMD's disclosure, making it insufficiently comparable to the detailed performance analysis provided by AMD."
+      }
+    ]
+  }
+}

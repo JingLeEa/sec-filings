@@ -1,0 +1,363 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "78648fa83cf987e1729e3c887798ff5a0e295324cf2a38ce521714ff9500e8aa",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D109",
+    "item": "7",
+    "target_topic": "Business Lending Revenue Decline",
+    "target_summary": "Business lending revenue decreased by $476 million in 2024 compared to 2023, driven by lower net interest income and leasing-related revenue, partially offset by higher tax credit activity.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0274",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the revenue change for 'Business Lending' within the Global Corporate, Global Commercial and Business Banking subset of Global Banking. The 2023 record details a $1.3 billion increase. The 2024 record details a $476 million decrease. The specific line item and segment scope match.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D099",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Business Lending revenue increased $1.3 billion in 2023 compared to 2022, driven by higher interest rates, revenue from tax-advantaged investment activities, and higher average loan balances.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D109",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Business lending revenue decreased by $476 million in 2024 compared to 2023, driven by lower net interest income and leasing-related revenue, partially offset by higher tax credit activity.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.364758,
+            "sequence_match_ratio": 0.333333,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "decreased",
+              "476",
+              "million",
+              "2024",
+              "2023",
+              "lower",
+              "net",
+              "interest",
+              "income",
+              "and",
+              "lower",
+              "leasing",
+              "related",
+              "revenue",
+              "partially",
+              "offset",
+              "by",
+              "credit",
+              "activity",
+              "in"
+            ],
+            "removed_tokens_sample": [
+              "increased",
+              "1",
+              "3",
+              "billion",
+              "2023",
+              "2022",
+              "interest",
+              "rates",
+              "higher",
+              "revenue",
+              "from",
+              "advantaged",
+              "investment",
+              "activities",
+              "and",
+              "the",
+              "impact",
+              "of",
+              "higher",
+              "average"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D099",
+            "score": 0.857377,
+            "normalised_score": 0.8574,
+            "label": "Modified",
+            "rationale": "Score 85.74% of ceiling with 27% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "Business Lending revenue swung from a $1.3 billion increase to a $476 million decrease. This reversal in revenue trajectory and the change in drivers (from interest rates/loan balances to lower NII/leasing revenue) represents a material change in business performance.",
+          "key_change": "Reversal of revenue growth trend"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0331",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the revenue performance for Business Lending within the Global Corporate, Global Commercial, and Business Banking segments. Both note a decrease in revenue (2024: $476M decrease; 2025: $698M decrease) driven primarily by lower net interest income.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D109",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Business lending revenue decreased by $476 million in 2024 compared to 2023, driven by lower net interest income and leasing-related revenue, partially offset by higher tax credit activity.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D100",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Banking > Global Corporate, Global Commercial and Business Banking",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Business Lending revenue decreased by $698 million in 2025 compared to 2024, primarily due to lower net interest income.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.61115,
+            "sequence_match_ratio": 0.588235,
+            "length_ratio": 0.545455,
+            "word_count_delta": -15,
+            "added_tokens_sample": [
+              "698",
+              "2025",
+              "2024"
+            ],
+            "removed_tokens_sample": [
+              "476",
+              "2024",
+              "2023",
+              "and",
+              "lower",
+              "leasing",
+              "related",
+              "revenue",
+              "partially",
+              "offset",
+              "by",
+              "higher",
+              "tax",
+              "credit",
+              "activity",
+              "in",
+              "affordable",
+              "housing"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2024_7_D109",
+            "score": 0.93263,
+            "normalised_score": 0.9326,
+            "label": "Reduced",
+            "rationale": "Score 93.26% of ceiling — content shrank from ~32 to ~18 words (0.6×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "The change is a routine annual update of revenue figures and their drivers. The 2025 disclosure simplifies the explanation by removing specific offsets (tax credit activity, leasing-related revenue) seen in 2024, attributing the decrease solely to lower net interest income. This is a standard period-over-period financial reporting update without a structural change in business dynamics.",
+          "key_change": "Update of revenue decrease amount and simplification of drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D343",
+            "peer_topic": "FY 2024 Net Interest Income and Margin Performance",
+            "peer_summary": "Citi's 2024 net interest income decreased 1% to $54.1 billion ($54.2 billion TEB), primarily due to lower non-Markets income from higher mortgage-backed securities funding costs in Corporate Treasury and lower Argentina investment revenue, partially offset by USPB and Wealth growth. The 2024 net interest margin decreased to 2.40% TEB from 2.46% in 2023, driven by the Argentina and funding cost factors.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.198579,
+            "relationship": "same_topic",
+            "comparison": "Both Bank of America and Citi report a year-over-year decline in net interest income for fiscal 2024. BAC attributes its $476 million decrease in business lending revenue to lower net interest income, while Citi reports a $0.8 billion decrease in total net interest income. Both identify specific funding cost pressures and revenue declines in specialized portfolios as primary drivers: BAC cites lower leasing-related revenue, whereas Citi points to higher funding costs in the mortgage-backed securities portfolio in Corporate Treasury and lower revenue from Argentina.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D109",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P118_S001",
+                    "paragraph_id": "bac_2024_7_P118",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Business lending revenue decreased $476 million in 2024 compared to 2023 primarily driven by lower net interest income and lower leasing-related revenue, partially offset by higher tax credit activity in affordable housing.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D343",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P492_S001",
+                    "paragraph_id": "c_2024_7_P492",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Citi's net interest income for 2024 decreased 1%, or approximately $0.8 billion, to $54.1 billion ($54.2 billion on a taxable equivalent basis) versus the prior year.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P492_S002",
+                    "paragraph_id": "c_2024_7_P492",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The decrease was primarily due to a decrease in non-Markets net interest income, largely driven by higher funding costs in the mortgage-backed securities portfolio in Corporate Treasury within All Other and lower revenue from Citi's net investment in Argentina, partially offset by growth in USPB and Wealth.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D050",
+            "peer_topic": "Net Interest Income Growth and Drivers",
+            "peer_summary": "Net interest income for 2024 was $8.06 billion, representing a 27% increase from 2023, driven by higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by a decrease in deposits with banks.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.143244,
+            "relationship": "related_topic",
+            "comparison": "In contrast to BAC's reported decrease in net interest income, Goldman Sachs reported a 27% increase in net interest income to $8.06 billion in 2024. Both companies discuss net interest income, but the trends and drivers are opposite. BAC attributes its decline to lower net interest income and leasing revenue, while GS attributes its growth to higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by an increase in interest expense.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D109",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P118_S001",
+                    "paragraph_id": "bac_2024_7_P118",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Business lending revenue decreased $476 million in 2024 compared to 2023 primarily driven by lower net interest income and lower leasing-related revenue, partially offset by higher tax credit activity in affordable housing.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P054_S002",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net interest income in the consolidated statements of earnings was $8.06 billion for 2024, 27% higher than 2023, reflecting an increase in interest income, partially offset by an increase in interest expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P054_S003",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in interest income primarily related to trading assets and investments (each reflecting the impact of higher average balances and higher average interest rates), collateralized agreements and other interest-earning assets (each reflecting the impact of higher average interest rates), partially offset by a decrease in interest income related to deposits with banks (reflecting the impact of lower average balances).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for JPM (jpm_2024_7_D064 and jpm_2024_7_D030) discuss accounts payable/liabilities and principal transactions revenue, respectively. Neither candidate addresses net interest income or business lending revenue trends comparable to BAC's disclosure."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D061",
+            "peer_topic": "Wealth Management Net Interest Revenue Performance and Drivers",
+            "peer_summary": "Wealth Management net interest revenues decreased 10% year-over-year to $7,313 million in 2024, primarily driven by lower average sweep deposits, partially offset by higher investment portfolio yields and lending growth.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.191404,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and Morgan Stanley report a decline in net interest-related revenue for 2024. BAC's business lending revenue fell by $476 million due to lower net interest income. Similarly, Morgan Stanley's Wealth Management net interest revenues decreased 10% to $7,313 million, driven by lower average sweep deposits. While both experienced declines, the specific drivers differ: BAC highlights lower net interest income and leasing revenue broadly, while MS cites deposit volume changes (sweep deposits) specific to its wealth management segment.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D109",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P118_S001",
+                    "paragraph_id": "bac_2024_7_P118",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Business lending revenue decreased $476 million in 2024 compared to 2023 primarily driven by lower net interest income and lower leasing-related revenue, partially offset by higher tax credit activity in affordable housing.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D061",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P064_S001",
+                    "paragraph_id": "ms_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net interest revenues of $7,313 million in 2024 decreased 10% compared with the prior year, primarily due to lower average sweep deposits, partially offset by higher yields on our investment portfolio and lending growth.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

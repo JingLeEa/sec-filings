@@ -1,0 +1,251 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "e3bbeb328165b4f739814dacc078817d4fcba50bce2d1ebc18dce0b545757be0",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D118",
+    "item": "7",
+    "target_topic": "Average Home Lending loans held-for-sale and fair value",
+    "target_summary": "Average Home Lending loans held-for-sale and loans at fair value were $7.1 billion, $4.8 billion, and $7.3 billion for the years ended December 31, 2024, 2023, and 2022, respectively.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0408",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure D118 reports average Home Lending loans held-for-sale and at fair value. There is no 2023 counterpart in the required IDs or provided records that matches this specific general 'Home Lending' average metric. The previous year's D353 was specific to government-insured loans (a subset), and D355/D353 pair relates to geographic concentration. Therefore, D118 has no matched counterpart.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D118",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average Home Lending loans held-for-sale and loans at fair value were $7.1 billion, $4.8 billion, and $7.3 billion for the years ended December 31, 2024, 2023, and 2022, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 35,
+            "added_tokens_sample": [
+              "c",
+              "average",
+              "home",
+              "lending",
+              "loans",
+              "held",
+              "for",
+              "sale",
+              "and",
+              "loans",
+              "at",
+              "fair",
+              "value",
+              "were",
+              "7",
+              "1",
+              "billion",
+              "4",
+              "8",
+              "billion"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.8,
+          "reason": "This is a new disclosure introducing specific metrics for 'Home Lending loans held-for-sale and at fair value' for the first time in this context. While the amounts ($7.1B, $4.8B, $7.3B) are disclosed, the introduction of a specific line item for fair value held-for-sale loans in the segment results indicates a potential shift in how the Home Lending segment's liquidity or trading assets are monitored and reported, which is meaningful for financial analysis. It adds specific data points previously absent from the aligned comparison.",
+          "key_change": "Introduction of Home Lending fair value loan metrics"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0545",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D118 and D130 (2024) specify the exclusion of average consumer loans held-for-sale and loans at fair value from net charge-off/recovery rate calculations. D348 (2025) provides the current year figures for these same excluded items and confirms their exclusion from the rate calculation.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D118",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average Home Lending loans held-for-sale and loans at fair value were $7.1 billion, $4.8 billion, and $7.3 billion for the years ended December 31, 2024, 2023, and 2022, respectively.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D130",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Several footnotes clarify accounting treatments: loans held-for-sale/fair value reflect Markets positions; client coverage segments are described elsewhere; First Republic deposits were transferred between segments in Q4 2023; allowances for nonaccrual loans are specified; government-insured past-due mortgage loans are excluded based on guarantees; and net charge-off calculations exclude loans held-for-sale/fair value.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D348",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CONSUMER CREDIT PORTFOLIO",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Average consumer loans held-for-sale and loans at fair value were $23.7 billion and $17.2 billion for the years ended December 31, 2025 and 2024, respectively, and these amounts were excluded when calculating net charge-off/(recovery) rates.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.536218,
+            "sequence_match_ratio": 0.2397,
+            "length_ratio": 0.181416,
+            "word_count_delta": -185,
+            "added_tokens_sample": [
+              "k",
+              "consumer",
+              "23",
+              "17",
+              "2",
+              "2025",
+              "and",
+              "amounts",
+              "rates"
+            ],
+            "removed_tokens_sample": [
+              "c",
+              "home",
+              "lending",
+              "1",
+              "billion",
+              "4",
+              "8",
+              "7",
+              "3",
+              "2023",
+              "and",
+              "2022",
+              "a",
+              "loans",
+              "held",
+              "for",
+              "sale",
+              "and",
+              "loans",
+              "at"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2024_7_D118",
+            "score": 0.907565,
+            "normalised_score": 0.9076,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 90.76% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The 2025 disclosure updates the average amount of consumer loans held-for-sale and at fair value to $23.7 billion and $17.2 billion, respectively, a significant increase from the 2024 figures of $7.1 billion and $4.8 billion. This reflects a substantial change in the composition and size of the excluded assets affecting net charge-off calculations, indicating a meaningful shift in the company's financial position and risk management scope.",
+          "key_change": "Significant increase in average loans held-for-sale and at fair value"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Bank of America's candidates disclose commercial loans under the fair value option and commercial real estate loan composition. These topics are distinct from the target's specific disclosure regarding the average balance of consumer 'Home Lending' loans held-for-sale and at fair value. The subjects (commercial vs. consumer/home lending) and metrics differ substantially."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Citigroup's candidates disclose commercial credit card exposure and overall Banking segment asset composition. These do not address the specific topic of average loans held-for-sale and at fair value within a home lending or consumer context comparable to JPMorgan's disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Goldman Sachs' candidates discuss Platform Solutions gross loans and other unencumbered assets. These topics are unrelated to the specific accounting classification and volume of loans held-for-sale and at fair value in the consumer/home lending segment disclosed by JPMorgan."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D287",
+            "peer_topic": "Customer types, market activities, and classification of loans and lending commitments",
+            "peer_summary": "The company provides loans and commitments to corporate, institutional, and high-net-worth clients, and purchases loans in the secondary market; these are classified as held for investment, held for sale, or carried at fair value.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.119869,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Morgan Stanley disclose that loans may be carried at fair value or held for sale, confirming alignment on loan classification policies. However, JPMorgan provides specific quantitative averages for these categories ($7.1 billion in 2024), whereas Morgan Stanley discloses the qualitative framework and revenue implications (mark-to-market gains/losses) without providing comparable aggregate balances for this specific classification in the supplied text.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D118",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P163_S001",
+                    "paragraph_id": "jpm_2024_7_P163",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(c)Average Home Lending loans held-for-sale and loans at fair value were $7.1 billion, $4.8 billion and $7.3 billion for the years ended December 31, 2024, 2023 and 2022, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D287",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P328_S003",
+                    "paragraph_id": "ms_2024_7_P328",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Loans and lending commitments are either held for investment, held for sale or carried at fair value.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,337 @@
+{
+  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
+  "request_hash": "4bf1a079c73db61bbabec4b92ea4b7b7d50d6bd4e6b98706a5682194dce02c2f",
+  "result": {
+    "target_ticker": "MU",
+    "target_disclosure_id": "mu_2024_7_D012",
+    "item": "7",
+    "target_topic": "CNBU operating income change 2024",
+    "target_summary": "CNBU operating income improved in 2024 compared to 2023, driven by higher bit shipments, increased average selling prices, and cost reductions, partially offset by higher R&D expenses.",
+    "target_source_status": "needs_review",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "mu_2023_2024_M0217",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No matching required disclosure found for CNBU operating income in 2023. The 2023 filing contains operating income data in the ungrouped/excluded audit hit mu_2023_7_P018_AUDIT (mu_2023_7_P018_S001/S002), but this is not a candidate disclosure ID in the required_ids list. The automatic search returned revenue disclosures (D022, D019) which are a different topic (Revenue vs Operating Income). Therefore, this 2024 disclosure is unmatched in the current scope.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2024_7_D012",
+            "item": "7",
+            "section": "Results of Operations > Operating Income (Loss) by Business Unit",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "CNBU operating income improved in 2024 compared to 2023, driven by higher bit shipments, increased average selling prices, and cost reductions, partially offset by higher R&D expenses.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 45,
+            "added_tokens_sample": [
+              "changes",
+              "in",
+              "operating",
+              "income",
+              "or",
+              "loss",
+              "for",
+              "each",
+              "business",
+              "unit",
+              "for",
+              "2024",
+              "as",
+              "compared",
+              "to",
+              "2023",
+              "were",
+              "as",
+              "follows",
+              "cnbu"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "This is a new disclosure segment in 2024 detailing 'Operating Income (Loss) by Business Unit'. Prior to this, the company did not disclose operating income/loss specifically broken down by unit in this section. The explicit reporting of CNBU improvement driven by ASPs and shipments provides new, granular financial data about segment performance, changing the level of financial transparency and exposure.",
+          "key_change": "Introduction of operating income disclosure by business unit"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "mu_2024_2025_M0227",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "2024 D012 (CNBU Operating Income) describes an improvement driven by bit shipments, ASPs, and cost reductions. 2025 D025 (CMBU Operating Income) describes an improvement with nearly identical drivers (bit shipments, ASPs, cost reductions). CMBU corresponds to CNBU (Client/Commercial) in the new naming convention. This is a strong topic match.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2024_7_D012",
+            "item": "7",
+            "section": "Results of Operations > Operating Income (Loss) by Business Unit",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "CNBU operating income improved in 2024 compared to 2023, driven by higher bit shipments, increased average selling prices, and cost reductions, partially offset by higher R&D expenses.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2025_7_D025",
+            "item": "7",
+            "section": "Results of Operations > Operating Income (Loss) by Business Unit",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "CMBU operating income improved in 2024 due to higher bit shipments, increases in average selling prices, and manufacturing cost reductions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D025",
+            "peer_topic": "Client segment operating income performance",
+            "peer_summary": "Client operating income improved to an $897 million profit in 2024 from a $46 million operating loss in 2023, primarily due to higher revenue partially offset by higher operating expenses.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.304197,
+            "relationship": "same_topic",
+            "comparison": "Both MU and AMD report significant improvements in segment operating income for fiscal 2024. MU attributes its CNBU operating income improvement to higher bit shipments, increased average selling prices (ASPs), and cost reductions. Similarly, AMD reports that its Client segment operating income improved to a profit, primarily due to higher revenue, though it was partially offset by higher operating expenses. Both companies experienced positive operating income shifts driven by revenue growth factors, though MU specifically highlights cost reductions and ASP increases as drivers, while AMD highlights the transition from a loss to a profit in its Client segment.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P017_S002",
+                    "paragraph_id": "mu_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "• CNBU operating income (loss) improved primarily due to higher bit shipments, increases in average selling prices, and cost reductions, partially offset by higher R&D expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P037_S001",
+                    "paragraph_id": "amd_2024_7_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Client operating income was $897 million in 2024, compared to operating loss of $46 million in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P037_S002",
+                    "paragraph_id": "amd_2024_7_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in operating income was primarily due to higher revenue, partially offset by higher operating expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D023",
+            "peer_topic": "Data Center Segment Financial Performance",
+            "peer_summary": "Data Center net revenue increased 94% to $12.6 billion in 2024 from $6.5 billion in 2023, primarily driven by higher sales of AMD Instinct GPUs and AMD EPYC CPUs. Operating income rose to $3.5 billion in 2024 from $1.3 billion in 2023, mainly due to higher revenue partially offset by increased R&D investment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.201644,
+            "relationship": "same_topic",
+            "comparison": "Both MU and AMD disclose substantial growth in their respective Data Center-focused segments, driven by specific high-demand products. MU's CNBU operating income improved due to higher bit shipments and ASPs, while AMD's Data Center operating income rose to $3.5 billion, primarily due to higher revenue driven by AMD Instinct GPUs and EPYC CPUs. Both companies benefited from strong demand in the data center/AI infrastructure space, with MU leveraging memory/bit shipments and AMD leveraging GPU/CPU sales.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P017_S002",
+                    "paragraph_id": "mu_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "• CNBU operating income (loss) improved primarily due to higher bit shipments, increases in average selling prices, and cost reductions, partially offset by higher R&D expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P035_S001",
+                    "paragraph_id": "amd_2024_7_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Data Center operating income was $3.5 billion in 2024, compared to operating income of $1.3 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P035_S002",
+                    "paragraph_id": "amd_2024_7_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in operating income was primarily due to higher revenue, partially offset by higher R&D investment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses semiconductor hardware operating income drivers such as shipments, ASPs, or cost reductions. The provided AVGO candidates focus on software segment income (VMware) and networking/broadband hardware revenue, which are not comparable to MU's CNBU memory/bit business dynamics."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_7_D082",
+            "peer_topic": "DCAI Revenue Composition Changes",
+            "peer_summary": "DCAI revenue increased 1% from 2023, driven by higher server revenue from high core count products, which increased average selling prices but lowered volume compared to 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.124099,
+            "relationship": "same_topic",
+            "comparison": "Both MU and INTC discuss the impact of Average Selling Prices (ASPs) on their revenue and operating performance. MU notes that increased ASPs were a positive driver for CNBU operating income improvement. In contrast, INTC's DCAI segment saw its revenue increase driven by higher ASPs from high core count products, but this was accompanied by lower volume. Both disclosures highlight ASP dynamics as a key variable in their respective data center/server revenue streams, though the outcomes (positive for MU, mixed with volume declines for INTC) differ.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P017_S002",
+                    "paragraph_id": "mu_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "• CNBU operating income (loss) improved primarily due to higher bit shipments, increases in average selling prices, and cost reductions, partially offset by higher R&D expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D082",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P076_S006",
+                    "paragraph_id": "intc_2024_7_P076",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "DCAI revenue increased 1% from 2023 driven by higher server revenue primarily from high core count products, which increased ASPs and lowered volume compared to 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D047",
+            "peer_topic": "Segment Operating Income Increase",
+            "peer_summary": "The year-on-year increase in Compute & Networking and Graphics operating income was driven by higher revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.165817,
+            "relationship": "same_topic",
+            "comparison": "Both MU and NVDA report year-over-year increases in operating income for their primary growth segments. NVDA's Compute & Networking operating income increase was driven by higher revenue, specifically from AI-related products. MU's CNBU operating income also improved, driven by higher bit shipments and increased ASPs. Both companies reflect a sector-wide trend of operating income expansion in 2024 fueled by strong revenue growth in data center and AI-adjacent markets.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P017_S002",
+                    "paragraph_id": "mu_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "• CNBU operating income (loss) improved primarily due to higher bit shipments, increases in average selling prices, and cost reductions, partially offset by higher R&D expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D047",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P050_S001",
+                    "paragraph_id": "nvda_2024_7_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Reportable segment operating income - The year-on-year increase in Compute & Networking and Graphics operating income was driven by higher revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses semiconductor memory or bit-level operating income drivers. The QCOM candidates focus on QCT segment revenue drivers (handsets, automotive, IoT) and EBT margins, which pertain to connectivity/mobile chips rather than the memory/storage business model and ASP/shipment dynamics central to MU's CNBU disclosure."
+      }
+    ]
+  }
+}

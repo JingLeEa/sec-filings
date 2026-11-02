@@ -1,0 +1,330 @@
+{
+  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
+  "request_hash": "5d29e65a30eb91933b071492ce5ccc4b13065c795b4769d8346cbe5b4e5362d1",
+  "result": {
+    "target_ticker": "QCOM",
+    "target_disclosure_id": "qcom_2024_1A_D013",
+    "item": "1A",
+    "target_topic": "Apple Product Mix Risk",
+    "target_summary": "Apple purchases MDM products which have lower revenue and margin contributions than combined modem and application processor products; if Apple takes device share from customers using integrated products, revenues and margins may be negatively impacted.",
+    "target_source_status": "needs_review",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "qcom_2023_2024_M0044",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "The 2023 disclosure D001 (P009_S001, S002) details the risk that Apple's purchase of MDM products with lower margins, and Apple taking device share from integrated product customers, negatively impacts Qualcomm's revenues and margins. The 2024 disclosure D013 (P009_S001, S002) contains identical wording on this specific Apple-related margin risk.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2023_1A_D001",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Qualcomm derives a significant portion of revenues from a small number of customers and licensees, particularly in the premium handset market and among Chinese OEMs. This concentration creates risks including lower product prices due to customer purchasing power, revenue fluctuations from customer product launch timing, adverse impacts if licensees fail to meet obligations or renew agreements, and negative effects on licensing revenues if licensee sales volumes or average selling prices decline.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_1A_D013",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Apple purchases MDM products which have lower revenue and margin contributions than combined modem and application processor products; if Apple takes device share from customers using integrated products, revenues and margins may be negatively impacted.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "qcom_2024_2025_M0001",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure D013 specifically addresses the risk that Apple purchases MDM products with lower margins and may take device share, negatively impacting revenues. In the 2025 filing, the text containing this specific information (P018 and P023) was identified in the audit hits as 'ungrouped_or_excluded_evidence' and was not included in the selected sentences of any current disclosure ID, including the broad Operating Businesses disclosure (D024). D024's selected sentences cover general customer purchasing and concentration but do not cite the specific Apple MDM/vertical integration text found in P018/P023. Therefore, there is no valid counterpart ID in the 2025 record set that contains the specific selected evidence for this topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_1A_D013",
+            "item": "1A",
+            "section": "RISKS RELATED TO OUR OPERATING BUSINESSES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Apple purchases MDM products which have lower revenue and margin contributions than combined modem and application processor products; if Apple takes device share from customers using integrated products, revenues and margins may be negatively impacted.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -61,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "apple",
+              "purchases",
+              "our",
+              "mdm",
+              "or",
+              "thin",
+              "modem",
+              "products",
+              "which",
+              "do",
+              "not",
+              "include",
+              "our",
+              "integrated",
+              "application",
+              "processor",
+              "technology",
+              "and",
+              "which",
+              "have"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.8,
+          "reason": "The 2024 disclosure specifically quantifies the financial risk of Apple purchasing lower-margin MDM products and taking device share, directly linking this to negative impacts on revenues and margins. Its removal eliminates a specific, high-consequence customer dependency risk disclosure, shifting to a more generic customer concentration narrative.",
+          "key_change": "Removal of specific Apple margin and device share risk"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that addresses product mix risks affecting margins. AMD's candidates (amd_2024_1A_D053, amd_2024_1A_D052) focus on macroeconomic conditions, customer concentration, and payment defaults, which are distinct from the specific product mix margin risk disclosed by Qualcomm.",
+        "agent_warnings": [
+          "repaired_peer_ticker:INTEL->INTC:intc_2024_1A_D011"
+        ]
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_1A_D068",
+            "peer_topic": "Gross margin dependencies",
+            "peer_summary": "Gross margin depends on product mix, price erosion, acquisitions, capacity utilization, and commodity prices; shifts in sales mix, competition, and demand fluctuations can negatively impact margins, while supply imbalances may create unsustainable high margins.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.068428,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose that their gross margins are sensitive to product mix shifts. Qualcomm specifically highlights the risk that Apple's purchase of lower-margin MDM products, instead of higher-margin integrated products, negatively impacts revenues and margins. Similarly, Broadcom states that its gross margin is highly dependent on product mix, and a shift in sales mix away from higher-margin products could adversely affect future gross margin percentages.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1A_D013",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P009_S001",
+                    "paragraph_id": "qcom_2024_1A_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Apple purchases our MDM (or thin modem) products, which do not include our integrated application processor technology, and which have lower revenue and margin contributions than our combined modem and application processor products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_1A_P009_S002",
+                    "paragraph_id": "qcom_2024_1A_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Consequently, to the extent Apple takes device share from our customers who purchase our integrated modem and application processor products, our revenues and margins may be negatively impacted.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_1A_D068",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1A_P092_S001",
+                    "paragraph_id": "avgo_2024_1A_P092",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Our gross margin is dependent on a number of factors, including our product mix, price erosion, acquisitions we may make, level of capacity utilization and commodity prices.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_1A_P093_S002",
+                    "paragraph_id": "avgo_2024_1A_P093",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "A shift in sales mix away from our higher margin products, as well as the timing and amount of our software licensing and non-product revenue, could adversely affect our future gross margin percentages.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_1A_D011",
+            "peer_topic": "Product demand and margin variability risks",
+            "peer_summary": "Changes in product demand, macroeconomic conditions, and competitive pressures can adversely affect Intel's revenue and margins, with shifts from higher-margin to lower-margin products (e.g., Intel Core Ultra 200V) causing margin decreases.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.051036,
+            "relationship": "same_topic",
+            "comparison": "Both companies identify product mix changes as a driver of margin variability. Qualcomm warns that selling lower-margin MDM products to Apple compared to integrated solutions negatively impacts margins. Intel similarly discloses that its gross margin can be reduced by shifts in demand, specifically noting that some higher-priced products (like Intel Core Ultra 200V) have lower margins because they are produced at external foundries, and that ancillary products have significantly lower margins.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1A_D013",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P009_S001",
+                    "paragraph_id": "qcom_2024_1A_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Apple purchases our MDM (or thin modem) products, which do not include our integrated application processor technology, and which have lower revenue and margin contributions than our combined modem and application processor products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_1A_P009_S002",
+                    "paragraph_id": "qcom_2024_1A_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Consequently, to the extent Apple takes device share from our customers who purchase our integrated modem and application processor products, our revenues and margins may be negatively impacted.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_1A_D011",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1A_P025_S004",
+                    "paragraph_id": "intc_2024_1A_P025",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Changes in the demand for our products have in the past and may in the future reduce our revenue, lower our gross margin, or require us to write down the value of our assets.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_1A_P027_S004",
+                    "paragraph_id": "intc_2024_1A_P027",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Some of our higher-priced products, however, such as the Intel Core Ultra 200V processors launched in September 2024, have lower margins as they are produced at external foundries rather than in our manufacturing facilities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_1A_D012",
+            "peer_topic": "Product Specification Failures and Portfolio Strategy",
+            "peer_summary": "Failure to supply products meeting customer specifications may require selling at lower prices, reducing margins, while shifts in product mix driven by portfolio optimization strategies also impact gross margins.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.039622,
+            "relationship": "same_topic",
+            "comparison": "Both companies explicitly link product mix shifts to gross margin impacts. Qualcomm discloses that Apple's purchase of lower-margin MDM products (vs. integrated products) negatively impacts revenues and margins. Micron discloses that its gross margins are impacted by shifts in product mix driven by its strategy to optimize its portfolio, and that failing to meet specifications may require selling products at lower prices, reducing gross margins.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_1A_D013",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P009_S001",
+                    "paragraph_id": "qcom_2024_1A_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Apple purchases our MDM (or thin modem) products, which do not include our integrated application processor technology, and which have lower revenue and margin contributions than our combined modem and application processor products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_1A_P009_S002",
+                    "paragraph_id": "qcom_2024_1A_P009",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Consequently, to the extent Apple takes device share from our customers who purchase our integrated modem and application processor products, our revenues and margins may be negatively impacted.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1A_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1A_P012_S001",
+                    "paragraph_id": "mu_2024_1A_P012",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In addition, if we are unable to supply products that meet customer design and performance specifications, we may be required to sell such products at lower average selling prices, which may reduce our gross margins.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1A_P012_S002",
+                    "paragraph_id": "mu_2024_1A_P012",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Our gross margins may also be impacted by shifts in product mix, driven by our strategy to optimize our portfolio to best respond to changing market dynamics.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that addresses product mix risks affecting margins. NVDA's candidates (nvda_2024_1A_D011, nvda_2024_1A_D038) focus on tax liabilities and energy consumption concerns, which are not comparable to Qualcomm's product mix margin risk."
+      }
+    ]
+  }
+}

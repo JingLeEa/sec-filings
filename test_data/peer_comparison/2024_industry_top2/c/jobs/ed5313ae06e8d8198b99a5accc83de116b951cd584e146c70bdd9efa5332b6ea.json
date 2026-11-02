@@ -1,0 +1,238 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "9b755d2d4cf188e19b5fd096cc46d72ef071eb5b6eef46965175c9a5759950c2",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_1_D019",
+    "item": "1",
+    "target_topic": "Downside Scenario Assumptions",
+    "target_summary": "The downside scenario assumes a recession with an average U.S. unemployment rate of 6.8% over the eight-quarter recovery and stabilization period, peaking at a 3.4% difference in Q2 2026, and a 1.8% year-over-year U.S. real GDP contraction in 2025.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0354",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures define the specific macroeconomic assumptions of the 'downside scenario', including recession parameters, unemployment rates, and GDP contraction figures.",
+        "previous_disclosures": [
+          {
+            "item": "1",
+            "section": "OVERVIEW > Macroeconomic Variables > Scenario Weighting",
+            "summary": "The downside scenario assumes a recession with an average U.S. unemployment rate of 6.8% over the eight-quarter recovery and stabilization period, peaking at a 3.4% difference in Q2 2026, and a 1.8% year-over-year U.S. real GDP contraction in 2025.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_1_D019",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "1",
+            "section": "OVERVIEW > SIGNIFICANT ACCOUNTING POLICIES AND SIGNIFICANT ESTIMATES > Citi's Allowance for Credit Losses (ACL) > Macroeconomic Variables > Scenario Weighting",
+            "summary": "The downside scenario includes more adverse assumptions than the base or weighted scenarios, specifically reflecting a recession with an average U.S. unemployment rate of 6.9% (peaking 3.5% higher than base in Q2 2027) and a 1.8% year-over-year U.S. real GDP contraction in 2026.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2025_1_D034",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 1.247191,
+            "change_taxonomy": "Modified",
+            "word_count_delta": 22,
+            "cosine_similarity": 0.896772,
+            "added_tokens_sample": [
+              "the",
+              "weighted",
+              "scenario",
+              "assumptions",
+              "or",
+              "9",
+              "5",
+              "2027",
+              "the",
+              "weighted",
+              "average",
+              "u",
+              "s",
+              "unemployment",
+              "rate",
+              "that",
+              "considers",
+              "all",
+              "three",
+              "probability"
+            ],
+            "sequence_match_ratio": 0.84,
+            "removed_tokens_sample": [
+              "8",
+              "4",
+              "2026",
+              "2025",
+              "3"
+            ]
+          },
+          "semantic": {
+            "label": "Relocated",
+            "score": 0.987787,
+            "method": "embedding_cosine",
+            "rationale": "Score 98.78% of ceiling — content is similar but section changed from 'OVERVIEW > Macroeconomic Variables > Scenario Weighting' to 'OVERVIEW > SIGNIFICANT ACCOUNTING POLICIES AND SIGNIFICANT ESTIMATES > Citi's Allowance for Credit Losses (ACL) > Macroeconomic Variables > Scenario Weighting'.",
+            "matched_id": "c_2024_1_D019",
+            "normalised_score": 0.9878
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The downside scenario macroeconomic assumptions were updated: peak unemployment difference increased from 3.4% to 3.5%, the peak timing shifted from Q2 2026 to Q2 2027, and the GDP contraction year shifted from 2025 to 2026. These changes meaningfully alter the risk parameters and stress testing assumptions underlying the ACL, indicating a material change in the company's view of adverse economic conditions.",
+          "key_change": "Modification of downside scenario recession parameters and timing"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_1_D040",
+            "peer_topic": "CCAR stress testing process and outcomes",
+            "peer_summary": "The Federal Reserve conducts annual CCAR stress tests using hypothetical economic scenarios that may affect the Company's SCB levels, as evidenced by the 2024 increase in the SCB result.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.020829,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and Bank of America disclose the use of hypothetical economic scenarios for regulatory stress testing under the CCAR framework. Citi explicitly describes its internal downside scenario assumptions, noting it 'incorporates more adverse macroeconomic assumptions than the base scenario' and reflects a recession with specific unemployment and GDP metrics. Similarly, Bank of America states that 'the Federal Reserve conducts stress testing on parts of our business using hypothetical economic scenarios prepared by the Federal Reserve' and notes that these scenarios 'may affect our CCAR stress test results, which may impact the level of our SCB.' While Citi details the specific macroeconomic parameters of its own scenario, Bank of America focuses on the regulatory process and the impact of Federal Reserve scenarios on its capital buffers.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1_D019",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1_P033_S001",
+                    "paragraph_id": "c_2024_1_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Citi's downside scenario incorporates more adverse macroeconomic assumptions than the base scenario.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_1_P033_S002",
+                    "paragraph_id": "c_2024_1_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "For example, compared to the base scenario, Citi's downside scenario reflects a recession, including an elevated average U.S. unemployment rate of 6.8% over the eight-quarter R&S period, with a peak difference of 3.4% in the second quarter of 2026.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1_D040",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1_P035_S003",
+                    "paragraph_id": "bac_2024_1_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "As part of its CCAR, the Federal Reserve conducts stress testing on parts of our business using hypothetical economic scenarios prepared by the Federal Reserve.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_1_P035_S004",
+                    "paragraph_id": "bac_2024_1_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Those scenarios may affect our CCAR stress test results, which may impact the level of our SCB.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of the retrieved candidate disclosures for GS (gs_2024_1_D187 on tax rate risk, gs_2024_1_D026 on investment revenue) concern macroeconomic stress testing, downside scenario assumptions, or CCAR capital buffer determinations. The topics are unrelated to the target's focus on adverse economic assumptions."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_1_D010",
+            "peer_topic": "CCAR Stress Testing and SCB Requirements",
+            "peer_summary": "JPMorgan Chase is subject to annual supervisory stress tests under the CCAR framework and must submit an annual capital plan, with the Federal Reserve using severely adverse scenario results to determine the Stress Capital Buffer (SCB); the firm is required to file its 2025 CCAR submission by April 5, 2025, with final SCB requirements effective October 1, 2025, amid pending changes to the framework and legal challenges.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.01542,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and JPMorgan Chase disclose their participation in the Federal Reserve's annual Comprehensive Capital Analysis and Review (CCAR) and the use of adverse scenarios. Citi details its 'downside scenario' which 'incorporates more adverse macroeconomic assumptions than the base scenario,' including a recession and elevated unemployment. JPMorgan Chase describes the regulatory framework where 'the Federal Reserve uses the results under the severely adverse scenario from its supervisory stress test to determine the Firm's Stress Capital Buffer (\"SCB\") requirement.' Both companies link these adverse scenario outcomes directly to their capital planning and buffer requirements.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1_D019",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1_P033_S001",
+                    "paragraph_id": "c_2024_1_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Citi's downside scenario incorporates more adverse macroeconomic assumptions than the base scenario.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_1_P033_S002",
+                    "paragraph_id": "c_2024_1_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "For example, compared to the base scenario, Citi's downside scenario reflects a recession, including an elevated average U.S. unemployment rate of 6.8% over the eight-quarter R&S period, with a peak difference of 3.4% in the second quarter of 2026.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1_D010",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1_P016_S002",
+                    "paragraph_id": "jpm_2024_1_P016",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "As a large BHC, JPMorganChase is subject to supervisory stress testing administered by the Federal Reserve as part of the Federal Reserve's annual Comprehensive Capital Analysis and Review (\"CCAR\") framework.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_1_P016_S004",
+                    "paragraph_id": "jpm_2024_1_P016",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The Federal Reserve uses the results under the severely adverse scenario from its supervisory stress test to determine the Firm's Stress Capital Buffer (\"SCB\") requirement for the coming year, which forms part of the Firm's applicable capital buffers.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of the retrieved candidate disclosures for MS (ms_2024_1_D025 on net capital rules, ms_2024_1_D015 on resolution planning) concern macroeconomic stress testing or downside scenario assumptions. ms_2024_1_D015 mentions recovery plans for 'prolonged financial stress' but focuses on resolution and recovery strategy rather than the specific macroeconomic scenario inputs (like unemployment/GDP rates) used for CCAR stress testing as described in the target."
+      }
+    ]
+  }
+}

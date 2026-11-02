@@ -1,0 +1,225 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "ab6064fd46caaeffe57d2ddbe71195417666f76238e4a57fab6b0c7e60eceb8c",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_8_D643",
+    "item": "8",
+    "target_topic": "Tax reimbursement payments",
+    "target_summary": "Parent Company reimbursements for taxes paid on behalf of subsidiaries were $5.0 billion, $13.2 billion, and $11.3 billion for the years ended December 31, 2024, 2023, and 2022, respectively.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M1394",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "The 2023 disclosure D693 covers Parent Company-only financial statements with specific footnotes: (a) interest expense offsets, (b) LTD maturity, (c) guarantees reference, (d) tax reimbursements. The 2024 disclosures split these details: D641 presents the Parent Co-only statements table (analogous to D693's main table), D642 presents the LTD maturity amounts (analogous to D693's note b), and D643 presents the tax reimbursement amounts (analogous to D693's note d). D693 also mentions guarantees (note c), which links to D594/595, but D641/D642/D643 are the direct structural counterparts for the table and its specific quantitative footnotes presented in the Parent Co section.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_8_D693",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 33 - Parent Company",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provided tables present Parent Company-only financial statements, with specific notes detailing intercompany derivative hedge offsets, long-term debt maturity schedules, subsidiary guarantees, and tax payment reimbursements.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D641",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 33 - Parent Company",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The provided tables present Parent Company-only financial statements.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D642",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 33 - Parent Company",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "At December 31, 2024, Parent Company long-term debt contractually maturing in 2025 through 2029 totaled $7.7 billion, $29.3 billion, $20.2 billion, $35.0 billion, and $18.5 billion, respectively.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_8_D643",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 33 - Parent Company",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Parent Company reimbursements for taxes paid on behalf of subsidiaries were $5.0 billion, $13.2 billion, and $11.3 billion for the years ended December 31, 2024, 2023, and 2022, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M1340",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report Parent Company tax payments/reimbursements, specifically 'taxes paid on behalf of certain of its subsidiaries that are subsequently reimbursed.' D643 reports $5.0 billion for 2024. D679 reports $5.0 billion for 2024 (comparing 2025, 2024, 2023). This is a direct topic and data match.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D643",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 33 - Parent Company",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Parent Company reimbursements for taxes paid on behalf of subsidiaries were $5.0 billion, $13.2 billion, and $11.3 billion for the years ended December 31, 2024, 2023, and 2022, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_8_D679",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 33 - Parent Company",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Parent Company tax payments include taxes paid on behalf of subsidiaries that are subsequently reimbursed, with reimbursement amounts of $713 million, $5.0 billion, and $13.2 billion for the years ended December 31, 2025, 2024, and 2023, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.894635,
+            "sequence_match_ratio": 0.878505,
+            "length_ratio": 0.981481,
+            "word_count_delta": -1,
+            "added_tokens_sample": [
+              "e",
+              "713",
+              "million",
+              "and",
+              "2025",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "d",
+              "billion",
+              "and",
+              "11",
+              "3",
+              "and",
+              "2022"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_8_D643",
+            "score": 1.014278,
+            "normalised_score": 1.0143,
+            "label": "Unchanged",
+            "rationale": "Score 101.43% of ceiling — semantically identical despite surface differences (word overlap 78%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.75,
+          "reason": "The disclosure updates the reimbursement amounts for taxes paid on behalf of subsidiaries. The 2025 reimbursement is $713 million, a significant decrease from the $5.0 billion reported in 2024. This quantitative change in intercompany tax flows represents a meaningful update to the financial position and cash flow dynamics, although it may be routine for large banks, the magnitude of the drop (approx 85%) is notable.",
+          "key_change": "Significant decrease in tax reimbursement amount"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for BAC (bac_2024_8_D165 on nonperforming loans and bac_2024_8_D099 on interchange fees) concern credit risk and payment network revenue, respectively. Neither candidate addresses Parent Company tax payments, subsidiary settlements, or intercompany cash flows related to taxes, which is the specific topic of the JPM disclosure."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for C (c_2024_8_D351 on corporate loan sales and c_2024_8_D520 on net investment hedge gains) concern asset disposition and foreign currency hedge accounting. These topics are unrelated to Parent Company tax reimbursement payments and subsidiary settlements disclosed by JPM."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for GS (gs_2024_8_D581 on cash payments for interest and gs_2024_8_D582 on cash payments for income taxes) report consolidated cash payments to external tax authorities. They do not disclose the specific intercompany mechanism of Parent Company payments on behalf of subsidiaries that are subsequently reimbursed or settled between the Parent and subsidiaries, which is the core subject of JPM's Note 33 disclosure."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D485",
+            "peer_topic": "Parent Company Tax Payments and Subsidiary Settlements",
+            "peer_summary": "The Parent Company made total tax payments net of refunds, including taxes paid on behalf of subsidiaries which were subsequently settled between the Parent and these subsidiaries, with settlement amounts of $1.6 billion, $1.6 billion, and $2.6 billion for 2024, 2023, and 2022, respectively.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.499644,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan Chase (JPM) and Morgan Stanley (MS) disclose Parent Company tax payments on behalf of subsidiaries that are subsequently settled with or reimbursed by the subsidiaries. Both companies report that the Parent Company makes these tax payments to authorities and recovers the amounts via intercompany settlements. However, the scale differs significantly: JPM reported $5.0 billion in reimbursements for 2024, whereas MS reported $1.6 billion in settlements for the same period. Additionally, MS explicitly frames this as 'settlements received from subsidiaries' in its cash flow context, while JPM refers to them as 'reimbursements' in its note to financial statements.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D643",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P952_S001",
+                    "paragraph_id": "jpm_2024_8_P952",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(d)Represents payments, net of refunds, made by the Parent Company to various taxing authorities and includes taxes paid on behalf of certain of its subsidiaries that are subsequently reimbursed.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P952_S002",
+                    "paragraph_id": "jpm_2024_8_P952",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The reimbursements were $5.0 billion, $13.2 billion, and $11.3 billion for the years ended December 31, 2024, 2023 and 2022, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D485",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P605_S001",
+                    "paragraph_id": "ms_2024_8_P605",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "1.Represents total payments, net of refunds, made to various tax authorities and includes taxes paid on behalf of certain subsidiaries that are subsequently settled between the Parent Company and these subsidiaries.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P605_S002",
+                    "paragraph_id": "ms_2024_8_P605",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The settlements received from subsidiaries were $1.6 billion, $1.6 billion and $2.6 billion for 2024, 2023 and 2022, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

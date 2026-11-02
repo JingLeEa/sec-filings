@@ -1,0 +1,183 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "f487facd3328dcf28ad8f533f6c82c794edb569defce9f4909c6a814fb6da490",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D121",
+    "item": "7",
+    "target_topic": "Total payments transaction volume definition",
+    "target_summary": "Total payments transaction volume includes debit and credit card sales volume and gross outflows of ACH, ATM, teller, wires, BillPay, PayChase, Zelle, person-to-person, and checks.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0411",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No corresponding disclosure was found in the 2023 data that matches the topic of 'Total payments transaction volume' definition. The 2023 D121 refers to CIB revenue sharing and tax-equivalent adjustments, which is a distinct topic.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D121",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total payments transaction volume includes debit and credit card sales volume and gross outflows of ACH, ATM, teller, wires, BillPay, PayChase, Zelle, person-to-person, and checks.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 28,
+            "added_tokens_sample": [
+              "c",
+              "total",
+              "payments",
+              "transaction",
+              "volume",
+              "includes",
+              "debit",
+              "and",
+              "credit",
+              "card",
+              "sales",
+              "volume",
+              "and",
+              "gross",
+              "outflows",
+              "of",
+              "ach",
+              "atm",
+              "teller",
+              "wires"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "This is a new disclosure defining 'Total payments transaction volume,' including specific components like Zelle, BillPay, and person-to-person transfers. This definition is critical for understanding the scale of the payments business. Its introduction suggests a strategic emphasis on these digital payment volumes as a key performance indicator, which is a meaningful change in operational metric disclosure.",
+          "key_change": "Introduction of digital payments volume definition"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0041",
+        "relationship": "previous_only",
+        "status": "needs_review",
+        "review_reasons": [
+          "invalid_or_omitted_verifier_proposal"
+        ],
+        "explanation": "Automatic repair turn limit reached; remaining disclosures need review.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D121",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total payments transaction volume includes debit and credit card sales volume and gross outflows of ACH, ATM, teller, wires, BillPay, PayChase, Zelle, person-to-person, and checks.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D085",
+            "peer_topic": "Consumer Lending risk-adjusted margin and purchase volumes",
+            "peer_summary": "Total risk-adjusted margin decreased 85 bps driven by higher net credit losses, while total credit card and debit card purchase volumes increased to $368.9 billion and $557.0 billion respectively, reflecting higher consumer spending.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.07716,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC disclose specific definitions and metrics for credit and debit card transaction volumes in their 2024 disclosures. JPM defines 'total payments transaction volume' as including debit and credit card sales volume alongside other gross outflows. BAC reports specific dollar amounts for 'total credit card purchase volumes' and 'debit card purchase volumes,' noting increases in both, which aligns with the credit/debit card component of JPM's payment volume definition. While JPM provides a broad definition including non-card flows, BAC isolates the card purchase volumes that are a subset of JPM's total payments metric.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D121",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P167_S001",
+                    "paragraph_id": "jpm_2024_7_P167",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(c)Total payments transaction volume includes debit and credit card sales volume and gross outflows of ACH, ATM, teller, wires, BillPay, PayChase, Zelle, person-to-person and checks.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D085",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P091_S002",
+                    "paragraph_id": "bac_2024_7_P091",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Total credit card purchase volumes increased $5.7 billion to $368.9 billion, and debit card purchase volumes increased $29.9 billion to $557.0 billion, reflecting higher levels of consumer spending.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved is sufficiently comparable. The provided candidates for C concern rate/volume variance allocation methodology and the composition of Allowance for Credit Losses versus non-accrual loans, which do not address payment transaction volume definitions or card purchase volumes."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved is sufficiently comparable. The provided candidates for GS concern revenue and provision drivers related to credit card balances and net revenues, but do not define or report transaction volume metrics or payment outflows comparable to JPM's total payments transaction volume definition."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved is sufficiently comparable. The provided candidates for MS concern net charge-off ratio calculation methodology and AUM outflow definitions, which are unrelated to payments transaction volume or card purchase volumes."
+      }
+    ]
+  }
+}

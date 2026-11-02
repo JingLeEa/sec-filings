@@ -1,0 +1,340 @@
+{
+  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
+  "request_hash": "85ac940e218e938ae14105a1106428348474ffedf57601c2c1a9d3e041cb2fca",
+  "result": {
+    "target_ticker": "QCOM",
+    "target_disclosure_id": "qcom_2024_7_D026",
+    "item": "7",
+    "target_topic": "QTL EBT Margin Expansion Drivers",
+    "target_summary": "QTL EBT as a percentage of revenues increased in fiscal 2024 primarily due to lower cost of sales driven by a decrease in amortization expense related to acquired patents and higher revenues.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "qcom_2023_2024_M0197",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss the drivers for the change in QTL Earnings Before Tax (EBT) as a percentage of revenues. D029 attributes the decrease to lower revenues, while D026 attributes the increase to lower amortization expenses and higher revenues.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2023_7_D029",
+            "item": "7",
+            "section": "Segment Results > QTL Segment (in millions, except percentages) > 2023 vs. 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL Earnings Before Tax (EBT) as a percentage of revenues decreased in fiscal 2023 primarily due to lower revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_7_D026",
+            "item": "7",
+            "section": "Segment Results > QTL Segment (in millions, except percentages) > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL EBT as a percentage of revenues increased in fiscal 2024 primarily due to lower cost of sales driven by a decrease in amortization expense related to acquired patents and higher revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.61115,
+            "sequence_match_ratio": 0.595745,
+            "length_ratio": 1.9375,
+            "word_count_delta": 15,
+            "added_tokens_sample": [
+              "increased",
+              "2024",
+              "cost",
+              "of",
+              "sales",
+              "driven",
+              "by",
+              "a",
+              "decrease",
+              "in",
+              "amortization",
+              "expense",
+              "related",
+              "to",
+              "acquired",
+              "patents",
+              "higher"
+            ],
+            "removed_tokens_sample": [
+              "decreased",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "matched_id": "qcom_2023_7_D029",
+            "score": 0.84724,
+            "normalised_score": 0.8472,
+            "label": "Relocated",
+            "rationale": "Score 84.72% of ceiling — content is similar but section changed from 'Segment Results > QTL Segment (in millions, except percentages) > 2023 vs. 2022' to 'Segment Results > QTL Segment (in millions, except percentages) > 2024 vs. 2023'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The primary driver for QTL EBT margin expansion changed. The prior year cited only lower revenues (implying operating leverage was not the primary benefit or was overwhelmed by volume loss). The current year explicitly identifies 'lower cost of sales driven by a decrease in amortization expense related to acquired patents' as a key positive driver. This identifies a specific structural cost benefit (acquired patent amortization wind-down) impacting profitability, which is a substantive change in the earnings profile.",
+          "key_change": "Identification of amortization decrease as EBT margin driver"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "qcom_2024_2025_M0211",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "These disclosures are related to the QTL Segment results but address distinct financial aspects. D025 details the drivers of revenue increase (sales volume vs. price) in 2024, while D026 details the drivers of EBT margin expansion (amortization vs. revenue). D023 in 2025 provides a high-level statement that both revenues and EBT remained flat due to offsetting license expirations and new agreements (Transsion, Chinese OEMs). While D023 covers the same broad topic (QTL financial performance drivers/changes), the 2024 disclosures are specific variance breakdowns, whereas 2023 is a summary of offsetting forces. Given the validation errors cited 'invalid_citations' for the previous rejected attempts which improperly cited D023 for both, and the semantic difference between 'drivers of increase' (2024) and 'flat status/mix of agreements' (2025), we treat them as separate alignments to avoid spurious linkage. However, since they all fall under QTL Segment Results, we must align them if a counterpart exists. D023 is the only 2025 candidate for QTL segment narrative. D025 and D026 are both 2024 QTL segment drivers. A many-to-one alignment is allowed if they share the specific topic. The top",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "qcom_2024_7_D025",
+            "item": "7",
+            "section": "Segment Results > QTL Segment (in millions, except percentages) > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL licensing revenues increased in fiscal 2024, driven primarily by a $402 million increase in estimated sales of 3G/4G/5G-based multimode products, offset by decreases in estimated revenues per unit ($90 million) and upfront license fee recognition from Nokia ($68 million).",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "qcom_2024_7_D026",
+            "item": "7",
+            "section": "Segment Results > QTL Segment (in millions, except percentages) > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "QTL EBT as a percentage of revenues increased in fiscal 2024 primarily due to lower cost of sales driven by a decrease in amortization expense related to acquired patents and higher revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "qcom_2025_7_D023",
+            "item": "7",
+            "section": "Segment Results > QTL Segment (in millions, except percentages) > 2025 vs. 2024",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "QTL licensing revenues and EBT remained approximately flat in fiscal 2025 due to a mix of new long-term licenses with key Chinese OEMs and the expiration of agreements with others, such as Huawei. Specifically, new agreements were executed with two key Chinese OEMs for expired terms and with Transsion, resolving all outstanding litigation between Qualcomm and Transsion.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.292439,
+            "sequence_match_ratio": 0.182857,
+            "length_ratio": 0.804124,
+            "word_count_delta": -19,
+            "added_tokens_sample": [
+              "and",
+              "ebt",
+              "remained",
+              "approximately",
+              "flat",
+              "2025",
+              "during",
+              "second",
+              "2025",
+              "we",
+              "executed",
+              "final",
+              "agreements",
+              "for",
+              "new",
+              "licenses",
+              "with",
+              "two",
+              "key",
+              "chinese"
+            ],
+            "removed_tokens_sample": [
+              "the",
+              "increase",
+              "in",
+              "2024",
+              "was",
+              "primarily",
+              "due",
+              "to",
+              "402",
+              "million",
+              "increase",
+              "in",
+              "estimated",
+              "sales",
+              "of",
+              "3g",
+              "4g",
+              "5g",
+              "based",
+              "multimode"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "qcom_2024_7_D025",
+            "score": 0.703174,
+            "normalised_score": 0.7032,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 70.32% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The 2025 disclosure reveals a fundamental shift in QTL revenue dynamics: revenues and EBT are flat due to the expiration of major license agreements (e.g., Huawei) and the need to execute *new* long-term licenses with specific OEMs (Transsion, Chinese OEMs) to resolve litigation. This contrasts with 2024, where revenue was growing significantly driven by sales volume increases. The introduction of specific license expirations and the resolution of litigation via new agreements represents a material change in the licensing strategy and revenue sustainability risk.",
+          "key_change": "Shift from volume-driven growth to flat revenue due to license expirations and new OEM agreements"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate sufficiently comparable to the specific topic of QTL EBT margin expansion driven by amortization decreases. AMD's candidates discuss Embedded segment revenue declines due to inventory normalization or general amortization decreases without linking them to segment margin expansion in the same manner."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D052",
+            "peer_topic": "Amortization of Acquisition-Related Intangible Assets Increase",
+            "peer_summary": "Amortization of acquisition-related intangible assets recognized in operating expenses increased by $1,850 million, or 133%, in fiscal year 2024 compared to the prior fiscal year. This increase was primarily due to higher amortization of customer-related intangible assets resulting from the VMware Merger.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.122887,
+            "relationship": "same_topic",
+            "comparison": "Both QCOM and AVGO discuss the impact of amortization of acquired patents/intangibles on their financial results for fiscal 2024, but with opposite directions and business contexts. QCOM reports that a decrease in amortization expense was a primary driver for its QTL EBT margin expansion, indicating a tailwind to profitability. In contrast, AVGO reports a significant increase in amortization of acquisition-related intangible assets (up $1,850 million or 133%) driven by the VMware Merger, which contributed to a massive increase in unallocated expenses, representing a substantial cost burden rather than a margin expansion driver.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D026",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P024_S005",
+                    "paragraph_id": "qcom_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "QTL EBT as a percentage of revenues increased in fiscal 2024 primarily due to:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_7_P024_S006",
+                    "paragraph_id": "qcom_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "+ lower cost of sales driven by a decrease in amortization expense related to acquired patents",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D052",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P051_S001",
+                    "paragraph_id": "avgo_2024_7_P051",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Amortization of acquisition-related intangible assets recognized in operating expenses increased $1,850 million, or 133%, in fiscal year 2024, compared to the prior fiscal year primarily due to higher amortization of customer-related intangible assets from the VMware Merger.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate sufficiently comparable. INTC's candidates discuss CCG cost of sales decreases or DCAI revenue declines due to server volume/ASP dynamics, which do not align with the topic of margin expansion drivers via amortization or similar cost structures."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate sufficiently comparable. MU's candidates discuss total revenue growth driven by DRAM/NAND shipment and ASP increases, or SG&A expense trends, which are unrelated to the specific topic of licensing segment margin expansion via patent amortization changes."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D022",
+            "peer_topic": "Gross Margin Trends",
+            "peer_summary": "Gross margin increased in fiscal year 2024, primarily driven by Data Center revenue growth and lower net inventory provisions as a percentage of revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.138352,
+            "relationship": "same_topic",
+            "comparison": "Both QCOM and NVDA attribute positive margin or earnings performance in fiscal 2024 to specific operational improvements alongside revenue growth, though the specific drivers differ. QCOM attributes its QTL EBT margin expansion to lower cost of sales (decreased amortization) and higher revenues. Similarly, NVDA attributes its overall gross margin increase to Data Center revenue growth and lower net inventory provisions. Both disclosures highlight a combination of top-line growth and favorable cost-side dynamics contributing to improved financial metrics, whereas NVDA's cost driver was inventory-related rather than amortization-related.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D026",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P024_S005",
+                    "paragraph_id": "qcom_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "QTL EBT as a percentage of revenues increased in fiscal 2024 primarily due to:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_7_P024_S006",
+                    "paragraph_id": "qcom_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "+ lower cost of sales driven by a decrease in amortization expense related to acquired patents",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_7_P024_S007",
+                    "paragraph_id": "qcom_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "+ higher revenues",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P023_S001",
+                    "paragraph_id": "nvda_2024_7_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Gross margin increased in fiscal year 2024, primarily driven by Data Center revenue growth and lower net inventory provisions as a percentage of revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

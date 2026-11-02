@@ -1,0 +1,227 @@
+{
+  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
+  "request_hash": "1f140bf4ea12dd5aefb7fb542466066f14422f450e642d05f81cd652d897823e",
+  "result": {
+    "target_ticker": "MU",
+    "target_disclosure_id": "mu_2024_8_D096",
+    "item": "8",
+    "target_topic": "CHIPS Act investment tax credit recognition",
+    "target_summary": "Beginning in 2023, the company receives a 25% investment tax credit on qualified U.S. semiconductor manufacturing investments under the CHIPS Act, recognizing these credits in receivables or other noncurrent assets as investments are made.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "mu_2023_2024_M0350",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures discuss the 25% investment tax credit on qualified U.S. semiconductor manufacturing investments under the CHIPS Act. D108 mentions receiving this credit and aggregate commitments, while D096 details the recognition of these credits in receivables or other noncurrent assets as investments are made. The specific subject is the CHIPS Act investment tax credit mechanism.\n\nBoth disclosures report aggregate government incentive commitments subject to performance conditions. D108 reports $2 billion in commitments as of Aug 31, 2023, and D098 reports $3.4 billion in commitments as of Aug 29, 2024. The subject is the total value of pending government grant commitments.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2023_8_D108",
+            "item": "8",
+            "section": "Government Incentives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of August 31, 2023, the company had aggregate commitments of up to $2 billion through 2033 subject to performance conditions, receives a 25% investment tax credit on qualified U.S. semiconductor manufacturing investments, and finalized an additional $1.3 billion grant arrangement subsequent to that date.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2024_8_D096",
+            "item": "8",
+            "section": "Government Incentives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Beginning in 2023, the company receives a 25% investment tax credit on qualified U.S. semiconductor manufacturing investments under the CHIPS Act, recognizing these credits in receivables or other noncurrent assets as investments are made.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "mu_2024_8_D098",
+            "item": "8",
+            "section": "Government Incentives",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "As of August 29, 2024, the company had aggregate government commitments of up to $3.4 billion through 2033, including $1.8 billion for a facility in India (funded 50% by central government, 20% by state) and up to $1.3 billion from Japan for DRAM production using EUV lithography.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "mu_2024_2025_M0357",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specifically address the investment tax credits received under the CHIPS Act for qualified U.S. semiconductor manufacturing investments and the accounting recognition of these credits in receivables or other noncurrent assets. D106 updates the credit rate (35% vs 25%) but covers the same specific policy topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2024_8_D096",
+            "item": "8",
+            "section": "Government Incentives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Beginning in 2023, the company receives a 25% investment tax credit on qualified U.S. semiconductor manufacturing investments under the CHIPS Act, recognizing these credits in receivables or other noncurrent assets as investments are made.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2025_8_D106",
+            "item": "8",
+            "section": "Note 20. Government Incentives > U.S. CHIPS Act Funding Agreements",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company receives investment tax credits on qualified U.S. semiconductor manufacturing investments, increased from 25% to 35% by the One Big Beautiful Bill Act for investments placed in service after December 31, 2025, which are recognized as receivables or noncurrent assets.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.701204,
+            "sequence_match_ratio": 0.586207,
+            "length_ratio": 2.052632,
+            "word_count_delta": 40,
+            "added_tokens_sample": [
+              "addition",
+              "to",
+              "the",
+              "u",
+              "s",
+              "commitment",
+              "amount",
+              "in",
+              "the",
+              "table",
+              "above",
+              "an",
+              "on",
+              "july",
+              "4",
+              "2025",
+              "the",
+              "one",
+              "big",
+              "beautiful"
+            ],
+            "removed_tokens_sample": [
+              "beginning",
+              "2023",
+              "a",
+              "25"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2024_8_D096",
+            "score": 0.909771,
+            "normalised_score": 0.9098,
+            "label": "Relocated",
+            "rationale": "Score 90.98% of ceiling — content is similar but section changed from 'Government Incentives' to 'Note 20. Government Incentives > U.S. CHIPS Act Funding Agreements'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The investment tax credit rate increases from 25% to 35% for investments placed in service after December 31, 2025. This is a significant change in the economic value of the government incentive, directly impacting the company's financial position.",
+          "key_change": "Increase in CHIPS Act investment tax credit rate to 35%"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for AMD discuss general income tax accounting methodology (deferred tax assets/liabilities, uncertain positions) and the status of NOL/tax credit carryforwards. Neither candidate specifically discloses CHIPS Act incentives, investment tax credit recognition policies, or government incentive accounting, which are the specific topics of MU's disclosure. Therefore, they are not substantively comparable to the specific CHIPS Act tax credit topic."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for AVGO discuss components of other income/expense and the status of NOL and tax credit expirations. These do not address CHIPS Act incentives or investment tax credit recognition. There is no mention of government incentives or CHIPS Act specifics comparable to MU's disclosure."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D098",
+            "peer_topic": "Financial impact of capital-related incentives",
+            "peer_summary": "Capital-related incentives reduced gross property, plant, and equipment by $9.5 billion as of December 28, 2024, with $4.1 billion recognized in 2024. These incentives reduced depreciation expense by $594 million in 2024, substantially all of which reduced cost of sales, and $3.3 billion of the total capital-related incentives recognized in 2024 was classified as a non-cash investing activity.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.099157,
+            "relationship": "same_topic",
+            "comparison": "Both MU and INTC disclose specific accounting for investment tax credits under the CHIPS Act, but they differ significantly in magnitude, nature, and presentation. MU discloses a 25% investment tax credit recognized as receivables or noncurrent assets as investments are made (mu_2024_8_P103_S003). In contrast, INTC recognizes a much larger advanced manufacturing investment tax credit of $2.6 billion in 2024, which is notable for its potential cash refundability exceeding tax liabilities (intc_2024_8_P111_S005). While both companies leverage CHIPS Act tax credits, INTC's disclosure highlights the cash-refundable nature and material dollar amount of the credit, whereas MU's disclosure focuses on the standard 25% rate and balance sheet classification.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_8_D096",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P103_S002",
+                    "paragraph_id": "mu_2024_8_P103",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Beginning in 2023, we receive a 25% investment tax credit on qualified investments in U.S. semiconductor manufacturing under the CHIPS Act.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_8_P103_S003",
+                    "paragraph_id": "mu_2024_8_P103",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "As qualified investments are made, we recognize investment tax credits in receivables or other noncurrent assets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_8_D098",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P111_S005",
+                    "paragraph_id": "intc_2024_8_P111",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "▪US federal government pursuant to the CHIPS Act. In September 2024, we were awarded up to $3.0 billion in direct funding for the Secure Enclave program to expand the trusted manufacturing of leading-edge semiconductors for the US government. In November 2024, we signed a Direct Funding Agreement with the US Department of Commerce for the award of $7.9 billion in government incentives. We recognized $1.3 billion of grants, including $253 million of operating grants, in 2024 under the CHIPS Act. Additionally, we recognized an advanced manufacturing investment tax credit of $2.6 billion in 2024 ($845 million in 2023), which may be refunded to us in cash to the extent it exceeds our outstanding income tax liabilities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved for NVDA."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved for QCOM."
+      }
+    ]
+  }
+}

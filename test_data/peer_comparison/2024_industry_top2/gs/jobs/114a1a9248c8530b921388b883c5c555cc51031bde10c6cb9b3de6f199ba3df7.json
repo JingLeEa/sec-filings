@@ -1,0 +1,382 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "864382d00dd9b10780ee380cc704d5140d1b03e5fe0bf1b2d16d01d3d98772a3",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_8_D219",
+    "item": "8",
+    "target_topic": "GM Credit Card Program Transition",
+    "target_summary": "In 2023, the firm transferred approximately $2.0 billion of the GM co-branded credit card portfolio to held for sale. In 2024, an agreement was entered to transition the program to another issuer, with completion expected in the third quarter of 2025.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0975",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "Both cover the GM co-branded credit card program transition. 2023 disclosures mention the agreement to transition and transfer to held-for-sale; 2024 confirms the agreement entered in 2024 and the expected completion date.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_8_D030",
+            "item": "8",
+            "section": "Accounting Firm > Description of Business > Platform Solutions",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "In Q4 2023, the firm agreed to sell GreenSky, expecting closure in Q1 2024, while also selling a majority of its installment loan portfolio. Additionally, the firm initiated a process to transition GM's credit card program to another issuer.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2023_8_D225",
+            "item": "8",
+            "section": "Accounting Firm > Loans",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In 2023, the firm transferred approximately $2.0 billion of the GM co-branded credit card portfolio to held for sale, resulting in a $160 million reduction in reserves.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D219",
+            "item": "8",
+            "section": "Accounting Firm > Loans",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "In 2023, the firm transferred approximately $2.0 billion of the GM co-branded credit card portfolio to held for sale. In 2024, an agreement was entered to transition the program to another issuer, with completion expected in the third quarter of 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M1029",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D218 reports the sale of the GreenSky portfolio ($3.69B) in 2024. D219 reports the transition of the GM credit card program. D208 reports the completion of the GreenSky sale and the sale of the GM credit card program. D208 covers both topics, so it matches both previous disclosures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D218",
+            "item": "8",
+            "section": "Accounting Firm > Loans",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "In 2023, the firm sold approximately $4.0 billion of the GreenSky loan portfolio (installment loans), and sold the remaining GreenSky loan portfolio of $3.69 billion during 2024.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_8_D219",
+            "item": "8",
+            "section": "Accounting Firm > Loans",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "In 2023, the firm transferred approximately $2.0 billion of the GM co-branded credit card portfolio to held for sale. In 2024, an agreement was entered to transition the program to another issuer, with completion expected in the third quarter of 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_8_D208",
+            "item": "8",
+            "section": "Accounting Firm > Loans > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "During 2024, the firm completed the sale of the $3.69 billion GreenSky loan portfolio, and in 2025, the firm sold the GM credit card program (with a net carrying value of $1.54 billion) to another issuer.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.723414,
+            "sequence_match_ratio": 0.396947,
+            "length_ratio": 0.597561,
+            "word_count_delta": -33,
+            "added_tokens_sample": [
+              "2024",
+              "completed",
+              "the",
+              "sale",
+              "2025",
+              "sold",
+              "net",
+              "carrying",
+              "value",
+              "of",
+              "this",
+              "credit",
+              "card",
+              "loan",
+              "portfolio",
+              "at",
+              "time",
+              "the",
+              "sale",
+              "was"
+            ],
+            "removed_tokens_sample": [
+              "2023",
+              "sold",
+              "approximately",
+              "4",
+              "0",
+              "billion",
+              "greensky",
+              "loan",
+              "portfolio",
+              "included",
+              "in",
+              "installment",
+              "loans",
+              "and",
+              "during",
+              "2024",
+              "sold",
+              "the",
+              "remaining",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2024_8_D218",
+            "score": 0.874195,
+            "normalised_score": 0.8742,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 87.42% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Reduced",
+          "final_taxonomy": "Reduced"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.92,
+          "confidence_score": 0.95,
+          "reason": "This is a merged disclosure that combines the completion of the GreenSky sale and the sale of the GM credit card program. The GM credit card program sale was previously disclosed as an anticipated transition (expected Q3 2025) but is now reported as completed in 2025 with a specific carrying value ($1.54 billion). This confirmation of a major strategic divestiture is material.",
+          "key_change": "Confirmation of GM credit card program sale completion"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M1030",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D219 describes the 2023 transfer to held for sale and the 2024 agreement to transition the GM credit card program, expected in Q3 2025. D208 describes the 2025 sale of the GM credit card program to another issuer. While D219 anticipates the event and D208 confirms it, they refer to the same specific underlying topic: the disposition of the GM co-branded credit card portfolio. The transition agreement in D219 led to the sale described in D208.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D219",
+            "item": "8",
+            "section": "Accounting Firm > Loans",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "In 2023, the firm transferred approximately $2.0 billion of the GM co-branded credit card portfolio to held for sale. In 2024, an agreement was entered to transition the program to another issuer, with completion expected in the third quarter of 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_8_D208",
+            "item": "8",
+            "section": "Accounting Firm > Loans > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "During 2024, the firm completed the sale of the $3.69 billion GreenSky loan portfolio, and in 2025, the firm sold the GM credit card program (with a net carrying value of $1.54 billion) to another issuer.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.601121,
+            "sequence_match_ratio": 0.36,
+            "length_ratio": 0.960784,
+            "word_count_delta": -2,
+            "added_tokens_sample": [
+              "2024",
+              "completed",
+              "the",
+              "sale",
+              "greensky",
+              "loan",
+              "of",
+              "3",
+              "69",
+              "billion",
+              "2025",
+              "the",
+              "firm",
+              "sold",
+              "net",
+              "carrying",
+              "value",
+              "of",
+              "this",
+              "credit"
+            ],
+            "removed_tokens_sample": [
+              "2023",
+              "transferred",
+              "approximately",
+              "2",
+              "0",
+              "billion",
+              "gm",
+              "co",
+              "branded",
+              "credit",
+              "card",
+              "to",
+              "held",
+              "for",
+              "sale",
+              "2024",
+              "we",
+              "entered",
+              "into",
+              "an"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2024_8_D219",
+            "score": 0.840829,
+            "normalised_score": 0.8408,
+            "label": "Relocated",
+            "rationale": "Score 84.08% of ceiling — content is similar but section changed from 'Accounting Firm > Loans' to 'Accounting Firm > Loans > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Reduced",
+          "final_taxonomy": "Reduced"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.92,
+          "confidence_score": 0.95,
+          "reason": "The disclosure changes from an anticipation of the GM credit card program transition (expected Q3 2025) to the confirmation of its sale in 2025. The actual sale, with a net carrying value of $1.54 billion, represents a concrete realization of a significant strategic prior, materially altering the company's loan portfolio composition and financial position compared to the prior expectation.",
+          "key_change": "Confirmation of GM credit card program sale"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for BAC discuss TDR carrying values and payment default definitions, which do not share specific facts or events regarding co-branded credit card portfolio transitions or partnerships comparable to Goldman Sachs' GM program transition."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D617",
+            "peer_topic": "Additional Guarantee Commitments and Portfolio Exposure Assessment",
+            "peer_summary": "Guarantees include additional commitments from the American Airlines co-branded credit card partnership agreement executed in December 2024, as well as guarantees of subsidiaries. Citi believes maximum exposure figures are not representative of actual potential loss based on historical and expected future portfolio performance.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.115698,
+            "relationship": "same_topic",
+            "comparison": "Citigroup also entered into agreements regarding a co-branded credit card partnership in 2024, similar to Goldman Sachs' transition of its GM program, but focused on extending an existing American Airlines partnership rather than transitioning away. While Goldman Sachs is exiting its GM co-branded program by transitioning it to another issuer, Citigroup is amending its American Airlines co-branded credit card partnership agreement, noting that the maximum exposure figures for these guarantees are not representative of actual potential loss.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D219",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P301_S007",
+                    "paragraph_id": "gs_2024_8_P301",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• During 2023, the firm transferred approximately $2.0 billion of the GM co-branded credit card portfolio to held for sale. During 2024, we entered into an agreement to transition the GM credit card program to another issuer. The transition is expected to be completed in the third quarter of 2025.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D617",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P895_S001",
+                    "paragraph_id": "c_2024_8_P895",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(3)Includes additional guarantees entered into as part of the extension and amendment of the American Airlines co-branded credit card partnership agreement, executed in December 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D206",
+            "peer_topic": "Co-brand credit card partnership structure",
+            "peer_summary": "The Firm holds exclusive rights to issue and market co-branded credit card products through contractual agreements with numerous partners lasting five to ten years, who provide customer lists and endorse the programs.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.116261,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Goldman Sachs disclose the structure of their co-branded credit card partnerships, specifically noting that partners provide customer lists and endorse the programs, while Goldman Sachs highlights a specific recent transition event involving GM. JPMorgan describes the general contractual framework where partners provide customer lists and endorse the programs with terms of five to ten years, whereas Goldman Sachs provides a specific timeline for transitioning its GM co-branded program to another issuer.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D219",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P301_S007",
+                    "paragraph_id": "gs_2024_8_P301",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• During 2023, the firm transferred approximately $2.0 billion of the GM co-branded credit card portfolio to held for sale. During 2024, we entered into an agreement to transition the GM credit card program to another issuer. The transition is expected to be completed in the third quarter of 2025.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D206",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P331_S002",
+                    "paragraph_id": "jpm_2024_8_P331",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "These partners endorse the co-brand credit card programs and provide their customer or member lists to the Firm.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for MS discuss hedge amounts and loan accounting categories (held for investment/sale), which are generic financial reporting disclosures not specific to the topic of co-branded credit card portfolio transitions or partnerships."
+      }
+    ]
+  }
+}

@@ -1,0 +1,298 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "4d90e21d81f3de76fd251208fdcfe065899323acf4ce32f02ad489821d7c0373",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D032",
+    "item": "7",
+    "target_topic": "Equity and Fixed Income Net Revenues composition - Part 3",
+    "target_summary": "The Equity and Fixed Income Net Revenues metric includes Investments and Other revenues.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0238",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2023 disclosure D030 defines the components of 'Equity and Fixed Income Net Revenues' as including Commissions/fees, Asset management, funding costs, and Investments/Other. The 2024 disclosures split these components into separate disclosures: D030 covers Commissions/fees and Asset management; D031 covers funding costs; D032 covers Investments/Other. All are from the same section and define the same aggregate metric.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D030",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Equity and Fixed Income Net Revenues include commissions, fees, asset management revenues, allocated funding costs, and investments and other revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D030",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes Commissions and fees and Asset management revenues.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D031",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes funding costs, which are allocated to the businesses based on funding usage.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D032",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes Investments and Other revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Unchanged",
+            "cosine_similarity": 1.0,
+            "sequence_match_ratio": 1.0,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "ms_2023_7_D030",
+            "score": 0.898005,
+            "normalised_score": 0.898,
+            "rationale": "Split: 1 previous → 3 current. Best pair scored 89.80% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The 2024 disclosures split a single 2023 definition into three separate disclosures for clarity. The components (Commissions/fees, Asset management, Funding costs, Investments/Other) and their definitions remain exactly the same. No substantive change in how the metric is calculated or reported.",
+          "key_change": "Formatting split of metric components"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0035",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in Item 7 for 2025. The 2024 disclosure states that Equity and Fixed Income Net Revenues include Investments and Other revenues. The 2025 search returned D174 (Investments Sensitivity) and D175 (Asset Management Revenue Sensitivity), but no disclosure explicitly defines the 'Equity and Fixed Income Net Revenues' metric as including 'Investments and Other revenues'. The specific metric definition component is not present.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D032",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes Investments and Other revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -6,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "3",
+              "includes",
+              "investments",
+              "and",
+              "other",
+              "revenues"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.8,
+          "reason": "The disclosure that 'Investments and Other revenues' are included in 'Equity and Fixed Income Net Revenues' is removed. This removes clarity on the composition of this aggregated revenue figure, representing a meaningful reduction in financial disclosure granularity.",
+          "key_change": "Removal of revenue composition inclusion note"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D122",
+            "peer_topic": "Definition and composition of sales and trading revenue",
+            "peer_summary": "Sales and trading revenue includes unrealized and realized gains and losses on trading assets, net interest income, and equity commissions, segregated into fixed-income, currencies, commodities, and equities.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.068232,
+            "relationship": "same_topic",
+            "comparison": "Both MS and BAC define the composition of their respective trading/market revenues. MS states its Equity and Fixed Income Net Revenues includes 'Investments and Other revenues.' BAC defines its Sales and trading revenue (segregated into fixed-income and equities) as including 'unrealized and realized gains and losses on trading and other assets... and fees primarily from commissions.' Both disclosures clarify that these revenue metrics capture gains/losses ('Investments' for MS, 'gains and losses on trading assets' for BAC) alongside other income streams like commissions or 'Other'.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D032",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P038_S001",
+                    "paragraph_id": "ms_2024_7_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "3.Includes Investments and Other revenues.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D122",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P129_S001",
+                    "paragraph_id": "bac_2024_7_P129",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Sales and trading revenue includes unrealized and realized gains and losses on trading and other assets that are included in market making and similar activities, net interest income, and fees primarily from commissions on equity securities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D098",
+            "peer_topic": "2024 Revenue Growth and 2025 Outlook",
+            "peer_summary": "Revenues increased 6% due to higher Equity Markets and Fixed Income Markets revenues; the company expects 2025 revenues to reflect the overall market environment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.119846,
+            "relationship": "same_topic",
+            "comparison": "Both MS and Citi disclose 2024 revenue performance driven by Equity and Fixed Income markets. MS explicitly includes 'Investments and Other revenues' as a component of its Equity and Fixed Income Net Revenues metric, whereas Citi reports that its 2024 revenue increase of 6% was 'driven by higher Equity Markets and Fixed Income Markets revenues.' While MS details the composition including 'Investments', Citi highlights the growth trend in these specific market lines.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D032",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P038_S001",
+                    "paragraph_id": "ms_2024_7_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "3.Includes Investments and Other revenues.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D098",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P125_S001",
+                    "paragraph_id": "c_2024_7_P125",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Revenues increased 6%, driven by higher Equity Markets and Fixed Income Markets revenues.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D006",
+            "peer_topic": "2024 Net Revenue Growth by Segment",
+            "peer_summary": "Net revenues increased 16% to $53.51 billion in 2024, driven primarily by higher revenues in Global Banking & Markets (Equities, Investment banking, FICC) and Asset & Wealth Management (Equity investments, Management fees), with slight increases in Platform Solutions.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.107518,
+            "relationship": "same_topic",
+            "comparison": "Both MS and Goldman Sachs provide composition details for their 2024 equity and fixed income related revenues. MS notes that its Equity and Fixed Income Net Revenues metric includes 'Investments and Other revenues.' Similarly, GS reports that the increase in its Global Banking & Markets net revenues 'primarily reflected higher net revenues in Equities... and higher net revenues in Fixed Income, Currency and Commodities (FICC).' Both disclosures identify Equity and Fixed Income as key revenue drivers/components, though MS highlights a specific 'Investments' inclusion while GS highlights the growth in Equities and FICC segments.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D032",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P038_S001",
+                    "paragraph_id": "ms_2024_7_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "3.Includes Investments and Other revenues.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D006",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P008_S002",
+                    "paragraph_id": "gs_2024_7_P008",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in net revenues in Global Banking & Markets primarily reflected higher net revenues in Equities, significantly higher Investment banking fees and higher net revenues in Fixed Income, Currency and Commodities (FICC).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (jpm_2024_7_D226 on Goodwill deductions and jpm_2024_7_D026 on accounting changes for tax investments) do not discuss Equity and Fixed Income Net Revenues composition or trading revenues. They are unrelated to the target's topic."
+      }
+    ]
+  }
+}

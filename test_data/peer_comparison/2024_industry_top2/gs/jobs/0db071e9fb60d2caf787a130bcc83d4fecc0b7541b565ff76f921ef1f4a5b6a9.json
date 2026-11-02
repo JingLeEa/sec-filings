@@ -1,0 +1,354 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "1d348e8ff9ffbb63bd7d65c9c4691ecf90d23671f79598b0f12f802e42d077d5",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_8_D232",
+    "item": "8",
+    "target_topic": "Residential and Securities-Based Loan Credit Quality",
+    "target_summary": "Substantially all residential real estate and securities-based loans in the unrated category had loan-to-value ratios under 80% and were performing as of December 2023 and 2024; residential loans largely featured FICO scores above 740.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0982",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "The 2023 disclosures D231 and D232 separately detail the credit quality characteristics (LTV < 80%, performing status, FICO > 740 for residential) of loans in the 'other metrics/unrated' category for residential real estate and securities-based loans. The 2024 disclosure D232 combines these same two categories into a single disclosure with identical substance regarding LTV and performance metrics, effectively merging the 2023 split topics.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_8_D231",
+            "item": "8",
+            "section": "Accounting Firm > Loans > Credit Quality > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Substantially all residential real estate loans in the other metrics/unrated category had loan-to-value ratios below 80% and performed in accordance with contractual terms as of December 2023 and 2022, with the vast majority holding FICO scores above 740.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2023_8_D232",
+            "item": "8",
+            "section": "Accounting Firm > Loans > Credit Quality > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Substantially all securities-based loans in the other metrics/unrated category had loan-to-value ratios below 80% and performed in accordance with contractual terms as of December 2023 and 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D232",
+            "item": "8",
+            "section": "Accounting Firm > Loans > Credit Quality > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Substantially all residential real estate and securities-based loans in the unrated category had loan-to-value ratios under 80% and were performing as of December 2023 and 2024; residential loans largely featured FICO scores above 740.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M1041",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures provide specific credit quality metrics for unrated residential real estate and securities-based loans, noting LTV ratios under 80%, performing status, and FICO scores above 740 for the respective year-ends.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D232",
+            "item": "8",
+            "section": "Accounting Firm > Loans > Credit Quality > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Substantially all residential real estate and securities-based loans in the unrated category had loan-to-value ratios under 80% and were performing as of December 2023 and 2024; residential loans largely featured FICO scores above 740.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_8_D219",
+            "item": "8",
+            "section": "Accounting Firm > Loans > Credit Quality > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Substantially all residential real estate, securities-based, and credit card loans in the other metrics/unrated category had loan-to-value ratios under 80% and performed according to contractual terms as of December 2024 and 2025, with residential loans mostly having FICO scores above 740.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.883176,
+            "sequence_match_ratio": 0.756757,
+            "length_ratio": 1.42623,
+            "word_count_delta": 52,
+            "added_tokens_sample": [
+              "2025",
+              "2024",
+              "2025",
+              "2024",
+              "2025",
+              "2024",
+              "for",
+              "credit",
+              "card",
+              "loans",
+              "included",
+              "in",
+              "the",
+              "other",
+              "metrics",
+              "unrated",
+              "category",
+              "the",
+              "evaluation",
+              "of"
+            ],
+            "removed_tokens_sample": [
+              "in",
+              "the",
+              "table",
+              "above",
+              "2024",
+              "2023",
+              "2024",
+              "2023",
+              "2024",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2024_8_D232",
+            "score": 0.988589,
+            "normalised_score": 0.9886,
+            "label": "Unchanged",
+            "rationale": "Score 98.86% of ceiling — semantically identical despite surface differences (word overlap 61%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.9,
+          "reason": "The disclosure expanded to include 'credit card loans' in the 'other metrics/unrated category' alongside residential real estate and securities-based loans. This broadens the scope of the asset class description regarding credit quality metrics (LTV, FICO) and represents a meaningful change in the composition of the disclosed loan portfolio segments.",
+          "key_change": "Expansion of unrated loan portfolio to include credit cards"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D182",
+            "peer_topic": "U.S. Small Business Card loan details and exclusions (2024)",
+            "peer_summary": "Excluded U.S. Small Business Card loans total $10.6 billion; refreshed FICO scores break down by tier ($699M <620, $1.2B 620-679, $3.0B 680-739, $5.8B >=740), and gross charge-offs were $489 million.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.116477,
+            "relationship": "related_topic",
+            "comparison": "Both GS and BAC disclose high borrower credit quality metrics, specifically focusing on FICO scores and loan performance for wealth/consumer lending, but they apply to different loan products. GS reports that substantially all residential real estate loans in its unrated category had FICO scores >740 and LTV <80% as of Dec 2024. Similarly, BAC discloses that for its consumer card portfolio (which includes excluded small business cards), the majority of the balance ($5.8B) has a refreshed FICO score >=740, indicating a comparable focus on high-credit-quality borrowers, though BAC provides aggregate dollar amounts rather than a performance statement like GS.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D232",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P306_S002",
+                    "paragraph_id": "gs_2024_8_P306",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Substantially all residential real estate loans included in the other metrics/unrated category consists of loans extended to wealth management clients. As of both December 2024 and December 2023, substantially all of such loans had a loan-to-value ratio of less than 80% and were performing in accordance with the contractual terms. Additionally, as of both December 2024 and December 2023, the vast majority of such loans had a FICO credit score of greater than 740.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D182",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P212_S002",
+                    "paragraph_id": "bac_2024_8_P212",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Refreshed FICO scores for this portfolio are $699 million for less than 620; $1.2 billion for greater than or equal to 620 and less than 680; $3.0 billion for greater than or equal to 680 and less than 740; and $5.8 billion greater than or equal to 740.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D370",
+            "peer_topic": "Consumer Loan Risk Management Framework",
+            "peer_summary": "Citigroup utilizes a risk management process to monitor principal risks in the consumer loan portfolio, actively tracking credit quality indicators such as delinquency status, FICO scores, and loan-to-value (LTV) ratios.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.088013,
+            "relationship": "same_topic",
+            "comparison": "Both GS and C identify Loan-to-Value (LTV) ratios and FICO scores as critical credit quality indicators for their lending portfolios. GS specifies that for its unrated residential and securities-based loans, substantially all had LTV <80% and high FICO scores (>740) for residential, and were performing. C describes its broader risk management process for the consumer loan portfolio, explicitly stating that credit quality indicators actively monitored include both FICO scores and LTV ratios, aligning with the specific metrics GS uses to validate the quality of its unrated loans.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D232",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P306_S002",
+                    "paragraph_id": "gs_2024_8_P306",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Substantially all residential real estate loans included in the other metrics/unrated category consists of loans extended to wealth management clients. As of both December 2024 and December 2023, substantially all of such loans had a loan-to-value ratio of less than 80% and were performing in accordance with the contractual terms. Additionally, as of both December 2024 and December 2023, the vast majority of such loans had a FICO credit score of greater than 740.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P306_S003",
+                    "paragraph_id": "gs_2024_8_P306",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• The vast majority of securities-based loans included in the other metrics/unrated category had a loan-to-value ratio of less than 80% and were performing in accordance with the contractual terms as of both December 2024 and December 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D370",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P479_S002",
+                    "paragraph_id": "c_2024_8_P479",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Credit quality indicators that are actively monitored include delinquency status, consumer credit scores under Fair Isaac Corporation (FICO) and loan-to-value (LTV) ratios, each as discussed in more detail below.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D320",
+            "peer_topic": "Residential Real Estate Loan Risk Metrics",
+            "peer_summary": "For residential real estate loans, credit quality is assessed using LTV ratios (including combined LTV for junior liens), geographic distribution of collateral, and borrower FICO scores, with higher risk associated with high LTV and low FICO scores.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.150516,
+            "relationship": "same_topic",
+            "comparison": "Both GS and JPM utilize LTV ratios and FICO scores as primary metrics to assess the credit quality and risk of residential real estate loans. GS highlights that its unrated residential loans had LTV <80% and FICO >740, implying low risk. JPM explicitly defines LTV as an indicator of potential loss severity and borrower willingness to pay, and FICO as a secondary indicator where scores <660 are considered higher risk. Both disclosures converge on using these specific metrics to characterize the risk profile of residential lending, with GS providing specific outcomes for its high-quality segment and JPM defining the framework for assessing risk across the spectrum.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D232",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P306_S002",
+                    "paragraph_id": "gs_2024_8_P306",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Substantially all residential real estate loans included in the other metrics/unrated category consists of loans extended to wealth management clients. As of both December 2024 and December 2023, substantially all of such loans had a loan-to-value ratio of less than 80% and were performing in accordance with the contractual terms. Additionally, as of both December 2024 and December 2023, the vast majority of such loans had a FICO credit score of greater than 740.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D320",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P475_S006",
+                    "paragraph_id": "jpm_2024_8_P475",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• For residential real estate loans, the current estimated LTV ratio, or the combined LTV ratio in the case of junior lien loans, is an indicator of the potential loss severity in the event of default. Additionally, LTV or combined LTV ratios can provide insight into a borrower's continued willingness to pay, as the delinquency rate of high-LTV loans tends to be greater than that for loans where the borrower has equity in the collateral. The geographic distribution of the loan collateral also provides insight as to the credit quality of the portfolio, as factors such as the regional economy, home price changes and specific events such as natural disasters, will affect credit quality. The borrower's current or \"refreshed\" FICO score is a secondary credit quality indicator for certain loans, as FICO scores are an indication of the borrower's credit payment history. Thus, a loan to a borrower with a low FICO score (less than 660) is considered to be of higher risk than a loan to a borrower with a higher FICO score. Further, a loan to a borrower with a high LTV ratio and a low FICO score is at greater risk of default than a loan to a borrower that has both a high LTV ratio and a high FICO score.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D087",
+            "peer_topic": "Credit quality indicators for various loan types",
+            "peer_summary": "Credit quality indicators include internal risk ratings for corporate and commercial real estate loans, FICO scores and LTV ratios for residential real estate loans, and employment status for employee loans.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.126752,
+            "relationship": "same_topic",
+            "comparison": "Both GS and MS explicitly list FICO scores and LTV ratios as standard credit quality indicators for their residential real estate loans. GS uses these metrics to characterize the quality of its unrated residential loans (LTV <80%, FICO >740). MS lists these same two metrics (FICO scores and LTV ratios) as the specific indicators considered for residential real estate loans within its Allowance for Credit Losses (ACL) process, confirming a shared industry approach to measuring residential credit risk using these exact variables.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D232",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P306_S002",
+                    "paragraph_id": "gs_2024_8_P306",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Substantially all residential real estate loans included in the other metrics/unrated category consists of loans extended to wealth management clients. As of both December 2024 and December 2023, substantially all of such loans had a loan-to-value ratio of less than 80% and were performing in accordance with the contractual terms. Additionally, as of both December 2024 and December 2023, the vast majority of such loans had a FICO credit score of greater than 740.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D087",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P114_S003",
+                    "paragraph_id": "ms_2024_8_P114",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Residential real estate loans: Loan origination Fair Isaac Corporation (\"FICO\") credit scores as determined by independent credit agencies in the U.S. and LTV ratios.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,346 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "011e1eb1c60246d659b65f7ba5e6a71a4a001598ae33299b965556df6886301b",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D061",
+    "item": "7",
+    "target_topic": "Wealth Management Net Interest Revenue Performance and Drivers",
+    "target_summary": "Wealth Management net interest revenues decreased 10% year-over-year to $7,313 million in 2024, primarily driven by lower average sweep deposits, partially offset by higher investment portfolio yields and lending growth.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0265",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report Wealth Management Net Interest Revenues and the key factors influencing the change (interest rates, deposit mix, yields).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D063",
+            "item": "7",
+            "section": "Wealth Management > Net Revenues > Net Interest",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Wealth Management net interest revenues reached $8,118 million in 2023, a 9% increase from the prior year, primarily driven by higher interest rates which were partially offset by changes in the deposit mix.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D061",
+            "item": "7",
+            "section": "Wealth Management > Net Revenues > Net Interest",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Wealth Management net interest revenues decreased 10% year-over-year to $7,313 million in 2024, primarily driven by lower average sweep deposits, partially offset by higher investment portfolio yields and lending growth.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.44092,
+            "sequence_match_ratio": 0.5,
+            "length_ratio": 1.060606,
+            "word_count_delta": 2,
+            "added_tokens_sample": [
+              "7",
+              "313",
+              "2024",
+              "decreased",
+              "10",
+              "lower",
+              "average",
+              "sweep",
+              "deposits",
+              "higher",
+              "yields",
+              "on",
+              "our",
+              "investment",
+              "portfolio",
+              "and",
+              "lending",
+              "growth"
+            ],
+            "removed_tokens_sample": [
+              "8",
+              "118",
+              "2023",
+              "increased",
+              "9",
+              "the",
+              "net",
+              "effect",
+              "of",
+              "higher",
+              "interest",
+              "rates",
+              "changes",
+              "in",
+              "deposit",
+              "mix"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D063",
+            "score": 0.892102,
+            "normalised_score": 0.8921,
+            "label": "Modified",
+            "rationale": "Score 89.21% of ceiling with 41% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The disclosure reversed from a 9% increase to a 10% decrease in net interest revenue. The drivers also shifted from 'higher interest rates' to 'lower average sweep deposits'. This is a material change in financial condition and operational dynamics.",
+          "key_change": "Reversal in revenue trend and drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0062",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "Wealth Management net interest revenues decreased 10% to $7,313 million in 2024. The 2025 search results for this specific revenue decline and amount returned no matching disclosures. The highest scoring candidates (D173, D172) discuss sensitivity analysis and asset sensitivity, not the specific 2024 revenue performance or the 10% decrease fact. D173 notes a decrease in sensitivity, not revenue. D172 explains the mechanism (asset sensitive). There is no direct counterpart for the specific 2024 revenue figure and decline narrative in the 2025 filing's extracted disclosures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D061",
+            "item": "7",
+            "section": "Wealth Management > Net Revenues > Net Interest",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Wealth Management net interest revenues decreased 10% year-over-year to $7,313 million in 2024, primarily driven by lower average sweep deposits, partially offset by higher investment portfolio yields and lending growth.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -35,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "net",
+              "interest",
+              "revenues",
+              "of",
+              "7",
+              "313",
+              "million",
+              "in",
+              "2024",
+              "decreased",
+              "10",
+              "compared",
+              "with",
+              "the",
+              "prior",
+              "year",
+              "primarily",
+              "due",
+              "to",
+              "lower"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The 2024 filing disclosed specific financial performance data for Net Interest Revenues ($7.3B, -10%) and its drivers. The complete absence of this specific financial performance disclosure in the 2025 Item 7 results represents a significant gap in the financial narrative. This is a material removal of segment financial data.",
+          "key_change": "Removal of Net Interest Revenue performance data"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D089",
+            "peer_topic": "GWIM Net Interest Income Drivers",
+            "peer_summary": "Net interest income decreased $178 million to $7.0 billion, primarily driven by lower average deposit balances.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.233868,
+            "relationship": "same_topic",
+            "comparison": "Both MS and BAC report declines in net interest income/revenue for Wealth Management/GWIM segments primarily driven by lower average deposit balances. MS attributes its 10% decrease ($7,313 million) to 'lower average sweep deposits,' while BAC attributes its $178 million decrease ($7.0 billion) to 'lower average deposit balances.' Both disclose that these declines were the primary driver, contrasting with other potential positive factors like yield improvements (MS) or partially offset by higher yields in MS's broader context.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D061",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P064_S001",
+                    "paragraph_id": "ms_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net interest revenues of $7,313 million in 2024 decreased 10% compared with the prior year, primarily due to lower average sweep deposits, partially offset by higher yields on our investment portfolio and lending growth.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D089",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P100_S001",
+                    "paragraph_id": "bac_2024_7_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest income decreased $178 million to $7.0 billion primarily driven by lower average deposit balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss Net Income or USPB Net Income driven by cost of credit and revenue/expenses, not Net Interest Income or Net Interest Revenue drivers comparable to MS's Wealth Management NII disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D050",
+            "peer_topic": "Net Interest Income Growth and Drivers",
+            "peer_summary": "Net interest income for 2024 was $8.06 billion, representing a 27% increase from 2023, driven by higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by a decrease in deposits with banks.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.144099,
+            "relationship": "same_topic",
+            "comparison": "Both MS and GS disclose Net Interest Income/Revenue performance, but show opposite trends. MS reports a 10% decrease in Wealth Management Net Interest Revenue to $7,313 million, driven by lower average sweep deposits. In contrast, GS reports a 27% increase in consolidated Net Interest Income to $8.06 billion, driven by higher interest income from trading assets and investments. While MS's decline is linked to deposit dynamics (sweep deposits), GS's growth is linked to trading assets and higher average interest rates.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D061",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P064_S001",
+                    "paragraph_id": "ms_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net interest revenues of $7,313 million in 2024 decreased 10% compared with the prior year, primarily due to lower average sweep deposits, partially offset by higher yields on our investment portfolio and lending growth.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P054_S002",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net interest income in the consolidated statements of earnings was $8.06 billion for 2024, 27% higher than 2023, reflecting an increase in interest income, partially offset by an increase in interest expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P054_S003",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in interest income primarily related to trading assets and investments (each reflecting the impact of higher average balances and higher average interest rates), collateralized agreements and other interest-earning assets (each reflecting the impact of higher average interest rates), partially offset by a decrease in interest income related to deposits with banks (reflecting the impact of lower average balances).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D108",
+            "peer_topic": "Net interest income drivers",
+            "peer_summary": "Net interest income was $54.9 billion, flat year-over-year, due to lower margin compression and deposits in BWM, higher revolving balances in Card Services, and timing impacts from First Republic in Home Lending.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.173427,
+            "relationship": "same_topic",
+            "comparison": "Both MS and JPM report on Net Interest Income/Revenue trends where deposit dynamics played a key role, but outcomes differed. MS's Wealth Management net interest revenue decreased 10% primarily due to 'lower average sweep deposits.' JPM's overall net interest income was flat at $54.9 billion, with a decline in Banking & Wealth Management (BWM) driven by 'lower average deposits' and margin compression. MS specifically cites sweep deposits, while JPM cites lower average deposits in BWM as a headwind, though JPM also notes offsets from higher revolving balances in Card Services.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D061",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P064_S001",
+                    "paragraph_id": "ms_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net interest revenues of $7,313 million in 2024 decreased 10% compared with the prior year, primarily due to lower average sweep deposits, partially offset by higher yields on our investment portfolio and lending growth.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D108",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P152_S001",
+                    "paragraph_id": "jpm_2024_7_P152",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Net interest income was $54.9 billion, flat when compared with the prior year, reflecting:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P152_S002",
+                    "paragraph_id": "jpm_2024_7_P152",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• lower NII in Banking & Wealth Management (\"BWM\"), predominantly driven by deposit margin compression and lower average deposits, offset by",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

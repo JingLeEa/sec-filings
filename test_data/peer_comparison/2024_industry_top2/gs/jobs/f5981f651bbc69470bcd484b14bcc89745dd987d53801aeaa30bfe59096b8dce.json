@@ -1,0 +1,285 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "a622c633c3c16b36d0d14ba09d2ca220a10d295df4cf9a6f1d51ad0cbc99901c",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_1_D025",
+    "item": "1",
+    "target_topic": "Private Banking and Lending Revenue",
+    "target_summary": "Revenue from private banking and lending includes net interest income from loans secured by assets and from deposits raised from wealth management clients, including through Marcus.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0267",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Match supported. The 2023 disclosure details private banking services including loans secured by assets for investment financing and deposit alternatives. The 2024 disclosure (gs_2024_1_D025) explicitly describes private banking and lending activities including issuing loans secured by assets (real estate, securities) to wealth management clients and raising deposits from them, including through Marcus. The subject (private banking loan/deposit products for wealth clients) is consistent.\n\nBoth disclosures specifically detail Private Banking and Lending activities, including issuing secured loans to wealth management clients and raising deposits (including through Marcus), and the associated net interest income.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_1_D014",
+            "item": "1",
+            "section": "Our Business Segments > Asset & Wealth Management",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Services include personalized financial planning, securities execution, and private banking, which offers deposit alternatives and loans secured by assets to finance investments or provide liquidity.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2023_1_D018",
+            "item": "1",
+            "section": "Our Business Segments > Asset & Wealth Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Additional revenues come from private banking and lending activities, including net interest income from deposits and loans, as well as equity investments in corporate, real estate, and infrastructure assets and Community Reinvestment Act investments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_1_D025",
+            "item": "1",
+            "section": "Our Business Segments > Asset & Wealth Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Revenue from private banking and lending includes net interest income from loans secured by assets and from deposits raised from wealth management clients, including through Marcus.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.648032,
+            "sequence_match_ratio": 0.412698,
+            "length_ratio": 0.26506,
+            "word_count_delta": -183,
+            "added_tokens_sample": [
+              "raise"
+            ],
+            "removed_tokens_sample": [
+              "we",
+              "offer",
+              "personalized",
+              "financial",
+              "planning",
+              "to",
+              "individuals",
+              "and",
+              "also",
+              "provide",
+              "customized",
+              "investment",
+              "advisory",
+              "solutions",
+              "and",
+              "offer",
+              "structuring",
+              "and",
+              "execution",
+              "capabilities"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2023_1_D018",
+            "score": 0.920977,
+            "normalised_score": 0.921,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 92.10% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure merges and streamlines previous disclosures by removing references to unsecured consumer loans (which were sold) and specific descriptions of 'deposit alternatives,' consolidating the description to core private banking and lending activities (secured loans and deposits). This clarifies the current business model by removing exited activities.",
+          "key_change": "Removal of unsecured consumer loan activities from private banking"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0011",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in 2025 Item 1 for the specific disclosure of private banking and lending activities within Asset & Wealth Management as described. While gs_2025_1_D037 mentions private banking and lending, the extraction status is 'source_validated' but the sentences provided (gs_2025_1_P034_S001 to S003) only cover Management fees and Incentive fees, omitting the private banking/lending details. gs_2025_1_D035 mentions private banking services but focuses on the nature of services (loans/deposits for investment financing) rather than the revenue source description akin to D025. Given the mismatch in specific subject focus (revenue source breakdown vs service description) and incomplete evidence in the top candidate D037, no definitive match is certified.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_1_D025",
+            "item": "1",
+            "section": "Our Business Segments > Asset & Wealth Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Revenue from private banking and lending includes net interest income from loans secured by assets and from deposits raised from wealth management clients, including through Marcus.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -66,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "private",
+              "banking",
+              "and",
+              "lending",
+              "our",
+              "private",
+              "banking",
+              "and",
+              "lending",
+              "activities",
+              "include",
+              "issuing",
+              "loans",
+              "to",
+              "our",
+              "wealth",
+              "management",
+              "clients",
+              "such",
+              "loans"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure of revenue sources from private banking and lending (net interest income from loans/deposits) is absent from the 2025 evidence, which only covers management/incentive fees. This removal narrows the disclosed business model transparency, but as a standard segment disclosure component within a consistent reporting framework, it is not interpreted as a material change in the company's business, risk, or strategic priorities, but rather a potential formatting or aggregation shift in the 10-K.",
+          "key_change": "Removal of private banking revenue source details"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses private banking lending revenue, net interest income from wealth client loans, or the specific operational linkage between wealth management deposits and lending revenue. The available BAC candidates discuss segment structure and Volcker Rule compliance, which are unrelated to the specific revenue driver and product description in the target disclosure."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_1_D012",
+            "peer_topic": "Non-Markets Net Interest Income",
+            "peer_summary": "Non-Markets net interest income is used to assess lending and deposit activities apart from Markets volatility, providing investors with an alternative view of underlying fundamentals and operational performance trends for these specific activities.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.082837,
+            "relationship": "same_topic",
+            "comparison": "Both GS and Citi disclose specific internal management measures related to net interest income from lending and deposit activities within their wealth or private banking contexts. GS describes 'Private banking and lending' revenues including net interest income from loans secured by assets and deposits raised from wealth management clients. Citi describes 'Non-Markets net interest income' used to assess lending, investing, and deposit-raising activities. While GS frames this as a business segment revenue source, Citi frames it as a non-GAAP performance metric to isolate fundamentals from Markets volatility, but both focus on the same core driver: interest income from client deposits and loans.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1_P033_S004",
+                    "paragraph_id": "gs_2024_1_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Private banking and lending. Our private banking and lending activities include issuing loans to our wealth management clients. Such loans are generally secured by commercial and residential real estate, securities or other assets. We also raise deposits from wealth management clients, including through Marcus. Private banking and lending revenues include net interest income allocated to deposits and net interest income earned on loans to individual clients.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1_D012",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1_P018_S002",
+                    "paragraph_id": "c_2024_1_P018",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Management uses non-Markets net interest income to assess the performance of Citi's lending, investing (including asset-liability management) and deposit-raising activities, apart from any volatility associated with Markets activities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses private banking lending revenue or the specific composition of net interest income from wealth management clients. The available JPM candidates discuss business segment reorganization and regulatory standards of conduct, which do not address the financial measure or product details of private banking and lending revenue."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_1_D017",
+            "peer_topic": "Limitation of U.S. Bank Business Activities",
+            "peer_summary": "The business activities of Morgan Stanley's U.S. Bank Subsidiaries are generally limited to supporting its Institutional Securities and Wealth Management business segments.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.067836,
+            "relationship": "related_topic",
+            "comparison": "Both GS and Morgan Stanley highlight the structural integration of wealth management and banking operations. GS explicitly states that its private banking and lending activities raise deposits from wealth management clients, linking the two functions. Similarly, Morgan Stanley discloses that its U.S. Bank Subsidiaries' activities are limited to supporting its Wealth Management business segment, indicating a comparable strategic interdependence between its depository institutions and wealth management arms.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1_P033_S004",
+                    "paragraph_id": "gs_2024_1_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Private banking and lending. Our private banking and lending activities include issuing loans to our wealth management clients. Such loans are generally secured by commercial and residential real estate, securities or other assets. We also raise deposits from wealth management clients, including through Marcus. Private banking and lending revenues include net interest income allocated to deposits and net interest income earned on loans to individual clients.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_1_D017",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_1_P035_S005",
+                    "paragraph_id": "ms_2024_1_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Our U.S. Bank Subsidiaries' business activities are generally limited to supporting our Institutional Securities and Wealth Management business segments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

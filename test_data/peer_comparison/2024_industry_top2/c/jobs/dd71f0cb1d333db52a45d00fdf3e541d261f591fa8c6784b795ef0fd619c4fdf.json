@@ -1,0 +1,274 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "1fabf1e450642ea698fbcf0718e3cc183b5170f551bd0e6cfe0a7b879070f741",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D445",
+    "item": "7",
+    "target_topic": "Specific composition of wealth loans and Private Bank concentrations",
+    "target_summary": "Wealth loans include funded corporate and Private Bank loans; Private Bank loans totaled $18.6 billion as of Dec 31, 2024, concentrated in Hong Kong ($5.9B), Singapore ($4.8B), and the U.K. ($3.8B).",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "c_2023_2024_M0676",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures define 'Wealth loans' in the country exposure context, noting they include Private Bank loans net of unearned income, and provide specific 2024 totals.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "OTHER RISKS > Country Risk > Top 25 Country Exposures",
+            "summary": "Wealth loans include Private Bank loans net of unearned income (totaling $19.3 billion in top 25 countries as of Dec 31, 2023); other funded exposures include accounts receivable and equity method investments; unfunded exposure includes corporate lending commitments, letters of credit, and contingencies.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2023_7_D423",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "OTHER RISKS > Country Risk > Top 25 Country Exposures",
+            "summary": "Wealth loans include funded corporate and Private Bank loans; Private Bank loans totaled $18.6 billion as of Dec 31, 2024, concentrated in Hong Kong ($5.9B), Singapore ($4.8B), and the U.K. ($3.8B).",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D445",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.98,
+            "change_taxonomy": "Modified",
+            "word_count_delta": -1,
+            "cosine_similarity": 0.298812,
+            "added_tokens_sample": [
+              "corporate",
+              "and",
+              "loans",
+              "of",
+              "december",
+              "31",
+              "2024",
+              "private",
+              "bank",
+              "loans",
+              "in",
+              "the",
+              "table",
+              "above",
+              "totaled",
+              "18",
+              "6",
+              "billion",
+              "concentrated",
+              "in"
+            ],
+            "sequence_match_ratio": 0.323232,
+            "removed_tokens_sample": [
+              "including",
+              "those",
+              "related",
+              "to",
+              "the",
+              "2",
+              "other",
+              "funded",
+              "includes",
+              "other",
+              "direct",
+              "exposures",
+              "such",
+              "accounts",
+              "receivable",
+              "investments",
+              "accounted",
+              "for",
+              "under",
+              "equity"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "score": 0.796394,
+            "method": "embedding_cosine",
+            "rationale": "Score 79.64% of ceiling with 21% word overlap — same disclosure, wording changed.",
+            "matched_id": "c_2023_7_D423",
+            "normalised_score": 0.7964
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure changes the definition of 'Wealth loans' to explicitly include 'funded corporate loans' alongside Private Bank loans, whereas 2023 focused on Private Bank loans. Additionally, it provides specific geographic concentration data for 2024 that was absent in 2023. This clarifies and expands the composition of the exposure, affecting how the financial position is interpreted.",
+          "key_change": "Expanded definition of Wealth loans and new concentration data"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D096",
+            "peer_topic": "Bank of America Private Bank Revenue",
+            "peer_summary": "Bank of America Private Bank revenue of $3.9 billion increased six percent, primarily driven by higher asset management fees due to the impact of higher average equity market valuations and client flows.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.112793,
+            "relationship": "related_topic",
+            "comparison": "Both Citigroup and Bank of America disclose metrics specifically related to their Private Bank/Private Bank units, identifying them as key wealth management business segments. However, the nature of the disclosure differs: Citigroup reports the specific composition and geographic concentration of its Private Bank loan balances (totaling $18.6 billion), whereas Bank of America reports the revenue generated by its Private Bank unit ($3.9 billion) and the drivers of that revenue.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D445",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P619_S002",
+                    "paragraph_id": "c_2024_7_P619",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "As of December 31, 2024, Private Bank loans in the table above totaled $18.6 billion, concentrated in Hong Kong ($5.9 billion), Singapore ($4.8 billion) and the U.K. ($3.8 billion).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D096",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P106_S001",
+                    "paragraph_id": "bac_2024_7_P106",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Bank of America Private Bank revenue of $3.9 billion increased six percent primarily driven by higher asset management fees due to the impact of higher average equity market valuations and client flows.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D091",
+            "peer_topic": "Private Banking and Lending Loan Portfolio and Credit Losses",
+            "peer_summary": "Gross loans related to Private banking and lending were $38 billion in December 2024 and $33 billion in December 2023, with average gross loans of $45.84 billion in 2024. The provision for credit losses was a net benefit of $232 million in 2024, driven by wholesale portfolio paydowns, compared to a net benefit of $508 million in 2023 which included reserve reductions related to the Marcus loan portfolio sale.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.097598,
+            "relationship": "same_topic",
+            "comparison": "Both Citigroup and Goldman Sachs disclose the magnitude of their private banking and wealth management loan portfolios. Citigroup specifies that Private Bank loans totaled $18.6 billion as of December 31, 2024, concentrated in specific international jurisdictions. Goldman Sachs reports gross loans related to Private banking and lending at $38 billion as of December 2024, representing a larger absolute portfolio size and providing context on credit loss provisions rather than geographic concentration.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D445",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P619_S002",
+                    "paragraph_id": "c_2024_7_P619",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "As of December 31, 2024, Private Bank loans in the table above totaled $18.6 billion, concentrated in Hong Kong ($5.9 billion), Singapore ($4.8 billion) and the U.K. ($3.8 billion).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D091",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P117_S001",
+                    "paragraph_id": "gs_2024_7_P117",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In the table above, gross loans included $38 billion of loans as of December 2024 and $33 billion of loans as of December 2023 that were related to Private banking and lending.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for JPM focus on Home Lending loans held-for-sale and fair value, which are retail mortgage-related assets. This is not comparable to Citigroup's disclosure of Private Bank loans and funded corporate loans within the wealth management/wealth loans taxonomy."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D311",
+            "peer_topic": "Wealth Management CRE Lending Portfolio Overview and Risk Profile",
+            "peer_summary": "As of December 31, 2024, direct lending against CRE properties in Wealth Management totaled $7.7 billion, representing 4.3% of total exposure and primarily included in Securities-based lending and Other loans. These loans are originated through the private banking platform, secured, and over 95% benefit from guarantees from high net worth clients, with all lending located in the Americas.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.103352,
+            "relationship": "same_topic",
+            "comparison": "Both Citigroup and Morgan Stanley disclose specific loan balances within their wealth management or private banking platforms. Citigroup reports $18.6 billion in Private Bank loans with geographic breakdowns. Morgan Stanley reports $7.7 billion in direct lending against CRE properties within its Wealth Management segment, noting that these loans are originated through the private banking platform and are heavily secured with client guarantees.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D445",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P619_S002",
+                    "paragraph_id": "c_2024_7_P619",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "As of December 31, 2024, Private Bank loans in the table above totaled $18.6 billion, concentrated in Hong Kong ($5.9 billion), Singapore ($4.8 billion) and the U.K. ($3.8 billion).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D311",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P360_S001",
+                    "paragraph_id": "ms_2024_7_P360",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "As of December 31, 2024 and December 31, 2023, our direct lending against CRE properties totaled $7.7 billion and $7.1 billion, respectively, within the Wealth Management business segment.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P360_S003",
+                    "paragraph_id": "ms_2024_7_P360",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Such loans are originated through our private banking platform, are both secured and generally benefiting from full or partial guarantees from high or ultra-high net worth clients, which partially reduce associated credit risk.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

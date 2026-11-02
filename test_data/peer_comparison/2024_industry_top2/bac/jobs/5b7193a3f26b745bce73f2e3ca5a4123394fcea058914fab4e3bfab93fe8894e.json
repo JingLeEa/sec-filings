@@ -1,0 +1,170 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "a18e025f282036304c59435398229ed2849b1aa4218fdf4002987c55aa055b0c",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_8_D149",
+    "item": "8",
+    "target_topic": "Cumulative valuation adjustment balances at year-end 2024-2022",
+    "target_summary": "At December 31, 2024, 2023, and 2022, cumulative CVA reduced the derivative assets balance by $328 million, $359 million, and $518 million; cumulative FVA reduced the net derivative balance by $66 million, $87 million, and $54 million; and cumulative DVA reduced the derivative liabilities balance by $272 million, $299 million, and $506 million, respectively.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0661",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report cumulative CVA, FVA, and DVA impacts on derivative balances for the same years. The 2024 disclosure (D149) includes the 2023 figures ($359M CVA, $87M FVA, $299M DVA) which match the 2023 disclosure (D163) exactly, confirming they describe the same specific valuation adjustment topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_8_D163",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 3 Derivatives > Valuation Adjustments on Derivatives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "At year-end 2023, 2022, and 2021, cumulative CVA reduced derivative assets by $359 million, $518 million, and $438 million respectively, cumulative FVA reduced the net derivative balance by $87 million, $54 million, and $179 million, and cumulative DVA reduced derivative liabilities by $299 million, $506 million, and $312 million.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D149",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 3 Derivatives > Valuation Adjustments on Derivatives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "At December 31, 2024, 2023, and 2022, cumulative CVA reduced the derivative assets balance by $328 million, $359 million, and $518 million; cumulative FVA reduced the net derivative balance by $66 million, $87 million, and $54 million; and cumulative DVA reduced the derivative liabilities balance by $272 million, $299 million, and $506 million, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.957725,
+            "sequence_match_ratio": 0.8,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "2024",
+              "and",
+              "328",
+              "million",
+              "and",
+              "66",
+              "million",
+              "and",
+              "272",
+              "million",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "and",
+              "2021",
+              "million",
+              "and",
+              "438",
+              "million",
+              "and",
+              "179",
+              "and",
+              "312",
+              "million"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_8_D163",
+            "score": 1.033711,
+            "normalised_score": 1.0337,
+            "label": "Unchanged",
+            "rationale": "Score 103.37% of ceiling — semantically identical despite surface differences (word overlap 68%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.95,
+          "reason": "The disclosure introduces updated cumulative valuation adjustment figures for 2024 (CVA $328M, FVA $66M, DVA $272M) compared to the prior year's ending balances. This represents a material update to the company's financial exposure and asset/liability valuation for its derivatives portfolio, directly impacting reported financial condition.",
+          "key_change": "Updated derivative valuation adjustment balances for 2024"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0696",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "The 2024 D148 explains the mechanics of CVA, DVA, and FVA gains/losses on derivatives. The 2025 D149 includes the same explanation of these mechanics (sentences S002-S006) along with the cumulative balance data from the previous 2024 D149. Since 2025 D149 covers the same specific topic of valuation adjustment mechanics and balances found in 2024 D148/D149, it is the correct counterpart for D148.\n\nThe 2024 D149 reports the cumulative CVA, FVA, and DVA balances reducing asset/liability positions. The 2025 D149 reports the corresponding 2025 cumulative balances ($336M, $116M, $270M). This is the same specific disclosure topic (cumulative valuation adjustment balances).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D148",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 3 Derivatives > Valuation Adjustments on Derivatives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "CVA and DVA gains reduce their respective cumulative adjustments (increasing assets or decreasing liabilities), while losses have the opposite impact; similarly, FVA gains on assets reduce cumulative FVA (increasing assets), gains on liabilities increase cumulative FVA (decreasing liabilities), and losses have the opposite impact.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D149",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 3 Derivatives > Valuation Adjustments on Derivatives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "At December 31, 2024, 2023, and 2022, cumulative CVA reduced the derivative assets balance by $328 million, $359 million, and $518 million; cumulative FVA reduced the net derivative balance by $66 million, $87 million, and $54 million; and cumulative DVA reduced the derivative liabilities balance by $272 million, $299 million, and $506 million, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_8_D149",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 3 Derivatives > Valuation Adjustments on Derivatives",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "CVA, DVA, and FVA gains and losses impact derivative asset and liability balances; at December 31, 2025, cumulative CVA, FVA, and DVA reduced derivative assets/net balance and liabilities by $336 million, $116 million, and $270 million, respectively.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (non-accrual loan interest income and non-U.S. penalties) concern tax provisioning and credit quality metrics, which are substantively distinct from the target's topic of cumulative credit, funding, and valuation adjustments (CVA, FVA, DVA) on derivatives."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (other comprehensive income and tax-related interest/penalty accruals) concern comprehensive income components and tax liabilities, respectively, which are substantively distinct from the target's topic of cumulative valuation adjustments on derivatives."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (amortization expense and allowance for credit losses on receivables) concern intangible asset accounting and credit loss reserves, which are substantively distinct from the target's topic of cumulative valuation adjustments on derivatives."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (a specific unspecified financial balance and hedged portfolio layer method adjustments) do not disclose cumulative CVA, FVA, or DVA balances. The hedged portfolio topic involves basis adjustments for specific hedging strategies, which is a different accounting mechanism and risk exposure than the general derivative valuation adjustments detailed in the target."
+      }
+    ]
+  }
+}

@@ -1,0 +1,447 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "d3be7728a3a505f35b9d4a63ccb0b3dc6e7f7b3c6213fadfb67d91d32ea9ad6c",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D128",
+    "item": "7",
+    "target_topic": "Noninterest Expense Drivers",
+    "target_summary": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense (including revenue-related compensation and increased headcount) and higher technology and brokerage expense, partially offset by lower legal expense.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0417",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D134 reports 2023 Noninterest expense of $28.6 billion with drivers including compensation, legal, and indirect tax. D128 reports 2024 Noninterest expense of $35.4 billion with drivers including compensation, technology, and legal. Both disclosures summarize total Firmwide Noninterest expense and its primary drivers in Item 7, representing the same specific topic (aggregate Noninterest expense performance). D147 is a segment-specific disclosure ($5.4B for Investment Banking) and does not match the aggregate scope of D128; thus, D147 is excluded from this alignment.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D134",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > 2023 compared with 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense was $28.6 billion, up 5%, driven by higher legal expense, compensation expense including the impact of wage inflation, and higher indirect tax expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D128",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense (including revenue-related compensation and increased headcount) and higher technology and brokerage expense, partially offset by lower legal expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.550837,
+            "sequence_match_ratio": 0.461538,
+            "length_ratio": 1.5,
+            "word_count_delta": 13,
+            "added_tokens_sample": [
+              "35",
+              "4",
+              "4",
+              "revenue",
+              "related",
+              "compensation",
+              "and",
+              "an",
+              "increase",
+              "in",
+              "number",
+              "employees",
+              "as",
+              "well",
+              "as",
+              "higher",
+              "technology",
+              "brokerage",
+              "partially",
+              "offset"
+            ],
+            "removed_tokens_sample": [
+              "28",
+              "6",
+              "5",
+              "legal",
+              "expense",
+              "impact",
+              "wage",
+              "inflation",
+              "higher",
+              "indirect",
+              "tax"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_7_D134",
+            "score": 0.97328,
+            "normalised_score": 0.9733,
+            "label": "Relocated",
+            "rationale": "Score 97.33% of ceiling — content is similar but section changed from 'BUSINESS SEGMENT RESULTS > 2023 compared with 2022' to 'BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The disclosure indicates a significant increase in total Noninterest expense from $28.6 billion to $35.4 billion, driven by a structural shift in drivers. The 2024 filing cites higher compensation (including revenue-related comp and headcount) and technology costs, whereas the 2023 filing cited wage inflation and legal expenses. The introduction of technology expense as a primary driver reflects a meaningful change in operational cost structure.",
+          "key_change": "Increase in expense driven by compensation headcount and technology costs"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0346",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report Noninterest Expense figures and their primary drivers (compensation, technology, legal/regulated costs) for the Commercial & Investment Bank. The 2024 disclosure cites $35.4 billion (+4%) and the 2025 disclosure cites $38.2 billion (+8%), with similar qualitative explanations for the expense increases.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D128",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense (including revenue-related compensation and increased headcount) and higher technology and brokerage expense, partially offset by lower legal expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D112",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > 2025 compared with 2024",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense rose 8% to $38.2 billion due to higher compensation, technology, and regulatory costs, while the provision for credit losses increased to $2.6 billion.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.48448,
+            "sequence_match_ratio": 0.351145,
+            "length_ratio": 2.358974,
+            "word_count_delta": 53,
+            "added_tokens_sample": [
+              "38",
+              "2",
+              "8",
+              "predominantly",
+              "higher",
+              "brokerage",
+              "regulatory",
+              "the",
+              "provision",
+              "for",
+              "credit",
+              "losses",
+              "was",
+              "2",
+              "6",
+              "billion",
+              "driven",
+              "by",
+              "net",
+              "increases"
+            ],
+            "removed_tokens_sample": [
+              "35",
+              "4",
+              "4",
+              "expense",
+              "and",
+              "an",
+              "increase",
+              "in",
+              "the",
+              "number",
+              "of",
+              "employees",
+              "brokerage",
+              "lower",
+              "legal",
+              "expense"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_7_D128",
+            "score": 0.931238,
+            "normalised_score": 0.9312,
+            "label": "Relocated",
+            "rationale": "Score 93.12% of ceiling — content is similar but section changed from 'BUSINESS SEGMENT & CORPORATE RESULTS > 2024 compared with 2023' to 'BUSINESS SEGMENT & CORPORATE RESULTS > 2025 compared with 2024'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.92,
+          "reason": "Noninterest expense increased by 8% to $38.2 billion, accelerating from a 4% increase in the prior year. The drivers shifted to include higher regulatory and brokerage expenses alongside compensation and technology. This acceleration in expense growth materially impacts the firm's cost structure and profitability.",
+          "key_change": "Acceleration of noninterest expense growth to 8%"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D091",
+            "peer_topic": "GWIM Noninterest Expense",
+            "peer_summary": "Noninterest expense increased $1.4 billion to $17.2 billion, primarily due to higher revenue-related incentives.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.256957,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC report noninterest expense increases driven by higher compensation and revenue-related incentives. JPM cites 'higher compensation expense, including revenue-related compensation' as a key driver. Similarly, BAC’s GWIM segment reports noninterest expense increases 'primarily due to higher revenue-related incentives.'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D128",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P181_S001",
+                    "paragraph_id": "jpm_2024_7_P181",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense, including revenue-related compensation and an increase in the number of employees, as well as higher technology and brokerage expense partially offset by lower legal expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D091",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P102_S001",
+                    "paragraph_id": "bac_2024_7_P102",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Noninterest expense increased $1.4 billion to $17.2 billion primarily due to higher revenue-related incentives.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D022",
+            "peer_topic": "Services segment net income and expense drivers",
+            "peer_summary": "Services net income was $6.5 billion, a 40% increase, driven by higher revenue and lower cost of credit, partially offset by higher expenses of $10.6 billion which increased 6% due to technology investments and Argentina-related taxes.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.157967,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and C discuss higher operating expenses in the context of technology investments. JPM identifies 'higher technology... expense' as a driver. C’s Services segment reports a 6% increase in expenses, primarily driven by 'continued investments in technology and platform modernization.'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D128",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P181_S001",
+                    "paragraph_id": "jpm_2024_7_P181",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense, including revenue-related compensation and an increase in the number of employees, as well as higher technology and brokerage expense partially offset by lower legal expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P021_S001",
+                    "paragraph_id": "c_2024_7_P021",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Services expenses of $10.6 billion increased 6%, primarily driven by continued investments in technology and platform modernization, other risk and controls and product innovation, as well as an Argentina-related transaction tax expense and higher legal expenses, partially offset by the impact of productivity savings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D008",
+            "peer_topic": "Operating Expense Efficiency and Adjustments",
+            "peer_summary": "Operating expenses decreased 2% to $33.77 billion in 2024, aided by lower CIE commercial real estate impairments and prior year one-time charges like the GreenSky write-down, partially offset by higher compensation and transaction expenses, resulting in an efficiency ratio improvement to 63.1% from 74.6%.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.106278,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and GS highlight higher compensation costs as a driver for operating/noninterest expense changes, though the net impact differs. JPM reports a 4% increase in noninterest expense driven by 'higher compensation expense.' GS reports a 2% decrease in operating expenses, but explicitly notes this was 'partially offset by higher compensation and benefits expenses' due to improved performance.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D128",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P181_S001",
+                    "paragraph_id": "jpm_2024_7_P181",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense, including revenue-related compensation and an increase in the number of employees, as well as higher technology and brokerage expense partially offset by lower legal expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D008",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P010_S002",
+                    "paragraph_id": "gs_2024_7_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These decreases were partially offset by higher compensation and benefits expenses (reflecting improved operating performance) and higher transaction based expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D064",
+            "peer_topic": "Wealth Management Non-Interest Expense Trend and Drivers",
+            "peer_summary": "Wealth Management non-interest expenses increased 5% to $20,618 million in 2024 compared to the prior year. This increase was driven by higher compensation and benefits expenses, primarily due to increased formulaic payouts to representatives on higher compensable revenues, partially offset by decreases in non-compensation expenses such as professional services, legal expenses, and FDIC special assessment costs.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.178872,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and MS attribute higher noninterest expense to increased compensation costs linked to performance. JPM highlights 'revenue-related compensation' as a driver. MS’s Wealth Management segment explicitly states compensation increased 'due to an increase in the formulaic payout to Wealth Management representatives on higher compensable revenues.'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D128",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P181_S001",
+                    "paragraph_id": "jpm_2024_7_P181",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense, including revenue-related compensation and an increase in the number of employees, as well as higher technology and brokerage expense partially offset by lower legal expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D064",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P068_S002",
+                    "paragraph_id": "ms_2024_7_P068",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Compensation and benefits expenses increased, primarily due to an increase in the formulaic payout to Wealth Management representatives on higher compensable revenues.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D040",
+            "peer_topic": "Non-interest expense composition and drivers",
+            "peer_summary": "Non-interest expenses totaled $19,129 million in 2024, a 5% increase year-over-year, driven by higher compensation and benefits (primarily discretionary incentive compensation) and higher non-compensation expenses (primarily execution-related and technology spend).",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.168954,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and MS experienced higher noninterest expenses driven by compensation and technology/execution spend. JPM notes 'higher technology and brokerage expense' alongside compensation. MS reports non-compensation expenses increased due to 'higher execution-related expenses and increased technology spend,' mirroring the technology component identified by JPM.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D128",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P181_S001",
+                    "paragraph_id": "jpm_2024_7_P181",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Noninterest expense was $35.4 billion, up 4%, driven by higher compensation expense, including revenue-related compensation and an increase in the number of employees, as well as higher technology and brokerage expense partially offset by lower legal expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D040",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P044_S003",
+                    "paragraph_id": "ms_2024_7_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "• Non-compensation expenses increased primarily reflecting higher execution-related expenses and increased technology spend, partially offset by lower legal expenses and lower FDIC special assessment cost.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

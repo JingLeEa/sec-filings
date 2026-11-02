@@ -1,0 +1,271 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "3aa5515cb26dfedefa5212bbf8c52fc5cea0b5c3991fddb701bb3241ad9b7729",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_8_D455",
+    "item": "8",
+    "target_topic": "Goodwill Associated with Acquisitions by Year",
+    "target_summary": "Footnotes detail estimated goodwill from specific acquisitions: LayerOne Financial (2024), CIFM and Aumni Inc. (2023), and Global Shares PLC, Frosch Travel Group, Figg, Inc., Renovite Technologies, and Volkswagen Payments (2022).",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M1223",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail the specific acquisitions that generated goodwill for the year. 2023 D491 cites CIFM and Aumni. 2024 D455 cites CIFM and Aumni for 2023 goodwill (reflecting the prior year's acquisitions in the rollforward or comparative detail), along with LayerOne for 2024. The specific subject matter (composition of goodwill by acquisition) matches.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_8_D491",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 15 - Goodwill, mortgage servicing rights, and other intangible assets > Goodwill",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The 2023 goodwill primarily reflects acquisitions in AWM (CIFM) and CIB (Aumni Inc.), while 2022 and 2021 reflect various acquisitions across AWM, CCB, CIB, and Corporate segments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D455",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 15 - Goodwill, mortgage servicing rights, and other intangible assets > Goodwill",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnotes detail estimated goodwill from specific acquisitions: LayerOne Financial (2024), CIFM and Aumni Inc. (2023), and Global Shares PLC, Frosch Travel Group, Figg, Inc., Renovite Technologies, and Volkswagen Payments (2022).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.927109,
+            "sequence_match_ratio": 0.759036,
+            "length_ratio": 0.886364,
+            "word_count_delta": -10,
+            "added_tokens_sample": [
+              "for",
+              "2024",
+              "includes",
+              "estimated",
+              "goodwill",
+              "associated",
+              "with",
+              "the",
+              "acquisition",
+              "of",
+              "layerone",
+              "financial",
+              "in",
+              "cib",
+              "predominantly"
+            ],
+            "removed_tokens_sample": [
+              "for",
+              "2021",
+              "represents",
+              "goodwill",
+              "associated",
+              "with",
+              "the",
+              "acquisitions",
+              "of",
+              "nutmeg",
+              "in",
+              "corporate",
+              "openinvest",
+              "and",
+              "campbell",
+              "global",
+              "in",
+              "awm",
+              "and",
+              "frank"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_8_D491",
+            "score": 0.910354,
+            "normalised_score": 0.9104,
+            "label": "Modified",
+            "rationale": "Score 91.04% of ceiling with 74% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.9,
+          "reason": "The disclosure updates the specific acquisitions driving goodwill, adding LayerOne Financial for 2024 and removing 2021 acquisitions (Nutmeg, OpenInvest, etc.). This identifies new strategic acquisitions and removes obsolete drivers, changing the composition of the asset base.",
+          "key_change": "Update of specific acquisition drivers for goodwill"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M1184",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "D455 in 2024 contains footnotes (a), (b), and (c) detailing goodwill for acquisitions in 2024, 2023, and 2022 respectively. In 2025, these are split. D489 corresponds to footnote (a) for 2024 (LayerOne Financial acquisition). D490 corresponds to footnote (b) for 2023 (CIFM and Aumni acquisitions). D455 is a single disclosure containing multiple years' details; D489 and D490 are separate disclosures for those specific details. The link is supported by the specific acquisition details (LayerOne for 2024, CIFM/Aumni for 2023) matching the respective footnotes.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D455",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 15 - Goodwill, mortgage servicing rights, and other intangible assets > Goodwill",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Footnotes detail estimated goodwill from specific acquisitions: LayerOne Financial (2024), CIFM and Aumni Inc. (2023), and Global Shares PLC, Frosch Travel Group, Figg, Inc., Renovite Technologies, and Volkswagen Payments (2022).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_8_D489",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 15 - Goodwill, mortgage servicing rights, and other intangible assets > Goodwill",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "For 2024, goodwill includes estimated amounts associated with the acquisition of LayerOne Financial in the CIB segment.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2025_8_D490",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 15 - Goodwill, mortgage servicing rights, and other intangible assets > Goodwill",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "For 2023, goodwill predominantly represents estimated amounts associated with the acquisition of the remaining 51% interest in CIFM in AWM and the acquisition of Aumni Inc., predominantly in CIB.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D258",
+            "peer_topic": "Goodwill Impairment Test Results 2024",
+            "peer_summary": "The Corporation completed its annual goodwill impairment test as of June 30, 2024 using a qualitative assessment and concluded that no reporting units were at risk of impairment because their fair values were substantially in excess of their carrying values.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.059237,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC report on goodwill related to acquisitions in 2024, but BAC focuses on impairment testing results while JPM details specific acquisition sources. JPM states that 2024 goodwill includes amounts from LayerOne Financial, while BAC details its 2024 impairment test conclusion that no units were impaired, providing a contrast in disclosure focus: JPM discloses the origin of new goodwill, whereas BAC discloses the health of existing goodwill.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D455",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P679_S001",
+                    "paragraph_id": "jpm_2024_8_P679",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(a)For 2024, includes estimated goodwill associated with the acquisition of LayerOne Financial in CIB.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D258",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P296_S001",
+                    "paragraph_id": "bac_2024_8_P296",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "During 2024, the Corporation completed its annual goodwill impairment test as of June 30, 2024 using a qualitative assessment for all applicable reporting units.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates c_2024_8_D132 and c_2024_8_D127 are not comparable because they are generic references to other notes or definitions, lacking specific 2024 goodwill transaction or event details comparable to JPM's disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D312",
+            "peer_topic": "Goodwill impairment charge in 2024",
+            "peer_summary": "In the third quarter of 2024, the firm recorded a $14 million impairment for goodwill associated with Transaction banking and other, linked to the planned sale of its seller financing loan portfolio.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.086915,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and GS disclose specific goodwill events in 2024, but the nature is opposite: JPM reports goodwill arising from acquisitions (LayerOne), while GS reports goodwill impairment due to asset sales (seller financing loan portfolio). This highlights different drivers for goodwill changes in the same period: acquisition-driven growth for JPM versus restructuring/impairment for GS.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D455",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P679_S001",
+                    "paragraph_id": "jpm_2024_8_P679",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(a)For 2024, includes estimated goodwill associated with the acquisition of LayerOne Financial in CIB.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D312",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P408_S001",
+                    "paragraph_id": "gs_2024_8_P408",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "During the third quarter of 2024, in connection with the planned sale of the firm's seller financing loan portfolio, the firm performed a quantitative goodwill test and determined that the goodwill associated with Transaction banking and other was impaired, and accordingly, recorded a $14 million impairment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates ms_2024_8_D102 and ms_2024_8_D267 are not comparable because they describe valuation methodologies and general impairment test results (no impairment) rather than specific goodwill arising from or related to 2024 acquisitions like JPM."
+      }
+    ]
+  }
+}

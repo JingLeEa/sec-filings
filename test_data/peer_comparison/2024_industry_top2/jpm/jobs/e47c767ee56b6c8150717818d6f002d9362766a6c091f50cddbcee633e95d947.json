@@ -1,0 +1,391 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "4fc70b4104f788abbdbd7943d13a712637bd82d04fb8fd2faaf38c9ed1018c96",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_8_D527",
+    "item": "8",
+    "target_topic": "Income tax expense components from audit resolutions",
+    "target_summary": "Total income tax expense includes tax benefits of $314 million, $68 million, and $331 million in 2024, 2023, and 2022, respectively, resulting from the resolution of tax audits.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M1293",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report income tax benefits resulting from the resolution of tax audits. D574 lists specific benefits for 2023, 2022, and 2021. D527 lists specific benefits for 2024, 2023, and 2022. The specific subject of tax audit resolution benefits is the same, with updated figures for the current year.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_8_D574",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 25 - Income taxes > Effective tax rate and expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total income tax expense includes specific tax benefits and expenses resulting from the resolution of tax audits across 2021, 2022, and 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D527",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 25 - Income taxes > Effective tax rate and expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total income tax expense includes tax benefits of $314 million, $68 million, and $331 million in 2024, 2023, and 2022, respectively, resulting from the resolution of tax audits.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.833588,
+            "sequence_match_ratio": 0.677419,
+            "length_ratio": 0.823529,
+            "word_count_delta": -6,
+            "added_tokens_sample": [
+              "314",
+              "million",
+              "and",
+              "2024",
+              "2023",
+              "and",
+              "respectively"
+            ],
+            "removed_tokens_sample": [
+              "of",
+              "tax",
+              "benefits",
+              "in",
+              "2023",
+              "and",
+              "69",
+              "million",
+              "of",
+              "tax",
+              "expenses",
+              "in",
+              "2021"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_8_D574",
+            "score": 0.979859,
+            "normalised_score": 0.9799,
+            "label": "Unchanged",
+            "rationale": "Score 97.99% of ceiling — semantically identical despite surface differences (word overlap 73%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.9,
+          "reason": "The disclosure updates the specific tax benefit amounts resulting from the resolution of tax audits for the current year (2024) and shifts the historical window. These are periodic, item-specific financial results reflecting ongoing legal/tax audit outcomes, not a change in risk exposure or business strategy.",
+          "key_change": "Annual update of tax audit resolution benefits"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M1246",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report total income tax expense including tax benefits resulting from the resolution of tax audits for specific fiscal years (2024 vs 2025/2024/2023). While D675 also relates to audit resolutions, D567 captures the full multi-year breakdown presented in the effective tax rate section, matching the structure of D527.\n\nBoth disclosures report tax benefits resulting from the resolution of tax audits. The 2024 disclosure (D527) reports $314 million in tax benefits from audit resolutions for 2024. The 2025 disclosure (D675) reports a $774 million tax benefit driven by the resolution of certain tax audits finalized in 2024 and effective for 2025. While the amounts differ, the subject matter (tax benefit from audit resolution) and the specific reference to the 2024 resolution timeline link them as counterparts within the same Note 25 Income Taxes section.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D527",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 25 - Income taxes > Effective tax rate and expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total income tax expense includes tax benefits of $314 million, $68 million, and $331 million in 2024, 2023, and 2022, respectively, resulting from the resolution of tax audits.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_8_D567",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 25 - Income taxes > Effective tax rate and expense",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total income tax expense includes tax benefits of $629 million, $314 million, and $68 million for the years ended December 31, 2025, 2024, and 2023, respectively, resulting from the resolution of tax audits.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2025_8_D675",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 32 - Business segments & Corporate > Segment & Corporate results and reconciliation(a)",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Included a $774 million income tax benefit recorded in the second quarter of 2025, driven by the resolution of certain tax audits and tax regulations related to foreign currency translation gains and losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.72019,
+            "sequence_match_ratio": 0.419048,
+            "length_ratio": 2.75,
+            "word_count_delta": 49,
+            "added_tokens_sample": [
+              "629",
+              "million",
+              "and",
+              "for",
+              "the",
+              "years",
+              "ended",
+              "december",
+              "31",
+              "2025",
+              "and",
+              "f",
+              "included",
+              "a",
+              "774",
+              "million",
+              "income",
+              "tax",
+              "benefit",
+              "recorded"
+            ],
+            "removed_tokens_sample": [
+              "million",
+              "and",
+              "331",
+              "in",
+              "and",
+              "2022"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2024_8_D527",
+            "score": 1.018345,
+            "normalised_score": 1.0183,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 101.83% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The primary disclosure shows a significant increase in tax benefits from audit resolutions for 2025 ($629 million) compared to 2024 ($314 million) and 2023 ($68 million). This quantifies a substantial, albeit non-recurring, item in the effective tax rate. The split into a second disclosure (D675) highlighting a specific $774 million benefit in Q2 2025 further emphasizes the materiality of these audit resolutions to the firm's reported tax expense.",
+          "key_change": "Significant increase in tax benefits from audit resolutions"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D454",
+            "peer_topic": "FTE Adjustment for Tax-Exempt Securities",
+            "peer_summary": "Segment results on an FTE basis include additional net interest income and income tax expense related to tax-exempt securities of $619 million, $567 million, and $438 million in 2024, 2023, and 2022, respectively.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.269775,
+            "relationship": "related_topic",
+            "comparison": "Both JPM and BAC disclose specific line items within the income tax provision/expense, but they pertain to fundamentally different drivers. JPM's disclosed $314 million tax benefit in 2024 is explicitly attributed to the resolution of tax audits. BAC's disclosed $619 million relates to FTE adjustments for tax-exempt securities, which is a structural accounting presentation difference for municipal holdings rather than a result of tax audit resolutions. Both are specific quantified adjustments to tax expense, but the underlying causes (audit settlements vs. statutory tax-exempt interest inclusion) are distinct.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D527",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P790_S001",
+                    "paragraph_id": "jpm_2024_8_P790",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Total income tax expense includes $314 million, $68 million and $331 million of tax benefits in 2024, 2023, and 2022, respectively, resulting from the resolution of tax audits.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D454",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P570_S001",
+                    "paragraph_id": "bac_2024_8_P570",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "(1)Segment results are presented on an FTE basis and include additional net interest income and income tax expense, related to tax-exempt securities, of $619 million, $567 million and $438 million in 2024, 2023 and 2022, respectively, as compared to the Consolidated Statement of Income.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D294",
+            "peer_topic": "Non-U.S. penalty amounts",
+            "peer_summary": "Non-U.S. penalties included in the provision were $1 million in 2024, $0 million in 2023, and $3 million in 2022.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.263009,
+            "relationship": "related_topic",
+            "comparison": "Both JPM and C discuss components of tax provisions arising from regulatory or audit outcomes, but they focus on different specific items. JPM reports a $314 million tax benefit in 2024 resulting from the resolution of tax audits. C, in contrast, reports $1 million in non-U.S. penalties included in the provision for 2024. Both represent non-recurring or specific adjustments to the tax provision driven by external tax authority interactions, but JPM's represents a net benefit from resolution, while C's represents a penalty expense.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D527",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P790_S001",
+                    "paragraph_id": "jpm_2024_8_P790",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Total income tax expense includes $314 million, $68 million and $331 million of tax benefits in 2024, 2023, and 2022, respectively, resulting from the resolution of tax audits.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D294",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P347_S001",
+                    "paragraph_id": "c_2024_8_P347",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(1)Includes $1 million, $0 million and $3 million for non-U.S. penalties in 2024, 2023 and 2022, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D482",
+            "peer_topic": "Interest and Penalty Accruals Related to Income Taxes",
+            "peer_summary": "Accrued liability for interest and penalties was $475 million as of December 2024 and $320 million as of December 2023, with recognized expenses of $113 million, $90 million, and $59 million for 2024, 2023, and 2022, respectively.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.232884,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and GS disclose specific financial impacts related to the resolution of tax audits and associated penalties/interest in 2024. JPM reports a significant tax benefit of $314 million resulting specifically from the resolution of tax audits, whereas GS discloses that the accrued liability for interest and penalties related to income tax matters increased to $475 million, with recognized expenses of $113 million for 2024. While both relate to tax audit outcomes and associated costs/benefits, JPM's disclosure highlights a direct benefit from settlements, while GS highlights the accumulation of liability and expense for interest and penalties.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D527",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P790_S001",
+                    "paragraph_id": "jpm_2024_8_P790",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Total income tax expense includes $314 million, $68 million and $331 million of tax benefits in 2024, 2023, and 2022, respectively, resulting from the resolution of tax audits.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D482",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P624_S001",
+                    "paragraph_id": "gs_2024_8_P624",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The accrued liability for interest expense related to income tax matters and income tax penalties was $475 million as of December 2024 and $320 million as of December 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P624_S002",
+                    "paragraph_id": "gs_2024_8_P624",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The firm recognized interest expense and income tax penalties of $113 million for 2024, $90 million for 2023 and $59 million for 2022.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D278",
+            "peer_topic": "Presentation of income tax credits and amortization",
+            "peer_summary": "Income tax credits, other income tax benefits, and proportional amortization are included in the Provision for income taxes line in the consolidated income statement and the Depreciation and amortization line in the consolidated cash flow statement.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.147384,
+            "relationship": "related_topic",
+            "comparison": "Both JPM and MS disclose specific tax-related adjustments included in the Provision for income taxes, but they address different operational areas. JPM's $314 million benefit arises from the resolution of tax audits. MS's disclosure in D278 describes the accounting treatment, stating that income tax credits, other income tax benefits, and proportional amortization are included in the Provision for income taxes line. While JPM provides a specific monetary impact from audit resolutions, MS provides a general policy statement on where specific tax benefits (like credits) are recorded, without citing a specific audit resolution impact of similar magnitude or nature.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D527",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P790_S001",
+                    "paragraph_id": "jpm_2024_8_P790",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Total income tax expense includes $314 million, $68 million and $331 million of tax benefits in 2024, 2023, and 2022, respectively, resulting from the resolution of tax audits.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D278",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P350_S001",
+                    "paragraph_id": "ms_2024_8_P350",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Income tax credits and other income tax benefits recognized as well as proportional amortization are included in the Provision for income taxes line in the consolidated income statement and in the Depreciation and amortization line in the consolidated cash flow statement.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

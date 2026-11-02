@@ -1,0 +1,263 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "94323e458b1ef00ea108321391a1fd628d9e595bbd84273e8052249dd67777f4",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_7_D171",
+    "item": "7",
+    "target_topic": "TLAC RWA calculation methodology",
+    "target_summary": "In accordance with TLAC rules, the higher of Standardized or Advanced Risk-Weighted Assets (RWAs) is used to calculate TLAC and external long-term debt ratios, with RWAs representing Standardized RWAs for both December 2024 and December 2023.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0578",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2023 TLAC definition and RWA usage are split in 2024 into two separate disclosures: D170 covers the composition of TLAC and eligible long-term debt, while D171 covers the RWA calculation rule. Both 2024 disclosures share the same core topic (TLAC framework details) as the single 2023 disclosure D178.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_7_D178",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Total Loss-Absorbing Capacity (TLAC) > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "TLAC includes common and preferred stock plus eligible long-term debt issued by Group Inc, defined as unsecured debt with at least one year remaining maturity. External long-term debt consists of eligible long-term debt subject to a haircut if due between one and two years, and ratios utilize the higher of Standardized or Advanced RWAs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D170",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Total Loss-Absorbing Capacity (TLAC)",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "TLAC includes common and preferred stock and eligible long-term debt issued by Group Inc., defined as unsecured debt with at least one year maturity and other requirements, while external long-term debt consists of eligible debt subject to a haircut if due between one and two years.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D171",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Total Loss-Absorbing Capacity (TLAC) > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In accordance with TLAC rules, the higher of Standardized or Advanced Risk-Weighted Assets (RWAs) is used to calculate TLAC and external long-term debt ratios, with RWAs representing Standardized RWAs for both December 2024 and December 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.973227,
+            "sequence_match_ratio": 0.929577,
+            "length_ratio": 1.009434,
+            "word_count_delta": 1,
+            "added_tokens_sample": [
+              "in",
+              "the",
+              "table",
+              "above",
+              "both",
+              "december",
+              "2024",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "and",
+              "advanced",
+              "rwas",
+              "as",
+              "of",
+              "december",
+              "2022"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2023_7_D178",
+            "score": 0.935462,
+            "normalised_score": 0.9355,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 93.55% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure materially changes the composition of RWA used for TLAC calculations from 'Standardized or Advanced' to exclusively 'Standardized' RWAs for both current and prior periods. This aligns with the broader industry removal of Advanced Approaches for certain capital calculations and significantly alters the quantitative basis for the company's TLAC compliance metrics.",
+          "key_change": "Shift to Standardized RWA calculation basis"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0640",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures define TLAC components (common/preferred stock, eligible long-term debt) and external long-term debt (eligible debt with haircut rules). gs_2025_7_D194 explicitly defines these terms matching gs_2024_7_D170.\n\nBoth disclosures specify that the higher of Standardized or Advanced RWAs is used for TLAC/ELTD calculations. gs_2025_7_D194 (sentence gs_2025_7_P290_S004) mirrors this rule from gs_2024_7_D171.\n\nBoth disclosures define Leverage Exposure. gs_2024_7_D172 defines it as average adjusted total assets and off-balance sheet exposures. gs_2025_7_D194 (sentence gs_2025_7_P290_S005) provides the matching definition.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D170",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Total Loss-Absorbing Capacity (TLAC)",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "TLAC includes common and preferred stock and eligible long-term debt issued by Group Inc., defined as unsecured debt with at least one year maturity and other requirements, while external long-term debt consists of eligible debt subject to a haircut if due between one and two years.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D171",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Total Loss-Absorbing Capacity (TLAC) > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In accordance with TLAC rules, the higher of Standardized or Advanced Risk-Weighted Assets (RWAs) is used to calculate TLAC and external long-term debt ratios, with RWAs representing Standardized RWAs for both December 2024 and December 2023.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D172",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Total Loss-Absorbing Capacity (TLAC) > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Leverage exposure for TLAC purposes consists of average adjusted total assets and certain off-balance sheet exposures.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_7_D194",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Total Loss-Absorbing Capacity (TLAC)",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The table presents TLAC and external long-term debt ratios, defining TLAC as including common/preferred stock and eligible long-term debt, and external long-term debt as eligible debt subject to haircuts for maturities between one and two years.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D192",
+            "peer_topic": "TLAC and Long-Term Debt Calculation Method",
+            "peer_summary": "The Standardized approach is used to calculate TLAC and long-term debt ratios as it yields the higher Risk-Weighted Assets, applied for both 2024 and 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.306199,
+            "relationship": "same_topic",
+            "comparison": "Both Goldman Sachs (GS) and Bank of America (BAC) disclose that they use the Standardized approach to calculate Risk-Weighted Assets (RWA) for determining TLAC and external long-term debt ratios because it yields the higher RWA. Both companies applied this same methodology for both December 2024 and December 2023.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D171",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P245_S001",
+                    "paragraph_id": "gs_2024_7_P245",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• In accordance with the TLAC rules, the higher of Standardized or Advanced RWAs are used in the calculation of TLAC and external long-term debt ratios and applicable requirements. RWAs represent Standardized RWAs as of both December 2024 and December 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D192",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P213_S001",
+                    "paragraph_id": "bac_2024_7_P213",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "(4)The approach that yields the higher RWA is used to calculate TLAC and long-term debt ratios, which was the Standardized approach as of December 31, 2024 and 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate c_2024_7_D294 concerns debt repurchases/funding costs, not TLAC calculation methodology. Candidate c_2024_7_D297 discusses bankruptcy loss absorption dynamics for unsecured creditors, which is a risk/outcome implication of TLAC rather than the specific calculation methodology (Standardized vs Advanced RWA) used to determine TLAC ratios as discussed in the target and other comparable peers."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D256",
+            "peer_topic": "TLAC and LTD amounts as of Dec 31, 2024 and 2023",
+            "peer_summary": "The table presents eligible external TLAC and eligible LTD amounts, along with their percentages of total RWA and total leverage exposure, incorporating CECL capital transition provisions.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.131416,
+            "relationship": "same_topic",
+            "comparison": "Similar to GS, JPMorgan Chase (JPM) confirms that its RWA calculation for TLAC requirements is based on the greater of Standardized and Advanced RWAs. While GS explicitly states in its narrative that Standardized RWAs were used for both years due to yielding the higher amount, JPM explicitly defines this rule ('RWA is the greater of Standardized and Advanced') within the context of its TLAC and eligible long-term debt requirements table.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D171",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P245_S001",
+                    "paragraph_id": "gs_2024_7_P245",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• In accordance with the TLAC rules, the higher of Standardized or Advanced RWAs are used in the calculation of TLAC and external long-term debt ratios and applicable requirements. RWAs represent Standardized RWAs as of both December 2024 and December 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D256",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P376_S001",
+                    "paragraph_id": "jpm_2024_7_P376",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The external TLAC requirements and the minimum level of eligible long-term debt requirements are shown below: (a)RWA is the greater of Standardized and Advanced compared to their respective regulatory capital ratio requirements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate ms_2024_7_D188 only states compliance status without disclosing the specific RWA methodology (Standardized vs Advanced) used for the calculation. Candidate ms_2024_7_D167 is a cross-reference to other sections and does not contain substantive methodological disclosure comparable to the target's specific explanation of the RWA hierarchy."
+      }
+    ]
+  }
+}

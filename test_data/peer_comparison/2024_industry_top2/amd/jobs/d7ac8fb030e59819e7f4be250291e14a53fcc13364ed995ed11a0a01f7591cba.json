@@ -1,0 +1,453 @@
+{
+  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
+  "request_hash": "ce9ee9fe2ae4aac400eff179c51bbcef5b291e12b9608bff352a2cb8c5078c21",
+  "result": {
+    "target_ticker": "AMD",
+    "target_disclosure_id": "amd_2024_7_D039",
+    "item": "7",
+    "target_topic": "Income Tax Provision and Effective Rate",
+    "target_summary": "AMD recorded an income tax provision of $381 million in 2024 with a 19% effective tax rate, compared to a $346 million benefit and (68%) rate in 2023. The 2024 provision increase was driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "amd_2023_2024_M0285",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures cover 'Income Tax Benefit/Provision', reporting the effective tax rate and provision/benefit amount with explanations for year-over-year variances.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2023_7_D031",
+            "item": "7",
+            "section": "Income Tax Benefit",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "AMD recorded an income tax benefit of $346 million in 2023, representing an effective tax rate of (68%), compared to $122 million and (10%) in 2022. The increase in the 2023 benefit was primarily driven by lower pre-tax income, a $185 million foreign-derived intangible income tax benefit, and $169 million of research and development tax credits.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2024_7_D039",
+            "item": "7",
+            "section": "Income Tax Provision (Benefit)",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "AMD recorded an income tax provision of $381 million in 2024 with a 19% effective tax rate, compared to a $346 million benefit and (68%) rate in 2023. The 2024 provision increase was driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.764368,
+            "sequence_match_ratio": 0.566667,
+            "length_ratio": 0.904762,
+            "word_count_delta": -6,
+            "added_tokens_sample": [
+              "an",
+              "income",
+              "tax",
+              "provision",
+              "of",
+              "381",
+              "million",
+              "in",
+              "2024",
+              "and",
+              "19",
+              "and",
+              "provision",
+              "2024",
+              "higher",
+              "and",
+              "373",
+              "effect",
+              "from",
+              "an"
+            ],
+            "removed_tokens_sample": [
+              "and",
+              "122",
+              "million",
+              "and",
+              "2022",
+              "respectively",
+              "and",
+              "10",
+              "benefit",
+              "2023",
+              "the",
+              "lower",
+              "coupled",
+              "with",
+              "185",
+              "foreign",
+              "derived",
+              "intangible",
+              "income",
+              "benefit"
+            ]
+          },
+          "semantic": {
+            "matched_id": "amd_2023_7_D031",
+            "score": 0.939302,
+            "normalised_score": 0.9393,
+            "label": "Relocated",
+            "rationale": "Score 93.93% of ceiling — content is similar but section changed from 'Income Tax Benefit' to 'Income Tax Provision (Benefit)'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The disclosure flips from an income tax benefit in 2023 to a provision in 2024, accompanied by a significant shift in the effective tax rate from (68%) to 19%. The attribution of the 2024 provision to a $373 million tax effect from an 'intercompany integration transaction' represents a material change in the company's tax situation and financial result compared to the prior year.",
+          "key_change": "Shift from tax benefit to provision due to intercompany integration"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "amd_2024_2025_M0273",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "Both disclosures cover Income Tax Provision (Benefit) within SEC Item 7. The 2024 disclosure reports a $381 million provision, while the 2025 disclosure reports a $103 million benefit. Both cite the $373 million intercompany integration transaction effect as a key driver/comparator, confirming the specific topic link.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2024_7_D039",
+            "item": "7",
+            "section": "Income Tax Provision (Benefit)",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "AMD recorded an income tax provision of $381 million in 2024 with a 19% effective tax rate, compared to a $346 million benefit and (68%) rate in 2023. The 2024 provision increase was driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2025_7_D036",
+            "item": "7",
+            "section": "Income Tax Provision (Benefit)",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "AMD recorded an income tax benefit of $103 million in 2025 and a provision of $381 million in 2024, with effective tax rates of (2.5%) and 19% respectively. The 2025 decrease was primarily due to an $853 million benefit from the release of uncertain tax positions related to dual consolidated losses, whereas the 2024 provision included a $373 million tax effect from an intercompany integration transaction.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D062",
+            "peer_topic": "Income tax provision increase due to IP transfer and supply chain realignment",
+            "peer_summary": "The provision for income taxes increased to $3,748 million in fiscal year 2024 from $1,015 million in 2023, primarily due to the impact of a non-recurring intra-group transfer of certain IP rights to the United States as a result of supply chain realignment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.130346,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and AVGO reported a significant increase in their income tax provision for fiscal year 2024 compared to 2023, but attributed the increases to different structural drivers. AMD's provision increased to $381 million primarily due to higher pre-tax income and a specific $373 million intercompany integration transaction. In contrast, AVGO's provision surged to $3,748 million from $1,015 million, driven by a non-recurring intra-group transfer of IP rights and a resulting shift in the jurisdictional mix of income, rather than just income growth.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P053_S001",
+                    "paragraph_id": "amd_2024_7_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We recorded an income tax provision of $381 million in 2024 and an income tax benefit of $346 million in 2023, representing effective tax rates of 19% and (68%), respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P053_S002",
+                    "paragraph_id": "amd_2024_7_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in income tax provision in 2024 was primarily due to higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D062",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P060_S002",
+                    "paragraph_id": "avgo_2024_7_P060",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The provision for income taxes was $3,748 million and $1,015 million for fiscal years 2024 and 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P060_S003",
+                    "paragraph_id": "avgo_2024_7_P060",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase was primarily due to the impact of a non-recurring intra-group transfer of certain IP rights to the United States as a result of supply chain realignment and the resulting shift in the jurisdictional mix of income.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_7_D096",
+            "peer_topic": "Valuation allowance and effective tax rate change",
+            "peer_summary": "The effective tax rate increased in 2024 compared to 2023, primarily due to the establishment of a valuation allowance against US federal deferred tax assets in 2024. This allowance was recognized in the third quarter of 2024 after determining it was more likely than not that the assets would not be recoverable, largely due to a three-year cumulative historical loss position resulting from asset impairment and restructuring charges.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.092098,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and INTC disclosed changes in their effective tax rates in 2024 compared to 2023, but the drivers were opposing in nature regarding profitability and allowances. AMD's effective tax rate increased to 19% from a (68%) benefit rate, driven by higher pre-tax income and a large intercompany transaction. Conversely, INTC's effective tax rate increased because it established a valuation allowance against US federal deferred tax assets due to a three-year cumulative historical loss position, whereas AMD moved from a loss position (benefit) to a profit position (provision).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P053_S001",
+                    "paragraph_id": "amd_2024_7_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We recorded an income tax provision of $381 million in 2024 and an income tax benefit of $346 million in 2023, representing effective tax rates of 19% and (68%), respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P053_S002",
+                    "paragraph_id": "amd_2024_7_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in income tax provision in 2024 was primarily due to higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D096",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P091_S001",
+                    "paragraph_id": "intc_2024_7_P091",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Our effective tax rate increased in 2024 compared to 2023, primarily driven by the effects associated with the establishment of a valuation allowance against our US federal deferred tax assets in 2024.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_7_P091_S003",
+                    "paragraph_id": "intc_2024_7_P091",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "As a result of our assessment in the third quarter of 2024, we determined it was more likely than not that the deferred tax assets will not be recoverable based upon our three-year cumulative historical loss position as of the third quarter of 2024, largely resulting from the asset impairment and restructuring and other charges incurred during the third quarter of 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_7_D023",
+            "peer_topic": "Income Tax Rate Changes and Losses",
+            "peer_summary": "The effective tax rate change in 2024 was driven by profitability changes, while the 2023 change resulted from a pre-tax loss. Despite a worldwide consolidated pre-tax loss in 2023, taxes were payable in certain geographies due to minimum taxable income reporting requirements.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.230368,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and MU explained their 2024 effective tax rate changes primarily through the lens of profitability shifts compared to prior years. AMD reported an effective tax rate of 19% in 2024 compared to a (68%) benefit in 2023, with the increase driven by higher pre-tax income. MU stated that the change in its effective tax rate for 2024 compared to 2023 was primarily due to changes in profitability, distinguishing it from 2023 which was driven by a pre-tax loss.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P053_S001",
+                    "paragraph_id": "amd_2024_7_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We recorded an income tax provision of $381 million in 2024 and an income tax benefit of $346 million in 2023, representing effective tax rates of 19% and (68%), respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P053_S002",
+                    "paragraph_id": "amd_2024_7_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in income tax provision in 2024 was primarily due to higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P023_S002",
+                    "paragraph_id": "mu_2024_7_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "The change in our effective tax rate for 2024 as compared to 2023 was primarily due to changes in profitability.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_7_P023_S003",
+                    "paragraph_id": "mu_2024_7_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "The change in our effective tax rate for 2023 as compared to 2022 was primarily due to a pre-tax loss in 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D063",
+            "peer_topic": "Fiscal Year 2024 Income Tax Expense and Rate",
+            "peer_summary": "NVIDIA recognized income tax expense of $4.1 billion and an effective tax rate of 12.0% for fiscal year 2024, driven primarily by the FDII deduction, stock-based compensation, and U.S. federal research tax credits.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.214338,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and NVDA recognized a positive income tax provision in fiscal year 2024, but their effective tax rates differed significantly from the U.S. federal statutory rate of 21% due to distinct benefit drivers. AMD recorded an effective tax rate of 19%, slightly below the statutory rate, with the increase from 2023 driven by pre-tax income and an intercompany transaction. NVDA recorded an effective tax rate of 12.0%, also below the statutory rate, driven by benefits from the FDII deduction, stock-based compensation, and R&D tax credits.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P053_S001",
+                    "paragraph_id": "amd_2024_7_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We recorded an income tax provision of $381 million in 2024 and an income tax benefit of $346 million in 2023, representing effective tax rates of 19% and (68%), respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D063",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P066_S001",
+                    "paragraph_id": "nvda_2024_7_P066",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We recognized income tax expense of $4.1 billion for fiscal year 2024 and income tax benefit of $187 million for fiscal year 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P066_S002",
+                    "paragraph_id": "nvda_2024_7_P066",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Income tax as a percentage of income before income tax was an expense of 12.0% for fiscal year 2024 and a benefit of 4.5% for fiscal year 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P069_S001",
+                    "paragraph_id": "nvda_2024_7_P069",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our effective tax rates for fiscal years 2024 and 2023 were lower than the U.S. federal statutory rate of 21% due primarily to tax benefits from the FDII deduction, stock-based compensation and the U.S. federal research tax credit.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "QCOM",
+            "peer_disclosure_id": "qcom_2024_7_D017",
+            "peer_topic": "U.S. Taxation and FDII Benefits",
+            "peer_summary": "Substantially all of QCOM's income is taxed in the U.S., with a significant portion qualifying for preferential treatment as FDII at a 13% effective tax rate. The company provides additional details on its effective tax rate, including R&D capitalization impacts and IP transfers, in Note 3.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.186613,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and QCOM disclosed that their 2024 effective tax rates were influenced by specific U.S. tax provisions, though the magnitude and application differed. QCOM highlighted that a significant portion of its U.S.-taxed income qualified for the Foreign-Derived Intangible Income (FDII) deduction at a 13% effective rate. AMD did not explicitly cite FDII as a primary driver in the provided text but noted a 19% effective rate and specific impacts from an intercompany integration transaction, whereas QCOM's disclosure focused on the structural impact of FDII and R&D capitalization.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D039",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P053_S001",
+                    "paragraph_id": "amd_2024_7_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We recorded an income tax provision of $381 million in 2024 and an income tax benefit of $346 million in 2023, representing effective tax rates of 19% and (68%), respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "QCOM",
+                "disclosure_id": "qcom_2024_7_D017",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P015_S002",
+                    "paragraph_id": "qcom_2024_7_P015",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Substantially all of our income is taxed in the U.S., of which a significant portion qualifies for preferential treatment as FDII at a 13% effective tax rate.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

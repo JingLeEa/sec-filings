@@ -1,0 +1,193 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "81722bbe1803f0327182017229e3fa8934340a29509273b4f064eb73655aaef2",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D026",
+    "item": "7",
+    "target_topic": "TTS net interest income decline",
+    "target_summary": "TTS net interest income decreased 1%, primarily due to declining interest rates in Argentina.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0032",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No 2025 counterpart was found for the specific 2024 disclosure regarding TTS net interest income decline due to declining Argentina interest rates. c_2025_7_D049 reports TTS NII *increasing* 12%, which is a contradictory fact for the specific 2024 trend/topic. Other 2025 NII disclosures (e.g., c_2025_7_D318) refer to broader categories or different segments (e.g., All Other reinvestment benefits), not the specific TTS Argentina rate decline topic.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > EXECUTIVE SUMMARY > 2024 Results Summary > Services",
+            "summary": "TTS net interest income decreased 1%, primarily due to declining interest rates in Argentina.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_7_D026",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "llm": "Removed",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.0,
+            "change_taxonomy": "Removed",
+            "word_count_delta": -18,
+            "cosine_similarity": 0.0,
+            "added_tokens_sample": [],
+            "sequence_match_ratio": 0.0,
+            "removed_tokens_sample": [
+              "the",
+              "decrease",
+              "in",
+              "tts",
+              "net",
+              "interest",
+              "income",
+              "was",
+              "primarily",
+              "driven",
+              "by",
+              "the",
+              "decline",
+              "in",
+              "interest",
+              "rates",
+              "in",
+              "argentina"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "method": "alignment_presence",
+            "rationale": "One-sided change established by the finalized alignment.",
+            "matched_id": null,
+            "normalised_score": null
+          },
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.8,
+          "reason": "The 2024 filing disclosed a specific decline in TTS Net Interest Income due to Argentina interest rates. The 2025 evidence shows a contradictory trend (NII increase) or lack of specific disclosure on this driver, suggesting a material change in the financial performance or the specific risks (rate exposure) reported for this component.",
+          "key_change": "Removal of TTS NII decline disclosure"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D073",
+            "peer_topic": "Deposit segment net interest income decline",
+            "peer_summary": "Net interest income decreased $1.3 billion to $21.2 billion, primarily driven by lower deposit balances.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.251714,
+            "relationship": "same_topic",
+            "comparison": "Both Citigroup (C) and Bank of America (BAC) report a decline in net interest income for the fiscal year 2024, but they attribute the declines to different primary drivers. Citi's TTS segment net interest income decreased due to declining interest rates in Argentina, whereas BAC's Deposits segment net interest income decreased primarily due to lower deposit balances rather than rate declines.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D026",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P019_S003",
+                    "paragraph_id": "c_2024_7_P019",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The decrease in TTS net interest income was primarily driven by the decline in interest rates in Argentina.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D073",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P074_S002",
+                    "paragraph_id": "bac_2024_7_P074",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest income decreased $1.3 billion to $21.2 billion primarily driven by lower deposit balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Goldman Sachs (GS) reported a 27% increase in net interest income in 2024, driven by higher balances and rates, which is the opposite direction of the decline experienced by Citi. While both discuss NII drivers, the substantive financial outcome (increase vs. decrease) and the primary driver cited (higher rates/balances vs. lower rates) make the candidates not meaningfully comparable for the specific topic of NII decline."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "JPMorgan (JPM) reported that overall net interest income rose 24% in 2024. Although JPM notes that specific segments like Equity Markets saw declines due to higher funding costs, its headline NII performance was growth, contrasting with Citi's decline. The primary driver for JPM's growth was balance sheet actions, distinct from Citi's rate-driven decline."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D266",
+            "peer_topic": "Asset Sensitivity and Market Drivers of Wealth Management Net Interest Income",
+            "peer_summary": "The Wealth Management balance sheet is asset sensitive, meaning net interest income increases in higher rate environments and decreases in lower ones, as assets reprice faster than liabilities. Changes in interest rates may also affect deposit levels due to competition and impact client loan demand, contributing to a decrease in net interest income sensitivity at December 31, 2024, compared to the prior year due to shifts in the asset/liability mix and market rates.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.151564,
+            "relationship": "related_topic",
+            "comparison": "Citi and Morgan Stanley (MS) both disclose that declining interest rates negatively impact their respective net interest income streams. Citi explicitly cites declining interest rates in Argentina as the driver for its TTS NII decline. MS describes its Wealth Management business as 'asset sensitive,' noting that it results in 'lower net interest income in lower interest rate scenarios,' and reports that NII sensitivity decreased due to changes in market rates.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D026",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P019_S003",
+                    "paragraph_id": "c_2024_7_P019",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The decrease in TTS net interest income was primarily driven by the decline in interest rates in Argentina.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D266",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P311_S001",
+                    "paragraph_id": "ms_2024_7_P311",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Our Wealth Management business segment balance sheet is asset sensitive, given assets reprice faster than liabilities, resulting in higher net interest income in higher interest rate scenarios and lower net interest income in lower interest rate scenarios.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,409 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "b3842ae8e97cd6bd5c8d17753569def3c5aee0c218a29312b985ac09c2975b8e",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_7_D109",
+    "item": "7",
+    "target_topic": "2024 Operating Cash Flow vs 2023",
+    "target_summary": "Cash provided by operations in 2024 was $3.2 billion lower than in 2023, driven by a net loss in 2024 that was fully offset by higher non-cash adjustments (depreciation, share-based compensation, restructuring) compared to 2023.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0353",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures analyze the year-over-year change in cash provided by operating activities, attributing the decrease primarily to lower net income (or a net loss) which was partially/fullly offset by higher favorable non-cash adjustments or working capital changes.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2023_7_D099",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Liquidity and Capital Resources > Operating Activities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Cash provided by operating activities decreased by $4.0 billion in 2023 compared to 2022, primarily driven by lower net income after adjusting for non-cash items, partially offset by favorable working capital changes.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D109",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Liquidity and Capital Resources > Operating Activities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Cash provided by operations in 2024 was $3.2 billion lower than in 2023, driven by a net loss in 2024 that was fully offset by higher non-cash adjustments (depreciation, share-based compensation, restructuring) compared to 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.484064,
+            "sequence_match_ratio": 0.188976,
+            "length_ratio": 2.02381,
+            "word_count_delta": 43,
+            "added_tokens_sample": [
+              "operating",
+              "cash",
+              "flows",
+              "consist",
+              "of",
+              "net",
+              "income",
+              "loss",
+              "adjusted",
+              "certain",
+              "non",
+              "cash",
+              "items",
+              "and",
+              "changes",
+              "certain",
+              "assets",
+              "and",
+              "liabilities",
+              "operations"
+            ],
+            "removed_tokens_sample": [
+              "2023",
+              "compared",
+              "to",
+              "2022",
+              "the",
+              "4",
+              "0",
+              "billion",
+              "decrease",
+              "activities",
+              "was",
+              "primarily",
+              "driven",
+              "by",
+              "lower",
+              "2023",
+              "net",
+              "income",
+              "after",
+              "adjusting"
+            ]
+          },
+          "semantic": {
+            "matched_id": "intc_2023_7_D099",
+            "score": 0.918055,
+            "normalised_score": 0.9181,
+            "label": "Expanded",
+            "rationale": "Score 91.81% of ceiling — content grew from ~39 to ~81 words (2.1×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The disclosure of cash flow drivers changes significantly: the decrease in operating cash flow is now attributed to a net loss fully offset by non-cash items, whereas previously it was lower income partially offset by working capital. This reflects a fundamental shift from operational performance deterioration with working capital headwinds to a structural loss situation mitigated by accounting adjustments, materially altering the understanding of cash generation quality.",
+          "key_change": "Shift from working capital driven cash decline to net loss driven decline"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0415",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D109 defines operating cash flows as net income adjusted for non-cash items and changes in assets/liabilities. D075 provides the same definition statement. D076 is a comparative analysis (2025 vs 2024) of cash provided by operations, which is a distinct topic from the static definition provided in D109 and D075. Therefore, D109 matches D075 (definition) rather than D076 (comparative change).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D109",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Liquidity and Capital Resources > Operating Activities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Cash provided by operations in 2024 was $3.2 billion lower than in 2023, driven by a net loss in 2024 that was fully offset by higher non-cash adjustments (depreciation, share-based compensation, restructuring) compared to 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2025_7_D075",
+            "item": "7",
+            "section": "Consolidated Results of Operations > Liquidity and Capital Resources > 2025 vs. 2024",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating cash flows consist of net income (loss) adjusted for certain non-cash items and changes in certain assets and liabilities.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.620336,
+            "sequence_match_ratio": 0.396226,
+            "length_ratio": 0.247059,
+            "word_count_delta": -64,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "cash",
+              "provided",
+              "by",
+              "operations",
+              "in",
+              "2024",
+              "was",
+              "lower",
+              "compared",
+              "to",
+              "2023",
+              "by",
+              "3",
+              "2",
+              "billion",
+              "as",
+              "we",
+              "incurred",
+              "a",
+              "net"
+            ]
+          },
+          "semantic": {
+            "matched_id": "intc_2024_7_D109",
+            "score": 0.798401,
+            "normalised_score": 0.7984,
+            "label": "Relocated",
+            "rationale": "Score 79.84% of ceiling — content is similar but section changed from 'Consolidated Results of Operations > Liquidity and Capital Resources > Operating Activities' to 'Consolidated Results of Operations > Liquidity and Capital Resources > 2025 vs. 2024'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The current disclosure is a verbatim copy of the definition of operating cash flows from the previous year. The previous year's record also contained comparative data (2024 vs 2023) which is now handled in a different matched row (M0416). The specific text compared here represents a static definition with no change, making it non-material.",
+          "key_change": "No substantive change in definition text"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D051",
+            "peer_topic": "Operating cash flow and drivers in 2024",
+            "peer_summary": "Net cash provided by operating activities was $3 billion in 2024, primarily driven by net income of $1.6 billion, non-cash adjustments of $3.5 billion, and net cash outflows of $2.1 billion from changes in operating assets and liabilities, including a $1.9 billion increase in accounts receivable due to higher year-end revenue and a $1.5 billion increase in inventories to support new product ramps.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.191607,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and AMD disclose operating cash flow driven by net income adjusted for significant non-cash items and working capital changes. However, the outcomes differed: Intel reported a $3.2 billion decrease in operating cash flow in 2024 compared to 2023 due to incurring a net loss, which was only fully offset by higher non-cash adjustments. In contrast, AMD reported net cash provided by operating activities of $3 billion in 2024, driven by positive net income of $1.6 billion and non-cash adjustments of $3.5 billion, partially offset by $2.1 billion in outflows from changes in operating assets and liabilities, specifically a $1.9 billion increase in accounts receivable and a $1.5 billion increase in inventories.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D109",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P102_S001",
+                    "paragraph_id": "intc_2024_7_P102",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Cash provided by operations in 2024 was lower compared to 2023 by $3.2 billion as we incurred a net loss in 2024 that was fully offset by a higher amount of favorable operating cash flow adjustments for non-cash items like depreciation, share-based compensation, and restructuring and other expenses, compared to net income in 2023 with lower favorable operating cash flow adjustments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D051",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P064_S001",
+                    "paragraph_id": "amd_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Net cash provided by operating activities was $3 billion in 2024, primarily due to our net income of $1.6 billion in 2024, adjusted for non-cash adjustments of $3.5 billion and net cash outflows of $2.1 billion from changes in our operating assets and liabilities.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P064_S002",
+                    "paragraph_id": "amd_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The primary drivers of the changes in operating assets and liabilities included a $1.9 billion increase in accounts receivable driven primarily by higher revenue in the last month of 2024 compared to the last month of 2023, and a $1.5 billion increase in inventories driven primarily by a build of inventory to support the ramp of new products in advanced process nodes.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D074",
+            "peer_topic": "Cash flow from operating activities change due to VMware",
+            "peer_summary": "Cash provided by operations increased by $1,877 million in fiscal year 2024 compared to 2023, primarily due to contributions from VMware, despite an $8,187 million decrease in net income largely driven by $13,058 million higher non-cash adjustments related to the VMware Merger.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.30591,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Broadcom report changes in cash provided by operations where non-cash adjustments play a critical role in offsetting net income fluctuations. Intel’s 2024 operating cash flow was $3.2 billion lower than 2023 because a net loss was fully offset by higher non-cash adjustments like depreciation and restructuring. Broadcom’s 2024 operating cash flow increased by $1,877 million compared to 2023, primarily due to contributions from VMware, despite an $8,187 million decrease in net income which was largely driven by even higher non-cash adjustments ($13,058 million) related to the VMware Merger.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D109",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P102_S001",
+                    "paragraph_id": "intc_2024_7_P102",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Cash provided by operations in 2024 was lower compared to 2023 by $3.2 billion as we incurred a net loss in 2024 that was fully offset by a higher amount of favorable operating cash flow adjustments for non-cash items like depreciation, share-based compensation, and restructuring and other expenses, compared to net income in 2023 with lower favorable operating cash flow adjustments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D074",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P072_S002",
+                    "paragraph_id": "avgo_2024_7_P072",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The $1,877 million increase in cash provided by operations during fiscal year 2024 compared to fiscal year 2023 was primarily due to contributions from VMware.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P072_S003",
+                    "paragraph_id": "avgo_2024_7_P072",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The $8,187 million decrease in net income was largely driven by $13,058 million higher non-cash adjustments including amortization of intangible assets, stock-based compensation, and deferred taxes and other non-cash taxes related to the VMware Merger.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_7_D036",
+            "peer_topic": "Operating Cash Flow Drivers 2024",
+            "peer_summary": "In 2024, cash provided by operating activities increased compared to 2023, primarily driven by net income adjusted for non-cash items, increases in accounts payable, accrued expenses, and other current liabilities (largely due to customer prepayments), partially offset by an increase in receivables.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.196213,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Micron discuss how changes in operating cash flow are driven by net income adjusted for non-cash items and changes in working capital (receivables, payables, inventory). Intel reported a decrease in 2024 operating cash flow driven by a net loss offset by non-cash adjustments. Micron reported an increase in 2024 operating cash flow compared to 2023, primarily due to net income adjusted for non-cash items, along with increases in accounts payable and accrued expenses (partly due to customer prepayments), partially offset by an increase in receivables.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D109",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P102_S001",
+                    "paragraph_id": "intc_2024_7_P102",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Cash provided by operations in 2024 was lower compared to 2023 by $3.2 billion as we incurred a net loss in 2024 that was fully offset by a higher amount of favorable operating cash flow adjustments for non-cash items like depreciation, share-based compensation, and restructuring and other expenses, compared to net income in 2023 with lower favorable operating cash flow adjustments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D036",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P038_S001",
+                    "paragraph_id": "mu_2024_7_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "The increase in cash provided by operating activities for 2024 as compared to 2023 was primarily due to net income in 2024 adjusted for non-cash items, the effect of an increase in accounts payable and accrued expenses and an increase in other current liabilities largely due to customer prepayments to secure product supply, partially offset by an increase in receivables.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D068",
+            "peer_topic": "Cash Flow from Operating Activities Increase",
+            "peer_summary": "Cash provided by operating activities increased in fiscal year 2024 compared to fiscal year 2023 due to revenue growth.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.124477,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Nvidia disclose changes in cash provided by operating activities. Intel attributes its 2024 decrease in operating cash flow (vs 2023) to a net loss that was fully offset by non-cash adjustments. Nvidia attributes its 2024 increase in operating cash flow (vs 2023) simply to growth in revenue. Unlike Intel, Nvidia’s disclosure does not detail the offsetting impact of non-cash adjustments or working capital changes for the year-over-year change.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D109",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P102_S001",
+                    "paragraph_id": "intc_2024_7_P102",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Cash provided by operations in 2024 was lower compared to 2023 by $3.2 billion as we incurred a net loss in 2024 that was fully offset by a higher amount of favorable operating cash flow adjustments for non-cash items like depreciation, share-based compensation, and restructuring and other expenses, compared to net income in 2023 with lower favorable operating cash flow adjustments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D068",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P073_S001",
+                    "paragraph_id": "nvda_2024_7_P073",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Cash provided by operating activities increased in fiscal year 2024 compared to fiscal year 2023, due to growth in revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved for QCOM that discusses operating cash flow drivers or changes in cash provided by operations; the provided candidates (qcom_2024_7_D005 and qcom_2024_7_D012) discuss consolidated financial results (revenue/net income) and R&D expense drivers respectively, which are not directly comparable to the specific topic of operating cash flow changes."
+      }
+    ]
+  }
+}

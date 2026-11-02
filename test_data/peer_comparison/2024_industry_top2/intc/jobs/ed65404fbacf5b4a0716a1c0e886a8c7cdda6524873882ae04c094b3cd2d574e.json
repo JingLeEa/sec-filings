@@ -1,0 +1,189 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "28e17d7c608b96a05e1da5235031e219d7de346145472a6795339a659547a265",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_1A_D052",
+    "item": "1A",
+    "target_topic": "Customer Cancellation Rights and Non-Standard Agreements",
+    "target_summary": "Customers typically cancel, change, or delay purchase commitments with little notice and no penalty. Intel may occasionally enter into additional agreements for changes to standard terms, new product development, marketing, or private-label branding.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0146",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The current disclosure (2024) details the flexibility of customers to cancel/change orders with little notice/penalty and mentions additional agreements for branding/marketing. Search results in 2023 did not find a disclosure covering this specific contractual flexibility and additional agreement practice. Candidate intc_2023_1A_D014 covers demand variation factors, and intc_2023_1A_D022 covers supply-side purchase commitments, but neither addresses the customer's right to cancel/change orders from the buyer's perspective as described in the 2024 disclosure.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_1A_D052",
+            "item": "1A",
+            "section": "Sales and Marketing > Sales Arrangements",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Customers typically cancel, change, or delay purchase commitments with little notice and no penalty. Intel may occasionally enter into additional agreements for changes to standard terms, new product development, marketing, or private-label branding.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "New",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": 63,
+            "added_tokens_sample": [
+              "because",
+              "our",
+              "customers",
+              "generally",
+              "order",
+              "from",
+              "us",
+              "on",
+              "a",
+              "purchase",
+              "order",
+              "basis",
+              "they",
+              "can",
+              "typically",
+              "cancel",
+              "change",
+              "or",
+              "delay",
+              "product"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "New",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The disclosure explicitly states that customers can typically cancel, change, or delay purchase commitments with little or no notice and without penalty. This introduces a significant demand-side risk and revenue variability factor that was not previously disclosed in this specific manner, directly impacting the certainty of future cash flows and operational planning.",
+          "key_change": "Customer order cancellation flexibility"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0015",
+        "relationship": "previous_only",
+        "status": "needs_review",
+        "review_reasons": [
+          "agent_did_not_finish"
+        ],
+        "explanation": "Automatic repair turn limit reached; remaining disclosures need review.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_1A_D052",
+            "item": "1A",
+            "section": "Sales and Marketing > Sales Arrangements",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Customers typically cancel, change, or delay purchase commitments with little notice and no penalty. Intel may occasionally enter into additional agreements for changes to standard terms, new product development, marketing, or private-label branding.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate disclosures focus on ZT Systems divestiture risks and Nvidia's competitive dominance, which do not address customer cancellation rights or order-based sales flexibility."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "While Broadcom discusses termination for convenience in software licenses, this concerns license renewals rather than the cancellation of physical product purchase commitments described by Intel."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate disclosures focus on counterparty default risks and third-party IP infringement, which are unrelated to customer order cancellation rights."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_1A_D040",
+            "peer_topic": "Customer and Channel Concentration Risk",
+            "peer_summary": "The company receives significant revenue from a limited number of customers, with Customer A representing 13% and an indirect customer approximately 19% of total revenue in fiscal year 2024, both attributable to the Compute & Networking segment. Operating results depend on partner network sales, but customers can cancel or delay commitments with little notice, and partner purchasing patterns may change due to competition or internal developments.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.164323,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and NVIDIA disclose that their customers can typically cancel, change, or delay purchase commitments with little notice and without penalty, reflecting a similar order-based sales model. However, NVIDIA further emphasizes that this flexibility exists within the context of significant customer and channel concentration, noting that operating results depend on a limited number of customers and partners, whereas Intel's disclosure focuses on the general nature of purchase order cancellations and the occasional use of additional non-standard agreements.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_1A_D052",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1A_P103_S003",
+                    "paragraph_id": "intc_2024_1A_P103",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Because our customers generally order from us on a purchase order basis, they can typically cancel, change, or delay product purchase commitments with little or no notice to us and without penalty.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_1A_D040",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1A_P057_S006",
+                    "paragraph_id": "nvda_2024_1A_P057",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Because most of our sales are made on a purchase order basis, our customers can generally cancel, change or delay product purchase commitments with little notice to us and without penalty.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidate disclosures focus on patent license expiration/renegotiation risks and product defect consequences, which do not address the cancellation of product purchase commitments."
+      }
+    ]
+  }
+}
