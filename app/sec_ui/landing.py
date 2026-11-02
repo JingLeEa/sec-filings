@@ -19,32 +19,32 @@ BLUE, TEAL, PURPLE, AMBER, GREEN, ROSE, INDIGO, GREY = (
 FEATURES = [
     {"key": "run", "cta": "Run pipeline", "file": "0_Run_Pipeline.py", "icon": ":material/play_circle:", "color": BLUE,
      "title": "Run the pipeline", "tagline": "Add a company or a new year",
-     "bullets": ["Pick a company and fiscal years", "Watch each of the six steps as it runs",
+     "bullets": ["Pick a company and fiscal years", "Watch each of the six steps run",
                  "Resume or retry if something fails"]},
     {"key": "explorer", "cta": "Open the explorer", "file": "1_Change_Explorer.py", "icon": ":material/table_rows:", "color": TEAL,
      "title": "Explore changes", "tagline": "Find what changed between two years",
-     "bullets": ["Filter by section, topic or type of change", "See which changes are material",
+     "bullets": ["Filter by section, topic or change", "See which changes are material",
                  "Download the results as CSV or JSON"]},
     {"key": "side", "cta": "Open side by side", "file": "2_Side_by_Side.py", "icon": ":material/compare:", "color": PURPLE,
-     "title": "Compare side by side", "tagline": "Read the earlier and later text together",
-     "bullets": ["Added words in green, removed words in red", "Sentence IDs and SEC links for every source",
-                 "Clear message when one year has no match"]},
+     "title": "Compare side by side", "tagline": "Read both years' text together",
+     "bullets": ["Added words green, removed words red", "Sentence IDs and SEC links",
+                 "Clear note when a year has no match"]},
     {"key": "synthesis", "cta": "Open the report", "file": "3_Synthesis_Report.py", "icon": ":material/summarize:", "color": AMBER,
      "title": "Read the synthesis report", "tagline": "The multi-year story for one company",
      "bullets": ["Key findings and financial figures", "Every finding links to its evidence",
                  "Download the report"]},
     {"key": "peer", "cta": "Open peer comparison", "file": "4_Peer_Comparison.py", "icon": ":material/groups:", "color": GREEN,
-     "title": "Compare with peers", "tagline": "See how competitors disclose the same topic",
-     "bullets": ["Same year and same SEC Item only", "Cited sentences from both companies",
-                 "No match found does not mean a peer is silent"]},
+     "title": "Compare with peers", "tagline": "How competitors disclose a topic",
+     "bullets": ["Same year and same SEC Item only", "Cited sentences from both sides",
+                 "No match does not mean silence"]},
     {"key": "review", "cta": "Start reviewing", "file": "5_Manual_Review.py", "icon": ":material/fact_check:", "color": ROSE,
      "title": "Review the AI's work", "tagline": "Check and correct labels",
-     "bullets": ["Start with the matches the AI was unsure about", "Change a category or change label",
+     "bullets": ["Start with matches the AI doubted", "Change a category or change label",
                  "Your decision updates the reports"]},
     {"key": "chat", "cta": "Open the chatbot", "file": "6_Chatbot.py", "icon": ":material/forum:", "color": INDIGO,
      "title": "Ask the chatbot", "tagline": "Questions in plain English",
-     "bullets": ["Answers cite the match they come from", "Open any citation side by side",
-                 "Says so when the evidence is not enough"]},
+     "bullets": ["Answers cite their source match", "Open any citation side by side",
+                 "Says so when evidence is thin"]},
 ]
 
 CHANGE_LABEL_INFO = {
@@ -96,7 +96,14 @@ CSS = """
 def feature_css() -> str:
     rules = [CSS]
     for feature in FEATURES:
-        rules.append(f".st-key-card_{feature['key']} {{ border-left: 6px solid {feature['color']} !important; min-height: 13.5rem; }}")
+        rules.append(f".st-key-card_{feature['key']} {{ border-left: 6px solid {feature['color']} !important; }}")
+    # Every card gets the same fixed height. Narrower windows wrap the text more, so they get a taller card.
+    rules.append(".st-key-card_run, .st-key-card_explorer, .st-key-card_side, .st-key-card_synthesis, .st-key-card_peer, "
+                 ".st-key-card_review, .st-key-card_chat { height: 12.5rem !important; flex: 0 0 auto !important; overflow: hidden; }")
+    rules.append("@media (max-width: 1400px) { .st-key-card_run, .st-key-card_explorer, .st-key-card_side, .st-key-card_synthesis, "
+                 ".st-key-card_peer, .st-key-card_review, .st-key-card_chat { height: 17.5rem !important; } }")
+    rules.append("@media (max-width: 1100px) { .st-key-card_run, .st-key-card_explorer, .st-key-card_side, .st-key-card_synthesis, "
+                 ".st-key-card_peer, .st-key-card_review, .st-key-card_chat { height: 21.5rem !important; } }")
     for name, color in (("total", BLUE), ("changed", PURPLE), ("material", AMBER), ("review", ROSE)):
         rules.append(f".st-key-kpi_{name} {{ border-top: 5px solid {color} !important; min-height: 20rem; }}")
     rules.append(".st-key-askbox { border: 1px solid rgba(79,70,229,0.55) !important; background: rgba(79,70,229,0.07); }")
