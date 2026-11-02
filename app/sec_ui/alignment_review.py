@@ -82,7 +82,9 @@ def render(scope):
     def label(match_id):
         record = by_id[match_id]
         ai_label = record["methods"].get("llm") or data.NOT_LABELLED
-        return f"{match_id.rsplit('_', 1)[-1]} | Item {record['item']} | AI label: {ai_label}"
+        summary = " ".join((record["current_summary"] or record["previous_summary"] or "").split())
+        title = f"{match_id.rsplit('_', 1)[-1]} | Item {record['item']} | AI label: {ai_label}"
+        return f"{title} | {summary}" if summary else title
 
 
     def step(delta):

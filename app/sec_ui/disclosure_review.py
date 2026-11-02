@@ -106,7 +106,9 @@ def render(scope):
     def label(disclosure_id):
         row = by_id[disclosure_id]
         ai_type = row.get("llm_disclosure_type", row.get("taxonomy")) or data.NOT_CLASSIFIED
-        return f"{disclosure_id.rsplit('_', 1)[-1]} | Item {row['item']} | AI type: {ai_type}"
+        summary = " ".join((row.get("summary") or "").split())
+        title = f"{disclosure_id.rsplit('_', 1)[-1]} | Item {row['item']} | AI type: {ai_type}"
+        return f"{title} | {summary}" if summary else title
 
     top, previous_col, next_col = st.columns([6, 1, 1], vertical_alignment="bottom")
     top.selectbox(f"Disclosure ({len(ids):,} match the filters)", ids, key="disclosure_selected", format_func=label)
