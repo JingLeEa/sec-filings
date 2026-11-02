@@ -1,0 +1,447 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "039d7b32b7e440d3ffb116f7780f97604401f80add214a0fbe823894b971a0ca",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_7_D050",
+    "item": "7",
+    "target_topic": "Net Interest Income Growth and Drivers",
+    "target_summary": "Net interest income for 2024 was $8.06 billion, representing a 27% increase from 2023, driven by higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by a decrease in deposits with banks.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0476",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report on 'Net interest income'. The 2023 disclosure (D053) reports $6.35 billion, a 17% decrease. The 2024 disclosure (D050) reports $8.06 billion, a 27% increase. Both provide context on the drivers (interest rates, balances) for the change in this specific line item.\n\nThe 2023 disclosure (D053) discusses the offsetting effect of interest expense on net interest income. The 2024 disclosure (D051) specifically details the increase in interest expense components (collateralized financings, deposits, other liabilities) that offset the income increase. These are complementary parts of the same Net Interest Income discussion, but D051 focuses specifically on the expense side explanation which is a distinct aspect of the 2024 narrative compared to the summary in D053. However, looking at the structure, D050 covers the high-level NII change, and D051 covers the expense component detail. D053 covers both the NII figure and the expense driver context. Since D050 is the primary counterpart for the NII figure, D053's detailed expense context aligns with D051's detailed expense context. Thus, D053 can be matched to D050 (figure) and D051 (expense driver detail).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_7_D053",
+            "item": "7",
+            "section": "Results of Operations > Net Revenues > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES > 2023 versus 2022",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income decreased 17% to $6.35 billion in 2023, driven by a significant increase in interest expense related to higher average interest rates on liabilities such as deposits and borrowings, which was partially offset by a significant increase in interest income from earning assets also reflecting higher rates.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D050",
+            "item": "7",
+            "section": "Results of Operations > Net Revenues > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES > 2024 versus 2023 > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income for 2024 was $8.06 billion, representing a 27% increase from 2023, driven by higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by a decrease in deposits with banks.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D051",
+            "item": "7",
+            "section": "Results of Operations > Net Revenues > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES > 2024 versus 2023 > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in net interest income was partly offset by an increase in interest expense, primarily related to collateralized financings and deposits due to higher average balances and rates, as well as other interest-bearing liabilities due to higher average interest rates.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.86913,
+            "sequence_match_ratio": 0.470046,
+            "length_ratio": 1.552941,
+            "word_count_delta": 47,
+            "added_tokens_sample": [
+              "8",
+              "06",
+              "2024",
+              "27",
+              "higher",
+              "than",
+              "an",
+              "increase",
+              "in",
+              "interest",
+              "income",
+              "partially",
+              "offset",
+              "by",
+              "an",
+              "the",
+              "increase",
+              "in",
+              "interest",
+              "income"
+            ],
+            "removed_tokens_sample": [
+              "6",
+              "35",
+              "17",
+              "lower",
+              "than",
+              "2022",
+              "a",
+              "significant",
+              "bearing",
+              "liabilities",
+              "deposits",
+              "collateralized",
+              "financings",
+              "and",
+              "borrowings",
+              "was",
+              "partially",
+              "offset",
+              "by",
+              "a"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2023_7_D053",
+            "score": 0.966056,
+            "normalised_score": 0.9661,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 96.61% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.95,
+          "reason": "The disclosure changed from a significant decrease in net interest income (17%) to a significant increase (27%), with a shift in the dominant drivers from rates impacting expense offsets to balance growth and rate increases impacting income, along with a new detail on specific expense components (collateralized financings) in the current year.",
+          "key_change": "Reversal from significant decrease to significant increase in NII with new drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0500",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosures (D050 and D051) collectively describe Net Interest Income ($8.06B, +27%), detailing the drivers of interest income growth (trading assets, investments) and interest expense growth (collateralized financings, deposits). The 2025 disclosure (D047) describes Net Interest Income ($13.56B, +68%), detailing its drivers (decrease in expense vs decrease in income). They share the same specific topic: the composition and year-over-year change drivers of Net Interest Income.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D050",
+            "item": "7",
+            "section": "Results of Operations > Net Revenues > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES > 2024 versus 2023 > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income for 2024 was $8.06 billion, representing a 27% increase from 2023, driven by higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by a decrease in deposits with banks.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D051",
+            "item": "7",
+            "section": "Results of Operations > Net Revenues > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES > 2024 versus 2023 > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The increase in net interest income was partly offset by an increase in interest expense, primarily related to collateralized financings and deposits due to higher average balances and rates, as well as other interest-bearing liabilities due to higher average interest rates.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_7_D047",
+            "item": "7",
+            "section": "Results of Operations > Net Revenues > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income was $13.56 billion for 2025, a 68% increase from 2024, resulting from a decrease in interest expense related to lower average interest rates that partially offset a decrease in interest income.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.930799,
+            "sequence_match_ratio": 0.492754,
+            "length_ratio": 1.090909,
+            "word_count_delta": 12,
+            "added_tokens_sample": [
+              "net",
+              "interest",
+              "income",
+              "13",
+              "56",
+              "2025",
+              "68",
+              "2024",
+              "a",
+              "decrease",
+              "in",
+              "interest",
+              "expense",
+              "partially",
+              "offset",
+              "by",
+              "a",
+              "decrease",
+              "the",
+              "decrease"
+            ],
+            "removed_tokens_sample": [
+              "8",
+              "06",
+              "2024",
+              "27",
+              "2023",
+              "an",
+              "increase",
+              "the",
+              "increase",
+              "in",
+              "interest",
+              "income",
+              "primarily",
+              "assets",
+              "and",
+              "investments",
+              "each",
+              "and",
+              "higher",
+              "average"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2024_7_D050",
+            "score": 0.976355,
+            "normalised_score": 0.9764,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 97.64% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.96,
+          "confidence_score": 0.98,
+          "reason": "The disclosure reports a 68% increase in Net interest income, from $8.06 billion to $13.56 billion. This is a substantial change in financial condition and capital resources, driven by significant shifts in interest expense and income dynamics.",
+          "key_change": "Substantial year-over-year increase in Net interest income"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D103",
+            "peer_topic": "Net interest income decrease",
+            "peer_summary": "Net interest income decreased $1.4 billion to $13.2 billion primarily due to higher deposit costs and lower average loan balances, partially offset by higher average deposit balances.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.246149,
+            "relationship": "same_topic",
+            "comparison": "While Goldman Sachs reported a 27% increase in net interest income driven by higher trading assets and rates, Bank of America reported a $1.4 billion decrease to $13.2 billion. The divergence is attributed to Bank of America's specific headwinds of 'higher deposit costs and lower average loan balances,' whereas Goldman Sachs cited an 'increase in interest income' from trading assets and investments that offset its expense increases.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P054_S002",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net interest income in the consolidated statements of earnings was $8.06 billion for 2024, 27% higher than 2023, reflecting an increase in interest income, partially offset by an increase in interest expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P054_S003",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in interest income primarily related to trading assets and investments (each reflecting the impact of higher average balances and higher average interest rates), collateralized agreements and other interest-earning assets (each reflecting the impact of higher average interest rates), partially offset by a decrease in interest income related to deposits with banks (reflecting the impact of lower average balances).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D103",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P112_S001",
+                    "paragraph_id": "bac_2024_7_P112",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest income decreased $1.4 billion to $13.2 billion primarily due to higher deposit costs and lower average loan balances, partially offset by the benefit of higher average deposit balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D120",
+            "peer_topic": "Net Interest Income Components",
+            "peer_summary": "The 2% increase in net interest income was mainly attributed to higher average deposit spreads and volumes, partially offset by increased mortgage funding costs.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.197681,
+            "relationship": "same_topic",
+            "comparison": "Goldman Sachs achieved a 27% growth in net interest income due to higher average balances and rates in trading and investments. In contrast, Citigroup reported a modest 2% increase in net interest income, driven by a different set of drivers: 'higher average deposit spreads and volumes,' though it faced headwinds from 'higher mortgage funding costs' similar to how Goldman Sachs faced offsetting expense increases.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P054_S002",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net interest income in the consolidated statements of earnings was $8.06 billion for 2024, 27% higher than 2023, reflecting an increase in interest income, partially offset by an increase in interest expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D120",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P175_S002",
+                    "paragraph_id": "c_2024_7_P175",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The increase in net interest income was mainly due to higher average deposit spreads and volumes, partially offset by higher mortgage funding costs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D040",
+            "peer_topic": "Net Interest Income Drivers",
+            "peer_summary": "Net interest income increased, driven by balance sheet actions including reinvestments in investment securities, higher revolving card balances, the timing impact of First Republic, higher wholesale deposit balances, and higher Markets net interest income, largely offset by deposit margin compression and lower average deposit balances in CCB.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.166116,
+            "relationship": "same_topic",
+            "comparison": "Both Goldman Sachs and JPMorgan Chase reported increases in net interest income for 2024, though the magnitude and drivers differed. Goldman Sachs reported a 27% increase driven by trading assets and investments, while JPMorgan Chase reported an increase driven by 'balance sheet actions' including 'reinvestments in the investment securities portfolio' and 'higher revolving card balances.' Both firms noted offsetting pressures: Goldman Sachs cited an 'increase in interest expense,' while JPMorgan Chase cited 'deposit margin compression' and 'lower average deposit balances in CCB.'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P054_S002",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net interest income in the consolidated statements of earnings was $8.06 billion for 2024, 27% higher than 2023, reflecting an increase in interest income, partially offset by an increase in interest expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P054_S003",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in interest income primarily related to trading assets and investments (each reflecting the impact of higher average balances and higher average interest rates), collateralized agreements and other interest-earning assets (each reflecting the impact of higher average interest rates), partially offset by a decrease in interest income related to deposits with banks (reflecting the impact of lower average balances).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D040",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P063_S001",
+                    "paragraph_id": "jpm_2024_7_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Net interest income increased driven by the impact of balance sheet actions, primarily reinvestments in the investment securities portfolio, higher revolving balances in Card Services, the timing impact of First Republic, higher wholesale deposit balances and higher Markets net interest income.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P063_S002",
+                    "paragraph_id": "jpm_2024_7_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "These factors were largely offset by deposit margin compression across the lines of business and lower average deposit balances in CCB.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D061",
+            "peer_topic": "Wealth Management Net Interest Revenue Performance and Drivers",
+            "peer_summary": "Wealth Management net interest revenues decreased 10% year-over-year to $7,313 million in 2024, primarily driven by lower average sweep deposits, partially offset by higher investment portfolio yields and lending growth.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.142748,
+            "relationship": "same_topic",
+            "comparison": "Goldman Sachs and Morgan Stanley present contrasting performance in net interest income components within their wealth/asset management structures. Goldman Sachs reported overall net interest income growth of 27%, whereas Morgan Stanley's Wealth Management segment saw net interest revenues decrease 10% to $7,313 million. Morgan Stanley attributed this decline to 'lower average sweep deposits,' while noting it was partially offset by 'higher yields on our investment portfolio,' a driver that aligns with Goldman Sachs' mention of higher yields on trading assets and investments.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P054_S003",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in interest income primarily related to trading assets and investments (each reflecting the impact of higher average balances and higher average interest rates), collateralized agreements and other interest-earning assets (each reflecting the impact of higher average interest rates), partially offset by a decrease in interest income related to deposits with banks (reflecting the impact of lower average balances).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D061",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P064_S001",
+                    "paragraph_id": "ms_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net interest revenues of $7,313 million in 2024 decreased 10% compared with the prior year, primarily due to lower average sweep deposits, partially offset by higher yields on our investment portfolio and lending growth.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

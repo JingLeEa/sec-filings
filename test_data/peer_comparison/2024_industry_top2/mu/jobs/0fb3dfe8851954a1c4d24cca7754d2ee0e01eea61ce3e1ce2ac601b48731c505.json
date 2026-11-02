@@ -1,0 +1,284 @@
+{
+  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
+  "request_hash": "dbf506e41f0dcc25aa955aea7dabe4bad7c3c75c20eb06aede0428b701e95739",
+  "result": {
+    "target_ticker": "MU",
+    "target_disclosure_id": "mu_2024_1_D029",
+    "item": "1",
+    "target_topic": "CNBU revenue performance",
+    "target_summary": "CNBU reported revenue of $9.51 billion in 2024, compared to $5.71 billion in 2023 and $13.69 billion in 2022, with sales consisting primarily of HBM, DDR, LPDDR, and GDDR DRAM products.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "mu_2023_2024_M0126",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report CNBU revenue figures for the respective years and prior year comparisons, establishing a direct financial correspondence for the same business unit.\n\nBoth disclosures report financial revenue figures for memory products. D011 (2023) reports CNBU revenue, which is primarily driven by the DRAM products mentioned in other disclosures. D012 (2024) explicitly reports Total DRAM revenue. Both are under the 'Financial & Capital Resources' taxonomy (D012) and 'Sales/Revenue' context (D011 summary), matching the specific subject of DRAM/CNBU revenue reporting.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2023_1_D011",
+            "item": "1",
+            "section": "Sales, Markets, and Products > Products by Business Unit and Market > Compute and Networking Business Unit (\"CNBU\")",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "CNBU reported revenue of $5.71 billion in 2023, a decrease from $13.69 billion in 2022 and $12.28 billion in 2021.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2024_1_D012",
+            "item": "1",
+            "section": "Products, Market, and Sales > Product Technologies",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total reported DRAM revenue was $17.60 billion in 2024, $10.98 billion in 2023, and $22.39 billion in 2022.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "mu_2024_1_D029",
+            "item": "1",
+            "section": "Products, Market, and Sales > Products by Business Unit and Market > Compute and Networking Business Unit (\"CNBU\")",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "CNBU reported revenue of $9.51 billion in 2024, compared to $5.71 billion in 2023 and $13.69 billion in 2022, with sales consisting primarily of HBM, DDR, LPDDR, and GDDR DRAM products.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.689182,
+            "sequence_match_ratio": 0.372093,
+            "length_ratio": 3.3,
+            "word_count_delta": 46,
+            "added_tokens_sample": [
+              "total",
+              "reported",
+              "dram",
+              "revenue",
+              "was",
+              "17",
+              "60",
+              "billion",
+              "in",
+              "2024",
+              "10",
+              "98",
+              "billion",
+              "in",
+              "2023",
+              "and",
+              "22",
+              "39",
+              "billion",
+              "in"
+            ],
+            "removed_tokens_sample": [
+              "12",
+              "28",
+              "billion",
+              "2021"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "mu_2023_1_D011",
+            "score": 0.84769,
+            "normalised_score": 0.8477,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 84.77% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The alignment compares CNBU revenue of $5.71 billion in 2023 to $9.51 billion in 2024, a significant year-over-year increase. It also introduces total DRAM revenue figures. The change from specific CNBU component sales to broader DRAM revenue metrics, along with the substantial variance in reported financials, reflects a material shift in the company's financial position and revenue composition.",
+          "key_change": "Significant year-over-year revenue increase and broadening to total DRAM revenue reporting"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "mu_2024_2025_M0141",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Matched 2024 CNBU revenue to 2025 CMBU revenue. Although the unit name changed from CNBU (Compute and Networking) to CMBU (Cloud Memory), both disclosures report revenue for the primary high-performance data center memory business unit comprising HBM/DDR/LPDDR/GDDR. The context of 'data center sales' in both confirms the functional equivalence.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "mu_2024_1_D029",
+            "item": "1",
+            "section": "Products, Market, and Sales > Products by Business Unit and Market > Compute and Networking Business Unit (\"CNBU\")",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "CNBU reported revenue of $9.51 billion in 2024, compared to $5.71 billion in 2023 and $13.69 billion in 2022, with sales consisting primarily of HBM, DDR, LPDDR, and GDDR DRAM products.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "mu_2025_1_D022",
+            "item": "1",
+            "section": "Products, Market, and Sales > Products by Business Unit and Market > Cloud Memory Business Unit (\"CMBU\")",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total CMBU revenue was $13.52 billion in 2025, $3.79 billion in 2024, and $1.87 billion in 2023, with 2025 data center sales primarily consisting of HBM, DDR5/DDR4, LPDDR5, and GDDR6 products.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.655437,
+            "sequence_match_ratio": 0.597701,
+            "length_ratio": 0.933333,
+            "word_count_delta": -3,
+            "added_tokens_sample": [
+              "total",
+              "cmbu",
+              "was",
+              "13",
+              "52",
+              "billion",
+              "in",
+              "2025",
+              "3",
+              "79",
+              "and",
+              "1",
+              "87",
+              "cmbu",
+              "market",
+              "2025"
+            ],
+            "removed_tokens_sample": [
+              "cnbu",
+              "of",
+              "9",
+              "51",
+              "5",
+              "71",
+              "and",
+              "13",
+              "69",
+              "billion",
+              "in",
+              "2022",
+              "cnbu",
+              "pc",
+              "and",
+              "graphics",
+              "markets",
+              "2024",
+              "dram"
+            ]
+          },
+          "semantic": {
+            "matched_id": "mu_2024_1_D029",
+            "score": 0.959587,
+            "normalised_score": 0.9596,
+            "label": "Relocated",
+            "rationale": "Score 95.96% of ceiling — content is similar but section changed from 'Products, Market, and Sales > Products by Business Unit and Market > Compute and Networking Business Unit (\"CNBU\")' to 'Products, Market, and Sales > Products by Business Unit and Market > Cloud Memory Business Unit (\"CMBU\")'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "This disclosure captures a significant structural change in the company's reporting segments: the renaming of the Compute and Networking Business Unit (CNBU) to the Cloud Memory Business Unit (CMBU). This reorganization implies a strategic shift in how the company categorizes and potentially manages its high-performance data center memory business. The substantial increase in reported revenue for this new segment ($3.79B to $13.52B) also highlights a major growth trend in this specific business line, distinct from previous years' reporting structures.",
+          "key_change": "Renaming of CNBU to CMBU and associated revenue reclassification"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1_D062",
+            "peer_topic": "Competitive Landscape in Data Center Segment",
+            "peer_summary": "AMD competes in the Data Center segment primarily against Intel and NVIDIA with CPU, GPU, and DPU products, while also facing competition from Intel in FPGA and Adaptive SoC products. The competitive environment includes smaller fabless companies offering proprietary accelerators and Arm-based CPUs, as well as customers potentially developing internal microprocessor and accelerator products.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.029255,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures detail AMD's competitive positioning and revenue drivers within the data center segment, which is a primary market for MU's CNBU products. MU reports that its CNBU sales in the data center market consist primarily of HBM and various DDR/LPDDR/GDDR DRAM products, driven by high-performance computing needs. AMD explicitly identifies NVIDIA and Intel as its primary competitors in the Data Center segment using CPU, GPU, and DPU server products, while also facing competition from smaller fabless companies offering proprietary accelerators. While MU discloses the specific product types (HBM/DDR) fueling its data center revenue, AMD discloses the competitive landscape (NVIDIA/Intel) and product classes (CPU/GPU/DPU) defining its data center business model.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_1_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P031_S002",
+                    "paragraph_id": "mu_2024_1_P031",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "CNBU sales to the data center, PC, and graphics markets in 2024 consisted primarily of our HBM, DDR5 and DDR4, LPDDR5, and GDDR6 DRAM products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_1_D062",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1_P064_S001",
+                    "paragraph_id": "amd_2024_1_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "In the Data Center segment, we compete primarily against Intel Corporation (Intel) and NVIDIA Corporation (NVIDIA) with our CPU, GPU and DPU server products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1_P064_S003",
+                    "paragraph_id": "amd_2024_1_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "A variety of smaller fabless silicon companies offer proprietary accelerator solutions and Arm based CPUs targeting data center use-cases.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was sufficiently comparable. AVGO's candidates focus on the VMware acquisition (D005) and seasonal revenue trends driven by wireless/OEM mobile device launches (D091). MU's target disclosure concerns specific CNBU revenue figures and the mix of high-performance memory products (HBM, DDR) for compute and networking markets. Neither AVGO candidate addresses compute/data center memory revenue performance, specific product mixes like HBM, or the competitive dynamics of the data center compute market relevant to MU's CNBU."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was sufficiently comparable. INTC's candidates focus on risks related to marketable and non-marketable equity securities, including concentration in Chinese stocks and sensitivity to price declines. MU's target disclosure concerns operational revenue performance of its Compute and Networking Business Unit. There is no thematic overlap between equity investment risk profiles and data center memory revenue/product mix."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was sufficiently comparable. NVDA's candidates describe its data-center-scale architecture scaling to tens of thousands of GPU servers (D002) and its specialization in four markets including Data Center (D013). While related to the same general industry, NVDA's disclosures focus on GPU-accelerated server architecture and broad market segmentation rather than specific DRAM product revenue performance (HBM/DDR) or the competitive landscape for memory products in the same manner as MU's CNBU disclosure. MU's disclosure is specific to memory sales (HBM, DDR5, etc.), whereas NVDA candidates describe compute/networking infrastructure capabilities."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was sufficiently comparable. QCOM's candidates describe its principal revenue sources (Snapdragon ICs, IP licensing) and its corporate segment structure (QCT, QTL, QSI). These disclosures focus on mobile/automotive connectivity and IP licensing models. MU's target disclosure concerns revenue and product mix (HBM, DDR) for the Compute and Networking Business Unit. The business models (connectivity/IP vs. High-Performance Memory) and market segments (Mobile/Auto vs. Data Center/PC) are distinct."
+      }
+    ]
+  }
+}

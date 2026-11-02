@@ -1,0 +1,306 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "1416976d7e777af0f5fbbc02887f666005c3f5405e56c820872712757d47f00b",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D031",
+    "item": "7",
+    "target_topic": "Equity and Fixed Income Net Revenues composition - Part 2",
+    "target_summary": "The Equity and Fixed Income Net Revenues metric includes funding costs, which are allocated to the businesses based on funding usage.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0238",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2023 disclosure D030 defines the components of 'Equity and Fixed Income Net Revenues' as including Commissions/fees, Asset management, funding costs, and Investments/Other. The 2024 disclosures split these components into separate disclosures: D030 covers Commissions/fees and Asset management; D031 covers funding costs; D032 covers Investments/Other. All are from the same section and define the same aggregate metric.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D030",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Equity and Fixed Income Net Revenues include commissions, fees, asset management revenues, allocated funding costs, and investments and other revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D030",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes Commissions and fees and Asset management revenues.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D031",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes funding costs, which are allocated to the businesses based on funding usage.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D032",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes Investments and Other revenues.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Unchanged",
+            "cosine_similarity": 1.0,
+            "sequence_match_ratio": 1.0,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "ms_2023_7_D030",
+            "score": 0.898005,
+            "normalised_score": 0.898,
+            "rationale": "Split: 1 previous → 3 current. Best pair scored 89.80% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The 2024 disclosures split a single 2023 definition into three separate disclosures for clarity. The components (Commissions/fees, Asset management, Funding costs, Investments/Other) and their definitions remain exactly the same. No substantive change in how the metric is calculated or reported.",
+          "key_change": "Formatting split of metric components"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0034",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in Item 7 for 2025. The 2024 disclosure states that Equity and Fixed Income Net Revenues include funding costs allocated based on usage. The 2025 search returned D045 regarding Treasury allocation of interest expense, but this is under 'Funding Management' and does not explicitly link to the 'Equity and Fixed Income Net Revenues' metric definition as a component. The specific linkage in the 2024 record is not matched by a specific definition disclosure in 2025.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D031",
+            "item": "7",
+            "section": "Institutional Securities > Equity, Fixed Income and Other Net Revenues > Equity and Fixed Income Net Revenues",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Equity and Fixed Income Net Revenues metric includes funding costs, which are allocated to the businesses based on funding usage.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -14,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "2",
+              "includes",
+              "funding",
+              "costs",
+              "which",
+              "are",
+              "allocated",
+              "to",
+              "the",
+              "businesses",
+              "based",
+              "on",
+              "funding",
+              "usage"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.8,
+          "reason": "The specific disclosure linking 'funding costs' to the 'Equity and Fixed Income Net Revenues' metric via usage-based allocation is removed. While funding costs may appear elsewhere, the specific allocation methodology tied to this revenue line is lost, altering the transparency of the financial position.",
+          "key_change": "Removal of funding cost allocation methodology"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "BAC's candidates discuss general capital allocation to businesses and definitions of allocated capital/equity, but do not specifically address the allocation of funding costs to revenue metrics or the inclusion of funding costs in net revenue compositions as described by MS."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D357",
+            "peer_topic": "Capital and funding cost allocations",
+            "peer_summary": "Data includes allocations for capital and funding costs based on the location of the asset.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.168447,
+            "relationship": "same_topic",
+            "comparison": "Both MS and C disclose that their financial metrics include allocations for funding costs. MS specifies that funding costs are allocated to businesses based on funding usage within the Equity and Fixed Income Net Revenues metric. Similarly, C explicitly states that its data includes allocations for funding costs based on the location of the asset, indicating a shared practice of internal cost allocation for funding.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P037_S001",
+                    "paragraph_id": "ms_2024_7_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.Includes funding costs, which are allocated to the businesses based on funding usage.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D357",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P517_S001",
+                    "paragraph_id": "c_2024_7_P517",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(12)Includes allocations for capital and funding costs based on the location of the asset.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D067",
+            "peer_topic": "Segment revenue and equity allocation policies",
+            "peer_summary": "Net revenues include allocated interest income and expense based on funding generated or requirements. Common shareholders' equity and preferred dividends are allocated based on estimated equity required for regulatory capital, while net earnings apply the firmwide tax rate to pre-tax earnings.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.126365,
+            "relationship": "same_topic",
+            "comparison": "Both MS and GS disclose that segment net revenues include allocated interest income and expense based on funding. MS states that Equity and Fixed Income Net Revenues include funding costs allocated based on funding usage. GS confirms that segment net revenues include allocations of interest income and expense based on funding generated by or requirements of the respective segments, demonstrating a comparable methodology for incorporating funding costs into revenue reporting.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P037_S001",
+                    "paragraph_id": "ms_2024_7_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.Includes funding costs, which are allocated to the businesses based on funding usage.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D067",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P070_S001",
+                    "paragraph_id": "gs_2024_7_P070",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net revenues in our segments include allocations of interest income and expense based on the funding generated by, or the funding and liquidity requirements of, the respective segments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D134",
+            "peer_topic": "Equity Markets net interest income decline driver",
+            "peer_summary": "The decline in Equity Markets net interest income was driven by higher funding costs.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.161962,
+            "relationship": "related_topic",
+            "comparison": "Both MS and JPM address funding costs in the context of Equity Markets and Fixed Income/Markets revenues. MS discloses that its Equity and Fixed Income Net Revenues metric includes allocated funding costs. JPM highlights that the decline in Equity Markets net interest income was driven by higher funding costs. While MS describes the allocation mechanism as a standard component of the revenue line, JPM identifies funding costs as a specific driver of performance decline, both centering on the impact and inclusion of funding costs in equity-related revenue metrics.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P037_S001",
+                    "paragraph_id": "ms_2024_7_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.Includes funding costs, which are allocated to the businesses based on funding usage.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D134",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P200_S001",
+                    "paragraph_id": "jpm_2024_7_P200",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "(a)The decline in Equity Markets net interest income was driven by higher funding costs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -31,6 +31,27 @@ disclosures; this still requires PostgreSQL data for every ticker.
 
 ## Preview and run
 
+The dashboard's **Peer comparison** page connects to
+`scripts/run_peer_comparison_pipeline.py`. Select a target, peers, one fiscal
+year, Items, and either material changes or all disclosures. Click **Check
+prerequisites** before **Start peer comparison**. The readiness check uses the
+same saved-evidence and target-selection validation as the backend, with no
+model requests or writes. Missing company/year data or material target
+disclosures blocks launch and points to **Run pipeline**. Changing the selection
+requires a new check; launch checks inputs again, and the CLI retains its own
+database gate.
+
+The UI runs comparison in a background process, polls comparison counts, and
+shows an activity log. Stopped or partial runs can be resumed with the same
+selection, reusing PostgreSQL caches. It does not start the main pipeline
+automatically. In normal `auto` or `postgres` dashboard mode, saved reports are
+read directly from `peer_comparison_reports`; no local export is required.
+Local exports and marked sample reports remain viewable.
+`SEC_UI_DATA_SOURCE=files` limits the saved-report viewer to local files.
+
+UI process metadata and its console log are kept under `data/peer_runs/`.
+Evidence, model caches, comparison progress and saved reports stay in PostgreSQL.
+
 Check database inputs and candidate retrieval without model calls or writes:
 
 ```bash

@@ -1,0 +1,228 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "c9c6230d7625198a35304e7b2c870cdbc8803aee6396284aa00086dafd04a677",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_8_D327",
+    "item": "8",
+    "target_topic": "Common Stock Dividends Paid",
+    "target_summary": "Cash dividends paid per share of common stock were $1.00, $0.92, and $0.86 for fiscal years 2024, 2023, and 2022, respectively.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0821",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the cash dividends paid per share of common stock for the respective fiscal years. The 2023 record lists $0.92 for 2023, and the 2024 record lists $1.00 for 2024, maintaining the same specific topic of dividend payments.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_8_D319",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 13 Shareholders' Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Corporation paid cash dividends per share of common stock of $0.92 in 2023, $0.86 in 2022, and $0.78 in 2021.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D327",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 13 Shareholders' Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Cash dividends paid per share of common stock were $1.00, $0.92, and $0.86 for fiscal years 2024, 2023, and 2022, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.827974,
+            "sequence_match_ratio": 0.73913,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "1",
+              "00",
+              "and",
+              "for",
+              "2024",
+              "2023"
+            ],
+            "removed_tokens_sample": [
+              "0",
+              "78",
+              "for",
+              "2023",
+              "and",
+              "2021"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_8_D319",
+            "score": 1.008788,
+            "normalised_score": 1.0088,
+            "label": "Unchanged",
+            "rationale": "Score 100.88% of ceiling — semantically identical despite surface differences (word overlap 65%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.15,
+          "confidence_score": 0.95,
+          "reason": "The change represents a routine annual update to the cash dividend per share amount (from $0.92 to $1.00) and a shift in reporting years. This is a standard financial data update reflecting ongoing capital allocation policy rather than a meaningful change in business risk, strategy, or operational condition.",
+          "key_change": "Annual dividend per share increase"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0839",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the specific amounts of cash dividends paid per share of common stock for the respective fiscal years (2024 vs 2025), covering the same three-year lookback period.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D327",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 13 Shareholders' Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Cash dividends paid per share of common stock were $1.00, $0.92, and $0.86 for fiscal years 2024, 2023, and 2022, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_8_D317",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 13 Shareholders' Equity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Cash dividends paid per share of common stock were $1.08, $1.00, and $0.92 for fiscal years 2025, 2024, and 2023, respectively.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.828997,
+            "sequence_match_ratio": 0.73913,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "08",
+              "1",
+              "and",
+              "for",
+              "2025",
+              "2024"
+            ],
+            "removed_tokens_sample": [
+              "0",
+              "86",
+              "for",
+              "2024",
+              "and",
+              "2022"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2024_8_D327",
+            "score": 1.035891,
+            "normalised_score": 1.0359,
+            "label": "Unchanged",
+            "rationale": "Score 103.59% of ceiling — semantically identical despite surface differences (word overlap 58%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.9,
+          "reason": "The cash dividend per share increased from $1.00 to $1.08 for the current year, a 8% increase. Dividend policy changes are a key indicator of strategic priority and financial strength, making this a material change in capital resource allocation.",
+          "key_change": "Increase in cash dividend per share"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss EPS calculation methodology (two-class method) and payout ratio definitions, which are distinct from the specific factual disclosure of cash dividends paid per common share reported by BAC."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D414",
+            "peer_topic": "Preferred stock dividend declaration amounts and payment dates",
+            "peer_summary": "On January 7, 2025, The Goldman Sachs Group, Inc. declared dividends for multiple series of preferred stock ranging from $340.49 to $937.50 per share, payable on February 10, 2025, with additional dividends for Series E and F preferred stock payable in March 2025.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.215666,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and GS disclose specific declared cash dividend amounts for their capital stock in the same reporting period, though BAC focuses on common stock while GS details preferred stock dividends. BAC reports cash dividends paid per share of common stock at $1.00 for 2024. In contrast, GS discloses specific dividend declarations for multiple series of preferred stock, such as $345.49 per share for Series A and C, and $937.50 per share for Series W, paid in early 2025 relative to the 2024 fiscal year-end.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D327",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P379_S001",
+                    "paragraph_id": "bac_2024_8_P379",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The cash dividends paid per share of common stock were $1.00, $0.92 and $0.86 for 2024, 2023 and 2022, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D414",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P549_S001",
+                    "paragraph_id": "gs_2024_8_P549",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "On January 7, 2025, Group Inc. declared dividends of $345.49 per share of Series A Preferred Stock, $345.49 per share of Series C Preferred Stock, $340.49 per share of Series D Preferred Stock, $922.38 per share of Series Q Preferred Stock, $618.75 per share of Series R Preferred Stock, $550.00 per share of Series S Preferred Stock, $456.25 per share of Series U Preferred Stock and $937.50 per share of Series W Preferred Stock that were paid on February 10, 2025 to preferred shareholders of record on January 26, 2025.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss common stock authorization limits and EPS calculation methods using the two-class method, which are structurally different from the specific dividend payout amounts reported by BAC."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates provide a reference to Note 17 for dividend information or describe Series C preferred stock characteristics (rate and non-cumulative nature), but do not disclose specific common stock dividend per share amounts comparable to BAC's reported $1.00."
+      }
+    ]
+  }
+}

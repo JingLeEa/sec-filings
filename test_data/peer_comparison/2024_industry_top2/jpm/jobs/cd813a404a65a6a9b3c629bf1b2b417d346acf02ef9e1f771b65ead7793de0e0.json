@@ -1,0 +1,349 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "d0029a9375fe9121b513c652a0b91850a2120007302cface6a574452c0cd9834",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D009",
+    "item": "7",
+    "target_topic": "Noninterest Expense Drivers",
+    "target_summary": "Noninterest expense was $91.8 billion, up 5%, driven by higher compensation and a $1.0 billion Visa share contribution to the foundation, partially offset by lower FDIC-related expenses due to the timing of special assessments.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0319",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "verifier_requested_review",
+          "missing_review_metadata"
+        ],
+        "explanation": "Both disclosures report Firmwide Noninterest Expense. D023 details 2023 drivers including compensation, FDIC assessment, and First Republic costs. D009 details 2024 drivers including compensation, Visa share contribution, and offsetting lower FDIC expenses due to assessment timing.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D023",
+            "item": "7",
+            "section": "EXECUTIVE OVERVIEW > Firmwide overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense was $87.2 billion, up 14%, driven by higher compensation (increased employees in technology/front office and wage inflation), a $2.9 billion FDIC special assessment, and First Republic acquisition costs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D009",
+            "item": "7",
+            "section": "EXECUTIVE OVERVIEW > Firmwide overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense was $91.8 billion, up 5%, driven by higher compensation and a $1.0 billion Visa share contribution to the foundation, partially offset by lower FDIC-related expenses due to the timing of special assessments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0257",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures provide the firmwide Noninterest Expense overview for their respective years, detailing the drivers of the expense (compensation, FDIC assessments, and the specific Visa share contribution context). The evidence supports this one-to-one alignment within SEC Item 7.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D009",
+            "item": "7",
+            "section": "EXECUTIVE OVERVIEW > Firmwide overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense was $91.8 billion, up 5%, driven by higher compensation and a $1.0 billion Visa share contribution to the foundation, partially offset by lower FDIC-related expenses due to the timing of special assessments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D013",
+            "item": "7",
+            "section": "EXECUTIVE OVERVIEW > Firmwide overview",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Noninterest expense increased 4% to $95.6 billion in 2025, driven by higher compensation (including revenue-related pay and employee growth), brokerage fees, auto lease depreciation, and technology/marketing investments, partially offset by FDIC assessment accrual releases.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.761298,
+            "sequence_match_ratio": 0.463918,
+            "length_ratio": 1.229885,
+            "word_count_delta": 20,
+            "added_tokens_sample": [
+              "95",
+              "6",
+              "4",
+              "the",
+              "increase",
+              "in",
+              "expense",
+              "was",
+              "also",
+              "driven",
+              "by",
+              "higher",
+              "brokerage",
+              "expense",
+              "and",
+              "distribution",
+              "fees",
+              "higher",
+              "auto",
+              "lease"
+            ],
+            "removed_tokens_sample": [
+              "91",
+              "8",
+              "5",
+              "partially",
+              "offset",
+              "by",
+              "lower",
+              "fdic",
+              "related",
+              "expense",
+              "reflecting",
+              "a",
+              "2",
+              "9",
+              "billion",
+              "special",
+              "assessment",
+              "recognized",
+              "in",
+              "the"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_7_D009",
+            "score": 0.952702,
+            "normalised_score": 0.9527,
+            "label": "Modified",
+            "rationale": "Score 95.27% of ceiling with 54% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The 2025 disclosure introduces new expense drivers not present in 2024, specifically higher brokerage fees, auto lease depreciation, and technology/marketing investments, while the 2024 disclosure was dominated by the $1.0 billion Visa foundation contribution. This changes the structural composition of noninterest expense.",
+          "key_change": "Introduction of new expense drivers and removal of Visa contribution context"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D019",
+            "peer_topic": "Noninterest expense increase drivers and prior year comparisons",
+            "peer_summary": "Noninterest expense increased $967 million to $66.8 billion in 2024 compared to 2023, primarily driven by higher revenue-related expenses and investments in people, operations, and technology, partially offset by higher FDIC expense in 2023 (including a $2.1 billion special assessment) and lower expenses from a liquidating business activity.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.236345,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC report that higher compensation was a primary driver of their 2024 noninterest expense increases. JPM’s $91.8 billion total noninterest expense rose 5% driven by 'higher compensation expense, including higher revenue-related compensation,' while BAC’s $66.8 billion expense rose $967 million primarily due to 'higher revenue-related expenses as well as investments in people.' A key difference is that JPM’s increase was significantly impacted by a $1.0 billion one-time Visa share contribution to its foundation, whereas BAC’s variance included partial offsetting effects from lower FDIC-related expenses in 2024 compared to 2023 (due to prior year SVB/Signature Bank assessments), whereas JPM noted lower FDIC expense partially offsetting its rise. JPM sentence: 'Noninterest expense was $91.8 billion, up 5%, driven by higher compensation expense... as well as a $1.0 billion contribution... partially offset by lower FDIC-related expense.' BAC sentence: 'The increase was primarily driven by higher revenue-related expenses as well as investments in people, operations and technology, partially offset by higher Federal Deposit Insurance Corporation (FDIC) expense in 2023...'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D009",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P018_S002",
+                    "paragraph_id": "jpm_2024_7_P018",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• Noninterest expense was $91.8 billion, up 5%, driven by higher compensation expense, including higher revenue-related compensation and growth in the number of employees, as well as a $1.0 billion contribution of Visa shares to the JPMorgan Chase Foundation recorded in the second quarter of 2024, partially offset by lower FDIC-related expense, reflecting a $2.9 billion special assessment recognized in the fourth quarter of 2023, compared with a $725 million increase to the FDIC special assessment recognized in the first quarter of 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D019",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P017_S002",
+                    "paragraph_id": "bac_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The increase was primarily driven by higher revenue-related expenses as well as investments in people, operations and technology, partially offset by higher Federal Deposit Insurance Corporation (FDIC) expense in 2023, including $2.1 billion for the estimated special assessment amount arising from the closure of Silicon Valley Bank and Signature Bank, and lower expenses related to a liquidating business activity.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D049",
+            "peer_topic": "Expense reduction and credit cost",
+            "peer_summary": "All Other (managed basis) expenses decreased 19%, largely due to lower FDIC special assessments ($203 million vs $1.7 billion) and reduced restructuring charges ($259 million vs $781 million), partially offset by civil money penalties imposed in July 2024; cost of credit decreased to $1.1 billion from $1.3 billion, driven by a smaller ACL build for non-U.S. transfer risk.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.150523,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and C explicitly highlight the trend in FDIC special assessment costs as a significant comparative factor in their expense narratives. JPM notes its 2024 rise was partially offset by 'lower FDIC-related expense, reflecting a $2.9 billion special assessment recognized in the fourth quarter of 2023, compared with a $725 million increase... in the first quarter of 2024.' C’s 'All Other' segment details a similar dynamic, where expenses decreased largely due to 'lower FDIC special assessment ($203 million in 2024 versus approximately $1.7 billion in the prior year).' While JPM focuses on the gross expense increase drivers (compensation/Visa) against the backdrop of lower FDIC costs relative to the prior Q4 peak, C isolates the FDIC assessment reduction as a primary driver of segment-level expense decline. Both disclosures demonstrate that while revenue-linked pay rose, the timing and magnitude of FDIC assessments created distinct year-over-year comparisons for each institution. JPM sentence: '...partially offset by lower FDIC-related expense, reflecting a $2.9 billion special assessment recognized in the fourth quarter of 2023, compared with a $725 million increase to the FDIC special assessment recognized in the first quarter of 2024.' C sentence: 'All Other (managed basis) expenses decreased 19%, primarily driven by the lower FDIC special assessment ($203 million in 2024 versus approximately $1.7 billion in the prior year)...'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D009",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P018_S002",
+                    "paragraph_id": "jpm_2024_7_P018",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• Noninterest expense was $91.8 billion, up 5%, driven by higher compensation expense, including higher revenue-related compensation and growth in the number of employees, as well as a $1.0 billion contribution of Visa shares to the JPMorgan Chase Foundation recorded in the second quarter of 2024, partially offset by lower FDIC-related expense, reflecting a $2.9 billion special assessment recognized in the fourth quarter of 2023, compared with a $725 million increase to the FDIC special assessment recognized in the first quarter of 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D049",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P042_S001",
+                    "paragraph_id": "c_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "All Other (managed basis) expenses decreased 19%, primarily driven by the lower FDIC special assessment ($203 million in 2024 versus approximately $1.7 billion in the prior year) and a reduction from the closed exits and wind-downs, as well as the lower restructuring charges ($259 million in 2024 versus $781 million in 2023), partially offset by the civil money penalties imposed by the FRB and OCC in July 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D059",
+            "peer_topic": "Factors driving 2024 operating expense decreases and increases",
+            "peer_summary": "Operating expenses decreased relative to 2023 due to lower commercial real estate impairments, GreenSky intangible asset write-downs, consumer platform goodwill impairments, and FDIC fees, partially offset by higher compensation and transaction-based expenses driven by improved performance. An additional $71 million FDIC special assessment fee was recognized in 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.169464,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and GS identify higher compensation and benefits as a key upward pressure on operating/noninterest expenses in 2024, reflecting improved performance. JPM cites 'higher compensation expense, including higher revenue-related compensation' as a driver of its $91.8 billion total noninterest expense. GS reports that its operating expense decreases from 2023 (aided by prior-year impairments) were 'partially offset by higher compensation and benefits expenses (reflecting improved operating performance).' A major difference lies in the offsetting items: GS’s expense profile was heavily influenced by one-time prior-year charges like commercial real estate impairments ($1.46B) and intangible write-downs, whereas JPM’s 2024 increase was driven by a $1.0 billion one-time Visa share contribution and recurring compensation growth, with lower FDIC assessments providing a smaller offset. JPM sentence: 'Noninterest expense was $91.8 billion, up 5%, driven by higher compensation expense, including higher revenue-related compensation...' GS sentence: 'These decreases were partially offset by higher compensation and benefits expenses (reflecting improved operating performance)...'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D009",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P018_S002",
+                    "paragraph_id": "jpm_2024_7_P018",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• Noninterest expense was $91.8 billion, up 5%, driven by higher compensation expense, including higher revenue-related compensation and growth in the number of employees, as well as a $1.0 billion contribution of Visa shares to the JPMorgan Chase Foundation recorded in the second quarter of 2024, partially offset by lower FDIC-related expense, reflecting a $2.9 billion special assessment recognized in the fourth quarter of 2023, compared with a $725 million increase to the FDIC special assessment recognized in the first quarter of 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P061_S002",
+                    "paragraph_id": "gs_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "These decreases were partially offset by higher compensation and benefits expenses (reflecting improved operating performance) and higher transaction based expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D064",
+            "peer_topic": "Wealth Management Non-Interest Expense Trend and Drivers",
+            "peer_summary": "Wealth Management non-interest expenses increased 5% to $20,618 million in 2024 compared to the prior year. This increase was driven by higher compensation and benefits expenses, primarily due to increased formulaic payouts to representatives on higher compensable revenues, partially offset by decreases in non-compensation expenses such as professional services, legal expenses, and FDIC special assessment costs.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.181929,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and MS identify higher compensation and benefits as the primary driver of increased noninterest/non-interest expenses in 2024. JPM’s firmwide expense rose 5% due to 'higher compensation expense, including higher revenue-related compensation,' while MS’s Wealth Management non-interest expenses rose 5% due to 'higher Compensation and benefits expenses, partially offset by lower Non-compensation expenses.' Both disclosures link compensation growth to performance/revenue metrics; JPM specifies 'revenue-related compensation,' and MS attributes its increase to 'formulaic payout to Wealth Management representatives on higher compensable revenues.' A key difference is that JPM’s aggregate noninterest expense also included a significant one-time $1.0 billion Visa share contribution, whereas MS does not report a comparable singular large one-time expense item in this specific segment disclosure, focusing instead on the trade-off between compensation rises and lower non-compensation costs (like legal/FDIC). JPM sentence: 'Noninterest expense was $91.8 billion, up 5%, driven by higher compensation expense, including higher revenue-related compensation...' MS sentence: 'Non-interest expenses of $20,618 million in 2024 increased 5% compared with the prior year, as a result of higher Compensation and benefits expenses...'",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D009",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P018_S002",
+                    "paragraph_id": "jpm_2024_7_P018",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• Noninterest expense was $91.8 billion, up 5%, driven by higher compensation expense, including higher revenue-related compensation and growth in the number of employees, as well as a $1.0 billion contribution of Visa shares to the JPMorgan Chase Foundation recorded in the second quarter of 2024, partially offset by lower FDIC-related expense, reflecting a $2.9 billion special assessment recognized in the fourth quarter of 2023, compared with a $725 million increase to the FDIC special assessment recognized in the first quarter of 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D064",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P068_S001",
+                    "paragraph_id": "ms_2024_7_P068",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Non-interest expenses of $20,618 million in 2024 increased 5% compared with the prior year, as a result of higher Compensation and benefits expenses, partially offset by lower Non-compensation expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

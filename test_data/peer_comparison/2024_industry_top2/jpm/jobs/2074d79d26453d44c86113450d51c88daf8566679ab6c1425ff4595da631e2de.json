@@ -1,0 +1,315 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "59a89cfc5a4f509899eb34f4426780900470cf718f1ae369745d993d523d050a",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D348",
+    "item": "7",
+    "target_topic": "Residential real estate held-for-sale and nonaccrual increases",
+    "target_summary": "Loans held-for-sale and nonaccrual loans held-for-sale increased from December 31, 2023, primarily due to transfers of certain retained loans in anticipation of securitization and loan sales.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0612",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "conflicting_alignment_assignment"
+        ],
+        "explanation": "No counterpart found in 2023. The 2023 disclosure (D348) provides only generic references to Note 12 for portfolio details (delinquencies, modifications, credit quality) and does not contain specific information about loans held-for-sale or nonaccrual loans increasing due to securitization transfers, which is the specific topic of 2024 D348.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D348",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Discussions provide information on individual loan products, with further details on delinquencies, modifications, and credit quality available in Note 12.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D348",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans held-for-sale and nonaccrual loans held-for-sale increased from December 31, 2023, primarily due to transfers of certain retained loans in anticipation of securitization and loan sales.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0551",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "See split above. jpm_2025_7_D353 covers both the HFS/Nonaccrual HFS changes (matching D348) and the Fair Value loan changes (matching D349). D349 specifically details Loans at Fair Value and Nonaccrual Loans at Fair Value. D353 contains specific sentences on both: 'Loans at fair value increased... driven by CIB' and 'Nonaccrual loans at fair value increased... driven by CIB'. This row supports the link for D349 to D353.\n\nBoth disclosures focus on the specific subject of Loans Held-for-Sale (HFS) and Nonaccrual Loans HFS within the Consumer, excluding credit card portfolio. The 2024 disclosure (D348) explains the increase in HFS and nonaccrual HFS due to transfers for securitization/sales. The 2025 disclosure (D353) explains the decrease in HFS and nonaccrual HFS due to loan sales activities. The shared specific topic is the dynamics of the HFS and nonaccrual HFS loan balances in this segment.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D348",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans held-for-sale and nonaccrual loans held-for-sale increased from December 31, 2023, primarily due to transfers of certain retained loans in anticipation of securitization and loan sales.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D349",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans at fair value increased from December 31, 2023, predominantly driven by higher Home Lending loans as originations outpaced warehouse loan sales. Nonaccrual loans at fair value increased compared to December 31, 2023, driven by the Corporate & Investment Bank (CIB).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D353",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans held-for-sale and nonaccrual loans held-for-sale decreased compared to December 31, 2024, reflecting loan sales activities. Loans at fair value increased as purchases in the CIB and originations in Home Lending outpaced sales, while nonaccrual loans at fair value increased driven by the CIB.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.6906,
+            "sequence_match_ratio": 0.64,
+            "length_ratio": 0.865672,
+            "word_count_delta": -9,
+            "added_tokens_sample": [
+              "decreased",
+              "compared",
+              "to",
+              "2024",
+              "reflecting",
+              "compared",
+              "to",
+              "2024",
+              "purchases",
+              "outpaced",
+              "sales",
+              "in",
+              "cib",
+              "and",
+              "in",
+              "home",
+              "lending",
+              "2024"
+            ],
+            "removed_tokens_sample": [
+              "increased",
+              "from",
+              "2023",
+              "predominantly",
+              "driven",
+              "by",
+              "transfers",
+              "of",
+              "certain",
+              "retained",
+              "loans",
+              "in",
+              "anticipation",
+              "of",
+              "securitization",
+              "and",
+              "respectively",
+              "from",
+              "2023",
+              "predominantly"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2024_7_D349",
+            "score": 0.934951,
+            "normalised_score": 0.935,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 93.50% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.9,
+          "reason": "The disclosure updates the drivers of change for Loans at Fair Value. The 2024 disclosure attributed growth to 'higher Home Lending loans'. The 2025 disclosure explicitly attributes growth to 'purchases in CIB' (Corporate & Investment Bank) in addition to Home Lending. This indicates a material shift in the business activity (M&A/Trading vs. Lending) driving the fair value portfolio composition and risk exposure in the CIB segment.",
+          "key_change": "Shift in Fair Value portfolio drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D300",
+            "peer_topic": "Valuation and Exclusions of Nonperforming Loans",
+            "peer_summary": "Commercial nonperforming loans were carried at 88 percent of unpaid principal balance, reduced to estimated collateral value less costs to sell, excluding loans under the fair value option, held-for-sale balances, and small business card loans.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.100992,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures address the interaction between 'held-for-sale' status and credit quality valuation. JPMorgan reports an increase in 'nonaccrual loans held-for-sale' due to transfer activities. Bank of America explicitly excludes 'nonperforming loans held-for-sale' from its primary nonperforming loan definitions and tables, noting a specific balance of $731 million at December 31, 2024. While JPM focuses on the driver of the increase (securitization transfers), BAC focuses on the accounting treatment/exclusion of these held-for-sale nonperforming assets, showing that both entities manage and report nonperforming status separately or distinctly for held-for-sale portfolios.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D348",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P515_S001",
+                    "paragraph_id": "jpm_2024_7_P515",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Loans held-for-sale and nonaccrual loans held-for-sale increased from December 31, 2023, predominantly driven by transfers of certain retained loans in anticipation of securitization and loan sales, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D300",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P351_S001",
+                    "paragraph_id": "bac_2024_7_P351",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "(1)Balances do not include nonperforming loans held-for-sale of $731 million and $161 million at December 31, 2024 and 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D241",
+            "peer_topic": "Consumer Loan NCLs Accounting Definitions and Footnotes",
+            "peer_summary": "Consumer loan net credit losses (NCLs) and ratios are calculated based on average loans net of unearned income, with average loans including interest and fees on credit cards. Other managed basis excludes divestiture-related impacts, and Asia Consumer includes businesses in Poland and Russia. NCLs for Asia Consumer businesses classified as held-for-sale were recorded as a reduction in revenue and are excluded from this table.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.076305,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures discuss the accounting treatment of net credit losses (NCLs) for assets classified as held-for-sale. JPMorgan highlights that nonaccrual loans held-for-sale increased due to transfers for securitization. Citigroup explicitly states that NCLs related to Asia Consumer businesses 'classified as held-for-sale' were recorded as a reduction in revenue rather than in the standard NCL calculation. This illustrates a common financial driver where held-for-sale status alters the recognition or exclusion of credit losses compared to held-for-investment loans.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D348",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P515_S001",
+                    "paragraph_id": "jpm_2024_7_P515",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Loans held-for-sale and nonaccrual loans held-for-sale increased from December 31, 2023, predominantly driven by transfers of certain retained loans in anticipation of securitization and loan sales, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D241",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P350_S001",
+                    "paragraph_id": "c_2024_7_P350",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(5)Approximately $0 million, $25 million and $155 million in NCLs relating to certain Asia Consumer businesses classified as held-for-sale in Other assets and Other liabilities on the Consolidated Balance Sheet were recorded as a reduction in revenue (Other revenue) in 2024, 2023 and 2022, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D301",
+            "peer_topic": "Composition and Attribution of Equity and Debt Positions",
+            "peer_summary": "Equity positions primarily relate to investments in corporate, real estate, and infrastructure assets within Asset & Wealth Management, while debt positions include mezzanine/senior debt, corporate/real estate loans in Asset & Wealth Management, and specific held-for-sale credit card and GreenSky loans in Platform Solutions.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.093701,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Goldman Sachs disclose the existence of 'held-for-sale' loan classifications within their residential real estate or loan portfolios. JPMorgan specifically notes an increase in 'nonaccrual loans held-for-sale' driven by transfers for securitization. Goldman Sachs similarly identifies specific loan types, including 'GreenSky loans' and 'GM co-branded credit card loans', that were 'classified as held for sale' as of December 2023 (carrying forward into 2024 reporting periods), demonstrating a shared exposure to loans held for sale, although JPM's disclosure highlights a volume increase while GS highlights specific portfolio composition.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D348",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P515_S001",
+                    "paragraph_id": "jpm_2024_7_P515",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Loans held-for-sale and nonaccrual loans held-for-sale increased from December 31, 2023, predominantly driven by transfers of certain retained loans in anticipation of securitization and loan sales, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D301",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P401_S004",
+                    "paragraph_id": "gs_2024_7_P401",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Debt positions include mezzanine and senior debt, and corporate and real estate loans, substantially all of which are included within Asset & Wealth Management. Debt positions also included approximately $1.8 billion as of December 2024 and approximately $2.0 billion as of December 2023 of GM co-branded credit card loans, and approximately $3.0 billion as of December 2023 of GreenSky loans that were classified as held for sale. These held for sale loans were included within Platform Solutions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (ms_2024_7_D013 and ms_2024_7_D292) discuss revenue components from held-for-sale loans or the general definition of nonaccrual loans, but do not provide specific disclosure on residential real estate held-for-sale volumes, nonaccrual increases, or transfer drivers comparable to JPM's specific portfolio analysis. D013 mentions mark-to-market gains on held-for-sale commitments but lacks the residential credit portfolio context. D292 is a definitional footnote unrelated to the specific business driver of HFS volume changes."
+      }
+    ]
+  }
+}

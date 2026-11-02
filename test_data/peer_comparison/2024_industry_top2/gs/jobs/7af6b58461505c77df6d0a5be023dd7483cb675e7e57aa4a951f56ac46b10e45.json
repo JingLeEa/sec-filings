@@ -1,0 +1,329 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "2169b079f3d30930334f874ac4440cacce4a407a460708807b9bb2191dcbc9ce",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_8_D453",
+    "item": "8",
+    "target_topic": "Capital Ratio Changes from 2023 to 2024",
+    "target_summary": "Standardized and Advanced risk-based capital ratios increased from December 2023 to December 2024, driven by net earnings and decreased Market RWAs, partially offset by increased Credit RWAs.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M1177",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the increase in Standardized and Advanced risk-based capital ratios year-over-year, attributing the change primarily to net earnings, with offsetting effects from Credit RWAs (and Market RWAs in 2024).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_8_D450",
+            "item": "8",
+            "section": "Accounting Firm > Regulation and Capital Adequacy > GS Bank USA > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Standardized and Advanced risk-based capital ratios for GS Bank USA increased from December 2022 to December 2023. This increase was principally due to net earnings, partially offset by an increase in Credit Risk-Weighted Assets (RWAs).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D453",
+            "item": "8",
+            "section": "Accounting Firm > Regulation and Capital Adequacy > GS Bank USA",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Standardized and Advanced risk-based capital ratios increased from December 2023 to December 2024, driven by net earnings and decreased Market RWAs, partially offset by increased Credit RWAs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.87889,
+            "sequence_match_ratio": 0.849315,
+            "length_ratio": 1.212121,
+            "word_count_delta": 7,
+            "added_tokens_sample": [
+              "2023",
+              "2024",
+              "primarily",
+              "and",
+              "a",
+              "decrease",
+              "in",
+              "market",
+              "rwas"
+            ],
+            "removed_tokens_sample": [
+              "2022",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "matched_id": "gs_2023_8_D450",
+            "score": 0.989167,
+            "normalised_score": 0.9892,
+            "label": "Relocated",
+            "rationale": "Score 98.92% of ceiling — content is similar but section changed from 'Accounting Firm > Regulation and Capital Adequacy > GS Bank USA > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES' to 'Accounting Firm > Regulation and Capital Adequacy > GS Bank USA'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.8,
+          "reason": "The driver for the increase in capital ratios changed. In 2023, the increase was driven by net earnings offset by Credit RWAs. In 2024, the disclosure adds 'decrease in Market RWAs' as a contributing factor to the ratio increase. This identifies a meaningful shift in the operational drivers of the bank's capital adequacy.",
+          "key_change": "Introduction of Market RWA decrease as capital driver"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M1220",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures describe the components of Credit RWAs under Standardized and Advanced Capital Rules. D433 explains the calculation methodology (prescribed risk-weights, internal models), while D422 provides the specific 2025 outcome (Credit RWAs increased), confirming the same underlying topic of Credit RWA composition and drivers.\n\nBoth disclosures cover GS Bank USA's risk-based capital ratios (Standardized and Advanced). D452 details the compliance assessment methodology (lower of Standardized/Advanced) and CECL impact, while D453 discusses the drivers of ratio changes (earnings, RWAs). D422 in 2025 combines these elements, stating the methodology and the drivers of the decrease in ratios (Credit RWAs, Market RWAs, net earnings). The topics are the specific risk-based capital ratios for GS Bank USA.\n\nD451 is the introductory table reference for GS Bank USA's risk-based capital ratios. D422 contains the corresponding 2025 table for GS Bank USA's risk-based capital ratios. They share the same specific subject (GS Bank USA risk-based capital table).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D433",
+            "item": "8",
+            "section": "Accounting Firm > Regulation and Capital Adequacy > Consolidated Regulatory Capital Requirements > Credit Risk",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Credit RWAs are calculated based on measures of exposure risk-weighted under Standardized and Advanced Capital Rules, using prescribed risk-weights and formulas for the former and internal ratings-based models and internal models for the latter, with specific formulaic approaches for securitizations and equities.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_8_D451",
+            "item": "8",
+            "section": "Accounting Firm > Regulation and Capital Adequacy > GS Bank USA",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The table presents information about GS Bank USA's risk-based capital ratios.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "gs_2024_8_D452",
+            "item": "8",
+            "section": "Accounting Firm > Regulation and Capital Adequacy > GS Bank USA",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Compliance is assessed against the lower of Standardized or Advanced ratios, and GS Bank USA is phasing in an estimated reduction to regulatory capital from CECL adoption at 25% per year through January 2025.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_8_D453",
+            "item": "8",
+            "section": "Accounting Firm > Regulation and Capital Adequacy > GS Bank USA",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Standardized and Advanced risk-based capital ratios increased from December 2023 to December 2024, driven by net earnings and decreased Market RWAs, partially offset by increased Credit RWAs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_8_D422",
+            "item": "8",
+            "section": "Accounting Firm > Regulation and Capital Adequacy > GS Bank USA > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "GS Bank USA's Standardized and Advanced risk-based capital ratios decreased in December 2025 compared to December 2024, primarily due to an increase in Credit RWAs partially offset by net earnings and a decrease in Market RWAs, with compliance assessed using Standardized ratios for both periods.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D336",
+            "peer_topic": "Capital ratio table and transition periods",
+            "peer_summary": "The provided table presents capital ratios and related information in accordance with Basel 3 Standardized and Advanced approaches as measured at December 31, 2024 and 2023, with ratios calculated using a five-year transition period related to the adoption of the current expected credit losses accounting standard.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.135954,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures present the methodology and data for risk-based capital ratios under Basel III Standardized and Advanced approaches. While Goldman Sachs explicitly details the directional drivers of the ratio increase (net earnings and decreased Market RWAs), Bank of America provides the structural context that its ratios were calculated using a five-year transition period related to CECL adoption for both periods presented, whereas Goldman Sachs attributes its changes to operational capital and risk-weight changes without mentioning a similar CECL transition constraint in this specific sentence.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D453",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P587_S004",
+                    "paragraph_id": "gs_2024_8_P587",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• The Standardized and Advanced risk-based capital ratios increased from December 2023 to December 2024, primarily reflecting an increase in capital, principally due to net earnings, and a decrease in Market RWAs, partially offset by an increase in Credit RWAs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D336",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P408_S001",
+                    "paragraph_id": "bac_2024_8_P408",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The following table presents capital ratios and related information in accordance with Basel 3 Standardized and Advanced approaches as measured at December 31, 2024 and 2023 for the Corporation and BANA.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P409_S001",
+                    "paragraph_id": "bac_2024_8_P409",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "(1)As of December 31, 2024 and 2023, capital ratios are calculated using the regulatory capital rule that allows a five-year transition period related to the adoption of the current expected credit losses accounting standard on January 1, 2020.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate retrieved matches the topic of Capital Ratio Changes. The supplied candidates for Citigroup (C) focus on the Allowance for Credit Losses balance drivers or the specific calculation methodologies (Standardized vs Advanced) without providing the comparative performance/outcome of the ratios themselves or the specific drivers of ratio changes (e.g., earnings, RWA movements) that are central to the Goldman Sachs disclosure."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D547",
+            "peer_topic": "Basel III Capital Calculation Approaches",
+            "peer_summary": "Basel III rules establish minimum capital ratios for large and internationally active U.S. bank holding companies and banks, prescribing two comprehensive approaches for calculating RWA: Standardized and Advanced, with capital adequacy evaluated against the lower of the two.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.11648,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures define the dual-approach framework for calculating risk-based capital ratios under Basel III rules. Goldman Sachs focuses on the *outcome* of applying these frameworks (that ratios increased due to specific RWA and earnings changes), while JPMorgan Chase focuses on the *regulatory definition* (that capital adequacy is evaluated against the lower of the Standardized or Advanced approaches). Both confirm the use of Standardized and Advanced approaches for risk-based capital evaluation.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D453",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P587_S004",
+                    "paragraph_id": "gs_2024_8_P587",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• The Standardized and Advanced risk-based capital ratios increased from December 2023 to December 2024, primarily reflecting an increase in capital, principally due to net earnings, and a decrease in Market RWAs, partially offset by an increase in Credit RWAs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D547",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P815_S001",
+                    "paragraph_id": "jpm_2024_8_P815",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The capital rules under Basel III establish minimum capital ratios and overall capital adequacy standards for large and internationally active U.S. bank holding companies and banks, including the Firm and JPMorgan Chase Bank, N.A. Under the rules currently in effect, two comprehensive approaches are prescribed for calculating RWA: a standardized approach (\"Basel III Standardized\"), and an advanced approach (\"Basel III Advanced\").",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P815_S002",
+                    "paragraph_id": "jpm_2024_8_P815",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "For each of these risk-based capital ratios, the capital adequacy of the Firm and JPMorgan Chase Bank, N.A. is evaluated against the lower of the Standardized or Advanced approaches compared to their respective regulatory capital ratio requirements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D376",
+            "peer_topic": "Regulatory Capital Calculation Approaches",
+            "peer_summary": "The Firm's risk-based capital ratios are computed under both the Standardized Approach, which uses prescribed risk weights, and the Advanced Approach, which utilizes models. At December 31, 2024 and 2023, the differences between the actual and required ratios were lower under the Standardized Approach.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.142184,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures address the computation of risk-based capital ratios under the Standardized and Advanced Approaches. Goldman Sachs reports that its ratios increased, driven by specific changes in capital and RWAs. Morgan Stanley confirms it computes ratios under both approaches but highlights a key methodological difference: the Standardized Approach uses prescribed risk weights while the Advanced Approach uses models, and notes that the margin between actual and required ratios was tighter under the Standardized Approach for both years presented.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D453",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P587_S004",
+                    "paragraph_id": "gs_2024_8_P587",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• The Standardized and Advanced risk-based capital ratios increased from December 2023 to December 2024, primarily reflecting an increase in capital, principally due to net earnings, and a decrease in Market RWAs, partially offset by an increase in Credit RWAs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D376",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P474_S001",
+                    "paragraph_id": "ms_2024_8_P474",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The Firm's risk-based capital ratios are computed under both (i) the Standardized Approach and (ii) the Advanced Approach.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P474_S002",
+                    "paragraph_id": "ms_2024_8_P474",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The credit risk RWA calculations between the two approaches differ in that the Standardized Approach requires calculation of RWA using prescribed risk weights, whereas the Advanced Approach utilizes models to calculate exposure amounts and risk weights.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P474_S003",
+                    "paragraph_id": "ms_2024_8_P474",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "At December 31, 2024 and December 31, 2023, the differences between the actual and required ratio were lower under the Standardized Approach.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

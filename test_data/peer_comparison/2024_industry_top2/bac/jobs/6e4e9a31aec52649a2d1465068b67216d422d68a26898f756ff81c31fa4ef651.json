@@ -1,0 +1,277 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "693fefb2725f1e32a18d20f2c739d836bcd5263425bcde15ad052209c7dfafcf",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D026",
+    "item": "7",
+    "target_topic": "Debt Securities Portfolio Growth",
+    "target_summary": "Debt securities increased by $45.9 billion, primarily due to the investment of excess cash from higher deposits.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0200",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the increase in Debt Securities balances. 2023 cites $8.6B increase due to excess cash from borrowings (bac_2023_7_P025_S003), while 2024 cites $45.9B increase due to excess cash from higher deposits (bac_2024_7_P023_S003). Same topic, different figures/drivers.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D024",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Assets > Debt Securities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Debt securities increased by $8.6 billion, primarily due to the investment of excess cash from higher federal funds purchased and securities loaned or sold under agreements to repurchase, short-term borrowings, and long-term debt.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D026",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Assets > Debt Securities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Debt securities increased by $45.9 billion, primarily due to the investment of excess cash from higher deposits.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.454581,
+            "sequence_match_ratio": 0.52,
+            "length_ratio": 0.470588,
+            "word_count_delta": -18,
+            "added_tokens_sample": [
+              "45",
+              "9",
+              "deposits"
+            ],
+            "removed_tokens_sample": [
+              "8",
+              "6",
+              "federal",
+              "funds",
+              "purchased",
+              "and",
+              "securities",
+              "loaned",
+              "or",
+              "sold",
+              "under",
+              "agreements",
+              "to",
+              "repurchase",
+              "short",
+              "term",
+              "borrowings",
+              "and",
+              "long",
+              "term"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D024",
+            "score": 0.938583,
+            "normalised_score": 0.9386,
+            "label": "Reduced",
+            "rationale": "Score 93.86% of ceiling — content shrank from ~31 to ~15 words (0.5×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.85,
+          "reason": "The source of funding for debt securities increased significantly in magnitude ($8.6B to $45.9B) and shifted in nature from complex wholesale funding sources (federal funds, repos, borrowings) to 'higher deposits.' This shift implies a change in the bank's funding mix and potentially its reliance on stable retail/core deposits versus wholesale markets, which is a material change in financial condition and funding strategy.",
+          "key_change": "Shift in debt securities funding source to higher deposits"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0258",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail the year-over-year increase in Debt Securities, driven by the investment of excess cash from higher deposits (2024) and higher deposits plus long-term debt (2025).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D026",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Assets > Debt Securities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Debt securities increased by $45.9 billion, primarily due to the investment of excess cash from higher deposits.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D028",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Executive Summary > Balance Sheet Overview > Assets > Debt Securities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Debt securities increased by $8.4 billion, primarily resulting from the investment of excess cash generated from higher deposits and long-term debt.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.68291,
+            "sequence_match_ratio": 0.777778,
+            "length_ratio": 1.25,
+            "word_count_delta": 4,
+            "added_tokens_sample": [
+              "8",
+              "4",
+              "and",
+              "long",
+              "term",
+              "debt"
+            ],
+            "removed_tokens_sample": [
+              "45",
+              "9"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2024_7_D026",
+            "score": 1.002327,
+            "normalised_score": 1.0023,
+            "label": "Unchanged",
+            "rationale": "Score 100.23% of ceiling — semantically identical despite surface differences (word overlap 65%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.8,
+          "reason": "The disclosure updates the magnitude of debt securities growth ($8.4B vs $45.9B) and adds 'long-term debt' as a funding source alongside deposits. While the magnitude changed significantly, the fundamental driver (investing excess cash from deposits/debt) remains the same. The addition of long-term debt as a source is a minor update to the capital structure narrative, not a material change in risk profile or strategy.",
+          "key_change": "Update of debt securities funding sources and growth"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss Mexico Consumer/SBMM revenue growth (c_2024_7_D154) and a generic definition of investment securities composition (c_2024_7_D449). Neither candidate describes a change in the volume, growth, or investment activity of debt securities comparable to BAC's disclosure of a $45.9 billion increase."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D122",
+            "peer_topic": "Consolidated Balance Sheet Assets and Composition Changes",
+            "peer_summary": "Total assets were $1.68 trillion as of December 2024, an increase of $34.38 billion from December 2023, driven by increases in trading assets, investments, and loans, partially offset by decreases in cash and cash equivalents and collateralized agreements.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.123126,
+            "relationship": "same_topic",
+            "comparison": "Both Bank of America (BAC) and Goldman Sachs (GS) report increases in their investment securities portfolios as a key component of asset growth in fiscal 2024. BAC attributes a $45.9 billion increase in debt securities to the investment of excess cash from higher deposits. Similarly, GS reports a $37.68 billion increase in investments, specifically noting that this was 'primarily due to an increase in U.S. government obligations accounted for as available-for-sale.' Both disclosures highlight the accumulation of government-related debt securities as a driver of balance sheet expansion, linking cash inflows (deposits for BAC, activity-driven cash for GS) to investment purchases.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D026",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P023_S003",
+                    "paragraph_id": "bac_2024_7_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Debt securities increased $45.9 billion primarily due to investment of excess cash from higher deposits.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D122",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P186_S001",
+                    "paragraph_id": "gs_2024_7_P186",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "As of December 2024, total assets in our consolidated balance sheets were $1.68 trillion, an increase of $34.38 billion from December 2023, reflecting increases in trading assets of $93.05 billion (primarily due to an increase in government obligations, reflecting the impact of our and our clients' activities), investments of $37.68 billion (primarily due to an increase in U.S. government obligations accounted for as available-for-sale) and loans of $12.84 billion (primarily reflecting our clients' activities), partially offset by decreases in cash and cash equivalents of $59.49 billion (primarily reflecting our activity) and collateralized agreements of $48.52 billion (primarily reflecting our activity).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D052",
+            "peer_topic": "Investment securities increase composition",
+            "peer_summary": "Investment securities increased due to higher available-for-sale (AFS) securities, primarily U.S. Treasuries and non-U.S. government debt securities, partially offset by maturities and paydowns, and lower held-to-maturity (HTM) securities driven by maturities and paydowns.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.173387,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and JPMorgan Chase (JPM) disclose an increase in investment securities driven by net purchases of government debt. BAC states that debt securities increased by $45.9 billion primarily due to the investment of excess cash. JPM explains that its investment securities increased due to 'higher available-for-sale (AFS) securities, reflecting net purchases, primarily U.S. Treasuries and non-U.S. government debt securities.' While BAC emphasizes the source of funding (excess deposits) and JPM emphasizes the specific asset class (U.S. Treasuries/Non-U.S. gov debt) and accounting classification (AFS), both confirm a strategic buildup of government-backed debt securities in the AFS category during the period.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D026",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P023_S003",
+                    "paragraph_id": "bac_2024_7_P023",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Debt securities increased $45.9 billion primarily due to investment of excess cash from higher deposits.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D052",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P087_S002",
+                    "paragraph_id": "jpm_2024_7_P087",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher available-for-sale (\"AFS\") securities, reflecting net purchases, primarily U.S. Treasuries and non-U.S. government debt securities, partially offset by maturities and paydowns, and",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss drivers of non-compensation and compensation expenses (ms_2024_7_D075, ms_2024_7_D074). These are income statement/operating expense topics, not balance sheet debt securities portfolio activity."
+      }
+    ]
+  }
+}

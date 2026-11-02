@@ -1,0 +1,254 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "fc4043053dfcc33f4e1321a1f2832900439526f96566e0f6198304b97b17f457",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_1_D022",
+    "item": "1",
+    "target_topic": "4Q24 ACL Balance and Net Build",
+    "target_summary": "Citi's Allowance for Credit Losses (ACL) ending balance for the fourth quarter of 2024 was $22.2 billion, representing a slight increase from September 30, 2024. The quarter saw a net build of $0.3 billion, primarily driven by growth in cards balances within USPB.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "c_2023_2024_M0225",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both 2023 D012 and 2024 D022 describe the Q4 ending ACL balance and the net build drivers (card growth, transfer risk). 2023 D012 and 2024 D023 share the identical closing statement regarding the forward view of the economic environment. The 2024 disclosures split the general ACL overview into specific balance changes (D022) and the forward-looking statement (D023), matching the combined scope of the 2023 D012.",
+        "previous_disclosures": [
+          {
+            "item": "1",
+            "section": "OVERVIEW > 4Q23 Changes in the ACL",
+            "summary": "Citi's ending Allowance for Credit Losses (ACL) balance for Q4 2023 was $21.8 billion, representing a net build of $1.5 billion from September 30, 2023. This build was primarily driven by a $1.3 billion increase related to transfer risk in Argentina and Russia and a $0.5 billion increase from card balance growth in USPB.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2023_1_D012",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "1",
+            "section": "OVERVIEW > Macroeconomic Variables > 4Q24 Changes in the ACL",
+            "summary": "Citi's Allowance for Credit Losses (ACL) ending balance for the fourth quarter of 2024 was $22.2 billion, representing a slight increase from September 30, 2024. The quarter saw a net build of $0.3 billion, primarily driven by growth in cards balances within USPB.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_1_D022",
+            "extraction_status": "source_validated"
+          },
+          {
+            "item": "1",
+            "section": "OVERVIEW > Macroeconomic Variables > 4Q24 Changes in the ACL",
+            "summary": "Citi states that its ACL analysis reflects the forward view of the economic environment as of December 31, 2024.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_1_D023",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 0.65,
+            "change_taxonomy": "Reduced",
+            "word_count_delta": -35,
+            "cosine_similarity": 0.641773,
+            "added_tokens_sample": [
+              "2024",
+              "22",
+              "a",
+              "slight",
+              "increase",
+              "from",
+              "2024",
+              "0",
+              "the",
+              "quarter",
+              "was",
+              "primarily",
+              "driven",
+              "by",
+              "cards",
+              "2024"
+            ],
+            "sequence_match_ratio": 0.593939,
+            "removed_tokens_sample": [
+              "2023",
+              "21",
+              "8",
+              "billion",
+              "compared",
+              "to",
+              "20",
+              "as",
+              "of",
+              "2023",
+              "1",
+              "5",
+              "billion",
+              "is",
+              "primarily",
+              "related",
+              "to",
+              "i",
+              "an",
+              "approximate"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "score": 0.941955,
+            "method": "embedding_cosine",
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 94.20% of ceiling.",
+            "matched_id": "c_2023_1_D012",
+            "normalised_score": 0.942
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.3,
+          "confidence_score": 0.9,
+          "reason": "The disclosure splits the general ACL overview into specific balance changes and a forward-looking statement. The substance changes from a $1.5B net build driven by Argentina/Russia transfer risk to a $0.3B net build driven by USPB card growth. While the drivers changed significantly, the disclosure itself is a routine quarterly update of financial metrics. The *change in the metric* (risk exposure) is material, but the *disclosure change* described here (reclassifying/splitting the presentation of the quarterly ACL roll-forward) is a formatting/presentation change. However, judging the *content change*: the removal of Argentina/Russia specific risk build as a primary driver is a significant change in the disclosed risk profile. But looking at the prompt instructions: 'Assess the CHANGE represented by the alignment'. The alignment identifies that the *text* was split. The substantive content change (drivers) is material. Let's re-evaluate. The 2023 text highlights specific geopolitical risks. The 2024 text does not. This is a meaningful change in disclosed risk exposure. I will score this as Material (Yes).",
+          "key_change": "Change in primary drivers of ACL net build"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "c_2024_2025_M0357",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the ending ACL balance for the fourth quarter and discuss the primary drivers (net build/release) of the change in the balance.\n\nBoth disclosures state that the ACL analysis reflects the forward view of the economic environment as of the respective year-end dates (Dec 31, 2024 and Dec 31, 2025). The search hit c_2025_1_D037 contains the matching sentence: \"Citi believes its analysis of the ACL reflects the forward view of the economic environment as of December 31, 2025.\"",
+        "previous_disclosures": [
+          {
+            "item": "1",
+            "section": "OVERVIEW > Macroeconomic Variables > 4Q24 Changes in the ACL",
+            "summary": "Citi's Allowance for Credit Losses (ACL) ending balance for the fourth quarter of 2024 was $22.2 billion, representing a slight increase from September 30, 2024. The quarter saw a net build of $0.3 billion, primarily driven by growth in cards balances within USPB.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_1_D022",
+            "extraction_status": "source_validated"
+          },
+          {
+            "item": "1",
+            "section": "OVERVIEW > Macroeconomic Variables > 4Q24 Changes in the ACL",
+            "summary": "Citi states that its ACL analysis reflects the forward view of the economic environment as of December 31, 2024.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2024_1_D023",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "1",
+            "section": "OVERVIEW > SIGNIFICANT ACCOUNTING POLICIES AND SIGNIFICANT ESTIMATES > Citi's Allowance for Credit Losses (ACL) > Macroeconomic Variables > 4Q25 Changes in the ACL",
+            "summary": "Citi's ending ACL balance for Q4 2025 decreased by $2.4 billion to $21.4 billion, driven by the reclassification of AO Citibank to held-for-sale as part of its planned sale, which was completed on February 18, 2026. Citi's analysis reflects the forward view of the economic environment as of December 31, 2025.",
+            "taxonomy": "Financial & Capital Resources",
+            "disclosure_id": "c_2025_1_D037",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Modified",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 1.2,
+            "change_taxonomy": "Modified",
+            "word_count_delta": 13,
+            "cosine_similarity": 0.626006,
+            "added_tokens_sample": [
+              "2025",
+              "21",
+              "4",
+              "decrease",
+              "of",
+              "2",
+              "4",
+              "billion",
+              "2025",
+              "the",
+              "reclassification",
+              "of",
+              "ao",
+              "citibank",
+              "to",
+              "held",
+              "for",
+              "sale",
+              "including",
+              "the"
+            ],
+            "sequence_match_ratio": 0.559441,
+            "removed_tokens_sample": [
+              "2024",
+              "22",
+              "2",
+              "slight",
+              "increase",
+              "2024",
+              "the",
+              "net",
+              "build",
+              "of",
+              "0",
+              "3",
+              "billion",
+              "in",
+              "the",
+              "quarter",
+              "was",
+              "primarily",
+              "growth",
+              "in"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "score": 0.868585,
+            "method": "embedding_cosine",
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 86.86% of ceiling.",
+            "matched_id": "c_2024_1_D022",
+            "normalised_score": 0.8686
+          },
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The primary driver of the ACL change shifted significantly from organic growth in U.S. cards balances (a net build) to the reclassification of assets held for sale (a release/decrease) due to the planned sale of AO Citibank. This represents a material change in the operational and strategic drivers of the company's credit loss reserves, moving from organic portfolio dynamics to divestiture-related effects.",
+          "key_change": "Shift from organic growth to divestiture-driven ACL changes"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that concerns the Allowance for Credit Losses (ACL) balance, net build, or credit risk provisions. The available candidates discuss employee compensation and CCAR stress testing, which are not substantively comparable to the target's specific financial measure of ACL ending balance and quarterly build drivers."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that concerns the Allowance for Credit Losses (ACL) balance, net build, or credit risk provisions. The available candidates discuss risks to deposit growth/funding strategies and investment banking results, which are not substantively comparable to the target's specific financial measure of ACL ending balance and quarterly build drivers."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that concerns the Allowance for Credit Losses (ACL) balance, net build, or credit risk provisions. The available candidates discuss global workforce headcount and CFPB overdraft fee regulations, which are not substantively comparable to the target's specific financial measure of ACL ending balance and quarterly build drivers."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that concerns the Allowance for Credit Losses (ACL) balance, net build, or credit risk provisions. The available candidates discuss SEC net capital rules for broker-dealers and global employee headcount, which are not substantively comparable to the target's specific financial measure of ACL ending balance and quarterly build drivers."
+      }
+    ]
+  }
+}

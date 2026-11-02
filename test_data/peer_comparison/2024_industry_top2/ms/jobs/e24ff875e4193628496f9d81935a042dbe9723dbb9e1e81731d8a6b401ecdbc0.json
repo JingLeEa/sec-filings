@@ -1,0 +1,342 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "c620007b6bd14d5c8580398117e65f7d648d78232f55ed9ad8362ef68cc771d6",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D151",
+    "item": "7",
+    "target_topic": "Deposit composition and trends",
+    "target_summary": "Time deposits are predominantly brokered certificates of deposit, while total deposits in 2024 increased due to higher Savings and Time deposits, offset by reductions in Brokerage sweep deposits driven by client outflows to alternative products.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0336",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures discuss the composition and movement of total deposits, specifically highlighting the impact of Brokerage sweep deposits flowing to alternative cash products. The 2023 disclosure notes a decrease driven by these outflows, while the 2024 disclosure notes an increase in total deposits offset by similar reductions in Brokerage sweep deposits.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D148",
+            "item": "7",
+            "section": "Balance Sheet > Funding Management > Unsecured Financing > Deposits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total deposits decreased in 2023, driven by net outflows from Brokerage sweep deposits to alternative cash products, partially offset by increases in Time and Savings deposits.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D151",
+            "item": "7",
+            "section": "Balance Sheet > Funding Management > Unsecured Financing > Deposits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Time deposits are predominantly brokered certificates of deposit, while total deposits in 2024 increased due to higher Savings and Time deposits, offset by reductions in Brokerage sweep deposits driven by client outflows to alternative products.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.663238,
+            "sequence_match_ratio": 0.484211,
+            "length_ratio": 1.375,
+            "word_count_delta": 15,
+            "added_tokens_sample": [
+              "1",
+              "amounts",
+              "represent",
+              "balances",
+              "swept",
+              "from",
+              "client",
+              "brokerage",
+              "accounts",
+              "2",
+              "our",
+              "time",
+              "deposits",
+              "are",
+              "predominantly",
+              "brokered",
+              "certificates",
+              "of",
+              "deposit",
+              "2024"
+            ],
+            "removed_tokens_sample": [
+              "the",
+              "decrease",
+              "in",
+              "2023",
+              "was",
+              "driven",
+              "continued",
+              "partially",
+              "offset",
+              "by",
+              "an",
+              "increase",
+              "in",
+              "time",
+              "deposits",
+              "and",
+              "savings"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D148",
+            "score": 0.86061,
+            "normalised_score": 0.8606,
+            "label": "Modified",
+            "rationale": "Score 86.06% of ceiling with 40% word overlap — same disclosure, wording changed.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The disclosure reverses the year-over-year trend of total deposits from a decrease (2023) to an increase (2024). This shift in funding levels, even while noting the offsetting reduction in Brokerage sweep deposits, represents a material change in the company's liquidity position and deposit funding dynamics.",
+          "key_change": "Reversal of total deposit trend"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0329",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "missing_review_metadata",
+          "verifier_requested_review"
+        ],
+        "explanation": "Both disclosures describe deposits sourced from Wealth Management clients, held in U.S. subsidiaries/offices, and including sweep, savings, and time deposits. The 2025 disclosure (D051) confirms the source (Wealth Management clients), location (U.S. offices), and components (swept brokerage, time deposits) align with the 2024 definition.\n\nThe 2024 disclosures D151, D152, and D153 cover distinct aspects of the Deposits topic: D151 details time deposit composition (brokered CDs) and sweep balances; D152 covers source (Wealth Management), location (U.S.), and stability/cost characteristics; D153 covers cost profile differentiation and interest rate sensitivity. The 2025 disclosure D051 combines all these specific sub-topics into a single narrative, citing evidence for each: swept balances (ms_2025_7_P070_S001), brokered CDs (ms_2025_7_P071_S001), U.S. offices (ms_2025_7_P072_S001), Wealth Management/stability (ms_2025_7_P073_S001), and cost/profile sensitivity (ms_2025_7_P073_S002). Thus, D051 corresponds to the combined group.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D046",
+            "item": "7",
+            "section": "Wealth Management > Wealth Management Metrics",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Deposits reflect liabilities from Wealth Management clients and other funding sources at U.S. Bank Subsidiaries, including sweep, savings, and time deposits.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D151",
+            "item": "7",
+            "section": "Balance Sheet > Funding Management > Unsecured Financing > Deposits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Time deposits are predominantly brokered certificates of deposit, while total deposits in 2024 increased due to higher Savings and Time deposits, offset by reductions in Brokerage sweep deposits driven by client outflows to alternative products.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D152",
+            "item": "7",
+            "section": "Balance Sheet > Funding Management > Unsecured Financing > Deposits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Deposits are primarily sourced from Wealth Management clients and held in U.S. offices, characterized as stable, low-cost funding.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "ms_2024_7_D153",
+            "item": "7",
+            "section": "Balance Sheet > Funding Management > Unsecured Financing > Deposits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Each deposit category has a distinct cost profile, and clients may respond differently to changes in interest rates and macroeconomic conditions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2025_7_D051",
+            "item": "7",
+            "section": "Balance Sheet > Funding Management > Unsecured Financing > Deposits",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Deposits are primarily sourced from Wealth Management clients and held in U.S. offices, including time deposits (predominantly brokered CDs) and swept brokerage account balances. These deposits are characterized as stable, low-cost funding, though cost profiles vary by category and sensitivity to interest rates and macroeconomic conditions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D031",
+            "peer_topic": "Deposit Growth",
+            "peer_summary": "Deposits increased by $41.6 billion, primarily driven by growth in commercial client balances and time deposits.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.225764,
+            "relationship": "same_topic",
+            "comparison": "Both MS and BAC report that total deposits increased in 2024, driven significantly by growth in Time deposits. For MS, total deposits increased due to higher Savings and Time deposits, with Time deposits being predominantly brokered certificates of deposit. Similarly, BAC's deposit increase of $41.6 billion was primarily driven by growth in commercial client balances and time deposits. However, MS also noted a reduction in Brokerage sweep deposits offsetting the gains, while BAC's specific segment drivers for the increase focus on commercial balances and time deposits without mentioning sweep outflows in this specific sentence.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D151",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P182_S001",
+                    "paragraph_id": "ms_2024_7_P182",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.Our Time deposits are predominantly brokered certificates of deposit.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P184_S003",
+                    "paragraph_id": "ms_2024_7_P184",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Total deposits in 2024 increased primarily due to increases in Savings and Time deposits, partially offset by a reduction in Brokerage sweep deposits, largely due to net outflows to alternative cash equivalent and other investment products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D031",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P028_S001",
+                    "paragraph_id": "bac_2024_7_P028",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Deposits increased $41.6 billion primarily driven by growth in commercial client balances and time deposits.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses deposit balance trends, composition changes, or drivers comparable to MS's disclosure of increased total deposits and specific time deposit composition. The provided C candidates (c_2024_7_D353 and c_2024_7_D287) focus on the static definition of savings/time categories and average deposit changes by business segment respectively, lacking the specific narrative of total deposit growth drivers and time deposit sourcing details found in MS."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D133",
+            "peer_topic": "Deposit Types and Maturities",
+            "peer_summary": "Savings and demand accounts include money market and demand deposit accounts with no stated maturity, while time deposits had a weighted average maturity of approximately 0.6 years as of December 2024 and 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.124082,
+            "relationship": "same_topic",
+            "comparison": "Both MS and GS disclose the composition and maturity characteristics of their Time deposits. MS states that its Time deposits are 'predominantly brokered certificates of deposit.' GS provides similar specificity by noting that its Time deposits had a 'weighted average maturity of approximately 0.6 years' and distinguishes them from savings and demand accounts. Both disclosures characterize Time deposits as distinct from general savings/demand products, with GS providing quantitative maturity data while MS identifies the structural nature (brokered CDs).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D151",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P182_S001",
+                    "paragraph_id": "ms_2024_7_P182",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.Our Time deposits are predominantly brokered certificates of deposit.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D133",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P200_S003",
+                    "paragraph_id": "gs_2024_7_P200",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Time deposits had a weighted average maturity of approximately 0.6 years as of both December 2024 and December 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D060",
+            "peer_topic": "Deposits increase by segment",
+            "peer_summary": "Deposits increased, reflecting an increase in CIB due to net inflows predominantly in Payments (largely offset by net maturities of structured notes in Markets), an increase in AWM due to growth in balances in new and existing client accounts reflecting higher-yielding product offerings (largely offset by migration into other investments), and a decline in CCB primarily driven by a decrease in balances in existing accounts due to increased customer spending and migration into higher-yielding investments (predominantly offset by new accounts).",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.121035,
+            "relationship": "same_topic",
+            "comparison": "Both MS and JPM describe an increase in total deposits for 2024, driven by growth in asset management/wealth segments and retail/client balances, partially offset by migration into other investments. MS reports an increase in total deposits due to Savings and Time deposits, offset by Brokerage sweep outflows to alternative products. JPM reports deposit increases driven by AWM (reflecting higher-yielding product offerings, offset by migration into other investments) and CIB, while CCB declined due to spending and migration. Both firms highlight the competitive dynamic of deposit growth being countered by client migration to alternative or higher-yielding investments.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D151",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P184_S003",
+                    "paragraph_id": "ms_2024_7_P184",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Total deposits in 2024 increased primarily due to increases in Savings and Time deposits, partially offset by a reduction in Brokerage sweep deposits, largely due to net outflows to alternative cash equivalent and other investment products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P097_S003",
+                    "paragraph_id": "jpm_2024_7_P097",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• an increase in AWM as a result of growth in balances in new and existing client accounts, reflecting the impact of higher-yielding product offerings, largely offset by continued migration into other investments, and",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P097_S004",
+                    "paragraph_id": "jpm_2024_7_P097",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• a decline in CCB primarily driven by a decrease in balances in existing accounts due to increased customer spending and migration into higher-yielding investments, predominantly offset by new accounts.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,400 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "898c07fecdec60b5005de3ea8b2899d61ccde38c51272fd4e3e8a3215a99533c",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_1A_D057",
+    "item": "1A",
+    "target_topic": "Credit rating impact on liquidity",
+    "target_summary": "Reductions in JPMorganChase's credit ratings may adversely affect its liquidity and cost of funding.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0220",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2023 disclosure D064 covers the entire topic of credit rating risks: factors evaluated (D058), the risk of downgrade (D059), and the initial impact on liquidity (D057). The 2024 disclosure splits this single topic into three distinct sentences/disclosures. Therefore, D064 matches the combined group [D057, D058, D059].",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_1A_D064",
+            "item": "1A",
+            "section": "Liquidity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "JPMorgan Chase's credit ratings are determined by agencies evaluating factors such as expected future profitability, risk management practices, legal expenses, ratings differentials, regulatory developments, assumptions about government support, and economic/geopolitical developments. The company monitors these factors, but there is no assurance ratings will not be downgraded.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_1A_D057",
+            "item": "1A",
+            "section": "Liquidity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Reductions in JPMorganChase's credit ratings may adversely affect its liquidity and cost of funding.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_1A_D058",
+            "item": "1A",
+            "section": "Liquidity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Credit rating agencies evaluate factors such as profitability, risk management, legal expenses, and regulatory developments when determining JPMorganChase's credit ratings.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_1A_D059",
+            "item": "1A",
+            "section": "Liquidity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "There is no assurance that JPMorganChase's credit ratings will not be downgraded, particularly during periods of broader market instability.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.922083,
+            "sequence_match_ratio": 0.959184,
+            "length_ratio": 0.973154,
+            "word_count_delta": -4,
+            "added_tokens_sample": [
+              "jpmorganchase's",
+              "jpmorganchase",
+              "jpmorganchase's",
+              "jpmorganchase's"
+            ],
+            "removed_tokens_sample": [
+              "jpmorgan",
+              "chase's",
+              "jpmorgan",
+              "chase",
+              "jpmorgan",
+              "chase's",
+              "jpmorgan",
+              "chase's"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2023_1A_D064",
+            "score": 0.972375,
+            "normalised_score": 0.9724,
+            "rationale": "Split: 1 previous → 3 current. Best pair scored 97.24% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Reduced",
+          "final_taxonomy": "Reduced"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "This alignment represents a structural split of existing disclosures. The 2023 single paragraph on credit ratings is split into three sentences in 2024. Additionally, the 2024 version adds a sentence about downgrades occurring during market instability. This addition expands the context of the risk but does not introduce a new category of risk or change the fundamental nature of the credit rating risk disclosure. The core substance (ratings determined by specific factors, no assurance against downgrade) is unchanged.",
+          "key_change": "Structural split and minor contextual expansion"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0155",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D057 states that credit rating reductions may adversely affect liquidity and cost of funding. D041 begins with the same specific assertion: 'JPMorganChase's liquidity and cost of funding could be adversely affected by downgrades in its credit ratings' (P103_S001). This is a direct one-to-one match on the general risk assertion.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_1A_D057",
+            "item": "1A",
+            "section": "Liquidity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Reductions in JPMorganChase's credit ratings may adversely affect its liquidity and cost of funding.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_1A_D041",
+            "item": "1A",
+            "section": "Liquidity",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Credit rating downgrades could adversely affect liquidity and funding costs by curtailing business activities, increasing capital issuance costs, triggering collateral requirements, and reducing investor willingness.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.449255,
+            "sequence_match_ratio": 0.136364,
+            "length_ratio": 5.285714,
+            "word_count_delta": 60,
+            "added_tokens_sample": [
+              "could",
+              "be",
+              "adversely",
+              "affected",
+              "by",
+              "downgrades",
+              "in",
+              "its",
+              "credit",
+              "ratings",
+              "a",
+              "downgrade",
+              "in",
+              "jpmorganchase's",
+              "credit",
+              "ratings",
+              "could",
+              "curtail",
+              "its",
+              "business"
+            ],
+            "removed_tokens_sample": [
+              "reductions",
+              "in",
+              "credit",
+              "ratings",
+              "may",
+              "adversely",
+              "affect",
+              "its"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_1A_D057",
+            "score": 0.889712,
+            "normalised_score": 0.8897,
+            "label": "Expanded",
+            "rationale": "Score 88.97% of ceiling — content grew from ~14 to ~78 words (5.6×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.8,
+          "reason": "The 2025 disclosure expands the previous one-liner statement about credit rating impacts. It now details specific mechanisms: curtailing business activities, increasing capital issuance costs, triggering collateral requirements, and reducing investor willingness. This escalation from a general assertion to a detailed enumeration of consequences provides a more comprehensive view of the risk exposure, materially changing the substance of the disclosure regarding the potential impacts of rating downgrades.",
+          "key_change": "Expansion of credit rating downgrade impact mechanisms"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_1A_D007",
+            "peer_topic": "Impact of credit rating downgrades on funding and contracts",
+            "peer_summary": "Reduction in credit ratings could limit access to funding, increase borrowing costs, trigger collateral requirements, and allow counterparties to terminate OTC derivative contracts or demand additional collateral, with impacts being uncertain and dynamic.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.126744,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan Chase and Bank of America disclose that credit rating reductions negatively impact liquidity and increase funding costs. JPM states generally that reductions may 'adversely affect its liquidity and cost of funding' [jpm_2024_1A_P100_S001]. Bank of America provides more specific mechanics, noting that reductions could 'limit our access to funding or the capital markets, increase borrowing costs or trigger additional collateral or funding requirements' [bac_2024_1A_P021_S001]. Both identify increased borrowing costs/funding requirements as a direct consequence of downgrades.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1A_D057",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1A_P100_S001",
+                    "paragraph_id": "jpm_2024_1A_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Reductions in JPMorganChase's credit ratings may adversely affect its liquidity and cost of funding.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_1A_D007",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_1A_P021_S001",
+                    "paragraph_id": "bac_2024_1A_P021",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Reduction in our credit ratings could limit our access to funding or the capital markets, increase borrowing costs or trigger additional collateral or funding requirements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_1A_D037",
+            "peer_topic": "Consequences of Ratings Downgrade",
+            "peer_summary": "A ratings downgrade could restrict Citi's access to capital markets, increase funding costs, trigger derivative collateral requirements, and cause counterparties to limit trading or withdraw deposits.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.087112,
+            "relationship": "same_topic",
+            "comparison": "Citigroup and JPMorgan Chase both identify that ratings downgrades restrict access to capital markets and increase funding costs. JPMorgan notes reductions may 'adversely affect its liquidity and cost of funding' [jpm_2024_1A_P100_S001]. Citigroup elaborates that downgrades could 'negatively impact Citi and its rated subsidiaries' ability to access the capital markets and other sources of funds as well as increase credit spreads and the costs of those funds' [c_2024_1A_P118_S002]. Additionally, Citigroup explicitly highlights derivative triggers requiring collateral or contract termination, a specific liquidity constraint also present in peer disclosures like Goldman Sachs but not explicitly detailed in the single JPM sentence provided.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1A_D057",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1A_P100_S001",
+                    "paragraph_id": "jpm_2024_1A_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Reductions in JPMorganChase's credit ratings may adversely affect its liquidity and cost of funding.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_1A_D037",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_1A_P118_S002",
+                    "paragraph_id": "c_2024_1A_P118",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Ratings downgrades could negatively impact Citi and its rated subsidiaries' ability to access the capital markets and other sources of funds as well as increase credit spreads and the costs of those funds.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_1A_D043",
+            "peer_topic": "Impact of credit rating reductions on liquidity and costs",
+            "peer_summary": "Reductions in credit ratings or increases in credit spreads adversely affect liquidity and funding costs. A rating reduction could limit access to capital markets, trigger contract termination or collateral requirements, and cause losses or liquidity impairments.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.309689,
+            "relationship": "same_topic",
+            "comparison": "Goldman Sachs and JPMorgan Chase share nearly identical language regarding the adverse effects of rating reductions on liquidity and funding costs. JPMorgan states that 'Reductions in JPMorganChase's credit ratings may adversely affect its liquidity and cost of funding' [jpm_2024_1A_P100_S001]. Similarly, Goldman Sachs discloses that 'Reductions in our credit ratings or an increase in our credit spreads may adversely affect our liquidity and cost of funding' [gs_2024_1A_P048_S001]. Both companies also explicitly link rating reductions to increased borrowing costs and potential contract triggers (collateral/termination), with Goldman Sachs specifying that 'counterparties could be permitted to terminate contracts with us or require us to post additional collateral' [gs_2024_1A_P049_S003].",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1A_D057",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1A_P100_S001",
+                    "paragraph_id": "jpm_2024_1A_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Reductions in JPMorganChase's credit ratings may adversely affect its liquidity and cost of funding.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_1A_D043",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_1A_P048_S001",
+                    "paragraph_id": "gs_2024_1A_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Reductions in our credit ratings or an increase in our credit spreads may adversely affect our liquidity and cost of funding.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_1A_P049_S003",
+                    "paragraph_id": "gs_2024_1A_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Under these provisions, counterparties could be permitted to terminate contracts with us or require us to post additional collateral.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_1A_D028",
+            "peer_topic": "Credit rating sensitivity and triggers",
+            "peer_summary": "Borrowing costs and market access depend on credit ratings, which are monitored by agencies based on factors like governance, capital adequacy, and earnings; negative perceptions from losses, misconduct, or regulatory action can impair funding.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.11338,
+            "relationship": "same_topic",
+            "comparison": "Morgan Stanley and JPMorgan Chase both identify credit ratings as a determinant of borrowing costs and market access. JPMorgan broadly warns that rating reductions 'may adversely affect its liquidity and cost of funding' [jpm_2024_1A_P100_S001]. Morgan Stanley is more specific about the mechanism, stating that 'Our borrowing costs and access to the debt capital markets depend on our credit ratings' [ms_2024_1A_P044_S001] and that the 'cost and availability of unsecured financing generally are impacted by... our long-term and short-term credit ratings' [ms_2024_1A_P045_S001]. While JPM focuses on the adverse outcome of a reduction, Morgan Stanley defines the positive dependency of costs on the rating level.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_1A_D057",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_1A_P100_S001",
+                    "paragraph_id": "jpm_2024_1A_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Reductions in JPMorganChase's credit ratings may adversely affect its liquidity and cost of funding.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_1A_D028",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_1A_P044_S001",
+                    "paragraph_id": "ms_2024_1A_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Our borrowing costs and access to the debt capital markets depend on our credit ratings.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_1A_P045_S001",
+                    "paragraph_id": "ms_2024_1A_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The cost and availability of unsecured financing generally are impacted by (among other things) our long-term and short-term credit ratings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

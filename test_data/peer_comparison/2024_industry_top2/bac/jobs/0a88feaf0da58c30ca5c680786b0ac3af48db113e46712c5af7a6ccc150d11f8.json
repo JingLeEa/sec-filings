@@ -1,0 +1,199 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "93d1f0f7424f2083fe626650d6b89f2fd6469c5fae430501d277114511a7f971",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D133",
+    "item": "7",
+    "target_topic": "Income tax benefit variance",
+    "target_summary": "The income tax benefit decreased to $7.6 billion in 2024 from $8.4 billion in 2023, primarily due to the absence of benefits recorded against pretax charges in 2023 for the FDIC special assessment and the impact of BSBY's cessation.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0294",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "conflicting_alignment_assignment"
+        ],
+        "explanation": "Both disclosures report the Income Tax Benefit in the 'All Other' business segment. 2023 D122 reports $8.4B benefit driven by FDIC/BSBY charges. 2024 D133 reports $7.6B benefit, noting the decrease due to absence of those 2023 charges. They are the same specific topic and section.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D122",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > All Other",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The All Other segment recorded an income tax benefit of $8.4 billion in 2023, up from $6.0 billion in 2022, primarily due to tax benefits against pretax charges for the FDIC assessment and BSBY cessation, and higher tax credits for tax-advantaged investments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D133",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > All Other",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The income tax benefit decreased to $7.6 billion in 2024 from $8.4 billion in 2023, primarily due to the absence of benefits recorded against pretax charges in 2023 for the FDIC special assessment and the impact of BSBY's cessation.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0028",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in Item 7 for the specific 2024 income tax benefit decrease of $7.6 billion driven by the absence of FDIC special assessment and BSBY cessation benefits. The best search candidate, bac_2025_7_D115, discusses a different income tax benefit decrease ($166 million) driven by lower pretax loss, lacking the specific structural drivers (FDIC/BSBY) cited for the 2024 anchor.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D133",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > All Other",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The income tax benefit decreased to $7.6 billion in 2024 from $8.4 billion in 2023, primarily due to the absence of benefits recorded against pretax charges in 2023 for the FDIC special assessment and the impact of BSBY's cessation.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -47,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "the",
+              "income",
+              "tax",
+              "benefit",
+              "was",
+              "7",
+              "6",
+              "billion",
+              "in",
+              "2024",
+              "compared",
+              "to",
+              "8",
+              "4",
+              "billion",
+              "in",
+              "2023",
+              "the",
+              "decrease",
+              "in"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure explains a significant decrease in income tax benefit ($7.6B) driven by specific structural events (FDIC special assessment and BSBY cessation). The removal of this specific explanation for a large financial figure means the rationale for a material tax adjustment is no longer explicitly disclosed in the primary results section. This obscures the understanding of tax performance drivers.",
+          "key_change": "Removal of specific tax benefit decrease rationale"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses income tax benefits or effective tax rate variances. The provided candidates for Citigroup focus on operating expenses excluding FDIC special assessments (c_2024_7_D012) and expense reductions related to FDIC assessments and restructuring charges within the All Other segment (c_2024_7_D049). These topics address cost drivers rather than income tax benefits, which is the specific topic of the Bank of America disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D062",
+            "peer_topic": "Effective Income Tax Rate Changes",
+            "peer_summary": "The effective income tax rate increased to 22.4% in 2024 from 20.7% in 2023, primarily driven by a decrease in the impact of permanent tax benefits, partially offset by changes in the geographic mix of earnings.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.151421,
+            "relationship": "same_topic",
+            "comparison": "Both companies reported on their 2024 income tax benefits and effective tax rates, noting shifts from the prior year. Bank of America disclosed a decrease in the total income tax benefit to $7.6 billion in 2024 from $8.4 billion in 2023, primarily attributing this to the absence of tax benefits recorded against pretax charges for the FDIC special assessment that occurred in 2023. Goldman Sachs reported an increase in its effective income tax rate to 22.4% in 2024 from 20.7% in 2023, which it attributed to a decrease in the impact of permanent tax benefits. While both cited changes in specific tax impacts (FDIC charges vs. permanent benefits) as key drivers of their respective 2024 tax positions relative to 2023, the direction and nature of the variance differed: BAC saw a decline in absolute benefit amounts linked to one-off regulatory charges, whereas GS saw a rate increase linked to the composition of permanent benefits.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D133",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P140_S001",
+                    "paragraph_id": "bac_2024_7_P140",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The income tax benefit was $7.6 billion in 2024 compared to $8.4 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P140_S002",
+                    "paragraph_id": "bac_2024_7_P140",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The decrease in the income tax benefit was primarily due to the benefits recorded against pretax charges in 2023 for the FDIC special assessment and the impact of BSBY's cessation.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D062",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P063_S001",
+                    "paragraph_id": "gs_2024_7_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The effective income tax rate for 2024 was 22.4%, up from the full year income tax rate of 20.7% for 2023, primarily due to a decrease in the impact of permanent tax benefits for 2024 compared with 2023, partially offset by changes in the geographic mix of earnings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses income tax benefits or effective tax rate variances. The provided candidates for JPMorgan Chase focus on the impact of FDIC special assessments on expenses (jpm_2024_7_D149) and overall Corporate segment net income and revenue growth (jpm_2024_7_D151). While JPM discusses FDIC assessments, it does so in the context of expense/provision drivers and segment profitability, not as a component of income tax benefit variance analysis similar to Bank of America's disclosure."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses income tax benefits or effective tax rate variances. The provided candidates for Morgan Stanley focus on Wealth Management non-interest expense trends (ms_2024_7_D064) and compensation expense drivers (ms_2024_7_D074). Neither candidate addresses income tax benefits, making them incomparable to the target disclosure."
+      }
+    ]
+  }
+}

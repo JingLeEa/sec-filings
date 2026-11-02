@@ -1,0 +1,259 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "adf999942c010a936bf9f675a8c75c4e7e8462b1a8b7ed08d70ab395da0269dc",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_8_D103",
+    "item": "8",
+    "target_topic": "Fair value hierarchy level 3 table presentation",
+    "target_summary": "The table presents trading cash instruments by fair value hierarchy level, showing assets as positive amounts and liabilities as negative amounts.",
+    "target_source_status": "needs_review",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0873",
+        "relationship": "one_to_many",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "The 2023 disclosure (D113) defines trading cash instruments components (corporate debt, other debt, equity) and table presentation. The 2024 disclosures split this: D103 covers the table presentation (assets/liabilities positive/negative), and D105 covers the component definitions. These are distinct aspects of the same topic ('Trading Cash Instruments' table/notes) but presented as separate disclosures in 2024. They share the same SEC Item (Item 8) and specific subject matter (Fair Value Hierarchy for Trading Cash Instruments). They are kept as one grouped row to represent the many-to-many split from the single 2023 topic.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_8_D113",
+            "item": "8",
+            "section": "Accounting Firm > Fair Value Hierarchy > Trading Cash Instruments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Trading cash instruments include corporate debt (loans, securities, prepaid commodities), other debt obligations (asset-backed, money market), and equity securities (public equities, ETFs), presented as positive assets and negative liabilities.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D103",
+            "item": "8",
+            "section": "Accounting Firm > Fair Value Hierarchy > Trading Cash Instruments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The table presents trading cash instruments by fair value hierarchy level, showing assets as positive amounts and liabilities as negative amounts.",
+            "extraction_status": "needs_review"
+          },
+          {
+            "disclosure_id": "gs_2024_8_D105",
+            "item": "8",
+            "section": "Accounting Firm > Fair Value Hierarchy > Trading Cash Instruments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Corporate debt instruments include corporate loans, debt securities, convertible debentures, prepaid commodity transactions, and secured loans; other debt obligations include asset-backed securities and money market instruments; equity securities include public equities and ETFs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0083",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in 2025. The search for 'trading cash instruments by level within the fair value hierarchy' returned only table header/excluded evidence (gs_2025_8_P134_AUDIT) which lacks substantive disclosure. The closest substantive table is for 'other financial assets and liabilities' (gs_2025_8_D134), which is a different category than 'trading cash instruments' covered in gs_2024_8_D103.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D103",
+            "item": "8",
+            "section": "Accounting Firm > Fair Value Hierarchy > Trading Cash Instruments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The table presents trading cash instruments by fair value hierarchy level, showing assets as positive amounts and liabilities as negative amounts.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -35,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "fair",
+              "value",
+              "by",
+              "level",
+              "the",
+              "table",
+              "below",
+              "presents",
+              "trading",
+              "cash",
+              "instruments",
+              "by",
+              "level",
+              "within",
+              "the",
+              "fair",
+              "value",
+              "hierarchy",
+              "in",
+              "the"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "Removal of the disclosure presenting trading cash instruments by fair value hierarchy level. Trading cash instruments are a core component of Goldman Sachs' assets and liabilities. Removing this specific tabular data (or its summary disclosure) significantly reduces transparency into the liquidity and valuation risk profile of the firm's most liquid trading assets and liabilities.",
+          "key_change": "Removal of trading cash instruments fair value hierarchy data"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates do not concern fair value hierarchy level presentation or trading cash instruments. Bac_2024_8_D264 discloses lease income, which is an income statement item unrelated to fair value hierarchy classification. Bac_2024_8_D367 discloses 'Combined plan investment assets,' which are distinct from the 'trading cash instruments' reported by GS and do not provide a comparable hierarchy table for trading liabilities/assets."
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D551",
+            "peer_topic": "Fair value hierarchy classification for exchange-traded derivatives",
+            "peer_summary": "Exchange-traded derivatives measured using quoted prices in active markets are classified as Level 1 within the fair value hierarchy.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.183386,
+            "relationship": "same_topic",
+            "comparison": "Both Goldman Sachs (GS) and Citigroup (C) disclose the classification of specific financial instruments within the fair value hierarchy levels. GS presents a table for 'trading cash instruments' showing assets and liabilities by level, explicitly stating that assets are positive and liabilities are negative. Similarly, C classifies 'exchange-traded derivatives' as Level 1 based on quoted prices in active markets. While GS focuses on the presentation of a broad category of cash instruments with sign conventions for assets/liabilities, C specifies the valuation input basis (quoted prices) for a specific derivative type to assign it to Level 1.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D103",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P132_S002",
+                    "paragraph_id": "gs_2024_8_P132",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The table below presents trading cash instruments by level within the fair value hierarchy.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P134_S002",
+                    "paragraph_id": "gs_2024_8_P134",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Assets are shown as positive amounts and liabilities are shown as negative amounts.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D551",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P786_S001",
+                    "paragraph_id": "c_2024_8_P786",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Exchange-traded derivatives, measured at fair value using quoted (i.e., exchange) prices in active markets, where available, are classified as Level 1 within the fair value hierarchy.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D101",
+            "peer_topic": "Fair value hierarchy classification of financial assets and liabilities",
+            "peer_summary": "A table presents the carrying values and estimated fair values at December 31, 2024 and 2023, for financial assets and liabilities excluding those carried at fair value on a recurring basis, classified within the fair value hierarchy.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.202352,
+            "relationship": "same_topic",
+            "comparison": "Both GS and JPMorgan Chase (JPM) present tables that organize financial instruments by fair value hierarchy classification. GS's table specifically addresses 'trading cash instruments' and defines the sign convention (assets positive, liabilities negative) for the presentation. JPM's table presents 'carrying values and estimated fair values' for financial assets and liabilities (excluding those carried at fair value on a recurring basis) and classifies them within the fair value hierarchy. Both disclosures serve to map specific asset/liability categories to the hierarchy levels, though GS focuses on trading cash instruments while JPM includes non-recurring fair value instruments.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D103",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P132_S002",
+                    "paragraph_id": "gs_2024_8_P132",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The table below presents trading cash instruments by level within the fair value hierarchy.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P134_S001",
+                    "paragraph_id": "gs_2024_8_P134",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In the table above:",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D101",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P170_S001",
+                    "paragraph_id": "jpm_2024_8_P170",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The following table presents, by fair value hierarchy classification, the carrying values and estimated fair values at December 31, 2024 and 2023, of financial assets and liabilities, excluding financial instruments that are carried at fair value on a recurring basis, and their classification within the fair value hierarchy.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates do not match the topic of fair value hierarchy table presentation for trading cash instruments. MS_2024_8_D189 explains the sign convention for the difference between contractual principal and fair value (indicating premium/discount), not hierarchy levels. MS_2024_8_D208 discusses reporting fair value prior to collateral/netting adjustments for derivatives. Neither addresses the hierarchy level classification (Level 1, 2, 3) of trading cash instruments."
+      }
+    ]
+  }
+}

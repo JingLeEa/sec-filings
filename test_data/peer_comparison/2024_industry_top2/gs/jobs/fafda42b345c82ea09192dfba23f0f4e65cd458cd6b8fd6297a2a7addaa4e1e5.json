@@ -1,0 +1,376 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "ef68f13719139ed040092440ebd8c8acbfc3003e8f431436a5d4cc786f268a5d",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_7_D146",
+    "item": "7",
+    "target_topic": "Supervisory Capital Buffer (SCB) calculation and determination",
+    "target_summary": "The FRB determines the SCB based on its own stress test, calculating it as the difference between starting and minimum projected CET1 ratios under the supervisory severely adverse scenario plus planned dividends, expressed as a percentage of RWAs.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0559",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the specific outcome of the CCAR submission regarding the Supplemental Capital Buffer (SCB) adjustment and the resulting Standardized CET1 capital ratio requirement for the subsequent regulatory period. D164 cites the 2023 result (13.0%), and D147 cites the 2024 result (13.7%).\n\nThis 2024 disclosure explains how the FRB determines the SCB (starting vs minimum projected CET1 ratios). The 2023 disclosure (D164) states the SCB reduction result but does not define the calculation method. D146 provides the methodology context. However, since D164 is already matched to D147 (the result), and D146 is a methodological explanation without a direct 2023 methodological anchor in the required IDs, this row is technically a valid link but the 2023 counterpart D164 is already covered. The prompt allows sharing IDs. D164 supports D146's topic (SCB determination basis). But D146's text is purely about the *method* of determination, while D164 is about the *outcome*. They are related but distinct. D146 matches the general topic of SCB. D164 is the best available 2023 match for SCB. I will include it as a supported link sharing the D164 anchor, or leave it out if D164 is 'con",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_7_D164",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Capital Management > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Based on the 2023 CCAR submission, the Federal Reserve reduced the Supplemental Capital Buffer (SCB) from 6.3% to 5.5%, resulting in a Standardized CET1 capital ratio requirement of 13.0% for the period from October 1, 2023, through September 30, 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D146",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Capital Management",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The FRB determines the SCB based on its own stress test, calculating it as the difference between starting and minimum projected CET1 ratios under the supervisory severely adverse scenario plus planned dividends, expressed as a percentage of RWAs.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D147",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Capital Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Following the 2024 CCAR submission, the FRB increased the SCB from 5.5% to 6.2%, resulting in a Standardized CET1 capital ratio requirement of 13.7% for the period from October 1, 2024, through September 30, 2025, with DFAST results published in June 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.531363,
+            "sequence_match_ratio": 0.326531,
+            "length_ratio": 4.025641,
+            "word_count_delta": 118,
+            "added_tokens_sample": [
+              "the",
+              "frb",
+              "determines",
+              "the",
+              "scb",
+              "applicable",
+              "to",
+              "us",
+              "based",
+              "on",
+              "its",
+              "own",
+              "annual",
+              "stress",
+              "test",
+              "the",
+              "scb",
+              "under",
+              "the",
+              "standardized"
+            ],
+            "removed_tokens_sample": [
+              "2023",
+              "reduced",
+              "6",
+              "3",
+              "to",
+              "0",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2023_7_D164",
+            "score": 0.905663,
+            "normalised_score": 0.9057,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 90.57% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure introduces a detailed methodological explanation of how the FRB determines the Supplemental Capital Buffer (SCB) and the Standardized CET1 ratio (calculating difference between starting and minimum projected CET1 ratios). The 2023 disclosure only reported the outcome (the 13.0% requirement) without explaining the calculation logic. This addition of quantitative methodology for regulatory capital determination is a meaningful expansion of the company's disclosure on capital requirements.",
+          "key_change": "Introduction of SCB and CET1 ratio calculation methodology"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M0603",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the requirement to submit an annual capital plan to the FRB for CCAR review, the purpose of ensuring robust capital planning and operation during stress, and the specific evaluation criteria used by the FRB (capital adequacy under scenarios, governance, and capital distribution plans). The evidence in both disclosures is nearly identical.\n\nDisclosure gs_2024_7_D146 describes how the FRB determines the Supervisory Capital Buffer (SCB) based on its own stress test and the calculation formula. Disclosure gs_2025_7_D157 contains the corresponding sentences describing the same determination and calculation formula. Although gs_2025_7_D157 is a broader disclosure covering the capital plan, it explicitly includes the specific topic of the SCB determination found in the 2024 disclosure.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_7_D145",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Capital Management",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The company submits an annual capital plan to the FRB for review to ensure robust planning and continued operation during stress, with the FRB evaluating capital adequacy, risk identification processes, governance, and capital distribution plans across economic scenarios.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_7_D146",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Capital Management",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The FRB determines the SCB based on its own stress test, calculating it as the difference between starting and minimum projected CET1 ratios under the supervisory severely adverse scenario plus planned dividends, expressed as a percentage of RWAs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_7_D157",
+            "item": "7",
+            "section": "Capital Management and Regulatory Capital > Capital Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company submits an annual capital plan for FRB review, which evaluates capital adequacy under baseline and severely adverse scenarios, governance, and capital distribution plans, determining the Supervisory Capital Buffer based on the FRB's own stress test.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.997469,
+            "sequence_match_ratio": 0.990991,
+            "length_ratio": 1.018182,
+            "word_count_delta": 4,
+            "added_tokens_sample": [
+              "of",
+              "common",
+              "stock",
+              "preferred"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2024_7_D145",
+            "score": 0.960639,
+            "normalised_score": 0.9606,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 96.06% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The disclosure regarding the CCAR process and SCB calculation is substantially identical. The only changes are minor rewording in the description of capital distributions (specifying 'repurchases of common stock') and the addition of the full SCB calculation formula which was previously referenced but less explicitly detailed in the merged view. These are clarifications of regulatory mechanics, not changes to the company's capital planning strategy or outcomes.",
+          "key_change": "Clarification of capital distribution and SCB calculation"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D180",
+            "peer_topic": "Minimum CET1 Capital Ratio Requirements and Buffers",
+            "peer_summary": "To avoid restrictions on capital distributions and bonus payments, the Corporation must meet CET1 capital ratio requirements including buffers and G-SIB surcharges, requiring minimum ratios of 10.0% from Jan 1 to Sep 30, 2024, and 10.7% (Standardized) or 10.0% (Advanced) from Oct 1, 2024. These requirements must be comprised solely of CET1 capital.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.122125,
+            "relationship": "same_topic",
+            "comparison": "Both Goldman Sachs and Bank of America disclose that the Stress Capital Buffer (SCB) is a component of their minimum CET1 capital ratio requirements, specifically applying only to the Standardized approach. GS states the FRB determines the SCB based on its own stress test calculation involving the difference between starting and minimum projected CET1 ratios under the supervisory severely adverse scenario and planned dividends. BAC similarly identifies the SCB as part of the requirements to avoid restrictions on capital distributions, noting it applies only under the Standardized approach (unlike the Advanced approach where it is not included). While GS focuses on the calculation mechanics and BAC focuses on the resulting threshold requirements (10.0% to 10.7%), both confirm the SCB's role in binding capital constraints for the Standardized approach.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D146",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P221_S004",
+                    "paragraph_id": "gs_2024_7_P221",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The FRB determines the SCB applicable to us based on its own annual stress test.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P221_S005",
+                    "paragraph_id": "gs_2024_7_P221",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The SCB under the Standardized approach is calculated as (i) the difference between our starting and minimum projected CET1 capital ratios under the supervisory severely adverse scenario and (ii) our planned common stock dividends for each of the fourth through seventh quarters of the planning horizon, expressed as a percentage of RWAs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D180",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P189_S001",
+                    "paragraph_id": "bac_2024_7_P189",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "In order to avoid restrictions on capital distributions and discretionary bonus payments to executive officers, the Corporation must meet risk-based capital ratio requirements that include a capital conservation buffer of 2.5 percent (under the Advanced approaches only), an SCB (under the Standardized approach only), plus any applicable countercyclical capital buffer and a global systemically important bank (G-SIB) surcharge.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_7_P189_S003",
+                    "paragraph_id": "bac_2024_7_P189",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "For the period from January 1, 2024 through September 30, 2024, the Corporation's minimum CET1 capital ratio requirements were 10.0 percent under both the Standardized approach and the Advanced approaches.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved on the topic of SCB calculation or regulatory capital buffer determination. C's candidates focus on dividend payout ratios and CET1 capital ratio performance metrics, which are financial outcomes rather than the regulatory determination mechanics of the SCB."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D197",
+            "peer_topic": "Stress Capital Buffer determination",
+            "peer_summary": "The Federal Reserve determines each firm's Stress Capital Buffer (SCB) requirement for the coming year using results from the severely adverse scenario of its supervisory stress test.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.192834,
+            "relationship": "same_topic",
+            "comparison": "Both GS and JPMorgan describe the Federal Reserve's determination of the Stress Capital Buffer (SCB) based on supervisory stress test results. GS specifies that the FRB determines the SCB based on its annual stress test, calculating it as the difference between starting and minimum projected CET1 ratios under the supervisory severely adverse scenario plus planned dividends. JPMorgan similarly states that the Reserve uses results under the severely adverse scenario from its supervisory stress test to determine the SCB requirement for the coming year. Both disclosures confirm that the SCB is a regulatory capital requirement derived directly from the FRB's stress testing process rather than firm-specific models.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D146",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P221_S004",
+                    "paragraph_id": "gs_2024_7_P221",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The FRB determines the SCB applicable to us based on its own annual stress test.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P221_S005",
+                    "paragraph_id": "gs_2024_7_P221",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The SCB under the Standardized approach is calculated as (i) the difference between our starting and minimum projected CET1 capital ratios under the supervisory severely adverse scenario and (ii) our planned common stock dividends for each of the fourth through seventh quarters of the planning horizon, expressed as a percentage of RWAs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D197",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P299_S005",
+                    "paragraph_id": "jpm_2024_7_P299",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Reserve uses results under the severely adverse scenario from its supervisory stress test to determine each firm's Stress Capital Buffer (\"SCB\") requirement for the coming year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D190",
+            "peer_topic": "Stress Capital Buffer (SCB) Determination and Mechanics",
+            "peer_summary": "The SCB applies to Standardized Approach risk-based capital requirements, replacing the CET1 capital conservation buffer, and is calculated as the greater of the maximum decline in the Common Equity Tier 1 ratio under the severely adverse scenario (adjusted for planned dividends and projected RWAs) or 2.5%, with discretion for the Federal Reserve to recalculate the SCB outside the annual cycle or impose capital action restrictions.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.224741,
+            "relationship": "same_topic",
+            "comparison": "Both GS and Morgan Stanley disclose that the SCB applies only to Standardized Approach requirements and replaces the CET1 capital conservation buffer. GS details the calculation as the difference between starting and minimum projected CET1 ratios under the supervisory severely adverse scenario plus planned dividends. MS provides a more granular formula, stating the SCB is the greater of the maximum decline in CET1 under the severely adverse scenario (adjusted for planned dividends and projected RWAs) or 2.5%. Both firms confirm the FRB determines the SCB annually through supervisory stress testing, and both emphasize the buffer's application is exclusive to the Standardized approach.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D146",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P221_S004",
+                    "paragraph_id": "gs_2024_7_P221",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The FRB determines the SCB applicable to us based on its own annual stress test.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P221_S005",
+                    "paragraph_id": "gs_2024_7_P221",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The SCB under the Standardized approach is calculated as (i) the difference between our starting and minimum projected CET1 capital ratios under the supervisory severely adverse scenario and (ii) our planned common stock dividends for each of the fourth through seventh quarters of the planning horizon, expressed as a percentage of RWAs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D190",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P235_S001",
+                    "paragraph_id": "ms_2024_7_P235",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "As part of its annual capital supervisory stress testing process, the Federal Reserve determines an SCB for each large BHC, including us.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P235_S002",
+                    "paragraph_id": "ms_2024_7_P235",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The SCB applies only with respect to Standardized Approach risk-based capital requirements and replaced the CET1 capital conservation buffer of 2.5%.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_7_P235_S003",
+                    "paragraph_id": "ms_2024_7_P235",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The SCB is the greater of (i) the maximum decline in our Common Equity Tier 1 capital ratio under the severely adverse scenario over the supervisory stress test measurement period plus the sum of the four quarters of planned common stock dividends divided by the projected RWAs from the quarter in which the Firm's projected Common Equity Tier 1 capital ratio reaches its minimum in the supervisory stress test and (ii) 2.5%.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

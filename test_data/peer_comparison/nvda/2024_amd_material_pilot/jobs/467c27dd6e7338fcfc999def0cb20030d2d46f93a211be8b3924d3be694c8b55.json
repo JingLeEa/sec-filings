@@ -1,0 +1,404 @@
+{
+  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
+  "request_hash": "a5d1db4dcc79ba9a983e3e931d884f5b3b25d50ff760b366b1928c3d1217c8f3",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_7_D018",
+    "item": "7",
+    "target_topic": "Data Center Segment Performance",
+    "target_summary": "Data Center revenue for fiscal year 2024 increased 217%, driven by strong demand in enterprise software, consumer internet, and verticals such as automotive, financial services, and healthcare; compute revenue rose 244% and networking revenue rose 133%.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0317",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures focus on Data Center revenue performance for the fiscal year summary. 2023_D021 cites $15.01B (implied by context of D030) and 41% growth driven by hyperscalers and CSP partners. 2024_D018 cites $47.5B (in D024) and 217% growth driven by enterprise/verticals. While D018 is the summary row, it covers the same specific financial topic as D021 (Fiscal Year Summary Data Center). D024 is the detailed Market Platform Highlight for Data Center, which corresponds to D030.\n\n2024_D025 focuses on Data Center customer concentration (cloud providers >50% revenue) and automotive data center trends. 2023_D021 explicitly mentions 'purchases made by several CSP partners to support multi-year cloud service agreements' as a driver for Data Center revenue. This is the most direct prior-year link to the 'large cloud providers' and 'CSP' focus in 2024_D025. 2023_D030 also mentions hyperscaler/cloud usage, but D021 is more specific to the partner/customer relationship structure.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_7_D021",
+            "item": "7",
+            "section": "Fiscal Year 2023 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Data Center revenue increased 41% year-over-year, driven by hyperscale customers, CSP partners supporting cloud service agreements, and R&D activities.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D018",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Data Center revenue for fiscal year 2024 increased 217%, driven by strong demand in enterprise software, consumer internet, and verticals such as automotive, financial services, and healthcare; compute revenue rose 244% and networking revenue rose 133%.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_7_D025",
+            "item": "7",
+            "section": "Market Platform Highlights",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "In the fourth quarter of fiscal year 2024, large cloud providers represented more than half of Data Center revenue. Additionally, the company expects NVIDIA's automotive data center processing demand to grow significantly as AV algorithms shift to video transformers.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.321477,
+            "sequence_match_ratio": 0.157576,
+            "length_ratio": 2.510638,
+            "word_count_delta": 71,
+            "added_tokens_sample": [
+              "for",
+              "fiscal",
+              "year",
+              "2024",
+              "217",
+              "strong",
+              "demand",
+              "was",
+              "driven",
+              "enterprise",
+              "software",
+              "and",
+              "consumer",
+              "internet",
+              "applications",
+              "and",
+              "multiple",
+              "industry",
+              "verticals",
+              "including"
+            ],
+            "removed_tokens_sample": [
+              "41",
+              "from",
+              "a",
+              "year",
+              "ago",
+              "led",
+              "strong",
+              "growth",
+              "from",
+              "hyperscale",
+              "and",
+              "also",
+              "reflects",
+              "purchases",
+              "made",
+              "by",
+              "several",
+              "csp",
+              "partners",
+              "to"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "nvda_2023_7_D021",
+            "score": 0.841384,
+            "normalised_score": 0.8414,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 84.14% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.95,
+          "confidence_score": 0.95,
+          "reason": "The disclosure changes from attributing Data Center revenue growth to general hyperscale customers and CSP partners in 2023 to a specific financial concentration risk in 2024, stating that large cloud providers represented more than half of Data Center revenue. This introduces a material customer concentration disclosure and a significant shift in the stated drivers of growth (from general hyperscale to enterprise/verticals and specific cloud provider dominance).",
+          "key_change": "Introduction of >50% cloud provider revenue concentration and shift in growth drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0291",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "This group aligns Data Center revenue drivers and architecture updates. Previous D018 and D024 both discuss FY2024 Data Center revenue growth (up 217%) driven by AI demand and specific platforms (inference, DGX Cloud, Spectrum-X). Current D004 discusses FY2025 revenue growth driven by Data Center compute/networking platforms (Hopper/Blackwell). The shared topic is Data Center revenue performance and the underlying AI architecture/platform drivers.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D018",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Data Center revenue for fiscal year 2024 increased 217%, driven by strong demand in enterprise software, consumer internet, and verticals such as automotive, financial services, and healthcare; compute revenue rose 244% and networking revenue rose 133%.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_7_D024",
+            "item": "7",
+            "section": "Market Platform Highlights",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Data Center revenue for fiscal year 2024 was $47.5 billion, up 217% from fiscal year 2023, with approximately 40% attributed to AI inference. The company launched AI inference platforms, NVIDIA DGX Cloud, AI Foundations, and Spectrum-X to support generative AI and accelerated networking.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D004",
+            "item": "7",
+            "section": "Demand and Supply",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Revenue growth in fiscal year 2025 was driven by data center compute and networking platforms for accelerated computing and AI solutions, with demand for the Hopper architecture driving significant full-year growth, while production systems of the Blackwell architecture began shipping in the fourth quarter.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.459242,
+            "sequence_match_ratio": 0.119266,
+            "length_ratio": 0.305389,
+            "word_count_delta": -116,
+            "added_tokens_sample": [
+              "growth",
+              "in",
+              "2025",
+              "and",
+              "networking",
+              "platforms",
+              "for",
+              "accelerated",
+              "computing",
+              "and",
+              "ai",
+              "solutions",
+              "demand",
+              "for",
+              "our",
+              "hopper",
+              "architecture",
+              "drove",
+              "our",
+              "significant"
+            ],
+            "removed_tokens_sample": [
+              "data",
+              "center",
+              "for",
+              "2024",
+              "was",
+              "up",
+              "217",
+              "strong",
+              "demand",
+              "enterprise",
+              "software",
+              "and",
+              "consumer",
+              "internet",
+              "applications",
+              "and",
+              "multiple",
+              "industry",
+              "verticals",
+              "including"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "nvda_2024_7_D018",
+            "score": 0.722533,
+            "normalised_score": 0.7225,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 72.25% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.85,
+          "reason": "This row represents a shift in reporting period from FY2024 to FY2025 results. While the numbers and specific drivers (Hopper/Blackwell vs. AI inference/DGX Cloud) have evolved, this is a routine annual update of financial performance. It does not represent a new material risk, a change in business model, or a structural change in the company's operations, but rather the passage of time and continuous growth.",
+          "key_change": "Annual update of Data Center revenue drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0303",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures focus specifically on Data Center revenue growth. D018 reports FY2024 Data Center revenue up 217% driven by AI demand in enterprise/software/verticals. D019 reports FY2025 Data Center revenue up 142% driven by Hopper architecture demand for AI/LGMM. The subject is Data Center revenue performance metrics and drivers.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D018",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Data Center revenue for fiscal year 2024 increased 217%, driven by strong demand in enterprise software, consumer internet, and verticals such as automotive, financial services, and healthcare; compute revenue rose 244% and networking revenue rose 133%.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D019",
+            "item": "7",
+            "section": "Fiscal Year 2025 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Data Center revenue increased 142% driven by demand for Hopper architecture for AI applications, and the company began shipping Blackwell architecture production systems in Q4 fiscal 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.429215,
+            "sequence_match_ratio": 0.304,
+            "length_ratio": 0.893939,
+            "word_count_delta": -7,
+            "added_tokens_sample": [
+              "2025",
+              "142",
+              "from",
+              "a",
+              "year",
+              "ago",
+              "the",
+              "year",
+              "on",
+              "year",
+              "growth",
+              "demand",
+              "for",
+              "our",
+              "hopper",
+              "architecture",
+              "accelerated",
+              "computing",
+              "platform",
+              "used"
+            ],
+            "removed_tokens_sample": [
+              "2024",
+              "217",
+              "demand",
+              "enterprise",
+              "software",
+              "consumer",
+              "internet",
+              "and",
+              "multiple",
+              "industry",
+              "verticals",
+              "including",
+              "automotive",
+              "financial",
+              "services",
+              "and",
+              "healthcare",
+              "customers",
+              "across",
+              "industry"
+            ]
+          },
+          "semantic": {
+            "matched_id": "nvda_2024_7_D018",
+            "score": 0.770635,
+            "normalised_score": 0.7706,
+            "label": "Relocated",
+            "rationale": "Score 77.06% of ceiling — content is similar but section changed from 'Fiscal Year 2024 Summary' to 'Fiscal Year 2025 Summary'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.3,
+          "confidence_score": 0.9,
+          "reason": "This row updates the Data Center revenue metrics and growth drivers for the new fiscal year. The shift in growth drivers from general verticals to specific architecture demand (Hopper/Blackwell) is a routine reflection of product lifecycle progression and sales mix changes, rather than a fundamental shift in strategic priorities or risk exposure.",
+          "key_change": "Update of Data Center revenue growth drivers to reflect Hopper/Blackwell demand"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D023",
+            "peer_topic": "Data Center Segment Financial Performance",
+            "peer_summary": "Data Center net revenue increased 94% to $12.6 billion in 2024 from $6.5 billion in 2023, primarily driven by higher sales of AMD Instinct GPUs and AMD EPYC CPUs. Operating income rose to $3.5 billion in 2024 from $1.3 billion in 2023, mainly due to higher revenue partially offset by increased R&D investment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.096765,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AMD report substantial double-digit percentage increases in Data Center revenue for fiscal year 2024, driven by high-demand AI and server components. NVDA's Data Center revenue increased 217% to a level implied by the text as significantly larger than AMD's, driven by enterprise software, consumer internet, and verticals like automotive and healthcare, with specific mentions of compute (up 244%) and networking (up 133%) growth. AMD's Data Center net revenue increased 94% to $12.6 billion, primarily driven by higher sales of AMD Instinct GPUs and AMD EPYC CPUs. While both companies benefited from similar underlying market drivers (AI infrastructure), the scale of growth and absolute revenue figures differed, with NVDA reporting a more than double-digit growth rate compared to AMD's 94% growth.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D018",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P019_S001",
+                    "paragraph_id": "nvda_2024_7_P019",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Data Center revenue for fiscal year 2024 was up 217%.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P019_S002",
+                    "paragraph_id": "nvda_2024_7_P019",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Strong demand was driven by enterprise software and consumer internet applications, and multiple industry verticals including automotive, financial services, and healthcare.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P019_S004",
+                    "paragraph_id": "nvda_2024_7_P019",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Data Center compute revenue was up 244% in the fiscal year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D023",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P034_S001",
+                    "paragraph_id": "amd_2024_7_P034",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Data Center net revenue of $12.6 billion in 2024 increased by 94%, compared to net revenue of $6.5 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P034_S002",
+                    "paragraph_id": "amd_2024_7_P034",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase was primarily driven by higher sales of AMD Instinct GPUs and AMD EPYC CPUs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

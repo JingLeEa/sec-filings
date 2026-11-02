@@ -1,0 +1,193 @@
+{
+  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
+  "request_hash": "8946fe7e33ed92f949d2ccfbea41da7f375aea34b04eb50fe72411d4a319b04b",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_1A_D006",
+    "item": "1A",
+    "target_topic": "Risks from complex laws and regulations",
+    "target_summary": "The company is subject to complex laws, rules, regulations, and political actions that may adversely impact its business.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0199",
+        "relationship": "one_to_one",
+        "status": "auto_matched",
+        "review_reasons": [],
+        "explanation": "The complete selected original text is identical within the same SEC Item after removing line-leading bullet formatting and normalizing whitespace. Neither LLM agent was used for this link.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_1A_D008",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The company is subject to complex laws, rules, and regulations, as well as political actions, which may adversely impact its business.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1A_D006",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The company is subject to complex laws, rules, regulations, and political actions that may adversely impact its business.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Unchanged",
+            "cosine_similarity": 1.0,
+            "sequence_match_ratio": 1.0,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "nvda_2023_1A_D008",
+            "score": 1.04668,
+            "normalised_score": 1.0467,
+            "label": "Unchanged",
+            "rationale": "Score 104.67% of ceiling with 100% word overlap — text is effectively identical.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.0,
+          "confidence_score": 1.0,
+          "reason": "The aligned disclosures are exact-text matches under the automatic matching policy, so no meaningful disclosure change is identified.",
+          "key_change": "No substantive change"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0174",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the risk arising from being subject to complex laws, rules, regulations, and political actions (including export restrictions) that may adversely impact the business. D004 in 2025 (P005_S001) is a direct thematic successor to D006 in 2024 (P005_S001), specifically highlighting export restrictions as a key component of these complex laws. While D033 also mentions complex laws, D004 is the primary disclosure in the 'Regulatory, Legal, Our Stock, and Other Matters' section focusing on this specific broad regulatory risk statement, whereas D033 expands into specific compliance areas. Given the one-to-many allowance and the specificity of the shared 'complex laws... political actions... adversely impact' phrasing, D004 is the strongest match. D033 is a separate disclosure covering specific compliance areas (IP, taxes, AI, etc.) which is a subset/expansion, but D004 captures the core shared subject of general regulatory/legal complexity.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1A_D006",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The company is subject to complex laws, rules, regulations, and political actions that may adversely impact its business.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_1A_D004",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock, and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The company is subject to complex laws and political actions, including export restrictions on its products, which may adversely impact its business.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.765282,
+            "sequence_match_ratio": 0.808511,
+            "length_ratio": 1.35,
+            "word_count_delta": 7,
+            "added_tokens_sample": [
+              "including",
+              "restrictions",
+              "on",
+              "the",
+              "export",
+              "of",
+              "our",
+              "products"
+            ],
+            "removed_tokens_sample": [
+              "and"
+            ]
+          },
+          "semantic": {
+            "matched_id": "nvda_2024_1A_D006",
+            "score": 0.995398,
+            "normalised_score": 0.9954,
+            "label": "Relocated",
+            "rationale": "Score 99.54% of ceiling — content is similar but section changed from 'Risks Related to Regulatory, Legal, Our Stock and Other Matters' to 'Risks Related to Regulatory, Legal, Our Stock, and Other Matters'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.92,
+          "reason": "The 2025 disclosure adds 'including restrictions on the export of our products' to the general risk of being subject to complex laws. This specifically highlights export controls as a primary regulatory risk, which is a materially significant exposure for a semiconductor company and represents a narrowing and escalation of the regulatory risk disclosure compared to the generic 2024 statement.",
+          "key_change": "Explicit inclusion of export restriction risks"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1A_D027",
+            "peer_topic": "Environmental and conflict minerals regulations",
+            "peer_summary": "The company is subject to environmental laws, conflict minerals regulations, and various other laws or regulations.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.177051,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and NVDA disclose risks related to being subject to complex or various laws, rules, and regulations. NVDA explicitly includes 'political and other actions' as a component of these risks, whereas AMD’s disclosure focuses on specific regulatory domains like 'environmental laws, conflict minerals regulations' and general 'other laws or regulations.' Both acknowledge that these legal and regulatory frameworks may adversely impact their business.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_1A_D006",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1A_P005_S001",
+                    "paragraph_id": "nvda_2024_1A_P005",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "• We are subject to complex laws, rules and regulations, and political and other actions, which may adversely impact our business.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_1A_D027",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1A_P005_S005",
+                    "paragraph_id": "amd_2024_1A_P005",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "◦We are subject to environmental laws, conflict minerals regulations, as well as a variety of other laws or regulations.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,289 @@
+{
+  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
+  "request_hash": "907d98196541eaf4a1614f13126dd7608c07731adc5c712aad0773c9e2d7d25b",
+  "result": {
+    "target_ticker": "AMD",
+    "target_disclosure_id": "amd_2024_8_D123",
+    "item": "8",
+    "target_topic": "Income Tax Provision and Effective Rates",
+    "target_summary": "The Company recorded an income tax provision of $381 million and an income tax benefit of $346 million in 2024 and 2023, with effective tax rates of 19% and (68%) respectively, driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "amd_2023_2024_M0417",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the total income tax benefit/provision and effective tax rates for their respective fiscal years, attributing the change primarily to variations in pre-tax income. D119 cites a $346M benefit in 2023, while D123 cites a $381M provision in 2024 (and the same $346M benefit in 2023 as a comparative baseline). The core subject is the annual income tax expense/benefit figure.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2023_8_D119",
+            "item": "8",
+            "section": "NOTE 14 - Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "AMD recorded an income tax benefit of $346 million in 2023 (effective rate of (68%)) and $122 million in 2022 (effective rate of (10%)), with the increase driven by lower pre-tax income, an $185 million FDII tax benefit, and $169 million in R&D tax credits.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2024_8_D123",
+            "item": "8",
+            "section": "NOTE 15 - Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Company recorded an income tax provision of $381 million and an income tax benefit of $346 million in 2024 and 2023, with effective tax rates of 19% and (68%) respectively, driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.778322,
+            "sequence_match_ratio": 0.590164,
+            "length_ratio": 0.936508,
+            "word_count_delta": -4,
+            "added_tokens_sample": [
+              "an",
+              "income",
+              "tax",
+              "provision",
+              "of",
+              "381",
+              "million",
+              "and",
+              "in",
+              "2024",
+              "19",
+              "and",
+              "provision",
+              "2024",
+              "higher",
+              "and",
+              "373",
+              "effect",
+              "from",
+              "an"
+            ],
+            "removed_tokens_sample": [
+              "122",
+              "million",
+              "in",
+              "and",
+              "2022",
+              "and",
+              "10",
+              "benefit",
+              "2023",
+              "the",
+              "lower",
+              "coupled",
+              "with",
+              "185",
+              "fdii",
+              "benefit",
+              "and",
+              "169",
+              "million",
+              "of"
+            ]
+          },
+          "semantic": {
+            "matched_id": "amd_2023_8_D119",
+            "score": 0.897995,
+            "normalised_score": 0.898,
+            "label": "Relocated",
+            "rationale": "Score 89.80% of ceiling — content is similar but section changed from 'NOTE 14 - Income Taxes' to 'NOTE 15 - Income Taxes'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.8,
+          "reason": "The company's effective tax rate shifted materially from a benefit of (68)% to a provision of 19%. This reversal, driven by higher pre-tax income and a specific $373 million tax effect from an intercompany integration transaction, indicates a significant change in the company's tax exposure and profitability profile compared to the prior year.",
+          "key_change": "Shift from tax benefit to tax provision"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "amd_2024_2025_M0413",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the primary Income Tax Provision (or Benefit) for their respective fiscal years and explain the major drivers. The 2024 disclosure (D123) reports a $381 million provision (19% rate) driven by higher pre-tax income and an intercompany integration transaction. The 2025 disclosure (D127) reports a $103 million benefit (-2.5% rate) driven by a release of uncertain tax positions. While the specific drivers differ, both disclosures serve the same specific purpose of explaining the year-over-year income tax provision/benefit amount and rate, covering the same line item in the financial statements.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "amd_2024_8_D123",
+            "item": "8",
+            "section": "NOTE 15 - Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Company recorded an income tax provision of $381 million and an income tax benefit of $346 million in 2024 and 2023, with effective tax rates of 19% and (68%) respectively, driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "amd_2025_8_D127",
+            "item": "8",
+            "section": "NOTE 17 - Income Taxes > Continuing Operations",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The Company recorded an income tax benefit of $103 million in 2025 (2.5% effective rate) compared to a provision of $381 million in 2024 (19%), with the 2025 decrease driven by an $853 million release of uncertain tax positions related to dual consolidated losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.783044,
+            "sequence_match_ratio": 0.533333,
+            "length_ratio": 1.542373,
+            "word_count_delta": 32,
+            "added_tokens_sample": [
+              "an",
+              "income",
+              "tax",
+              "benefit",
+              "of",
+              "103",
+              "million",
+              "and",
+              "in",
+              "2025",
+              "2",
+              "5",
+              "and",
+              "decrease",
+              "2025",
+              "driven",
+              "by",
+              "an",
+              "853",
+              "million"
+            ],
+            "removed_tokens_sample": [
+              "an",
+              "income",
+              "tax",
+              "benefit",
+              "of",
+              "346",
+              "million",
+              "in",
+              "and",
+              "2023",
+              "and",
+              "68",
+              "increase",
+              "2024",
+              "due",
+              "higher",
+              "pre",
+              "and",
+              "a"
+            ]
+          },
+          "semantic": {
+            "matched_id": "amd_2024_8_D123",
+            "score": 0.945385,
+            "normalised_score": 0.9454,
+            "label": "Relocated",
+            "rationale": "Score 94.54% of ceiling — content is similar but section changed from 'NOTE 15 - Income Taxes' to 'NOTE 17 - Income Taxes > Continuing Operations'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.3,
+          "confidence_score": 0.8,
+          "reason": "This row compares the income tax provision/benefit. While the absolute numbers change significantly (provision to benefit), this is primarily driven by the specific, one-time regulatory relief event detailed in M0414 (release of uncertain tax positions). Without the context of the regulatory change, the financial variance is significant, but the *disclosure* itself is a standard explanation of tax results. However, given the magnitude of the change (-2.5% vs 19% rate) and the specific driver (IRS approval), it sits on the boundary. Standard tax provision fluctuations are often routine, but this specific shift due to a specific regulatory win is borderline. Given the prompt's instruction to judge substance, a shift from provision to benefit driven by a specific regulatory event is material to financial position. *Self-Correction*: M0414 is the specific regulatory change. M0413 is the general tax provision. Usually, tax rate fluctuations are not considered 'meaningful changes in business/strategy' unless they reflect a permanent change in status. Here it's a one-time benefit. I will rate it low materiality as it is a financial result, not a strategic change, but acknowledge the significance. Actually, a change from provision to benefit is a major financial event. But is it a 'meaningful change in the company's business... or strategic priorities'? No, it's a financial outcome. The *disclosure* of the outcome is routine. The *cause* is the regulatory change (M0414). I will keep M0413 as No because it is the financial summary, while M0414 is the substantive event.",
+          "key_change": "Tax rate fluctuation explanation"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D135",
+            "peer_topic": "Income Tax Provision Drivers",
+            "peer_summary": "The provision for income taxes increased in fiscal years 2024 and 2023, primarily due to a non-recurring intra-group transfer of IP rights to the U.S. in 2024 and higher pre-tax income in 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.178138,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Broadcom attribute increases in their 2024 income tax provisions to specific structural transactions and intercompany activities rather than just operating performance. AMD cites a '$373 million tax effect from an intercompany integration transaction' as a primary driver alongside higher pre-tax income. Similarly, Broadcom attributes its increase to a 'non-recurring intra-group transfer of certain IP rights to the United States' and the resulting shift in jurisdictional mix. Both disclosures highlight that corporate restructuring and integration activities significantly impacted their effective tax rates and provision amounts in 2024.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_8_D123",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P131_S002",
+                    "paragraph_id": "amd_2024_8_P131",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in income tax provision in 2024 was primarily due to higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_8_D135",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P179_S004",
+                    "paragraph_id": "avgo_2024_8_P179",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase in provision for income taxes in fiscal year 2024 compared to fiscal year 2023 was primarily due to the impact of a non-recurring intra-group transfer of certain IP rights to the United States as a result of supply chain realignment and the resulting shift in jurisdictional mix of income, partially offset by an increase in excess tax benefits from stock-based awards.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for Intel focus on the magnitude of unrecognized tax benefits and the impact of R&D tax credits on the effective rate, which are distinct from AMD's disclosure of specific provision drivers (intercompany integration) and recorded provision amounts."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for Micron discuss the recognition timing of tax benefits from share-based awards and the materiality of tax incentive arrangements, which do not align with AMD's discussion of the total provision amount and intercompany integration drivers."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      }
+    ]
+  }
+}

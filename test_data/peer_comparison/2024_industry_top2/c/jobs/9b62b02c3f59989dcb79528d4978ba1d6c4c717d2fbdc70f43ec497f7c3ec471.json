@@ -1,0 +1,247 @@
+{
+  "input_fingerprint": "54fbfbd6eb8d1bf98e471aaaf782eada6b446a942c128d8eb85f81f79bf54d77",
+  "request_hash": "c23646b5644573e588240aa525558e2199e709d468439c6ec208fe8ab65512ce",
+  "result": {
+    "target_ticker": "C",
+    "target_disclosure_id": "c_2024_7_D436",
+    "item": "7",
+    "target_topic": "General Strategic Risk Reference",
+    "target_summary": "Additional information on Citi's strategic risks is referenced in the \"Risk Factors-Strategic Risks\" section.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "c_2023_2024_M0664",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The complete selected original text is identical within the same SEC Item after removing line-leading bullet formatting and normalizing whitespace. Neither LLM agent was used for this link.\n\nThe previous proposal (D408->D436) was incorrect. D408 defines strategic risk, which matches c_2024_7_D431. D436 is a cross-reference to 'Risk Factors-Strategic Risks'. The 2023 filings provided do not contain an equivalent cross-reference sentence in the same context. Therefore, no counterpart was found for D436 in the provided 2023 records.",
+        "previous_disclosures": [
+          {
+            "item": "7",
+            "section": "STRATEGIC RISK",
+            "summary": "Strategic risk is defined as the risk of sustained impact on core strategic objectives due to external factors and internal strategy execution, managed via the Strategic Risk Framework at the Enterprise Level.",
+            "taxonomy": "Strategy & Business Model",
+            "disclosure_id": "c_2023_7_D408",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "item": "7",
+            "section": "COMPLIANCE RISK > STRATEGIC RISK",
+            "summary": "Citi defines strategic risk as the risk of sustained impact on core strategic objectives, measured by impacts on anticipated earnings, market capitalization, or capital, arising from external factors and risks associated with defining/executing strategy.",
+            "taxonomy": "Strategy & Business Model",
+            "disclosure_id": "c_2024_7_D431",
+            "extraction_status": "source_validated"
+          },
+          {
+            "item": "7",
+            "section": "COMPLIANCE RISK > STRATEGIC RISK",
+            "summary": "Additional information on Citi's strategic risks is referenced in the \"Risk Factors-Strategic Risks\" section.",
+            "taxonomy": "Strategy & Business Model",
+            "disclosure_id": "c_2024_7_D436",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "llm": "Expanded",
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "length_ratio": 1.188406,
+            "change_taxonomy": "Reworded",
+            "word_count_delta": 13,
+            "cosine_similarity": 0.947871,
+            "added_tokens_sample": [
+              "for",
+              "additional",
+              "information",
+              "on",
+              "citi's",
+              "strategic",
+              "risks",
+              "see",
+              "risk",
+              "factors",
+              "strategic",
+              "risks",
+              "above"
+            ],
+            "sequence_match_ratio": 0.913907,
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "Modified",
+            "score": 1.000706,
+            "method": "embedding_cosine",
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 100.07% of ceiling.",
+            "matched_id": "c_2023_7_D408",
+            "normalised_score": 1.0007
+          },
+          "final_taxonomy": "Expanded"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosures include D436, a new cross-reference directing readers to 'Risk Factors-Strategic Risks'. This introduces a new linkage to additional risk disclosures not present in the 2023 text, materially changing how the strategic risk definition is contextualized within the filing's broader risk landscape.",
+          "key_change": "Introduction of cross-reference to Risk Factors section"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D166",
+            "peer_topic": "Strategic risk governance and planning process",
+            "peer_summary": "The Corporation manages strategic risk through policy integration and a strategic plan aligned with risk appetite and capital needs, which is annually reviewed and approved by the Board alongside financial and capital plans.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.136341,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and Bank of America manage strategic risk through defined governance frameworks integrated with their strategic planning processes. Citi references specific 'Strategic Risks' within its Risk Factors, while Bank of America explicitly details its management of strategic risk via the Strategic Risk Enterprise Policy and alignment with capital and liquidity plans.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D436",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P607_S001",
+                    "paragraph_id": "c_2024_7_P607",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "For additional information on Citi's strategic risks, see \"Risk Factors-Strategic Risks\" above.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D166",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P177_S001",
+                    "paragraph_id": "bac_2024_7_P177",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "We manage strategic risk through the Strategic Risk Enterprise Policy and integration into the strategic planning process, among other activities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D388",
+            "peer_topic": "Cross-reference to other risk management disclosures",
+            "peer_summary": "Further details on risk management processes are available in the 'Overview and Structure of Risk Management' and 'Risk Factors' sections of Part I, Item 1A.",
+            "peer_taxonomy": "Other / Unclassified",
+            "retrieval_score": 0.090819,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures serve as cross-references directing readers to other sections for detailed risk management information. Citi references the 'Risk Factors-Strategic Risks' section for strategic risk details, whereas Goldman Sachs references the 'Overview and Structure of Risk Management' and 'Risk Factors' for broader risk management processes.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D436",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P607_S001",
+                    "paragraph_id": "c_2024_7_P607",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "For additional information on Citi's strategic risks, see \"Risk Factors-Strategic Risks\" above.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D388",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P527_S001",
+                    "paragraph_id": "gs_2024_7_P527",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "For further information about our risk management processes, see \"Overview and Structure of Risk Management\" and \"Risk Factors\" in Part I, Item 1A of this Form 10-K.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D188",
+            "peer_topic": "Strategic Risk Management Governance and Oversight",
+            "peer_summary": "The Operating Committee and senior leadership manage significant strategic risks, with regular engagement from IRM in business discussions and decision-making, while the Board of Directors and its Risk Committee oversee these strategic decisions and the risk governance framework.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.149407,
+            "relationship": "same_topic",
+            "comparison": "Both Citi and JPMorgan identify strategic risk management as a key governance area, though they specify different oversight bodies. Citi references the 'Risk Factors' section for strategic risks generally, while JPMorgan details that the Operating Committee and senior leadership are responsible for managing significant strategic risks with Board oversight.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D436",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P607_S001",
+                    "paragraph_id": "c_2024_7_P607",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "For additional information on Citi's strategic risks, see \"Risk Factors-Strategic Risks\" above.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D188",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P285_S001",
+                    "paragraph_id": "jpm_2024_7_P285",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The Operating Committee, together with the senior leadership of each LOB and Corporate, are responsible for managing the Firm's most significant strategic risks.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates for MS relate to financial statement notes regarding collateralized transactions and goodwill/intangible assets, which are distinct from the target's topic of general strategic risk reference."
+      }
+    ]
+  }
+}

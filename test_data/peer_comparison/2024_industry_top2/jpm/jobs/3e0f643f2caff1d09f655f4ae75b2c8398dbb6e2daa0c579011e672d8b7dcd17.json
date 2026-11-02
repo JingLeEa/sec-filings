@@ -1,0 +1,301 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "512cd0064546ac0dde88e3a91ff5d88ae997c5dfc29c3bd3eefbf8a7d07490b4",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_8_D502",
+    "item": "8",
+    "target_topic": "Preferred Stock Liquidation Value",
+    "target_summary": "Each series of preferred stock has a liquidation value and redemption price of $10,000 per share plus accrued unpaid dividends. The aggregate liquidation value was $20.2 billion at December 31, 2024.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M1269",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specify the liquidation value and redemption price per share of preferred stock as $10,000 plus accrued dividends, and report the total aggregate liquidation value at year-end ($27.7 billion in 2023 vs $20.2 billion in 2024).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_8_D550",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 21 - Preferred stock",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Each series of preferred stock has a liquidation value and redemption price of $10,000 per share plus accrued dividends, totaling an aggregate liquidation value of $27.7 billion at December 31, 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D502",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 21 - Preferred stock",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Each series of preferred stock has a liquidation value and redemption price of $10,000 per share plus accrued unpaid dividends. The aggregate liquidation value was $20.2 billion at December 31, 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.861949,
+            "sequence_match_ratio": 0.911765,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "20",
+              "2",
+              "2024"
+            ],
+            "removed_tokens_sample": [
+              "27",
+              "7",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_8_D550",
+            "score": 1.029411,
+            "normalised_score": 1.0294,
+            "label": "Unchanged",
+            "rationale": "Score 102.94% of ceiling — semantically identical despite surface differences (word overlap 87%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.9,
+          "reason": "The aggregate liquidation value of preferred stock decreased from $27.7 billion to $20.2 billion, a reduction of approximately $7.5 billion (27%). This represents a significant change in the company's capital structure and financial position, indicating a substantial redemption or repurchase of preferred equity. Such a magnitude of change in a key capital resource metric is material to investors assessing the firm's leverage and capital composition.",
+          "key_change": "Significant decrease in aggregate preferred stock liquidation value"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M1222",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures state the liquidation value and redemption price per share ($10,000 plus accrued dividends) and report the aggregate liquidation value for the year-end.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_8_D502",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 21 - Preferred stock",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Each series of preferred stock has a liquidation value and redemption price of $10,000 per share plus accrued unpaid dividends. The aggregate liquidation value was $20.2 billion at December 31, 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_8_D538",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > Note 21 - Preferred stock",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Each series of preferred stock has a liquidation value and redemption price of $10,000 per share plus accrued unpaid dividends, with an aggregate liquidation value of $20.1 billion at December 31, 2025.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.905826,
+            "sequence_match_ratio": 0.941176,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "1",
+              "2025"
+            ],
+            "removed_tokens_sample": [
+              "2",
+              "2024"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2024_8_D502",
+            "score": 1.035384,
+            "normalised_score": 1.0354,
+            "label": "Unchanged",
+            "rationale": "Score 103.54% of ceiling — semantically identical despite surface differences (word overlap 87%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.05,
+          "confidence_score": 0.98,
+          "reason": "The only change is the update of the aggregate liquidation value from $20.2 billion to $20.1 billion and the reporting date from 2024 to 2025. This is a routine financial calculation update reflecting minor fluctuations in share counts or accrued dividends, not a material change in capital structure or risk exposure.",
+          "key_change": "Update to aggregate liquidation value"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D332",
+            "peer_topic": "Redemption Rights and Depositary Share Structures",
+            "peer_summary": "The Corporation may redeem most preferred stock series at its option at liquidation preference plus unpaid dividends, except for Series B and Series L which lack early redemption rights. Ownership is generally held via depositary shares representing fractional interests in preferred stock, with dividend payment frequencies and minimum rates varying by series as detailed in the table footnotes.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.189988,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Bank of America disclose the mechanics for redeeming preferred stock, specifically defining the redemption price as the liquidation preference plus unpaid dividends. JPM states the redemption price is $10,000 per share plus accrued unpaid dividends. BAC similarly states that the Corporation may redeem series of preferred stock at the liquidation preference plus declared and unpaid dividends, though it notes exceptions for specific series (Series B and L) lacking early redemption rights.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D502",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P756_S001",
+                    "paragraph_id": "jpm_2024_8_P756",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Each series of preferred stock has a liquidation value and redemption price per share of $10,000, plus accrued but unpaid dividends.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D332",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P389_S001",
+                    "paragraph_id": "bac_2024_8_P389",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "(2)The Corporation may redeem series of preferred stock on or after the redemption date, in whole or in part, at its option, at the liquidation preference plus declared and unpaid dividends.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that discusses preferred stock liquidation values or redemption price mechanics comparable to the target disclosure. The available candidates (c_2024_8_D443 and c_2024_8_D433) focus on specific issuance events or dividend reset terms for particular series, not the general redemption value structure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D409",
+            "peer_topic": "Redemption Price Mechanics for Various Preferred Stock Series",
+            "peer_summary": "The redemption price per share for Series A through F and Series Q through Y Preferred Stock is the liquidation preference plus declared and unpaid dividends, while the redemption price for Series O Preferred Stock is the liquidation preference plus accrued and unpaid dividends.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.538147,
+            "relationship": "same_topic",
+            "comparison": "Goldman Sachs and JPMorgan both disclose the formula for the redemption price of preferred stock as the liquidation preference plus accrued or declared unpaid dividends. Goldman Sachs specifies that the redemption price for most series is the liquidation preference plus declared and unpaid dividends, while JPMorgan defines the redemption price generally as $10,000 plus accrued unpaid dividends. Both disclosures focus on the pricing mechanism for redemption rather than specific redemption events or total capital amounts.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D502",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P756_S001",
+                    "paragraph_id": "jpm_2024_8_P756",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Each series of preferred stock has a liquidation value and redemption price per share of $10,000, plus accrued but unpaid dividends.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D409",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P541_S007",
+                    "paragraph_id": "gs_2024_8_P541",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• The redemption price per share for Series A through F and Series Q through Y Preferred Stock is the liquidation preference plus declared and unpaid dividends. The redemption price per share for Series O Preferred Stock is the liquidation preference plus accrued and unpaid dividends.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D395",
+            "peer_topic": "Redemption Terms for Series A and C",
+            "peer_summary": "Series A and C are redeemable at the redemption price plus accrued and unpaid dividends, regardless of whether dividends are actually declared.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.295732,
+            "relationship": "same_topic",
+            "comparison": "Morgan Stanley and JPMorgan both define the redemption price for specific preferred stock series as the liquidation/redemption price plus accrued and unpaid dividends. JPMorgan states the redemption price is $10,000 plus accrued unpaid dividends. Morgan Stanley specifies that Series A and C are redeemable at the redemption price plus accrued and unpaid dividends, regardless of declaration, aligning with the 'accrued' nature described by JPM.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D502",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P756_S001",
+                    "paragraph_id": "jpm_2024_8_P756",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Each series of preferred stock has a liquidation value and redemption price per share of $10,000, plus accrued but unpaid dividends.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D395",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P495_S001",
+                    "paragraph_id": "ms_2024_8_P495",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "3.Series A and C are redeemable at the redemption price plus accrued and unpaid dividends, regardless of whether dividends are actually declared, up to but excluding the date of redemption.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

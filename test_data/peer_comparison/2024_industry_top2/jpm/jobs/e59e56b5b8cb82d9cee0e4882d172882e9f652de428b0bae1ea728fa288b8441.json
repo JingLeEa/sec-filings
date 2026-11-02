@@ -1,0 +1,321 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "cb46ae03f780b371bac114f3a1d826e0a62b51eea00b61cceb45cee3ca9c57cc",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D349",
+    "item": "7",
+    "target_topic": "Residential real estate fair value loans",
+    "target_summary": "Loans at fair value increased from December 31, 2023, predominantly driven by higher Home Lending loans as originations outpaced warehouse loan sales. Nonaccrual loans at fair value increased compared to December 31, 2023, driven by the Corporate & Investment Bank (CIB).",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0613",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures analyze the drivers of changes in 'Loans at fair value'. The 2023 disclosure attributes the increase to Home Lending originations outpacing sales and CIB purchases. The 2024 disclosure attributes the increase to Home Lending originations outpacing sales and notes CIB impact on nonaccruals. They share the same specific topic: drivers of fair value loan changes in Home Lending and CIB.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D350",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans at fair value increased from December 31, 2022, driven by an increase in Home Lending where originations outpaced warehouse loan sales, and in the Corporate & Investment Bank (CIB) where purchases outpaced sales and paydowns.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D349",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans at fair value increased from December 31, 2023, predominantly driven by higher Home Lending loans as originations outpaced warehouse loan sales. Nonaccrual loans at fair value increased compared to December 31, 2023, driven by the Corporate & Investment Bank (CIB).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.52665,
+            "sequence_match_ratio": 0.567164,
+            "length_ratio": 1.16129,
+            "word_count_delta": 5,
+            "added_tokens_sample": [
+              "2023",
+              "predominantly",
+              "higher",
+              "loans",
+              "nonaccrual",
+              "loans",
+              "at",
+              "fair",
+              "value",
+              "increased",
+              "compared",
+              "to",
+              "december",
+              "31",
+              "2023",
+              "driven",
+              "by"
+            ],
+            "removed_tokens_sample": [
+              "2022",
+              "an",
+              "increase",
+              "in",
+              "and",
+              "in",
+              "as",
+              "purchases",
+              "outpaced",
+              "sales",
+              "and",
+              "paydowns"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_7_D350",
+            "score": 0.983132,
+            "normalised_score": 0.9831,
+            "label": "Relocated",
+            "rationale": "Score 98.31% of ceiling — content is similar but section changed from 'BUSINESS SEGMENT RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis' to 'BUSINESS SEGMENT & CORPORATE RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.85,
+          "reason": "The disclosure introduces a specific credit quality deterioration risk in the Corporate & Investment Bank (CIB) segment, noting that 'Nonaccrual loans at fair value increased... driven by CIB.' The prior year focused on the volume drivers (purchases outpacing sales) without highlighting a concurrent rise in nonaccruals for CIB fair value loans. This adds a specific negative credit performance indicator to a segment previously described neutrally in terms of volume changes.",
+          "key_change": "Introduction of CIB nonaccrual loan growth"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0551",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "See split above. jpm_2025_7_D353 covers both the HFS/Nonaccrual HFS changes (matching D348) and the Fair Value loan changes (matching D349). D349 specifically details Loans at Fair Value and Nonaccrual Loans at Fair Value. D353 contains specific sentences on both: 'Loans at fair value increased... driven by CIB' and 'Nonaccrual loans at fair value increased... driven by CIB'. This row supports the link for D349 to D353.\n\nBoth disclosures focus on the specific subject of Loans Held-for-Sale (HFS) and Nonaccrual Loans HFS within the Consumer, excluding credit card portfolio. The 2024 disclosure (D348) explains the increase in HFS and nonaccrual HFS due to transfers for securitization/sales. The 2025 disclosure (D353) explains the decrease in HFS and nonaccrual HFS due to loan sales activities. The shared specific topic is the dynamics of the HFS and nonaccrual HFS loan balances in this segment.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D348",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans held-for-sale and nonaccrual loans held-for-sale increased from December 31, 2023, primarily due to transfers of certain retained loans in anticipation of securitization and loan sales.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D349",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans at fair value increased from December 31, 2023, predominantly driven by higher Home Lending loans as originations outpaced warehouse loan sales. Nonaccrual loans at fair value increased compared to December 31, 2023, driven by the Corporate & Investment Bank (CIB).",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D353",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > CONSUMER CREDIT PORTFOLIO > Consumer, excluding credit card > Portfolio analysis",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Loans held-for-sale and nonaccrual loans held-for-sale decreased compared to December 31, 2024, reflecting loan sales activities. Loans at fair value increased as purchases in the CIB and originations in Home Lending outpaced sales, while nonaccrual loans at fair value increased driven by the CIB.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.6906,
+            "sequence_match_ratio": 0.64,
+            "length_ratio": 0.865672,
+            "word_count_delta": -9,
+            "added_tokens_sample": [
+              "decreased",
+              "compared",
+              "to",
+              "2024",
+              "reflecting",
+              "compared",
+              "to",
+              "2024",
+              "purchases",
+              "outpaced",
+              "sales",
+              "in",
+              "cib",
+              "and",
+              "in",
+              "home",
+              "lending",
+              "2024"
+            ],
+            "removed_tokens_sample": [
+              "increased",
+              "from",
+              "2023",
+              "predominantly",
+              "driven",
+              "by",
+              "transfers",
+              "of",
+              "certain",
+              "retained",
+              "loans",
+              "in",
+              "anticipation",
+              "of",
+              "securitization",
+              "and",
+              "respectively",
+              "from",
+              "2023",
+              "predominantly"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2024_7_D349",
+            "score": 0.934951,
+            "normalised_score": 0.935,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 93.50% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.9,
+          "reason": "The disclosure updates the drivers of change for Loans at Fair Value. The 2024 disclosure attributed growth to 'higher Home Lending loans'. The 2025 disclosure explicitly attributes growth to 'purchases in CIB' (Corporate & Investment Bank) in addition to Home Lending. This indicates a material shift in the business activity (M&A/Trading vs. Lending) driving the fair value portfolio composition and risk exposure in the CIB segment.",
+          "key_change": "Shift in Fair Value portfolio drivers"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D086",
+            "peer_topic": "Consumer Lending loan originations and demand trends",
+            "peer_summary": "First mortgage loan originations increased $1.1 billion due to higher demand, while home equity production decreased $878 million driven by lower demand.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.117841,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and BAC report on the dynamics of their residential mortgage portfolios for the same fiscal year. JPM specifically highlights 'Home Lending' loans at fair value, noting that originations outpaced warehouse loan sales. Similarly, BAC reports on 'First mortgage loan originations' in its Consumer Banking segment, attributing an increase to higher demand. While JPM's disclosure focuses on the balance sheet composition (fair value loans vs warehouse sales) and the specific driver of originations exceeding sales, BAC's disclosure focuses on the top-line volume driver (demand) for originations. Both disclosures confirm increased activity in home lending/residential mortgages for the period.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D349",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P516_S001",
+                    "paragraph_id": "jpm_2024_7_P516",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Loans at fair value increased from December 31, 2023, predominantly driven by higher Home Lending loans, as originations outpaced warehouse loan sales.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D086",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P094_S001",
+                    "paragraph_id": "bac_2024_7_P094",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "First mortgage loan originations for Consumer Banking and the total Corporation increased $1.1 billion and $1.7 billion primarily driven by higher demand.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was sufficiently comparable. Citigroup's candidates (c_2024_7_D029 and c_2024_7_D097) focus on 'Markets' or 'All Other-Managed Basis' segment net income performance. These do not address the specific topic of residential real estate fair value loans, home lending originations, or nonaccrual loan portfolios that are central to JPM's disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D022",
+            "peer_topic": "Non-Shared Risk Wholesale Loan Calculation",
+            "peer_summary": "For wholesale loans without similar risk characteristics, such as nonaccrual loans, the allowance is calculated using the present value of expected cash flows, observable market price, or collateral fair value less costs to sell.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.12523,
+            "relationship": "same_topic",
+            "comparison": "Both JPM and GS explicitly reference 'nonaccrual loans' in their disclosures. JPM notes that nonaccrual loans at fair value increased compared to the prior year, driven by the Corporate & Investment Bank. GS defines the accounting treatment for the allowance for loan losses specifically for wholesale loans that do not share similar risk characteristics, such as nonaccrual loans. While JPM reports a specific movement (increase) in the volume of nonaccrual loans in a specific segment, GS provides the methodological framework for how such loans are handled for allowance purposes. The common topic is the identification and treatment of nonaccrual loans.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D349",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P516_S002",
+                    "paragraph_id": "jpm_2024_7_P516",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Nonaccrual loans at fair value increased compared to December 31, 2023, driven by CIB.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P026_S009",
+                    "paragraph_id": "gs_2024_7_P026",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The allowance for loan losses for wholesale loans that do not share similar risk characteristics, such as nonaccrual loans, is calculated using the present value of expected future cash flows discounted at the loan's effective rate, the observable market price of the loan, or, in the case of collateral dependent loans, the fair value of the collateral less estimated costs to sell, if applicable.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was sufficiently comparable. Morgan Stanley's candidate ms_2024_7_D292 defines 'nonaccrual loans' generally, but it is a static definition without the context of performance or volume changes seen in JPM's disclosure. The other candidate (ms_2024_7_D068) concerns asset management fees and AUM, which is unrelated to residential mortgage fair value loans. Furthermore, MS is primarily an asset manager and does not have the same consumer home lending portfolio structure as JPM, making the definition alone an insufficient comparison of business drivers or financial outcomes for this specific topic."
+      }
+    ]
+  }
+}

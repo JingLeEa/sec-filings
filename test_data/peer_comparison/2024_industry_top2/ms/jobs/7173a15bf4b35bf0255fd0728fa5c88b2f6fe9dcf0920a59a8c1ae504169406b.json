@@ -1,0 +1,462 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "cf4626460f6885e7921694927ffc4642f33691cb2ecb99c16809f0f0fca3b817",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_8_D315",
+    "item": "8",
+    "target_topic": "Exchange and clearinghouse member default obligations",
+    "target_summary": "As a member of various exchanges and clearinghouses, the Firm may be required to pay amounts in case of another member's default or share losses from the clearinghouse's investment of guarantee funds if specified resources are exhausted. The maximum potential payout is un estimable, no contingent liability is recorded, and the Firm believes the risk of payment is remote.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0816",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures address the Firm's membership in exchanges and clearinghouses, describing the obligation to pay shares of financial obligations or losses in the event of member default or clearinghouse investment losses, with remote risk and no recorded contingent liability.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_8_D311",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Other Guarantees and Indemnities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As a member of exchanges and clearinghouses, the Firm may be required to pay shares of financial obligations if other members default or if clearinghouse investment losses exceed allocated resources; these payouts cannot be estimated, but the Firm believes the risk is remote and has recorded no contingent liability.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D315",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Other Guarantees and Indemnities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As a member of various exchanges and clearinghouses, the Firm may be required to pay amounts in case of another member's default or share losses from the clearinghouse's investment of guarantee funds if specified resources are exhausted. The maximum potential payout is un estimable, no contingent liability is recorded, and the Firm believes the risk of payment is remote.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.961434,
+            "sequence_match_ratio": 0.884718,
+            "length_ratio": 0.793269,
+            "word_count_delta": -43,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "exchange",
+              "clearinghouse",
+              "member",
+              "guarantees",
+              "the",
+              "maximum",
+              "potential",
+              "payout",
+              "under",
+              "these",
+              "rules",
+              "cannot",
+              "be",
+              "estimated",
+              "the",
+              "firm",
+              "has",
+              "not",
+              "recorded",
+              "any"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_8_D311",
+            "score": 0.993377,
+            "normalised_score": 0.9934,
+            "label": "Unchanged",
+            "rationale": "Score 99.34% of ceiling — semantically identical despite surface differences (word overlap 82%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Expanded",
+          "final_taxonomy": "Expanded"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.8,
+          "reason": "The 2024 disclosure removes the explicit statement that the 'maximum potential payout under these rules cannot be estimated' and the statement that 'no contingent liability is recorded' (which is present in the previous year's text but seemingly omitted or implied in the 2024 excerpt provided, though the summary suggests it remains). More critically, the 2024 text retains the detailed explanation of obligations but the removal of the specific disclaimer about unestimable maximum payout and the explicit 'no contingent liability' recording statement (if fully removed from the main text body as indicated by the token removal) can be material as it changes the clarity of the company's financial position regarding these off-balance sheet exposures. However, looking closely at the evidence, the 2024 text *ends* before the liability recording sentence which is in 2023. This truncation means the 2024 disclosure is incomplete regarding the accounting treatment (remote/no liability) compared to 2023. If the 2024 filing *omits* the confirmation of 'no contingent liability' and 'remote risk' for these specific clearinghouse guarantees in this specific paragraph, it creates an ambiguity about the financial impact. *Correction*: The 2024 evidence sentences provided end at S001. The 2023 evidence includes S002 explicitly stating no contingent liability and remote risk. The 2024 alignment explanation says 'Both disclosures address... with remote risk and no recorded contingent liability', implying the substance is preserved, likely in subsequent sentences not captured in the short extract or in D315's full text. However, based *only* on the supplied evidence, the 2024 extract lacks the explicit 'no contingent liability' and 'remote' language found in 2023. This is a material omission of critical financial condition disclosure if not present elsewhere. Assuming the alignment logic holds that the *full* disclosure is matched, the change is minimal. But if we judge the *supplied* evidence, the 2024 text is truncated. Given the 'ai_verified' status and explanation claiming substance is preserved, I will lean towards No, but the truncation is notable. Actually, M0816 evidence for 2024 only has 2 sentences. 2023 has 3. The 3rd sentence in 2023 is crucial: 'The Firm has not recorded any contingent liability...'. Its absence in the 2024 evidence *for this match* is significant. However, D315 is the current disclosure. The alignment explanation says 'Both disclosures address... with remote risk and no recorded contingent liability'. This implies the full text of D315 contains this. The provided evidence snippet is short. I must judge the *disclosure change*. If the company moved the 'no liability' statement elsewhere or condensed it, is it material? Usually, removing the explicit 'remote/no liability' qualifier from a risk disclosure is material. But the alignment says it's covered. Let's look at the 'Reworded' vs 'Expanded' vs 'Unchanged'. The change analysis says 'Reworded' (Lexical) but 'Expanded' (LLM). This is contradictory. The semantic score is 0.99 (Unchanged). The text is almost identical. The missing sentence in the *evidence snippet* might be an extraction error. If the text is effectively identical, it's not material. I will classify as No based on the high semantic similarity and the alignment explanation confirming the substance is the same.)",
+          "key_change": "Minor text truncation/condensation of clearinghouse guarantee risk assessment"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0802",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures cover the Firm's obligations as a member of exchanges and clearinghouses, including potential payments for member defaults or sharing losses from guarantee fund investments if resources are exhausted. The content is substantively identical.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_8_D315",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Other Guarantees and Indemnities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As a member of various exchanges and clearinghouses, the Firm may be required to pay amounts in case of another member's default or share losses from the clearinghouse's investment of guarantee funds if specified resources are exhausted. The maximum potential payout is un estimable, no contingent liability is recorded, and the Firm believes the risk of payment is remote.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2025_8_D315",
+            "item": "8",
+            "section": "Notes to Consolidated Financial Statements > Other Guarantees and Indemnities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As a member of various exchanges and clearinghouses, the Firm may be required to cover defaults of other members or share losses from the clearinghouse's investment of guarantee funds if resources are exhausted, with obligations varying by rule but generally arising only after resource exhaustion.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reworded",
+            "cosine_similarity": 0.997472,
+            "sequence_match_ratio": 0.988024,
+            "length_ratio": 1.024242,
+            "word_count_delta": 4,
+            "added_tokens_sample": [
+              "exchange",
+              "clearinghouse",
+              "member",
+              "guarantees"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "ms_2024_8_D315",
+            "score": 0.990239,
+            "normalised_score": 0.9902,
+            "label": "Unchanged",
+            "rationale": "Score 99.02% of ceiling with 96% word overlap — text is effectively identical.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Reworded",
+          "final_taxonomy": "Reworded"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The disclosure on clearinghouse membership obligations is substantively identical. The lexical changes are minor and do not alter the description of the Firm's risk of payment or the conditions under which obligations arise.",
+          "key_change": "No substantive change in clearinghouse obligation disclosure"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D308",
+            "peer_topic": "Exchange and Clearing House Membership Obligations",
+            "peer_summary": "The Corporation is a member of various securities and derivative exchanges and clearinghouses globally and may be required to pay a pro-rata share of losses from member defaults. Potential obligations are generally limited to membership interests, guarantee fund contributions, or residual losses, with management assessing the probability of such payments as remote.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.202464,
+            "relationship": "same_topic",
+            "comparison": "Both Morgan Stanley and Bank of America disclose obligations arising from membership in exchanges and clearinghouses, specifically regarding pro-rata shares of losses from member defaults. Morgan Stanley states that obligations generally arise only if the clearinghouse has previously exhausted its resources (ms_2024_8_P399_S008), while Bank of America similarly notes that potential obligations may be limited to membership interests or guarantee fund contributions, with maximum exposure difficult to estimate and risk assessed as remote (bac_2024_8_P357_S003, bac_2024_8_P357_S004).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D315",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P399_S008",
+                    "paragraph_id": "ms_2024_8_P399",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The Firm is a member of various exchanges and clearinghouses that trade and clear securities and/or derivative contracts. Associated with its membership, the Firm may be required to pay a certain amount as determined by the exchange or the clearinghouse in case of a default of any of its members or pay a proportionate share of the financial obligations of another member that may default on its obligations to the exchange or the clearinghouse. While the rules governing different exchange or clearinghouse memberships and the forms of these guarantees may vary, in general the Firm's obligations under these rules would arise only if the exchange or clearinghouse had previously exhausted its resources.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P400_S001",
+                    "paragraph_id": "ms_2024_8_P400",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In addition, some clearinghouse rules require members to assume a proportionate share of losses resulting from the clearinghouse's investment of guarantee fund contributions and initial margin and of other losses unrelated to the default of a clearing member, if such losses exceed the specified resources allocated for such purpose by the clearinghouse.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D308",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P357_S001",
+                    "paragraph_id": "bac_2024_8_P357",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The Corporation is a member of various securities and derivative exchanges and clearinghouses, both in the U.S. and other countries.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P357_S002",
+                    "paragraph_id": "bac_2024_8_P357",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "As a member, the Corporation may be required to pay a pro-rata share of the losses incurred by some of these organizations as a result of another member default and under other loss scenarios.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P357_S003",
+                    "paragraph_id": "bac_2024_8_P357",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The Corporation's potential obligations may be limited to its membership interests in such exchanges and clearinghouses, to the amount (or multiple) of the Corporation's contribution to the guarantee fund or, in limited instances, to the full pro-rata share of the residual losses after applying the guarantee fund.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P357_S004",
+                    "paragraph_id": "bac_2024_8_P357",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The Corporation's maximum potential exposure under these membership agreements is difficult to estimate; however, the Corporation has assessed the probability of making any such payments as remote.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D634",
+            "peer_topic": "VTN Membership Obligations and Exposure",
+            "peer_summary": "Citi is a member of numerous value-transfer networks (VTNs) globally, where it may be required to pay a pro rata share of losses resulting from another member's default, with potential limits on its obligations. The maximum exposure is difficult to estimate due to the uncertainty of future claims, but Citi considers the risk of loss remote based on historical experience, and no amounts are reflected on the balance sheet for these potential obligations.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.133261,
+            "relationship": "same_topic",
+            "comparison": "Citigroup and Morgan Stanley both disclose membership in value-transfer networks, exchanges, and clearinghouses where members may be required to pay a pro-rata share of losses from another member's default. Citigroup explicitly states that Citi's participation is not reported in guarantees tables and no amounts are reflected on the balance sheet, mirroring Morgan Stanley's conclusion that no contingent liability is recorded because the risk is remote (c_2024_8_P913_S005 vs ms_2024_8_D315 summary). Both companies note that maximum exposure is difficult to estimate due to the uncertainty of future claims.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D315",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P399_S008",
+                    "paragraph_id": "ms_2024_8_P399",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The Firm is a member of various exchanges and clearinghouses that trade and clear securities and/or derivative contracts. Associated with its membership, the Firm may be required to pay a certain amount as determined by the exchange or the clearinghouse in case of a default of any of its members or pay a proportionate share of the financial obligations of another member that may default on its obligations to the exchange or the clearinghouse. While the rules governing different exchange or clearinghouse memberships and the forms of these guarantees may vary, in general the Firm's obligations under these rules would arise only if the exchange or clearinghouse had previously exhausted its resources.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P400_S001",
+                    "paragraph_id": "ms_2024_8_P400",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In addition, some clearinghouse rules require members to assume a proportionate share of losses resulting from the clearinghouse's investment of guarantee fund contributions and initial margin and of other losses unrelated to the default of a clearing member, if such losses exceed the specified resources allocated for such purpose by the clearinghouse.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D634",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P913_S001",
+                    "paragraph_id": "c_2024_8_P913",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Citi is a member of, or shareholder in, hundreds of value-transfer networks (VTNs) (payment, clearing and settlement systems as well as exchanges) around the world.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_8_P913_S002",
+                    "paragraph_id": "c_2024_8_P913",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "As a condition of membership, many of these VTNs require that members stand ready to pay a pro rata share of the losses incurred by the organization due to another member's default on its obligations.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_8_P913_S004",
+                    "paragraph_id": "c_2024_8_P913",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The maximum exposure is difficult to estimate as this would require an assessment of claims that have not yet occurred; however, Citi believes the risk of loss is remote given historical experience with the VTNs.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_8_P913_S005",
+                    "paragraph_id": "c_2024_8_P913",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Accordingly, Citi's participation in VTNs is not reported in the guarantees tables above, and there are no amounts reflected on the Consolidated Balance Sheet as of December 31, 2024 or 2023 for potential obligations that could arise from Citi's involvement with VTN associations.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D397",
+            "peer_topic": "Indemnities and Guarantees of Service Providers and Networks",
+            "peer_summary": "The firm indemnifies service providers and may be liable for losses from third-party providers or member defaults in clearing networks, but believes material payments are unlikely and no material liabilities were recognized as of December 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.080574,
+            "relationship": "same_topic",
+            "comparison": "Goldman Sachs and Morgan Stanley both identify membership in payment, clearing, and settlement networks as a source of potential obligation to meet the obligations of such networks in the event of member defaults. While Goldman Sachs groups this with indemnities for service providers and states it is unable to develop an estimate of the maximum payout (gs_2024_8_P526_S003, gs_2024_8_P528_S001), Morgan Stanley specifically isolates this obligation in 'Other Guarantees and Indemnities' and also finds the maximum potential payout un estimable with risk considered remote (ms_2024_8_P399_S008, ms_2024_8_D315 summary).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D315",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P399_S008",
+                    "paragraph_id": "ms_2024_8_P399",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The Firm is a member of various exchanges and clearinghouses that trade and clear securities and/or derivative contracts. Associated with its membership, the Firm may be required to pay a certain amount as determined by the exchange or the clearinghouse in case of a default of any of its members or pay a proportionate share of the financial obligations of another member that may default on its obligations to the exchange or the clearinghouse. While the rules governing different exchange or clearinghouse memberships and the forms of these guarantees may vary, in general the Firm's obligations under these rules would arise only if the exchange or clearinghouse had previously exhausted its resources.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D397",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P526_S003",
+                    "paragraph_id": "gs_2024_8_P526",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "In addition, the firm is a member of payment, clearing and settlement networks, as well as securities exchanges around the world that may require the firm to meet the obligations of such networks and exchanges in the event of member defaults and other loss scenarios.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_8_P528_S001",
+                    "paragraph_id": "gs_2024_8_P528",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The firm is unable to develop an estimate of the maximum payout under these guarantees and indemnifications as this depends upon the occurrence of future events, including an assessment of claims that have not yet occurred.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D590",
+            "peer_topic": "Exchange and Clearing House Membership Obligations",
+            "peer_summary": "The Firm is a member of several securities and derivative exchanges and clearing houses globally, providing clearing services to clients, with membership obligations including pro rata shares of losses from member defaults or investment losses that vary by organization and may be limited to guarantee fund contributions.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.192405,
+            "relationship": "same_topic",
+            "comparison": "JPMorgan and Morgan Stanley both describe obligations as members of securities and derivative exchanges and clearinghouses to pay pro-rata shares of losses resulting from member defaults or clearinghouse investment losses. Both disclosures highlight that these obligations may be limited to guarantee fund contributions or residual losses after fund exhaustion, and that payment would generally only occur if the clearinghouse's own resources are exhausted (jpm_2024_8_P879_S002, jpm_2024_8_P879_S004, jpm_2024_8_P879_S007 vs ms_2024_8_P399_S008, ms_2024_8_P400_S001).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D315",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P399_S008",
+                    "paragraph_id": "ms_2024_8_P399",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "The Firm is a member of various exchanges and clearinghouses that trade and clear securities and/or derivative contracts. Associated with its membership, the Firm may be required to pay a certain amount as determined by the exchange or the clearinghouse in case of a default of any of its members or pay a proportionate share of the financial obligations of another member that may default on its obligations to the exchange or the clearinghouse. While the rules governing different exchange or clearinghouse memberships and the forms of these guarantees may vary, in general the Firm's obligations under these rules would arise only if the exchange or clearinghouse had previously exhausted its resources.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "ms_2024_8_P400_S001",
+                    "paragraph_id": "ms_2024_8_P400",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In addition, some clearinghouse rules require members to assume a proportionate share of losses resulting from the clearinghouse's investment of guarantee fund contributions and initial margin and of other losses unrelated to the default of a clearing member, if such losses exceed the specified resources allocated for such purpose by the clearinghouse.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D590",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P879_S002",
+                    "paragraph_id": "jpm_2024_8_P879",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Membership in some of these organizations requires the Firm to pay a pro rata share of the losses incurred by the organization as a result of the default of another member.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P879_S004",
+                    "paragraph_id": "jpm_2024_8_P879",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "These obligations may be limited to the amount (or a multiple of the amount) of the Firm's contribution to the guarantee fund maintained by a clearing house or exchange as part of the resources available to cover any losses in the event of a member default.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P879_S005",
+                    "paragraph_id": "jpm_2024_8_P879",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Alternatively, these obligations may also include a pro rata share of the residual losses after applying the guarantee fund.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P879_S006",
+                    "paragraph_id": "jpm_2024_8_P879",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Additionally, certain clearing houses require the Firm as a member to pay a pro rata share of losses that may result from the clearing house's investment of guarantee fund contributions and initial margin, unrelated to and independent of the default of another member.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_8_P879_S007",
+                    "paragraph_id": "jpm_2024_8_P879",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Generally a payment would only be required should such losses exceed the resources of the clearing house or exchange that are contractually required to absorb the losses in the first instance.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      }
+    ]
+  }
+}

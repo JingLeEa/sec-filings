@@ -1,0 +1,242 @@
+{
+  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
+  "request_hash": "8aa173d44d524738913401121374281ccccff3432100d0ebbf620feb7237989b",
+  "result": {
+    "target_ticker": "INTC",
+    "target_disclosure_id": "intc_2024_7_D079",
+    "item": "7",
+    "target_topic": "Intel Foundry Revenue Decrease",
+    "target_summary": "Intel Foundry external revenue decreased 60% from 2023 due to lower traditional packaging services and lower equipment sales.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "intc_2023_2024_M0325",
+        "relationship": "current_only",
+        "status": "needs_review",
+        "review_reasons": [
+          "invalid_or_omitted_verifier_proposal"
+        ],
+        "explanation": "Automatic repair turn limit reached; remaining disclosures need review.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D079",
+            "item": "7",
+            "section": "Consolidated Results of Operations > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Intel Foundry external revenue decreased 60% from 2023 due to lower traditional packaging services and lower equipment sales.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "intc_2024_2025_M0088",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure focuses on the 60% decrease in Intel Foundry *external* revenue from 2023. The 2025 filings do not contain a specific disclosure detailing Intel Foundry external revenue changes for 2025 vs 2024. The search results for Intel Foundry in 2025 returned strategic descriptions (D033) or supply constraint impacts on server revenue (D024) rather than a direct counterpart detailing foundry external revenue performance. No specific counterpart was found.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "intc_2024_7_D079",
+            "item": "7",
+            "section": "Consolidated Results of Operations > 2024 vs. 2023",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Intel Foundry external revenue decreased 60% from 2023 due to lower traditional packaging services and lower equipment sales.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -18,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "intel",
+              "foundry",
+              "external",
+              "revenue",
+              "decreased",
+              "60",
+              "from",
+              "2023",
+              "due",
+              "to",
+              "lower",
+              "traditional",
+              "packaging",
+              "services",
+              "and",
+              "lower",
+              "equipment",
+              "sales"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "Removal of specific quantitative disclosure regarding Intel Foundry external revenue performance (60% decrease) and its drivers (packaging services, equipment sales). This represents a loss of visibility into a key segment's financial trajectory and operational health.",
+          "key_change": "Removal of Intel Foundry external revenue decline disclosure"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D028",
+            "peer_topic": "Embedded segment net revenue and drivers for fiscal year 2024",
+            "peer_summary": "Embedded net revenue decreased by 33% to $3.6 billion in 2024 from $5.3 billion in 2023, primarily due to lower demand as customers normalized inventory levels.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.163703,
+            "relationship": "same_topic",
+            "comparison": "Both Intel Foundry and AMD’s Embedded segment reported significant year-over-year revenue declines in 2024, though driven by different specific market factors. Intel Foundry’s external revenue decreased 60% due to lower traditional packaging services and equipment sales, whereas AMD’s Embedded net revenue decreased 33% primarily because customers normalized inventory levels leading to lower demand.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D079",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P076_S003",
+                    "paragraph_id": "intc_2024_7_P076",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Intel Foundry external revenue decreased 60% from 2023 due to lower traditional packaging services and lower equipment sales.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D028",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P040_S001",
+                    "paragraph_id": "amd_2024_7_P040",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Embedded net revenue of $3.6 billion in 2024 decreased by 33%, compared to net revenue of $5.3 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P040_S002",
+                    "paragraph_id": "amd_2024_7_P040",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The decrease in net revenue was primarily due to lower demand as customers continued to normalize their inventory levels.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D026",
+            "peer_topic": "Gaming Segment Revenue Decline",
+            "peer_summary": "Gaming net revenue decreased by 58% to $2.6 billion in 2024 from $6.2 billion in 2023, primarily driven by lower semi-custom product revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.15368,
+            "relationship": "same_topic",
+            "comparison": "Similar to Intel Foundry's sharp revenue contraction, AMD’s Gaming segment experienced a substantial year-over-year revenue drop of 58% in 2024, attributed to lower semi-custom product revenue. This mirrors the significant negative revenue performance observed in Intel's foundry business.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D079",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P076_S003",
+                    "paragraph_id": "intc_2024_7_P076",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Intel Foundry external revenue decreased 60% from 2023 due to lower traditional packaging services and lower equipment sales.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D026",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P038_S001",
+                    "paragraph_id": "amd_2024_7_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Gaming net revenue of $2.6 billion in 2024 decreased by 58%, compared to net revenue of $6.2 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P038_S002",
+                    "paragraph_id": "amd_2024_7_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The decrease in net revenue was primarily due to lower semi-custom product revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for AVGO discuss 'Other income, net' (interest income changes) and 'Working Capital Changes' (balance sheet captions), which are not comparable to the target's specific topic of 'Intel Foundry Revenue Decrease' driven by packaging and equipment sales volume."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for MU discuss revenue decreases in 2023 compared to 2022. The target disclosure concerns the 2024 fiscal year performance compared to 2023. Comparing MU's 2023 performance to Intel's 2024 performance is not sufficiently comparable for the same fiscal year."
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for NVDA discuss gross margin performance and drivers (increases in 2024). The target disclosure focuses on a specific segment's revenue decrease. While both are financial performance metrics, one describes margin expansion driven by data center growth and the other describes revenue contraction in foundry services; they are not sufficiently comparable on the same specific topic of revenue decline drivers."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for QCOM discuss drivers for revenue increases in 2024. The target disclosure discusses a revenue decrease. The direction of the financial outcome (increase vs. decrease) and the specific segment focus (QCT/QTL growth vs. Foundry decline) make these candidates not sufficiently comparable."
+      }
+    ]
+  }
+}

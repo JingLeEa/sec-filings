@@ -1,0 +1,387 @@
+{
+  "input_fingerprint": "24bd74cd81f7630b0d8298141a923760db532f9e1d28ef24966fa45596553d76",
+  "request_hash": "eff099a83a4ef1a5135d812166de49426c1d125358ffc3b22f7e7af4d87b665e",
+  "result": {
+    "target_ticker": "GS",
+    "target_disclosure_id": "gs_2024_8_D198",
+    "item": "8",
+    "target_topic": "Composition of held-to-maturity securities types",
+    "target_summary": "Substantially all government obligations consist of U.S. government obligations, U.S. agency obligations consist of U.S. agency issued mortgage-backed securities, and securities backed by real estate consist of residential real estate-backed securities.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "gs_2023_2024_M0956",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures address the accounting treatment of Held-to-Maturity (HTM) securities, specifically that they are accounted for at amortized cost and excluded from the fair value hierarchy. gs_2023_8_D214 also provides the hypothetical fair value hierarchy classification (Level 1/2), which gs_2024_8_D197 also includes. They share the specific topic of HTM accounting policy and hypothetical valuation hierarchy.\n\nBoth disclosures detail the composition of the Held-to-Maturity security portfolio. gs_2023_8_D214 specifies that government obligations are primarily U.S. government obligations and real estate-backed securities are residential. gs_2024_8_D198 provides the same compositional breakdown (US Gov, Agency MBS, Residential Real Estate). They share the specific topic of HTM portfolio composition.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2023_8_D214",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Held-to-Maturity Securities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Held-to-maturity securities are accounted for at amortized cost and, because they are not at fair value, are excluded from the fair value hierarchy, though hypothetical classification would place government obligations in Level 1 and real estate-backed securities primarily in Level 2.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D197",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Held-to-Maturity Securities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Held-to-maturity securities are accounted for at amortized cost and are not included in the fair value hierarchy. Had they been included, government obligations would be Level 1, while U.S. agency and real estate-backed obligations would primarily be Level 2.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "gs_2024_8_D198",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Held-to-Maturity Securities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Substantially all government obligations consist of U.S. government obligations, U.S. agency obligations consist of U.S. agency issued mortgage-backed securities, and securities backed by real estate consist of residential real estate-backed securities.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.611467,
+            "sequence_match_ratio": 0.502924,
+            "length_ratio": 0.486957,
+            "word_count_delta": -59,
+            "added_tokens_sample": [
+              "u",
+              "s",
+              "agency",
+              "obligations",
+              "consist",
+              "of",
+              "u",
+              "s",
+              "agency",
+              "issued",
+              "mortgage",
+              "backed",
+              "securities"
+            ],
+            "removed_tokens_sample": [
+              "as",
+              "these",
+              "securities",
+              "are",
+              "not",
+              "accounted",
+              "for",
+              "at",
+              "fair",
+              "value",
+              "they",
+              "are",
+              "not",
+              "included",
+              "in",
+              "the",
+              "firm's",
+              "fair",
+              "value",
+              "hierarchy"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "gs_2023_8_D214",
+            "score": 0.86269,
+            "normalised_score": 0.8627,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 86.27% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosures split the 2023 HTM policy and composition into two rows. The accounting treatment (amortized cost), exclusion from fair value hierarchy, and portfolio composition (US Gov, Agency MBS, Residential) remain substantively identical to 2023. The addition of 'US Agency' composition detail is a clarifying expansion, not a change in strategy or risk.",
+          "key_change": "Split of HTM policy with clarifying composition detail"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M1011",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D198 details the types of HTM securities (Government, Agency, Real Estate). D193 (from preserved proposals context, though not in the final row's required IDs, we are checking the validity of the link D198->D193 suggested in the error correction attempt). D193 covers the same subject: types of securities. The validation error noted D193 was matched to D197. However, many-to-one is allowed. If D193 exists and covers the topic, it is a valid candidate. But D189 is the other required ID. Let's look at the preserved proposals. D197->D193 is preserved. D198 is required. D193 is the best topical match for D198 (both describe security types). D189 describes AFS aging. Therefore, D198 should match D193, and D189 should remain unmatched or match something else. But D193 is already in a preserved row with D197. The prompt says 'If established_exact_links is supplied... do not repeat those links'. D197->D193 is not in the supplied `preserved_proposals` list in the prompt? Wait, `preserved_proposals` lists D197->D193. Yes. So D193 is already matched to D197. Can D198 also match D193? Yes. But we must return the final alignments. The validation error tried to add D198->D193. This is a valid mat",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D198",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Held-to-Maturity Securities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Substantially all government obligations consist of U.S. government obligations, U.S. agency obligations consist of U.S. agency issued mortgage-backed securities, and securities backed by real estate consist of residential real estate-backed securities.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_8_D193",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Held-to-Maturity Securities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Held-to-maturity securities are accounted for at amortized cost and are excluded from the fair value hierarchy, though hypothetical classification would place government obligations in Level 1 and agency/real estate-backed securities in Level 2.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.657087,
+            "sequence_match_ratio": 0.519774,
+            "length_ratio": 2.847826,
+            "word_count_delta": 85,
+            "added_tokens_sample": [
+              "held",
+              "to",
+              "maturity",
+              "securities",
+              "are",
+              "accounted",
+              "for",
+              "at",
+              "amortized",
+              "cost",
+              "as",
+              "these",
+              "securities",
+              "are",
+              "not",
+              "accounted",
+              "for",
+              "at",
+              "fair",
+              "value"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "gs_2024_8_D198",
+            "score": 0.785749,
+            "normalised_score": 0.7857,
+            "label": "Expanded",
+            "rationale": "Score 78.57% of ceiling — content grew from ~45 to ~127 words (2.8×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.8,
+          "reason": "The alignment merges two previous disclosures into one. The 2024 D198 explicitly listed the composition of government, agency, and real estate-backed obligations. The 2025 D193 retains only the government obligation detail but loses the specific breakdown for agency and real estate-backed securities. While the text is truncated, the loss of specific compositional detail for agency and real estate securities represents a narrowing of the disclosed operational detail regarding the held-to-maturity portfolio.",
+          "key_change": "Loss of agency and real estate-backed security composition details"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "gs_2024_2025_M1008",
+        "relationship": "one_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "D198 details the composition/types of Held-to-Maturity (HTM) securities (Government, Agency, Real Estate). D189 references a table about Available-for-Sale (AFS) securities in an unrealized loss position. These are distinct security categories (HTM vs AFS) and distinct subjects (composition vs aging/loss status). There is no semantic overlap or shared topic. D198 has no valid counterpart in the 2025 item based on the available required IDs. D189 is unmatched in this proposal.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "gs_2024_8_D198",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Held-to-Maturity Securities",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Substantially all government obligations consist of U.S. government obligations, U.S. agency obligations consist of U.S. agency issued mortgage-backed securities, and securities backed by real estate consist of residential real estate-backed securities.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "gs_2025_8_D189",
+            "item": "8",
+            "section": "Accounting Firm > Investments > Available-for-Sale Securities, at Fair Value > THE GOLDMAN SACHS GROUP, INC. AND SUBSIDIARIES",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "A table presenting information about available-for-sale securities in an unrealized loss position by aging category is referenced.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_8_D410",
+            "peer_topic": "Composition of Real Estate-Backed and Structured Instruments in Fair Value Tables",
+            "peer_summary": "Instruments backed by residential and commercial real estate include RMBS, commercial MBS, whole loans, and mortgage CDOs, while commercial loans and debt securities include corporate CLOs and CDOs; structured liabilities primarily include equity-linked notes accounted for under the fair value option.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.148751,
+            "relationship": "same_topic",
+            "comparison": "Both GS and BAC disclose the specific composition of securities backed by real estate. GS states that substantially all securities backed by real estate consist of securities backed by residential real estate. BAC provides a similar compositional breakdown, noting that instruments backed by residential and commercial real estate assets include RMBS, commercial MBS, whole loans, and mortgage CDOs. Both disclosures aim to clarify the underlying asset types within real estate-backed security categories.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D198",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P285_S004",
+                    "paragraph_id": "gs_2024_8_P285",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• Substantially all of the securities backed by real estate consist of securities backed by residential real estate.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D410",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P521_S002",
+                    "paragraph_id": "bac_2024_8_P521",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "In the previous tables, instruments backed by residential and commercial real estate assets include RMBS, commercial MBS, whole loans and mortgage CDOs.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D321",
+            "peer_topic": "Security Composition Descriptions",
+            "peer_summary": "The AFS debt securities portfolio includes U.S. government-sponsored agency mortgage-backed securities, as well as corporate, asset-backed, and other debt securities.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.193404,
+            "relationship": "same_topic",
+            "comparison": "Both GS and C disclose the specific composition of their U.S. government-sponsored agency securities within their debt portfolios. GS describes its U.S. agency obligations as consisting of U.S. agency issued mortgage-backed securities, while C identifies its portfolio as including U.S. government-sponsored agency mortgage-backed securities. Both disclosures focus on clarifying the nature of agency-backed assets.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D198",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P285_S003",
+                    "paragraph_id": "gs_2024_8_P285",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• U.S. agency obligations consist of U.S. agency issued mortgage-backed securities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D321",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P400_S001",
+                    "paragraph_id": "c_2024_8_P400",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "(2)Includes mortgage-backed securities of U.S. government-sponsored agencies.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No peer candidate was retrieved that discusses the composition of held-to-maturity securities or U.S. government/agency obligations in a manner comparable to the target's specific disclosure of security types. The provided JPM candidates (jpm_2024_8_D448, jpm_2024_8_D240) discuss repurchased delinquent loans and employee benefit plan assets respectively, which are substantively different topics from the target's held-to-maturity securities composition."
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D215",
+            "peer_topic": "AFS Securities Guarantees and Agency Composition",
+            "peer_summary": "Underlying loans in the investment securities portfolio are backed by a guarantee of at least 95% of principal and interest, typically from the U.S. Department of Education, and U.S. agency securities mainly consist of agency mortgage pass-through pools, CMOs, and agency-issued debt.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.176557,
+            "relationship": "same_topic",
+            "comparison": "MS and GS both provide descriptive details regarding the composition of U.S. agency securities. GS specifies that its U.S. agency obligations consist of U.S. agency issued mortgage-backed securities. Similarly, MS describes its U.S. agency securities as consisting mainly of agency mortgage pass-through pool securities, CMOs, and agency-issued debt. Both disclosures serve to define the specific instrument types underlying the 'agency securities' category.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D198",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P285_S003",
+                    "paragraph_id": "gs_2024_8_P285",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• U.S. agency obligations consist of U.S. agency issued mortgage-backed securities.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D215",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P273_S001",
+                    "paragraph_id": "ms_2024_8_P273",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "2.U.S. agency securities consist mainly of agency mortgage pass-through pool securities, CMOs and agency-issued debt.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

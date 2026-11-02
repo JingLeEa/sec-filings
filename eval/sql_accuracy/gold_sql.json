@@ -1,0 +1,302 @@
+[
+ {
+  "id": 1,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='intc' AND current_year=2025 AND item='1A' AND change_type='New'",
+  "interpretation": "Intel, current_year 2025, Item 1A, change_type New."
+ },
+ {
+  "id": 2,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='jpm' AND previous_year=2023 AND current_year=2024 AND item='1A' AND change_type='Removed'",
+  "interpretation": "JPM, 2023->2024, Item 1A, Removed."
+ },
+ {
+  "id": 3,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='gs' AND current_year=2024 AND item='7' AND change_type='Expanded'",
+  "interpretation": "GS, current_year 2024, Item 7, Expanded."
+ },
+ {
+  "id": 4,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='nvda' AND current_year=2025 AND materiality_score > 0.8",
+  "interpretation": "NVDA, current_year 2025, all rows (plain-noun changes) with materiality_score > 0.8."
+ },
+ {
+  "id": 5,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='ms' AND status='needs_review'",
+  "interpretation": "MS, status needs_review, both windows."
+ },
+ {
+  "id": 6,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='bac' AND current_year=2024 AND material='Yes'",
+  "interpretation": "BAC, current_year 2024, material Yes (no change_type filter)."
+ },
+ {
+  "id": 7,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='avgo' AND current_year=2025 AND item='8' AND change_type='Unchanged'",
+  "interpretation": "AVGO, current_year 2025, Item 8, Unchanged."
+ },
+ {
+  "id": 8,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='amd' AND current_year=2025 AND item='1' AND change_type='New'",
+  "interpretation": "AMD, current_year 2025, Item 1, New."
+ },
+ {
+  "id": 9,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='qcom' AND change_type='Reworded'",
+  "interpretation": "QCOM, Reworded, no year filter."
+ },
+ {
+  "id": 10,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='mu' AND current_year=2024 AND relationship='one_to_many'",
+  "interpretation": "MU, current_year 2024, relationship one_to_many."
+ },
+ {
+  "id": 11,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE company='jpm' AND current_year=2025 AND disclosure_taxonomy='Cybersecurity & Data' AND change_type IN ('Modified','Reworded','Expanded','Reduced','New','Removed')",
+  "interpretation": "JPM, current_year 2025, taxonomy Cybersecurity & Data, changed change_types."
+ },
+ {
+  "id": 12,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE current_year=2025 AND change_type='Removed'",
+  "interpretation": "All companies, current_year 2025, Removed."
+ },
+ {
+  "id": 13,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='jpm' AND previous_year=2023 AND current_year=2024 AND item='1A' AND change_type='Removed' ORDER BY match_id",
+  "interpretation": "JPM, 2023->2024, Item 1A, Removed."
+ },
+ {
+  "id": 14,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='amd' AND current_year=2025 AND item='1' AND change_type='New' ORDER BY match_id",
+  "interpretation": "AMD, current_year 2025, Item 1, New."
+ },
+ {
+  "id": 15,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='bac' AND current_year=2025 AND item='8' AND change_type='Reduced' ORDER BY match_id",
+  "interpretation": "BAC, current_year 2025, Item 8, Reduced."
+ },
+ {
+  "id": 16,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='intc' AND current_year=2024 AND item='15' AND change_type IN ('Modified','Reworded','Expanded','Reduced','New','Removed') ORDER BY match_id",
+  "interpretation": "Intel, current_year 2024, Item 15, changed change_types."
+ },
+ {
+  "id": 17,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='nvda' AND current_year=2025 AND item='1A' AND status='needs_review' ORDER BY match_id",
+  "interpretation": "NVDA, current_year 2025, Item 1A, needs_review."
+ },
+ {
+  "id": 18,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='mu' AND current_year=2024 AND item='1A' AND change_type='Expanded' ORDER BY match_id",
+  "interpretation": "MU, current_year 2024, Item 1A, Expanded."
+ },
+ {
+  "id": 19,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='qcom' AND current_year=2025 AND disclosure_taxonomy='Technology & AI' AND change_type='New' ORDER BY match_id",
+  "interpretation": "QCOM, current_year 2025, taxonomy Technology & AI, New."
+ },
+ {
+  "id": 20,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='avgo' AND current_year=2024 AND relationship='many_to_one' ORDER BY match_id",
+  "interpretation": "AVGO, current_year 2024, many_to_one."
+ },
+ {
+  "id": 21,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='gs' AND confidence_score < 0.7 ORDER BY match_id",
+  "interpretation": "GS, confidence_score < 0.7, no year filter."
+ },
+ {
+  "id": 22,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='bac' AND current_year=2024 AND lexical_label IS NOT NULL AND semantic_label IS NOT NULL AND lexical_label <> semantic_label ORDER BY match_id",
+  "interpretation": "BAC, current_year 2024, lexical vs semantic disagreement."
+ },
+ {
+  "id": 23,
+  "sql": "SELECT match_id FROM alignment_changes WHERE company='jpm' AND current_year=2025 AND item='1A' AND lexical_label IS NOT NULL AND semantic_label IS NOT NULL AND lexical_label <> semantic_label ORDER BY match_id",
+  "interpretation": "JPM, current_year 2025, Item 1A, lexical vs semantic disagreement."
+ },
+ {
+  "id": 24,
+  "sql": "SELECT match_id, materiality_score AS score FROM alignment_changes WHERE company='bac' AND current_year=2024 AND materiality_score IS NOT NULL ORDER BY score DESC",
+  "interpretation": "BAC, current_year 2024, all scored rows ranked by materiality_score desc."
+ },
+ {
+  "id": 25,
+  "sql": "SELECT match_id, materiality_score AS score FROM alignment_changes WHERE company='amd' AND current_year=2025 AND materiality_score IS NOT NULL ORDER BY score DESC",
+  "interpretation": "AMD, current_year 2025, 'significant' = materiality_score, desc."
+ },
+ {
+  "id": 26,
+  "sql": "SELECT match_id, materiality_score AS score FROM alignment_changes WHERE company='gs' AND previous_year=2024 AND current_year=2025 AND item='1A' AND materiality_score IS NOT NULL ORDER BY score DESC",
+  "interpretation": "GS, 2024->2025, Item 1A, materiality_score desc."
+ },
+ {
+  "id": 27,
+  "sql": "SELECT match_id, materiality_score AS score FROM alignment_changes WHERE company='jpm' AND current_year=2024 AND item='7' AND materiality_score IS NOT NULL ORDER BY score DESC",
+  "interpretation": "JPM, current_year 2024, Item 7, materiality_score desc."
+ },
+ {
+  "id": 28,
+  "sql": "SELECT match_id, materiality_score AS score FROM alignment_changes WHERE company='nvda' AND current_year=2025 AND change_type='New' AND materiality_score IS NOT NULL ORDER BY score DESC",
+  "interpretation": "NVDA, current_year 2025, New, materiality_score desc."
+ },
+ {
+  "id": 29,
+  "sql": "SELECT match_id, confidence_score AS score FROM alignment_changes WHERE company='mu' AND current_year=2024 AND confidence_score IS NOT NULL ORDER BY score ASC",
+  "interpretation": "MU, current_year 2024, all scored rows by confidence_score asc."
+ },
+ {
+  "id": 30,
+  "sql": "SELECT match_id, confidence_score AS score FROM alignment_changes WHERE company='ms' AND current_year=2025 AND material='Yes' AND confidence_score IS NOT NULL ORDER BY score ASC",
+  "interpretation": "MS, current_year 2025, material Yes, confidence_score asc."
+ },
+ {
+  "id": 31,
+  "sql": "SELECT match_id, materiality_score AS score FROM alignment_changes WHERE company='intc' AND change_type='Removed' AND materiality_score IS NOT NULL ORDER BY score DESC",
+  "interpretation": "Intel, Removed, both windows, materiality_score desc."
+ },
+ {
+  "id": 32,
+  "sql": "SELECT change_type, COUNT(*) AS n FROM alignment_changes WHERE item='7' AND change_type IS NOT NULL GROUP BY change_type ORDER BY n DESC",
+  "interpretation": "Item 7, all companies/years, count by change_type (non-null)."
+ },
+ {
+  "id": 33,
+  "sql": "SELECT change_type, COUNT(*) AS n FROM alignment_changes WHERE company='qcom' AND current_year=2024 AND change_type IS NOT NULL GROUP BY change_type ORDER BY n DESC",
+  "interpretation": "QCOM, current_year 2024, count by change_type (non-null)."
+ },
+ {
+  "id": 34,
+  "sql": "SELECT change_type, item, COUNT(*) AS n FROM alignment_changes WHERE company='bac' AND current_year=2024 AND change_type IS NOT NULL GROUP BY change_type, item ORDER BY change_type, item",
+  "interpretation": "BAC, current_year 2024, count by change_type and item (non-null change_type)."
+ },
+ {
+  "id": 35,
+  "sql": "SELECT company, COUNT(*) AS n FROM alignment_changes WHERE current_year=2025 GROUP BY company ORDER BY n DESC",
+  "interpretation": "current_year 2025, all rows per company."
+ },
+ {
+  "id": 36,
+  "sql": "SELECT status, COUNT(*) AS n FROM alignment_changes WHERE company='gs' AND current_year=2024 GROUP BY status ORDER BY n DESC",
+  "interpretation": "GS, current_year 2024, count by status."
+ },
+ {
+  "id": 37,
+  "sql": "SELECT company, change_type, COUNT(*) AS n FROM alignment_changes WHERE company IN ('bac','jpm') AND previous_year=2024 AND current_year=2025 AND change_type IS NOT NULL GROUP BY company, change_type ORDER BY company, n DESC",
+  "interpretation": "BAC and JPM, 2024->2025 window, count by company and change_type (non-null)."
+ },
+ {
+  "id": 38,
+  "sql": "SELECT company, COUNT(*) AS n FROM alignment_changes WHERE company IN ('intc','amd','nvda','avgo','qcom','mu') AND current_year=2025 AND material='Yes' GROUP BY company ORDER BY n DESC",
+  "interpretation": "Chipmakers, current_year 2025, material Yes, per company."
+ },
+ {
+  "id": 39,
+  "sql": "SELECT current_year, change_type, COUNT(*) AS n FROM alignment_changes WHERE company='intc' AND change_type IS NOT NULL GROUP BY current_year, change_type ORDER BY current_year, n DESC",
+  "interpretation": "Intel, both windows (current_year 2024 vs 2025), count by change_type (non-null)."
+ },
+ {
+  "id": 40,
+  "sql": "SELECT company, COUNT(*) AS n FROM alignment_changes WHERE lexical_label IS NOT NULL AND semantic_label IS NOT NULL AND lexical_label <> semantic_label GROUP BY company ORDER BY n DESC",
+  "interpretation": "Lexical vs semantic disagreements per company, no year filter."
+ },
+ {
+  "id": 41,
+  "sql": "SELECT value FROM chatbot_synthesis_trends WHERE company='amd' AND kind='calculated_metric' AND metric='Gross margin' AND year=2024",
+  "interpretation": "AMD calculated Gross margin, fiscal 2024 (percent)."
+ },
+ {
+  "id": 42,
+  "sql": "SELECT growth_pct AS value FROM chatbot_synthesis_trends WHERE company='amd' AND kind='year_over_year_change' AND metric='Revenue from Contract with Customer, Excluding Assessed Tax' AND from_year=2024 AND to_year=2025",
+  "interpretation": "AMD revenue YoY growth_pct, 2024->2025 (percent)."
+ },
+ {
+  "id": 43,
+  "sql": "SELECT growth_pct AS value FROM chatbot_synthesis_trends WHERE company='gs' AND kind='year_over_year_change' AND metric='Earnings Per Share, Diluted' AND from_year=2023 AND to_year=2024",
+  "interpretation": "GS diluted EPS YoY growth_pct, 2023->2024 (percent)."
+ },
+ {
+  "id": 44,
+  "sql": "SELECT value FROM chatbot_synthesis_trends WHERE company='amd' AND kind='calculated_metric' AND metric='Net margin' AND year=2025",
+  "interpretation": "AMD calculated Net margin, fiscal 2025 (percent)."
+ },
+ {
+  "id": 45,
+  "sql": "SELECT year, value AS operating_margin_pct FROM chatbot_synthesis_trends WHERE company='amd' AND kind='calculated_metric' AND metric='Operating margin' AND year BETWEEN 2023 AND 2025 ORDER BY year",
+  "interpretation": "AMD Operating margin for fiscal 2023, 2024, 2025."
+ },
+ {
+  "id": 46,
+  "sql": "SELECT item, COUNT(*) FILTER (WHERE change_type='Removed') AS n_removed, COUNT(*) AS n_total, ROUND(100.0*COUNT(*) FILTER (WHERE change_type='Removed')/COUNT(*),2) AS pct_removed FROM alignment_changes WHERE company='jpm' AND current_year=2025 GROUP BY item ORDER BY pct_removed DESC",
+  "interpretation": "JPM, current_year 2025, per item: removed rows as % of all the item's alignments, ranked desc."
+ },
+ {
+  "id": 47,
+  "sql": "SELECT AVG(materiality_score) AS value FROM alignment_changes WHERE company='ms' AND current_year=2025",
+  "interpretation": "MS, current_year 2025, mean materiality_score over all scored rows (plain-noun changes)."
+ },
+ {
+  "id": 48,
+  "sql": "SELECT company, COUNT(*) AS n_analysed, COUNT(*) FILTER (WHERE material='Yes') AS n_material, ROUND(100.0*COUNT(*) FILTER (WHERE material='Yes')/COUNT(*),2) AS pct_material FROM alignment_changes WHERE current_year=2025 AND analysis_status='completed' GROUP BY company HAVING 100.0*COUNT(*) FILTER (WHERE material='Yes')/COUNT(*) > 30 ORDER BY pct_material DESC",
+  "interpretation": "current_year 2025, analysed rows; companies whose material share > 30%."
+ },
+ {
+  "id": 49,
+  "sql": "SELECT company, COUNT(*) AS n_total, COUNT(*) FILTER (WHERE status='needs_review') AS n_needs_review, ROUND(100.0*COUNT(*) FILTER (WHERE status='needs_review')/COUNT(*),2) AS pct_needs_review FROM alignment_changes WHERE current_year=2024 GROUP BY company ORDER BY pct_needs_review DESC",
+  "interpretation": "current_year 2024, per company needs_review rows as % of all alignments."
+ },
+ {
+  "id": 50,
+  "sql": "SELECT section, COUNT(*) AS n_material FROM alignment_changes WHERE company='gs' AND current_year=2025 AND material='Yes' GROUP BY section ORDER BY n_material DESC, section",
+  "interpretation": "GS, current_year 2025, material Yes, count per section heading, ranked desc."
+ },
+ {
+  "id": 51,
+  "sql": "SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY materiality_score) AS value FROM alignment_changes WHERE current_year=2025 AND change_type='New' AND materiality_score IS NOT NULL",
+  "interpretation": "current_year 2025, New, median (percentile_cont) materiality_score."
+ },
+ {
+  "id": 52,
+  "sql": "SELECT company, COUNT(*) FILTER (WHERE current_year=2024) AS new_2024, COUNT(*) FILTER (WHERE current_year=2025) AS new_2025, COUNT(*) FILTER (WHERE current_year=2025) - COUNT(*) FILTER (WHERE current_year=2024) AS increase FROM alignment_changes WHERE change_type='New' GROUP BY company ORDER BY increase DESC",
+  "interpretation": "New rows per company in 2024 vs 2025 filings; increase = 2025 minus 2024, ranked desc."
+ },
+ {
+  "id": 53,
+  "sql": "SELECT disclosure_taxonomy, AVG(materiality_score) AS avg_materiality, COUNT(materiality_score) AS n_scored FROM alignment_changes WHERE current_year=2025 AND materiality_score IS NOT NULL GROUP BY disclosure_taxonomy ORDER BY avg_materiality DESC",
+  "interpretation": "current_year 2025, mean materiality_score per taxonomy, ranked desc."
+ },
+ {
+  "id": 54,
+  "sql": "SELECT company, COUNT(*) FILTER (WHERE change_type='Removed') AS n_removed, COUNT(*) FILTER (WHERE change_type='New') AS n_new FROM alignment_changes WHERE current_year=2024 GROUP BY company HAVING COUNT(*) FILTER (WHERE change_type='Removed') > COUNT(*) FILTER (WHERE change_type='New') ORDER BY company",
+  "interpretation": "current_year 2024, companies with more Removed than New rows."
+ },
+ {
+  "id": 55,
+  "sql": "SELECT 100.0*COUNT(*) FILTER (WHERE item='1A')/COUNT(*) AS value FROM alignment_changes WHERE company='nvda' AND current_year=2025 AND material='Yes'",
+  "interpretation": "NVDA, current_year 2025, material Yes: % in Item 1A."
+ },
+ {
+  "id": 56,
+  "sql": "SELECT section, COUNT(*) AS n_changed FROM alignment_changes WHERE company='jpm' AND current_year=2024 AND item='7' AND change_type IN ('Modified','Reworded','Expanded','Reduced','New','Removed') GROUP BY section ORDER BY n_changed DESC, section",
+  "interpretation": "JPM, current_year 2024, Item 7, changed change_types, count per section ranked desc (full table)."
+ },
+ {
+  "id": 57,
+  "sql": "SELECT COUNT(*) AS n FROM alignment_changes WHERE materiality_score = 1",
+  "interpretation": "All rows with materiality_score = 1, no year filter."
+ },
+ {
+  "id": 58,
+  "sql": "SELECT COUNT(*) FILTER (WHERE current_year=2024) AS material_2024, COUNT(*) FILTER (WHERE current_year=2025) AS material_2025, COUNT(*) FILTER (WHERE current_year=2025) - COUNT(*) FILTER (WHERE current_year=2024) AS difference FROM alignment_changes WHERE company='bac' AND material='Yes'",
+  "interpretation": "BAC material Yes counts for current_year 2024 vs 2025, and 2025 minus 2024."
+ },
+ {
+  "id": 59,
+  "sql": "SELECT change_type, AVG(materiality_score) AS avg_materiality, COUNT(materiality_score) AS n_scored FROM alignment_changes WHERE change_type IS NOT NULL AND materiality_score IS NOT NULL GROUP BY change_type ORDER BY avg_materiality DESC",
+  "interpretation": "All companies/years, mean materiality_score per change_type, ranked desc."
+ },
+ {
+  "id": 60,
+  "sql": "SELECT AVG(word_count_delta) AS value FROM alignment_changes WHERE company='intc' AND change_type='Expanded'",
+  "interpretation": "Intel, Expanded, both windows, mean word_count_delta."
+ }
+]

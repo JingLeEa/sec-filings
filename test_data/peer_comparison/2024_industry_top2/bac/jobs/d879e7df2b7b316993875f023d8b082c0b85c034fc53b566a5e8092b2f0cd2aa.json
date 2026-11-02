@@ -1,0 +1,372 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "33848b8d31d474e1c2a85ab197d4c17f54b762b6dbc5bd508c7cc5301188b29a",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D089",
+    "item": "7",
+    "target_topic": "GWIM Net Interest Income Drivers",
+    "target_summary": "Net interest income decreased $178 million to $7.0 billion, primarily driven by lower average deposit balances.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0254",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report Net Interest Income for the Global Wealth & Investment Management segment. D082 reports a decrease of $319 million to $7.1 billion driven by lower deposit balances and mix shift. D089 reports a decrease of $178 million to $7.0 billion driven by lower deposit balances. They address the same specific financial line item and segment.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D082",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Wealth & Investment Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income decreased $319 million to $7.1 billion, primarily driven by lower average deposit balances and a portfolio mix shift to higher yielding deposit products.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D089",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Wealth & Investment Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income decreased $178 million to $7.0 billion, primarily driven by lower average deposit balances.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.611724,
+            "sequence_match_ratio": 0.681818,
+            "length_ratio": 0.62963,
+            "word_count_delta": -10,
+            "added_tokens_sample": [
+              "178",
+              "0"
+            ],
+            "removed_tokens_sample": [
+              "319",
+              "1",
+              "and",
+              "a",
+              "portfolio",
+              "mix",
+              "shift",
+              "to",
+              "higher",
+              "yielding",
+              "deposit",
+              "products"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D082",
+            "score": 1.005507,
+            "normalised_score": 1.0055,
+            "label": "Unchanged",
+            "rationale": "Score 100.55% of ceiling — semantically identical despite surface differences (word overlap 48%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The disclosure changed from attributing NII decline to 'portfolio mix shift' in 2023 to omitting that specific driver in 2024, while the primary driver (lower deposit balances) remained consistent. This appears to be a simplification or refinement of explanation for a continuing trend, not a material change in the nature of the income or expense.",
+          "key_change": "Refinement of Net Interest Income decline drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0021",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "Previous D089 reports Net Interest Income changes for Global Wealth & Investment Management (GWIM). The automatic search found no specific NII change disclosure for the GWIM segment in 2025. Current D087 reports NII for GWIM but combines it with income and expense; however, D089 is a distinct single-metric disclosure that does not have a direct single-metric counterpart in the proposed groups or search results. D087 is a multi-metric disclosure. Given the instruction to split groups, D089 stands alone as no specific single-NII counterpart for GWIM was found in the provided candidates (D070 is Consumer Banking).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D089",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Business Segment Operations > Global Wealth & Investment Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Net interest income decreased $178 million to $7.0 billion, primarily driven by lower average deposit balances.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -17,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "net",
+              "interest",
+              "income",
+              "decreased",
+              "178",
+              "million",
+              "to",
+              "7",
+              "0",
+              "billion",
+              "primarily",
+              "driven",
+              "by",
+              "lower",
+              "average",
+              "deposit",
+              "balances"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure details specific Net Interest Income (NII) performance for the 'Global Wealth & Investment Management' segment. While 2025 contains related data, the specific single-metric disclosure for NII changes is not present as a distinct item. The removal of specific performance attribution for NII in a key revenue-generating segment constitutes a meaningful change in operational transparency.",
+          "key_change": "Removal of GWIM segment NII performance disclosure"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D343",
+            "peer_topic": "FY 2024 Net Interest Income and Margin Performance",
+            "peer_summary": "Citi's 2024 net interest income decreased 1% to $54.1 billion ($54.2 billion TEB), primarily due to lower non-Markets income from higher mortgage-backed securities funding costs in Corporate Treasury and lower Argentina investment revenue, partially offset by USPB and Wealth growth. The 2024 net interest margin decreased to 2.40% TEB from 2.46% in 2023, driven by the Argentina and funding cost factors.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.227432,
+            "relationship": "same_topic",
+            "comparison": "Both Bank of America and Citi report a decrease in net interest income (NII) for 2024, though the magnitudes and primary drivers differ. BAC attributes its $178 million decrease ($7.0 billion total) specifically to lower average deposit balances. In contrast, Citi's broader NII decreased by only 1% ($0.8 billion to $54.1 billion), driven by a combination of higher funding costs in Corporate Treasury (MBS portfolio) and lower revenue from Argentina, partially offset by growth in USPB and Wealth segments. While BAC's decline is isolated to deposit volume reduction, Citi's decline reflects structural funding cost pressures and geographic mix effects alongside specific business line dynamics.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D089",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P100_S001",
+                    "paragraph_id": "bac_2024_7_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest income decreased $178 million to $7.0 billion primarily driven by lower average deposit balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D343",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P492_S001",
+                    "paragraph_id": "c_2024_7_P492",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Citi's net interest income for 2024 decreased 1%, or approximately $0.8 billion, to $54.1 billion ($54.2 billion on a taxable equivalent basis) versus the prior year.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "c_2024_7_P492_S002",
+                    "paragraph_id": "c_2024_7_P492",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "The decrease was primarily due to a decrease in non-Markets net interest income, largely driven by higher funding costs in the mortgage-backed securities portfolio in Corporate Treasury within All Other and lower revenue from Citi's net investment in Argentina, partially offset by growth in USPB and Wealth.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D050",
+            "peer_topic": "Net Interest Income Growth and Drivers",
+            "peer_summary": "Net interest income for 2024 was $8.06 billion, representing a 27% increase from 2023, driven by higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by a decrease in deposits with banks.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.18961,
+            "relationship": "same_topic",
+            "comparison": "Unlike BAC, which reported a decline in net interest income, Goldman Sachs reported a significant increase in NII for 2024. BAC's NII decreased by $178 million due to lower average deposit balances. Goldman Sachs' NII increased 27% to $8.06 billion, driven by higher interest income from trading assets, investments, and collateralized agreements due to higher balances and rates, partially offset by a decrease in deposits with banks. This highlights a divergent performance where BAC suffered from deposit outflows or lower balances, while GS benefited from growth in trading and investment balances.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D089",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P100_S001",
+                    "paragraph_id": "bac_2024_7_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest income decreased $178 million to $7.0 billion primarily driven by lower average deposit balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P054_S002",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Net interest income in the consolidated statements of earnings was $8.06 billion for 2024, 27% higher than 2023, reflecting an increase in interest income, partially offset by an increase in interest expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P054_S003",
+                    "paragraph_id": "gs_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "The increase in interest income primarily related to trading assets and investments (each reflecting the impact of higher average balances and higher average interest rates), collateralized agreements and other interest-earning assets (each reflecting the impact of higher average interest rates), partially offset by a decrease in interest income related to deposits with banks (reflecting the impact of lower average balances).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D040",
+            "peer_topic": "Net Interest Income Drivers",
+            "peer_summary": "Net interest income increased, driven by balance sheet actions including reinvestments in investment securities, higher revolving card balances, the timing impact of First Republic, higher wholesale deposit balances, and higher Markets net interest income, largely offset by deposit margin compression and lower average deposit balances in CCB.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.34662,
+            "relationship": "same_topic",
+            "comparison": "BAC and JPM exhibit contrasting trends in net interest income and different drivers regarding deposits. BAC reported a decrease in NII driven by lower average deposit balances. JPMorgan, however, reported an increase in NII driven by balance sheet actions including reinvestments in investment securities and higher wholesale deposit balances. Although JPM also cited 'lower average deposit balances in CCB' as an offsetting factor, its overall NII grew due to strong performance in Card Services, Markets, and investment securities, whereas BAC's overall NII declined.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D089",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P100_S001",
+                    "paragraph_id": "bac_2024_7_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest income decreased $178 million to $7.0 billion primarily driven by lower average deposit balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D040",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P063_S001",
+                    "paragraph_id": "jpm_2024_7_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Net interest income increased driven by the impact of balance sheet actions, primarily reinvestments in the investment securities portfolio, higher revolving balances in Card Services, the timing impact of First Republic, higher wholesale deposit balances and higher Markets net interest income.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P063_S002",
+                    "paragraph_id": "jpm_2024_7_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "These factors were largely offset by deposit margin compression across the lines of business and lower average deposit balances in CCB.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D061",
+            "peer_topic": "Wealth Management Net Interest Revenue Performance and Drivers",
+            "peer_summary": "Wealth Management net interest revenues decreased 10% year-over-year to $7,313 million in 2024, primarily driven by lower average sweep deposits, partially offset by higher investment portfolio yields and lending growth.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.235707,
+            "relationship": "same_topic",
+            "comparison": "Morgan Stanley and Bank of America both experienced declines in net interest revenue/income driven by lower deposit balances, but the segments and magnitudes differ. BAC reported a $178 million decrease in NII primarily due to lower average deposit balances across its global operations. Morgan Stanley's Wealth Management division saw a 10% decrease in net interest revenues ($7,313 million) primarily due to lower average sweep deposits. While both cite lower deposit balances as a primary headwind, Morgan Stanley's disclosure is specific to the Wealth Management segment's sweep deposits, whereas BAC's is a company-wide metric for its Global Wealth & Investment Management segment but reflected in the overall NII decrease.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D089",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P100_S001",
+                    "paragraph_id": "bac_2024_7_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Net interest income decreased $178 million to $7.0 billion primarily driven by lower average deposit balances.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D061",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P064_S001",
+                    "paragraph_id": "ms_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Net interest revenues of $7,313 million in 2024 decreased 10% compared with the prior year, primarily due to lower average sweep deposits, partially offset by higher yields on our investment portfolio and lending growth.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,379 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "bc75862184a0947583f178a4fcc0991f58ec096f40dac177e6759c5af84981b5",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_8_D338",
+    "item": "8",
+    "target_topic": "Risk-based and leverage ratio regulatory minimums",
+    "target_summary": "Risk-based capital regulatory minimums include a capital conservation buffer of 2.5 percent, and the leverage ratio minimums correspond to the levels required to be considered well capitalized under the Prompt Corrective Action framework.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0831",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Previous disclosure D334 details both the components of the CET1 capital regulatory minimum (4.5% + G-SIB + buffer) and the risk-based leverage minimums (2.5% buffer + PCA well-capitalized threshold). The current year splits these topics: D337 covers the CET1 minimums (4.5% + G-SIB + SCB) and D338 covers the risk-based/leverage minimums (2.5% buffer + PCA). The specific topics align across the split.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_8_D334",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The CET1 capital minimum includes a 4.5% base, a 2.5% G-SIB surcharge, and a 2.5% buffer (conservation or stress depending on approach), with a zero countercyclical buffer; risk-based capital minimums include a 2.5% conservation buffer, and leverage minimums align with the PCA well-capitalized threshold.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D337",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The CET1 capital regulatory minimum includes the Corporation's G-SIB surcharge and statutory capital buffer (SCB), while the SLR regulatory minimum includes a 2.0 percent leverage buffer; countercyclical capital buffers were zero for both periods.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D338",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Risk-based capital regulatory minimums include a capital conservation buffer of 2.5 percent, and the leverage ratio minimums correspond to the levels required to be considered well capitalized under the Prompt Corrective Action framework.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.936371,
+            "sequence_match_ratio": 0.792982,
+            "length_ratio": 0.925676,
+            "word_count_delta": -11,
+            "added_tokens_sample": [
+              "3",
+              "0",
+              "at",
+              "december",
+              "31",
+              "2024",
+              "scb",
+              "under",
+              "the",
+              "standardized",
+              "approach",
+              "of",
+              "2",
+              "2024",
+              "and",
+              "2",
+              "5",
+              "percent",
+              "at",
+              "december"
+            ],
+            "removed_tokens_sample": [
+              "common",
+              "equity",
+              "tier",
+              "1",
+              "2",
+              "5",
+              "the",
+              "corporation's",
+              "capital",
+              "conservation",
+              "buffer",
+              "of",
+              "2",
+              "5",
+              "percent",
+              "under",
+              "the",
+              "advanced",
+              "approaches",
+              "or"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2023_8_D334",
+            "score": 0.918505,
+            "normalised_score": 0.9185,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 91.85% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.85,
+          "reason": "The disclosure reveals a change in the company's G-SIB surcharge (increased to 3.0% at year-end 2024) and the application of the Stress Capital Buffer (SCB) under the Standardized approach versus the Capital Conservation Buffer under Advanced approaches. These changes to regulatory capital minimums materially affect the company's required capital levels and leverage ratios.",
+          "key_change": "Change in G-SIB surcharge and capital buffer application"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0855",
+        "relationship": "many_to_one",
+        "status": "needs_review",
+        "review_reasons": [
+          "input_extraction_needs_review"
+        ],
+        "explanation": "Both disclosures address the specific reason for the difference between Total capital under Advanced approaches and the Standardized approach. Previous D339 sentence (4) states this difference is due to 'differences in the amount permitted in Tier 2 capital related to the qualifying allowance for credit losses.' Current D335 sentence (4) contains the identical explanation: 'Total capital under the Advanced approaches differs from the Standardized approach due to differences in the amount permitted in Tier 2 capital related to the qualifying allowance for credit losses.'\n\nPrevious D337 and D338 detail the components of regulatory capital minimums (CET1/SRB/G-SIB, SLR leverage buffer, risk-based conservation buffer, PCA well-capitalized thresholds). Current D335 combines these specific definitions into a single disclosure: sentence (2) defines CET1 minimums including G-SIB and SCB; sentence (3) defines SLR leverage buffer; sentence (4) defines risk-based capital regulatory minimums including the conservation buffer; and sentence (5) defines leverage ratio minimums under PCA. These four sentences in Current D335 map directly to the subjects covered by Previous D337 and D338.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_8_D337",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The CET1 capital regulatory minimum includes the Corporation's G-SIB surcharge and statutory capital buffer (SCB), while the SLR regulatory minimum includes a 2.0 percent leverage buffer; countercyclical capital buffers were zero for both periods.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D338",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Risk-based capital regulatory minimums include a capital conservation buffer of 2.5 percent, and the leverage ratio minimums correspond to the levels required to be considered well capitalized under the Prompt Corrective Action framework.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_8_D339",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total capital under the Advanced approaches differs from the Standardized approach due to differences in the amount permitted in Tier 2 capital related to the qualifying allowance for credit losses.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_8_D335",
+            "item": "8",
+            "section": "Report of Independent Registered Public Accounting Firm > NOTE 16 Regulatory Requirements and Restrictions",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The regulatory capital ratios include specific components such as a G-SIB surcharge, SCB, capital conservation buffer, and leverage buffer, with Total capital under Advanced approaches differing from Standardized due to Tier 2 capital allowances for credit losses.",
+            "extraction_status": "needs_review"
+          }
+        ],
+        "change_analysis": {
+          "status": "not_started",
+          "lexical": null,
+          "semantic": null,
+          "llm": null,
+          "final_taxonomy": null
+        },
+        "materiality_analysis": null
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_8_D419",
+            "peer_topic": "Regulatory Capital Status",
+            "peer_summary": "Citigroup and Citibank were classified as \"well capitalized\" under federal bank regulatory agency definitions as of December 31, 2024 and 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.136138,
+            "relationship": "same_topic",
+            "comparison": "Both Bank of America (BAC) and Citigroup (C) explicitly reference the 'well capitalized' status under the Prompt Corrective Action (PCA) framework regarding their leverage ratios. BAC states that its leverage ratio minimums correspond to the levels required to be considered well capitalized under the PCA framework, while C reports that it was classified as 'well capitalized' under federal bank regulatory agency definitions as of December 31, 2024 and 2023.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D338",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P411_S002",
+                    "paragraph_id": "bac_2024_8_P411",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The regulatory minimums for the leverage ratios as of both period ends are the percent required to be considered well capitalized under the PCA framework.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_8_D419",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_8_P587_S001",
+                    "paragraph_id": "c_2024_8_P587",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "As indicated in the table above, Citigroup and Citibank were \"well capitalized\" under the current federal bank regulatory agencies definitions as of December 31, 2024 and 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_8_D450",
+            "peer_topic": "Detailed Capital Ratio Definitions and Buffer Specifications",
+            "peer_summary": "Definitions clarify that the CET1, Tier 1, and Total capital minimums include buffers, with the countercyclical buffer set to zero percent, and that well-capitalized requirements bind for leverage ratios.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.17639,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures define the regulatory minimums for capital ratios by including buffers and referencing the 'well-capitalized' binding requirements for leverage. BAC notes that its leverage ratio minimums correspond to the 'well capitalized' level under the PCA framework. GS clarifies in its table definitions that while CET1, Tier 1, and Total capital minimums include buffers, the 'well-capitalized' requirements are the binding requirements for leverage ratios.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D338",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P411_S002",
+                    "paragraph_id": "bac_2024_8_P411",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The regulatory minimums for the leverage ratios as of both period ends are the percent required to be considered well capitalized under the PCA framework.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_8_D450",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_8_P585_S003",
+                    "paragraph_id": "gs_2024_8_P585",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "• The \"well-capitalized\" requirements are the binding requirements for leverage ratios.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_8_D549",
+            "peer_topic": "Risk-Based Regulatory Capital Requirements",
+            "peer_summary": "The table presents risk-based regulatory capital ratio requirements and well-capitalized ratios for the Firm and JPMorgan Chase Bank, N.A. as of December 31, 2024 and 2023.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.147422,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures address the presentation of risk-based regulatory capital ratio requirements and well-capitalized ratios. BAC describes the specific composition of these minimums (Basel 3 with a 2.5% conservation buffer and PCA 'well capitalized' leverage standards). JPM presents a table that explicitly lists these 'risk-based regulatory capital ratio requirements and well-capitalized ratios' for the Firm and its bank subsidiary, serving the same informational purpose of defining the regulatory thresholds.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D338",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P411_S001",
+                    "paragraph_id": "bac_2024_8_P411",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "(3)Risk-based capital regulatory minimums at both December 31, 2024 and 2023 are the minimum ratios under Basel 3 including a capital conservation buffer of 2.5 percent.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "bac_2024_8_P411_S002",
+                    "paragraph_id": "bac_2024_8_P411",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The regulatory minimums for the leverage ratios as of both period ends are the percent required to be considered well capitalized under the PCA framework.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_8_D549",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_8_P817_S001",
+                    "paragraph_id": "jpm_2024_8_P817",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The following table presents the risk-based regulatory capital ratio requirements and well-capitalized ratios to which the Firm and JPMorgan Chase Bank, N.A. were subject as of December 31, 2024 and 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_8_D377",
+            "peer_topic": "Leverage-Based Capital Requirements",
+            "peer_summary": "Leverage-based capital requirements include a minimum Tier 1 leverage ratio of 4%, a minimum SLR of 3%, and an enhanced SLR capital buffer of at least 2%.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.13733,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures discuss leverage-based capital requirements within the context of regulatory minimums. BAC identifies that its leverage ratio minimums align with the 'well capitalized' level under the PCA framework. Morgan Stanley (MS) provides specific quantitative details for its leverage-based requirements, including a minimum Tier 1 leverage ratio of 4%, a minimum SLR of 3%, and an enhanced SLR capital buffer, illustrating the specific components of the leverage standards that BAC references generally.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_8_D338",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_8_P411_S002",
+                    "paragraph_id": "bac_2024_8_P411",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The regulatory minimums for the leverage ratios as of both period ends are the percent required to be considered well capitalized under the PCA framework.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_8_D377",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_8_P475_S002",
+                    "paragraph_id": "ms_2024_8_P475",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Leverage-based capital requirements include a minimum Tier 1 leverage ratio of 4%, a minimum SLR of 3% and an enhanced SLR capital buffer of at least 2%.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

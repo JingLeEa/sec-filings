@@ -1,0 +1,427 @@
+{
+  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
+  "request_hash": "1674c118bb6ab07d35c85895301d658439eaaa968ba9866c215865faea599777",
+  "result": {
+    "target_ticker": "AVGO",
+    "target_disclosure_id": "avgo_2024_7_D060",
+    "item": "7",
+    "target_topic": "Interest expense increase due to VMware Merger debt",
+    "target_summary": "Interest expense increased to $3,953 million in fiscal year 2024 from $1,622 million in 2023, primarily due to interest on debt incurred for the VMware Merger.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "avgo_2023_2024_M0285",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures analyze the change in Interest Expense. D058 reports a decrease to $1,622M due to lack of extinguishment losses, noting expected additional expense from VMware merger debt. D060 reports an increase to $3,953M due to interest on debt incurred for the VMware Merger. They share the specific topic of interest expense trends and VMware merger impact.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2023_7_D058",
+            "item": "7",
+            "section": "Results of Operations > Non-Operating Income and Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Interest expense decreased to $1,622 million in fiscal year 2023 from $1,737 million in 2022, primarily due to a lack of losses on extinguishment of debt which occurred in 2022, and the company expects additional interest expense in the future due to indebtedness from the VMware Merger.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Non-Operating Income and Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Interest expense increased to $3,953 million in fiscal year 2024 from $1,622 million in 2023, primarily due to interest on debt incurred for the VMware Merger.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.607246,
+            "sequence_match_ratio": 0.527473,
+            "length_ratio": 0.568966,
+            "word_count_delta": -25,
+            "added_tokens_sample": [
+              "3",
+              "953",
+              "622",
+              "2024",
+              "and",
+              "increase",
+              "primarily",
+              "interest",
+              "for"
+            ],
+            "removed_tokens_sample": [
+              "1",
+              "622",
+              "737",
+              "and",
+              "2022",
+              "decrease",
+              "losses",
+              "extinguishment",
+              "of",
+              "related",
+              "to",
+              "debt",
+              "transactions",
+              "in",
+              "fiscal",
+              "year",
+              "2022",
+              "we",
+              "expect",
+              "to"
+            ]
+          },
+          "semantic": {
+            "matched_id": "avgo_2023_7_D058",
+            "score": 0.99212,
+            "normalised_score": 0.9921,
+            "label": "Unchanged",
+            "rationale": "Score 99.21% of ceiling — semantically identical despite surface differences (word overlap 42%).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.95,
+          "reason": "Interest expense more than doubled (from $1,622M to $3,953M) due to the debt incurred for the VMware Merger. This is a material change in the company's financial condition and cost structure, directly impacting net income and leverage ratios. The shift from a 'lack of extinguishment losses' driving a decrease to 'merger debt' driving an increase is substantive.",
+          "key_change": "Doubling of interest expense due to VMware merger debt"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "avgo_2024_2025_M0243",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures cover interest expense and its primary drivers. The 2024 disclosure cites an increase to $3,953 million due to debt for the VMware Merger (S001-S003), while the 2025 disclosure cites a decrease to $3,210 million due to reduced debt balances and refinancing (S001-S003).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "avgo_2024_7_D060",
+            "item": "7",
+            "section": "Results of Operations > Non-Operating Income and Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Interest expense increased to $3,953 million in fiscal year 2024 from $1,622 million in 2023, primarily due to interest on debt incurred for the VMware Merger.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "avgo_2025_7_D056",
+            "item": "7",
+            "section": "Results of Operations > Non-Operating Income and Expenses",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Interest expense decreased to $3,210 million in fiscal year 2025 from $3,953 million in 2024, primarily due to reduced outstanding debt balances and refinancing activities that lowered effective interest rates.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.611706,
+            "sequence_match_ratio": 0.481013,
+            "length_ratio": 1.393939,
+            "word_count_delta": 13,
+            "added_tokens_sample": [
+              "210",
+              "3",
+              "953",
+              "2025",
+              "and",
+              "decrease",
+              "from",
+              "a",
+              "reduction",
+              "in",
+              "outstanding",
+              "debt",
+              "balances",
+              "and",
+              "debt",
+              "refinancing",
+              "activities",
+              "that",
+              "drove",
+              "lower"
+            ],
+            "removed_tokens_sample": [
+              "953",
+              "1",
+              "622",
+              "and",
+              "2023",
+              "increase",
+              "due",
+              "interest",
+              "on",
+              "debt",
+              "incurred",
+              "for",
+              "vmware",
+              "merger"
+            ]
+          },
+          "semantic": {
+            "matched_id": "avgo_2024_7_D060",
+            "score": 0.857902,
+            "normalised_score": 0.8579,
+            "label": "Expanded",
+            "rationale": "Score 85.79% of ceiling — content grew from ~31 to ~44 words (1.4×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "Interest expense decreased significantly by approximately 19% ($743 million) from $3,953 million to $3,210 million. The primary driver changed from debt incurred for a specific acquisition (VMware) to reduced debt balances and refinancing activities lowering effective interest rates. This reflects a material shift in the company's capital structure costs and debt management strategy.",
+          "key_change": "Significant reduction in interest expense due to debt reduction and refinancing"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D037",
+            "peer_topic": "Interest Expense Variation and Debt Repayment",
+            "peer_summary": "Interest expense decreased to $92 million in 2024 from $106 million in 2023, primarily driven by the repayment of the 2.95% Senior Notes due in June 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.262297,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and AMD disclose specific drivers for their 2024 interest expense changes. AVGO experienced a significant increase in interest expense ($3,953 million vs $1,622 million in 2023) primarily driven by debt incurred for the VMware Merger. In contrast, AMD saw a decrease in interest expense ($92 million in 2024 vs $106 million in 2023) primarily driven by the repayment of the 2.95% Senior Notes due in June 2024. While both companies attribute changes to debt-related activities, AVGO's increase was due to new debt from an acquisition, whereas AMD's decrease was due to debt repayment.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P058_S002",
+                    "paragraph_id": "avgo_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Interest expense was $3,953 million and $1,622 million for fiscal years 2024 and 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P058_S003",
+                    "paragraph_id": "avgo_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase was primarily due to interest on debt incurred for the VMware Merger.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D037",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P050_S001",
+                    "paragraph_id": "amd_2024_7_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Interest expense of $92 million in 2024 decreased by $14 million compared to $106 million in 2023, primarily due to repayment of the 2.95% Senior Notes due in June 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_7_D095",
+            "peer_topic": "Components of Interest and Other, Net",
+            "peer_summary": "In 2024, interest and other, net decreased due to higher interest expense from increased average borrowings and a decrease in other, net. The change in other, net included a $755 million loss from a derivative related to potential liquidated damages with Apollo and a $560 million benefit from interest related to an EC competition matter.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.1406,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and INTC report higher interest expense in 2024 due to increased borrowing. AVGO states its interest expense increased to $3,953 million primarily due to interest on debt incurred for the VMware Merger. INTC states that interest and other, net decreased primarily due to higher interest expense resulting from higher 2024 average borrowings. Both companies cite increased debt levels as the primary driver for the rise in their respective interest expense metrics, although AVGO specifies an acquisition-related debt while INTC cites general average borrowing increases.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P058_S002",
+                    "paragraph_id": "avgo_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Interest expense was $3,953 million and $1,622 million for fiscal years 2024 and 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P058_S003",
+                    "paragraph_id": "avgo_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase was primarily due to interest on debt incurred for the VMware Merger.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "disclosure_id": "intc_2024_7_D095",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P090_S001",
+                    "paragraph_id": "intc_2024_7_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "In 2024, interest and other, net decreased primarily due to higher interest expense due to higher 2024 average borrowings and lower other, net.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_7_D022",
+            "peer_topic": "Interest Income and Expense Trends",
+            "peer_summary": "Net interest income (expense) deteriorated in 2024 compared to 2023 due to higher interest expenses from increased debt rates, partially offset by higher interest income from cash and investments; it had previously improved in 2023 due to higher rates on cash and investments despite higher debt balances.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.180703,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and MU disclose that interest expense increased in 2024 due to higher debt-related costs. AVGO attributes the increase to $3,953 million (from $1,622 million) to interest on debt incurred for the VMware Merger. MU reports that net interest income (expense) deteriorated due to increases in interest expense as a result of higher interest rates on debt. While both companies face rising interest expense, AVGO's driver is specifically acquisition debt, whereas MU's is attributed to higher interest rates on existing debt.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P058_S002",
+                    "paragraph_id": "avgo_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Interest expense was $3,953 million and $1,622 million for fiscal years 2024 and 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P058_S003",
+                    "paragraph_id": "avgo_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase was primarily due to interest on debt incurred for the VMware Merger.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "disclosure_id": "mu_2024_7_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_7_P022_S001",
+                    "paragraph_id": "mu_2024_7_P022",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Interest Income (Expense), Net: Interest income (expense) deteriorated for 2024 as compared to 2023 primarily due to increases in interest expense as a result of higher interest rates on our debt, partially offset by increases in interest income due to higher interest rates on our cash and investments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D061",
+            "peer_topic": "Interest Expense Components",
+            "peer_summary": "Interest expense consists of coupon interest and debt discount amortization associated with the company's notes.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.258756,
+            "relationship": "related_topic",
+            "comparison": "Both AVGO and NVDA discuss the composition of interest expense related to their notes. AVGO highlights a specific increase in interest expense to $3,953 million due to debt from the VMware Merger. NVDA defines its interest expense as comprising coupon interest and debt discount amortization related to its notes. While NVDA provides a structural definition of interest expense components without quantifying a year-over-year change in this specific sentence, AVGO provides a quantified year-over-year increase driven by new debt, showing a difference in disclosure focus between structural definition and quantitative change attribution.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "disclosure_id": "avgo_2024_7_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P058_S002",
+                    "paragraph_id": "avgo_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Interest expense was $3,953 million and $1,622 million for fiscal years 2024 and 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P058_S003",
+                    "paragraph_id": "avgo_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase was primarily due to interest on debt incurred for the VMware Merger.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D061",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P064_S001",
+                    "paragraph_id": "nvda_2024_7_P064",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Interest expense is comprised of coupon interest and debt discount amortization related to our notes.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that addresses interest expense trends or debt drivers. The available QCOM candidate (qcom_2024_7_D009) discusses investment and other income driven by interest rates on securities, which is interest income, not interest expense."
+      }
+    ]
+  }
+}

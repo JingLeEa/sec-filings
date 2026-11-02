@@ -1,0 +1,249 @@
+{
+  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
+  "request_hash": "39c17fdc32ece8c6d31759617ff53e01d2648a086d0b84f076664631b0b0198c",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_7_D037",
+    "item": "7",
+    "target_topic": "Recognition and Policy for Unrealized Tax Benefits",
+    "target_summary": "The company recognizes benefits from tax positions only if more-likely-than-not sustained upon audit, and includes interest and penalties related to unrecognized tax benefits in income tax expense.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0332",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures describe the specific accounting policy for recognizing tax benefits, requiring positions to be more-likely-than-not sustained upon audit, and the policy to include interest and penalties in income tax expense. The 2024 disclosure (D037) explicitly contains the same sentences regarding technical merits and interest/penalties policy found in the 2023 disclosure (D049).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_7_D049",
+            "item": "7",
+            "section": "Critical Accounting Policies and Estimates > Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company recognizes benefits from tax positions only if more-likely-than-not sustained upon audit, and policy dictates including interest and penalties related to unrecognized tax benefits in income tax expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D037",
+            "item": "7",
+            "section": "Critical Accounting Estimates > Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company recognizes benefits from tax positions only if more-likely-than-not sustained upon audit, and includes interest and penalties related to unrecognized tax benefits in income tax expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.902251,
+            "sequence_match_ratio": 0.794118,
+            "length_ratio": 1.518519,
+            "word_count_delta": 28,
+            "added_tokens_sample": [
+              "to",
+              "the",
+              "extent",
+              "realization",
+              "of",
+              "the",
+              "deferred",
+              "tax",
+              "assets",
+              "becomes",
+              "more",
+              "likely",
+              "than",
+              "not",
+              "we",
+              "would",
+              "recognize",
+              "such",
+              "deferred",
+              "tax"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "matched_id": "nvda_2023_7_D049",
+            "score": 0.977405,
+            "normalised_score": 0.9774,
+            "label": "Relocated",
+            "rationale": "Score 97.74% of ceiling — content is similar but section changed from 'Critical Accounting Policies and Estimates > Income Taxes' to 'Critical Accounting Estimates > Income Taxes'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The evidence shows identical sentences regarding tax position recognition and interest/penalty policy. Any lexical differences are negligible or stem from alignment artifacts with other split parts. There is no meaningful change in policy.",
+          "key_change": "No material policy change"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0317",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "nvda_2024_7_D037 discusses recognizing deferred tax assets when realization becomes more-likely-than-not. This specific aspect maps to nvda_2025_7_D032, which explicitly covers the valuation allowance and recognition of deferred tax assets upon realization becoming more-likely-than-not. Evidence: nvda_2024_7_P035_S002 supports the realization condition; nvda_2025_7_P033_S001 and nvda_2025_7_P033_S002 support the valuation allowance and recognition policy.\n\nnvda_2024_7_D037 discusses recognizing tax benefits only if more-likely-than-not sustained upon audit and including interest/penalties in expense. This maps to nvda_2025_7_D033, which covers the same tax position recognition policy and interest/penalty treatment. Evidence: nvda_2024_7_P036_S001 and nvda_2024_7_P036_S002 support the recognition and penalty policy; nvda_2025_7_P034_S001 and nvda_2025_7_P034_S002 support the corresponding 2025 policies.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D037",
+            "item": "7",
+            "section": "Critical Accounting Estimates > Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company recognizes benefits from tax positions only if more-likely-than-not sustained upon audit, and includes interest and penalties related to unrecognized tax benefits in income tax expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D032",
+            "item": "7",
+            "section": "Critical Accounting Estimates > Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Nvidia records a valuation allowance to reduce deferred tax assets to the amount believed more likely than not to be realized based on all available evidence. Deferred tax assets are recognized as income tax benefits during the period if realization becomes more-likely-than-not.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_7_D033",
+            "item": "7",
+            "section": "Critical Accounting Estimates > Income Taxes",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Benefits from tax positions are recognized only if more-likely-than-not sustained upon audit based on technical merits. Interest and penalties related to unrecognized tax benefits are included as a component of income tax expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Expanded",
+            "cosine_similarity": 0.949253,
+            "sequence_match_ratio": 0.854167,
+            "length_ratio": 1.341463,
+            "word_count_delta": 28,
+            "added_tokens_sample": [
+              "we",
+              "record",
+              "a",
+              "valuation",
+              "allowance",
+              "to",
+              "reduce",
+              "deferred",
+              "tax",
+              "assets",
+              "to",
+              "the",
+              "amount",
+              "that",
+              "is",
+              "believed",
+              "more",
+              "likely",
+              "than",
+              "not"
+            ],
+            "removed_tokens_sample": []
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "nvda_2024_7_D037",
+            "score": 0.9534,
+            "normalised_score": 0.9534,
+            "rationale": "Split: 1 previous → 2 current. Best pair scored 95.34% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.8,
+          "reason": "The disclosure was expanded to explicitly state the practice of recording a valuation allowance to reduce deferred tax assets based on all available evidence. While the recognition trigger (more-likely-than-not) remained, the explicit mention of the valuation allowance mechanism adds clarity to the financial condition and tax risk exposure, representing a meaningful refinement of the tax position disclosure.",
+          "key_change": "Explicit disclosure of valuation allowance practice for deferred tax assets"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D019",
+            "peer_topic": "Deferred tax asset valuation allowance policy",
+            "peer_summary": "A valuation allowance is recorded for deferred tax assets unless recovery is considered more-likely-than-not; conversely, if realization is deemed more-likely-than-not, existing valuation allowances may be reversed, resulting in a credit to income tax expense.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.306885,
+            "relationship": "related_topic",
+            "comparison": "Both companies apply a 'more-likely-than-not' threshold in their critical tax accounting estimates, but they address different specific tax assets. NVDA applies this threshold to recognize benefits from tax positions and determine if deferred tax assets should be recognized. AMD explicitly applies the 'more-likely-than-not' standard to assess the recoverability of deferred tax assets, requiring a valuation allowance if recovery is not deemed more-likely-than-not. While NVDA focuses on the technical merits of tax positions and the recognition timing of deferred assets based on realization probability, AMD focuses on the specific mechanic of recording/reversing valuation allowances based on the same probability threshold.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "disclosure_id": "nvda_2024_7_D037",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P035_S002",
+                    "paragraph_id": "nvda_2024_7_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "To the extent realization of the deferred tax assets becomes more-likely-than-not, we would recognize such deferred tax assets as income tax benefits during the period.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P036_S001",
+                    "paragraph_id": "nvda_2024_7_P036",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We recognize the benefit from a tax position only if it is more-likely-than-not that the position would be sustained upon audit based solely on the technical merits of the tax position.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "disclosure_id": "amd_2024_7_D019",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P027_S002",
+                    "paragraph_id": "amd_2024_7_P027",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Unless recovery is considered more-likely-than-not (a probability level of more than 50%), we will record a charge to income tax expense in the form of a valuation allowance for the deferred tax assets that we estimate will not ultimately be recoverable or maintain the valuation allowance recorded in prior periods.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P027_S003",
+                    "paragraph_id": "amd_2024_7_P027",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "When considering all available evidence, if we determine it is more-likely-than-not we will realize our deferred tax assets, we will reverse some or all of the existing valuation allowance, which would result in a credit to income tax expense and the establishment of an asset in the period of reversal.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_unrequested_peer:INTC"
+        ]
+      }
+    ]
+  }
+}

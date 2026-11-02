@@ -1,0 +1,390 @@
+{
+  "input_fingerprint": "aaacaef1efb55570f3a2e92b9ddaf588e6a272518be37e6c76ded18f94a4be7f",
+  "request_hash": "b9f97e96f5612f282c9694ef0e6a8d3e70862ede28728012a9b1da34e2f40bd3",
+  "result": {
+    "target_ticker": "JPM",
+    "target_disclosure_id": "jpm_2024_7_D384",
+    "item": "7",
+    "target_topic": "Consumer & Retail portfolio size and criticized exposure trends",
+    "target_summary": "Consumer & Retail exposure was $129.8 billion as of December 31, 2024, with criticized exposure decreasing by $1.4 billion from $8.3 billion to $6.9 billion, driven by net portfolio activity and upgrades largely offset by downgrades.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "jpm_2023_2024_M0643",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report total Consumer & Retail exposure amounts and changes in criticized exposure levels. 2023 D382 reports $127.1B exposure and $8.3B criticized; 2024 D384 reports $129.8B exposure and $6.9B criticized.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2023_7_D382",
+            "item": "7",
+            "section": "BUSINESS SEGMENT RESULTS > WHOLESALE CREDIT PORTFOLIO > Consumer & Retail",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Consumer & Retail exposure totaled $127.1 billion as of December 31, 2023, with criticized exposure increasing by $409 million to $8.3 billion from the prior year, driven by client-specific downgrades offset by upgrades.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D384",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Consumer & Retail",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Consumer & Retail exposure was $129.8 billion as of December 31, 2024, with criticized exposure decreasing by $1.4 billion from $8.3 billion to $6.9 billion, driven by net portfolio activity and upgrades largely offset by downgrades.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.735502,
+            "sequence_match_ratio": 0.526316,
+            "length_ratio": 0.938776,
+            "word_count_delta": -3,
+            "added_tokens_sample": [
+              "129",
+              "8",
+              "2024",
+              "decreased",
+              "1",
+              "4",
+              "billion",
+              "to",
+              "6",
+              "9",
+              "billion",
+              "at",
+              "december",
+              "31",
+              "2024",
+              "and",
+              "upgrades",
+              "largely",
+              "offset",
+              "by"
+            ],
+            "removed_tokens_sample": [
+              "127",
+              "1",
+              "2023",
+              "increased",
+              "409",
+              "million",
+              "7",
+              "9",
+              "billion",
+              "at",
+              "december",
+              "31",
+              "2022",
+              "to",
+              "client",
+              "specific",
+              "downgrades",
+              "predominantly",
+              "offset",
+              "by"
+            ]
+          },
+          "semantic": {
+            "matched_id": "jpm_2023_7_D382",
+            "score": 1.006083,
+            "normalised_score": 1.0061,
+            "label": "Relocated",
+            "rationale": "Score 100.61% of ceiling — content is similar but section changed from 'BUSINESS SEGMENT RESULTS > WHOLESALE CREDIT PORTFOLIO > Consumer & Retail' to 'BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Consumer & Retail'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure reports a significant change in the trend of criticized exposure for Consumer & Retail, shifting from an increase driven by downgrades in 2023 to a decrease driven by net portfolio activity and upgrades in 2024. This represents a meaningful improvement in portfolio quality.",
+          "key_change": "Reversal in Consumer & Retail criticized exposure trend"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "jpm_2024_2025_M0582",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2025 disclosure D387 combines the Consumer & Retail exposure total, criticized exposure changes, and secured/unsecured ratings into a single paragraph. The 2024 disclosures D384 (exposure total and criticized changes) and D386 (secured/unsecured breakdown) covered these same specific metrics in separate sections. D387 corresponds to both.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "jpm_2024_7_D384",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Consumer & Retail",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Consumer & Retail exposure was $129.8 billion as of December 31, 2024, with criticized exposure decreasing by $1.4 billion from $8.3 billion to $6.9 billion, driven by net portfolio activity and upgrades largely offset by downgrades.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "jpm_2024_7_D386",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Consumer & Retail",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Consumer & Retail exposure is approximately 57% secured, with unsecured exposure being approximately 80% investment-grade.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "jpm_2025_7_D387",
+            "item": "7",
+            "section": "BUSINESS SEGMENT & CORPORATE RESULTS > WHOLESALE CREDIT PORTFOLIO > Consumer & Retail",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Consumer & Retail exposure totaled $133.9 billion as of December 31, 2025, with approximately 57% of exposure secured and 77% of unsecured exposure rated investment-grade. Criticized exposure increased by $1.2 billion during the period, driven by net downgrades and new lending commitments.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.833218,
+            "sequence_match_ratio": 0.650794,
+            "length_ratio": 1.065574,
+            "word_count_delta": 4,
+            "added_tokens_sample": [
+              "133",
+              "9",
+              "2025",
+              "increased",
+              "2",
+              "to",
+              "8",
+              "0",
+              "billion",
+              "at",
+              "december",
+              "31",
+              "2025",
+              "by",
+              "net",
+              "downgrades",
+              "and",
+              "new",
+              "lending",
+              "related"
+            ],
+            "removed_tokens_sample": [
+              "129",
+              "8",
+              "2024",
+              "decreased",
+              "4",
+              "8",
+              "3",
+              "billion",
+              "at",
+              "december",
+              "31",
+              "2023",
+              "to",
+              "and",
+              "upgrades",
+              "largely",
+              "offset",
+              "by",
+              "downgrades",
+              "80"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "jpm_2024_7_D384",
+            "score": 0.984833,
+            "normalised_score": 0.9848,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 98.48% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "Critically, criticized exposure changed from a $1.4 billion decrease in 2024 to a $1.2 billion increase in 2025, signaling a deterioration in credit quality trends rather than improvement. Additionally, the percentage of unsecured investment-grade exposure dropped from 80% to 77%, indicating a shift in portfolio risk profile.",
+          "key_change": "Reversal of criticized exposure trend and decline in investment-grade coverage"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D265",
+            "peer_topic": "Credit Card Unused Lines of Credit",
+            "peer_summary": "Unused lines of credit for credit cards increased to $398.7 billion at December 31, 2024, from $390.2 billion at December 31, 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.172551,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Bank of America disclose specific trends and balances for their consumer credit portfolios, specifically focusing on credit card exposures. JPMorgan reports total Consumer & Retail exposure of $129.8 billion with a decrease in criticized exposure, while Bank of America reports on the unused lines of credit for its credit card portfolio increasing to $398.7 billion. Both companies track the dynamics of consumer credit lines, though JPM focuses on total exposure and credit quality (criticized loans) while BAC highlights the volume of unused borrowing capacity.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D384",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P561_S001",
+                    "paragraph_id": "jpm_2024_7_P561",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Consumer & Retail exposure was $129.8 billion as of December 31, 2024.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P561_S002",
+                    "paragraph_id": "jpm_2024_7_P561",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Criticized exposure decreased by $1.4 billion from $8.3 billion at December 31, 2023 to $6.9 billion at December 31, 2024, driven by net portfolio activity and upgrades, largely offset by downgrades.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D265",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P307_S001",
+                    "paragraph_id": "bac_2024_7_P307",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Unused lines of credit for credit card increased to $398.7 billion at December 31, 2024 from $390.2 billion at December 31, 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of the retrieved candidates for Citi (Corporate/Other Revenue Decline, Transformation Expenses) address consumer credit portfolio size, criticized exposure trends, or credit card performance metrics comparable to JPMorgan's Consumer & Retail disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D111",
+            "peer_topic": "Platform Solutions Credit Loss Provisions 2024",
+            "peer_summary": "Provision for credit losses increased to $1.54 billion in 2024 from $1.14 billion in 2023, primarily driven by net charge-offs in the credit card portfolio.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.134485,
+            "relationship": "same_topic",
+            "comparison": "Both JPMorgan and Goldman Sachs provide detailed analysis of credit loss provisions and credit quality drivers within their consumer/credit card portfolios. JPMorgan explicitly states that criticized exposure in its Consumer & Retail segment decreased, driven by upgrades and net activity. Similarly, Goldman Sachs reports that its provision for credit losses increased, primarily driven by net charge-offs in its credit card portfolio, indicating a focus on the same specific risk driver (credit card performance) and financial measure (provision/losses).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D384",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P561_S002",
+                    "paragraph_id": "jpm_2024_7_P561",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Criticized exposure decreased by $1.4 billion from $8.3 billion at December 31, 2023 to $6.9 billion at December 31, 2024, driven by net portfolio activity and upgrades, largely offset by downgrades.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D111",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P174_S001",
+                    "paragraph_id": "gs_2024_7_P174",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Provision for credit losses was $1.54 billion for 2024, compared with $1.14 billion for 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "gs_2024_7_P174_S002",
+                    "paragraph_id": "gs_2024_7_P174",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Provisions for 2024 reflected net provisions related to the credit card portfolio (primarily driven by net charge-offs).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D303",
+            "peer_topic": "Commercial Real Estate Lending Exposure and Amounts",
+            "peer_summary": "As of December 31, 2024 and 2023, lending against commercial real estate properties totaled $10.7 billion and $9.4 billion, respectively, representing 4.4% and 4.5% of total exposure in the Institutional Securities segment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.079207,
+            "relationship": "related_topic",
+            "comparison": "Both JPMorgan and Morgan Stanley disclose specific loan portfolio exposures and their respective trends, though in different segments. JPMorgan focuses on the 'Consumer & Retail' segment, noting a $129.8 billion exposure with decreasing criticized loans. Morgan Stanley discloses lending against commercial real estate properties within its 'Institutional Securities' segment, which increased to $10.7 billion. While both address lending exposure trends, the specific asset classes (Consumer vs. CRE) and segments differ, making this a related comparison of loan portfolio dynamics rather than the same specific topic.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D384",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P561_S001",
+                    "paragraph_id": "jpm_2024_7_P561",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Consumer & Retail exposure was $129.8 billion as of December 31, 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D303",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P352_S001",
+                    "paragraph_id": "ms_2024_7_P352",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "As of December 31, 2024 and December 31, 2023, our lending against commercial real estate (\"CRE\") properties within the Institutional Securities business segment totaled $10.7 billion and $9.4 billion, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

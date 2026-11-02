@@ -1,0 +1,344 @@
+{
+  "input_fingerprint": "627edb00ee787a7e2ecc515bed5f85024973e8155d9fc374268889c321e71f5e",
+  "request_hash": "edb07073bc170c340862f99fc78e01f6b8325f94f367e07c08e46fb40f8997e2",
+  "result": {
+    "target_ticker": "BAC",
+    "target_disclosure_id": "bac_2024_7_D276",
+    "item": "7",
+    "target_topic": "Decrease in Commercial Allowance for Loan and Lease Losses",
+    "target_summary": "The commercial allowance for loan and lease losses decreased by $152 million during 2024 to $4.7 billion.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "bac_2023_2024_M0430",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the year-over-year change in the commercial allowance for loan and lease losses, specifically noting a decrease ($623M in 2023, $152M in 2024) and attributing it to macroeconomic conditions. Evidence: bac_2023_7_P335_S001 and bac_2024_7_P325_S001.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2023_7_D291",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Credit Risk Management > Commercial Portfolio Credit Risk Management > Commercial Credit Portfolio",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The commercial allowance for loan and lease losses decreased $623 million during 2023 to $4.8 billion, primarily driven by improved macroeconomic conditions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D276",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Commercial Portfolio Credit Risk Management > Commercial Credit Portfolio",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The commercial allowance for loan and lease losses decreased by $152 million during 2024 to $4.7 billion.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.556359,
+            "sequence_match_ratio": 0.7,
+            "length_ratio": 0.73913,
+            "word_count_delta": -6,
+            "added_tokens_sample": [
+              "152",
+              "2024",
+              "7"
+            ],
+            "removed_tokens_sample": [
+              "623",
+              "2023",
+              "8",
+              "primarily",
+              "driven",
+              "by",
+              "improved",
+              "macroeconomic",
+              "conditions"
+            ]
+          },
+          "semantic": {
+            "matched_id": "bac_2023_7_D291",
+            "score": 0.943586,
+            "normalised_score": 0.9436,
+            "label": "Relocated",
+            "rationale": "Score 94.36% of ceiling — content is similar but section changed from 'Management's Discussion and Analysis of Financial Condition and Results of Operations > Credit Risk Management > Commercial Portfolio Credit Risk Management > Commercial Credit Portfolio' to 'Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Commercial Portfolio Credit Risk Management > Commercial Credit Portfolio'.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.4,
+          "confidence_score": 0.85,
+          "reason": "While the magnitude of the decrease in the allowance for loan and lease losses changed ($623M to $152M), both disclosures indicate a decrease attributed to improving conditions (2023 explicitly stated, 2024 implies stability/reduction). The removal of the explicit 'improved macroeconomic conditions' driver in 2024 reduces specificity but does not necessarily indicate a worsening risk position given the smaller delta. However, without the explicit driver, the nuance is lost. Given the smaller absolute change and lack of adverse qualifier, it is borderline. But typically, a specific reason change from 'improved' to unexplained decrease is less material than the absolute number change. I will lean towards No as it describes a continued reduction in reserves, albeit smaller, without an adverse trigger mentioned.",
+          "key_change": "Reduction in allowance for losses"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "bac_2024_2025_M0486",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure states the commercial allowance for loan and lease losses decreased to $4.7 billion. The 2025 disclosure states it increased to $4.8 billion. While the direction and amount differ, the specific subject matter (the commercial allowance for loan and lease losses) is identical. The matching agent grouped this, and it is a valid one-to-one alignment of the same financial metric.\n\nThe 2024 disclosure D277 contains specific narrative metrics on total commercial utilized credit exposure ($739.5 billion) and the aggregate utilization rate (55%). The 2025 disclosure D276 contains the corresponding narrative metrics for 2025 (exposure $808.4 billion, utilization rate 55%). D277 in 2025 only contains structural references to tables and lacks the exposure narrative, making D276 the valid counterpart for the specific topic covered in 2024 D277.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "bac_2024_7_D276",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Commercial Portfolio Credit Risk Management > Commercial Credit Portfolio",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The commercial allowance for loan and lease losses decreased by $152 million during 2024 to $4.7 billion.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "bac_2024_7_D277",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Commercial Portfolio Credit Risk Management > Commercial Credit Portfolio",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total commercial utilized credit exposure increased by $43.2 billion during 2024 to $739.5 billion, primarily driven by higher loans and leases, while the aggregate utilization rate for loans, SBLCs, financial guarantees, and commercial letters of credit remained stable at 55 percent at both year-ends.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "bac_2025_7_D276",
+            "item": "7",
+            "section": "Management's Discussion and Analysis of Financial Condition and Results of Operations > Liquidity Risk > Commercial Portfolio Credit Risk Management > Commercial Credit Portfolio",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Total commercial utilized credit exposure rose $68.9 billion to $808.4 billion in 2025, with a utilization rate of 55% for loans, SBLCs, and commercial letters of credit. The commercial allowance for loan and lease losses increased $153 million during the year to $4.8 billion.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Modified",
+            "cosine_similarity": 0.844615,
+            "sequence_match_ratio": 0.847222,
+            "length_ratio": 1.0,
+            "word_count_delta": 0,
+            "added_tokens_sample": [
+              "increased",
+              "153",
+              "2025",
+              "8",
+              "68",
+              "9",
+              "2025",
+              "808",
+              "4",
+              "2025",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "decreased",
+              "152",
+              "2024",
+              "7",
+              "43",
+              "2",
+              "2024",
+              "739",
+              "5",
+              "and",
+              "2023"
+            ]
+          },
+          "semantic": {
+            "label": "Modified",
+            "matched_id": "bac_2024_7_D277",
+            "score": 0.979381,
+            "normalised_score": 0.9794,
+            "rationale": "Merge: 2 previous → 1 current. Best pair scored 97.94% of ceiling.",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure shows a material change in both the direction and magnitude of key financial metrics. The commercial allowance for loan and lease losses reversed from a decrease to an increase ($4.7B to $4.8B), and total commercial utilized credit exposure grew significantly ($739.5B to $808.4B). These are substantive changes in financial position and risk exposure.",
+          "key_change": "Reversal in allowance trend and exposure growth"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "C",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "C",
+            "peer_disclosure_id": "c_2024_7_D028",
+            "peer_topic": "Services cost of credit improvement",
+            "peer_summary": "Cost of credit decreased to $276 million from $950 million in the prior year, primarily due to a smaller allowance for credit losses build for transfer risk outside the U.S.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.136263,
+            "relationship": "same_topic",
+            "comparison": "Both companies reported a decrease in credit loss metrics for 2024, but the mechanisms and magnitudes differ. Bank of America explicitly reduced its commercial allowance for loan and lease losses by $152 million to $4.7 billion. In contrast, Citigroup reported a significant decrease in its overall cost of credit from $950 million to $276 million, driven by a smaller allowance for credit losses build associated with transfer risk outside the U.S. While BAC focuses on the absolute level of the commercial allowance, C focuses on the flow metric (cost of credit) and attributes its improvement to specific international regulatory factors.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D276",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P325_S001",
+                    "paragraph_id": "bac_2024_7_P325",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The commercial allowance for loan and lease losses decreased $152 million during 2024 to $4.7 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "C",
+                "disclosure_id": "c_2024_7_D028",
+                "sentences": [
+                  {
+                    "sentence_id": "c_2024_7_P021_S002",
+                    "paragraph_id": "c_2024_7_P021",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/831001/000083100125000067/c-20241231.htm",
+                    "text": "Cost of credit decreased to $276 million from $950 million in the prior year, primarily driven by a smaller ACL build for transfer risk associated with exposures outside of the U.S., driven by safety and soundness considerations under U.S. banking law.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidate disclosures for GS relate to Value at Risk (VaR) methodology and general accounting policies for charge-offs, which are structural/market risk metrics or general policies, rather than the specific 2024 financial performance or allowance balance changes for commercial loans that characterize the target disclosure."
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D054",
+            "peer_topic": "Allowance for loan losses increase",
+            "peer_summary": "The allowance for loan losses increased, reflecting a net addition to the allowance for loan losses of $1.9 billion, consisting of a $2.1 billion net addition in consumer (primarily Card Services) and a net reduction of $176 million in wholesale.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.149947,
+            "relationship": "same_topic",
+            "comparison": "Both Bank of America and JPMorgan Chase disclosed changes to their allowance for loan losses in 2024, but the directions and drivers were opposite. BAC reported a $152 million decrease in its commercial allowance to $4.7 billion. Conversely, JPMorgan reported a net addition to its allowance for loan losses of $1.9 billion, driven primarily by a $2.1 billion net addition in consumer lending (Card Services) due to loan growth, partially offset by a reduction in wholesale lending. BAC's allowance decreased, likely reflecting improved conditions or recoveries in commercial lines, whereas JPM's increased to support robust consumer and wholesale loan book growth.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D276",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P325_S001",
+                    "paragraph_id": "bac_2024_7_P325",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The commercial allowance for loan and lease losses decreased $152 million during 2024 to $4.7 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D054",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P090_S001",
+                    "paragraph_id": "jpm_2024_7_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "The allowance for loan losses increased, reflecting a net addition to the allowance for loan losses of $1.9 billion, consisting of:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P090_S002",
+                    "paragraph_id": "jpm_2024_7_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• $2.1 billion net addition in consumer, primarily in Card Services, predominantly driven by loan growth, reflecting higher revolving balances, including the seasoning of vintages originated in recent years, partially offset by a net reduction in Home Lending in the first quarter of 2024, and",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "jpm_2024_7_P090_S003",
+                    "paragraph_id": "jpm_2024_7_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• a net reduction of $176 million in wholesale, reflecting:",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "MS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MS",
+            "peer_disclosure_id": "ms_2024_7_D038",
+            "peer_topic": "Provision for credit losses in 2024",
+            "peer_summary": "In 2024, the provision for credit losses on loans and lending commitments was $202 million, primarily driven by growth in the corporate loan portfolio and provisions for specific commercial real estate loans, partially offset by improvements in the macroeconomic outlook.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.078753,
+            "relationship": "same_topic",
+            "comparison": "Both BAC and Morgan Stanley discussed credit loss provisions and allowances related to commercial exposure in 2024. BAC reported a decrease in its commercial allowance for loan and lease losses to $4.7 billion. Morgan Stanley reported a provision for credit losses on loans and lending commitments of $202 million, which was driven by growth in the corporate loan portfolio and specific provisions for commercial real estate loans, offset by macroeconomic improvements. While BAC showed a net decline in the allowance balance, MS incurred a positive provision expense, reflecting different stages of credit cycle management or portfolio growth strategies in their commercial segments.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D276",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P325_S001",
+                    "paragraph_id": "bac_2024_7_P325",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "The commercial allowance for loan and lease losses decreased $152 million during 2024 to $4.7 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D038",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P042_S001",
+                    "paragraph_id": "ms_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "In 2024, the Provision for credit losses on loans and lending commitments of $202 million was primarily related to growth in the corporate loan portfolio and provisions for certain specific commercial real estate loans, partially offset by improvements in the macroeconomic outlook.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}

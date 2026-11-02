@@ -1,0 +1,414 @@
+{
+  "input_fingerprint": "a69869848998b788a9dea027a80a33814313f10f77c0ddc7b3a138717c80933b",
+  "request_hash": "15c24a593c60e39dcf25084e8efe67ffc56ee37e9f80c03b90a541f9e8164059",
+  "result": {
+    "target_ticker": "MS",
+    "target_disclosure_id": "ms_2024_7_D059",
+    "item": "7",
+    "target_topic": "Asset Management Revenue Performance",
+    "target_summary": "Asset management revenues increased 18% to $16,501 million in 2024, driven by higher fee-based assets resulting from market levels and positive fee-based flows.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "ms_2023_2024_M0263",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report Wealth Management Asset Management net revenues and the drivers behind the year-over-year change (fees, flows, market levels).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2023_7_D061",
+            "item": "7",
+            "section": "Wealth Management > Net Revenues > Asset Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Asset management revenues were $14,019 million in 2023, a 1% increase from the prior year, driven by positive fee-based flows but partially offset by client/product mix changes, lower average fee-based assets, and market declines.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D059",
+            "item": "7",
+            "section": "Wealth Management > Net Revenues > Asset Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Asset management revenues increased 18% to $16,501 million in 2024, driven by higher fee-based assets resulting from market levels and positive fee-based flows.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Reduced",
+            "cosine_similarity": 0.550228,
+            "sequence_match_ratio": 0.482759,
+            "length_ratio": 0.673077,
+            "word_count_delta": -17,
+            "added_tokens_sample": [
+              "16",
+              "501",
+              "2024",
+              "18",
+              "higher",
+              "fee",
+              "based",
+              "assets",
+              "due",
+              "to",
+              "higher",
+              "market",
+              "levels",
+              "and"
+            ],
+            "removed_tokens_sample": [
+              "14",
+              "019",
+              "2023",
+              "1",
+              "partially",
+              "offset",
+              "by",
+              "a",
+              "reduction",
+              "driven",
+              "by",
+              "changes",
+              "in",
+              "client",
+              "and",
+              "product",
+              "mix",
+              "and",
+              "lower",
+              "average"
+            ]
+          },
+          "semantic": {
+            "matched_id": "ms_2023_7_D061",
+            "score": 0.964739,
+            "normalised_score": 0.9647,
+            "label": "Reduced",
+            "rationale": "Score 96.47% of ceiling — content shrank from ~49 to ~32 words (0.7×).",
+            "method": "embedding_cosine"
+          },
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "The driver of revenue growth changed materially. 2023 cited 'positive fee-based flows' partially offset by 'client/product mix' and 'lower average assets'. 2024 cites 'higher fee-based assets due to higher market levels'. This shifts the narrative from operational mix/headwinds to market-driven growth, a significant change in business performance explanation.",
+          "key_change": "Shift in revenue growth drivers"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "ms_2024_2025_M0060",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in 2025 Item 7. The original disclosure (D059) reports 2024 Asset Management revenue performance ($16.5B, +18%). The top search hit (D175) is a Market Risk sensitivity disclosure. While both concern Asset Management revenues, D059 is a financial performance metric in the Wealth Management segment results, whereas D175 is a risk factor disclosure in the Market Risk section. There is no extracted disclosure in 2025 Item 7 that reports the 2025 Asset Management revenue performance figure. Matching performance to sensitivity is considered a mismatch of specific topic type (Outcome vs. Risk Driver).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "ms_2024_7_D059",
+            "item": "7",
+            "section": "Wealth Management > Net Revenues > Asset Management",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Asset management revenues increased 18% to $16,501 million in 2024, driven by higher fee-based assets resulting from market levels and positive fee-based flows.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": {
+            "method": "tfidf_difflib_hybrid",
+            "change_taxonomy": "Removed",
+            "cosine_similarity": 0.0,
+            "sequence_match_ratio": 0.0,
+            "length_ratio": 0.0,
+            "word_count_delta": -35,
+            "added_tokens_sample": [],
+            "removed_tokens_sample": [
+              "asset",
+              "management",
+              "revenues",
+              "of",
+              "16",
+              "501",
+              "million",
+              "in",
+              "2024",
+              "increased",
+              "18",
+              "compared",
+              "with",
+              "the",
+              "prior",
+              "year",
+              "reflecting",
+              "higher",
+              "fee",
+              "based"
+            ]
+          },
+          "semantic": {
+            "label": "Removed",
+            "score": null,
+            "normalised_score": null,
+            "matched_id": null,
+            "rationale": "One-sided change established by the finalized alignment.",
+            "method": "alignment_presence"
+          },
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The 2024 filing disclosed specific financial performance data for Asset Management revenues ($16.5B, +18%). The complete absence of this specific financial performance disclosure in the 2025 Item 7 results (with no counterpart found) represents a significant gap in the financial narrative. This is a material removal of segment financial data.",
+          "key_change": "Removal of Asset Management revenue performance data"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "BAC",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D095",
+            "peer_topic": "Merrill Wealth Management Revenue",
+            "peer_summary": "Merrill Wealth Management revenue of $19.1 billion increased nine percent, primarily driven by higher asset management fees due to higher average equity market valuations and positive AUM flows, as well as higher brokerage fees due to increased transactional volume.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.140425,
+            "relationship": "same_topic",
+            "comparison": "Both MS and BAC report significant increases in wealth/asset management revenues driven by the same primary factors: higher market valuations and positive asset flows. MS reports an 18% increase to $16.5 billion, while BAC's Merrill Wealth Management segment reports a 9% increase to $19.1 billion. Both disclosures explicitly attribute revenue growth to 'higher average equity market valuations' (BAC) or 'higher market levels' (MS) alongside 'positive AUM flows' or 'positive fee-based flows'.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P061_S001",
+                    "paragraph_id": "ms_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Asset management revenues of $16,501 million in 2024 increased 18% compared with the prior year, reflecting higher fee-based assets due to higher market levels and the cumulative impact of positive fee-based flows.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D095",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P105_S001",
+                    "paragraph_id": "bac_2024_7_P105",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "Merrill Wealth Management revenue of $19.1 billion increased nine percent primarily driven by higher asset management fees due to the impact of higher average equity market valuations and positive AUM flows, as well as higher brokerage fees due to increased transactional volume.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "BAC",
+            "peer_disclosure_id": "bac_2024_7_D014",
+            "peer_topic": "Investment and Brokerage Services Drivers",
+            "peer_summary": "Investment and brokerage services increased $2.2 billion primarily driven by higher asset management fees due to higher average equity market valuations and positive AUM flows, as well as higher brokerage fees due to increased transactional volume, partially offset by the impact of lower AUM pricing.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.142379,
+            "relationship": "related_topic",
+            "comparison": "While BAC's Investment and Brokerage Services disclosure also cites asset management fees driven by market valuations and AUM flows, it provides a broader view that includes transactional volume and notes a partial offset from lower AUM pricing, whereas MS's disclosure focuses solely on the positive drivers of market levels and flows without mentioning offsetting pricing pressures.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P061_S001",
+                    "paragraph_id": "ms_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Asset management revenues of $16,501 million in 2024 increased 18% compared with the prior year, reflecting higher fee-based assets due to higher market levels and the cumulative impact of positive fee-based flows.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "BAC",
+                "disclosure_id": "bac_2024_7_D014",
+                "sentences": [
+                  {
+                    "sentence_id": "bac_2024_7_P015_S005",
+                    "paragraph_id": "bac_2024_7_P015",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085825000139/bac-20241231.htm",
+                    "text": "● Investment and brokerage services increased $2.2 billion primarily driven by higher asset management fees due to higher average equity market valuations and positive assets under management (AUM) flows, as well as higher brokerage fees due to increased transactional volume, partially offset by the impact of lower AUM pricing.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "C",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates c_2024_7_D118 and c_2024_7_D129 discuss net income and profitability drivers for 'All Other' or general segments, focusing on costs of credit and revenue/expense ratios, rather than specific asset management fee drivers, market level impacts, or AUM flow volumes relevant to MS's Wealth Management Asset Management disclosure."
+      },
+      {
+        "peer_ticker": "GS",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "GS",
+            "peer_disclosure_id": "gs_2024_7_D046",
+            "peer_topic": "Investment Management Revenue Growth",
+            "peer_summary": "Investment management revenues totaled $10.60 billion in 2024, an 11% increase over 2023, primarily due to higher management and other fees reflecting the impact of higher average assets under supervision (AUS).",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.147952,
+            "relationship": "same_topic",
+            "comparison": "Both MS and GS attribute their investment/asset management revenue growth primarily to higher average assets under supervision/fee-based assets resulting from market levels. MS saw an 18% increase to $16.5 billion, while GS saw an 11% increase to $10.6 billion. Both disclosures highlight 'higher market levels' and 'assets' as the key drivers, with GS also specifying 'higher average assets under supervision (AUS)' and MS noting 'higher fee-based assets due to higher market levels'.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P061_S001",
+                    "paragraph_id": "ms_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Asset management revenues of $16,501 million in 2024 increased 18% compared with the prior year, reflecting higher fee-based assets due to higher market levels and the cumulative impact of positive fee-based flows.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "GS",
+                "disclosure_id": "gs_2024_7_D046",
+                "sentences": [
+                  {
+                    "sentence_id": "gs_2024_7_P050_S001",
+                    "paragraph_id": "gs_2024_7_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/886982/000088698225000005/gs-20241231.htm",
+                    "text": "Investment management revenues in the consolidated statements of earnings were $10.60 billion for 2024, 11% higher than 2023, primarily due to higher management and other fees, primarily reflecting the impact of higher average assets under supervision (AUS).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "JPM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D140",
+            "peer_topic": "Asset Management Revenue Drivers",
+            "peer_summary": "Asset Management revenue was $10.2 billion, an 11% increase, driven by higher asset management fees due to higher average market levels and strong net inflows, as well as higher performance fees.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.182153,
+            "relationship": "same_topic",
+            "comparison": "Both MS and JPM report double-digit growth in asset management revenues (MS 18%, JPM 11%) driven by identical core factors: higher average market levels and strong net inflows/positive flows. MS attributes the increase to 'higher fee-based assets due to higher market levels and... positive fee-based flows,' while JPM cites 'higher asset management fees, reflecting higher average market levels and strong net inflows.' JPM additionally notes higher performance fees as a driver, which is not explicitly detailed in the cited MS sentence.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P061_S001",
+                    "paragraph_id": "ms_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Asset management revenues of $16,501 million in 2024 increased 18% compared with the prior year, reflecting higher fee-based assets due to higher market levels and the cumulative impact of positive fee-based flows.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D140",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P211_S002",
+                    "paragraph_id": "jpm_2024_7_P211",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "• higher asset management fees, reflecting higher average market levels and strong net inflows, as well as",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "JPM",
+            "peer_disclosure_id": "jpm_2024_7_D033",
+            "peer_topic": "Asset Management Fee Drivers",
+            "peer_summary": "Asset management fees increased, reflecting higher average market levels and net inflows in AWM and CCB, as well as higher performance fees in AWM, and the timing impact of First Republic in CCB.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.138433,
+            "relationship": "same_topic",
+            "comparison": "Similar to the peer comparison with JPM's D140, this disclosure also aligns with MS's drivers. Both highlight 'higher average market levels' and 'net inflows' as the reasons for increased asset management fees. MS reports $16.5 billion in revenue from these drivers, while JPM discusses the fee increase components in detail, noting the impact in specific segments (AWM and CCB) alongside market levels and inflows.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MS",
+                "disclosure_id": "ms_2024_7_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "ms_2024_7_P061_S001",
+                    "paragraph_id": "ms_2024_7_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/895421/000089542125000304/ms-20241231.htm",
+                    "text": "Asset management revenues of $16,501 million in 2024 increased 18% compared with the prior year, reflecting higher fee-based assets due to higher market levels and the cumulative impact of positive fee-based flows.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "JPM",
+                "disclosure_id": "jpm_2024_7_D033",
+                "sentences": [
+                  {
+                    "sentence_id": "jpm_2024_7_P054_S001",
+                    "paragraph_id": "jpm_2024_7_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm",
+                    "text": "Asset management fees increased, reflecting, in AWM and CCB, higher average market levels and net inflows, as well as higher performance fees in AWM; and in CCB, the timing impact of First Republic.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ]
+  }
+}
