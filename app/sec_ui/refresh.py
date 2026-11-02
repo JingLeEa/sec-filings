@@ -1,4 +1,4 @@
-"""Queue post-review pipeline work and display its durable progress."""
+"""Queue post-review pipeline work and show its progress on Manual Review."""
 from __future__ import annotations
 
 import os
@@ -70,6 +70,7 @@ def worker_running():
 
 @st.fragment(run_every=3)
 def status_panel(company, years):
+    """Poll review refreshes only from the Manual Review page's two sections."""
     jobs = backend()
     rows = [row for row in jobs.jobs(queue_dir(), company)
             if set(years) & {row["previous_year"], row.get("current_year")}]

@@ -4,7 +4,7 @@
 
 ## 1. Purpose and implementation status
 
-The **Manual Review** page appears below **Peer Comparison** in the Streamlit
+The **Manual Review** page appears below **Side by Side** in the Streamlit
 sidebar and follows the existing dashboard's styling. It has two sections:
 
 | Section | Scope | Human label |
@@ -24,12 +24,21 @@ All/Pending/Reviewed filters, Previous/Next navigation, Save review, Save and ne
 and JSON/CSV downloads. Alignment reuses the existing side-by-side comparison
 with removed words in red and added words in green.
 
+Both sections put the section and scope selectors, SEC Item, Review status,
+Search text and Clear filters together in one bordered **Review queue** block.
+The review content appears below this block; company and filing-year selectors
+stay in the sidebar.
+
 Saving records a human annotation and automatically queues a background pipeline
 refresh through **synthesis** when using PostgreSQL, the full pipeline's final stage.
 Disclosure reviews apply the human type to extraction outputs, then rerun affected
 year comparisons, LLM change analysis, materiality and affected synthesis reports.
 Alignment reviews apply the human change label to the saved group and continue
 through change analysis, materiality and synthesis, preserving the human label.
+Live **Pipeline updates**, completion messages and retry controls appear only on
+**Manual Review**, in both sections. Other pages do not poll these review jobs
+or automatically rerun when they finish. Work continues in the background after
+leaving Manual Review; return there to check progress or retry a failed refresh.
 Overview, Change Explorer and Side by Side use the resulting labels in views,
 filters and exports. Original model labels and source evidence remain available.
 Synthesis reports are regenerated from updated material changes. Peer comparison
@@ -92,8 +101,12 @@ paragraph/sentence files and complete extraction metadata, not just UI fixtures.
 
 ## 4. Inputs and review scope
 
-**Review scope** appears above the Disclosure/Alignment selector in a bordered
-control panel. Both selectors use segmented buttons with the dashboard's theme.
+One bordered **Review queue** block contains the selectors side by side:
+**What to review** (Disclosure/Alignment) and **Which records** (Needs review/AI
+approved). A shared description explains the selected queue, with the SEC Item,
+Review status, Search text and Clear filters controls directly underneath inside
+the same block. Both selectors use segmented buttons with the dashboard's theme
+and stack on narrow screens.
 The scope defaults to **Needs review** and stays selected when switching sections
 or visiting another dashboard page. **AI approved**
 shows completed, accepted AI results with valid labels and no active review flag.
@@ -154,9 +167,10 @@ same provenance display is shared with the **Side by Side** page.
 
 After either Save action, **Pipeline updates** shows the queued/running stage,
 completion or a failure with **Retry pipeline refresh**. The review remains saved
-if a model, database or worker error stops the refresh. A completed refresh clears
-the dashboard cache and reloads current results automatically. **Refresh downstream
-results** can resubmit an existing saved decision without editing its label.
+if a model, database or worker error stops the refresh. While Manual Review is open,
+a completed refresh clears the dashboard cache and reloads that page automatically.
+**Refresh downstream results** can resubmit an existing saved decision without
+editing its label.
 
 A disclosure review affects adjacent available filing years and any existing
 comparison containing the reviewed year. For example, AMD FY2024 refreshes

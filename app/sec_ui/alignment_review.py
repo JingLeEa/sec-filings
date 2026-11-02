@@ -6,13 +6,14 @@ import streamlit as st
 from sec_ui import components, config, data, reports, review, refresh
 
 
-def render(scope):
+def render(scope, controls):
     st.subheader("Alignment review")
     st.caption("Inspect AI-approved change labels or manually label groups that need review.")
     if message := st.session_state.pop("_manual_review_message", None):
         st.success(message)
 
     source, company, previous, current = components.comparison_picker()
+    refresh.status_panel(company, (previous, current))
     comparison = components.load_selected(source, company, previous, current)
     try:
         saved_reviews = review.load_reviews(company, previous, current)
@@ -29,6 +30,8 @@ def render(scope):
         st.stop()
 
     current_reviews = {r["match_id"]: saved for r in records if (saved := review.current_review(r, saved_reviews))}
+    status, sel_items, needle = components.review_filters(
+        (r["item"] for r in records), prefix="manual", container=controls)
     total, done = len(records), len(current_reviews)
     m1, m2, m3 = st.columns(3)
     m1.metric("Review queue", f"{total:,}")
@@ -36,13 +39,6 @@ def render(scope):
     m3.metric("Pending", f"{total - done:,}")
     st.progress(done / total, text=f"{done:,} of {total:,} alignment groups reviewed by a person")
 
-    st.sidebar.header("Review filters")
-    status = st.sidebar.selectbox("Review status", ["All", "Pending", "Reviewed"], key="manual_status")
-    items = sorted({r["item"] for r in records}, key=components._item_order)
-    components._clean("manual_items", items)
-    sel_items = st.sidebar.multiselect("SEC Item", items, key="manual_items",
-                                      format_func=lambda i: config.ITEM_TITLES.get(i, f"Item {i}"))
-    needle = st.sidebar.text_input("Search text", key="manual_text", placeholder="word or phrase")
     filtered = data.filter_records(records, items=sel_items, text=needle)
     if status != "All":
         filtered = [r for r in filtered if (r["match_id"] in current_reviews) == (status == "Reviewed")]
@@ -67,7 +63,7 @@ def render(scope):
         if status == "Pending" and done == total:
             st.success("All alignment groups in this comparison have been reviewed.")
         else:
-            st.info("No disclosures match these review filters. Change a filter in the sidebar to see more.")
+            st.info("No disclosures match these review filters. Change a filter above to see more.")
         downloads()
         st.stop()
 

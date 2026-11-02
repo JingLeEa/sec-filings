@@ -84,7 +84,7 @@ class SynthesisPageTests(unittest.TestCase):
         self.addCleanup(context.stop)
 
     def page(self):
-        page = AppTest.from_file(str(ROOT / "app/pages/3_Synthesis_Report.py"), default_timeout=20).run()
+        page = AppTest.from_file(str(ROOT / "app/pages/1_Synthesis_Report.py"), default_timeout=20).run()
         self.assertFalse(page.exception, [error.value for error in page.exception])
         return page
 

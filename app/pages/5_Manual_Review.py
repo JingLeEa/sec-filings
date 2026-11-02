@@ -27,17 +27,23 @@ def retain_selection(key):
         st.session_state[key] = st.session_state[f"_{key}_selection"]
 
 
-with st.container(border=True, key="manual_review_controls"):
-    scope = st.segmented_control("Review scope", ["Needs review", "AI approved"], key="review_scope",
-                                 width="stretch", on_change=retain_selection, args=("review_scope",))
-    st.caption("Choose which records to view. **Needs review** shows items flagged for a person to check. "
-               "**AI approved** shows items accepted by the AI; you can still review and change their labels.")
-    section = st.segmented_control("Review section", ["Disclosure", "Alignment"], key="manual_section",
-                                   width="stretch", on_change=retain_selection, args=("manual_section",))
-    st.caption("Choose what to label. **Disclosure** lets you check the disclosure type within one filing. "
-               "**Alignment** lets you check how disclosures changed between two filing years.")
+controls = st.container(border=True, key="manual_review_controls")
+with controls:
+    st.markdown("**Review queue**")
+    section_column, scope_column = st.columns(2, gap="large")
+    section = section_column.segmented_control(
+        "What to review", ["Disclosure", "Alignment"], key="manual_section",
+        width="stretch", on_change=retain_selection, args=("manual_section",))
+    scope = scope_column.segmented_control(
+        "Which records", ["Needs review", "AI approved"], key="review_scope",
+        width="stretch", on_change=retain_selection, args=("review_scope",))
+    subject = ("Review disclosure types within one filing." if section == "Disclosure" else
+               "Review disclosure changes between two filing years.")
+    records = ("Showing records flagged for a person to check." if scope == "Needs review" else
+               "Showing records accepted by the AI; you can still correct their labels.")
+    st.caption(f"{subject} {records}")
 
 if section == "Disclosure":
-    disclosure_review.render(scope)
+    disclosure_review.render(scope, controls)
 else:
-    alignment_review.render(scope)
+    alignment_review.render(scope, controls)

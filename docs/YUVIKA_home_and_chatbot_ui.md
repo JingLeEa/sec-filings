@@ -4,6 +4,10 @@
 
 ## 1. What changed and why
 
+The sidebar and home-page cards follow this order: Home, Run Pipeline, Synthesis
+Report, Chatbot, Peer Comparison, Side by Side, Manual Review, Change Explorer.
+Manual Review is part of the merged dashboard and opens `app/pages/5_Manual_Review.py`.
+
 The old home page was a summary page: a few charts and counts with little explanation. It now works as a landing page for someone who has never seen the app.
 
 | Section | What the reader gets |
@@ -20,7 +24,7 @@ After a manual review is saved, the numbers read from the same cached loaders as
 
 ## 2. Chatbot page
 
-`app/pages/6_Chatbot.py` wraps `sec_disclosure.chatbot.Chatbot`. Nothing in the chatbot engine was changed.
+`app/pages/2_Chatbot.py` wraps `sec_disclosure.chatbot.Chatbot`. Nothing in the chatbot engine was changed.
 
 - Two sidebar switches: AI-written answers, and meaning-based search. With both off the page still answers, from templates.
 - Example questions for the company selected in the sidebar.
@@ -38,7 +42,7 @@ After a manual review is saved, the numbers read from the same cached loaders as
 | `app/Home.py` | The new home page (replaces the old one). |
 | `app/sec_ui/landing.py` | Colours, the feature cards, label and status explanations, CSS. No page logic. |
 | `app/sec_ui/chat.py` | Connects the page to the chatbot: shared database, per-session bot, match-ID parsing, "open side by side". |
-| `app/pages/6_Chatbot.py` | The chat page. |
+| `app/pages/2_Chatbot.py` | The chat page. |
 | `tests/test_ui_home_chat.py` | 20 tests (home page, landing helpers, chat page). |
 
 Aarav's `app/streamlit_app.py` is superseded by the chatbot page and can stay or go; the team can decide.

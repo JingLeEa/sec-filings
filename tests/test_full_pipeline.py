@@ -138,12 +138,81 @@ class FullPipelineTests(unittest.TestCase):
 
     def test_failed_text_extraction_is_not_retried_or_saved_by_runner(self):
         for code in (2, 75):
+            def fail_text(stage, **kwargs):
+                return code if stage.script == "extract_filings.py" else 0
+
             with self.subTest(code=code), patch.object(runner, "preflight"), \
-                 patch.object(runner, "execute_stage", return_value=code) as run, \
+                 patch.object(runner, "execute_stage", side_effect=fail_text) as run, \
                  redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
                 self.assertEqual(runner.main(self.arguments + ["--until", "preprocessing"]), code)
-            self.assertEqual(run.call_count, 1)
-            self.assertEqual(run.call_args.args[0].script, "extract_filings.py")
+            text = [call.args[0] for call in run.call_args_list if call.args[0].name.startswith("text_")]
+            self.assertEqual([stage.name for stage in text], ["text_2023"])
+            self.assertFalse(any(call.args[0].name.startswith("save_text_") for call in run.call_args_list))
+
+    def test_preprocessing_branches_overlap_and_both_saves_gate_extraction_and_alignment(self):
+        def check_parallel_progress():
+            state = json.loads(self.progress_path.read_text())
+            self.assertEqual({row["stage"] for row in state["stages"] if row["status"] == "running"},
+                             {"text_2023", "api_tables_and_save"})
+
+        started = threading.Barrier(2, action=check_parallel_progress, timeout=5)
+        finishing = threading.Barrier(2, timeout=5)
+        completed = set()
+        lock = threading.Lock()
+        expected = runner.build_stages(runner.parse_args(self.arguments + ["--until", "alignment"]))
+        preprocessing = {stage.name for stage in expected if stage.phase == "preprocessing"}
+
+        def execute(stage, **kwargs):
+            if stage.name in {"text_2023", "api_tables_and_save"}:
+                started.wait()  # A sequential runner cannot pass this barrier.
+            if stage.name in {"save_text_2025", "save_xbrl_2025"}:
+                finishing.wait()
+            with lock:
+                if stage.name.startswith("save_text_"):
+                    self.assertIn(stage.name.removeprefix("save_"), completed)
+                elif stage.name.startswith("save_xbrl_"):
+                    self.assertIn("api_tables_and_save", completed)
+                elif stage.phase == "extraction":
+                    self.assertTrue(preprocessing <= completed)
+                    state = json.loads(self.progress_path.read_text())
+                    self.assertTrue(all(row["status"] == "complete" for row in state["stages"]
+                                        if row["phase"] == "preprocessing"))
+                elif stage.phase == "alignment":
+                    self.assertIn("extract_disclosures_and_save", completed)
+                completed.add(stage.name)
+            return 0
+
+        code, executed, _ = self.run_mock_pipeline(["--until", "alignment"], effect=execute)
+        self.assertEqual(code, 0)
+        self.assertEqual(completed, {stage.name for stage in expected})
+        for scripts in ({"extract_filings.py", "load_to_postgres.py"},
+                        {"run_api_metrics_batch.py", "load_xbrl_to_postgres.py"}):
+            chain = [stage.name for stage in expected if stage.script in scripts]
+            self.assertEqual([name for name in executed if name in chain], chain)
+        self.assertEqual(list(self.root.iterdir()), [])
+
+    def test_preprocessing_failure_drains_the_other_branch_and_resume_retries_only_unfinished_work(self):
+        for failed in ("save_text_2023", "save_xbrl_2023"):
+            started = threading.Barrier(2, timeout=5)
+
+            def execute(stage, **kwargs):
+                if stage.name in {"text_2023", "api_tables_and_save"}:
+                    started.wait()
+                return 2 if stage.name == failed else 0
+
+            with self.subTest(failed=failed):
+                code, executed, _ = self.run_mock_pipeline(["--until", "alignment", "--no-resume"], effect=execute)
+                self.assertEqual(code, 2)
+                state = json.loads(self.progress_path.read_text())
+                self.assertFalse(state["complete"])
+                self.assertTrue(all(row["phase"] == "preprocessing" for row in state["stages"]))
+                self.assertNotIn("extract_disclosures_and_save", executed)
+                finished = {row["stage"] for row in state["stages"] if row["status"] == "complete"}
+                self.assertIn("save_xbrl_2025" if failed.startswith("save_text_") else "save_text_2025", finished)
+                expected = runner.build_stages(runner.parse_args(self.arguments + ["--until", "alignment"]))
+                code, resumed, _ = self.run_mock_pipeline(["--until", "alignment"])
+                self.assertEqual(code, 0)
+                self.assertCountEqual(resumed, [stage.name for stage in expected if stage.name not in finished])
 
     def test_extraction_api_cap_tracks_selected_year_and_batch_workers_unless_explicit(self):
         for options, expected in ((["--workers", "2", "--batch-workers", "4"], 8),
@@ -182,6 +251,7 @@ class FullPipelineTests(unittest.TestCase):
         preflight.assert_not_called()
         run.assert_not_called()
         self.assertIn("save_materiality_2024_2025", output.getvalue())
+        self.assertIn("text and API/XBRL run in up to 2 parallel branches", output.getvalue())
         self.assertIn("Materiality: up to 2 parallel pairs x 9 workers per pair; shared API cap 18.", output.getvalue())
         self.assertEqual(list(self.root.iterdir()), [])
 
@@ -195,6 +265,8 @@ class FullPipelineTests(unittest.TestCase):
         self.assertFalse(state["full_pipeline_complete"])
         self.assertEqual(state["synthesis_status"], "skipped")
         self.assertEqual(state["until"], "materiality")
+        self.assertEqual(state["preprocessing_concurrency"], {"branch_workers": 2, "text_year_workers": 1,
+                                                            "table_year_workers": 1})
         self.assertEqual(state["extraction_concurrency"], {"year_workers": 3,
                                                          "batch_workers_per_year": 6,
                                                          "max_concurrent_requests": 18})
@@ -210,10 +282,13 @@ class FullPipelineTests(unittest.TestCase):
 
     def test_storage_failure_stops_before_any_subsequent_stage(self):
         with patch.object(runner, "preflight"), \
-             patch.object(runner, "execute_stage", side_effect=[0, 1]) as run, \
+             patch.object(runner, "execute_stage", side_effect=lambda stage, **kwargs:
+                          1 if stage.name == "save_text_2023" else 0) as run, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()) as errors:
             self.assertEqual(runner.main(self.arguments), 1)
-        self.assertEqual(run.call_count, 2)
+        names = [call.args[0].name for call in run.call_args_list]
+        self.assertNotIn("text_2024", names)
+        self.assertNotIn("extract_disclosures_and_save", names)
         self.assertIn("save_text_2023", errors.getvalue())
         state = json.loads(self.progress_path.read_text())
         self.assertFalse(state["complete"])
@@ -223,7 +298,7 @@ class FullPipelineTests(unittest.TestCase):
              patch.object(runner, "execute_stage", return_value=2) as run, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             self.assertEqual(runner.main(self.arguments), 2)
-        self.assertEqual(run.call_count, 1)
+        self.assertTrue(all(call.args[0].phase == "preprocessing" for call in run.call_args_list))
 
     def test_preflight_failure_does_not_start_extraction(self):
         with patch.object(runner, "preflight", side_effect=ValueError("PostgreSQL unavailable")), \
@@ -456,25 +531,44 @@ class FullPipelineTests(unittest.TestCase):
         return code, [call.args[0].name for call in execute.call_args_list], output.getvalue()
 
     def test_resume_retries_an_interrupted_save_without_redownloading_completed_text(self):
+        started = threading.Barrier(2, timeout=5)
+
         def fail_save(stage, **kwargs):
+            if stage.name in {"text_2023", "api_tables_and_save"}:
+                started.wait()
             return 1 if stage.name == "save_text_2023" else 0
 
         self.assertEqual(self.run_mock_pipeline(["--until", "preprocessing"], effect=fail_save)[0], 1)
         # A killed process may leave "running" instead of "stopped".
         state = json.loads(self.progress_path.read_text())
         original_start = state["started_at"]
-        state["stages"][-1]["status"] = "running"
-        state["stages"][-1].pop("exit_code")
+        interrupted = next(entry for entry in state["stages"] if entry["stage"] == "save_text_2023")
+        interrupted["status"] = "running"
+        interrupted.pop("exit_code")
         self.progress_path.write_text(json.dumps(state))
         code, executed, output = self.run_mock_pipeline(["--until", "preprocessing"])
         self.assertEqual(code, 0)
         self.assertNotIn("text_2023", executed)
-        self.assertEqual(executed[0], "save_text_2023")
-        self.assertEqual(len(executed), 9)
-        self.assertIn("skipping 1 completed stages", output)
+        self.assertEqual(executed, ["save_text_2023", "text_2024", "save_text_2024", "text_2025", "save_text_2025"])
+        self.assertIn("skipping 5 completed stages", output)
         state = json.loads(self.progress_path.read_text())
         self.assertEqual(len(state["stages"]), 10)
         self.assertEqual(state["started_at"], original_start)
+
+    def test_unfinished_xbrl_save_invalidates_completed_extraction_and_downstream_work(self):
+        self.assertEqual(self.run_mock_pipeline()[0], 0)
+        state = json.loads(self.progress_path.read_text())
+        changed = "save_xbrl_2024"
+        entry = next(row for row in state["stages"] if row["stage"] == changed)
+        entry.update(status="stopped", exit_code=1)
+        self.progress_path.write_text(json.dumps(state))
+        code, executed, _ = self.run_mock_pipeline()
+        self.assertEqual(code, 0)
+        expected = runner.build_stages(runner.parse_args(self.arguments))
+        self.assertCountEqual(executed, [stage.name for stage in expected
+                                        if stage.phase != "preprocessing" or stage.name == changed])
+        self.assertEqual(executed[0], changed)
+        self.assertEqual(executed[1], "extract_disclosures_and_save")
 
     def test_resume_only_retries_the_failed_materiality_pair_and_its_save(self):
         barrier = threading.Barrier(2, timeout=5)

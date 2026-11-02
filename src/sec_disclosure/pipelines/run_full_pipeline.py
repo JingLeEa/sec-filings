@@ -306,7 +306,9 @@ def synthesis_capacity(args):
 def print_concurrency(args, stages):
     phases = {stage.phase for stage in stages}
     if "preprocessing" in phases:
-        print("Preprocessing: sequential text/year jobs, API/XBRL years and database saves.")
+        print("Preprocessing: text and API/XBRL run in up to 2 parallel branches, "
+              "with ordered years and PostgreSQL saves within each branch. "
+              "Extraction waits for both branches to finish successfully.")
     if "extraction" in phases:
         print(f"Extraction: up to {min(args.workers, len(args.years))} parallel years x "
               f"{args.batch_workers} batch workers per year; shared API cap {args.max_concurrent_requests}.")
@@ -429,6 +431,8 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
              "from_stage": args.from_stage, "input_source": "postgres",
              "resume": args.resume, "skipped_stages": skipped,
              "complete": False, "full_pipeline_complete": False,
+             "preprocessing_concurrency": {"branch_workers": 2, "text_year_workers": 1,
+                                           "table_year_workers": 1},
              "extraction_concurrency": {"year_workers": min(args.workers, len(args.years)),
                                         "batch_workers_per_year": args.batch_workers,
                                         "max_concurrent_requests": args.max_concurrent_requests},
@@ -487,7 +491,16 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
     try:
         for phase, members in groupby(pending, key=lambda stage: stage.phase):
             phase_stages = list(members)
-            if phase in {"alignment", "change-analysis", "materiality"}:
+            if phase == "preprocessing":
+                chains = {}
+                for stage in phase_stages:
+                    branch = "text" if stage.script in {"extract_filings.py", "load_to_postgres.py"} else "tables"
+                    chains.setdefault(branch, []).append(stage)
+                # The two branches keep their own saves ordered. Drain both
+                # before extraction; any failure prevents all downstream work.
+                run_jobs(list(chains.values()), lambda chain: run_chain(chain, None),
+                         lambda chain, result: None, 2)
+            elif phase in {"alignment", "change-analysis", "materiality"}:
                 chains = {}
                 for stage in phase_stages:
                     chains.setdefault(stage.comparison, []).append(stage)

@@ -21,19 +21,19 @@ FEATURES = [
      "title": "Run the pipeline", "tagline": "Add a company or a new year",
      "bullets": ["Pick a company and fiscal years", "Watch each of the six steps run",
                  "Resume or retry if something fails"]},
-    {"key": "explorer", "cta": "Open the explorer", "file": "1_Change_Explorer.py", "icon": ":material/table_rows:", "color": TEAL,
+    {"key": "explorer", "cta": "Open the explorer", "file": "6_Change_Explorer.py", "icon": ":material/table_rows:", "color": TEAL,
      "title": "Explore changes", "tagline": "Find what changed between two years",
      "bullets": ["Filter by section, topic or change", "See which changes are material",
                  "Download the results as CSV or JSON"]},
-    {"key": "side", "cta": "Open side by side", "file": "2_Side_by_Side.py", "icon": ":material/compare:", "color": PURPLE,
+    {"key": "side", "cta": "Open side by side", "file": "4_Side_by_Side.py", "icon": ":material/compare:", "color": PURPLE,
      "title": "Compare side by side", "tagline": "Read both years' text together",
      "bullets": ["Added words green, removed words red", "Sentence IDs and SEC links",
                  "Clear note when a year has no match"]},
-    {"key": "synthesis", "cta": "Open the report", "file": "3_Synthesis_Report.py", "icon": ":material/summarize:", "color": AMBER,
+    {"key": "synthesis", "cta": "Open the report", "file": "1_Synthesis_Report.py", "icon": ":material/summarize:", "color": AMBER,
      "title": "Read the synthesis report", "tagline": "The multi-year story for one company",
      "bullets": ["Key findings and financial figures", "Every finding links to its evidence",
                  "Download the report"]},
-    {"key": "peer", "cta": "Open peer comparison", "file": "4_Peer_Comparison.py", "icon": ":material/groups:", "color": GREEN,
+    {"key": "peer", "cta": "Open peer comparison", "file": "3_Peer_Comparison.py", "icon": ":material/groups:", "color": GREEN,
      "title": "Compare with peers", "tagline": "How competitors disclose a topic",
      "bullets": ["Same year and same SEC Item only", "Cited sentences from both sides",
                  "No match does not mean silence"]},
@@ -41,7 +41,7 @@ FEATURES = [
      "title": "Review the AI's work", "tagline": "Check and correct labels",
      "bullets": ["Start with matches the AI doubted", "Change a category or change label",
                  "Your decision updates the reports"]},
-    {"key": "chat", "cta": "Open the chatbot", "file": "6_Chatbot.py", "icon": ":material/forum:", "color": INDIGO,
+    {"key": "chat", "cta": "Open the chatbot", "file": "2_Chatbot.py", "icon": ":material/forum:", "color": INDIGO,
      "title": "Ask the chatbot", "tagline": "Questions in plain English",
      "bullets": ["Answers cite their source match", "Open any citation side by side",
                  "Says so when evidence is thin"]},
@@ -95,6 +95,13 @@ CSS = """
 
 def feature_css() -> str:
     rules = [CSS]
+    card_selectors = [f".st-key-card_{feature['key']}" for feature in FEATURES]
+    card_selectors += [f".st-key-kpi_{name}" for name in ("total", "changed", "material", "review")]
+    cards = ", ".join(card_selectors)
+    rules.append(f":is({cards}) {{ display: flex; flex-direction: column; }}")
+    # The final Streamlit element is the card's action link or button.
+    rules.append(f":is({cards}) > [data-testid='stElementContainer']:last-child "
+                 "{ margin-top: auto !important; flex-shrink: 0; }")
     for feature in FEATURES:
         rules.append(f".st-key-card_{feature['key']} {{ border-left: 6px solid {feature['color']} !important; }}")
     # Every card gets the same fixed height. Narrower windows wrap the text more, so they get a taller card.
@@ -115,7 +122,8 @@ def inject_css() -> None:
 
 
 def available_features() -> list:
-    return [f for f in FEATURES if (PAGES_DIR / f["file"]).is_file()]
+    return sorted((f for f in FEATURES if (PAGES_DIR / f["file"]).is_file()),
+                  key=lambda feature: int(feature["file"].split("_", 1)[0]))
 
 
 def has_page(file_name: str) -> bool:

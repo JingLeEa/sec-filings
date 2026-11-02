@@ -133,8 +133,6 @@ def empty_state_no_data(source=None) -> None:
 
 def load_selected(source, company, previous, current):
     """Load one comparison with friendly messages. Stops the page on failure."""
-    from . import refresh
-    refresh.status_panel(company, (previous, current))
     mode = source.scopes.get((company, previous, current), "files")
     try:
         return review.apply_final_choices(cached_comparison(company, previous, current, mode))
@@ -187,6 +185,30 @@ def filters(records: list, *, location: str = "sidebar"):
                   on_click=_clear_filters)
     return data.filter_records(records, items=sel_items, categories=sel_categories, change_labels=sel_changes,
                                materiality=sel_materiality, statuses=sel_statuses, relationships=sel_relationships, text=text)
+
+
+def review_filters(items, *, prefix, container):
+    """Add filters to the same block as the review section and scope controls."""
+    items = sorted(set(items), key=_item_order)
+    _clean(f"{prefix}_items", items)
+    with container:
+        st.divider()
+        st.markdown("**Filters**")
+        item_column, status_column, search_column = st.columns(3)
+        selected_items = item_column.multiselect(
+            "SEC Item", items, key=f"{prefix}_items",
+            format_func=lambda item: config.ITEM_TITLES.get(item, f"Item {item}"))
+        status = status_column.selectbox("Review status", ["All", "Pending", "Reviewed"],
+                                         key=f"{prefix}_status")
+        text = search_column.text_input("Search text", key=f"{prefix}_text", placeholder="word or phrase")
+        st.button("Clear filters", on_click=_clear_review_filters, args=(prefix,), key=f"{prefix}_clear_filters")
+    return status, selected_items, text
+
+
+def _clear_review_filters(prefix):
+    st.session_state[f"{prefix}_status"] = "All"
+    st.session_state[f"{prefix}_items"] = []
+    st.session_state[f"{prefix}_text"] = ""
 
 
 def _clear_filters():

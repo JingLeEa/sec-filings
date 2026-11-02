@@ -71,6 +71,24 @@ def test_disclosure_queue_does_not_require_alignment_and_honors_pipeline_policy(
     assert {m.label: m.value for m in at.metric} == {"Review queue": "2", "Reviewed": "0", "Pending": "2"}
 
 
+def test_disclosure_filters_are_on_page_and_clear_together(inputs):
+    at = app()
+    assert not at.sidebar.multiselect
+    assert all(field.key != "disclosure_status" for field in at.sidebar.selectbox)
+    at.multiselect(key="disclosure_items").set_value(["1A"]).run()
+    at.text_input(key="disclosure_text").set_value("dependency 903").run()
+    assert at.selectbox(key="disclosure_selected").value == inputs[2]["disclosure_id"]
+    at.selectbox(key="disclosure_status").select("Reviewed").run()
+    assert not at.exception
+    assert any("No disclosures match" in message.value for message in at.info)
+    click(at, "Clear filters")
+    assert not at.exception
+    assert at.multiselect(key="disclosure_items").value == []
+    assert at.text_input(key="disclosure_text").value == ""
+    assert at.selectbox(key="disclosure_status").value == "All"
+    assert len(at.selectbox(key="disclosure_selected").options) == 2
+
+
 def test_disclosure_type_validation_persistence_editing_and_stage_isolation(inputs):
     at = app()
     assert at.selectbox(key="disclosure_type").value is None
@@ -227,6 +245,11 @@ def test_review_save_queues_refresh_and_ui_can_retry_failed_work(inputs):
     (job,) = jobs.jobs(refresh.queue_dir())
     assert job["stage"] == "disclosure" and job["status"] == "queued"
     assert job["review"]["disclosure_type"] == "Operations & Capacity"
+    assert any(expander.label == "Pipeline updates" for expander in at.expander)
+    job.update(status="running", phase="Updating comparisons affected by this disclosure")
+    write_json(jobs.job_path(refresh.queue_dir(), job["job_id"]), job)
+    at.run()
+    assert any(job["phase"] in message.value for message in at.info)
     job.update(status="failed", phase="Refresh stopped; review is saved", error="Temporary failure")
     write_json(jobs.job_path(refresh.queue_dir(), job["job_id"]), job)
     at.run()

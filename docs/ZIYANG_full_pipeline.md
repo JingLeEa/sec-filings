@@ -40,8 +40,10 @@ PostgreSQL. Every downstream stage uses `--input-source postgres`; it queries
 the database directly for the previous stage's data. Local input JSON downloads
 are not required and there is no automatic fallback to local files:
 
-1. Preprocess narrative text and API/XBRL table metrics for every selected year,
-   then load the verified XBRL exports into PostgreSQL.
+1. Preprocess narrative text and API/XBRL table metrics in two parallel branches.
+   Each branch processes its selected years and PostgreSQL saves in order.
+   Both branches, including all database saves, must succeed before disclosure
+   extraction starts. Alignment follows completed disclosure extraction.
 2. Extract disclosures for every selected year.
 3. Align disclosures for every adjacent year pair.
 4. Run LLM change classification and save the updated alignment results.
@@ -283,7 +285,7 @@ Default concurrency for three selected years:
 
 | Stage | Parallel work | Shared API concurrency |
 | --- | --- | --- |
-| Text and API/XBRL preprocessing | One year/job at a time, with ordered database saves | Sequential downloads; no LLM requests |
+| Text and API/XBRL preprocessing | 2 parallel branches; one year/job at a time within each branch, with ordered PostgreSQL saves | Text and table downloads can overlap; text recovery uses its existing AI defaults |
 | Disclosure extraction | 3 years × 6 batch workers | 18 requests, shared across years |
 | Alignment | 2 adjacent-year pairs × 9 workers | 18 requests, shared across pairs |
 | Change analysis | 2 adjacent-year pairs × 9 LLM batch workers, followed by each pair's database save | 18 requests, shared across pairs |
@@ -294,6 +296,13 @@ Available work can reduce these concurrency levels. API request starts are space
 by two seconds in the concurrent agent stages. Synthesis uses the same spacing
 and a shared rate-limit cooldown; a failed request stops the stage and the next
 invocation reuses successfully cached responses.
+
+Preprocessing runs text extraction and its raw-data saves alongside API/XBRL
+extraction and its XBRL saves. If either branch fails, no disclosure extraction
+or alignment starts. Already-running preprocessing work is drained and successful
+stage checkpoints remain available, so a resumed run skips completed work and
+retries the unfinished branch. Caches, progress and results remain in PostgreSQL
+by default.
 
 Disclosure extraction defaults to **3 concurrent year jobs × 6 batch workers per
 year**, with a shared cap of **18 simultaneous API requests** for the three-year

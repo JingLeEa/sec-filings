@@ -11,7 +11,7 @@ from sec_ui import components, config, data, landing
 components.setup("Home")
 landing.inject_css()
 
-CHAT_PAGE = "6_Chatbot.py"
+CHAT_PAGE = "2_Chatbot.py"
 STEPS = [(landing.BLUE, "Prepare a company"), (landing.TEAL, "Explore the changes"), (landing.PURPLE, "Read the evidence"),
          (landing.AMBER, "Get the summary"), (landing.INDIGO, "Ask questions")]
 
@@ -109,7 +109,7 @@ def _see(preset: dict):
     for key in ("f_items", "f_categories", "f_changes", "f_materiality", "f_statuses", "f_relationships"):
         st.session_state[key] = preset.get(key, [])
     st.session_state["f_text"] = ""
-    st.switch_page("pages/1_Change_Explorer.py")
+    st.switch_page("pages/6_Change_Explorer.py")
 
 
 kpis = [

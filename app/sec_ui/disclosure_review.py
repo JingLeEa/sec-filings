@@ -16,7 +16,7 @@ def cached_disclosures(company, year, mode):
     return disclosure_data.load_disclosures(company, year, disclosure_data.Source({(company, year): mode}), include_all=True)
 
 
-def render(scope):
+def render(scope, controls):
     st.subheader("Disclosure review")
     st.caption("Inspect AI-approved disclosure types or manually label disclosures that need review.")
     if message := st.session_state.pop("_disclosure_review_message", None):
@@ -53,19 +53,15 @@ def render(scope):
         return
     current = {row["disclosure_id"]: saved for row in records
                if (saved := review.current_disclosure_review(row, saved_reviews))}
+    status, selected_items, text = components.review_filters(
+        (row["item"] for row in records), prefix="disclosure", container=controls)
+    text = text.strip().lower()
     total, done = len(records), len(current)
     m1, m2, m3 = st.columns(3)
     m1.metric("Review queue", f"{total:,}")
     m2.metric("Reviewed", f"{done:,}")
     m3.metric("Pending", f"{total-done:,}")
     st.progress(done/total, text=f"{done:,} of {total:,} disclosures reviewed by a person")
-    st.sidebar.header("Review filters")
-    status = st.sidebar.selectbox("Review status", ["All", "Pending", "Reviewed"], key="disclosure_status")
-    items = sorted({row["item"] for row in records}, key=components._item_order)
-    components._clean("disclosure_items", items)
-    selected_items = st.sidebar.multiselect("SEC Item", items, key="disclosure_items",
-                                           format_func=lambda item: config.ITEM_TITLES.get(item, f"Item {item}"))
-    text = st.sidebar.text_input("Search text", key="disclosure_text", placeholder="word or phrase").strip().lower()
     filtered = [row for row in records if (not selected_items or row["item"] in selected_items)
                 and (not text or text in " ".join(str(row.get(field) or "") for field in
                      ("summary", "content", "section", "taxonomy")).lower())

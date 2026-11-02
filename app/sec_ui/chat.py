@@ -130,5 +130,5 @@ def open_in_side_by_side(match_id: str) -> bool:
         st.session_state[key] = []
     st.session_state["f_text"] = ""
     st.session_state["selected_match"] = match_id
-    st.switch_page("pages/2_Side_by_Side.py")
+    st.switch_page("pages/4_Side_by_Side.py")
     return True

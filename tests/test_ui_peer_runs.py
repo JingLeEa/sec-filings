@@ -143,7 +143,7 @@ class PeerPageTests(unittest.TestCase):
         with patch.dict(os.environ, {"SEC_UI_DATA_SOURCE": "files",
                                      "SEC_UI_ALIGNMENTS_DIR": str(root / "tests/fixtures/alignments")}):
             page = AppTest.from_file(str(root / "app/Home.py"), default_timeout=20).run()
-        page.switch_page("pages/4_Peer_Comparison.py").run()
+        page.switch_page("pages/3_Peer_Comparison.py").run()
         self.assertFalse(page.exception, [error.value for error in page.exception])
         return page
 

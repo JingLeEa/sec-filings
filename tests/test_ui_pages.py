@@ -8,8 +8,8 @@ from streamlit.testing.v1 import AppTest  # noqa: E402
 
 APP = Path(__file__).resolve().parents[1] / "app"
 FIXTURES = Path(__file__).parent / "fixtures"
-PAGES = ["Home.py", "pages/0_Run_Pipeline.py", "pages/1_Change_Explorer.py", "pages/2_Side_by_Side.py",
-         "pages/3_Synthesis_Report.py", "pages/4_Peer_Comparison.py", "pages/5_Manual_Review.py"]
+PAGES = ["Home.py", "pages/0_Run_Pipeline.py", "pages/6_Change_Explorer.py", "pages/4_Side_by_Side.py",
+         "pages/1_Synthesis_Report.py", "pages/3_Peer_Comparison.py", "pages/5_Manual_Review.py"]
 
 
 @pytest.fixture(autouse=True)
@@ -31,7 +31,7 @@ def sample_environment(monkeypatch, tmp_path):
 
 
 def run(page: str) -> AppTest:
-    if page == "pages/4_Peer_Comparison.py":
+    if page == "pages/3_Peer_Comparison.py":
         return AppTest.from_file(str(APP / "Home.py"), default_timeout=60).run().switch_page(page).run()
     return AppTest.from_file(str(APP / page), default_timeout=60).run()
 
@@ -197,7 +197,7 @@ def test_pipeline_page_rejects_invalid_ticker():
 
 
 def test_explorer_filter_narrows_the_table():
-    at = run("pages/1_Change_Explorer.py")
+    at = run("pages/6_Change_Explorer.py")
     assert metrics(at)["Showing"] == "432 of 432"
     assert not at.sidebar.multiselect
     at.multiselect(key="f_changes").select("Removed").run()
@@ -207,7 +207,7 @@ def test_explorer_filter_narrows_the_table():
 
 
 def test_explorer_filters_with_no_match_show_a_message():
-    at = run("pages/1_Change_Explorer.py")
+    at = run("pages/6_Change_Explorer.py")
     at.multiselect(key="f_changes").select("Removed").run()
     at.multiselect(key="f_materiality").select("Not assessed").run()
     assert not at.exception
@@ -217,18 +217,18 @@ def test_explorer_filters_with_no_match_show_a_message():
 
 def test_filters_persist_across_pages():
     at = run("Home.py")
-    at.switch_page("pages/1_Change_Explorer.py").run()
+    at.switch_page("pages/6_Change_Explorer.py").run()
     at.multiselect(key="f_changes").select("Modified").run()
     chosen = at.multiselect(key="f_changes").value
     assert chosen == ["Modified"]
     # AppTest keeps session state when the same instance moves to another page
-    at.switch_page("pages/2_Side_by_Side.py").run()
+    at.switch_page("pages/4_Side_by_Side.py").run()
     assert not at.exception
     assert at.multiselect(key="f_changes").value == ["Modified"]
 
 
 def test_side_by_side_steps_through_records():
-    at = run("pages/2_Side_by_Side.py")
+    at = run("pages/4_Side_by_Side.py")
     first = at.selectbox(key="selected_match").value
     next(b for b in at.button if b.label == "Next").click().run()
     assert not at.exception
@@ -236,7 +236,7 @@ def test_side_by_side_steps_through_records():
 
 
 def test_side_by_side_marks_missing_counterpart():
-    at = run("pages/2_Side_by_Side.py")
+    at = run("pages/4_Side_by_Side.py")
     at.multiselect(key="f_relationships").select("previous_only").run()
     html = " ".join(m.value for m in at.markdown)
     assert "No counterpart found in the FY2025 filing." in html
@@ -244,7 +244,7 @@ def test_side_by_side_marks_missing_counterpart():
 
 
 def test_synthesis_page_escapes_dollar_signs_and_links_evidence():
-    at = run("pages/3_Synthesis_Report.py")
+    at = run("pages/1_Synthesis_Report.py")
     text = " ".join(m.value for m in at.markdown)
     assert "\\$" in text
     assert "amd_2023_2024_M0269" in text
@@ -252,7 +252,7 @@ def test_synthesis_page_escapes_dollar_signs_and_links_evidence():
 
 
 def test_peer_page_shows_sample_banner_and_results():
-    at = run("pages/4_Peer_Comparison.py")
+    at = run("pages/3_Peer_Comparison.py")
     assert any("Sample data" in w.value for w in at.warning)
     shown = metrics(at)
     assert shown["Target disclosures"] == "2" and shown["Peer comparisons made"] == "3"
@@ -271,8 +271,8 @@ def test_no_data_gives_empty_states_not_crashes(monkeypatch, tmp_path):
     home = run("Home.py")
     assert any("No comparison data" in e.value for e in home.error)
     assert any(link.label == "Run pipeline" for link in home.get("page_link"))
-    assert any("No synthesis output" in i.value for i in run("pages/3_Synthesis_Report.py").info)
-    assert any("No peer comparison output" in i.value for i in run("pages/4_Peer_Comparison.py").info)
+    assert any("No synthesis output" in i.value for i in run("pages/1_Synthesis_Report.py").info)
+    assert any("No peer comparison output" in i.value for i in run("pages/3_Peer_Comparison.py").info)
 
 
 def test_broken_alignment_file_shows_error_message(monkeypatch, tmp_path):
@@ -282,7 +282,7 @@ def test_broken_alignment_file_shows_error_message(monkeypatch, tmp_path):
     (folder / "alignments.json").write_text("{broken")
     monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(tmp_path))
     st.cache_data.clear()
-    at = run("pages/1_Change_Explorer.py")
+    at = run("pages/6_Change_Explorer.py")
     assert not at.exception
     assert any("Could not load this comparison" in e.value for e in at.error)
 
@@ -319,7 +319,7 @@ def test_ai_approved_scope_shows_labels_and_allows_manual_override_across_pages(
     (final,) = [row for row in data.load_comparison("amd", 2024, 2025)["records"] if row["match_id"] == match_id]
     assert final["change_label"] == manual
     assert next(row for row in cached["records"] if row["match_id"] == match_id)["change_label"] == llm
-    at.switch_page("pages/2_Side_by_Side.py").run()
+    at.switch_page("pages/4_Side_by_Side.py").run()
     at.selectbox(key="selected_match").select(match_id).run()
     assert any(f"Final label: {manual}" in caption.value for caption in at.caption)
     fresh = run("pages/5_Manual_Review.py")
@@ -334,7 +334,7 @@ def test_ai_approved_scope_shows_labels_and_allows_manual_override_across_pages(
     assert final["change_label"] == manual and final["final_label_source"] == "manual"
 
 
-@pytest.mark.parametrize("page", ["pages/2_Side_by_Side.py", "pages/5_Manual_Review.py"])
+@pytest.mark.parametrize("page", ["pages/4_Side_by_Side.py", "pages/5_Manual_Review.py"])
 def test_comparison_pages_show_disclosure_paragraph_and_sentence_sources(page):
     at = run(page)
     assert not at.exception
@@ -377,6 +377,47 @@ def test_manual_review_save_persists_and_can_be_edited():
     assert manual_review().selectbox(key="manual_label").value == "Reworded"
 
 
+@pytest.mark.parametrize("page", ["Home.py", "pages/6_Change_Explorer.py", "pages/4_Side_by_Side.py",
+                                  "pages/1_Synthesis_Report.py"])
+def test_review_refresh_only_polls_and_updates_progress_on_manual_review(page):
+    from unittest.mock import patch
+    import streamlit as st
+    from sec_disclosure.llm.disclosures import write_json
+    from sec_ui import refresh
+
+    at = run("Home.py").switch_page("pages/5_Manual_Review.py").run()
+    at.selectbox(key="manual_label").select("Modified")
+    next(button for button in at.button if button.label == "Save review").click().run()
+    jobs = refresh.backend()
+    (job,) = jobs.jobs(refresh.queue_dir())
+    assert job["stage"] == "alignment" and job["status"] == "queued"
+    assert any(expander.label == "Pipeline updates" for expander in at.expander)
+    job.update(status="running", phase="Updating affected alignment change analysis")
+    write_json(jobs.job_path(refresh.queue_dir(), job["job_id"]), job)
+    at.run()
+    assert any(job["phase"] in message.value for message in at.info)
+
+    # Leaving review must stop its polling, worker startup and completion reruns.
+    with patch.object(refresh, "backend", side_effect=AssertionError("Review polling left Manual Review")) as poll, \
+         patch.object(st.cache_data, "clear", wraps=st.cache_data.clear) as clear:
+        at.switch_page(page).run()
+        assert not at.exception and not at.error
+        assert all(expander.label != "Pipeline updates" for expander in at.expander)
+        job.update(status="complete", phase="Updated through materiality")
+        write_json(jobs.job_path(refresh.queue_dir(), job["job_id"]), job)
+        at.run()
+        assert not at.exception and not at.error
+        assert all(job["phase"] not in message.value for message in at.success)
+        poll.assert_not_called()
+        clear.assert_not_called()
+
+    at.switch_page("pages/5_Manual_Review.py").run()
+    assert not at.exception and not at.error
+    assert any(job["phase"] in message.value for message in at.success)
+    assert at.session_state["_review_refresh_completed_amd"] == (job["job_id"],)
+    assert at.selectbox(key="manual_label").value == "Modified"
+
+
 def test_manual_review_save_and_next_does_not_copy_labels():
     at = manual_review()
     first = at.selectbox(key="manual_selected").value
@@ -388,7 +429,7 @@ def test_manual_review_save_and_next_does_not_copy_labels():
     assert at.selectbox(key="manual_label").value is None
     assert at.text_area(key="manual_notes").value == ""
     assert metrics(at)["Pending"] == "44"
-    at.sidebar.selectbox(key="manual_status").select("Reviewed").run()
+    at.selectbox(key="manual_status").select("Reviewed").run()
     assert at.selectbox(key="manual_selected").value == first
     assert at.selectbox(key="manual_label").value == "Expanded"
 
@@ -405,10 +446,21 @@ def test_manual_review_year_switch_does_not_copy_labels():
 
 def test_manual_review_empty_filter_keeps_downloads():
     at = manual_review()
-    at.sidebar.selectbox(key="manual_status").select("Reviewed").run()
+    count = len(at.selectbox(key="manual_selected").options)
+    assert not at.sidebar.multiselect
+    assert all(field.key != "manual_status" for field in at.sidebar.selectbox)
+    at.multiselect(key="manual_items").set_value(["1A"]).run()
+    at.text_input(key="manual_text").set_value("no matching review content 918273").run()
+    at.selectbox(key="manual_status").select("Reviewed").run()
     assert not at.exception
     assert any("No disclosures match" in i.value for i in at.info)
     assert len(at.get("download_button")) == 2
+    next(button for button in at.button if button.label == "Clear filters").click().run()
+    assert not at.exception
+    assert at.selectbox(key="manual_status").value == "All"
+    assert at.multiselect(key="manual_items").value == []
+    assert at.text_input(key="manual_text").value == ""
+    assert len(at.selectbox(key="manual_selected").options) == count
 
 
 def test_manual_review_handles_missing_and_broken_review_file(monkeypatch, tmp_path):
@@ -441,7 +493,7 @@ def test_manual_review_finishing_pending_queue_keeps_exports(monkeypatch, tmp_pa
     monkeypatch.setenv("SEC_UI_ALIGNMENTS_DIR", str(tmp_path / "alignments"))
     st.cache_data.clear()
     at = manual_review()
-    at.sidebar.selectbox(key="manual_status").select("Pending").run()
+    at.selectbox(key="manual_status").select("Pending").run()
     at.selectbox(key="manual_label").select("Reworded")
     next(b for b in at.button if b.label == "Save and next").click().run()
     assert not at.exception

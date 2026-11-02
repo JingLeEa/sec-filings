@@ -25,6 +25,7 @@ class PipelineRunUiTests(unittest.TestCase):
         progress = {"stages": [
             {"stage": "save_text_2023", "phase": "preprocessing", "status": "complete"},
             {"stage": "text_2024", "phase": "preprocessing", "status": "running"},
+            {"stage": "api_tables_and_save", "phase": "preprocessing", "status": "running"},
             {"stage": "align_and_save_2023_2024", "phase": "alignment", "status": "complete"},
             {"stage": "align_and_save_2024_2025", "phase": "alignment", "status": "running"},
             {"stage": "llm_changes_2023_2024", "phase": "change-analysis", "status": "complete"},
@@ -32,6 +33,8 @@ class PipelineRunUiTests(unittest.TestCase):
         phases = {phase["phase"]: phase for phase in pipeline_runs.phase_progress([2023, 2024, 2025], progress)}
         self.assertEqual((phases["preprocessing"]["saved"], phases["preprocessing"]["total"]), (1, 6))
         self.assertEqual(phases["preprocessing"]["status"], "running")
+        self.assertEqual(phases["preprocessing"]["active"], ["text_2024", "api_tables_and_save"])
+        self.assertEqual(phases["extraction"]["status"], "waiting")
         self.assertEqual(phases["alignment"]["saved"], 1)
         self.assertEqual(phases["alignment"]["status"], "running")
         self.assertEqual((phases["change-analysis"]["saved"], phases["change-analysis"]["total"]), (1, 4))

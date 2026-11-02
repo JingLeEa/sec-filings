@@ -78,10 +78,10 @@ def test_home_snapshot_follows_the_sidebar_choice():
 
 
 def test_features_skip_pages_that_do_not_exist(monkeypatch, tmp_path):
-    (tmp_path / "1_Change_Explorer.py").write_text("")
+    (tmp_path / "6_Change_Explorer.py").write_text("")
     monkeypatch.setattr(landing, "PAGES_DIR", tmp_path)
     assert [f["key"] for f in landing.available_features()] == ["explorer"]
-    assert landing.has_page("1_Change_Explorer.py") and not landing.has_page("6_Chatbot.py")
+    assert landing.has_page("6_Change_Explorer.py") and not landing.has_page("2_Chatbot.py")
 
 
 def test_every_feature_has_a_colour_a_button_label_and_bullets():
@@ -159,7 +159,7 @@ def bot(monkeypatch):
 
 
 def test_chat_page_starts_with_examples(bot):
-    at = run("pages/6_Chatbot.py")
+    at = run("pages/2_Chatbot.py")
     assert not at.exception, [e.value for e in at.exception]
     labels = [b.label for b in at.button]
     assert any("most material changes" in label for label in labels)
@@ -167,7 +167,7 @@ def test_chat_page_starts_with_examples(bot):
 
 
 def test_asking_a_question_shows_answer_citations_and_evidence(bot):
-    at = run("pages/6_Chatbot.py")
+    at = run("pages/2_Chatbot.py")
     at.chat_input[0].set_value("What changed at AMD?").run()
     assert not at.exception, [e.value for e in at.exception]
     assert bot.asked == ["What changed at AMD?"]
@@ -183,13 +183,13 @@ def test_asking_a_question_shows_answer_citations_and_evidence(bot):
 def test_dollar_amounts_are_escaped_so_they_are_not_read_as_maths(monkeypatch):
     fake = FakeBot(answer="Revenue rose from $5 billion to $7 billion.")
     monkeypatch.setattr(chat, "create_bot", lambda use_llm, use_embeddings: fake)
-    at = run("pages/6_Chatbot.py")
+    at = run("pages/2_Chatbot.py")
     at.chat_input[0].set_value("revenue?").run()
     assert "\\$5 billion to \\$7 billion" in text_of(at)
 
 
 def test_clicking_an_example_asks_it(bot):
-    at = run("pages/6_Chatbot.py")
+    at = run("pages/2_Chatbot.py")
     example = next(b for b in at.button if "How many new risk factors" in b.label)
     example.click().run()
     assert bot.asked and "How many new risk factors" in bot.asked[0]
@@ -197,7 +197,7 @@ def test_clicking_an_example_asks_it(bot):
 
 
 def test_home_prefill_is_asked_once(bot):
-    at = run("pages/6_Chatbot.py", chat_prefill="Summarise AMD for me")
+    at = run("pages/2_Chatbot.py", chat_prefill="Summarise AMD for me")
     assert bot.asked == ["Summarise AMD for me"]
     assert "chat_prefill" not in at.session_state
     at.run()
@@ -205,14 +205,14 @@ def test_home_prefill_is_asked_once(bot):
 
 
 def test_follow_up_scope_is_shown_in_the_sidebar(bot):
-    at = run("pages/6_Chatbot.py")
+    at = run("pages/2_Chatbot.py")
     at.chat_input[0].set_value("What changed at AMD?").run()
     sidebar = " ".join(m.value for m in at.sidebar.markdown) + " ".join(c.value for c in at.sidebar.caption)
     assert "Remembered for follow-ups" in sidebar and "AMD" in sidebar and "FY2025 10-K" in sidebar and "?" not in sidebar
 
 
 def test_clear_conversation_empties_the_page(bot):
-    at = run("pages/6_Chatbot.py")
+    at = run("pages/2_Chatbot.py")
     at.chat_input[0].set_value("What changed at AMD?").run()
     assert len(at.chat_message) == 2
     next(b for b in at.sidebar.button if b.label == "Clear conversation").click().run()
@@ -222,7 +222,7 @@ def test_clear_conversation_empties_the_page(bot):
 def test_a_failing_question_becomes_a_message_not_a_crash(monkeypatch):
     fake = FakeBot(error=RuntimeError("Query 'x' failed: timeout"))
     monkeypatch.setattr(chat, "create_bot", lambda use_llm, use_embeddings: fake)
-    at = run("pages/6_Chatbot.py")
+    at = run("pages/2_Chatbot.py")
     at.chat_input[0].set_value("slow question").run()
     assert not at.exception
     assert any("could not be answered" in e.value and "timeout" in e.value for e in at.error)
@@ -234,7 +234,7 @@ def test_unavailable_chatbot_explains_how_to_fix_it(monkeypatch):
     def broken(use_llm, use_embeddings):
         raise chat.ChatUnavailable("Cannot connect to PostgreSQL (OperationalError).")
     monkeypatch.setattr(chat, "create_bot", broken)
-    at = run("pages/6_Chatbot.py")
+    at = run("pages/2_Chatbot.py")
     assert not at.exception
     assert any("not available" in e.value for e in at.error)
     text = text_of(at)

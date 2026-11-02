@@ -27,7 +27,7 @@ Verification: see section 8.
 | File | Responsibility |
 | --- | --- |
 | `app/Home.py` | Overview page and the entry point. |
-| `app/pages/0_Run_Pipeline.py` ... `4_Peer_Comparison.py` | One file per page; the run page launches and monitors the full pipeline. |
+| `app/pages/*.py` | Pages ordered by filename prefix; the run page launches and monitors the full pipeline. |
 | `app/sec_ui/pipeline_runs.py` | Safe local subprocess launch, persisted UI job state, console-log tail, PostgreSQL checkpoint reads, and mapping of database saves to pipeline phases. |
 | `app/sec_ui/peer_runs.py` | Peer prerequisites using backend validation, background peer CLI launch, progress polling, and PostgreSQL report reads. |
 | `app/sec_ui/config.py` | Data folders, environment variables, company names. |

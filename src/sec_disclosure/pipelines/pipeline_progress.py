@@ -51,7 +51,7 @@ def read_progress(path, ticker, years):
 
 
 def stage_dependencies(stages):
-    raw_saves = {stage.name for stage in stages if stage.name.startswith("save_text_")}
+    preprocessing = {stage.name for stage in stages if stage.phase == "preprocessing"}
     dependencies = {}
     for stage in stages:
         if stage.name.startswith("save_text_"):
@@ -59,7 +59,7 @@ def stage_dependencies(stages):
         elif stage.name.startswith("save_xbrl_"):
             parents = {"api_tables_and_save"}
         elif stage.phase == "extraction":
-            parents = raw_saves | {"api_tables_and_save"}
+            parents = preprocessing
         elif stage.phase == "preprocessing":
             parents = set()
         elif stage.phase == "synthesis":

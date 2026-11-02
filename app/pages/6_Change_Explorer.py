@@ -76,7 +76,7 @@ if picked:
     methods = record["methods"]
     st.caption("Method labels: " + ", ".join(f"{k} = {v or 'n/a'}" for k, v in methods.items()))
     if st.button("Open side by side", type="primary"):
-        st.switch_page("pages/2_Side_by_Side.py")
+        st.switch_page("pages/4_Side_by_Side.py")
 
 st.divider()
 st.subheader("Export")

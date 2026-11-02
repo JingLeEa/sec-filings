@@ -8,7 +8,8 @@ from sec_ui import components, pipeline_runs
 
 STAGES = (
     ("preprocessing", "Preprocessing", "Preparing filing text and financial tables",
-     "Extracts filing sections and financial metrics, then saves them. Missing sections are checked with AI; "
+     "Prepares filing text and financial tables in parallel and saves both to PostgreSQL. "
+     "Disclosure extraction waits for both to finish. Missing sections are checked with AI; "
      "timed-out downloads retry automatically, so this stage may take longer."),
     ("extraction", "Disclosure extraction", "Hang on, we are extracting disclosures",
      "Identifies company-specific disclosures and checks their supporting source sentences."),
