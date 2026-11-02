@@ -87,14 +87,18 @@ SoCLaaS configuration. PostgreSQL mode needs a configured, running database; see
 | `SEC_UI_DATA_SOURCE` | `auto` (default), `files` or `postgres` |
 | `SEC_UI_DISCLOSURES_DIR` | Extraction JSON root: `<company>/<year>/` |
 | `SEC_UI_ALIGNMENTS_DIR` | Alignment JSON root: `<company>/<previous>-<current>/` |
-| `SEC_UI_MANUAL_REVIEWS_DIR` | Writable annotation root; defaults to `data/manual_reviews` |
+| `SEC_UI_MANUAL_REVIEWS_DIR` | Legacy import root (default `data/manual_reviews`); writable annotation root only in explicit `files` mode |
 | `SEC_UI_PIPELINE_DATA_DIR` | Legacy file-mode raw-data root; PostgreSQL mode uses its database artifact workspace |
 | `SEC_UI_PIPELINE_ENV_FILE` | Optional backend database/model configuration file; otherwise the existing defaults apply |
 | `SEC_UI_PIPELINE_CACHE_NAMESPACE` | PostgreSQL artifact/cache namespace used by the full pipeline; defaults to `main` |
 | `SEC_UI_REFRESH_AUTOSTART` | Defaults to `1`; set `0` only to use a separately managed worker or offline UI tests |
 
-The review page reads PostgreSQL or JSON through the existing data layer. Human
-annotations are saved as local JSON files in either mode.
+The review page reads PostgreSQL or JSON through the existing data layer. In
+default `auto` and `postgres` modes, human labels, notes, review history, refresh
+jobs, progress and worker logs are stored in PostgreSQL's `pipeline_artifacts`
+table under namespace `human-reviews`. Pipeline extraction and alignment read
+the same decisions. A database failure stops saving instead of falling back to
+disk. Explicit `SEC_UI_DATA_SOURCE=files` retains local storage for offline use.
 Automatic refreshes use the configured model API and need the same backend
 dependencies and configuration as the full pipeline. File mode requires the raw
 paragraph/sentence files and complete extraction metadata, not just UI fixtures.
@@ -215,17 +219,20 @@ reviewer supply one. The original AI label remains visible after an override.
 
 ## 6. Saved outputs and downloads
 
-The default annotation paths are separate for the two sections:
+Within the `human-reviews` PostgreSQL namespace, annotation keys are separate for
+the two sections:
 
 ```text
-data/manual_reviews/disclosures/<company>/<year>/manual_reviews.json
-data/manual_reviews/<company>/<previous>-<current>/manual_reviews.json
+manual_reviews/disclosures/<company>/<year>/manual_reviews.json
+manual_reviews/<company>/<previous>-<current>/manual_reviews.json
 ```
 
 Both use `schema_version: 1` and a `reviews` object keyed by disclosure ID or
-match ID. Writes use a temporary file and atomic replacement.
-Refresh queue metadata and the worker log remain under
-`<manual-reviews-root>/pipeline_refresh/`. PostgreSQL-mode stage workspaces,
+match ID. PostgreSQL writes are atomic; database locks serialize concurrent
+read/modify/write operations, with stale-session checks before replacing a
+decision. Local file mode uses a temporary file and atomic replacement.
+Refresh queue metadata and worker logs use PostgreSQL keys under
+`manual_reviews/pipeline_refresh/`. PostgreSQL-mode stage workspaces,
 source backups, model response caches and checkpoints use `pipeline_artifacts`;
 file-only workspaces remain under the queue directory. One worker owns that queue
 at a time. A PostgreSQL refresh takes the same company lock as the full pipeline
@@ -236,7 +243,23 @@ Valid reviews follow unchanged source text/membership if alignment renumbers IDs
 changed source evidence requires a new review. Reused IDs retain earlier review
 versions for audit rather than deleting decisions for a different source group.
 
-To drain pending jobs using a separately managed worker or after an app restart:
+At first access, existing files under the legacy root are read and imported once.
+Missing record IDs are merged into existing documents; decisions already in
+PostgreSQL take priority. Source files are retained unchanged. Legacy PostgreSQL
+jobs are migrated; unfinished file-mode jobs are paused for an explicit retry
+against PostgreSQL. Relaunching the app does not reapply the original local labels.
+
+The app automatically starts a PostgreSQL queue worker after a save or when
+Manual Review discovers pending work following a restart. For a separately
+managed worker, use the virtual queue path from its job settings with
+`--postgres` (and the same optional `--env-file`), or register a fresh virtual root:
+
+```bash
+.venv/bin/python scripts/process_review_refresh.py --postgres \
+  --queue-dir /__sec_postgres__/human-reviews-worker/manual_reviews/pipeline_refresh
+```
+
+For **explicit file mode**:
 
 ```bash
 .venv/bin/python scripts/process_review_refresh.py --queue-dir data/manual_reviews/pipeline_refresh

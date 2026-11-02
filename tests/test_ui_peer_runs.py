@@ -131,7 +131,8 @@ class PeerPageTests(unittest.TestCase):
             patch.object(pipeline_runs, "active_run", return_value=None),
             patch.object(peer_runs, "active_run", return_value=None),
             patch.object(peer_runs, "read_run", return_value=None),
-            patch.dict(os.environ, {"SEC_UI_DATA_SOURCE": "files", "SEC_UI_PEER_DIR": str(fixture)}),
+            patch.dict(os.environ, {"SEC_UI_DATA_SOURCE": "files", "SEC_UI_PEER_DIR": str(fixture),
+                                    "SEC_UI_BOOTSTRAP_TEST_DATA": "0"}),
         ):
             context.start()
             self.addCleanup(context.stop)

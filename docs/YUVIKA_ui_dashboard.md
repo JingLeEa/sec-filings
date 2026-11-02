@@ -16,9 +16,12 @@ Implemented:
 - **Synthesis report**: reads saved PostgreSQL reports or local JSON exports, shows each finding with its cited evidence, financial figures, limitations and validation result; downloads as Markdown, evidence CSV and JSON.
 - **Peer comparison**: checks saved company/year prerequisites, launches or resumes `run_peer_comparison_pipeline.py` in the background, and polls comparison counts and the activity log. Reads PostgreSQL reports or local exports, shows cited sentences on both sides, and downloads Markdown, CSV and JSON.
 - **Run pipeline**: accepts a ticker and comma-separated fiscal years (1900-2200), shows the exact comparison pairs, confirms selections spanning more than two years, and starts or resumes `run_full_pipeline.py` in the background. Shows all six phases through synthesis, PostgreSQL saves, activity logs, and an in-app completion or failure notice. Filing-section recovery and download-timeout retries are automatic inside the extractor.
-- Two data sources behind one data layer (`app/sec_ui/data.py`): the JSON files on the `test-data` branch, or PostgreSQL through `sec_disclosure.storage.exports`.
+- The shared data layer (`app/sec_ui/data.py`) reads PostgreSQL results, including the bundled starter reports imported at startup. Explicit file mode also supports legacy JSON inputs.
 
-Not implemented (planned): the chatbot (Aarav), user accounts and saving of user notes, and human review actions on `needs_review` matches.
+User accounts are not implemented. Human review supports saved labels and notes;
+see [Manual Review](ZIYANG_manual_review.md). In default `auto`/`postgres` mode,
+these decisions and their refresh queue/logs persist in PostgreSQL, including
+across app restarts. Local review storage requires explicit `files` mode.
 
 Verification: see section 8.
 
@@ -60,16 +63,25 @@ Python 3.11 or newer and the packages in `requirements.txt` (the dashboard adds 
 
 ```bash
 pip install -r requirements.txt
-git fetch origin test-data
-git worktree add ../sec-filings-test-data origin/test-data   # about 227 MiB, once
+docker compose up -d
 streamlit run app/Home.py
 ```
 
-The app finds `../sec-filings-test-data/test_data` by itself. Optional environment variables:
+Startup imports the bundled [starter reports](../starter_data/README.md) for 11
+companies into PostgreSQL automatically. Each new app process checks for missing
+scopes; existing data and newer pipeline results are preserved. The first import
+is atomic and requires no model/API calls or second branch checkout. If PostgreSQL
+is unavailable, the app shows setup instructions and can retry after reload.
+The shipped reports do not contain full raw/XBRL preprocessing inputs; run the
+pipeline before attempting dependent manual-review refreshes on those examples.
+
+Legacy file-mode development can still use `../sec-filings-test-data/test_data`.
+Optional environment variables:
 
 | Variable | Meaning |
 | --- | --- |
 | `SEC_UI_DATA_SOURCE` | `auto` (default: database if it has completed runs, otherwise files), `files`, or `postgres`. |
+| `SEC_UI_BOOTSTRAP_TEST_DATA` | Defaults to `1`; set `0` to skip the automatic starter-data import. Explicit `files` mode also skips it. |
 | `SEC_UI_ALIGNMENTS_DIR`, `SEC_UI_DISCLOSURES_DIR` | Folders laid out as `<company>/<previous>-<current>/alignments.json` and `<company>/<year>/disclosures.json`. |
 | `SEC_UI_SYNTHESIS_DIRS` | Folders holding synthesis output JSON (default `data/synthesis`, `synthesis_dev`, `tests/fixtures/synthesis`). |
 | `SEC_UI_PEER_DIR` | Folder laid out as `<TICKER>/<YEAR>/peer_comparison.json` (default `data/peer_comparison`). |

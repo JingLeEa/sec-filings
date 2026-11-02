@@ -1,6 +1,9 @@
 # Homepage introduction
 
-`sec-filings-intro.mp4` is the approved 20-second project animation, displayed at the top of `app/Home.py`. It plays muted, loops, and keeps the standard video controls for pausing, replaying and fullscreen viewing. Streamlit serves the bundled file, so playback needs no external video host or API key.
+`sec-filings-intro.mp4` is the approved 20-second project animation, displayed at the top of `app/Home.py`. It autoplays muted and loops as a passive animation. Playback controls, mouse interaction and keyboard focus are disabled, so hovering or clicking does not reveal video actions. The app embeds the bundled file, so playback needs no external video host or API key.
+
+The player is centered and capped at 640 pixels wide (360 pixels tall at its
+16:9 aspect ratio). It shrinks to fit narrower screens.
 
 The animation introduces disclosure changes, then peer comparison, then the chatbot. The peer comparison is an illustration; the chatbot uses a saved result from the app. Numbered “Feature” labels are omitted.
 

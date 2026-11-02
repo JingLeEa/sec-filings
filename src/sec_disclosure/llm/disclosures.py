@@ -455,7 +455,8 @@ def usage_report(requests: list[dict], total_batches: int) -> dict:
 
 
 def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: list[dict], *,
-                 consolidation_max_prompt_chars=MAX_CONSOLIDATION_PROMPT_CHARS) -> dict:
+                 consolidation_max_prompt_chars=MAX_CONSOLIDATION_PROMPT_CHARS,
+                 input_source="files", env_file=None) -> dict:
     disclosures, exclusions, failed, pending = [], list(filing.filtered), [], []
     unassigned, invalid, nodes = [], [], []
     attempts = defaultdict(list)
@@ -570,7 +571,8 @@ def save_outputs(output: Path, filing: Filing, batches: list[dict], requests: li
     failed_consolidations = [{"consolidation_id": c["id"], "item": c["item"], "error": c["error"]}
                             for c in consolidation_audit if c["status"] == "failed"]
     from sec_disclosure.review_overrides import apply_disclosure_review, read_reviews, review_root
-    human_reviews = read_reviews(review_root(), filing.company, "disclosure", filing.year)
+    human_reviews = read_reviews(review_root(), filing.company, "disclosure", filing.year,
+                                 input_source=input_source, env_file=env_file)
     disclosures = [apply_disclosure_review(row, human_reviews.get(row["disclosure_id"])) for row in disclosures]
     accepted = [d for d in disclosures if d["verification"]["status"] == "source_validated"]
     review = [d for d in disclosures if d["verification"]["status"] == "needs_review"]
@@ -761,7 +763,8 @@ def run_year(args, prepared, config, pacer):
 
     def save():
         return save_outputs(output, filing, batches, requests,
-                            consolidation_max_prompt_chars=args.consolidation_max_prompt_chars)
+                            consolidation_max_prompt_chars=args.consolidation_max_prompt_chars,
+                            input_source=getattr(args, "input_source", "files"), env_file=args.env_file)
 
     try:
         log(f"{args.ticker.upper()}: {len(filing.paragraphs)} chunks; {len(filing.units)} sentence records; {len(filing.filtered)} filtered; {len(batches)} batches.")

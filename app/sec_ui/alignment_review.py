@@ -55,7 +55,7 @@ def render(scope, controls):
                           file_name=f"{base}.json", mime="application/json", width="stretch", disabled=not rows)
         c.download_button("Reviews (CSV)", reports.rows_to_csv(rows), file_name=f"{base}.csv",
                           mime="text/csv", width="stretch", disabled=not rows)
-        st.caption(f"Choices and notes are saved to {review.review_path(company, previous, current)}. "
+        st.caption(f"Choices and notes are saved to {review.storage_label(review.review_path(company, previous, current))}. "
                    "Downloads include every result in this comparison, using AI labels unless a manual label was saved.")
 
 

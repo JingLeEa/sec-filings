@@ -31,6 +31,24 @@ def test_discovers_company_and_year_pairs():
     assert source.pairs("amd") == [(2023, 2024), (2024, 2025)]
 
 
+def test_starter_snapshot_can_be_browsed_from_postgres_when_original_sources_are_missing(monkeypatch):
+    from sec_disclosure.storage import exports
+    folder = FIXTURES / "alignments/amd/2024-2025"
+    saved = {name: json.loads((folder / name).read_text()) for name in ("alignments.json", "needs_review.json")}
+
+    def missing(*args, **kwargs):
+        raise exports.MissingAlignmentDisclosures("Original source disclosure is missing")
+
+    monkeypatch.setattr(exports, "get_alignment_reports", missing)
+    monkeypatch.setattr(data, "_starter_alignment_reports", lambda *args: (saved, {}))
+    comparison = data.load_comparison("amd", 2024, 2025, data.Source({("amd", 2024, 2025): "postgres"}))
+    assert comparison["meta"]["source"] == "postgres"
+    assert comparison["records"] and any(row["text_source"] == "cited sentences" for row in comparison["records"])
+    monkeypatch.setattr(data, "_starter_alignment_reports", lambda *args: None)
+    with pytest.raises(data.DataError, match="Original source disclosure is missing"):
+        data.load_comparison("amd", 2024, 2025, data.Source({("amd", 2024, 2025): "postgres"}))
+
+
 def test_loads_every_alignment_including_needs_review(amd):
     saved = json.loads((FIXTURES / "alignments/amd/2024-2025/alignments.json").read_text())["alignments"]
     review = json.loads((FIXTURES / "alignments/amd/2024-2025/needs_review.json").read_text())

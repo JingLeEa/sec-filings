@@ -98,7 +98,8 @@ class AlignmentTests(unittest.TestCase):
         database = self.database_inputs()
         shutil.rmtree(self.root / 'raw')
         shutil.rmtree(self.root / 'disclosures')
-        with patch.object(snapshots, 'read_snapshots', return_value=database):
+        with patch.object(snapshots, 'read_snapshots', return_value=database), \
+             patch("sec_disclosure.storage.artifacts.PostgresArtifactStore.get", return_value=None):
             self.assertEqual(self.run_cli('--input-source', 'postgres'), (0, 0))
             self.assertEqual(self.run_cli('--input-source', 'postgres', '--output-dir', str(self.root / 'new-output')),
                              (0, calls))
@@ -2072,6 +2073,7 @@ class AlignmentTests(unittest.TestCase):
             row["materiality_analysis"] = {"materiality": "Yes", "reason": "Stored only in PostgreSQL."}
         target = self.root / "database-recovery"
         with patch.object(snapshots, "read_snapshots", return_value=self.database_inputs()), \
+             patch("sec_disclosure.storage.artifacts.PostgresArtifactStore.get", return_value=None), \
              patch.object(snapshots, "alignment_annotation_reports", return_value=documents):
             self.assertEqual(self.run_cli("--input-source", "postgres", "--repair-from", str(source),
                                           "--output-dir", str(target), "--offline-repair"), (0, 0))

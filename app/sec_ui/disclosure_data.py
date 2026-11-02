@@ -28,11 +28,14 @@ def discover_source():
     if mode in {"auto", "postgres"}:
         try:
             with data._postgres_connection() as conn, conn.cursor() as cur:
-                cur.execute("SELECT DISTINCT f.company, f.fiscal_year FROM filings f "
-                            "JOIN disclosures d ON d.filing_id=f.filing_id WHERE f.form_type='10-K' "
-                            "AND EXISTS (SELECT 1 FROM pipeline_stage_snapshots s WHERE s.company=f.company "
-                            "AND s.kind='disclosures' AND s.previous_year=f.fiscal_year AND s.current_year=f.fiscal_year "
-                            "AND s.documents->'token_usage.json'->'payload'->>'run_complete'='true')")
+                cur.execute("WITH available AS MATERIALIZED ("
+                            "SELECT company,previous_year FROM pipeline_stage_snapshots "
+                            "WHERE kind='disclosures' AND previous_year=current_year "
+                            "AND (documents->'token_usage.json'->'payload'->>'run_complete'='true' "
+                            "OR documents->'starter_data.json'->'payload'->>'source'='test-data')) "
+                            "SELECT f.company,f.fiscal_year FROM filings f JOIN available s ON s.company=f.company "
+                            "AND s.previous_year=f.fiscal_year WHERE f.form_type='10-K' "
+                            "AND EXISTS (SELECT 1 FROM disclosures d WHERE d.filing_id=f.filing_id)")
                 source.scopes.update({(company, int(year)): "postgres" for company, year in cur.fetchall()})
         except Exception as error:
             source.notes.append(f"Disclosure database not used ({type(error).__name__}).")

@@ -23,6 +23,10 @@ class DownstreamExportError(RuntimeError):
     """Missing normalized data or a safe-to-print database export failure."""
 
 
+class MissingAlignmentDisclosures(DownstreamExportError):
+    """An alignment references disclosures absent from its normalized filings."""
+
+
 def _company(value):
     value = value.lower()
     if not re.fullmatch(r"[a-z0-9][a-z0-9.-]*", value):
@@ -112,7 +116,7 @@ def _alignment_reports(cur, company, previous, current):
         members[row["match_id"]][row["side"]].append(disclosure)
     if missing:
         ids = sorted(set(missing))
-        raise DownstreamExportError(
+        raise MissingAlignmentDisclosures(
             f"Alignment {company} {previous}-{current} has {len(ids)} disclosure IDs missing from the expected filings "
             f"({', '.join(ids[:5])}). Import disclosures for both years before exporting; no partial reports were written.")
     partition = {"alignments": [], "needs_review": []}

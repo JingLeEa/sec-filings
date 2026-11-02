@@ -1,6 +1,7 @@
 """Backend launch and progress mapping for the dashboard, without external requests."""
 import json
 import importlib.util
+import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
@@ -266,6 +267,7 @@ class RunPipelinePageTests(unittest.TestCase):
         self.temp = TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         for context in (
+            patch.dict(os.environ, {"SEC_UI_BOOTSTRAP_TEST_DATA": "0"}),
             patch.object(pipeline_runs, "ROOT", Path(self.temp.name)),
             patch.object(pipeline_runs, "_postgres_documents", return_value={}),
         ):

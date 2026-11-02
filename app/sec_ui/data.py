@@ -149,16 +149,47 @@ def _file_reports(company, previous, current):
     return reports, lookup
 
 
+def _starter_alignment_reports(company, previous, current):
+    """Browse incomplete legacy evidence from its PostgreSQL starter snapshot."""
+    import psycopg
+    from psycopg.rows import dict_row
+    from sec_disclosure.storage.exports import _disclosure_reports
+
+    with _postgres_connection() as conn:
+        conn.read_only = True
+        conn.isolation_level = psycopg.IsolationLevel.REPEATABLE_READ
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute("SELECT documents FROM pipeline_stage_snapshots WHERE company=%s AND kind='alignments' "
+                        "AND previous_year=%s AND current_year=%s "
+                        "AND documents->'starter_data.json'->'payload'->>'source'='test-data'", (company, previous, current))
+            row = cur.fetchone()
+            if row is None:
+                return None
+            reports = {name: row["documents"][name]["payload"] for name in ("alignments.json", "needs_review.json")
+                       if name in row["documents"]}
+            lookup = {}
+            for year in (previous, current):
+                for report in _disclosure_reports(cur, company, year).values():
+                    lookup.update({record["disclosure_id"]: record for record in report["disclosures"]})
+            return reports, lookup
+
+
 def _postgres_reports(company, previous, current):
     src = str(config.ROOT / "src")
     if src not in sys.path:
         sys.path.insert(0, src)
     try:
-        from sec_disclosure.storage.exports import DownstreamExportError, get_alignment_reports
+        from sec_disclosure.storage.exports import DownstreamExportError, MissingAlignmentDisclosures, get_alignment_reports
     except ImportError as error:
         raise DataError(f"The project package is not importable ({error}).") from None
     try:
         reports = get_alignment_reports(company, previous, current)
+    except MissingAlignmentDisclosures as error:
+        # Only bundled legacy reports can use this browse-only path. Real
+        # pipeline inputs retain the strict missing-source failure above.
+        if starter := _starter_alignment_reports(company, previous, current):
+            return starter
+        raise DataError(str(error)) from None
     except DownstreamExportError as error:
         raise DataError(str(error)) from None
     return reports, {}

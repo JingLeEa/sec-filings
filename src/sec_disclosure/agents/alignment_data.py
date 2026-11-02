@@ -15,6 +15,7 @@ class AlignmentData:
                  input_source="files", env_file=None):
         self.ticker, self.years = ticker, years
         self.input_source = input_source
+        self.env_file = env_file
         self.records, self.paragraphs, self.audit, self.hashes = {}, {}, {}, {}
         self.extraction_usage = {}
         self._database_documents = {}

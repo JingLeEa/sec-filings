@@ -71,7 +71,7 @@ class SynthesisStorageUiTests(unittest.TestCase):
 class SynthesisPageTests(unittest.TestCase):
     def setUp(self):
         for context in (
-            patch.dict(os.environ, {"SEC_UI_DATA_SOURCE": "auto"}),
+            patch.dict(os.environ, {"SEC_UI_DATA_SOURCE": "auto", "SEC_UI_BOOTSTRAP_TEST_DATA": "0"}),
             patch.object(reports, "list_synthesis_files", return_value=[]),
             patch.object(reports, "list_synthesis_reports", return_value=[SAVED]),
         ):

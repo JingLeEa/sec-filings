@@ -259,7 +259,8 @@ def save_report(output, data, candidates, matches, groups, decisions, runtime, *
               "alignments": finalized}
     from sec_disclosure.review_overrides import apply_alignment_reviews, read_reviews, review_root
     report = apply_alignment_reviews(report, data.records,
-        read_reviews(review_root(), data.ticker, "alignment", *data.years))
+        read_reviews(review_root(), data.ticker, "alignment", *data.years,
+                     input_source=data.input_source, env_file=data.env_file))
     exact_path = output / "automatic_matches.json"
     if exact_path.exists():
         automatic = json.loads(exact_path.read_text())

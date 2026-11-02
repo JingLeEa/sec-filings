@@ -35,6 +35,7 @@ src/sec_disclosure/
 └── utils/           # planned shared utilities
 
 app/                 # Streamlit chatbot UI
+starter_data/        # bundled saved reports, imported into PostgreSQL on app launch
 scripts/             # command-line entry points
 docs/                # detailed workflow notes and annotation guides
 data/                # generated outputs; ignored by Git
@@ -42,6 +43,19 @@ tests/               # unit tests
 ```
 
 ## Quick Start
+
+To open the dashboard with starter company data already available in PostgreSQL:
+
+```bash
+python3 -m pip install -r requirements.txt -r app/requirements.txt
+docker compose up -d
+python3 -m streamlit run app/Home.py
+```
+
+App startup automatically imports the bundled `test-data` reports for 11 companies
+into missing PostgreSQL scopes. Later launches preserve existing data and newer
+pipeline results. No second branch checkout or model API key is needed for this
+import. See [starter data](starter_data/README.md) for contents and setup options.
 
 Install dependencies:
 
@@ -145,4 +159,10 @@ Run the test suite:
 PYTHONPATH=src python3 -m unittest discover -s tests
 ```
 
-Generated files are written under `data/`, which is ignored by Git. Table metrics default to `data/table_output/<company>/`.
+The main and peer pipelines keep generated outputs and caches in PostgreSQL by
+default. Manual Review also saves human labels, notes, history and refresh jobs/logs
+in PostgreSQL; existing local annotations are imported once without replacing
+decisions already saved in the database. Explicit `SEC_UI_DATA_SOURCE=files`
+keeps offline review storage local. Local result exports require `--save-local-output`. Legacy standalone
+scripts can write under `data/`, which is ignored by Git. The tracked
+`starter_data/` bundle contains shipped inputs rather than generated run output.

@@ -36,6 +36,8 @@ def setup(title: str):
     """Call first on every page."""
     st.set_page_config(page_title=f"{title} | SEC Disclosure Comparison", layout="wide")
     st.markdown(CSS, unsafe_allow_html=True)
+    from .bootstrap import ensure_starter_data
+    ensure_starter_data()
     persist()
 
 

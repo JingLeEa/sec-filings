@@ -6,7 +6,7 @@ from copy import deepcopy
 import hashlib
 import json
 import os
-from pathlib import Path
+from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 from sec_disclosure.annotation.export_table_annotations import CONTENT_LABELS
 
@@ -33,11 +33,20 @@ def annotation_path(root, company, stage, previous, current=None):
     return Path(root) / company / f"{previous}-{current}" / "manual_reviews.json"
 
 
-def read_reviews(root, company, stage, previous, current=None):
+def read_reviews(root, company, stage, previous, current=None, *, input_source="files", env_file=None):
     path = annotation_path(root, company, stage, previous, current)
-    if not path.exists():
-        return {}
-    document = json.loads(path.read_text())
+    if input_source == "postgres" and not hasattr(path, "artifact_store"):
+        from sec_disclosure.storage.artifacts import PostgresArtifactStore
+        from sec_disclosure.storage.human_reviews import NAMESPACE
+        key = annotation_path("manual_reviews", company, stage, previous, current).as_posix()
+        stored = PostgresArtifactStore(NAMESPACE, env_file, read_only=True).get(key)
+        if stored is None:
+            return {}
+        document = json.loads(stored[1])
+    else:
+        if not path.exists():
+            return {}
+        document = json.loads(path.read_text())
     if (document.get("schema_version") != 1 or document.get("company") != company
             or not isinstance(document.get("reviews"), dict)):
         raise ValueError(f"Invalid human review file: {path.name}")

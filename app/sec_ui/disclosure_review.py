@@ -78,7 +78,7 @@ def render(scope, controls):
                           mime="application/json", disabled=not rows, width="stretch")
         c.download_button("Disclosure reviews (CSV)", reports.rows_to_csv(rows), file_name=base+".csv",
                           mime="text/csv", disabled=not rows, width="stretch")
-        st.caption(f"Choices and notes are saved to {review.disclosure_review_path(company, year)}. "
+        st.caption(f"Choices and notes are saved to {review.storage_label(review.disclosure_review_path(company, year))}. "
                    "Downloads include every disclosure in this filing, using AI types unless a manual type was saved.")
 
     if not filtered:

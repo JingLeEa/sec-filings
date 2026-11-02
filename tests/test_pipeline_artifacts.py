@@ -176,7 +176,8 @@ class PipelineArtifactTests(unittest.TestCase):
                              for name in ('2023_chunks.json', '2023_chunk_sentences.json')}
                 snapshots = {('raw', '2023', '2023'): {'documents': documents}}
                 pg_args = args + ['--data-dir', str(workspace.root), '--input-source', 'postgres']
-                with patch('sec_disclosure.storage.pipeline_snapshots.read_snapshots', return_value=snapshots):
+                with patch('sec_disclosure.storage.pipeline_snapshots.read_snapshots', return_value=snapshots), \
+                     patch('sec_disclosure.storage.artifacts.PostgresArtifactStore.get', return_value=None):
                     self.assertEqual(disclosures.main(pg_args), 0)
                     self.assertEqual(requests.call_count, calls)
                     self.assertEqual((workspace.root / 'disclosures/amd/2023/disclosures.json').read_bytes(), original)

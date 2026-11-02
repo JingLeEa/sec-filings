@@ -15,7 +15,8 @@ from sec_disclosure.llm.config import LLMConfig
 class DisclosureTests(unittest.TestCase):
     def test_cached_extraction_keeps_source_bound_manual_type_without_model_calls(self):
         from sec_ui import review
-        with patch.dict("os.environ", {"SEC_UI_MANUAL_REVIEWS_DIR": str(self.root / "reviews")}):
+        with patch.dict("os.environ", {"SEC_UI_MANUAL_REVIEWS_DIR": str(self.root / "reviews"),
+                                       "SEC_UI_DATA_SOURCE": "files"}):
             self.assertEqual(self.run_command()[0], 0)
             row = self.read_output("disclosures.json")["disclosures"][0]
             original = row["taxonomy"]
@@ -65,7 +66,8 @@ class DisclosureTests(unittest.TestCase):
         for path in self.input_dir.glob('*.json'):
             path.unlink()
         key = ('raw', '2024', '2024')
-        with patch.object(snapshots, 'read_snapshots', return_value={key: {'documents': documents}}) as read:
+        with patch.object(snapshots, 'read_snapshots', return_value={key: {'documents': documents}}) as read, \
+             patch("sec_disclosure.storage.artifacts.PostgresArtifactStore.get", return_value=None):
             self.assertEqual(self.run_command('--input-source', 'postgres')[0], 0)
         read.assert_called_once()
         self.assertTrue(self.read_output('token_usage.json')['run_complete'])

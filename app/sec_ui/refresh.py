@@ -24,6 +24,9 @@ def queue_dir():
 
 
 def request(stage, record, saved, mode, *, force=False):
+    # An auto-mode data fallback must not turn a review refresh into a file writer.
+    if config.data_source_mode() != "files":
+        mode = "postgres"
     disclosures = config.disclosures_dir() or config.ROOT / "data/disclosures"
     alignments = config.alignments_dir() or config.ROOT / "data/alignments"
     pipeline_data = Path(os.environ.get("SEC_UI_PIPELINE_DATA_DIR",
@@ -50,22 +53,13 @@ def request(stage, record, saved, mode, *, force=False):
             job = jobs.enqueue(queue_dir(), **arguments)
         jobs.launch_worker(queue_dir())
         return job
-    except (OSError, ValueError) as error:
+    except (OSError, ValueError, jobs.ArtifactStorageError) as error:
         raise data.DataError("Your review is saved, but the pipeline refresh could not start. "
                              "Use Refresh downstream results to retry. " + str(error)) from None
 
 
 def worker_running():
-    import fcntl
-    path = queue_dir() / "worker.lock"
-    if not path.exists():
-        return False
-    with path.open("a") as lock:
-        try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            return True
-        return False
+    return backend().worker_running(queue_dir())
 
 
 @st.fragment(run_every=3)

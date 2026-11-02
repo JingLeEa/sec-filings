@@ -290,6 +290,14 @@ def test_postgres_refresh_publishes_consistent_snapshots_and_normalized_inputs(p
     artifacts = MemoryArtifactStore()
     synthesized = []
 
+    # Agent overrides now read the dedicated PostgreSQL human-review namespace.
+    from sec_disclosure.storage.artifacts import PostgresArtifactStore
+    def read_human_review(store, key):
+        assert store.namespace == "human-reviews"
+        path = case.root / "reviews" / Path(key).relative_to("manual_reviews")
+        return ("file", path.read_bytes(), 0) if path.exists() else None
+    monkeypatch.setattr(PostgresArtifactStore, "get", read_human_review)
+
     def read(company, scopes, **kwargs):
         assert company == "amd"
         return {tuple(map(str, scope)): deepcopy(database[tuple(map(str, scope))]) for scope in scopes}

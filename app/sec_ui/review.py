@@ -6,6 +6,7 @@ import json
 import os
 import re
 import tempfile
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from threading import Lock
@@ -13,6 +14,36 @@ from threading import Lock
 from . import config, data
 
 _SAVE_LOCK = Lock()
+
+
+@contextmanager
+def _review_lock(path):
+    with _SAVE_LOCK:
+        if not hasattr(path, "artifact_store"):
+            yield
+            return
+        from sec_disclosure.storage.artifacts import ArtifactStorageError
+        from sec_disclosure.storage.human_reviews import document_lock
+        try:
+            with document_lock(path):
+                yield
+        except ArtifactStorageError:
+            raise data.DataError("Could not save human reviews in PostgreSQL. Check the database connection; "
+                                 "local storage is not used as a fallback.") from None
+
+
+def storage_label(path):
+    return "PostgreSQL" if hasattr(path, "artifact_store") else str(path)
+
+
+def _read_document(path):
+    if not hasattr(path, "artifact_store"):
+        return json.loads(path.read_text(encoding="utf-8"))
+    from sec_disclosure.storage.artifacts import ArtifactStorageError
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except ArtifactStorageError:
+        raise data.DataError("Could not read human reviews in PostgreSQL. Check the database connection.") from None
 
 
 def label_source(saved):
@@ -74,6 +105,10 @@ def apply_final_choices(comparison):
 
 
 def _write_reviews(path, payload):
+    if hasattr(path, "artifact_store"):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        return
     temporary = None
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -117,7 +152,7 @@ def review_path(company: str, previous: int, current: int) -> Path:
 def load_reviews(company: str, previous: int, current: int) -> dict:
     path = review_path(company, previous, current)
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = _read_document(path)
     except FileNotFoundError:
         return {}
     except (OSError, ValueError):
@@ -173,10 +208,9 @@ def save_review(record: dict, label: str, notes: str, *, expected: dict | None, 
         raise data.DataError("Choose a change label before saving.")
     if any(record[f"{side}_ids"] and not record[f"{side}_text"].strip() for side in ("previous", "current")):
         raise data.DataError("Source text is missing for a disclosure in this match.")
-    # Streamlit sessions share this lock. Read again inside it to retain other saved labels.
-    with _SAVE_LOCK:
-        company, previous, current = record["company"], record["previous_year"], record["current_year"]
-        path = review_path(company, previous, current)
+    company, previous, current = record["company"], record["previous_year"], record["current_year"]
+    path = review_path(company, previous, current)
+    with _review_lock(path):
         reviews = load_reviews(company, previous, current)
         if reviews.get(record["match_id"]) != expected:
             raise data.DataError("This review was updated in another session. Reload data before saving again.")
@@ -226,7 +260,7 @@ def disclosure_review_path(company, year):
 def load_disclosure_reviews(company, year):
     path = disclosure_review_path(company, year)
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = _read_document(path)
     except FileNotFoundError:
         return {}
     except (OSError, ValueError):
@@ -263,9 +297,9 @@ def save_disclosure_review(record, disclosure_type, notes, *, expected, label_so
         raise data.DataError("Choose a disclosure type before saving.")
     if not (record.get("content") or "").strip():
         raise data.DataError("Source text is missing for this disclosure.")
-    with _SAVE_LOCK:
-        company, year, disclosure_id = record["company"], record["fiscal_year"], record["disclosure_id"]
-        path = disclosure_review_path(company, year)
+    company, year, disclosure_id = record["company"], record["fiscal_year"], record["disclosure_id"]
+    path = disclosure_review_path(company, year)
+    with _review_lock(path):
         reviews = load_disclosure_reviews(company, year)
         if reviews.get(disclosure_id) != expected:
             raise data.DataError("This disclosure review was updated in another session. Reload data before saving again.")

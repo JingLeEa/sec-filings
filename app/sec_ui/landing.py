@@ -5,6 +5,7 @@ Meaning is never carried by colour alone: every coloured item also has a text la
 """
 from __future__ import annotations
 
+from base64 import b64encode
 from html import escape
 from pathlib import Path
 
@@ -68,7 +69,8 @@ STATUS_INFO = {
 
 CSS = """
 .st-key-home_intro video { border-radius: 14px; border: 1px solid rgba(128,128,128,0.28);
-                           background: #f4f1e8; }
+                           background: #f4f1e8; display: block; width: 100%; height: auto;
+                           pointer-events: none; user-select: none; }
 .hero { padding: 1.4rem 1.6rem; border-radius: 14px; margin-bottom: 1rem;
         border: 1px solid rgba(128,128,128,0.28);
         background: linear-gradient(135deg, rgba(37,99,235,0.13), rgba(124,58,237,0.10) 55%, rgba(13,148,136,0.10)); }
@@ -125,10 +127,17 @@ def inject_css() -> None:
 
 
 def render_intro() -> None:
-    """Play the bundled project introduction above the home-page content."""
+    """Show the bundled introduction as a passive, looping animation."""
     if INTRO_VIDEO.is_file():
-        with st.container(key="home_intro"):
-            st.video(str(INTRO_VIDEO), autoplay=True, muted=True, loop=True)
+        encoded = b64encode(INTRO_VIDEO.read_bytes()).decode("ascii")
+        with st.container(key="home_intro", horizontal_alignment="center"):
+            st.html(
+                '<video autoplay muted loop playsinline tabindex="-1" '
+                'disablepictureinpicture disableremoteplayback '
+                'aria-label="SEC disclosure comparison introduction" '
+                f'src="data:video/mp4;base64,{encoded}"></video>',
+                width=640,
+            )
 
 
 def available_features() -> list:
