@@ -38,8 +38,8 @@ def strip_reasoning(text: str) -> str:
     return text.strip()
 
 SCHEMA_DOC = """View alignment_changes (one row per alignment decision; use this first):
-  run_id bigint, company text (lowercase ticker: banks 'bac','jpm','c','gs','ms'; chipmakers 'intc','amd','nvda',
-     'avgo','qcom','mu'), previous_year int, current_year int, match_id text,
+  run_id bigint, company text (lowercase ticker, e.g. 'bac', 'txn'; the loaded companies are listed with the
+     question), previous_year int, current_year int, match_id text,
   status text ('auto_matched','ai_verified','unmatched','needs_review'),
   relationship text ('one_to_one','one_to_many','many_to_one','many_to_many','previous_only','current_only'),
   match_method text, source_file text, item text ('1','1A','7','8','15'), section text,
