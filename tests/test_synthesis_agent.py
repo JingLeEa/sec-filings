@@ -129,7 +129,9 @@ SQL_NULL = object()
 
 def financial_row(source_year, value, *, period_type="duration", start=None, end=None,
                   instant=None, decimals=SQL_NULL, precision=SQL_NULL,
-                  unit="USD", scope="company_wide"):
+                  unit="USD", scope="company_wide", company="EXAMPLE",
+                  concept="us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+                  value_index=0):
     decimals_missing = decimals is SQL_NULL
     precision_missing = precision is SQL_NULL
     if decimals_missing:
@@ -137,9 +139,8 @@ def financial_row(source_year, value, *, period_type="duration", start=None, end
     if precision_missing:
         precision = None
     return (
-        "EXAMPLE", source_year, "10-K", source_year, source_year, source_year,
-        "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
-        "Revenue", value, unit, period_type, scope, 0, str(value),
+        company, source_year, "10-K", source_year, source_year, source_year,
+        concept, "Revenue", value, unit, period_type, scope, value_index, str(value),
         start, end, instant, [], "reported", decimals, precision,
         decimals_missing, precision_missing,
     )
@@ -497,11 +498,13 @@ class SynthesisAgentTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Conflicting financial facts"):
             fetch_financial_metrics(connection, "EXAMPLE", [2023, 2024])
 
-    def test_accuracy_metadata_difference_is_conservatively_ambiguous(self):
+    def test_equal_values_with_different_accuracy_metadata_are_deduplicated(self):
         for first_accuracy, second_accuracy in (
             ({"decimals": "-6"}, {"decimals": "-3"}),
             ({"decimals": SQL_NULL}, {"decimals": None}),
             ({"precision": "6"}, {"precision": 6}),
+            ({"decimals": "-3"}, {"decimals": "-5"}),
+            ({"decimals": "-3"}, {"precision": "6"}),
         ):
             with self.subTest(first=first_accuracy, second=second_accuracy):
                 connection = FinancialConnection([
@@ -514,8 +517,62 @@ class SynthesisAgentTests(unittest.TestCase):
                         **second_accuracy,
                     ),
                 ])
-                with self.assertRaisesRegex(ValueError, "Conflicting financial facts"):
-                    fetch_financial_metrics(connection, "EXAMPLE", [2023, 2024])
+                metrics = fetch_financial_metrics(connection, "EXAMPLE", [2023, 2024])
+                self.assertEqual(len(metrics), 1)
+                self.assertEqual(metrics[0]["value"], Decimal("100"))
+                self.assertEqual(metrics[0]["source_filing_year"], 2023)
+                # Keep the chosen source's declarations, including missing vs JSON null.
+                for field in ("decimals", "precision"):
+                    original = first_accuracy.get(field, SQL_NULL)
+                    self.assertEqual(metrics[0][field], None if original is SQL_NULL else original)
+                    self.assertEqual(metrics[0][f"{field}_missing"], original is SQL_NULL)
+                reverse = FinancialConnection(list(reversed(connection.last_cursor.rows)))
+                self.assertEqual(fetch_financial_metrics(reverse, "EXAMPLE", [2023, 2024]), metrics)
+
+    def test_different_amounts_still_conflict_when_accuracy_metadata_differs(self):
+        connection = FinancialConnection([
+            financial_row(2023, Decimal("1292300000"), period_type="instant",
+                          instant=date(2023, 9, 29), decimals="-3"),
+            financial_row(2024, Decimal("1292400000"), period_type="instant",
+                          instant=date(2023, 9, 29), decimals="-5"),
+        ])
+        with self.assertRaisesRegex(ValueError, "Conflicting financial facts"):
+            fetch_financial_metrics(connection, "EXAMPLE", [2023, 2024])
+
+    def test_swks_identical_facts_with_mixed_decimals_are_deduplicated(self):
+        rows = [
+            financial_row(year, Decimal("1292300000"), company="SWKS",
+                          concept="us-gaap:DebtLongtermAndShorttermCombinedAmount",
+                          period_type="instant", instant=date(2023, 9, 29), decimals=decimals)
+            for year, decimals in ((2023, "-3"), (2024, "-5"))
+        ]
+        rows += [
+            financial_row(year, Decimal("2107300000"), company="SWKS",
+                          concept="us-gaap:GrossProfit", start=date(2022, 10, 1),
+                          end=date(2023, 9, 29), decimals=decimals, value_index=index)
+            for year, decimals, index in ((2023, "-5", 2), (2023, "-3", 3),
+                                         (2024, "-5", 1), (2025, "-5", 0))
+        ]
+        for amount, start, end, sources in (
+            ("1424600000", date(2021, 10, 2), date(2022, 9, 30),
+             ((2023, "-3"), (2024, "-5"))),
+            ("1856400000", date(2022, 10, 1), date(2023, 9, 29),
+             ((2023, "-3"), (2024, "-5"), (2025, "-5"))),
+        ):
+            rows += [
+                financial_row(year, Decimal(amount), company="SWKS",
+                              concept="us-gaap:NetCashProvidedByUsedInOperatingActivities",
+                              start=start, end=end, decimals=decimals)
+                for year, decimals in sources
+            ]
+        metrics = fetch_financial_metrics(FinancialConnection(rows), "SWKS", [2023, 2024, 2025])
+        self.assertEqual(len(metrics), 4)
+        self.assertEqual({metric["value"] for metric in metrics},
+                         {Decimal(amount) for amount in ("1292300000", "2107300000",
+                                                        "1424600000", "1856400000")})
+        self.assertTrue(all(metric["source_filing_year"] == 2023 for metric in metrics))
+        self.assertEqual(fetch_financial_metrics(FinancialConnection(rows[::-1]),
+                                               "SWKS", [2023, 2024, 2025]), metrics)
 
     def test_trend_years_follow_comparative_reporting_periods(self):
         connection = FinancialConnection([

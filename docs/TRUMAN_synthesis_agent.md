@@ -113,6 +113,17 @@ explicit file-oriented workflow.
 
 ## Outputs and validation
 
+Jing Le's fix deduplicates financial facts for the same concept, reporting period,
+unit and company-wide scope when their numeric amounts are exactly equal, even when
+their XBRL `decimals` or `precision` declarations differ. These declarations
+describe accuracy; they do not rescale the stored amount. The earliest source
+filing is selected with stable source-ID tie-breakers, retaining that source's
+accuracy metadata unchanged. Different numeric amounts still stop synthesis as
+conflicting facts; synthesis does not round them into agreement or automatically
+choose between possible restatements. This allows repeated equal comparative
+facts, such as SWKS's 2023 facts repeated in its 2024 and 2025 filings, without
+disabling the conflict check. See the [XBRL accuracy definitions](https://www.xbrl.org/Specification/XBRL-2.1/REC-2003-12-31/XBRL-2.1-REC-2003-12-31%2Bcorrected-errata-2013-02-20.html).
+
 For the standalone file workflow, synthesis writes:
 
 - `data/synthesis/<COMPANY>_<FIRST_YEAR>_<LAST_YEAR>_synthesis_output.json`

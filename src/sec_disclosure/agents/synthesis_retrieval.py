@@ -114,6 +114,8 @@ def fetch_financial_metrics(conn, company: str, years: list[int]) -> list[dict]:
 
     Instant facts are labeled with the calendar year of ``instant_date``. The
     view has no verified issuer fiscal-year-end date with which to validate it.
+    Equal amounts for the same context are deduplicated even when their accuracy
+    declarations differ; the selected source's metadata is retained unchanged.
     """
     if not years:
         return []
@@ -225,19 +227,15 @@ def fetch_financial_metrics(conn, company: str, years: list[int]) -> list[dict]:
             json.dumps(dimensions, sort_keys=True, separators=(",", ":")),
             status,
             scope,
-            decimals_missing,
-            json.dumps(decimals, sort_keys=True, separators=(",", ":")),
-            precision_missing,
-            json.dumps(precision, sort_keys=True, separators=(",", ":")),
         )
         grouped[period_key].append((metric, equivalence_key))
 
     selected_metrics = []
     conflicts = {}
     for period_key, records in grouped.items():
-        # The schema preserves missing accuracy metadata separately from JSON null,
-        # and preserves string/number JSON types. Require exact metadata matches;
-        # differing precision declarations remain ambiguous even when amounts match.
+        # decimals/precision declare accuracy, not a different amount or scale.
+        # Identical normalized amounts are safe to deduplicate; unequal amounts
+        # still fail rather than being rounded, averaged, or silently preferred.
         if len({equivalence_key for _, equivalence_key in records}) > 1:
             conflicts[period_key] = [
                 {"source_filing_year": metric["source_filing_year"],
