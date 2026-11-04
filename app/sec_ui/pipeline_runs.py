@@ -204,12 +204,12 @@ def phase_progress(years, progress: dict | None) -> list[dict]:
         outputs = [(label, entries.get(stage, {}).get("status") == "complete") for label, stage in saves]
         saved = sum(done for _, done in outputs)
         phase_entries = [entry for entry in entries.values() if entry.get("phase") == phase]
-        if saved == len(saves):
-            status = "complete"
-        elif any(entry.get("status") == "stopped" for entry in phase_entries):
+        if any(entry.get("status") == "stopped" for entry in phase_entries):
             status = "stopped"
         elif any(entry.get("status") == "running" for entry in phase_entries):
             status = "running"
+        elif saved == len(saves):
+            status = "complete"
         else:
             status = "waiting"
         active = [entry["stage"] for entry in phase_entries if entry.get("status") == "running"]

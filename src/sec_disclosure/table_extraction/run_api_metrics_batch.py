@@ -9,6 +9,7 @@ Only yearly metrics JSON files are written to the company output folder.
 Yearly exports are saved to PostgreSQL by default. Existing output files are kept
 and imported without downloading again. Use --no-db for the file-only workflow.
 Failures are reported per year; other years are still attempted.
+Up to three years run concurrently; use --workers 1 for sequential extraction.
 Add --merge to also combine all yearly outputs by concept after a complete batch.
 """
 from __future__ import annotations
@@ -18,6 +19,7 @@ from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import sys
 
 from sec_disclosure.table_extraction import run_api_metrics_pipeline as pipeline
+from sec_disclosure.llm.concurrency import run_jobs
 
 
 DEFAULT_YEARS = (2023, 2024, 2025)
@@ -33,7 +35,7 @@ def fiscal_year(value):
     return year
 
 
-def main(argv=None):
+def main(argv=None, *, on_year_saved=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument('--ticker', help='SEC ticker, e.g. INTC or WFC')
@@ -48,8 +50,11 @@ def main(argv=None):
     parser.add_argument('--sec-cache', type=Path, help='Override the existing SEC/API download cache directory')
     parser.add_argument('--taxonomy-cache', type=Path, help='Override the official taxonomy cache directory')
     parser.add_argument('--merge', action='store_true', help='Also write one merged JSON by concept after all years are available')
+    parser.add_argument('--workers', type=int, default=3, help='Concurrent financial-table years (default: 3)')
     parser.add_argument('--no-db', action='store_true', help='Write JSON only; skip PostgreSQL storage')
     args = parser.parse_args(argv)
+    if args.workers < 1:
+        parser.error('--workers must be positive')
 
     source_value = (args.ticker or args.cik).strip()
     if not source_value:
@@ -70,27 +75,39 @@ def main(argv=None):
         if value is not None:
             common += [option, str(value)]
 
-    results = []
-    for index, year in enumerate(years, 1):
+    def run_year(year):
         target = output / f'{slug}_{year}_api_metrics_with_values.json'
-        print(f'\nFY{year} ({index}/{len(years)}) — {label}', flush=True)
+        print(f'\nFY{year} — {label}', flush=True)
         if target.is_file() and not target.is_symlink():
             try:
                 if not args.no_db:
                     pipeline.database.load_export(target, label, year, expected_cik=args.cik)
                 print(f'Existing output kept{ " (not revalidated)" if args.no_db else " and saved to PostgreSQL"}: {target}', flush=True)
-                results.append((year, 'existing', target))
+                return year, 'existing', target
             except (ValueError, OSError, KeyError, TypeError, pipeline.database.DatabaseSaveError) as exc:
                 print(f'FY{year} database save failed: {exc}. Existing JSON kept: {target}', file=sys.stderr, flush=True)
-                results.append((year, 'failed', target))
-            continue
+                return year, 'failed', target
         try:
             code = pipeline.main([*common, '--year', str(year)])
         except Exception as exc:
             # Isolate an unexpected per-filing failure too; Ctrl-C still exits.
             print(f'FY{year} failed: {type(exc).__name__}: {exc}', file=sys.stderr, flush=True)
             code = 1
-        results.append((year, 'created' if code == 0 else 'failed', target))
+        return year, 'created' if code == 0 else 'failed', target
+
+    results = []
+
+    def finished(year, result):
+        results.append(result)
+        # Successful pipeline.main/load_export returns only after its database
+        # transaction commits. Never infer a save from an output's existence.
+        if result[1] != 'failed' and not args.no_db and on_year_saved is not None:
+            on_year_saved(year)
+
+    workers = min(args.workers, len(years))
+    print(f'Financial tables: up to {workers} concurrent years.', flush=True)
+    run_jobs(years, run_year, finished, workers)
+    results.sort(key=lambda result: result[0])
 
     print('\nBatch summary:', flush=True)
     for year, status, target in results:

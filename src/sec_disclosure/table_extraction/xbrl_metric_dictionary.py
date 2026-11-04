@@ -8,6 +8,7 @@ No synonym list or company-specific concept names are supplied by this module.
 from __future__ import annotations
 
 from collections import defaultdict
+from threading import Lock
 import hashlib
 import io
 from sec_disclosure.storage.artifacts import ArtifactPath as Path
@@ -20,6 +21,7 @@ from lxml import etree
 from sec_disclosure.table_extraction import extract_item8_xbrl_api as api
 
 VERSION = '1.0.0'
+_dictionary_locks = defaultdict(Lock)
 XS = 'http://www.w3.org/2001/XMLSchema'
 XI = 'http://www.xbrl.org/2003/instance'
 LINK = 'http://www.xbrl.org/2003/linkbase'
@@ -126,6 +128,13 @@ def build_dictionary(package: bytes, year: int):
 def load_dictionary(year, cache=Path('data/taxonomy_cache'), offline=False):
     if not isinstance(year, int) or not 2011 <= year <= 2200:
         raise ValueError('Unsupported US-GAAP taxonomy year')
+    # Adjacent filings can use the same taxonomy. Publish its package/index
+    # together before a second year attempts to read or build that cache.
+    with _dictionary_locks[(str(Path(cache).resolve()), year)]:
+        return _load_dictionary(year, cache, offline)
+
+
+def _load_dictionary(year, cache, offline):
     cache = Path(cache)
     package_path = cache / f'us-gaap-{year}.zip'
     index_path = cache / f'us-gaap-{year}-dictionary.json'

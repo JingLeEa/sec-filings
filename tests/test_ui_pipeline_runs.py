@@ -220,6 +220,18 @@ class PipelineRunUiTests(unittest.TestCase):
         phase = pipeline_runs.phase_progress([2023, 2024], progress)[0]
         self.assertEqual((phase["saved"], phase["total"]), (1, 4))
 
+    def test_saved_years_do_not_hide_a_running_or_failed_table_merge(self):
+        progress = {'stages': [
+            {'stage': name, 'phase': 'preprocessing', 'status': 'complete'}
+            for name in ('save_text_2023', 'save_text_2024', 'save_xbrl_2023', 'save_xbrl_2024')
+        ]}
+        batch_entry = {'stage': 'api_tables_and_save', 'phase': 'preprocessing', 'status': 'running'}
+        progress['stages'].append(batch_entry)
+        for status in ('running', 'stopped', 'complete'):
+            batch_entry['status'] = status
+            phase = pipeline_runs.phase_progress([2023, 2024], progress)[0]
+            self.assertEqual((phase['saved'], phase['status']), (4, status))
+
     def test_synthesis_is_running_until_report_has_been_saved(self):
         progress = {"stages": [{"stage": "synthesis_and_save", "phase": "synthesis", "status": "running"}]}
         phase = pipeline_runs.phase_progress([2023, 2024], progress)[-1]

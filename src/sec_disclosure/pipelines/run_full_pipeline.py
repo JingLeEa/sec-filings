@@ -66,6 +66,8 @@ def parse_args(argv=None):
     parser.add_argument("--env-file", type=Path, help="Optional configuration file; otherwise repository .env and default SoCLaaS config")
     parser.add_argument("--workers", "--year-workers", dest="workers", type=int, default=3,
                         help="Concurrent disclosure-extraction year jobs (default: 3)")
+    parser.add_argument('--table-workers', type=int, default=3,
+                        help='Concurrent financial-table years (default: 3)')
     parser.add_argument("--batch-workers", type=int, default=6,
                         help="Concurrent extraction/consolidation batches within each year (default: 6)")
     parser.add_argument("--max-concurrent-requests", type=int,
@@ -126,7 +128,7 @@ def parse_args(argv=None):
     minimum_years = 2 if PHASES.index(args.until) >= PHASES.index("alignment") else 1
     if (not re.fullmatch(r"[a-z0-9][a-z0-9.-]*", args.ticker) or len(args.years) < minimum_years
             or any(not 1900 <= year <= 2200 for year in args.years)
-            or min(args.workers, args.batch_workers, args.max_concurrent_requests,
+            or min(args.workers, args.table_workers, args.batch_workers, args.max_concurrent_requests,
                    args.alignment_workers, args.alignment_pair_workers,
                    args.alignment_max_concurrent_requests, args.materiality_concurrency,
                    args.materiality_pair_workers, args.materiality_max_concurrent_requests,
@@ -168,6 +170,7 @@ def build_stages(args, *, full=False):
             "--year", year, "--data-dir", data / "raw", "--sync")
     add("preprocessing", "api_tables_and_save", "run_api_metrics_batch.py", "--ticker", args.ticker,
         "--company", args.ticker, "--years", *args.years, "--merge",
+        "--workers", args.table_workers,
         "--output-dir", data / "table_output" / args.ticker,
         "--sec-cache", data / "sec_cache", "--taxonomy-cache", data / "taxonomy_cache",
         "--user-agent", args.user_agent)
@@ -262,7 +265,7 @@ def preflight(args, *, stages=None):
         raise ValueError("Cannot connect to PostgreSQL. Start Docker/PostgreSQL and check POSTGRES_* / DATABASE_URL.") from None
 
 
-def execute_stage(stage, *, request_pacer=None):
+def execute_stage(stage, *, request_pacer=None, on_year_saved=None):
     if stage.script == "align_disclosures.py":
         # Both pairs use one limiter, including shared request spacing/cooldowns.
         from sec_disclosure.agents.disclosure_alignment import main as align
@@ -270,7 +273,8 @@ def execute_stage(stage, *, request_pacer=None):
     if stage.script == "classify_materiality.py":
         from sec_disclosure.agents.materiality import main as classify
         return classify(list(stage.arguments), request_pacer=request_pacer)
-    return run_script(stage.command, cwd=ROOT, check=False).returncode
+    kwargs = {"on_year_saved": on_year_saved} if on_year_saved is not None else {}
+    return run_script(stage.command, cwd=ROOT, check=False, **kwargs).returncode
 
 
 def run_script(command, **kwargs):
@@ -295,7 +299,9 @@ def run_script(command, **kwargs):
         module = sys.modules[name]
     else:
         module = importlib.import_module(modules[script])
-    return SimpleNamespace(returncode=module.main(command[2:]))
+    module_kwargs = ({'on_year_saved': kwargs['on_year_saved']}
+                     if script == 'run_api_metrics_batch.py' and 'on_year_saved' in kwargs else {})
+    return SimpleNamespace(returncode=module.main(command[2:], **module_kwargs))
 
 
 def synthesis_capacity(args):
@@ -307,7 +313,7 @@ def print_concurrency(args, stages):
     phases = {stage.phase for stage in stages}
     if "preprocessing" in phases:
         print("Preprocessing: text and API/XBRL run in up to 2 parallel branches, "
-              "with ordered years and PostgreSQL saves within each branch. "
+              f"with ordered text years and up to {min(args.table_workers, len(args.years))} concurrent table years. "
               "Extraction waits for both branches to finish successfully.")
     if "extraction" in phases:
         print(f"Extraction: up to {min(args.workers, len(args.years))} parallel years x "
@@ -432,7 +438,7 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
              "resume": args.resume, "skipped_stages": skipped,
              "complete": False, "full_pipeline_complete": False,
              "preprocessing_concurrency": {"branch_workers": 2, "text_year_workers": 1,
-                                           "table_year_workers": 1},
+                                           "table_year_workers": min(args.table_workers, len(args.years))},
              "extraction_concurrency": {"year_workers": min(args.workers, len(args.years)),
                                         "batch_workers_per_year": args.batch_workers,
                                         "max_concurrent_requests": args.max_concurrent_requests},
@@ -457,7 +463,18 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
     write_json(log_dir / "status.json", state)
     print_concurrency(args, pending)
 
+    def table_year_saved(year):
+        stage = next(s for s in all_stages if s.name == f'save_xbrl_{year}')
+        with state_lock:
+            entries[stage.name] = {"stage": stage.name, "phase": stage.phase,
+                                   "status": "complete", "exit_code": 0,
+                                   "command_sha256": stage_signature(stage)}
+            state["stages"] = [entries[s.name] for s in all_stages if s.name in entries]
+            write_json(log_dir / "status.json", state)
+
     def run_one(stage, pacer):
+        if stage.name.startswith('save_xbrl_') and entries.get(stage.name, {}).get('status') == 'complete':
+            return  # The batch already saved and checkpointed this year.
         entry = {"stage": stage.name, "phase": stage.phase, "status": "running",
                  "command_sha256": stage_signature(stage)}
         with state_lock:
@@ -468,7 +485,8 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
             state["stages"] = [entries[s.name] for s in all_stages if s.name in entries]
             write_json(log_dir / "status.json", state)
         try:
-            code = execute_stage(stage, request_pacer=pacer)
+            kwargs = {"on_year_saved": table_year_saved} if stage.name == 'api_tables_and_save' else {}
+            code = execute_stage(stage, request_pacer=pacer, **kwargs)
         except KeyboardInterrupt:
             code = 130
         except SystemExit as error:
@@ -496,8 +514,8 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
                 for stage in phase_stages:
                     branch = "text" if stage.script in {"extract_filings.py", "load_to_postgres.py"} else "tables"
                     chains.setdefault(branch, []).append(stage)
-                # The two branches keep their own saves ordered. Drain both
-                # before extraction; any failure prevents all downstream work.
+                # Text years are ordered; the batch schedules table years.
+                # Drain both branches before allowing downstream extraction.
                 run_jobs(list(chains.values()), lambda chain: run_chain(chain, None),
                          lambda chain, result: None, 2)
             elif phase in {"alignment", "change-analysis", "materiality"}:

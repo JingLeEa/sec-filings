@@ -214,6 +214,35 @@ class FullPipelineTests(unittest.TestCase):
                 self.assertEqual(code, 0)
                 self.assertCountEqual(resumed, [stage.name for stage in expected if stage.name not in finished])
 
+    def test_year_saves_are_visible_during_batch_and_do_not_repeat_the_database_import(self):
+        def execute(stage, **kwargs):
+            if stage.name == 'api_tables_and_save':
+                for year in (2024, 2023, 2025):
+                    kwargs['on_year_saved'](year)
+                    entries = {row['stage']: row for row in json.loads(self.progress_path.read_text())['stages']}
+                    self.assertEqual(entries[f'save_xbrl_{year}']['status'], 'complete')
+                    self.assertEqual(entries['api_tables_and_save']['status'], 'running')
+            return 0
+
+        code, executed, _ = self.run_mock_pipeline(['--until', 'extraction'], effect=execute)
+        self.assertEqual(code, 0)
+        self.assertFalse(any(name.startswith('save_xbrl_') for name in executed))
+        self.assertIn('extract_disclosures_and_save', executed)
+
+    def test_failed_batch_retains_committed_year_checkpoint_and_blocks_extraction(self):
+        def execute(stage, **kwargs):
+            if stage.name == 'api_tables_and_save':
+                kwargs['on_year_saved'](2024)
+                return 1
+            return 0
+
+        code, executed, _ = self.run_mock_pipeline(['--until', 'extraction'], effect=execute)
+        self.assertEqual(code, 1)
+        self.assertNotIn('extract_disclosures_and_save', executed)
+        entries = {row['stage']: row for row in json.loads(self.progress_path.read_text())['stages']}
+        self.assertEqual(entries['save_xbrl_2024']['status'], 'complete')
+        self.assertEqual(entries['api_tables_and_save']['status'], 'stopped')
+
     def test_extraction_api_cap_tracks_selected_year_and_batch_workers_unless_explicit(self):
         for options, expected in ((["--workers", "2", "--batch-workers", "4"], 8),
                                   (["--year-workers", "3", "--batch-workers", "6", "--max-concurrent-requests", "5"], 5),
@@ -223,7 +252,7 @@ class FullPipelineTests(unittest.TestCase):
                 self.assertEqual(args.max_concurrent_requests, expected)
 
     def test_each_concurrency_control_requires_a_positive_value(self):
-        for flag in ("--workers", "--batch-workers", "--max-concurrent-requests",
+        for flag in ("--workers", "--table-workers", "--batch-workers", "--max-concurrent-requests",
                      "--alignment-workers", "--alignment-pair-workers",
                      "--alignment-max-concurrent-requests", "--materiality-concurrency",
                      "--materiality-pair-workers", "--materiality-max-concurrent-requests",
@@ -266,7 +295,7 @@ class FullPipelineTests(unittest.TestCase):
         self.assertEqual(state["synthesis_status"], "skipped")
         self.assertEqual(state["until"], "materiality")
         self.assertEqual(state["preprocessing_concurrency"], {"branch_workers": 2, "text_year_workers": 1,
-                                                            "table_year_workers": 1})
+                                                            "table_year_workers": 3})
         self.assertEqual(state["extraction_concurrency"], {"year_workers": 3,
                                                          "batch_workers_per_year": 6,
                                                          "max_concurrent_requests": 18})

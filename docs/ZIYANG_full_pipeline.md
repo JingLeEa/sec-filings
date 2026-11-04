@@ -41,7 +41,8 @@ the database directly for the previous stage's data. Local input JSON downloads
 are not required and there is no automatic fallback to local files:
 
 1. Preprocess narrative text and API/XBRL table metrics in two parallel branches.
-   Each branch processes its selected years and PostgreSQL saves in order.
+   Text years run in order; up to three financial-table years run concurrently.
+   Each table year's PostgreSQL save updates progress immediately.
    Both branches, including all database saves, must succeed before disclosure
    extraction starts. Alignment follows completed disclosure extraction.
 2. Extract disclosures for every selected year.
@@ -285,7 +286,7 @@ Default concurrency for three selected years:
 
 | Stage | Parallel work | Shared API concurrency |
 | --- | --- | --- |
-| Text and API/XBRL preprocessing | 2 parallel branches; one year/job at a time within each branch, with ordered PostgreSQL saves | Text and table downloads can overlap; text recovery uses its existing AI defaults |
+| Text and API/XBRL preprocessing | 2 parallel branches; ordered text years and up to 3 concurrent table years (`--table-workers`) | SEC clients share request pacing and cache access; text recovery uses its existing AI defaults |
 | Disclosure extraction | 3 years × 6 batch workers | 18 requests, shared across years |
 | Alignment | 2 adjacent-year pairs × 9 workers | 18 requests, shared across pairs |
 | Change analysis | 2 adjacent-year pairs × 9 LLM batch workers, followed by each pair's database save | 18 requests, shared across pairs |
@@ -303,6 +304,15 @@ or alignment starts. Already-running preprocessing work is drained and successfu
 stage checkpoints remain available, so a resumed run skips completed work and
 retries the unfinished branch. Caches, progress and results remain in PostgreSQL
 by default.
+
+Financial-table extraction defaults to **3 concurrent years**. Use
+`--table-workers 1` for sequential table processing, or another positive worker
+count to bound the selected years. The standalone `run_api_metrics_batch.py`
+command uses `--workers` for the same control. Each year is verified and committed
+to PostgreSQL independently before its progress marker is published. Merging
+waits for every year; any failed year or merge blocks disclosure extraction.
+Shared taxonomy caches are built once per cache/year at a time. XML verification
+remains CPU intensive, so concurrent years do not guarantee a proportional speedup.
 
 Disclosure extraction defaults to **3 concurrent year jobs × 6 batch workers per
 year**, with a shared cap of **18 simultaneous API requests** for the three-year

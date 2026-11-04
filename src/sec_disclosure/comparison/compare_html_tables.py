@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from typing import Any
+from threading import Lock
 from urllib.parse import quote, urlparse
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -502,8 +503,12 @@ class SecClient:
     """SEC submissions API + original document retrieval. HTML stays in memory by default.
 
     Metadata cache expires after 24 hours; accession-specific documents are immutable.
-    A per-client rate limit and bounded transient retries keep network behavior predictable.
+    A shared rate limit and bounded transient retries keep concurrent clients paced.
     """
+    _request_lock = Lock()
+    _last_request = 0.0
+    _cache_locks = defaultdict(Lock)
+
     def __init__(self, user_agent: str, cache_dir: Path | None = None, refresh=False):
         if not user_agent.strip():
             raise ValueError('SEC API mode requires --user-agent "Your name your-email@example.com" '
@@ -515,6 +520,12 @@ class SecClient:
         self.last_request = 0.0
 
     def get(self, url: str, metadata=False) -> bytes:
+        # Years share submissions/ticker caches. Do not let one reader see a
+        # partially written cache while another client is fetching the URL.
+        with self._cache_locks[(str(self.cache_dir), url, metadata)]:
+            return self._get(url, metadata)
+
+    def _get(self, url: str, metadata=False) -> bytes:
         host = urlparse(url).hostname or ''
         if urlparse(url).scheme != 'https' or host not in {'www.sec.gov','data.sec.gov'}:
             raise ValueError(f'SEC client only accepts official SEC HTTPS URLs: {url}')
@@ -531,10 +542,11 @@ class SecClient:
                     self.memo[url] = data
                     return data
         for attempt in range(3):
-            delay = 0.25 - (time.monotonic() - self.last_request)
-            if delay > 0:
-                time.sleep(delay)
-            self.last_request = time.monotonic()
+            with SecClient._request_lock:
+                delay = 0.25 - (time.monotonic() - SecClient._last_request)
+                if delay > 0:
+                    time.sleep(delay)
+                self.last_request = SecClient._last_request = time.monotonic()
             request = Request(url, headers={'User-Agent': self.user_agent,
                                            'Accept': 'application/json' if metadata else 'text/html,application/xhtml+xml'})
             try:

@@ -3,10 +3,11 @@ from contextlib import redirect_stdout, redirect_stderr
 import io
 import json
 import os
+import threading
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from sec_disclosure.table_extraction import run_api_metrics_batch as batch
 from sec_disclosure.table_extraction import merge_api_metrics
@@ -42,15 +43,17 @@ class BatchPipelineTests(unittest.TestCase):
                     patch.object(merge_api_metrics, 'main', return_value=0) as merge:
                 code, log = run(['--ticker', 'INTC', '--company', 'Intel', '--output-dir', tmp, '--merge'], save_to_db=True)
             self.assertEqual(code, 0, log)
-            self.assertEqual([call.args[2] for call in save.call_args_list], [2023, 2024, 2025])
+            self.assertCountEqual([call.args[2] for call in save.call_args_list], [2023, 2024, 2025])
             merge.assert_called_once()
 
     def test_existing_export_database_failure_is_reported_and_blocks_merge(self):
         with TemporaryDirectory() as tmp:
             for year in batch.DEFAULT_YEARS:
                 (Path(tmp) / f'intel_{year}_api_metrics_with_values.json').write_text('existing export')
-            with patch.object(batch.pipeline.database, 'load_export',
-                              side_effect=[None, batch.pipeline.database.DatabaseSaveError('DB unavailable'), None]), \
+            def save(path, company, year, **kwargs):
+                if year == 2024:
+                    raise batch.pipeline.database.DatabaseSaveError('DB unavailable')
+            with patch.object(batch.pipeline.database, 'load_export', side_effect=save), \
                     patch.object(merge_api_metrics, 'main') as merge:
                 code, log = run(['--ticker', 'INTC', '--company', 'Intel', '--output-dir', tmp, '--merge'], save_to_db=True)
             self.assertEqual(code, 1, log)
@@ -64,7 +67,7 @@ class BatchPipelineTests(unittest.TestCase):
             code, log = run(['--ticker', 'intc'])
         self.assertEqual(code, 0, log)
         commands = [call.args[0] for call in single.call_args_list]
-        self.assertEqual([args[args.index('--year') + 1] for args in commands], ['2023', '2024', '2025'])
+        self.assertCountEqual([args[args.index('--year') + 1] for args in commands], ['2023', '2024', '2025'])
         for args in commands:
             self.assertEqual(args[args.index('--ticker') + 1], 'INTC')
             self.assertEqual(args[args.index('--output-dir') + 1], 'data/table_output/intc')
@@ -77,7 +80,7 @@ class BatchPipelineTests(unittest.TestCase):
                              '--taxonomy-cache', 'some/taxonomy', '--user-agent', 'Test test@example.com'])
         self.assertEqual(code, 0, log)
         commands = [call.args[0] for call in single.call_args_list]
-        self.assertEqual([a[a.index('--year') + 1] for a in commands], ['2023', '2025'])
+        self.assertCountEqual([a[a.index('--year') + 1] for a in commands], ['2023', '2025'])
         for args in commands:
             for flag, value in [('--cik', '50863'), ('--company', 'Intel'), ('--output-dir', tmp),
                                 ('--sec-cache', 'some/cache'), ('--taxonomy-cache', 'some/taxonomy'),
@@ -87,8 +90,14 @@ class BatchPipelineTests(unittest.TestCase):
 
     def test_year_failure_does_not_prevent_later_years_and_exit_is_nonzero(self):
         for failure in (1, ValueError('Unverified financial statements')):
+            def extract(arguments):
+                if arguments[-1] == '2024':
+                    if isinstance(failure, Exception):
+                        raise failure
+                    return failure
+                return 0
             with self.subTest(failure=failure), TemporaryDirectory() as tmp, \
-                    patch.object(batch.pipeline, 'main', side_effect=[0, failure, 0]) as single:
+                    patch.object(batch.pipeline, 'main', side_effect=extract) as single:
                 code, log = run(['--ticker', 'INTC', '--output-dir', tmp])
             self.assertEqual(code, 1)
             self.assertEqual(single.call_count, 3)
@@ -118,7 +127,7 @@ class BatchPipelineTests(unittest.TestCase):
             with patch.object(batch.pipeline, 'main', return_value=0) as single:
                 code, log = run(['--ticker', 'INTC', '--output-dir', tmp])
             self.assertEqual(code, 0, log)
-            self.assertEqual([c.args[0][-1] for c in single.call_args_list], ['2023', '2025'])
+            self.assertCountEqual([c.args[0][-1] for c in single.call_args_list], ['2023', '2025'])
             self.assertEqual(output.read_text(), 'preserved')
 
     def test_directory_or_symlink_is_not_reported_as_an_existing_export(self):
@@ -135,7 +144,8 @@ class BatchPipelineTests(unittest.TestCase):
     def test_invalid_input_does_not_start_extraction(self):
         with patch.object(batch.pipeline, 'main') as single:
             for args in (['--ticker', ' '], ['--ticker', 'INTC', '--years', '25'],
-                         ['--ticker', 'INTC', '--years', 'not-a-year'], ['--company', 'Intel']):
+                         ['--ticker', 'INTC', '--years', 'not-a-year'], ['--company', 'Intel'],
+                         ['--ticker', 'INTC', '--workers', '0']):
                 with self.subTest(args=args), redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                     batch.main(args)
             single.assert_not_called()
@@ -144,8 +154,41 @@ class BatchPipelineTests(unittest.TestCase):
         with TemporaryDirectory() as tmp, \
                 patch.object(batch.pipeline, 'main', side_effect=KeyboardInterrupt) as single:
             with redirect_stdout(io.StringIO()), self.assertRaises(KeyboardInterrupt):
-                batch.main(['--ticker', 'INTC', '--output-dir', tmp])
+                batch.main(['--ticker', 'INTC', '--output-dir', tmp, '--workers', '1'])
             self.assertEqual(single.call_count, 1)
+
+    def test_three_years_overlap_and_report_committed_saves_before_batch_finishes(self):
+        admitted = threading.Barrier(3, timeout=5)
+        first_saved = threading.Event()
+        saves = []
+
+        def extract(arguments):
+            year = int(arguments[-1])
+            admitted.wait()  # Sequential extraction cannot pass this barrier.
+            if year != 2023:
+                self.assertTrue(first_saved.wait(5))
+            return 1 if year == 2024 else 0
+
+        def saved(year):
+            saves.append(year)
+            if year == 2023:
+                first_saved.set()
+
+        with TemporaryDirectory() as tmp, patch.object(batch.pipeline, 'main', side_effect=extract), \
+                patch.object(merge_api_metrics, 'main') as merge, \
+                redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            code = batch.main(['--ticker', 'INTC', '--output-dir', tmp, '--merge'], on_year_saved=saved)
+        self.assertEqual(code, 1)
+        self.assertEqual(saves, [2023, 2025])
+        merge.assert_not_called()
+
+    def test_file_only_batch_never_announces_a_database_save(self):
+        callback = Mock()
+        with TemporaryDirectory() as tmp, patch.object(batch.pipeline, 'main', return_value=0), \
+                redirect_stdout(io.StringIO()):
+            self.assertEqual(batch.main(['--ticker', 'INTC', '--output-dir', tmp, '--no-db'],
+                                        on_year_saved=callback), 0)
+        callback.assert_not_called()
 
     def test_merge_runs_only_when_all_years_are_available(self):
         with TemporaryDirectory() as tmp:
