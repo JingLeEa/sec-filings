@@ -319,6 +319,12 @@ class MaterialityTests(unittest.TestCase):
         self.assertEqual(len(ledger["records"]), 4)
 
     def test_timeout_automatically_splits_and_reserves_unknown_usage(self):
+        self.check_timeout_batch_recovery('SoCLaaS request timed out. Try again or increase --timeout.')
+
+    def test_total_deadline_automatically_splits_and_reserves_unknown_usage(self):
+        self.check_timeout_batch_recovery('SoCLaaS request exceeded the 180-second total deadline.')
+
+    def check_timeout_batch_recovery(self, message):
         rows = [self.row(number) for number in range(1, 9)]
         write_json(self.output / "alignments.json", self.document(rows))
         observed_timeouts = []
@@ -326,8 +332,7 @@ class MaterialityTests(unittest.TestCase):
         def response(prompt, **kwargs):
             observed_timeouts.append(kwargs["timeout"])
             if len(json.loads(prompt)["rows"]) > 4:
-                raise LLMError("SoCLaaS request timed out. Try again or increase --timeout.",
-                               retryable=True)
+                raise LLMError(message, retryable=True)
             return self.response(prompt, **kwargs)
 
         self.assertEqual(self.run_cli(
@@ -438,6 +443,12 @@ class MaterialityTests(unittest.TestCase):
 
         self.assertEqual(self.run_cli("--skip-verification", response=timeout), (1, 2))
         self.assertEqual(observed_timeouts, [180, 300])
+        # WFC's old ledger used this wording and classified it as api_error.
+        for path in (self.output / 'materiality/requests').glob('*.json'):
+            record = json.loads(path.read_text())
+            record.update(failure_kind='api_error',
+                          error_message='SoCLaaS request exceeded the 180-second total deadline.')
+            write_json(path, record)
         self.assertEqual(self.run_cli("--skip-verification", response=timeout), (1, 0))
         self.assertEqual(self.run_cli(
             "--skip-verification", "--retry-failed", "--timeout", "300"

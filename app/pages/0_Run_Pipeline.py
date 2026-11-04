@@ -45,6 +45,8 @@ def show_progress(ticker, years):
     job_status = (job or {}).get("status")
     full_complete = bool(progress and progress.get("full_pipeline_complete"))
     log = pipeline_runs.log_tail(ticker, years, job)
+    exhausted = [entry for entry in (progress or {}).get('stages', [])
+                 if entry.get('status') == 'stopped' and entry.get('retry_exhausted')]
     if job_status == "stopped":
         for phase in phases:
             if phase["status"] == "running":
@@ -61,15 +63,34 @@ def show_progress(ticker, years):
             st.toast(f"{ticker} pipeline complete", icon=":material/check_circle:")
     elif job_status == "complete":
         st.warning("The process exited, but the full-pipeline completion marker is missing. Check the activity log.")
-    elif job_status == "stopped":
-        st.error("Pipeline stopped. Saved work is retained; resume the same selection to continue.")
+    elif job_status == 'stopping':
+        st.info('Stopping pipeline. Saved progress is retained; Resume pipeline will be available once it stops.')
+    elif job_status == 'stopped' and job.get('stopped_by_user'):
+        st.info('Pipeline stopped by you. Saved progress is retained. Resume this run, '
+                'or change the company and fiscal years to start another pipeline.')
+        if st.session_state.get('pipeline_notified_run') != job.get('run_id'):
+            st.session_state['pipeline_notified_run'] = job['run_id']
+            st.toast(f'{ticker} pipeline stopped', icon=':material/pause_circle:')
+    elif job_status == "stopped" or exhausted and job_status not in {'starting', 'running'}:
+        if exhausted:
+            retries = max(entry['max_retries'] for entry in exhausted)
+            st.error(f"Pipeline stopped after {retries} automatic retries. Saved work is retained; "
+                     "click Resume pipeline to try again.")
+        else:
+            st.error("Pipeline stopped. Saved work is retained; resume the same selection to continue.")
         if "Cannot connect to PostgreSQL" in log:
             st.warning("PostgreSQL is unavailable. Start Docker Desktop, run `docker compose up -d` "
                        "in the project folder, and check `docker compose ps`. Then click Resume pipeline.")
-        if st.session_state.get("pipeline_notified_run") != job.get("run_id"):
+        if job and st.session_state.get("pipeline_notified_run") != job.get("run_id"):
             st.session_state["pipeline_notified_run"] = job["run_id"]
             st.toast(f"{ticker} pipeline stopped", icon=":material/error:")
     elif job_status in {"starting", "running"}:
+        for entry in (progress or {}).get('stages', []):
+            if entry.get('status') == 'running' and (entry.get('retrying') or entry.get('retries_used', 0)):
+                title = next(stage[1] for stage in STAGES if stage[0] == entry['phase'])
+                number = entry.get('retry_number') if entry.get('retrying') else entry['retries_used']
+                st.warning(f"{title}: automatic retry {number} of {entry['max_retries']}. "
+                           "Saved results and successful responses are reused.")
         active = next((phase for phase in phases if phase["status"] == "running"), None)
         if active:
             _, _, message, description = next(stage for stage in STAGES if stage[0] == active["phase"])
@@ -90,6 +111,8 @@ def show_progress(ticker, years):
             "stopped": ("Stopped", ":material/error:", "red"),
             "waiting": ("Waiting", ":material/schedule:", "gray"),
         }[phase["status"]]
+        if phase['status'] == 'stopped' and (job or {}).get('stopped_by_user'):
+            icon, color = ':material/pause_circle:', 'gray'
         st.markdown(f"**{index:02d}  {title}**")
         if phase["status"] == "running":
             st.markdown(
@@ -137,32 +160,100 @@ def show_progress(ticker, years):
             st.code(log, language="text")
 
 
-@st.fragment(run_every="3s")
-def run_panel(ticker, years, confirmed):
-    valid = bool(re.fullmatch(r"[A-Z0-9][A-Z0-9.-]*", ticker)) and years is not None and len(years) >= 2
-    running = pipeline_runs.active_run()
+def run_setup(running):
+    st.subheader("Run setup")
+    query = (st.query_params.get("ticker", "AMD"), st.query_params.get("years", "2023, 2024, 2025"))
+    if not running and st.session_state.get("pipeline_setup_query") != query:
+        st.session_state["pipeline_setup_ticker"], st.session_state["pipeline_setup_years"] = query
+    st.session_state["pipeline_setup_query"] = query
+    if running:
+        st.session_state["pipeline_setup_ticker"] = running["ticker"].upper()
+        st.session_state["pipeline_setup_years"] = ", ".join(map(str, running["years"]))
+
+    locked = running is not None
+    left, right = st.columns([1, 2])
+    with left:
+        ticker = st.text_input("Company ticker", key="pipeline_setup_ticker",
+                               max_chars=20, disabled=locked).strip().upper()
+    with right:
+        year_input = st.text_input(
+            "Fiscal years", key="pipeline_setup_years", disabled=locked,
+            help="Enter two or more fiscal years, separated by commas. They do not need to be consecutive.",
+        )
+    years = parse_years(year_input)
+    valid_ticker = bool(re.fullmatch(r"[A-Z0-9][A-Z0-9.-]*", ticker))
+    valid_years = years is not None and len(years) >= 2
+    if not valid_ticker:
+        st.warning("Enter a ticker beginning with a letter or number, using only letters, numbers, periods, or hyphens.")
+    if not valid_years:
+        st.warning("Enter at least two distinct fiscal years from 1900 to 2200, separated by commas.")
+    if valid_ticker and valid_years:
+        st.caption("Comparisons: " + "; ".join(f"FY{a} to FY{b}" for a, b in zip(years, years[1:])))
+    if locked:
+        st.caption("Run setup is locked while this pipeline is running.")
+
     job, progress = None, None
-    if valid:
+    if valid_ticker and valid_years:
         try:
             job, progress = pipeline_runs.read_run(ticker, years)
         except pipeline_runs.RunError as error:
             st.error(str(error))
+    complete = bool(progress and progress.get('full_pipeline_complete'))
+    if not locked and (job or progress) and (job or {}).get('status') not in {'starting', 'running', 'stopping'}:
+        selection = f"{ticker} | FY{', FY'.join(map(str, years))}"
+        if complete:
+            st.success(f'Already completed for **{selection}**. '
+                       'View the saved results on the Synthesis Report page.')
+        elif progress:
+            st.info(f'Previous run found for **{selection}**. Saved progress is available. '
+                    'Select **Resume pipeline** to continue using the saved work.')
+        else:
+            st.warning(f'Previous attempt found for **{selection}**. '
+                       'Completion has not been confirmed. Select **Resume pipeline** to try again.')
 
-    selected_running = (job or {}).get("status") in {"starting", "running"}
+    confirmed = True
+    if valid_years and len(years) > 2 and not (complete and not locked):
+        selected = (ticker, *years)
+        if st.session_state.get("confirmation_selection") != selected:
+            st.session_state["confirmation_selection"] = selected
+            st.session_state["confirm_multi_year"] = False
+        if locked:
+            st.session_state["confirm_multi_year"] = True
+        st.warning(f"{len(years)} fiscal years create {len(years) - 1} comparison pairs. "
+                   "This may take longer and use more API requests.")
+        confirmed = st.checkbox("Continue with these fiscal years", key="confirm_multi_year", disabled=locked)
+    return ticker, years, confirmed, job, progress
+
+
+@st.fragment(run_every="3s")
+def run_panel():
+    running = pipeline_runs.active_run()
+    ticker, years, confirmed, job, progress = run_setup(running)
+    valid = bool(re.fullmatch(r"[A-Z0-9][A-Z0-9.-]*", ticker)) and years is not None and len(years) >= 2
+
+    selected_running = (job or {}).get("status") in {"starting", "running", "stopping"}
     complete = bool(progress and progress.get("full_pipeline_complete"))
-    if running:
-        running_ticker = running["ticker"].upper()
-        running_years = running["years"]
-        if running_ticker != ticker or tuple(running_years) != tuple(years or ()):
-            st.info(f"{running_ticker} is running for FY{', FY'.join(map(str, running_years))}. "
-                    "Its progress is shown below. Wait for it to finish before starting another pipeline.")
-        st.status("Pipeline running", state="running", expanded=False)
-    elif selected_running:
-        st.status("Pipeline running", state="running", expanded=False)
+    active_job = running or (job if selected_running else None)
+    if active_job:
+        stopping = active_job.get('status') == 'stopping'
+        st.status('Stopping pipeline' if stopping else 'Pipeline running', state='running', expanded=False)
+        if st.button('Stop pipeline', icon=':material/stop_circle:',
+                     disabled=stopping or not active_job.get('pid'),
+                     help='Stops processing and keeps completed results. Unfinished requests may run again when you resume.'):
+            try:
+                pipeline_runs.stop_run(active_job['ticker'], active_job['years'], run_id=active_job['run_id'])
+            except pipeline_runs.RunError as error:
+                st.error(str(error))
+            else:
+                st.rerun()
     elif not complete:
         label = "Resume pipeline" if job or progress else "Start pipeline"
-        retry_failed = False
+        exhausted = any(entry.get('status') == 'stopped' and entry.get('retry_exhausted')
+                        for entry in (progress or {}).get('stages', []))
+        manual_stop = bool(job and job.get('stopped_by_user'))
+        retry_failed = exhausted or manual_stop
         retry_required = bool(job and job.get("status") == "stopped"
+                              and not (exhausted or manual_stop)
                               and "--retry-failed" in pipeline_runs.log_tail(ticker, years, job))
         if retry_required:
             st.warning("An AI request failed or was interrupted. Select the retry option below to resume. "
@@ -230,35 +321,4 @@ st.caption("Runs locally using PostgreSQL and the configured SEC and SoCLaaS cre
 st.caption("Before starting, make sure Docker Desktop is running and run `docker compose up -d` "
            "in the project folder to start PostgreSQL.")
 
-st.subheader("Run setup")
-left, right = st.columns([1, 2])
-with left:
-    ticker = st.text_input("Company ticker", value=st.query_params.get("ticker", "AMD"),
-                           max_chars=20).strip().upper()
-with right:
-    year_input = st.text_input(
-        "Fiscal years", value=st.query_params.get("years", "2023, 2024, 2025"),
-        help="Enter two or more fiscal years, separated by commas. They do not need to be consecutive.",
-    )
-years = parse_years(year_input)
-valid_ticker = bool(re.fullmatch(r"[A-Z0-9][A-Z0-9.-]*", ticker))
-valid_years = years is not None and len(years) >= 2
-if not valid_ticker:
-    st.warning("Enter a ticker beginning with a letter or number, using only letters, numbers, periods, or hyphens.")
-if not valid_years:
-    st.warning("Enter at least two distinct fiscal years from 1900 to 2200, separated by commas.")
-
-if valid_ticker and valid_years:
-    st.caption("Comparisons: " + "; ".join(f"FY{a} to FY{b}" for a, b in zip(years, years[1:])))
-
-confirmed = True
-if valid_years and len(years) > 2:
-    selected = (ticker, *years)
-    if st.session_state.get("confirmation_selection") != selected:
-        st.session_state["confirmation_selection"] = selected
-        st.session_state["confirm_multi_year"] = False
-    st.warning(f"{len(years)} fiscal years create {len(years) - 1} comparison pairs. "
-               "This may take longer and use more API requests.")
-    confirmed = st.checkbox("Continue with these fiscal years", key="confirm_multi_year")
-
-run_panel(ticker, years, confirmed)
+run_panel()

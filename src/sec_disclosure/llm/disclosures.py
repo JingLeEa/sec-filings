@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 from itertools import count
 from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from typing import Any
+from uuid import uuid4
 
 from sec_disclosure.annotation.export_table_annotations import CONTENT_LABELS
 from .client import LLMError, request_completion
@@ -127,9 +128,14 @@ def digest(data: bytes) -> str:
 
 def write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    # Request workers and report publication can save the same checkpoint at
+    # once. Each writer must own its temporary artifact until atomic replace.
+    temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    try:
+        temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def normalized(text: str) -> str:

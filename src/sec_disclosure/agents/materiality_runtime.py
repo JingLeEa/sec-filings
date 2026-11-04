@@ -22,7 +22,9 @@ class MaterialityRequestTimedOut(LLMError):
 
 
 def is_timeout_error(error):
-    return isinstance(error, LLMError) and "timed out" in str(error).lower()
+    return isinstance(error, LLMError) and any(
+        phrase in str(error).lower() for phrase in ('timed out', 'total deadline')
+    )
 
 
 def retryable_rate_limit(record):
@@ -52,6 +54,12 @@ class MaterialityRuntime:
             request for request in all_requests
             if request.get("classification_run_id") == classification_run_id
         ]
+        # Older ledgers called total-deadline errors generic API failures.
+        # Recognize them on resume without replacing the original response log.
+        for request in self.requests:
+            if request.get('status') == 'failed' and is_timeout_error(
+                    LLMError(request.get('error_message', ''))):
+                request['failure_kind'] = 'timeout'
         self.new_requests = 0
         self.rate_limit_retries = args.rate_limit_retries
         self.pacer = request_pacer if request_pacer is not None else RequestPacer(

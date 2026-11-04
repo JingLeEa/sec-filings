@@ -6,8 +6,11 @@ import json
 import os
 from pathlib import Path
 import re
+import shlex
+import signal
 import subprocess
 import sys
+import time
 from threading import Lock, Thread
 from uuid import uuid4
 
@@ -90,7 +93,7 @@ def active_run() -> dict | None:
             job = _read_json(path)
         except RunError:
             continue
-        if job and job.get("status") in {"starting", "running"} and _pid_alive(job.get("pid")):
+        if job and job.get("status") in {"starting", "running", "stopping"} and _pid_alive(job.get("pid")):
             return job
     return None
 
@@ -99,11 +102,12 @@ def _finish_job(process: subprocess.Popen, folder: Path, run_id: str) -> None:
     code = process.wait()
     path = folder / "ui_run.json"
     try:
-        job = _read_json(path)
-        if job and job.get("run_id") == run_id:
-            job.update(status="complete" if code == 0 else "stopped", exit_code=code,
-                       completed_at=datetime.now(timezone.utc).isoformat())
-            _write_json(path, job)
+        with _START_LOCK:
+            job = _read_json(path)
+            if job and job.get("run_id") == run_id:
+                job.update(status="complete" if code == 0 else "stopped", exit_code=code,
+                           completed_at=datetime.now(timezone.utc).isoformat())
+                _write_json(path, job)
     except (OSError, RunError):
         # PostgreSQL progress and the local console log remain available if this write fails.
         pass
@@ -119,8 +123,11 @@ def start_run(ticker: str, years, *, retry_failed: bool = False) -> dict:
                            "Wait for it to finish before starting another pipeline.")
         folder.mkdir(parents=True, exist_ok=True)
         previous = _read_json(folder / "ui_run.json")
-        if previous and previous.get("status") in {"starting", "running"} and _pid_alive(previous.get("pid")):
+        if previous and previous.get("status") in {"starting", "running", "stopping"} and _pid_alive(previous.get("pid")):
             raise RunError("This pipeline is already running. Watch its progress below.")
+        # Resume permits unfinished requests to run again; completed responses
+        # remain cached and the existing request/token budgets still apply.
+        retry_failed = retry_failed or bool(previous and previous.get('stopped_by_user'))
 
         run_id = uuid4().hex
         log_name = f"ui_run_{run_id[:12]}.log"
@@ -147,19 +154,107 @@ def start_run(ticker: str, years, *, retry_failed: bool = False) -> dict:
         return job
 
 
+def _pipeline_process_matches(pid, ticker, years) -> bool:
+    """Do not signal a stale PID that now belongs to another program/run."""
+    try:
+        result = subprocess.run(['ps', '-p', str(pid), '-o', 'command='],
+                                capture_output=True, text=True, timeout=5, check=False)
+        command = result.stdout.strip()
+        if result.returncode or str(ROOT / 'scripts/run_full_pipeline.py') not in command:
+            return False
+        arguments = shlex.split(command)
+        selected_ticker = arguments[arguments.index('--ticker') + 1]
+        start = arguments.index('--years') + 1
+        selected_years = []
+        for value in arguments[start:]:
+            if value.startswith('--'):
+                break
+            selected_years.append(int(value))
+        return selected_ticker.lower() == ticker and tuple(sorted(set(selected_years))) == years
+    except (OSError, subprocess.TimeoutExpired, ValueError, IndexError):
+        return False
+
+
+def _finish_stop(folder, run_id):
+    """Also finish stops after a dashboard restart lost the Popen monitor."""
+    while True:
+        with _START_LOCK:
+            path = folder / 'ui_run.json'
+            try:
+                job = _read_json(path)
+                if not job or job.get('run_id') != run_id or job.get('status') != 'stopping':
+                    return
+                if not _pid_alive(job.get('pid')):
+                    job.update(status='stopped', completed_at=datetime.now(timezone.utc).isoformat())
+                    _write_json(path, job)
+                    return
+            except (OSError, RunError):
+                return
+        time.sleep(0.2)
+
+
+def stop_run(ticker: str, years, *, run_id: str) -> dict:
+    """Stop only the selected local runner; preserve every committed checkpoint."""
+    ticker, years = normalized_selection(ticker, years)
+    folder = run_folder(ticker, years)
+    path = folder / 'ui_run.json'
+    with _START_LOCK:
+        job = _read_json(path)
+        if not job or job.get('run_id') != run_id:
+            raise RunError('The pipeline run changed. Refresh the page before stopping it.')
+        if job.get('status') not in {'starting', 'running', 'stopping'}:
+            return job
+        if not _pid_alive(job.get('pid')):
+            job.update(status='stopped', completed_at=datetime.now(timezone.utc).isoformat())
+            _write_json(path, job)
+            return job
+        if job['status'] == 'stopping':
+            return job
+        pid = job['pid']
+        if pid <= 1 or not _pipeline_process_matches(pid, ticker, years):
+            raise RunError('Cannot verify the pipeline process. Refresh the page; no process was stopped.')
+        if os.name == 'posix':
+            try:
+                if os.getpgid(pid) != pid or pid == os.getpgrp():
+                    raise RunError('The pipeline does not have its own process group; no process was stopped.')
+            except ProcessLookupError:
+                job.update(status='stopped', completed_at=datetime.now(timezone.utc).isoformat())
+                _write_json(path, job)
+                return job
+        previous = dict(job)
+        job.update(status='stopping', stopped_by_user=True,
+                   stop_requested_at=datetime.now(timezone.utc).isoformat())
+        _write_json(path, job)
+        try:
+            if os.name == 'posix':
+                os.killpg(pid, signal.SIGTERM)
+            else:
+                os.kill(pid, signal.SIGTERM)
+        except ProcessLookupError:
+            job.update(status='stopped', completed_at=datetime.now(timezone.utc).isoformat())
+            _write_json(path, job)
+            return job
+        except OSError as error:
+            _write_json(path, previous)
+            raise RunError('Could not stop the pipeline process. Check process permissions and try again.') from error
+        Thread(target=_finish_stop, args=(folder, run_id), daemon=True).start()
+        return job
+
+
 def read_run(ticker: str, years) -> tuple[dict | None, dict | None]:
     folder = run_folder(ticker, years)
     job = _read_json(folder / "ui_run.json")
     progress = _progress_documents(ticker, years).get(_status_key(ticker, years))
     if job and progress and progress.get("last_invocation_at", "") < job.get("started_at", ""):
         progress = None
-    if job and job.get("status") in {"starting", "running"}:
+    if job and job.get("status") in {"starting", "running", "stopping"}:
         job = dict(job)
         if progress and progress.get("full_pipeline_complete"):
             job["status"] = "complete"
-        elif job["status"] == "running" and not _pid_alive(job.get("pid")):
+        elif job["status"] in {'running', 'stopping'} and not _pid_alive(job.get("pid")):
             job["status"] = "stopped"
-            job.setdefault("error", "The pipeline process ended. Check the activity log for details.")
+            if not job.get('stopped_by_user'):
+                job.setdefault("error", "The pipeline process ended. Check the activity log for details.")
     return job, progress
 
 

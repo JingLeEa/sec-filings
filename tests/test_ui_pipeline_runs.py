@@ -2,6 +2,7 @@
 import json
 import importlib.util
 import os
+import signal
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
@@ -21,6 +22,120 @@ class PipelineRunUiTests(unittest.TestCase):
         self.postgres_patch = patch.object(pipeline_runs, "_postgres_documents", return_value={})
         self.postgres_patch.start()
         self.addCleanup(self.postgres_patch.stop)
+
+    def running_job(self):
+        folder = pipeline_runs.run_folder('wfc', [2023, 2024, 2025])
+        folder.mkdir(parents=True, exist_ok=True)
+        job = {'ticker': 'wfc', 'years': [2023, 2024, 2025], 'run_id': 'active-wfc',
+               'status': 'running', 'pid': 12345}
+        pipeline_runs._write_json(folder / 'ui_run.json', job)
+        return folder, job
+
+    @unittest.skipUnless(os.name == 'posix', 'POSIX process groups')
+    def test_stop_targets_only_the_verified_runner_and_resume_reuses_cached_work(self):
+        folder, job = self.running_job()
+        cache = folder / 'saved-response.json'
+        cache.write_text('{"completed": true}')
+        with patch.object(pipeline_runs, '_pid_alive', return_value=True), \
+             patch.object(pipeline_runs, '_pipeline_process_matches', return_value=True), \
+             patch.object(pipeline_runs.os, 'getpgid', return_value=12345), \
+             patch.object(pipeline_runs.os, 'getpgrp', return_value=999), \
+             patch.object(pipeline_runs.os, 'killpg') as stop, patch.object(pipeline_runs, 'Thread') as thread:
+            result = pipeline_runs.stop_run('WFC', job['years'], run_id=job['run_id'])
+            self.assertEqual(result['status'], 'stopping')
+            self.assertTrue(result['stopped_by_user'])
+            stop.assert_called_once_with(12345, signal.SIGTERM)
+            with self.assertRaises(pipeline_runs.RunError):
+                pipeline_runs.start_run('amd', [2023, 2024])
+            pipeline_runs.stop_run('WFC', job['years'], run_id=job['run_id'])
+            self.assertEqual(stop.call_count, 1)
+            with patch.object(pipeline_runs, '_pid_alive', return_value=False):
+                thread.call_args.kwargs['target'](*thread.call_args.kwargs['args'])
+
+        stopped = pipeline_runs._read_json(folder / 'ui_run.json')
+        self.assertEqual(stopped['status'], 'stopped')
+        self.assertTrue(stopped['stopped_by_user'])
+        self.assertEqual(cache.read_text(), '{"completed": true}')
+        with patch.object(pipeline_runs.subprocess, 'Popen', return_value=SimpleNamespace(pid=54321)) as popen, \
+             patch.object(pipeline_runs, 'Thread'):
+            resumed = pipeline_runs.start_run('wfc', job['years'])
+        self.assertIn('--retry-failed', popen.call_args.args[0])
+        self.assertNotIn('--no-resume', popen.call_args.args[0])
+        self.assertTrue(resumed['retry_failed'])
+        self.assertEqual(cache.read_text(), '{"completed": true}')
+
+    @unittest.skipUnless(os.name == 'posix', 'POSIX process groups')
+    def test_stop_refuses_changed_runs_and_unrelated_processes(self):
+        folder, job = self.running_job()
+        with patch.object(pipeline_runs, '_pid_alive', return_value=True), \
+             patch.object(pipeline_runs, '_pipeline_process_matches', return_value=False), \
+             patch.object(pipeline_runs.os, 'killpg') as stop:
+            with self.assertRaisesRegex(pipeline_runs.RunError, 'run changed'):
+                pipeline_runs.stop_run('wfc', job['years'], run_id='old-run')
+            with self.assertRaisesRegex(pipeline_runs.RunError, 'Cannot verify'):
+                pipeline_runs.stop_run('wfc', job['years'], run_id=job['run_id'])
+            stop.assert_not_called()
+        self.assertEqual(pipeline_runs._read_json(folder / 'ui_run.json')['status'], 'running')
+
+    @unittest.skipUnless(os.name == 'posix', 'POSIX process groups')
+    def test_stop_does_not_signal_a_shared_terminal_group(self):
+        _, job = self.running_job()
+        with patch.object(pipeline_runs, '_pid_alive', return_value=True), \
+             patch.object(pipeline_runs, '_pipeline_process_matches', return_value=True), \
+             patch.object(pipeline_runs.os, 'getpgid', return_value=999), \
+             patch.object(pipeline_runs.os, 'killpg') as stop:
+            with self.assertRaisesRegex(pipeline_runs.RunError, 'own process group'):
+                pipeline_runs.stop_run('wfc', job['years'], run_id=job['run_id'])
+            stop.assert_not_called()
+
+    @unittest.skipUnless(os.name == 'posix', 'POSIX process groups')
+    def test_failed_stop_restores_running_controls(self):
+        folder, job = self.running_job()
+        with patch.object(pipeline_runs, '_pid_alive', return_value=True), \
+             patch.object(pipeline_runs, '_pipeline_process_matches', return_value=True), \
+             patch.object(pipeline_runs.os, 'getpgid', return_value=12345), \
+             patch.object(pipeline_runs.os, 'getpgrp', return_value=999), \
+             patch.object(pipeline_runs.os, 'killpg', side_effect=PermissionError):
+            with self.assertRaisesRegex(pipeline_runs.RunError, 'permissions'):
+                pipeline_runs.stop_run('wfc', job['years'], run_id=job['run_id'])
+        self.assertEqual(pipeline_runs._read_json(folder / 'ui_run.json'), job)
+
+    def test_stop_process_verification_checks_company_years_and_script(self):
+        script = pipeline_runs.ROOT / 'scripts/run_full_pipeline.py'
+        valid = f'python -u {script} --ticker wfc --years 2023 2024 2025 --data-dir /tmp/data'
+        for command, expected in ((valid, True), (valid.replace('wfc', 'amd'), False),
+                                  (valid.replace('2024 2025', '2022'), False), ('python unrelated.py', False)):
+            with self.subTest(command=command), patch.object(pipeline_runs.subprocess, 'run',
+                    return_value=SimpleNamespace(stdout=command, returncode=0)):
+                self.assertEqual(pipeline_runs._pipeline_process_matches(12345, 'wfc', (2023, 2024, 2025)), expected)
+
+    def test_completion_monitor_preserves_the_user_stop_reason(self):
+        folder, job = self.running_job()
+        job.update(status='stopping', stopped_by_user=True)
+        pipeline_runs._write_json(folder / 'ui_run.json', job)
+        pipeline_runs._finish_job(SimpleNamespace(wait=lambda: -15), folder, job['run_id'])
+        saved = pipeline_runs._read_json(folder / 'ui_run.json')
+        self.assertEqual((saved['status'], saved['exit_code']), ('stopped', -15))
+        self.assertTrue(saved['stopped_by_user'])
+
+    def test_stopped_run_allows_another_company_or_year_selection_without_losing_progress(self):
+        folder, job = self.running_job()
+        job.update(status='stopped', stopped_by_user=True)
+        pipeline_runs._write_json(folder / 'ui_run.json', job)
+        saved_job = (folder / 'ui_run.json').read_bytes()
+        checkpoint = folder / 'saved-checkpoint.json'
+        checkpoint.write_text('{"completed":15}')
+        for ticker, years in (('NVDA', [2021, 2022]), ('WFC', [2022, 2023])):
+            with self.subTest(ticker=ticker, years=years), \
+                 patch.object(pipeline_runs, '_pid_alive', return_value=False), \
+                 patch.object(pipeline_runs.subprocess, 'Popen', return_value=SimpleNamespace(pid=54321)) as popen, \
+                 patch.object(pipeline_runs, 'Thread'):
+                started = pipeline_runs.start_run(ticker, years)
+                self.assertEqual(started['ticker'], ticker.lower())
+                self.assertEqual(started['years'], years)
+                self.assertNotIn('--retry-failed', popen.call_args.args[0])
+                self.assertEqual((folder / 'ui_run.json').read_bytes(), saved_job)
+                self.assertEqual(checkpoint.read_text(), '{"completed":15}')
 
     def test_database_progress_only_marks_completed_save_steps(self):
         progress = {"stages": [

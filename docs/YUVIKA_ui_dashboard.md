@@ -93,7 +93,7 @@ To start a run from the UI, configure `.env` as in the full pipeline guide, star
 .venv/bin/python -m streamlit run app/Home.py --server.address 127.0.0.1
 ```
 
-The Run Pipeline page can launch jobs directly. It shows the active UI-launched pipeline even if another ticker or year selection is entered, and disables new launches until that process exits. To browse existing PostgreSQL results, set `SEC_UI_DATA_SOURCE=postgres`; the default `auto` mode also prefers completed database results over files.
+The Run Pipeline page can launch jobs directly. While a run is active, Run setup shows its company and fiscal years with the controls disabled. **Stop pipeline** halts that runner and retains completed PostgreSQL work; **Stopping pipeline** remains visible until the process exits. The setup then unlocks and **Resume pipeline** continues using saved checkpoints and successful response caches. Interrupted requests may need another attempt, and existing budgets remain enforced. A user stop does not trigger automatic retries. New launches stay disabled until the old process exits. To browse existing PostgreSQL results, set `SEC_UI_DATA_SOURCE=postgres`; the default `auto` mode also prefers completed database results over files.
 
 ## 4. Inputs
 

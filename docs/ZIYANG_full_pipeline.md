@@ -232,12 +232,18 @@ selection exits without executing stages. Another machine connected to the same
 database can reuse the cache and checkpoints; `--data-dir` only controls optional
 local exports.
 
-The Item fallback also stores page maps, pointer resolutions, and request caches
+The Item fallback also stores page maps, pointer resolutions, named
+incorporated-report outlines, and request caches
 in PostgreSQL `pipeline_artifacts`, under `filing_page_cache/` in the selected
 cache namespace. This cache is excluded from local result exports. Existing
 `data/filing_page_cache/` files beneath the working directory are imported once
 into the default namespace; the originals are left untouched. Moving the cache
 does not invalidate completed preprocessing stages.
+When a referenced annual report has no usable deterministic outline, the existing
+LLM fallback locates its named sections from original source IDs. Validated
+outlines and window checkpoints use `filing_page_cache/report_sections/` in
+PostgreSQL; they are also excluded from local exports. See
+[incorporated-report recovery](JINGLE_fallback_llm_extraction.md#incorporated-report-section-recovery).
 
 On the first run after this storage change, existing local artifacts for the
 selected ticker are imported once into PostgreSQL. Completed stage signatures
@@ -263,6 +269,45 @@ when intentionally refreshing source
 data or changing external model/database configuration. One runner at a time may
 run a company's pipeline at a time, including overlapping year selections and
 different cache namespaces. PostgreSQL advisory locks enforce this across machines.
+
+A failed stage now receives **five automatic retries** by default, after its
+initial attempt. Retries wait five seconds, retain successful caches and existing
+budgets, and permit failed AI requests in that stage to be attempted again.
+Completed stages and successful year pairs are retained. Budget/input pauses and
+manual interruptions stop immediately. Existing request-level retry and timeout
+recovery policies still apply inside each stage attempt.
+
+After all five stage retries fail, the dashboard reports that automatic retries
+are exhausted and provides **Resume pipeline**. Selecting it allows failed AI
+requests to be retried while reusing successful responses. A new manual resume
+starts a fresh stage retry allowance. Retry counters and status are saved in
+PostgreSQL. Changing these limits preserves completed stage checkpoints.
+
+The dashboard also provides **Stop pipeline** during a run. It stops the selected
+runner and shows **Stopping pipeline** until that process exits; another run
+cannot start during this interval. Completed stages, PostgreSQL results and
+request caches are retained. An intentional stop does not activate automatic
+stage retries.
+
+After the stop, **Resume pipeline** continues the same company/year selection
+using saved checkpoints and successful responses. Requests interrupted before
+their response was saved may need another attempt. The dashboard automatically
+permits these unfinished requests on resume while retaining the existing budgets.
+The setup fields unlock after the process stops. Stopping only the dashboard
+terminal remains separate: the detached pipeline continues in the background.
+
+After stopping, users may also select another company or fiscal-year selection
+and start that pipeline. The stopped run's checkpoints and caches are preserved.
+To return to it later, select its original company and years and use
+**Resume pipeline**.
+
+Entering a previously run company and the same fiscal-year selection shows a
+reminder beside Run setup. Completed selections point users to their saved
+synthesis results and do not offer another pipeline launch. Incomplete selections
+show that saved progress is available and offer **Resume pipeline**. A previous
+attempt without a confirmed checkpoint is identified separately. The lookup also
+works from PostgreSQL progress when no local UI job file exists; entering a new
+selection clears the previous reminder.
 
 ## Preview, configuration and progress
 
@@ -351,6 +396,8 @@ budgets remain enforced per pair.
 | `--from-stage STAGE` | Skip earlier stages and read saved PostgreSQL inputs; default `preprocessing` |
 | `--resume` / `--no-resume` | Skip completed stages by default, or deliberately execute the selected stages using their internal caches |
 | `--retry-failed` | Permit new attempts for failed/interrupted requests in unfinished extraction, alignment, change analysis and materiality; preserve successful caches and existing budgets |
+| `--stage-retries N` | Automatic retries after a stage fails; default `5` additional attempts, or `0` to disable |
+| `--stage-retry-delay SECONDS` | Delay between automatic stage retries; default `5` seconds |
 | `--user-agent "Name email@example.com"` | Override the SEC contact |
 | `--workers N` / `--year-workers N` | Concurrent disclosure-extraction years; default `3` |
 | `--batch-workers N` | Extraction/consolidation batch workers per year; default `6` |

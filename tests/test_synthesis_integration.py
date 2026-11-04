@@ -20,7 +20,7 @@ class TestSynthesisIntegration(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name).resolve()
         self.arguments = ["--ticker", "AMD", "--years", "2023", "2024", "2025",
-                          "--data-dir", str(self.root)]
+                          "--data-dir", str(self.root), "--stage-retries", "0"]
         self.artifacts = MemoryArtifactStore()
         workspace = patch.object(pipeline, 'PostgresWorkspace', side_effect=workspace_factory(self.artifacts))
         workspace.start()
@@ -158,12 +158,14 @@ class TestSynthesisIntegration(unittest.TestCase):
         self.assertNotIn("synthesis_and_save", [entry["stage"] for entry in self.state()["stages"]])
         self.assertEqual(self.run_pipeline()[1], ["synthesis_and_save"])
 
-    def test_resaving_xbrl_invalidates_only_synthesis(self):
+    def test_resaving_xbrl_invalidates_stages_after_the_preprocessing_barrier(self):
         self.assertEqual(self.run_pipeline()[0], 0)
         state = self.state()
         next(entry for entry in state["stages"] if entry["stage"] == "save_xbrl_2024")["status"] = "stopped"
         self.progress.write_text(json.dumps(state))
-        self.assertEqual(self.run_pipeline()[1], ["save_xbrl_2024", "synthesis_and_save"])
+        downstream = [stage.name for stage in pipeline.build_stages(pipeline.parse_args(self.arguments))
+                      if stage.phase != 'preprocessing']
+        self.assertCountEqual(self.run_pipeline()[1], ['save_xbrl_2024', *downstream])
 
     def test_dry_run_includes_synthesis_without_writes_or_service_calls(self):
         code, executed, run, preflight, output = self.run_pipeline(["--dry-run"])

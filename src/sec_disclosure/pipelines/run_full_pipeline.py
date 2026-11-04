@@ -5,15 +5,17 @@ from __future__ import annotations
 import argparse
 from copy import copy
 from contextlib import nullcontext
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 import importlib.util
+import math
 from itertools import groupby
 import os
 from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
 import shlex
 import sys
+import time
 from threading import RLock
 from types import SimpleNamespace
 
@@ -100,10 +102,17 @@ def parse_args(argv=None):
     parser.add_argument("--retry-failed", action="store_true",
                         help="Allow additional paid attempts for failed/interrupted AI requests in unfinished "
                              "extraction, alignment, change-analysis and materiality stages; retain successful caches and budgets.")
+    parser.add_argument('--stage-retries', type=int, default=5,
+                        help='Automatic retries after a stage fails (default: 5; 0 disables retries)')
+    parser.add_argument('--stage-retry-delay', type=float, default=5,
+                        help='Seconds between automatic stage retries (default: 5)')
     parser.add_argument("--dry-run", action="store_true", help="Print every command without downloads, model calls or database writes")
     parser.add_argument("--skip-synthesis", action="store_true",
                         help="Stop no later than materiality; equivalent to --until materiality for a full run")
     args = parser.parse_args(argv)
+    if (args.stage_retries < 0 or not math.isfinite(args.stage_retry_delay)
+            or args.stage_retry_delay < 0):
+        parser.error('Stage retries and retry delay must be finite and nonnegative.')
     if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]*', args.cache_namespace) or args.cache_namespace == 'peer':
         parser.error('--cache-namespace must be letters, digits, underscores or hyphens and cannot be peer')
     if args.skip_synthesis and args.until == "synthesis":
@@ -437,6 +446,7 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
              "from_stage": args.from_stage, "input_source": "postgres",
              "resume": args.resume, "skipped_stages": skipped,
              "complete": False, "full_pipeline_complete": False,
+             "retry_policy": {"stage_retries": args.stage_retries, "delay_seconds": args.stage_retry_delay},
              "preprocessing_concurrency": {"branch_workers": 2, "text_year_workers": 1,
                                            "table_year_workers": min(args.table_workers, len(args.years))},
              "extraction_concurrency": {"year_workers": min(args.workers, len(args.years)),
@@ -476,7 +486,7 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
         if stage.name.startswith('save_xbrl_') and entries.get(stage.name, {}).get('status') == 'complete':
             return  # The batch already saved and checkpointed this year.
         entry = {"stage": stage.name, "phase": stage.phase, "status": "running",
-                 "command_sha256": stage_signature(stage)}
+                 "command_sha256": stage_signature(stage), "max_retries": args.stage_retries}
         with state_lock:
             print(f"\n[{numbers[stage.name]}/{len(stages)}] {stage.name}", flush=True)
             entries[stage.name] = entry
@@ -484,23 +494,49 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
                 state["synthesis_status"] = "running"
             state["stages"] = [entries[s.name] for s in all_stages if s.name in entries]
             write_json(log_dir / "status.json", state)
-        try:
-            kwargs = {"on_year_saved": table_year_saved} if stage.name == 'api_tables_and_save' else {}
-            code = execute_stage(stage, request_pacer=pacer, **kwargs)
-        except KeyboardInterrupt:
-            code = 130
-        except SystemExit as error:
-            code = error.code if isinstance(error.code, int) else 1
-        except Exception as error:
-            print(f"{stage.name} failed ({type(error).__name__}); saved work is retained.", file=sys.stderr)
-            code = 1
-        with state_lock:
-            entry.update(status="complete" if code == 0 else "stopped", exit_code=code)
-            if stage.phase == "synthesis":
-                state["synthesis_status"] = "complete" if code == 0 else "failed"
-            write_json(log_dir / "status.json", state)
-        if code:
-            raise StageStopped(stage.name, code)
+        for retry in range(args.stage_retries + 1):
+            with state_lock:
+                entry.update(attempts=retry + 1, retries_used=retry, retrying=False,
+                             retry_exhausted=False, exit_code=None)
+                write_json(log_dir / "status.json", state)
+            attempt_stage = stage
+            if (retry and stage.script in {'extract_disclosures.py', 'align_disclosures.py', 'classify_materiality.py'}
+                    and '--retry-failed' not in stage.arguments):
+                # Retain successful responses and budgets; admit another
+                # attempt for failed/interrupted requests in this stage only.
+                attempt_stage = replace(stage, arguments=(*stage.arguments, '--retry-failed'))
+            try:
+                kwargs = {"on_year_saved": table_year_saved} if stage.name == 'api_tables_and_save' else {}
+                code = execute_stage(attempt_stage, request_pacer=pacer, **kwargs)
+            except KeyboardInterrupt:
+                code = 130
+            except SystemExit as error:
+                code = error.code if isinstance(error.code, int) else 1
+            except Exception as error:
+                print(f"{stage.name} failed ({type(error).__name__}); saved work is retained.", file=sys.stderr)
+                code = 1
+            # A budget/input pause or manual interruption requires the user;
+            # retries must never reset a budget or undo a requested stop.
+            retry_allowed = code not in {0, 2, 130, 143, -2, -15}
+            retry_pending = retry_allowed and retry < args.stage_retries
+            with state_lock:
+                entry.update(status="complete" if code == 0 else "running" if retry_pending else "stopped",
+                             exit_code=code, retrying=retry_pending,
+                             retry_number=retry + 1 if retry_pending else retry,
+                             retry_exhausted=bool(args.stage_retries and retry_allowed and not retry_pending))
+                if stage.phase == "synthesis":
+                    state["synthesis_status"] = "complete" if code == 0 else "running" if retry_pending else "failed"
+                write_json(log_dir / "status.json", state)
+            if code == 0:
+                return
+            if not retry_pending:
+                if entry['retry_exhausted']:
+                    print(f"{stage.name}: all {args.stage_retries} automatic retries exhausted. "
+                          "Saved work is retained; use Resume pipeline to continue.", file=sys.stderr, flush=True)
+                raise StageStopped(stage.name, code)
+            print(f"{stage.name}: automatic retry {retry + 1}/{args.stage_retries} "
+                  f"in {args.stage_retry_delay:g}s; successful caches and budgets are retained.", flush=True)
+            time.sleep(args.stage_retry_delay)
 
     def run_chain(chain, pacer):
         for stage in chain:

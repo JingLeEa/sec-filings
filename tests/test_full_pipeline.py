@@ -26,7 +26,75 @@ class FullPipelineTests(unittest.TestCase):
         patch.object(runner, "dotenv_values", return_value={}).start()
         self.arguments = ["--ticker", "AMD", "--years", "2023", "2024", "2025",
                           "--data-dir", str(self.root), "--user-agent", "Test test@example.com",
-                          "--skip-synthesis"]
+                          "--skip-synthesis", "--stage-retries", "0"]
+
+    def test_stage_retry_defaults_and_invalid_settings(self):
+        args = runner.parse_args([])
+        self.assertEqual((args.stage_retries, args.stage_retry_delay), (5, 5))
+        for option, value in (('--stage-retries', '-1'), ('--stage-retry-delay', '-1'),
+                              ('--stage-retry-delay', 'nan'), ('--stage-retry-delay', 'inf')):
+            with self.subTest(option=option, value=value), redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                runner.parse_args([option, value])
+
+    def test_failed_stage_recovers_without_repeating_completed_work(self):
+        attempts = []
+
+        def execute(stage, **kwargs):
+            if stage.name == 'materiality_2024_2025':
+                attempts.append(stage)
+                if len(attempts) == 1:
+                    raise RuntimeError('Simulated stage failure')
+                return 1 if len(attempts) == 2 else 0
+            return 0
+
+        with patch.object(runner.time, 'sleep') as sleep:
+            code, executed, _ = self.run_mock_pipeline(['--stage-retries', '5'], effect=execute)
+        self.assertEqual(code, 0)
+        self.assertEqual(executed.count('materiality_2024_2025'), 3)
+        self.assertEqual(executed.count('extract_disclosures_and_save'), 1)
+        self.assertEqual(executed.count('materiality_2023_2024'), 1)
+        self.assertEqual(executed.count('save_materiality_2023_2024'), 1)
+        self.assertNotIn('--retry-failed', attempts[0].arguments)
+        self.assertTrue(all('--retry-failed' in stage.arguments for stage in attempts[1:]))
+        self.assertTrue(all(runner.stage_signature(stage) == runner.stage_signature(attempts[0]) for stage in attempts))
+        self.assertEqual(sleep.call_count, 2)
+        entry = next(row for row in json.loads(self.progress_path.read_text())['stages']
+                     if row['stage'] == 'materiality_2024_2025')
+        self.assertEqual((entry['status'], entry['attempts'], entry['retries_used']), ('complete', 3, 2))
+
+    def test_five_retry_exhaustion_stops_and_manual_resume_keeps_completed_pair(self):
+        def execute(stage, **kwargs):
+            if stage.name == 'materiality_2024_2025':
+                return 1
+            return 0
+
+        with patch.object(runner.time, 'sleep') as sleep:
+            code, executed, log = self.run_mock_pipeline(['--stage-retries', '5'], effect=execute)
+        self.assertEqual(code, 1)
+        self.assertEqual(executed.count('materiality_2024_2025'), 6)
+        self.assertEqual(sleep.call_count, 5)
+        self.assertIn('automatic retry 5/5', log)
+        entries = {row['stage']: row for row in json.loads(self.progress_path.read_text())['stages']}
+        failed = entries['materiality_2024_2025']
+        self.assertEqual((failed['status'], failed['attempts'], failed['retries_used']), ('stopped', 6, 5))
+        self.assertTrue(failed['retry_exhausted'])
+        self.assertEqual(entries['save_materiality_2023_2024']['status'], 'complete')
+        self.assertNotIn('save_materiality_2024_2025', executed)
+        code, resumed, _ = self.run_mock_pipeline(['--stage-retries', '5', '--retry-failed'])
+        self.assertEqual(code, 0)
+        self.assertEqual(resumed, ['materiality_2024_2025', 'save_materiality_2024_2025'])
+
+    def test_automatic_retries_do_not_override_budget_pauses_or_manual_stops(self):
+        for stopped_code in (2, 130, 143):
+            def execute(stage, **kwargs):
+                return stopped_code if stage.name == 'materiality_2024_2025' else 0
+
+            with self.subTest(code=stopped_code), patch.object(runner.time, 'sleep') as sleep:
+                code, executed, _ = self.run_mock_pipeline(
+                    ['--stage-retries', '5', '--no-resume'], effect=execute)
+                self.assertEqual(code, stopped_code)
+                self.assertEqual(executed.count('materiality_2024_2025'), 1)
+                sleep.assert_not_called()
 
     def test_each_stage_saves_and_materiality_is_imported_after_classification(self):
         stages = runner.build_stages(runner.parse_args(self.arguments))

@@ -1337,6 +1337,7 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                              use_html_hierarchy: bool = False) -> list[FilingBlock]:
     headings = {node["start"]: node for node in nodes}
     known_titles = {node["key"] for node in nodes}
+    known_titles.update(report_title_key(node['source_heading']) for node in nodes if node.get('source_heading'))
     heading_continuations = {
         position
         for node in nodes
@@ -1557,16 +1558,29 @@ def blocks_for_exact_title(
 
 def follow_report_references(section_blocks: dict[str, list[FilingBlock]], source: str,
                              user_agent: str, include_overlaps: bool = False,
-                             *, timeout: float = DEFAULT_SEC_TIMEOUT) -> tuple[dict, dict]:
+                             *, timeout: float = DEFAULT_SEC_TIMEOUT, report_fallback=None) -> tuple[dict, dict]:
     references = {item: reference for item, blocks in section_blocks.items()
                   if (reference := report_reference(blocks)) is not None}
     if not references:
         return section_blocks, {}
     report_source, document = discover_referenced_report(source, user_agent, **timeout_option(timeout))
-    events = html_to_structure_events(read_html_source(report_source, user_agent, **timeout_option(timeout)))
+    report_html = read_html_source(report_source, user_agent, **timeout_option(timeout))
+    events = html_to_structure_events(report_html)
     paths = [path for ref in references.values() for path in ref["section_paths"]]
-    nodes = report_outline(events, paths)
-    selections = {item: referenced_section_ranges(nodes, ref["section_paths"]) for item, ref in references.items()}
+    recovery = None
+    try:
+        nodes = report_outline(events, paths)
+        selections = {item: referenced_section_ranges(nodes, ref['section_paths']) for item, ref in references.items()}
+    except ValueError:
+        if report_fallback is None:
+            raise
+        recovered = report_fallback(report_source, report_html, events, paths)
+        nodes = recovered.nodes
+        selections = {item: referenced_section_ranges(nodes, ref['section_paths']) for item, ref in references.items()}
+        from sec_disclosure.agents.filing_item_fallback import REPORT_POLICY
+        from hashlib import sha256
+        recovery = {'method': REPORT_POLICY, 'attempts': recovered.attempts, 'cache_hits': recovered.cache_hits,
+                    'source_sha256': sha256(report_html.encode()).hexdigest()}
     result = dict(section_blocks)
     audit = {}
     for item, ranges in selections.items():
@@ -1584,6 +1598,8 @@ def follow_report_references(section_blocks: dict[str, list[FilingBlock]], sourc
         audit[item] = {**references[item], "source": report_source, "document_type": document["type"],
                        "filing_index": document["index_source"], "sections": ranges,
                        "excluded_sections": exclusions}
+        if recovery is not None:
+            audit[item]['boundary_recovery'] = dict(recovery)
     return result, audit
 
 
@@ -3778,7 +3794,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--max-chars", type=int, default=1800, help="Maximum characters per disclosure chunk.")
     parser.add_argument("--min-chars", type=int, default=120, help="Small paragraphs are merged until roughly this size.")
     parser.add_argument("--no-agent-fallback", action="store_true",
-                        help="Disable the LLM fallback for Items missing after deterministic extraction.")
+                        help="Disable LLM recovery for missing Items and unresolved incorporated-report sections.")
     parser.add_argument("--agent-check-items", nargs="+", type=normalize_item, choices=SUPPORTED_ITEMS,
                         default=[], help="Also re-check these Items with the LLM fallback (use for suspect boundaries).")
     parser.add_argument("--env-file", help="SoCLaaS settings file for the fallback agent; default: user SoCLaaS config.")
@@ -3789,7 +3805,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--agent-page-recovery", action=argparse.BooleanOptionalAction, default=True,
                         help="Automatically recover unresolved Item pages with the LLM (default: enabled); --no-agent-page-recovery disables this stage.")
     parser.add_argument("--agent-page-cache-dir", type=Path, default=Path("data/filing_page_cache"),
-                        help="Cache for experimental printed-page mapping requests.")
+                        help="Cache for printed-page and incorporated-report boundary recovery requests.")
     parser.add_argument(
         "--user-agent",
         default=os.environ.get("SEC_USER_AGENT", ""),
@@ -3805,6 +3821,21 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         parser.error("--sec-timeouts must be positive, finite, and strictly increasing")
     args.sec_timeout = args.sec_timeouts[0]
     return args
+
+
+def apply_report_fallback(report_source, report_html, events, paths, args):
+    """Recover named sections from the external report, not its primary-file pointer."""
+    from sec_disclosure.agents.filing_item_fallback import locate_report_sections
+    from sec_disclosure.llm.config import load_config
+    print(f'Referenced-report LLM fallback: locating named sections in {report_source}...', flush=True)
+    result = locate_report_sections(
+        events, paths, source=report_source, source_html=report_html,
+        config=load_config(args.env_file), cache_dir=args.agent_page_cache_dir,
+        timeout=args.agent_timeout, max_tokens=max(2400, args.agent_max_tokens), retries=3,
+    )
+    print(f'Referenced-report LLM fallback: validated {len(result.nodes)} headings; '
+          f'{result.attempts} requests, {result.cache_hits} cache hits.', flush=True)
+    return result
 
 
 def apply_item_fallback(
@@ -3972,6 +4003,9 @@ def extract_filing(args: argparse.Namespace) -> int:
             section_blocks, reference_audit = follow_report_references(
                 section_blocks, source, args.user_agent, include_overlaps=args.include_reference_overlaps,
                 **timeout_option(args.sec_timeout),
+                **({'report_fallback': lambda report_source, report_html, events, paths:
+                    apply_report_fallback(report_source, report_html, events, paths, args)}
+                   if not args.no_agent_fallback else {}),
             )
         except (ValueError, RuntimeError, OSError) as exc:
             print(f"Error resolving incorporated report: {exc}", file=sys.stderr)

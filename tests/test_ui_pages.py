@@ -101,11 +101,139 @@ def test_pipeline_page_shows_other_active_company_and_blocks_new_start(monkeypat
     }))
     monkeypatch.setattr(pipeline_runs, "_pid_alive", lambda pid: True)
     at = run("pages/0_Run_Pipeline.py")
-    assert any("UNH is running" in message.value for message in at.info)
+    assert at.text_input(key="pipeline_setup_ticker").value == "UNH"
+    assert at.text_input(key="pipeline_setup_years").value == "2023, 2024"
+    assert all(field.disabled for field in at.text_input)
     assert any("UNH | FY2023, FY2024" in message.value for message in at.caption)
     assert any(status.label == "Pipeline running" and status.state == "running" for status in at.get("status"))
     assert not any(button.label in {"Start pipeline", "Resume pipeline"} for button in at.button)
     assert not at.exception
+
+
+def test_pipeline_setup_tracks_active_run_and_unlocks_when_it_ends(monkeypatch):
+    from sec_ui import pipeline_runs
+    active = [None]
+    monkeypatch.setattr(pipeline_runs, "active_run", lambda: active[0])
+    monkeypatch.setattr(pipeline_runs, "read_run", lambda ticker, years: (None, None))
+    at = run("pages/0_Run_Pipeline.py")
+    at.text_input(key="pipeline_setup_ticker").set_value("NVDA").run()
+    at.text_input(key="pipeline_setup_years").set_value("2021, 2022").run()
+
+    active[0] = {"run_id": "wfc-active", "ticker": "wfc", "years": [2023, 2024, 2025]}
+    at.run()
+    assert not at.exception
+    assert at.text_input(key="pipeline_setup_ticker").value == "WFC"
+    assert at.text_input(key="pipeline_setup_years").value == "2023, 2024, 2025"
+    assert all(field.disabled for field in at.text_input)
+    assert at.checkbox(key="confirm_multi_year").disabled
+    assert at.checkbox(key="confirm_multi_year").value
+    assert not any(button.label in {"Start pipeline", "Resume pipeline"} for button in at.button)
+
+    active[0] = None
+    at.run()
+    assert not at.exception
+    assert at.text_input(key="pipeline_setup_ticker").value == "WFC"
+    assert at.text_input(key="pipeline_setup_years").value == "2023, 2024, 2025"
+    assert all(not field.disabled for field in at.text_input)
+    assert not at.checkbox(key="confirm_multi_year").disabled
+
+
+def test_pipeline_can_be_stopped_and_resumed_without_losing_its_selection(monkeypatch):
+    from sec_ui import pipeline_runs
+    job = {'ticker': 'wfc', 'years': [2023, 2024, 2025], 'run_id': 'user-run',
+           'pid': 12345, 'status': 'running'}
+    calls = []
+    progress = {'stages': [{'stage': 'materiality_2024_2025', 'phase': 'materiality', 'status': 'running'}]}
+    monkeypatch.setattr(pipeline_runs, 'active_run', lambda: job if job['status'] in {'running', 'stopping'} else None)
+    monkeypatch.setattr(pipeline_runs, 'read_run', lambda *args: (dict(job), progress))
+
+    def stop(ticker, years, **options):
+        calls.append(('stop', ticker, years, options))
+        job.update(status='stopping', stopped_by_user=True)
+        return job
+
+    def start(ticker, years, **options):
+        calls.append(('resume', ticker, years, options))
+        job.update(status='running', stopped_by_user=False, run_id='resumed')
+        return job
+
+    monkeypatch.setattr(pipeline_runs, 'stop_run', stop)
+    monkeypatch.setattr(pipeline_runs, 'start_run', start)
+    at = run('pages/0_Run_Pipeline.py')
+    next(button for button in at.button if button.label == 'Stop pipeline').click().run()
+    assert not at.exception
+    assert next(button for button in at.button if button.label == 'Stop pipeline').disabled
+    assert any('Stopping pipeline' in message.value for message in at.info)
+    assert all(field.disabled for field in at.text_input)
+    assert not any(button.label == 'Resume pipeline' for button in at.button)
+
+    job['status'] = 'stopped'
+    at.run()
+    assert not at.exception
+    assert not at.error
+    assert any('Pipeline stopped by you' in message.value for message in at.info)
+    assert at.text_input(key='pipeline_setup_ticker').value == 'WFC'
+    assert all(not field.disabled for field in at.text_input)
+    resume = next(button for button in at.button if button.label == 'Resume pipeline')
+    assert not resume.disabled
+    resume.click().run()
+    assert not at.exception
+    assert calls == [('stop', 'wfc', [2023, 2024, 2025], {'run_id': 'user-run'}),
+                     ('resume', 'WFC', [2023, 2024, 2025], {'retry_failed': True})]
+    assert all(field.disabled for field in at.text_input)
+
+
+def test_stopping_allows_switching_company_and_years_and_returning_to_the_old_run(monkeypatch):
+    from sec_ui import pipeline_runs
+    old_key = ('wfc', (2023, 2024, 2025))
+    jobs = {old_key: {'ticker': 'wfc', 'years': list(old_key[1]), 'run_id': 'original',
+                      'pid': 12345, 'status': 'running'}}
+    saved_progress = {'stages': [{'stage': 'save_text_2023', 'phase': 'preprocessing', 'status': 'complete'}]}
+    calls = []
+
+    def active():
+        return next((job for job in jobs.values() if job['status'] == 'running'), None)
+
+    def read(ticker, years):
+        key = (ticker.lower(), tuple(years))
+        return jobs.get(key), saved_progress if key == old_key else None
+
+    def stop(ticker, years, **options):
+        jobs[(ticker.lower(), tuple(years))].update(status='stopped', stopped_by_user=True)
+
+    def start(ticker, years, **options):
+        calls.append((ticker, years, options))
+        jobs[(ticker.lower(), tuple(years))] = {
+            'ticker': ticker.lower(), 'years': years, 'run_id': 'new-company',
+            'pid': 54321, 'status': 'running',
+        }
+
+    monkeypatch.setattr(pipeline_runs, 'active_run', active)
+    monkeypatch.setattr(pipeline_runs, 'read_run', read)
+    monkeypatch.setattr(pipeline_runs, 'stop_run', stop)
+    monkeypatch.setattr(pipeline_runs, 'start_run', start)
+    at = run('pages/0_Run_Pipeline.py')
+    next(button for button in at.button if button.label == 'Stop pipeline').click().run()
+    assert all(not field.disabled for field in at.text_input)
+    assert any('change the company and fiscal years' in item.value for item in at.info)
+    at.text_input(key='pipeline_setup_ticker').set_value('NVDA').run()
+    at.text_input(key='pipeline_setup_years').set_value('2021, 2022').run()
+    launch = next(button for button in at.button if button.label == 'Start pipeline')
+    assert not launch.disabled
+    launch.click().run()
+    assert not at.exception
+    assert calls == [('NVDA', [2021, 2022], {})]
+    assert at.text_input(key='pipeline_setup_ticker').value == 'NVDA'
+    assert at.text_input(key='pipeline_setup_years').value == '2021, 2022'
+    assert jobs[old_key]['status'] == 'stopped'
+    assert saved_progress['stages'][0]['status'] == 'complete'
+
+    next(button for button in at.button if button.label == 'Stop pipeline').click().run()
+    at.text_input(key='pipeline_setup_ticker').set_value('WFC').run()
+    at.text_input(key='pipeline_setup_years').set_value('2023, 2024, 2025').run()
+    assert not at.exception
+    assert any(button.label == 'Resume pipeline' for button in at.button)
+    assert any('1 of 6 outputs loaded to database' in caption.value for caption in at.caption)
 
 
 def test_pipeline_page_shows_preflight_failure_and_resume(monkeypatch):
@@ -116,23 +244,88 @@ def test_pipeline_page_shows_preflight_failure_and_resume(monkeypatch):
     at = run("pages/0_Run_Pipeline.py")
     assert any("Pipeline stopped" in message.value for message in at.error)
     assert any("docker compose up -d" in message.value for message in at.warning)
+    assert any('Previous attempt found' in message.value for message in at.warning)
     assert any("Pipeline preflight failed" in code.value for code in at.code)
     assert any(button.label == "Resume pipeline" for button in at.button)
     assert not at.exception
 
 
-def test_pipeline_page_shows_completion(monkeypatch):
+@pytest.mark.parametrize('job', [{'run_id': 'exhausted', 'status': 'stopped'}, None])
+def test_pipeline_retry_exhaustion_informs_user_and_resume_admits_failed_requests(monkeypatch, job):
+    from sec_ui import pipeline_runs
+    calls = []
+    progress = {'stages': [{
+        'stage': 'materiality_2024_2025', 'phase': 'materiality', 'status': 'stopped',
+        'retry_exhausted': True, 'max_retries': 5, 'retries_used': 5, 'attempts': 6,
+    }]}
+    monkeypatch.setattr(pipeline_runs, 'read_run', lambda ticker, years: (job, progress))
+    monkeypatch.setattr(pipeline_runs, 'log_tail', lambda *args: 'Earlier request failed; use --retry-failed.')
+    monkeypatch.setattr(pipeline_runs, 'start_run', lambda ticker, years, **options: calls.append((ticker, years, options)))
+    at = run('pages/0_Run_Pipeline.py')
+    assert any('stopped after 5 automatic retries' in message.value for message in at.error)
+    assert not any(box.label == 'Retry failed AI requests on resume' for box in at.checkbox)
+    at.checkbox(key='confirm_multi_year').check().run()
+    resume = next(button for button in at.button if button.label == 'Resume pipeline')
+    assert not resume.disabled
+    resume.click().run()
+    assert not at.exception
+    assert calls == [('AMD', [2023, 2024, 2025], {'retry_failed': True})]
+
+
+def test_pipeline_reports_automatic_retry_while_still_running(monkeypatch):
+    from sec_ui import pipeline_runs
+    progress = {'stages': [{
+        'stage': 'materiality_2024_2025', 'phase': 'materiality', 'status': 'running',
+        'retrying': True, 'retry_number': 3, 'retries_used': 2, 'max_retries': 5,
+    }]}
+    monkeypatch.setattr(pipeline_runs, 'read_run', lambda ticker, years: ({'status': 'running'}, progress))
+    at = run('pages/0_Run_Pipeline.py')
+    assert not at.exception
+    assert any('Materiality: automatic retry 3 of 5' in message.value for message in at.warning)
+    assert not at.error
+
+
+@pytest.mark.parametrize('job', [{'run_id': 'test', 'status': 'complete'}, None])
+def test_pipeline_page_shows_completion(monkeypatch, job):
     from sec_ui import pipeline_runs
     years = [2023, 2024, 2025]
     progress = {"full_pipeline_complete": True, "stages": [
         {"stage": stage, "phase": phase, "status": "complete"}
         for phase, saves in pipeline_runs.database_saves(years).items() for _, stage in saves
     ]}
-    monkeypatch.setattr(pipeline_runs, "read_run", lambda ticker, selected: ({"run_id": "test", "status": "complete"}, progress))
+    monkeypatch.setattr(pipeline_runs, "read_run", lambda ticker, selected: (job, progress))
     at = run("pages/0_Run_Pipeline.py")
     assert any("Pipeline complete" in message.value for message in at.success)
+    assert any('Already completed for **AMD | FY2023, FY2024, FY2025**' in message.value for message in at.success)
+    assert not any(button.label in {'Start pipeline', 'Resume pipeline'} for button in at.button)
+    assert not any(box.label == 'Continue with these fiscal years' for box in at.checkbox)
     assert any("6 of 6 stages complete" in message.text for message in at.get("progress"))
     assert not at.exception
+
+
+def test_pipeline_reminds_about_postgres_history_and_updates_when_the_selection_changes(monkeypatch):
+    from sec_ui import pipeline_runs
+    progress = {'stages': [{'stage': 'save_text_2023', 'phase': 'preprocessing', 'status': 'complete'}]}
+    key = pipeline_runs._status_key('wfc', [2023, 2024, 2025])
+    monkeypatch.setattr(pipeline_runs, '_postgres_documents',
+                        lambda keys, *args: {key: progress} if key in keys else {})
+    launches = []
+    monkeypatch.setattr(pipeline_runs, 'start_run', lambda *args, **kwargs: launches.append(args))
+    at = run('pages/0_Run_Pipeline.py')
+    at.text_input(key='pipeline_setup_ticker').set_value('wFc').run()
+    at.text_input(key='pipeline_setup_years').set_value('2025, 2023, 2024, 2025').run()
+    assert not at.exception
+    assert any('Previous run found for **WFC | FY2023, FY2024, FY2025**' in item.value for item in at.info)
+    assert any(button.label == 'Resume pipeline' for button in at.button)
+    assert not list(pipeline_runs.ROOT.glob('data/pipeline_runs/*/*/ui_run.json'))
+
+    at.text_input(key='pipeline_setup_years').set_value('2023, 2024').run()
+    assert not any('Previous run found for' in item.value for item in at.info)
+    assert any(button.label == 'Start pipeline' for button in at.button)
+    at.text_input(key='pipeline_setup_ticker').set_value('NVDA').run()
+    assert not any('Previous run found for' in item.value for item in at.info)
+    assert any(button.label == 'Start pipeline' for button in at.button)
+    assert not launches
 
 
 def test_pipeline_page_requires_full_completion_marker(monkeypatch):
