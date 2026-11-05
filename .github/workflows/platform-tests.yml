@@ -1,0 +1,74 @@
+name: Platform tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+        python: ['3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            app/requirements.txt
+            pyproject.toml
+      - name: Install project, dashboard, and test dependencies
+        run: python -m pip install -r requirements.txt -r app/requirements.txt -e ".[test]"
+      - name: Verify installed dependencies
+        run: python -m pip check
+      - name: Run native tests, including platform process and lock checks
+        run: python -m pytest -q
+
+  postgres:
+    name: PostgreSQL pipeline and peer integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      POSTGRES_HOST: '127.0.0.1'
+      SEC_PEER_DB_INTEGRATION: '1'
+      SEC_ALIGNMENT_DB_INTEGRATION: '1'
+      SEC_XBRL_DB_INTEGRATION: '1'
+      SEC_REVIEW_DB_INTEGRATION: '1'
+      SEC_STARTER_DB_INTEGRATION: '1'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            app/requirements.txt
+            pyproject.toml
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt -r app/requirements.txt -e ".[test]"
+      - name: Start PostgreSQL and pgvector
+        run: docker compose up -d --wait
+      - name: Run database integration tests with offline API fixtures
+        run: >-
+          python -m pytest -q
+          tests/test_peer_comparison_postgres.py
+          tests/test_alignment_storage.py
+          tests/test_load_xbrl_to_postgres.py
+          tests/test_xbrl_schema.py
+          tests/test_postgres_human_reviews.py
+          tests/test_starter_data.py
+      - name: Stop test database
+        if: always()
+        run: docker compose down
