@@ -51,15 +51,22 @@ Docker database, pipeline, peer comparison, and test commands.
 To open the dashboard with starter company data already available in PostgreSQL:
 
 ```bash
-python3 -m pip install -r requirements.txt -r app/requirements.txt
+python3 -m venv .venv
+.venv/bin/python -m pip install -r app/requirements.txt
 docker compose up -d
-python3 -m streamlit run app/Home.py
+.venv/bin/python -m streamlit run app/Home.py
 ```
 
 App startup automatically imports the bundled `test-data` reports for 11 companies
 into missing PostgreSQL scopes. Later launches preserve existing data and newer
 pipeline results. No second branch checkout or model API key is needed for this
 import. See [starter data](starter_data/README.md) for contents and setup options.
+
+Both `requirements.txt` and `app/requirements.txt` install the complete app
+dependencies, including `psutil` for process controls and `tzdata` for Windows
+timezone support. After pulling updates, rerun the pip install command with the
+same virtual-environment Python used to launch Streamlit. Keep separate `.venv`
+directories on macOS and Windows.
 
 Install dependencies:
 
@@ -130,8 +137,8 @@ Ask questions such as "What are the most material changes in Bank of America's 2
 alignment data in PostgreSQL. With the database running and fixtures loaded:
 
 ```bash
-pip install -r app/requirements.txt
-streamlit run app/streamlit_app.py
+.venv/bin/python -m pip install -r app/requirements.txt
+.venv/bin/python -m streamlit run app/streamlit_app.py
 PYTHONPATH=src python -m sec_disclosure.chatbot "How many new risk factors did Intel add in 2025?"
 ```
 

@@ -8,12 +8,19 @@ Create the project environment and install the backend, dashboard, and test tool
 
 ```powershell
 py -3.13 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt -r app\requirements.txt -e ".[test]"
+.\.venv\Scripts\python.exe -m pip install -r app\requirements.txt -e ".[test]"
 docker compose up -d --wait
 ```
 
 These commands use the environment's Python directly, so activating a script or
 changing PowerShell's execution policy is unnecessary.
+
+After pulling updates, rerun the install command above using your existing
+`.venv`; creating it again is unnecessary. `app/requirements.txt` includes the
+complete backend requirements, including `psutil`, plus timezone data for Windows.
+If the app reports `No module named 'psutil'`, close its terminal with Ctrl+C,
+run the install command, and start it with `.venv\Scripts\python.exe -m streamlit`
+as below. Avoid a bare `pip` or `streamlit` command that may use another Python.
 
 If `.env` does not exist, copy `.env.example` to `.env`. Keep existing settings
 when configuring a machine that has already been used for this project. Fill in

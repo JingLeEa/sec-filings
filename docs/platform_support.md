@@ -19,10 +19,20 @@ when the native project environment is absent.
 | Operation | macOS terminal | Windows PowerShell |
 | --- | --- | --- |
 | Create environment | `python3 -m venv .venv` | `py -3.13 -m venv .venv` |
-| Install dependencies | `.venv/bin/python -m pip install -r requirements.txt -r app/requirements.txt -e ".[test]"` | `.\.venv\Scripts\python.exe -m pip install -r requirements.txt -r app\requirements.txt -e ".[test]"` |
+| Install dependencies | `.venv/bin/python -m pip install -r app/requirements.txt -e ".[test]"` | `.\.venv\Scripts\python.exe -m pip install -r app\requirements.txt -e ".[test]"` |
 | Start PostgreSQL | `docker compose up -d --wait` | `docker compose up -d --wait` |
 | Run tests | `.venv/bin/python -m pytest -q` | `.\.venv\Scripts\python.exe -m pytest -q` |
 | Open dashboard | `.venv/bin/python -m streamlit run app/Home.py` | `.\.venv\Scripts\python.exe -m streamlit run app\Home.py` |
+
+`app/requirements.txt` includes the root requirements rather than maintaining a
+separate partial list. Either requirements entry point installs `psutil`,
+Streamlit, pandas and `tzdata`; `pip install -e ".[ui,test]"` is also supported.
+Always install and launch with the same environment's Python. In an existing
+checkout, rerun the dependency install after pulling changes. This fixes
+`ModuleNotFoundError: No module named 'psutil'` without changing process handling.
+The native CI jobs first install only `app/requirements.txt` and smoke-test UI
+imports/timezones before the editable package is installed, so it cannot hide a
+missing dashboard dependency.
 
 The OS-specific behavior is limited to file locks and process launch flags.
 macOS retains `fcntl.flock` locks and a separate process session/group; Windows
