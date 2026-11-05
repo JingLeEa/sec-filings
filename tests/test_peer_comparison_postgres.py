@@ -81,6 +81,55 @@ class PeerComparisonPostgresTests(unittest.TestCase):
         self.assertEqual(rows[0]["sentences"][0]["sentence_id"], "aaa-2024-s1")
         self.assertEqual(list(self.root.iterdir()), [])
 
+    def test_parallel_first_snapshot_saves_both_commit_without_catalog_conflicts(self):
+        from concurrent.futures import ThreadPoolExecutor
+        from threading import Event
+        import time
+        from sec_disclosure.storage.pipeline_snapshots import publish
+
+        with psycopg.connect(**self.arguments) as conn:
+            conn.execute('DROP TABLE pipeline_stage_snapshots')
+        ready, release = Event(), Event()
+        application = 'snapshot-second-' + uuid.uuid4().hex[:8]
+
+        def first():
+            with psycopg.connect(**self.arguments) as conn, conn.cursor() as cur:
+                publish(cur, 'amd', 'raw', 2023, 2023, {})
+                ready.set()
+                if not release.wait(10):
+                    raise TimeoutError('First snapshot transaction was not released')
+
+        def second():
+            with psycopg.connect(**self.arguments, application_name=application) as conn, conn.cursor() as cur:
+                publish(cur, 'amd', 'raw', 2024, 2024, {})
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            first_save = pool.submit(first)
+            try:
+                self.assertTrue(ready.wait(5))
+                second_save = pool.submit(second)
+                # Hold the first DDL transaction open until the second writer
+                # reaches PostgreSQL. This deterministically exercises the
+                # catalog conflict instead of depending on thread scheduling.
+                with psycopg.connect(**self.admin_arguments) as observer:
+                    deadline = time.monotonic() + 5
+                    while time.monotonic() < deadline:
+                        row = observer.execute(
+                            'SELECT wait_event_type FROM pg_stat_activity WHERE application_name=%s',
+                            (application,)).fetchone()
+                        if row and row[0] == 'Lock':
+                            break
+                        time.sleep(0.01)
+                    else:
+                        self.fail('Second snapshot writer did not reach the open schema transaction')
+            finally:
+                release.set()
+            first_save.result(timeout=10)
+            second_save.result(timeout=10)
+        with psycopg.connect(**self.arguments) as conn:
+            years = conn.execute('SELECT previous_year FROM pipeline_stage_snapshots ORDER BY previous_year').fetchall()
+        self.assertEqual(years, [(2023,), (2024,)])
+
     def test_batch_cache_import_preserves_existing_bytes_and_recovers_partial_import(self):
         source = self.root / 'legacy'
         (source / 'requests').mkdir(parents=True)

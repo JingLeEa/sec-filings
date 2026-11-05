@@ -453,9 +453,9 @@ class IncorporatedReportTests(unittest.TestCase):
             source, response, report_path = root / 'primary.htm', root / 'api.json', root / 'report.htm'
             source.write_bytes(primary)
             report_path.write_bytes(report)
-            (root / 'report-source.json').write_text(json.dumps({'sec_url': REPORT_URL, 'sha256': documents.sha(report)}))
+            (root / 'report-source.json').write_text(json.dumps({'sec_url': REPORT_URL, 'sha256': documents.sha(report)}), encoding='utf-8')
             response.write_text(json.dumps({'schema_version': 'sec-api-cache-2.0', 'request': {'htm-url': URL},
-                                           'source_sha256': documents.sha(primary), 'response': payload}))
+                                           'source_sha256': documents.sha(primary), 'response': payload}), encoding='utf-8')
             tax = root / 'tax'
             tax.mkdir()
             (tax / 'us-gaap-2023.zip').write_bytes(package(2023))
@@ -467,7 +467,7 @@ class IncorporatedReportTests(unittest.TestCase):
                                     '--sec-cache', str(root / 'cache'), '--offline', '--no-db'])
             self.assertEqual(code, 0)
             self.assertEqual([p.name for p in output.iterdir()], ['primary_2023_api_metrics_with_values.json'])
-            result = json.loads((output / 'primary_2023_api_metrics_with_values.json').read_text())
+            result = json.loads((output / 'primary_2023_api_metrics_with_values.json').read_text(encoding='utf-8'))
             provenance = result['verification']['source']['documents']
             self.assertEqual(provenance['report1']['sec_url'], REPORT_URL)
             self.assertEqual(provenance['report1']['sha256'], documents.sha(report))

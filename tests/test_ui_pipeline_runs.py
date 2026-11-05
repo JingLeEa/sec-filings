@@ -3,6 +3,8 @@ import json
 import importlib.util
 import os
 import signal
+import subprocess
+import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
@@ -48,6 +50,15 @@ class PipelineRunUiTests(unittest.TestCase):
                 pipeline_runs.start_run('WFC', job['years'], resume_only=True)
         launch.assert_not_called()
         self.assertEqual((folder / 'ui_run.json').read_bytes(), original)
+
+    def test_start_rejects_starter_results_before_creating_a_run_or_process(self):
+        progress = {'full_pipeline_complete': True, 'completion_source': 'starter_data', 'stages': []}
+        with patch.object(pipeline_runs, 'read_run', return_value=(None, progress)), \
+             patch.object(pipeline_runs.subprocess, 'Popen') as launch:
+            with self.assertRaisesRegex(pipeline_runs.RunError, 'Starter results'):
+                pipeline_runs.start_run('MU', [2023, 2024, 2025])
+        launch.assert_not_called()
+        self.assertFalse((pipeline_runs.ROOT / 'data').exists())
 
     @unittest.skipUnless(os.name == 'posix', 'POSIX process groups')
     def test_stop_targets_only_the_verified_runner_and_resume_reuses_cached_work(self):
@@ -120,12 +131,70 @@ class PipelineRunUiTests(unittest.TestCase):
 
     def test_stop_process_verification_checks_company_years_and_script(self):
         script = pipeline_runs.ROOT / 'scripts/run_full_pipeline.py'
-        valid = f'python -u {script} --ticker wfc --years 2023 2024 2025 --data-dir /tmp/data'
-        for command, expected in ((valid, True), (valid.replace('wfc', 'amd'), False),
-                                  (valid.replace('2024 2025', '2022'), False), ('python unrelated.py', False)):
-            with self.subTest(command=command), patch.object(pipeline_runs.subprocess, 'run',
-                    return_value=SimpleNamespace(stdout=command, returncode=0)):
+        valid = ['python', '-u', str(script), '--ticker', 'wfc', '--years', '2023', '2024', '2025']
+        for command, expected in ((valid, True), ([*valid[:4], 'amd', *valid[5:]], False),
+                                  ([*valid[:6], '2022'], False), (['python', 'unrelated.py'], False)):
+            with self.subTest(command=command), patch.object(pipeline_runs.psutil, 'Process') as process:
+                process.return_value.cmdline.return_value = command
                 self.assertEqual(pipeline_runs._pipeline_process_matches(12345, 'wfc', (2023, 2024, 2025)), expected)
+
+    def test_status_and_process_verification_leave_a_real_worker_running(self):
+        root = pipeline_runs.ROOT / 'checkout with spaces'
+        script = root / 'scripts/run_full_pipeline.py'
+        script.parent.mkdir(parents=True)
+        script.write_text('import sys\nsys.stdin.buffer.read(1)\n', encoding='utf-8')
+        command = [sys.executable, '-u', str(script), '--ticker', 'wfc', '--years', '2023', '2024']
+        with subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL,
+                              stderr=subprocess.DEVNULL, **pipeline_runs._launch_options()) as process:
+            try:
+                with patch.object(pipeline_runs, 'ROOT', root):
+                    self.assertTrue(pipeline_runs._pid_alive(process.pid))
+                    self.assertIsNone(process.poll())
+                    self.assertTrue(pipeline_runs._pipeline_process_matches(process.pid, 'wfc', (2023, 2024)))
+                    self.assertFalse(pipeline_runs._pipeline_process_matches(process.pid, 'amd', (2023, 2024)))
+                    self.assertIsNone(process.poll())
+            finally:
+                process.communicate(b'x', timeout=10)
+
+    def test_database_progress_uses_portable_keys(self):
+        documents = {
+            'disclosures/wfc/2023/token_usage.json': {'planned_batches': 4, 'pending_batches': ['last']},
+            'alignments/wfc/2023-2024/candidate_matches.json': {'a': [], 'b': []},
+            'alignments/wfc/2023-2024/jobs/matching_1.json': {'anchors': ['a']},
+        }
+        with patch.object(pipeline_runs, '_postgres_documents', return_value={
+                **documents, pipeline_runs._status_key('wfc', [2023, 2024]): {}}) as read:
+            row = pipeline_runs.stage_progress('wfc', [2023, 2024], 'extract_disclosures_and_save')[0]
+            self.assertEqual((row['done'], row['total']), (3, 4))
+            row = pipeline_runs.stage_progress('wfc', [2023, 2024], 'align_and_save_2023_2024')[0]
+            self.assertEqual((row['done'], row['total']), (1, 2))
+            for call in read.call_args_list:
+                self.assertTrue(all('\\' not in key for key in call.args[0]))
+                self.assertNotIn('\\', call.args[1] or '')
+
+    def test_stop_terminates_only_a_verified_real_runner(self):
+        script = pipeline_runs.ROOT / 'scripts/run_full_pipeline.py'
+        script.parent.mkdir(parents=True)
+        script.write_text('import sys\nsys.stdin.buffer.read(1)\n', encoding='utf-8')
+        folder, job = self.running_job()
+        command = [sys.executable, '-u', str(script), '--ticker', 'wfc', '--years', '2023', '2024', '2025']
+        with subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL,
+                              stderr=subprocess.DEVNULL, **pipeline_runs._launch_options()) as process:
+            try:
+                job['pid'] = process.pid
+                pipeline_runs._write_json(folder / 'ui_run.json', job)
+                with patch.object(pipeline_runs, 'Thread') as thread:
+                    stopped = pipeline_runs.stop_run('wfc', job['years'], run_id=job['run_id'])
+                    self.assertEqual(stopped['status'], 'stopping')
+                    process.wait(timeout=10)
+                    thread.call_args.kwargs['target'](*thread.call_args.kwargs['args'])
+                saved = pipeline_runs._read_json(folder / 'ui_run.json')
+                self.assertEqual(saved['status'], 'stopped')
+                self.assertTrue(saved['stopped_by_user'])
+            finally:
+                if process.poll() is None:
+                    process.terminate()
+                    process.wait(timeout=10)
 
     def test_completion_monitor_preserves_the_user_stop_reason(self):
         folder, job = self.running_job()
@@ -229,7 +298,12 @@ class PipelineRunUiTests(unittest.TestCase):
             self.assertEqual(command[command.index("--years") + 1:command.index("--data-dir")],
                              ["2023", "2024", "2025"])
             self.assertEqual(popen.call_args.kwargs["cwd"], pipeline_runs.ROOT)
-            self.assertTrue(popen.call_args.kwargs["start_new_session"])
+            if os.name == 'nt':
+                self.assertEqual(popen.call_args.kwargs['creationflags'],
+                                 subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW)
+            else:
+                self.assertTrue(popen.call_args.kwargs['start_new_session'])
+            self.assertEqual(popen.call_args.kwargs['env']['PYTHONIOENCODING'], 'utf-8')
             self.assertEqual(job["status"], "running")
             self.assertNotIn("--retry-failed", command)
             self.assertFalse(job["retry_failed"])
@@ -246,13 +320,21 @@ class PipelineRunUiTests(unittest.TestCase):
         self.assertEqual(saved["exit_code"], 0)
 
     def test_start_prefers_project_virtual_environment(self):
-        python = pipeline_runs.ROOT / ".venv" / "bin" / "python"
+        relative = 'Scripts/python.exe' if os.name == 'nt' else 'bin/python'
+        python = pipeline_runs.ROOT / '.venv' / relative
         python.parent.mkdir(parents=True)
         python.write_text("")
         with patch.object(pipeline_runs.subprocess, "Popen", return_value=SimpleNamespace(pid=12345)) as popen, \
              patch.object(pipeline_runs, "Thread"):
             pipeline_runs.start_run("unh", [2023, 2024])
         self.assertEqual(popen.call_args.args[0][0], str(python))
+
+    def test_other_platform_virtual_environment_is_never_executed(self):
+        relative = 'bin/python' if os.name == 'nt' else 'Scripts/python.exe'
+        foreign = pipeline_runs.ROOT / '.venv' / relative
+        foreign.parent.mkdir(parents=True)
+        foreign.write_text('', encoding='utf-8')
+        self.assertEqual(pipeline_runs._pipeline_python(), sys.executable)
 
     def test_explicit_failed_request_retry_is_passed_to_runner_and_recorded(self):
         with patch.object(pipeline_runs.subprocess, "Popen", return_value=SimpleNamespace(pid=12345)) as popen, \

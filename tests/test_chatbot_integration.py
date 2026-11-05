@@ -21,6 +21,8 @@ import unittest
 from collections import Counter
 from pathlib import Path
 
+from sec_disclosure.alignment_policy import exclude_from_reports
+
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "test_data" / "alignments"
 REQUIRED = [(c, p, p + 1) for c in ("bac", "intc", "jpm") for p in (2023, 2024)]
@@ -57,8 +59,13 @@ DB, SKIP_REASON = _database()
 def fixture_records() -> list[dict]:
     records = []
     for company, previous, current in PERIODS:
-        for name in ("alignments", "needs_review"):
-            report = json.loads((FIXTURES / company / f"{previous}-{current}" / f"{name}.json").read_text(encoding="utf-8"))
+        reports = {f'{name}.json': json.loads(
+            (FIXTURES / company / f"{previous}-{current}" / f"{name}.json").read_text(encoding='utf-8'))
+            for name in ('alignments', 'needs_review')}
+        # The current loaders and starter bundle exclude unresolved one-sided
+        # review cases before storing these fixtures in PostgreSQL.
+        exclude_from_reports(reports)
+        for report in reports.values():
             for record in report["alignments"]:
                 members = (record.get("previous_disclosures") or []) + (record.get("current_disclosures") or [])
                 items = sorted({str(m.get("item")) for m in members if m.get("item")})

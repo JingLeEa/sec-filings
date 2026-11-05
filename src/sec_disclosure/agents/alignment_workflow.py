@@ -51,7 +51,7 @@ class AlignmentWorkflow:
         job_id = f"matching_{index + 1:03d}"
         checkpoint = self.output / "jobs" / f"{job_id}.json"
         if checkpoint.exists():
-            saved = json.loads(checkpoint.read_text())
+            saved = json.loads(checkpoint.read_text(encoding='utf-8'))
         else:
             visible = set(anchors) | {hit["disclosure_id"] for anchor in anchors for hit in self.candidates[anchor]}
             payload = {"previous_year": self.data.years[0], "current_year": self.data.years[1], "anchors": anchors,
@@ -94,7 +94,7 @@ class AlignmentWorkflow:
     def run_verification_job(self, planned, matches):
         job_id, batch = planned["job_id"], planned["groups"]
         checkpoint = self.output / "jobs" / f"{job_id}.json"
-        saved = json.loads(checkpoint.read_text()) if checkpoint.exists() else None
+        saved = json.loads(checkpoint.read_text(encoding='utf-8')) if checkpoint.exists() else None
         if saved is None or saved.get("repair_pending") and not self.args.offline_repair:
             members = {key for group in batch for key in group["previous_ids"] + group["current_ids"]}
             required = members - self.exact_ids
@@ -158,7 +158,7 @@ class AlignmentWorkflow:
         return ("verification_phase" if self.args.workers > 1 else "verification_job") if state["verification_index"] < len(state["verification_plan"]) else "finish"
 
     def finish(self, state):
-        return {"complete": not any(json.loads(p.read_text()).get("repair_pending")
+        return {"complete": not any(json.loads(p.read_text(encoding='utf-8')).get("repair_pending")
                                      for p in (self.output / "jobs").glob("verification_*.json"))}
 
     def build(self):

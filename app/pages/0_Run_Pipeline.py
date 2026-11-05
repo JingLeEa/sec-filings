@@ -40,6 +40,12 @@ def show_progress(ticker, years):
         st.error(str(error))
         return
 
+    if progress and progress.get('full_pipeline_complete') and progress.get('completion_source') == 'starter_data':
+        st.subheader('Run status')
+        st.success('Starter results are ready. View the saved Synthesis Report; no new pipeline run is needed.')
+        st.caption(f"{ticker} | FY{', FY'.join(map(str, years))} | Imported starter reports")
+        return
+
     phases = pipeline_runs.phase_progress(years, progress)
     by_name = {phase["phase"]: phase for phase in phases}
     completed = sum(phase["status"] == "complete" for phase in phases)
@@ -212,7 +218,8 @@ def run_setup(running):
     if not locked and (job or progress) and (job or {}).get('status') not in {'starting', 'running', 'stopping'}:
         selection = f"{ticker} | FY{', FY'.join(map(str, years))}"
         if complete:
-            st.success(f'Already completed for **{selection}**. '
+            label = 'Starter results already available' if progress.get('completion_source') == 'starter_data' else 'Already completed'
+            st.success(f'{label} for **{selection}**. '
                        'View the saved results on the Synthesis Report page.')
         elif progress:
             st.info(f'Previous run found for **{selection}**. Saved progress is available. '

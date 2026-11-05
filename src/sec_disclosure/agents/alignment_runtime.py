@@ -33,7 +33,7 @@ class Runtime:
         self.output, self.config, self.args = output, config, args
         self.directory = output / "requests"
         self.directory.mkdir(parents=True, exist_ok=True)
-        self.requests = [json.loads(p.read_text()) for p in sorted(self.directory.glob("*.json"))]
+        self.requests = [json.loads(p.read_text(encoding='utf-8')) for p in sorted(self.directory.glob("*.json"))]
         self.requests.sort(key=lambda record: (record["request_hash"], record["attempt"]))
         self.new_requests = 0
         self.condition = threading.Condition(threading.RLock())

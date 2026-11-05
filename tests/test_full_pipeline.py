@@ -36,6 +36,23 @@ class FullPipelineTests(unittest.TestCase):
             with self.subTest(option=option, value=value), redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 runner.parse_args([option, value])
 
+    def test_starter_completion_reuses_saved_reports_without_running_or_preflighting(self):
+        self.arguments.remove('--skip-synthesis')
+        marker = {'ticker': 'amd', 'years': [2023, 2024, 2025], 'stages': [],
+                  'complete': True, 'full_pipeline_complete': True, 'completion_source': 'starter_data'}
+        self.progress_path.write_text(json.dumps(marker))
+        original = self.progress_path.read_bytes()
+        for options in ([], ['--dry-run']):
+            code, executed, output = self.run_mock_pipeline(options)
+            self.assertEqual(code, 0)
+            self.assertFalse(executed)
+            self.assertIn('starter results are already complete', output)
+            self.assertEqual(self.progress_path.read_bytes(), original)
+        code, executed, _ = self.run_mock_pipeline(['--no-resume'])
+        self.assertEqual(code, 0)
+        self.assertIn('text_2023', executed)
+        self.assertIn('synthesis_and_save', executed)
+
     def test_failed_stage_recovers_without_repeating_completed_work(self):
         attempts = []
 

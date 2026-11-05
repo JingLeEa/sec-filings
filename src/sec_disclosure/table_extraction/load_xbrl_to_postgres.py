@@ -192,7 +192,7 @@ def ensure_schema(cur):
     # Serialize initial schema creation; keep the migration inside our transaction.
     cur.execute('SELECT pg_advisory_xact_lock(40401001)')
     migration = ROOT / 'db/init/04_xbrl_data.sql'
-    statements = '\n'.join(line for line in migration.read_text().splitlines()
+    statements = '\n'.join(line for line in migration.read_text(encoding='utf-8').splitlines()
                            if line.strip() not in {'BEGIN;', 'COMMIT;'})
     cur.execute(statements)
 

@@ -121,7 +121,7 @@ class AlignmentPostgresTests(unittest.TestCase):
     def sql(cls, statement, database=None):
         command = ["docker", "compose", "exec", "-T", "db", "sh", "-c",
                    'exec psql -X -U "$POSTGRES_USER" -d "$1" -v ON_ERROR_STOP=1 -A -t', "sh", database or cls.database]
-        return subprocess.run(command, cwd=ROOT, input=statement, text=True, capture_output=True,
+        return subprocess.run(command, cwd=ROOT, input=statement, text=True, encoding='utf-8', capture_output=True,
                               check=True, timeout=30).stdout.strip()
 
     @classmethod
@@ -180,7 +180,7 @@ class AlignmentPostgresTests(unittest.TestCase):
             for name, rows in (("disclosures.json", records[:2]), ("review_candidates.json", records[2:])):
                 report = {"schema_version": "4", "company": "amd", "fiscal_year": str(year),
                           "policies": {"not_needed": True}, "disclosures": rows}
-                (folder / name).write_text(json.dumps(report, ensure_ascii=False))
+                (folder / name).write_text(json.dumps(report, ensure_ascii=False), encoding='utf-8')
             (folder / "token_usage.json").write_text('{"run_complete": true}')
             disclosures.store_disclosures(folder, "amd", year, replace=True)
 
@@ -214,11 +214,13 @@ class AlignmentPostgresTests(unittest.TestCase):
         self.assertEqual(group["future"], {"keep": True})
         self.assertTrue(group["evidence"])
         self.assertTrue(group["grouping"])
-        self.assertEqual(reports["needs_review.json"]["alignments"][0]["current_disclosures"], [])
+        reviewed = reports['needs_review.json']['alignments'][0]['current_disclosures']
+        self.assertEqual([row['disclosure_id'] for row in reviewed], ['amd_2024_7_D002'])
+        self.assertEqual(reviewed[0]['review_status'], 'review_candidate')
         with TemporaryDirectory() as output:
             paths = exports.export_reports("amd", [2023, 2024], Path(output))
             self.assertEqual(len(paths), 6)
-            self.assertEqual(json.loads((Path(output) / "alignments/amd/2023-2024/alignments.json").read_text()),
+            self.assertEqual(json.loads((Path(output) / "alignments/amd/2023-2024/alignments.json").read_text(encoding='utf-8')),
                              reports["alignments.json"])
         self.sql("DELETE FROM disclosures WHERE disclosure_id='amd_2023_7_D001';")
         with TemporaryDirectory() as output:
@@ -241,8 +243,10 @@ class AlignmentPostgresTests(unittest.TestCase):
                 rows[0]["text"] = "Revenue rose."
                 path.write_text(json.dumps(rows))
         with patch.object(alignment_runtime, "request_completion", side_effect=AssertionError("Exact alignments need no model calls")):
-            self.assertEqual(fixture.run_cli("--align", years=("2023", "2024"), store_postgres=True)[:2], (0, 4))
-            self.assertEqual(fixture.run_cli("--align", years=("2023", "2024"), store_postgres=True)[:2], (0, 0))
+            first = fixture.run_cli("--align", years=("2023", "2024"), store_postgres=True)
+            self.assertEqual(first[:2], (0, 4), first[3])
+            resumed = fixture.run_cli("--align", years=("2023", "2024"), store_postgres=True)
+            self.assertEqual(resumed[:2], (0, 0), resumed[3])
         self.assertEqual(self.sql("SELECT count(*) FROM disclosures;"), "4")
         self.assertEqual(self.sql("SELECT count(*) FROM alignment_runs;"), "1")
         self.assertEqual(self.sql("SELECT count(*) FROM alignments;"), "2")

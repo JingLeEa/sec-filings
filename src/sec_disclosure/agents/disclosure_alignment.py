@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from sec_disclosure.compat import source_digest
+
 import argparse
 import json
 import math
@@ -264,7 +266,7 @@ def save_report(output, data, candidates, matches, groups, decisions, runtime, *
                      input_source=data.input_source, env_file=data.env_file))
     exact_path = output / "automatic_matches.json"
     if exact_path.exists():
-        automatic = json.loads(exact_path.read_text())
+        automatic = json.loads(exact_path.read_text(encoding='utf-8'))
         report["automatic_matching"] = {"policy": automatic["policy"], "exact_pairs": len(automatic["alignments"]),
                                         "api_requests": 0, "api_tokens": 0,
                                         "source_warning_pairs": sum(bool(row["review_reasons"]) for row in automatic["alignments"])}
@@ -275,7 +277,7 @@ def save_report(output, data, candidates, matches, groups, decisions, runtime, *
     usage.update(run_complete=complete, company=data.ticker, previous_year=data.years[0], current_year=data.years[1],
                  extraction_tokens_by_year=data.extraction_usage)
     write_json(output / "token_usage.json", usage)
-    validation_jobs = [json.loads(p.read_text()) for p in sorted((output / "validation_errors").glob("*.json"))]
+    validation_jobs = [json.loads(p.read_text(encoding='utf-8')) for p in sorted((output / "validation_errors").glob("*.json"))]
     write_json(output / "validation_errors.json", {"schema_version": REPORT_VERSION, "company": data.ticker,
                "previous_year": data.years[0], "current_year": data.years[1], "jobs": validation_jobs})
     write_alignment_reports(output, report, usage,
@@ -337,11 +339,11 @@ def apply_extraction_policy_to_alignments(decisions, data):
 def load_alignment_report(output, *, documents=None):
     """Read all decisions from the two final files, or a legacy combined report."""
     report = (deepcopy(documents['alignments.json']['payload']) if documents is not None
-              else json.loads((output / "alignments.json").read_text()))
+              else json.loads((output / "alignments.json").read_text(encoding='utf-8')))
     if "included_statuses" not in report:
         return report
     review = (deepcopy(documents['needs_review.json']['payload']) if documents is not None
-              else json.loads((output / "needs_review.json").read_text()))
+              else json.loads((output / "needs_review.json").read_text(encoding='utf-8')))
     identity = ("schema_version", "company", "comparison_scope", "previous_year", "current_year",
                 "run_complete", "error", "overall_counts")
     if any(report[key] != review[key] for key in identity):
@@ -366,7 +368,7 @@ def regroup_saved_report(output, data, *, extraction_policy_only=False):
     path = output / "alignments.json"
     original_bytes = path.read_bytes()
     original = load_alignment_report(output)
-    manifest = json.loads((output / "manifest.json").read_text())
+    manifest = json.loads((output / "manifest.json").read_text(encoding='utf-8'))
     if original.get("comparison_scope") != "same_item" or manifest.get("comparison_scope") != "same_item":
         raise ValueError("Regrouping requires a saved same-Item run.")
     if (original["company"], original["previous_year"], original["current_year"]) != (data.ticker, *data.years):
@@ -401,7 +403,7 @@ def regroup_saved_report(output, data, *, extraction_policy_only=False):
         report["change_analysis_summary"] = change_summary(report)
     if report == original and not any((output / name).exists() for name in LEGACY_RESULT_FILES):
         return report
-    usage = json.loads((output / "token_usage.json").read_text())
+    usage = json.loads((output / "token_usage.json").read_text(encoding='utf-8'))
     operation = "extraction_policy" if extraction_policy_only else "overlap_grouping"
     review_path = output / "needs_review.json"
     saved_bytes = original_bytes + (review_path.read_bytes() if review_path.exists() else b"")
@@ -439,7 +441,7 @@ def regroup_saved_report(output, data, *, extraction_policy_only=False):
     write_json(output / ("extraction_policy_summary.json" if extraction_policy_only else "regrouping_summary.json"), summary)
     summary_path = output / "run_summary.json"
     if summary_path.exists():
-        run_summary = json.loads(summary_path.read_text())
+        run_summary = json.loads(summary_path.read_text(encoding='utf-8'))
         by_item = defaultdict(Counter)
         for row in report["alignments"]:
             by_item[data.item_for(row["previous_ids"] + row["current_ids"])][row["status"]] += 1
@@ -637,7 +639,7 @@ def analyze_saved_alignments(output, data, args, request_pacer=None):
         documents = snapshot['documents']
     report = load_alignment_report(output, documents=documents)
     manifest = (documents['manifest.json']['payload'] if documents is not None
-                else json.loads((output / "manifest.json").read_text()))
+                else json.loads((output / "manifest.json").read_text(encoding='utf-8')))
     if (report.get("comparison_scope") != "same_item" or not report["run_complete"]
             or (report["company"], report["previous_year"], report["current_year"]) != (data.ticker, *data.years)):
         raise ValueError("Change-analysis-only requires a completed same-Item alignment for this company/year pair.")
@@ -780,14 +782,14 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
                     "orchestration": orchestration_manifest(),
                     "comparison_scope": "same_item",
                     "exact_matching_policy": EXACT_POLICY if not source or source.exact_policy else None,
-                    "implementation_hashes": {p.name: digest(p.read_bytes()) for p in implementation},
+                    "implementation_hashes": {p.name: source_digest(p) for p in implementation},
                     "base_url": config.base_url if config else None, "model": config.model if config else None,
                     "settings": {key: getattr(args, key) for key in ("top_k", "batch_size", "max_steps", "max_tokens", "max_prompt_chars")}}
         if source:
             manifest["repair_source_hashes"] = source.hashes
         manifest_path = output / "manifest.json"
         if manifest_path.exists():
-            previous_manifest = json.loads(manifest_path.read_text())
+            previous_manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
             if previous_manifest.get("comparison_scope") != "same_item":
                 raise ValueError("This saved run predates same-Item-only comparison. Start a fresh run with a new --output-dir; legacy cross-Item jobs cannot be resumed or revalidated under this scope.")
             if previous_manifest != manifest:
@@ -831,9 +833,9 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
             # The coordinator can stop inside a graph node. Its portable job
             # artifacts contain the progress needed for the final partial report.
             if (output / "matching_proposals.json").exists():
-                matches = json.loads((output / "matching_proposals.json").read_text())
+                matches = json.loads((output / "matching_proposals.json").read_text(encoding='utf-8'))
             if (output / "proposed_groups.json").exists():
-                groups = json.loads((output / "proposed_groups.json").read_text())
+                groups = json.loads((output / "proposed_groups.json").read_text(encoding='utf-8'))
             decisions = checkpoint_decisions(output)
             report = save_report(output, data, candidates, matches, groups, decisions, runtime, complete=complete, error=error)
             print(f"Saved {output}: {report['counts']}; reported alignment tokens {runtime.report()['reported_tokens']['total_tokens']:,}.", flush=True)
@@ -847,9 +849,9 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
 def checkpoint_decisions(output):
     """Include all saved jobs when a resumed repair pauses partway through."""
     automatic = output / "automatic_matches.json"
-    rows = json.loads(automatic.read_text())["alignments"] if automatic.exists() else []
+    rows = json.loads(automatic.read_text(encoding='utf-8'))["alignments"] if automatic.exists() else []
     for path in sorted((output / "jobs").glob("verification_*.json")):
-        saved = json.loads(path.read_text())
+        saved = json.loads(path.read_text(encoding='utf-8'))
         rows.extend(saved["result"] if saved["result"] is not None else [review_row(group, saved["error"]) for group in saved["groups"]])
     return rows
 

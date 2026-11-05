@@ -36,6 +36,16 @@ class JsonCheckpointWriteTests(unittest.TestCase):
         with TemporaryDirectory() as temporary:
             self.overlapping_writes(Path(temporary) / 'token_usage.json')
 
+    def test_long_request_names_do_not_make_temporary_paths_exceed_windows_limits(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            folder = root / ('a' * (170 - len(str(root)) - 1))
+            target = folder / ('b' * 64 + '_attempt_001.json')
+            self.assertLess(len(str(target)), 260)
+            write_json(target, {'complete': True})
+            self.assertEqual(json.loads(target.read_text(encoding='utf-8')), {'complete': True})
+            self.assertEqual(list(folder.glob('*.tmp')), [])
+
     def test_overlapping_postgres_checkpoint_writes_both_succeed(self):
         store = MemoryArtifactStore()
         with PostgresWorkspace('checkpoint-test', store=store) as workspace:

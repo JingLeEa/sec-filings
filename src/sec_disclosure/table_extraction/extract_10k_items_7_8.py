@@ -150,7 +150,8 @@ def main(argv=None):
             source = filings[args.year]['url']
             company = args.company or args.ticker or issuer_data['name']
         data = load(source)
-        discovered = api.sec_filing_url(source) if urlparse(source).scheme else local_filing_url(source, data)
+        discovered = (api.sec_filing_url(source) if urlparse(source).scheme in {'http', 'https'}
+                      else local_filing_url(source, data))
         if args.filing_url and discovered and args.filing_url != discovered:
             raise ValueError('--filing-url conflicts with the selected/cached filing.')
         parameters = api.request_parameters(filing_url=args.filing_url or discovered or '')

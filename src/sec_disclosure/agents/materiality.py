@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from sec_disclosure.compat import source_digest
+
 import argparse
 from copy import deepcopy
 import json
@@ -205,7 +207,7 @@ def new_verification_ledger(classification_run_id, threshold):
 def load_verification_ledger(path, classification_run_id, threshold):
     if not path.exists():
         return new_verification_ledger(classification_run_id, threshold)
-    value = json.loads(path.read_text())
+    value = json.loads(path.read_text(encoding='utf-8'))
     if not isinstance(value, dict):
         raise ValueError("Materiality verification ledger must be a JSON object.")
     if value.get("classification_run_id") != classification_run_id:
@@ -368,7 +370,7 @@ def process_adaptive_batches(rows, size, process, *, stage, concurrency=2):
 
 
 def load_document(path, *, validate_materiality=True, document=None):
-    document = json.loads(path.read_text()) if document is None else deepcopy(document)
+    document = json.loads(path.read_text(encoding='utf-8')) if document is None else deepcopy(document)
     if not isinstance(document, dict):
         raise ValueError("alignments.json must contain a JSON object.")
     if not document.get("run_complete"):
@@ -441,7 +443,7 @@ def write_summary(
     else:
         summary_path = output / "summary.json"
         if summary_path.exists():
-            prior_summary = json.loads(summary_path.read_text())
+            prior_summary = json.loads(summary_path.read_text(encoding='utf-8'))
             if (isinstance(prior_summary, dict)
                     and prior_summary.get("classification_run_id") == classification_run_id
                     and isinstance(prior_summary.get("reported_tokens"), dict)):
@@ -566,7 +568,7 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
             if not prior_state_path.exists():
                 prior_state_path = output / "manifest.json"
             if prior_state_path.exists():
-                prior_state = json.loads(prior_state_path.read_text())
+                prior_state = json.loads(prior_state_path.read_text(encoding='utf-8'))
                 run_state = normalize_run_state(prior_state)
                 classification_run_id = run_state["classification_run_id"]
         for row in rows:
@@ -643,7 +645,7 @@ def main(argv=None, *, request_pacer: RequestPacer | None = None):
                           "max_tokens", "max_prompt_chars", "skip_verification",
                           "timeout_recovery", "retry_timeout", "concurrency",
                           "request_interval", "rate_limit_cooldown", "rate_limit_retries")},
-            "implementation_hashes": {file.name: digest(file.read_bytes()) for file in implementation},
+            "implementation_hashes": {file.name: source_digest(file) for file in implementation},
         })
         runtime = MaterialityRuntime(output, config, args, classification_run_id,
                                     request_pacer=request_pacer)

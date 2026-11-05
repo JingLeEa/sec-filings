@@ -287,7 +287,7 @@ def locate_printed_pages(events: list[Any], references: list[dict], tables: list
         path = cache / f"{request_key}.json" if cache else None
         if path and path.is_file():
             try:
-                saved = json.loads(path.read_text())
+                saved = json.loads(path.read_text(encoding='utf-8'))
                 return validate_markers(saved["validated_response"], window, excluded), 0, 1, []
             except (OSError, ValueError, KeyError, TypeError):
                 pass
@@ -341,7 +341,7 @@ def locate_printed_pages(events: list[Any], references: list[dict], tables: list
     map_path = cache / "map.json" if cache else None
     if map_path and map_path.is_file():
         try:
-            saved = json.loads(map_path.read_text())
+            saved = json.loads(map_path.read_text(encoding='utf-8'))
             if saved.get("scan_complete"):
                 results = [(validate_markers(saved["validated_response"], events, excluded), 0, 1, [])]
         except (OSError, ValueError, KeyError, TypeError):
@@ -543,7 +543,7 @@ def resolve_page_pointers(events: list[Any], references: list[dict], targets: li
         path = cache_dir / "pointers" / f"{key}.json" if cache_dir else None
         if path and path.is_file():
             try:
-                recovered.extend(validate(json.loads(path.read_text())))
+                recovered.extend(validate(json.loads(path.read_text(encoding='utf-8'))))
                 continue
             except (OSError, ValueError, KeyError, TypeError):
                 pass

@@ -253,8 +253,8 @@ class ExtractorTests(unittest.TestCase):
 
             self.assertEqual(code, 0)
             output = root / "output" / "jpm" / "2024"
-            chunks = json.loads((output / "2024_chunks.json").read_text())
-            sentences = json.loads((output / "2024_chunk_sentences.json").read_text())
+            chunks = json.loads((output / "2024_chunks.json").read_text(encoding='utf-8'))
+            sentences = json.loads((output / "2024_chunk_sentences.json").read_text(encoding='utf-8'))
             by_item = {item: " ".join(row["text"] for row in chunks if row["item"] == item)
                        for item in ("7", "8", "15")}
             self.assertIn("Operating discussion 10.", by_item["7"])
@@ -326,7 +326,7 @@ class ExtractorTests(unittest.TestCase):
             self.assertEqual(result, 0)
             self.assertIn("Sentence/chunk text match: OK (", stdout.getvalue())
             output = root / "output" / "mu" / "2024"
-            records = json.loads((output / "2024_chunks.json").read_text())
+            records = json.loads((output / "2024_chunks.json").read_text(encoding='utf-8'))
             self.assertEqual({record["item"] for record in records}, {"1", "1A", "7", "8"})
             self.assertFalse((output / "2024_item_15.txt").exists())
 
@@ -420,7 +420,7 @@ class ExtractorTests(unittest.TestCase):
 
             self.assertEqual(result, 0)
             output = root / "output" / "nvda" / "2024"
-            records = json.loads((output / "2024_chunks.json").read_text())
+            records = json.loads((output / "2024_chunks.json").read_text(encoding='utf-8'))
             self.assertIn("15", {record["item"] for record in records})
             self.assertTrue((output / "2024_item_15.txt").exists())
 
@@ -452,7 +452,7 @@ class ExtractorTests(unittest.TestCase):
             self.assertEqual(result, 0)
             item15_parser.assert_called_once()
             output = root / "output" / "jpm" / "2025"
-            records = json.loads((output / "2025_chunks.json").read_text())
+            records = json.loads((output / "2025_chunks.json").read_text(encoding='utf-8'))
             self.assertTrue(any(
                 record["item"] == "15" and "financial statement schedules" in record["text"]
                 for record in records
@@ -487,9 +487,9 @@ class ExtractorTests(unittest.TestCase):
                 self.assertEqual(errors.getvalue(), "")
                 item15_parser.assert_not_called()
                 output = root / "output" / "mu" / "2024"
-                records = json.loads((output / "2024_chunks.json").read_text())
+                records = json.loads((output / "2024_chunks.json").read_text(encoding='utf-8'))
                 self.assertEqual({record["item"] for record in records}, {"1", "1A", "7", "8"})
-                self.assertNotIn("Item 15", (output / "2024_chunks.txt").read_text())
+                self.assertNotIn("Item 15", (output / "2024_chunks.txt").read_text(encoding='utf-8'))
                 self.assertFalse((output / "2024_item_15.txt").exists())
                 for item in ("1", "1a", "7", "8"):
                     self.assertTrue((output / f"2024_item_{item}.txt").exists())
@@ -586,11 +586,11 @@ class ExtractorTests(unittest.TestCase):
                     self.assertEqual(main([str(source), "--out-dir", str(root / "output"), "--items", "7"]), 0)
                 output = root / "output" / "mu" / "2025"
                 for name in ("2025_chunks.json", "2025_chunks.txt", "2025_item_7.txt"):
-                    text = (output / name).read_text()
+                    text = (output / name).read_text(encoding='utf-8')
                     self.assertNotIn("59 |2025 10-K", text)
                     self.assertIn("Income taxes: We estimate taxes payable in multiple jurisdictions.", text)
                 if tag == "div":
-                    records = json.loads((output / "2025_chunks.json").read_text())
+                    records = json.loads((output / "2025_chunks.json").read_text(encoding='utf-8'))
                     self.assertEqual({record["item_title"] for record in records}, {"Critical Accounting Estimates"})
 
     def test_discover_10k_filing_reads_sec_historical_submissions(self):
@@ -2528,9 +2528,9 @@ def report_index(filename, document_type='EX-13'):
 class IncorporatedReportTests(unittest.TestCase):
     def make_files(self, root, year='2031', primary='wrapper.htm', report='financial-data.htm', doc_type='EX-13'):
         source = root / primary
-        source.write_text(incorporated_filing(year))
-        (root / report).write_text(incorporated_report(year))
-        (root / '0000999888-32-000001-index.htm').write_text(report_index(report, doc_type))
+        source.write_text(incorporated_filing(year), encoding='utf-8')
+        (root / report).write_text(incorporated_report(year), encoding='utf-8')
+        (root / '0000999888-32-000001-index.htm').write_text(report_index(report, doc_type), encoding='utf-8')
         return source
 
     def arguments(self, source, root, year='2031'):
@@ -2550,7 +2550,7 @@ class IncorporatedReportTests(unittest.TestCase):
                 with redirect_stdout(io.StringIO()):
                     self.assertEqual(main(self.arguments(source, root, year)), 0)
                 destination = root / 'output/example' / year
-                records = json.loads((destination / f'{year}_chunks.json').read_text())
+                records = json.loads((destination / f'{year}_chunks.json').read_text(encoding='utf-8'))
                 self.assertEqual({r['item'] for r in records}, {'1', '1A', '7', '8'})
                 self.assertEqual(len({r['id'] for r in records}), len(records))
                 by_item = {item: ' '.join(r['text'] for r in records if r['item'] == item) for item in ('1', '1A', '7', '8')}
@@ -2566,7 +2566,7 @@ class IncorporatedReportTests(unittest.TestCase):
                     self.assertNotIn(unwanted, all_text)
                 for record in records:
                     self.assertEqual(record['source'], str(source if record['item'] == '1' else root / report))
-                audit = json.loads((destination / f'{year}_sources.json').read_text())['referenced_items']
+                audit = json.loads((destination / f'{year}_sources.json').read_text(encoding='utf-8'))['referenced_items']
                 self.assertEqual(audit['7']['excluded_sections'][0]['title'], 'Risk Overview')
                 self.assertEqual(audit['8']['document_type'], doc_type)
                 for filename, content in before.items():
@@ -2582,10 +2582,10 @@ class IncorporatedReportTests(unittest.TestCase):
                 '<div><span style="font-weight:700">Total trading-related assets (average and period-end)</span>'
                 '<span style="font-weight:400"> increased reflecting:</span></div>'
                 '<div>• growth across asset classes; and</div><div>• increased agreements.</div>'
-                '<div>Total deposits increased.</div>'))
+                '<div>Total deposits increased.</div>'), encoding='utf-8')
             with redirect_stdout(io.StringIO()):
                 self.assertEqual(main(self.arguments(source, root)), 0)
-            records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
+            records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text(encoding='utf-8'))
             review = [r for r in records if r['item'] == '7']
             self.assertEqual([r['item_title'] for r in review], ['Performance', 'Performance'])
             self.assertEqual(review[0]['text'],
@@ -2616,10 +2616,10 @@ class IncorporatedReportTests(unittest.TestCase):
                 '<div style="font-weight:700">Deferred Taxes</div>'
                 '<div style="font-weight:700">Table 27.1: Tax Balances</div>'
                 '<table><tr><td>Taxes</td><td>987654321</td></tr></table>'
-                '<div>(1)Tax balances exclude interest.</div>'))
+                '<div>(1)Tax balances exclude interest.</div>'), encoding='utf-8')
             with redirect_stdout(io.StringIO()):
                 self.assertEqual(main(self.arguments(source, root)), 0)
-            records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
+            records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text(encoding='utf-8'))
             footnotes = [r for r in records if r['text'].startswith(('(1)', '(2)'))]
             self.assertEqual([r['item_title'] for r in footnotes],
                              ['Performance', 'Performance', 'Note 27. Income Taxes'])
@@ -2655,10 +2655,10 @@ class IncorporatedReportTests(unittest.TestCase):
                     '<div>Our revenue increased in 2031.</div>',
                     '<div style="font-weight:700">NM - Not meaningful</div>' + label_html +
                     '<div>Our revenue increased in 2031.</div>'
-                    '<div>Fees increased due to customer activity.</div>'))
+                    '<div>Fees increased due to customer activity.</div>'), encoding='utf-8')
                 with redirect_stdout(io.StringIO()):
                     self.assertEqual(main(self.arguments(source, root)), 0)
-                records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text())
+                records = json.loads((root / 'output/example/2031/2031_chunks.json').read_text(encoding='utf-8'))
                 review = [r for r in records if r['item'] == '7']
                 expected_title = (
                     'Performance > Full year 2031 vs. full year 2030'
@@ -2693,7 +2693,7 @@ class IncorporatedReportTests(unittest.TestCase):
             self.assertEqual(main(['--cik', '999888', '--company', 'example', '--year', '2031', '--items', '1A', '7', '8',
                                    '--user-agent', 'Test test@example.com', '--out-dir', temporary]), 0)
             self.assertEqual([call.args[0] for call in fetch.call_args_list], list(responses))
-            records = json.loads((Path(temporary) / 'example/2031/2031_chunks.json').read_text())
+            records = json.loads((Path(temporary) / 'example/2031/2031_chunks.json').read_text(encoding='utf-8'))
             self.assertTrue(all(r['source'] == base + 'changed-name.htm' for r in records))
 
     def test_sec_download_timeout_has_retryable_exit_code(self):
@@ -2722,13 +2722,13 @@ class IncorporatedReportTests(unittest.TestCase):
                 self.assertEqual(code, 0)
                 self.assertEqual([call.kwargs.get('timeout', 60) for call in fetch.call_args_list], expected)
                 self.assertIn('semiconductor products',
-                              (Path(temporary) / 'sample/2025/2025_item_1.txt').read_text())
+                              (Path(temporary) / 'sample/2025/2025_item_1.txt').read_text(encoding='utf-8'))
 
     def test_exhausted_sec_timeouts_preserve_existing_outputs(self):
         with TemporaryDirectory() as temporary:
             output = Path(temporary) / 'sample/2025/2025_chunks.json'
             output.parent.mkdir(parents=True)
-            output.write_text('["existing results"]')
+            output.write_text('["existing results"]', encoding='utf-8')
             with patch('sec_disclosure.extraction.sec_10k_extractor.fetch_url_bytes',
                        side_effect=URLError(TimeoutError('timeout'))) as fetch, \
                  redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
@@ -2737,7 +2737,7 @@ class IncorporatedReportTests(unittest.TestCase):
                              '--out-dir', temporary])
             self.assertEqual(code, 75)
             self.assertEqual([call.kwargs.get('timeout', 60) for call in fetch.call_args_list], [60, 180, 300])
-            self.assertEqual(output.read_text(), '["existing results"]')
+            self.assertEqual(output.read_text(encoding='utf-8'), '["existing results"]')
 
     def test_non_timeout_download_failure_is_not_retried(self):
         with patch('sec_disclosure.extraction.sec_10k_extractor.fetch_url_bytes',
@@ -2769,7 +2769,7 @@ class IncorporatedReportTests(unittest.TestCase):
                          '--user-agent', 'Test test@example.com', '--out-dir', temporary, '--no-agent-fallback'])
             self.assertEqual(code, 0)
             self.assertEqual(timeouts, [60, 180])
-            records = json.loads((Path(temporary) / 'example/2031/2031_chunks.json').read_text())
+            records = json.loads((Path(temporary) / 'example/2031/2031_chunks.json').read_text(encoding='utf-8'))
             self.assertTrue(any(record['source'] == report_url for record in records))
 
     def test_sec_timeout_arguments_require_finite_positive_increasing_values(self):
@@ -2788,25 +2788,25 @@ class IncorporatedReportTests(unittest.TestCase):
                 source = self.make_files(root)
                 index = root / '0000999888-32-000001-index.htm'
                 if failure == 'missing-heading':
-                    (root / 'financial-data.htm').write_text('<html><h1>Unrelated document</h1></html>')
+                    (root / 'financial-data.htm').write_text('<html><h1>Unrelated document</h1></html>', encoding='utf-8')
                 elif failure == 'ambiguous-document':
-                    index.write_text(report_index('first.htm') + report_index('second.htm'))
+                    index.write_text(report_index('first.htm') + report_index('second.htm'), encoding='utf-8')
                 elif failure == 'pdf-document':
-                    index.write_text(report_index('financial-data.pdf'))
+                    index.write_text(report_index('financial-data.pdf'), encoding='utf-8')
                 elif failure == 'outside-filing':
-                    index.write_text(report_index('https://example.org/unrelated.htm'))
+                    index.write_text(report_index('https://example.org/unrelated.htm'), encoding='utf-8')
                 elif failure == 'missing-index':
                     index.unlink()
                 else:
-                    source.write_text(incorporated_filing('2031').replace('under "Operating Review - Risk Overview."', 'on pages 12-20.'))
+                    source.write_text(incorporated_filing('2031').replace('under "Operating Review - Risk Overview."', 'on pages 12-20.'), encoding='utf-8')
                 output = root / 'output/example/2031'
                 output.mkdir(parents=True)
                 existing = output / '2031_chunks.json'
-                existing.write_text('["existing results"]')
+                existing.write_text('["existing results"]', encoding='utf-8')
                 errors = io.StringIO()
                 with redirect_stdout(io.StringIO()), redirect_stderr(errors):
                     self.assertEqual(main(self.arguments(source, root)), 2)
-                self.assertEqual(existing.read_text(), '["existing results"]')
+                self.assertEqual(existing.read_text(encoding='utf-8'), '["existing results"]')
                 self.assertIn('Error resolving incorporated report', errors.getvalue())
 
     def test_explicit_primary_only_and_overlap_options(self):
@@ -2817,10 +2817,10 @@ class IncorporatedReportTests(unittest.TestCase):
                 self.assertEqual(main(self.arguments(source, root) + ['--no-follow-references']), 0)
                 discovery.assert_not_called()
             output = root / 'output/example/2031/2031_chunks.json'
-            self.assertIn('incorporated by reference', output.read_text())
+            self.assertIn('incorporated by reference', output.read_text(encoding='utf-8'))
             with redirect_stdout(io.StringIO()):
                 self.assertEqual(main(self.arguments(source, root) + ['--include-reference-overlaps']), 0)
-            records = json.loads(output.read_text())
+            records = json.loads(output.read_text(encoding='utf-8'))
             self.assertTrue(any(r['item'] == '7' and 'Supply disruptions' in r['text'] for r in records))
 
     def test_html_heading_hierarchy_and_ambiguous_names(self):

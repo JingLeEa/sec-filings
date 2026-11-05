@@ -507,7 +507,7 @@ def run(args, *, database_inputs=None) -> dict:
         migrated = output
         output = output / 'runs' / profile
         legacy_manifest = migrated / 'manifest.json'
-        if legacy_manifest.is_file() and json.loads(legacy_manifest.read_text()) == manifest:
+        if legacy_manifest.is_file() and json.loads(legacy_manifest.read_text(encoding='utf-8')) == manifest:
             output.mkdir(parents=True, exist_ok=True)
             for path in list(migrated.iterdir()):
                 if path.name != 'runs':

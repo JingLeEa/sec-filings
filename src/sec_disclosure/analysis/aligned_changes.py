@@ -102,7 +102,7 @@ def main(argv=None):
             document = alignment_output(snapshot, args.alignment_dir)
             manifest = snapshot['documents']['manifest.json']['payload']
         else:
-            manifest = json.loads((args.alignment_dir / "manifest.json").read_text())
+            manifest = json.loads((args.alignment_dir / "manifest.json").read_text(encoding='utf-8'))
         canonical = lambda hashes: {str(Path(key).resolve()): value for key, value in hashes.items()}
         if canonical(manifest["input_hashes"]) != canonical(data.hashes):
             raise ValueError("Saved alignment evidence is stale; finish alignment with the current inputs first.")

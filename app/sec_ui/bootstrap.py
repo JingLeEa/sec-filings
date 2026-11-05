@@ -23,7 +23,7 @@ def backend():
 @st.cache_resource(show_spinner="Preparing starter data in PostgreSQL...")
 def _prepare(database_key, dataset_key):
     result = backend().seed_database()
-    if sum(result["imported"].values()) or result.get("excluded_alignments"):
+    if sum(result["imported"].values()) or result.get("excluded_alignments") or result.get('completion_markers'):
         st.cache_data.clear()
     if result.get("cleanup_pending") and os.environ.get("SEC_UI_REFRESH_AUTOSTART", "1") != "0":
         subprocess.Popen([sys.executable, str(config.ROOT / "scripts/cleanup_alignment_reviews.py"), "--wait"],
@@ -41,7 +41,8 @@ def ensure_starter_data():
         # Cache by configuration without storing credentials in visible labels.
         settings = storage.disclosures.connection_arguments()
         database_key = hashlib.sha256(json.dumps(settings, sort_keys=True).encode()).hexdigest()
-        result = _prepare(database_key, manifest["archive_sha256"])
+        result = _prepare(database_key, (manifest["archive_sha256"],
+                                        getattr(storage, 'COMPLETION_MARKER_VERSION', 1)))
         if result.get("cleanup_pending"):
             # Retry on the next full page run, including after the worker finishes.
             st.session_state["_alignment_cleanup_pending"] = True

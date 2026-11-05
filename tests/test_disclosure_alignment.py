@@ -5,7 +5,7 @@ import sqlite3
 import threading
 import unittest
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import redirect_stderr, redirect_stdout
+from contextlib import closing, redirect_stderr, redirect_stdout
 from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -128,11 +128,11 @@ class AlignmentTests(unittest.TestCase):
         """Change authoritative Item metadata while preserving the fixture's source IDs."""
         raw = self.root / "raw/amd" / year
         path = raw / f"{year}_chunks.json"
-        paragraphs = json.loads(path.read_text())
+        paragraphs = json.loads(path.read_text(encoding='utf-8'))
         paragraphs[number - 1]["item"] = item
         write_json(path, paragraphs)
         for path in (self.root / "disclosures/amd" / year).glob("*.json"):
-            document = json.loads(path.read_text())
+            document = json.loads(path.read_text(encoding='utf-8'))
             if "input_hashes" not in document:
                 continue
             document["input_hashes"] = {str(p): digest(p.read_bytes()) for p in raw.glob("*.json")}
@@ -227,7 +227,7 @@ class AlignmentTests(unittest.TestCase):
         return CompletionResult(json.dumps(result), "test-model", "stop", {"prompt_tokens": 100, "completion_tokens": 25, "total_tokens": 125})
 
     def output(self, name):
-        return json.loads((self.root / "alignments/amd/2023-2024" / name).read_text())
+        return json.loads((self.root / "alignments/amd/2023-2024" / name).read_text(encoding='utf-8'))
 
     def saved_report(self):
         return module.load_alignment_report(self.root / "alignments/amd/2023-2024")
@@ -302,7 +302,7 @@ class AlignmentTests(unittest.TestCase):
         self.assertTrue(usage["change_analysis_complete"])
         # Old paid caches omitted the final label. They must upgrade locally.
         for path in (self.root / "alignments/amd/2023-2024/change_analysis_cache").glob("*.json"):
-            cache = json.loads(path.read_text())
+            cache = json.loads(path.read_text(encoding='utf-8'))
             cache["analysis"]["final_taxonomy"] = None
             write_json(path, cache)
         self.assertEqual(self.run_cli(change_analysis=True), (0, 0))
@@ -651,7 +651,7 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(attempts, 2)
         self.assertEqual(self.saved_report()["change_analysis_summary"]["taxonomy_counts"], {"Modified": 3})
         trace = next((self.root / "alignments/amd/2023-2024/traces").glob("change_analysis_*.json"))
-        self.assertTrue(all("observation" not in step for step in json.loads(trace.read_text())))
+        self.assertTrue(all("observation" not in step for step in json.loads(trace.read_text(encoding='utf-8'))))
 
     def test_unlimited_api_retries_recover_rate_limits_and_keep_unknown_usage_reserves(self):
         attempts = 0
@@ -871,7 +871,7 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(self.run_cli("--revalidate-cache"), (0, 0))
         archived = list((output / "archives").glob("*/graph/checkpoints.sqlite"))
         self.assertEqual(len(archived), 1)
-        with sqlite3.connect(archived[0]) as conn:
+        with closing(sqlite3.connect(archived[0])) as conn:
             self.assertEqual(conn.execute("PRAGMA integrity_check").fetchone()[0], "ok")
         self.assertEqual(self.output("token_usage.json")["reported_tokens"]["total_tokens"], 250)
 
@@ -1060,7 +1060,7 @@ class AlignmentTests(unittest.TestCase):
 
     def test_stale_source_rejected_before_spending(self):
         path = self.root / "raw/amd/2023/2023_chunks.json"
-        path.write_text(path.read_text() + " ")
+        path.write_text(path.read_text(encoding='utf-8') + " ", encoding='utf-8')
         self.assertEqual(self.run_cli(), (1, 0))
 
     def test_invented_citations_and_wrong_year_matches_rejected(self):
@@ -1162,7 +1162,7 @@ class AlignmentTests(unittest.TestCase):
 
     def legacy_single_sentence(self, number=1, other_flags=(), *, warning="fewer_than_two_source_units"):
         path = self.root / "disclosures/amd/2023/disclosures.json"
-        doc = json.loads(path.read_text())
+        doc = json.loads(path.read_text(encoding='utf-8'))
         key = f"amd_2023_7_D{number:03d}"
         record = next(d for d in doc["disclosures"] if d["disclosure_id"] == key)
         doc["disclosures"].remove(record)
@@ -1173,7 +1173,7 @@ class AlignmentTests(unittest.TestCase):
         record["verification"] = {"status": "needs_review", "source_unit_count": 1,
                                   "review_reasons": [warning, *other_flags], "model_review_reason": ""}
         path = path.with_name("review_candidates.json")
-        doc = json.loads(path.read_text())
+        doc = json.loads(path.read_text(encoding='utf-8'))
         doc["disclosures"].append(record)
         write_json(path, doc)
         return key
@@ -1529,7 +1529,7 @@ class AlignmentTests(unittest.TestCase):
         output = self.root / "alignments/amd/2023-2024"
         original = (output / "alignments.json").read_bytes()
         manifest_path = output / "manifest.json"
-        manifest = json.loads(manifest_path.read_text())
+        manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
         for error in ("legacy", "stale"):
             broken = deepcopy(manifest)
             if error == "legacy":
@@ -1625,7 +1625,7 @@ class AlignmentTests(unittest.TestCase):
         with self.assertRaises(KeyboardInterrupt):
             self.run_cli(response=lambda *args, **kwargs: (_ for _ in ()).throw(KeyboardInterrupt()))
         directory = self.root / "alignments/amd/2023-2024/requests"
-        record = json.loads(next(directory.glob("*.json")).read_text())
+        record = json.loads(next(directory.glob("*.json")).read_text(encoding='utf-8'))
         reserve = len((record["system_prompt"] + record["prompt"]).encode()) + record["max_tokens"]
         self.assertEqual(self.run_cli("--retry-failed", "--max-total-tokens", str(2 * reserve - 1)), (2, 0))
         usage = self.output("token_usage.json")
@@ -1674,8 +1674,8 @@ class AlignmentTests(unittest.TestCase):
         # A legacy cached label must not leak into either JSON report or Markdown.
         self.assertNotIn('"change_type"', json.dumps(report))
         self.assertNotIn("change_counts", report)
-        self.assertNotIn('"change_type"', (output / "needs_review.json").read_text())
-        self.assertNotIn("Modified", (output / "alignments.md").read_text())
+        self.assertNotIn('"change_type"', (output / "needs_review.json").read_text(encoding='utf-8'))
+        self.assertNotIn("Modified", (output / "alignments.md").read_text(encoding='utf-8'))
         self.assertEqual(decisions[0]["change_type"], "Modified")
 
     def test_tool_access_is_limited_to_comparison_years_and_visible_ids(self):
@@ -1707,7 +1707,7 @@ class AlignmentTests(unittest.TestCase):
     def test_revalidation_reuses_responses_without_losing_accounting(self):
         self.assertEqual(self.run_cli(), (0, 2))
         path = self.root / "alignments/amd/2023-2024/manifest.json"
-        old = json.loads(path.read_text())
+        old = json.loads(path.read_text(encoding='utf-8'))
         old["implementation_hashes"]["disclosure_alignment.py"] = "older-implementation"
         write_json(path, old)
         self.assertEqual(self.run_cli(), (1, 0))
@@ -2031,13 +2031,13 @@ class AlignmentTests(unittest.TestCase):
         report = module.load_alignment_report(target)
         self.assertEqual(report["counts"], {"needs_review": 2, "ai_verified": 2})
         self.assertEqual(self.run_cli(*args), (0, 1))
-        usage = json.loads((target / "token_usage.json").read_text())
+        usage = json.loads((target / "token_usage.json").read_text(encoding='utf-8'))
         self.assertEqual(usage["reported_tokens"]["total_tokens"], 125)
         self.assertEqual(usage["source_run_reported_tokens"]["total_tokens"], 250)
         self.assertTrue(all(digest(p.read_bytes()) == h for p, h in hashes.items()))
         self.assertEqual(self.run_cli(*args), (0, 0))
         path = source / "matching_proposals.json"
-        path.write_text(path.read_text() + " ")
+        path.write_text(path.read_text(encoding='utf-8') + " ", encoding='utf-8')
         self.assertEqual(self.run_cli(*args), (1, 0))
 
     def test_recovery_preserves_annotations_when_match_ids_are_renumbered(self):
@@ -2129,15 +2129,15 @@ class AlignmentTests(unittest.TestCase):
         sentences = [{"sentence_id": f"{pid}_S{i:03d}", "text": text} for i, text in enumerate(texts, 1)]
         content = " ".join(texts)
         path = raw / f"{year}_chunks.json"
-        paragraphs = json.loads(path.read_text())
+        paragraphs = json.loads(path.read_text(encoding='utf-8'))
         paragraphs[number - 1]["text"] = content
         write_json(path, paragraphs)
         path = raw / f"{year}_chunk_sentences.json"
-        units = [s for s in json.loads(path.read_text()) if s["chunk_id"] != pid]
+        units = [s for s in json.loads(path.read_text(encoding='utf-8')) if s["chunk_id"] != pid]
         units.extend({"id": s["sentence_id"], "text": s["text"], "chunk_id": pid} for s in sentences)
         write_json(path, units)
         for path in (self.root / "disclosures/amd" / year).glob("*.json"):
-            document = json.loads(path.read_text())
+            document = json.loads(path.read_text(encoding='utf-8'))
             if "input_hashes" not in document:
                 continue
             document["input_hashes"] = {str(p): digest(p.read_bytes()) for p in raw.glob("*.json")}
@@ -2273,7 +2273,7 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(self.run_cli(), (0, 2))
         folder = self.root / "alignments/amd/2023-2024"
         path = folder / "manifest.json"
-        manifest = json.loads(path.read_text())
+        manifest = json.loads(path.read_text(encoding='utf-8'))
         del manifest["comparison_scope"]
         write_json(path, manifest)
         hashes = {p: digest(p.read_bytes()) for p in folder.rglob("*.json")}
@@ -2314,14 +2314,14 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual(parallel["counts"], {"ai_verified": 3})
         self.assertEqual(self.output("token_usage.json")["reported_tokens"]["total_tokens"], 750)
         self.assertEqual(self.output("token_usage.json")["in_flight_budget_reserve"]["attempt_count"], 0)
-        with sqlite3.connect(output / "graph/checkpoints.sqlite") as connection:
+        with closing(sqlite3.connect(output / "graph/checkpoints.sqlite")) as connection:
             self.assertEqual(len(connection.execute("SELECT DISTINCT thread_id FROM checkpoints").fetchall()), 6)
         # Changing only execution concurrency does not invalidate cached work.
         self.assertEqual(self.run_cli("--workers", "1", "--batch-size", "1"), (0, 0))
         serial_output = self.root / "serial"
         self.assertEqual(self.run_cli("--batch-size", "1", "--output-dir", str(serial_output)), (0, 6))
         self.assertEqual(parallel["alignments"], module.load_alignment_report(serial_output)["alignments"])
-        self.assertEqual(self.output("matching_proposals.json"), json.loads((serial_output / "matching_proposals.json").read_text()))
+        self.assertEqual(self.output("matching_proposals.json"), json.loads((serial_output / "matching_proposals.json").read_text(encoding='utf-8')))
 
     def test_parallel_pause_drains_saved_jobs_and_resumes_without_duplicate_calls(self):
         self.parallel_items()
@@ -2335,7 +2335,7 @@ class AlignmentTests(unittest.TestCase):
         output = self.root / "alignments/amd/2023-2024"
         saved = list((output / "jobs").glob("matching_*.json"))
         self.assertEqual(len(saved), 2)
-        self.assertTrue(all(json.loads(path.read_text())["result"] for path in saved))
+        self.assertTrue(all(json.loads(path.read_text(encoding='utf-8'))["result"] for path in saved))
         self.assertEqual(self.output("token_usage.json")["requests_with_unknown_usage"], 0)
         self.assertEqual(self.run_cli(*flags), (0, 4))
         self.assertEqual(self.saved_report()["counts"], {"ai_verified": 3})

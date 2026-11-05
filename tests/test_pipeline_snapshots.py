@@ -45,7 +45,8 @@ class PipelineSnapshotTests(unittest.TestCase):
 
     def test_database_artifact_paths_cannot_escape_the_output_folder(self):
         with TemporaryDirectory() as directory:
-            for name in ('../escape.json', '/tmp/escape.json'):
+            for name in ('../escape.json', '/tmp/escape.json', r'C:\escape.json',
+                         r'C:escape.json', r'\tmp\escape.json', r'..\escape.json'):
                 with self.subTest(name=name), self.assertRaises(snapshots.PipelineInputError):
                     snapshots.alignment_output({'documents': {name: {'payload': {}}}}, Path(directory))
 

@@ -20,6 +20,8 @@ from sec_disclosure.storage.artifacts import ArtifactPath as Path
 from typing import Any
 from uuid import uuid4
 
+from sec_disclosure.compat import atomic_replace, source_digest
+
 from sec_disclosure.annotation.export_table_annotations import CONTENT_LABELS
 from .client import LLMError, request_completion
 from .config import load_config
@@ -130,10 +132,12 @@ def write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     # Request workers and report publication can save the same checkpoint at
     # once. Each writer must own its temporary artifact until atomic replace.
-    temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    # Repeating a request's long hash-based name can exceed Windows MAX_PATH
+    # even when the final checkpoint path fits. The UUID alone is unique.
+    temporary = path.with_name(f".{uuid4().hex}.tmp")
     try:
-        temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        temporary.replace(path)
+        temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+        atomic_replace(temporary, path)
     finally:
         temporary.unlink(missing_ok=True)
 
@@ -680,7 +684,7 @@ def prepare_year(args, config):
                     "extraction_scope": EXTRACTION_SCOPE,
                     "table_introduction_policy": TABLE_INTRODUCTION_POLICY,
                     "post_extraction_filter_policy": POST_EXTRACTION_FILTER_POLICY,
-                    "source_filter_hash": digest(Path(__file__).with_name("disclosure_filters.py").read_bytes()),
+                    "source_filter_hash": source_digest(Path(__file__).with_name("disclosure_filters.py")),
                     "base_url": config.base_url, "requested_model": config.model,
                     "batch_chars": args.batch_chars, "max_tokens": args.max_tokens,
                     "system_prompt_hash": digest(SYSTEM_PROMPT.encode()),
@@ -695,12 +699,17 @@ def prepare_year(args, config):
                                  "prompt_hash": digest(make_prompt(filing, batch).encode())} for batch in batches]}
         manifest_path = output / "manifest.json"
         if manifest_path.exists():
-            previous = json.loads(manifest_path.read_text())
+            previous = json.loads(manifest_path.read_text(encoding='utf-8'))
             legacy = {key: value for key, value in manifest.items() if not key.startswith("consolidation_")}
             legacy["version"] = "3"
             from sec_disclosure.storage.artifacts import canonical_artifact_path
             def comparable(value):
-                return {**value, 'input_hashes': {canonical_artifact_path(key): item
+                source = Path(__file__).with_name('disclosure_filters.py').read_bytes().replace(b'\r\n', b'\n')
+                source_hash = value.get('source_filter_hash')
+                if source_hash in {digest(source), digest(source.replace(b'\n', b'\r\n'))}:
+                    source_hash = digest(source)
+                return {**value, 'source_filter_hash': source_hash,
+                        'input_hashes': {canonical_artifact_path(key): item
                                                  for key, item in value['input_hashes'].items()}}
             if comparable(previous) not in (comparable(manifest), comparable(legacy)):
                 raise ValueError(f"{args.year}: Inputs, model, or batching changed. Choose a new --output-dir or --output-root to keep token accounting separate.")
@@ -781,16 +790,16 @@ def run_year(args, prepared, config, pacer):
             log(f"Extraction prompt characters including instructions/context: {sum(len(SYSTEM_PROMPT) + len(make_prompt(filing, batch)) for batch in batches):,}. Boundary prompts depend on extracted candidates. Actual tokens are reported after API requests.")
             return 0
         manifest_path = output / "manifest.json"
-        if manifest_path.exists() and json.loads(manifest_path.read_text()) != manifest:
+        if manifest_path.exists() and json.loads(manifest_path.read_text(encoding='utf-8')) != manifest:
             # prepare_year already verified an exact version-3 extraction cache.
             archive = output / "manifest.pre_consolidation.json"
             if not archive.exists():
-                write_json(archive, json.loads(manifest_path.read_text()))
+                write_json(archive, json.loads(manifest_path.read_text(encoding='utf-8')))
             log("Upgrading extraction cache for consolidation; saved extraction/boundary requests are reused.")
         write_json(manifest_path, manifest)
         request_dir = output / "requests"
         request_dir.mkdir(exist_ok=True)
-        requests = [json.loads(path.read_text()) for path in sorted(request_dir.glob("*.json"))]
+        requests = [json.loads(path.read_text(encoding='utf-8')) for path in sorted(request_dir.glob("*.json"))]
         requests.sort(key=lambda record: (record["batch_id"], record["attempt"]))
         report = save()
         failed_ids = {batch["batch_id"] for batch in report["failed_batches"]}
@@ -962,7 +971,7 @@ def run_year(args, prepared, config, pacer):
         while not report["pending_batches"] and not report["failed_batches"]:
             if args.max_requests is not None and new_requests >= args.max_requests:
                 break
-            checks = json.loads((output / "boundary_checks.json").read_text())["boundaries"]
+            checks = json.loads((output / "boundary_checks.json").read_text(encoding='utf-8'))["boundaries"]
             check = next((c for c in checks if c["status"] not in ("completed", "needs_review")
                           or args.retry_failed and c["status"] == "needs_review" and c["id"] not in reviewed_this_run), None)
             if check is None:
@@ -990,7 +999,7 @@ def run_year(args, prepared, config, pacer):
         report = save()
         if not (report["pending_batches"] or report["failed_batches"]
                 or report["pending_boundary_checks"] or report["failed_boundary_checks"]):
-            checks = json.loads((output / "consolidation.json").read_text())["subsections"]
+            checks = json.loads((output / "consolidation.json").read_text(encoding='utf-8'))["subsections"]
 
             def process_consolidation(check):
                 if check["status"] == "completed" or check["status"] == "needs_review" and not args.retry_failed:

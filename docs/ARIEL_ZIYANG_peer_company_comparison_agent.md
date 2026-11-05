@@ -1,5 +1,7 @@
 # Peer comparison pipeline
 
+For native Windows commands, follow [Windows setup](windows_setup.md).
+
 Peer comparison runs separately from the main preprocessing-to-synthesis
 pipeline. It compares one target ticker against one or more peer tickers for
 the same fiscal year, using disclosures already stored in PostgreSQL.

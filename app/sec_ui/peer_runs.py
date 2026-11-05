@@ -144,7 +144,7 @@ def start_run(value):
         try:
             with (folder / job["log_file"]).open("w", encoding="utf-8") as log:
                 process = subprocess.Popen(command, cwd=pipeline_runs.ROOT, stdout=log,
-                                           stderr=subprocess.STDOUT, start_new_session=True)
+                                           stderr=subprocess.STDOUT, **pipeline_runs._launch_options())
         except OSError:
             job.update(status="stopped", error="Could not start the peer comparison process.")
             pipeline_runs._write_json(folder / "ui_run.json", job)

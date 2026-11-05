@@ -13,6 +13,7 @@ import sys
 import time
 
 from sec_disclosure.llm.disclosures import write_json
+from sec_disclosure.compat import exclusive_file_lock
 from sec_disclosure.storage.human_reviews import document_lock
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -43,7 +44,7 @@ def enqueue(queue, *, stage, company, previous, current=None, record_id, saved, 
     path = job_path(queue, job_id)
     with document_lock(path):
         if path.exists():
-            return json.loads(path.read_text())
+            return json.loads(path.read_text(encoding='utf-8'))
         job = {**identity, "job_id": job_id, "status": "queued", "phase": "Waiting to refresh",
                "created_at": now(), "updated_at": now(), "completed_steps": [], "attempts": 0, "error": None}
         write_json(path, job)
@@ -53,7 +54,7 @@ def enqueue(queue, *, stage, company, previous, current=None, record_id, saved, 
 def jobs(queue, company=None):
     rows = []
     for path in sorted((Path(queue) / "jobs").glob("*.json")):
-        row = json.loads(path.read_text())
+        row = json.loads(path.read_text(encoding='utf-8'))
         if company is None or row["company"] == company:
             rows.append(row)
     return sorted(rows, key=lambda row: row["created_at"], reverse=True)
@@ -62,7 +63,7 @@ def jobs(queue, company=None):
 def retry(queue, job_id):
     path = job_path(queue, job_id)
     with document_lock(path):
-        job = json.loads(path.read_text())
+        job = json.loads(path.read_text(encoding='utf-8'))
         if job["status"] == "failed":
             job.update(status="queued", error=None, phase="Waiting to retry", updated_at=now())
             write_json(path, job)
@@ -99,11 +100,10 @@ def worker_lock(queue):
                 return
             yield True
     else:
-        import fcntl
         queue.mkdir(parents=True, exist_ok=True)
-        with (queue / "worker.lock").open("a") as lock:
+        with (queue / "worker.lock").open("a+b") as lock, ExitStack() as stack:
             try:
-                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                stack.enter_context(exclusive_file_lock(lock))
             except BlockingIOError:
                 yield False
                 return

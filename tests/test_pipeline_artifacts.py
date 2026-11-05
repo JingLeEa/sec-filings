@@ -170,6 +170,13 @@ class PipelineArtifactTests(unittest.TestCase):
             self.assertEqual(disclosures.main(args + ['--data-dir', str(fixture.root)]), 0)
             original = (fixture.root / 'disclosures/amd/2023/disclosures.json').read_bytes()
             calls = requests.call_count
+            # A legacy Windows checkout hashed CRLF source bytes. Reuse those
+            # successful responses after moving to an LF checkout or database.
+            manifest_path = fixture.root / 'disclosures/amd/2023/manifest.json'
+            manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+            source = Path(disclosures.__file__).with_name('disclosure_filters.py').read_bytes()
+            manifest['source_filter_hash'] = disclosures.digest(source.replace(b'\r\n', b'\n').replace(b'\n', b'\r\n'))
+            manifest_path.write_text(json.dumps(manifest), encoding='utf-8')
             with PostgresWorkspace('test', store=self.store) as workspace:
                 workspace.import_local(fixture.root)
                 documents = {name: file_document(workspace.root / 'raw/amd/2023' / name)

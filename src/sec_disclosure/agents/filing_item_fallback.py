@@ -367,7 +367,7 @@ def locate_report_sections(events, paths, *, source, source_html, config, cache_
     result_path = cache / 'result.json' if cache is not None else None
     if result_path is not None and result_path.is_file():
         try:
-            saved = json.loads(result_path.read_text())
+            saved = json.loads(result_path.read_text(encoding='utf-8'))
             if saved['input_sha256'] == identity and saved['policy'] == REPORT_POLICY:
                 return ReportOutlineResult(_report_nodes(saved['headings'], evidence, events, targets, paths), 0, 1)
         except (ValueError, KeyError, TypeError):
@@ -396,7 +396,7 @@ def locate_report_sections(events, paths, *, source, source_html, config, cache_
         previous = results[index][0] if feedback else []
         if feedback is None and path is not None and path.is_file():
             try:
-                saved = json.loads(path.read_text())
+                saved = json.loads(path.read_text(encoding='utf-8'))
                 if saved.get('input_sha256') == identity and not saved.get('invalid'):
                     return _validate_report_headings({'headings': saved['headings']}, window, events, targets), 0, 1
             except (ValueError, KeyError, TypeError, AttributeError):
@@ -523,7 +523,7 @@ def locate_report_sections(events, paths, *, source, source_html, config, cache_
                 path = cache / f'window_{index:03d}.json'
                 if path.is_file():
                     try:
-                        saved = json.loads(path.read_text())
+                        saved = json.loads(path.read_text(encoding='utf-8'))
                         saved['invalid'] = True
                         write_json(path, saved)
                     except (ValueError, TypeError):

@@ -83,9 +83,9 @@ class ReportDiscoveryTests(unittest.TestCase):
             source, response, report_path = root / 'primary.htm', root / 'api.json', root / 'report.htm'
             source.write_bytes(primary)
             response.write_text(json.dumps({'schema_version': 'sec-api-cache-2.0', 'request': {'htm-url': URL},
-                                           'source_sha256': documents.sha(primary), 'response': payload}))
+                                           'source_sha256': documents.sha(primary), 'response': payload}), encoding='utf-8')
             report_path.write_bytes(report)
-            (root / 'report-source.json').write_text(json.dumps({'sec_url': REPORT_URL, 'sha256': documents.sha(report)}))
+            (root / 'report-source.json').write_text(json.dumps({'sec_url': REPORT_URL, 'sha256': documents.sha(report)}), encoding='utf-8')
             cache, tax = root / 'cache', root / 'tax'
             cache.mkdir()
             tax.mkdir()
@@ -101,7 +101,7 @@ class ReportDiscoveryTests(unittest.TestCase):
             self.assertEqual(code, 0)
             filename = 'primary_2023_api_metrics_with_values.json'
             self.assertEqual([p.name for p in output.iterdir()], [filename])
-            result = json.loads((output / filename).read_text())
+            result = json.loads((output / filename).read_text(encoding='utf-8'))
             provenance = result['verification']['source']['documents']['report1']
             self.assertEqual(provenance['sec_url'], REPORT_URL)
             self.assertEqual(provenance['report_discovery']['method'], 'sec_filing_document_list')

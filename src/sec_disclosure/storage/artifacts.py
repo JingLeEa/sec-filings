@@ -19,6 +19,8 @@ import stat
 import zlib
 from threading import RLock
 
+from sec_disclosure.compat import exclusive_file_lock
+
 
 ROOT = LocalPath(__file__).resolve().parents[3]
 _registry = {}
@@ -27,6 +29,11 @@ _registry_lock = RLock()
 
 class ArtifactStorageError(RuntimeError):
     """Durable pipeline storage failed; never fall back to a local cache."""
+
+
+def artifact_lock_key(namespace, key):
+    scope = 'main-pipeline' if key.startswith('pipeline_runs/') else namespace
+    return int.from_bytes(hashlib.sha256((scope + ':' + key).encode()).digest()[:8], 'big', signed=True)
 
 
 class PostgresArtifactStore:
@@ -50,7 +57,7 @@ class PostgresArtifactStore:
     def ensure_schema(self):
         with self.connection() as conn:
             conn.execute('SELECT pg_advisory_xact_lock(80808008)')
-            conn.execute((ROOT / 'db/init/08_pipeline_artifacts.sql').read_text())
+            conn.execute((ROOT / 'db/init/08_pipeline_artifacts.sql').read_text(encoding='utf-8'))
 
     def get(self, path):
         with self.connection() as conn:
@@ -135,8 +142,7 @@ class PostgresArtifactStore:
     def lock(self, key):
         # Normalized stage tables are shared across cache profiles. Serialize
         # overlapping year selections/configurations for the same company.
-        scope = 'main-pipeline' if key.startswith('pipeline_runs/') else self.namespace
-        value = int.from_bytes(hashlib.sha256((scope + ':' + key).encode()).digest()[:8], 'big', signed=True)
+        value = artifact_lock_key(self.namespace, key)
         with self.connection() as conn:
             if not conn.execute('SELECT pg_try_advisory_lock(%s)', (value,)).fetchone()[0]:
                 raise ValueError('This pipeline is already running. Wait for it to finish before rerunning.')
@@ -153,8 +159,14 @@ class PostgresArtifactStore:
             self.savers.clear()
 
 
-def _route(value):
+def _path_text(value):
+    # Database keys and saved aliases have one spelling on every platform.
     raw = str(value)
+    return raw.replace('\\', '/') if os.name == 'nt' else raw
+
+
+def _route(value):
+    raw = _path_text(value)
     with _registry_lock:
         for root, (store, prefix) in _registry.items():
             if raw == root or raw.startswith(root + '/'):
@@ -187,8 +199,11 @@ class ArtifactPath(type(LocalPath()), metaclass=_PathType):
     """A pathlib path whose registered workspace operations go to PostgreSQL."""
     def __new__(cls, *args):
         value = LocalPath(*args)
-        database = str(value).startswith('/__sec_postgres__/') or _route(value) is not None
+        database = _path_text(value).startswith('/__sec_postgres__/') or _route(value) is not None
         return super().__new__(cls, *args) if database else value
+
+    def __str__(self):
+        return _path_text(super().__str__())
 
     @property
     def artifact_store(self):
@@ -349,7 +364,8 @@ class ArtifactPath(type(LocalPath()), metaclass=_PathType):
             stream.seek(0, io.SEEK_END)
         if 'b' in mode:
             return stream
-        return io.TextIOWrapper(stream, encoding=encoding or 'utf-8', errors=errors, newline=newline)
+        return io.TextIOWrapper(stream, encoding=encoding or 'utf-8', errors=errors,
+                                newline='\n' if newline is None else newline)
 
 
 class PostgresWorkspace:
@@ -393,6 +409,7 @@ class PostgresWorkspace:
                     _registry.pop(alias, None)
 
     def _add_alias(self, alias, prefix=''):
+        alias = _path_text(alias)
         with _registry_lock:
             if alias in _registry and _registry[alias] != (self.store, prefix):
                 raise ArtifactStorageError('Legacy cache root belongs to another active workspace.')
@@ -412,11 +429,11 @@ class PostgresWorkspace:
             if folder.is_dir() and not folder.is_symlink():
                 candidates.extend(folder.rglob('*'))
         # An old runner must finish before its cache can be moved safely.
-        import fcntl
         for lock in (path for path in candidates if path.name == '.run.lock'):
             with lock.open('rb') as handle:
                 try:
-                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    with exclusive_file_lock(handle):
+                        pass
                 except BlockingIOError:
                     raise ArtifactStorageError('An older local pipeline is still running. Let it finish before starting the PostgreSQL-backed pipeline.') from None
         existing = {key for key, _ in self.store.entries(destination.artifact_key)}

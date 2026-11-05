@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from contextlib import contextmanager
-import fcntl
+from contextlib import contextmanager, ExitStack
 import hashlib
 import json
+
+from sec_disclosure.compat import exclusive_file_lock
 
 
 # Storage addresses, scheduling, SEC identification and admission limits do
@@ -36,7 +37,7 @@ def read_progress(path, ticker, years):
     if not path.exists():
         return {}
     try:
-        state = json.loads(path.read_text())
+        state = json.loads(path.read_text(encoding='utf-8'))
         if (not isinstance(state, dict) or state.get("ticker") != ticker
                 or state.get("years") != years or not isinstance(state.get("stages"), list)):
             raise ValueError
@@ -111,13 +112,10 @@ def invocation_lock(folder):
             yield
         return
     folder.mkdir(parents=True, exist_ok=True)
-    with (folder / ".run.lock").open("a") as handle:
+    with (folder / ".run.lock").open("a+b") as handle, ExitStack() as stack:
         try:
-            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            stack.enter_context(exclusive_file_lock(handle))
         except BlockingIOError:
             raise ValueError("A pipeline for this ticker and year selection is already running. "
                              "Wait for it to finish before rerunning.") from None
-        try:
-            yield
-        finally:
-            fcntl.flock(handle, fcntl.LOCK_UN)
+        yield

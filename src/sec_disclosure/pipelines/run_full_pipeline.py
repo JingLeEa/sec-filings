@@ -402,6 +402,14 @@ def _main(args):
     all_stages = build_stages(args, full=True)
     log_dir = args.data_dir / "pipeline_runs" / args.ticker / "-".join(map(str, args.years))
 
+    def starter_ready(state):
+        ready = (args.resume and args.from_stage == 'preprocessing' and args.until == 'synthesis'
+                 and state.get('full_pipeline_complete') and state.get('completion_source') == 'starter_data')
+        if ready:
+            print(f'{args.ticker.upper()} starter results are already complete for these fiscal years. '
+                  'View the saved Synthesis Report. Use --no-resume only to deliberately recompute them.')
+        return ready
+
     def progress():
         try:
             previous = read_progress(log_dir / "status.json", args.ticker, args.years)
@@ -419,10 +427,12 @@ def _main(args):
 
     if args.dry_run:
         try:
-            _, entries, pending, _ = progress()
+            previous, entries, pending, _ = progress()
         except (ValueError, OSError) as error:
             print(f"Pipeline progress error: {error}", file=sys.stderr)
             return 1
+        if starter_ready(previous):
+            return 0
         print_concurrency(args, pending)
         for number, stage in enumerate(stages, 1):
             if stage.name in entries:
@@ -432,6 +442,8 @@ def _main(args):
         return 0
     try:
         previous, entries, pending, skipped = progress()
+        if starter_ready(previous):
+            return 0
         if pending:
             preflight(args, stages=pending)
         return run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, skipped)

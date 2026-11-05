@@ -58,7 +58,7 @@ def migrate_local(root, destination):
                 raise ValueError("Invalid legacy human review document; migration stopped without deleting files.")
             target = destination / relative
             with document_lock(target):
-                current = json.loads(target.read_text()) if target.exists() else None
+                current = json.loads(target.read_text(encoding='utf-8')) if target.exists() else None
                 if current is not None:
                     if ({k: v for k, v in current.items() if k != "reviews"} !=
                             {k: v for k, v in incoming.items() if k != "reviews"}):
@@ -71,7 +71,7 @@ def migrate_local(root, destination):
             with document_lock(target):
                 if target.exists():
                     continue
-                job = json.loads(source.read_text())
+                job = json.loads(source.read_text(encoding='utf-8'))
                 settings = job["settings"]
                 settings["reviews_dir"] = str(destination)
                 if settings["input_source"] != "postgres":

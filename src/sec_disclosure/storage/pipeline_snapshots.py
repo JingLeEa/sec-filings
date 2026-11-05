@@ -4,6 +4,7 @@ from __future__ import annotations
 from copy import deepcopy
 import hashlib
 import json
+from pathlib import PurePosixPath, PureWindowsPath
 from sec_disclosure.storage.artifacts import ArtifactPath as Path
 
 
@@ -37,7 +38,10 @@ def file_document(path):
 
 def publish(cur, company, kind, previous, current, documents):
     """Publish inside the caller's existing result-storage transaction."""
-    cur.execute((ROOT / 'db/init/05_pipeline_stage_snapshots.sql').read_text())
+    # Concurrent first-year saves can otherwise race in PostgreSQL's catalogs:
+    # CREATE TABLE IF NOT EXISTS alone does not serialize uncommitted DDL.
+    cur.execute('SELECT pg_advisory_xact_lock(80808005)')
+    cur.execute((ROOT / 'db/init/05_pipeline_stage_snapshots.sql').read_text(encoding='utf-8'))
     serialized = json.dumps(documents, sort_keys=True, ensure_ascii=False)
     revision = hashlib.sha256(serialized.encode()).hexdigest()
     cur.execute('''INSERT INTO pipeline_stage_snapshots
@@ -56,7 +60,7 @@ def folder_documents(folder, names, *, include_change_cache=False):
         paths.extend(sorted((folder / 'requests').glob('*.json')))
         paths.extend(path for path in (folder / 'materiality').glob('*.json') if path.is_file())
         paths.extend(sorted((folder / 'materiality/requests').glob('*.json')))
-    return {str(path.relative_to(folder)): file_document(path) for path in paths}
+    return {path.relative_to(folder).as_posix(): file_document(path) for path in paths}
 
 
 def read_snapshots(company, scopes, *, env_file=None):
@@ -144,8 +148,10 @@ def alignment_output(snapshot, output):
     # The algorithm receives its input object separately. These are output
     # sidecars for atomic publication and existing checkpoint/report tools.
     for name, entry in snapshot['documents'].items():
-        relative = Path(name)
-        if relative.is_absolute() or '..' in relative.parts or relative.suffix != '.json':
+        relative = PurePosixPath(name)
+        windows = PureWindowsPath(name)
+        if (relative.is_absolute() or windows.drive or windows.root or '\\' in name
+                or '..' in relative.parts or relative.suffix != '.json'):
             raise PipelineInputError('Invalid artifact path in PostgreSQL alignment snapshot.')
         if name != 'alignments.json':
             write_json(output / name, entry['payload'])

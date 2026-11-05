@@ -119,7 +119,7 @@ class Refresh:
         years = []
         for folder in (self.disclosures / self.company).glob("*"):
             if re.fullmatch(r"\d{4}", folder.name) and (folder / "token_usage.json").exists():
-                if json.loads((folder / "token_usage.json").read_text()).get("run_complete"):
+                if json.loads((folder / "token_usage.json").read_text(encoding='utf-8')).get("run_complete"):
                     years.append(int(folder.name))
         pairs = [tuple(map(int, folder.name.split("-"))) for folder in (self.alignments / self.company).glob("*")
                  if re.fullmatch(r"\d{4}-\d{4}", folder.name) and (folder / "alignments.json").exists()]
@@ -184,14 +184,14 @@ class Refresh:
             for name in names:
                 path = target / name
                 if path.exists() and not (backup / name).exists():
-                    write_json(backup / name, json.loads(path.read_text()))
+                    write_json(backup / name, json.loads(path.read_text(encoding='utf-8')))
                 if (Path(output) / name).exists():
-                    write_json(path, json.loads((Path(output) / name).read_text()))
+                    write_json(path, json.loads((Path(output) / name).read_text(encoding='utf-8')))
                     self.files[path] = hashlib.sha256(path.read_bytes()).hexdigest()
             if kind == "alignments":
                 for directory in ("requests", "change_analysis_cache", "materiality"):
                     for path in (Path(output) / directory).rglob("*.json"):
-                        write_json(target / path.relative_to(output), json.loads(path.read_text()))
+                        write_json(target / path.relative_to(output), json.loads(path.read_text(encoding='utf-8')))
         self.documents.pop(key, None)
 
     def apply_disclosures(self, year):
@@ -224,7 +224,7 @@ class Refresh:
                              disclosures_dir=self.disclosures, input_source=self.mode, env_file=self.env_file)
 
     def load_output(self, output):
-        return combined({name: json.loads((Path(output) / name).read_text())
+        return combined({name: json.loads((Path(output) / name).read_text(encoding='utf-8'))
                          for name in ("alignments.json", "needs_review.json")})
 
     def apply_alignment(self, output, data, *, prior=None):
@@ -305,14 +305,14 @@ class Refresh:
                      "--alignment-dir", str(materiality_output), "--input-source", "files", "--concurrency", "3",
                      "--request-interval", str(self.settings.get("request_interval", 2)), *env]) != 0:
             raise RuntimeError("Materiality did not finish. Retry resumes its saved work.")
-        result = json.loads((materiality_output / "alignments.json").read_text())
+        result = json.loads((materiality_output / "alignments.json").read_text(encoding='utf-8'))
         assessments = {row["match_id"]: row.get("materiality_analysis") for row in result["alignments"]}
         for row in report["alignments"]:
             if assessments.get(row["match_id"]) is not None:
                 row["materiality_analysis"] = assessments[row["match_id"]]
         for path in (materiality_output / "materiality").rglob("*.json"):
             write_json(output / "materiality" / path.relative_to(materiality_output / "materiality"),
-                       json.loads(path.read_text()))
+                       json.loads(path.read_text(encoding='utf-8')))
         write_reports(output, report)
         self.publish("alignments", previous, current, output)
         self.finished(f"materiality:{previous}-{current}")
@@ -352,7 +352,7 @@ class Refresh:
             for previous, current in zip(selection, selection[1:]):
                 self.fetch("alignments", previous, current)
             progress = self.data / "pipeline_runs" / self.company / "-".join(map(str, selection)) / "status.json"
-            configuration = json.loads(progress.read_text()).get("synthesis_concurrency", {}) if progress.exists() else {}
+            configuration = json.loads(progress.read_text(encoding='utf-8')).get("synthesis_concurrency", {}) if progress.exists() else {}
             run_from_database(self.company.upper(), list(selection), env_file=self.env_file,
                 data_dir=self.data, limit_per_pair=500,
                 max_changes=int(self.settings.get("synthesis_max_changes", configuration.get("max_changes", 50))),

@@ -46,7 +46,7 @@ def read_reviews(root, company, stage, previous, current=None, *, input_source="
     else:
         if not path.exists():
             return {}
-        document = json.loads(path.read_text())
+        document = json.loads(path.read_text(encoding='utf-8'))
     if (document.get("schema_version") != 1 or document.get("company") != company
             or not isinstance(document.get("reviews"), dict)):
         raise ValueError(f"Invalid human review file: {path.name}")

@@ -70,7 +70,7 @@ class BatchPipelineTests(unittest.TestCase):
         self.assertCountEqual([args[args.index('--year') + 1] for args in commands], ['2023', '2024', '2025'])
         for args in commands:
             self.assertEqual(args[args.index('--ticker') + 1], 'INTC')
-            self.assertEqual(args[args.index('--output-dir') + 1], 'data/table_output/intc')
+            self.assertEqual(Path(args[args.index('--output-dir') + 1]), Path('data/table_output/intc'))
             self.assertEqual(args[args.index('--items') + 1:args.index('--year')], ['1', '1A', '7', '8'])
 
     def test_options_forwarded_and_duplicate_years_run_once(self):
@@ -85,7 +85,11 @@ class BatchPipelineTests(unittest.TestCase):
             for flag, value in [('--cik', '50863'), ('--company', 'Intel'), ('--output-dir', tmp),
                                 ('--sec-cache', 'some/cache'), ('--taxonomy-cache', 'some/taxonomy'),
                                 ('--user-agent', 'Test test@example.com')]:
-                self.assertEqual(args[args.index(flag) + 1], value)
+                actual = args[args.index(flag) + 1]
+                if flag in {'--output-dir', '--sec-cache', '--taxonomy-cache'}:
+                    self.assertEqual(Path(actual), Path(value))
+                else:
+                    self.assertEqual(actual, value)
             self.assertEqual(args[args.index('--items') + 1:args.index('--user-agent')], ['7', '8'])
 
     def test_year_failure_does_not_prevent_later_years_and_exit_is_nonzero(self):
@@ -134,7 +138,21 @@ class BatchPipelineTests(unittest.TestCase):
         with TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / 'intc_2023_api_metrics_with_values.json').mkdir()
-            (root / 'intc_2024_api_metrics_with_values.json').symlink_to(root / 'absent.json')
+            with patch.object(batch.pipeline, 'main', return_value=1) as single:
+                code, log = run(['--ticker', 'INTC', '--output-dir', tmp])
+            self.assertEqual(code, 1)
+            self.assertEqual(single.call_count, 3)
+            self.assertIn('0 existing files kept', log)
+
+    def test_symlink_is_not_reported_as_an_existing_export(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            try:
+                (root / 'intc_2024_api_metrics_with_values.json').symlink_to(root / 'absent.json')
+            except OSError as error:
+                if getattr(error, 'winerror', None) == 1314:
+                    self.skipTest('Creating Windows symlinks requires Developer Mode or administrator privileges')
+                raise
             with patch.object(batch.pipeline, 'main', return_value=1) as single:
                 code, log = run(['--ticker', 'INTC', '--output-dir', tmp])
             self.assertEqual(code, 1)

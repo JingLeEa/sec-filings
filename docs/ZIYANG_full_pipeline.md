@@ -1,5 +1,7 @@
 # Full pipeline with PostgreSQL inputs and storage
 
+For native Windows commands, follow [Windows setup](windows_setup.md).
+
 Run commands from the repository root using the environment containing
 `requirements.txt`. Docker/PostgreSQL must be running. Configure
 `SEC_USER_AGENT` and the sec-api.io `SEC_API_KEY` in the repository `.env`.
@@ -12,6 +14,11 @@ Cache, progress and output artifacts are stored in PostgreSQL by default. The
 pipeline creates no local result files, request caches or SQLite checkpoint
 files. `pipeline_artifacts` stores these artifacts alongside the normalized
 stage tables; graph execution uses memory and commits checkpoints to PostgreSQL.
+
+Completed starter selections also have a completion marker, tagged as imported
+starter data. A normal full run reuses those saved reports without new API calls.
+Use `--no-resume` only to deliberately recompute them; the bundled reports do not
+include raw preprocessing inputs or historical request caches.
 
 ```bash
 .venv/bin/python scripts/run_full_pipeline.py \

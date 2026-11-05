@@ -44,6 +44,10 @@ tests/               # unit tests
 
 ## Quick Start
 
+For native Windows PowerShell setup and commands, see
+[Windows setup](docs/windows_setup.md). It includes the Python environment,
+Docker database, pipeline, peer comparison, and test commands.
+
 To open the dashboard with starter company data already available in PostgreSQL:
 
 ```bash
@@ -153,10 +157,16 @@ See [Disclosure Change Chatbot](docs/AARAV_chatbot.md) for setup, LLM settings a
 
 ## Development
 
-Run the test suite:
+Native macOS and Windows checks are configured in
+[platform-tests.yml](.github/workflows/platform-tests.yml). See
+[platform support](docs/platform_support.md) for commands and validation scope.
+
+Install the test dependencies into your Python environment, then run the full
+test suite (including the platform checks):
 
 ```bash
-PYTHONPATH=src python3 -m unittest discover -s tests
+python3 -m pip install -e ".[test]"
+python3 -m pytest -q
 ```
 
 The main and peer pipelines keep generated outputs and caches in PostgreSQL by

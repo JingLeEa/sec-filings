@@ -245,14 +245,14 @@ class HtmlMetricsTests(unittest.TestCase):
             (root / 'report.htm').write_bytes(report)
             (root / 'report.htm.source.json').write_text(json.dumps({
                 'sec_url': FILING_URL.rsplit('/', 1)[0] + '/report.htm',
-                'sha256': hashlib.sha256(report).hexdigest()}))
+                'sha256': hashlib.sha256(report).hexdigest()}), encoding='utf-8')
             args = ['--filing', str(root / 'primary.htm'), '--filing-url', FILING_URL,
                     '--company', 'Example', '--year', '2023', '--offline',
                     '--sec-cache', str(root / 'cache'), '--output-dir', tmp]
             with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()), \
                  patch.object(cli.sec, 'SecClient', side_effect=AssertionError('No network')):
                 self.assertEqual(cli.main(args), 0)
-            result = json.loads((root / 'example_2023_html_metrics_with_values.json').read_text())
+            result = json.loads((root / 'example_2023_html_metrics_with_values.json').read_text(encoding='utf-8'))
             evidence = result['verification']['fiscal_year']
             self.assertEqual(evidence['value'], 2023)
             self.assertEqual(evidence['facts'][0]['document_id'], 'report1')

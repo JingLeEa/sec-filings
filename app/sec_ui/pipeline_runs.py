@@ -6,7 +6,6 @@ import json
 import os
 from pathlib import Path
 import re
-import shlex
 import signal
 import subprocess
 import sys
@@ -14,6 +13,8 @@ import time
 from zoneinfo import ZoneInfo
 from threading import Lock, Thread
 from uuid import uuid4
+
+import psutil
 
 from . import config
 
@@ -146,21 +147,24 @@ def _write_job(folder, job, *, require_history=False):
 def _pid_alive(pid) -> bool:
     if not isinstance(pid, int) or pid < 1:
         return False
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
-    return True
+    # os.kill(pid, 0) terminates the process on Windows.
+    return psutil.pid_exists(pid)
+
+
+def _launch_options():
+    options = {'env': {**os.environ, 'PYTHONIOENCODING': 'utf-8'}}
+    if os.name == 'nt':
+        options['creationflags'] = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW
+    else:
+        options['start_new_session'] = True
+    return options
 
 
 def _pipeline_python() -> str:
     """Use the project's environment even when Streamlit was started elsewhere."""
-    for path in (ROOT / ".venv" / "bin" / "python", ROOT / ".venv" / "Scripts" / "python.exe"):
-        if path.is_file():
-            return str(path)
-    return sys.executable
+    relative = 'Scripts/python.exe' if os.name == 'nt' else 'bin/python'
+    path = ROOT / '.venv' / relative
+    return str(path) if path.is_file() else sys.executable
 
 
 def active_run() -> dict | None:
@@ -199,9 +203,11 @@ def start_run(ticker: str, years, *, retry_failed: bool = False, resume_only: bo
         if running:
             raise RunError(f"{running['ticker'].upper()} is already running for FY{', FY'.join(map(str, running['years']))}. "
                            "Wait for it to finish before starting another pipeline.")
-        if resume_only:
-            _, progress = read_run(ticker, years)
-            if progress and progress.get('full_pipeline_complete'):
+        _, progress = read_run(ticker, years)
+        if progress and progress.get('full_pipeline_complete'):
+            if progress.get('completion_source') == 'starter_data':
+                raise RunError('Starter results for this company and fiscal-year selection are already available. View the saved Synthesis Report.')
+            if resume_only:
                 raise RunError('This company and fiscal-year selection has already completed. Refresh run history to see its latest result.')
         folder.mkdir(parents=True, exist_ok=True)
         previous = _read_json(folder / "ui_run.json")
@@ -231,7 +237,7 @@ def start_run(ticker: str, years, *, retry_failed: bool = False, resume_only: bo
         try:
             with (folder / log_name).open("w", encoding="utf-8") as output:
                 process = subprocess.Popen(command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT,
-                                           start_new_session=True)
+                                           **_launch_options())
         except OSError as error:
             job.update(status="stopped", error=f"Could not start pipeline ({type(error).__name__}).",
                        completed_at=datetime.now(timezone.utc).isoformat())
@@ -246,12 +252,10 @@ def start_run(ticker: str, years, *, retry_failed: bool = False, resume_only: bo
 def _pipeline_process_matches(pid, ticker, years) -> bool:
     """Do not signal a stale PID that now belongs to another program/run."""
     try:
-        result = subprocess.run(['ps', '-p', str(pid), '-o', 'command='],
-                                capture_output=True, text=True, timeout=5, check=False)
-        command = result.stdout.strip()
-        if result.returncode or str(ROOT / 'scripts/run_full_pipeline.py') not in command:
+        arguments = psutil.Process(pid).cmdline()
+        script = os.path.normcase(str((ROOT / 'scripts/run_full_pipeline.py').resolve()))
+        if not any(os.path.normcase(str(Path(argument).resolve())) == script for argument in arguments[1:]):
             return False
-        arguments = shlex.split(command)
         selected_ticker = arguments[arguments.index('--ticker') + 1]
         start = arguments.index('--years') + 1
         selected_years = []
@@ -260,7 +264,7 @@ def _pipeline_process_matches(pid, ticker, years) -> bool:
                 break
             selected_years.append(int(value))
         return selected_ticker.lower() == ticker and tuple(sorted(set(selected_years))) == years
-    except (OSError, subprocess.TimeoutExpired, ValueError, IndexError):
+    except (psutil.Error, OSError, ValueError, IndexError):
         return False
 
 
@@ -517,6 +521,8 @@ def _history_status(record):
 
 
 def _history_last_stage(record):
+    if (record.get('progress') or {}).get('completion_source') == 'starter_data':
+        return 'Starter reports imported'
     stages = (record.get('progress') or {}).get('stages', [])
     entry = (next((item for item in stages if item.get('status') == 'stopped'), None)
              or next((item for item in stages if item.get('status') == 'running'), None)
@@ -577,7 +583,8 @@ def read_run_history():
             run_id = f'checkpoint:{ticker}:{year_text}:{started or "unknown"}'
             records[run_id] = {**entry, 'run_id': run_id, 'started_at': started,
                                'completed_at': progress.get('completed_at'), 'progress': progress,
-                               'source': 'Saved pipeline checkpoint'}
+                               'source': ('Starter data' if progress.get('completion_source') == 'starter_data'
+                                          else 'Saved pipeline checkpoint')}
 
     rows = list(records.values())
     for record in rows:
@@ -604,7 +611,7 @@ def _progress_documents(ticker, years, keys=(), jobs_prefix=None):
     if jobs_prefix:
         for pattern in ("matching_*.json", "verification_*.json"):
             for path in (ROOT / "data" / jobs_prefix).glob(pattern):
-                documents[str(path.relative_to(ROOT / "data"))] = _optional_json(path)
+                documents[path.relative_to(ROOT / "data").as_posix()] = _optional_json(path)
     return documents
 
 
@@ -625,8 +632,8 @@ def stage_progress(ticker: str, years, stage: str) -> list[dict]:
         rows = []
         for year in years:
             folder = data / "disclosures" / ticker / str(year)
-            usage = documents.get(str((folder / "token_usage.json").relative_to(data))) or {}
-            manifest = documents.get(str((folder / "manifest.json").relative_to(data))) or {}
+            usage = documents.get((folder / "token_usage.json").relative_to(data).as_posix()) or {}
+            manifest = documents.get((folder / "manifest.json").relative_to(data).as_posix()) or {}
             batches = usage.get("planned_batches") or len(manifest.get("batches", []))
             if not batches:
                 rows.append(_progress_row(f"FY{year}: preparing extraction batches"))
@@ -661,7 +668,7 @@ def stage_progress(ticker: str, years, stage: str) -> list[dict]:
     if match:
         previous, current = match.groups()
         folder = data / "alignments" / ticker / f"{previous}-{current}"
-        prefix = str(folder.relative_to(data))
+        prefix = folder.relative_to(data).as_posix()
         documents = _progress_documents(ticker, years,
                                         [f"{prefix}/{name}.json" for name in ("alignments", "candidate_matches", "proposed_groups")],
                                         f"{prefix}/jobs/")

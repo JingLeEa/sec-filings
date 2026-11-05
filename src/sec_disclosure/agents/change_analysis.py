@@ -103,7 +103,7 @@ def cached_analysis(runtime, identity):
     if not path.is_file():
         return None
     try:
-        saved = json.loads(path.read_text())
+        saved = json.loads(path.read_text(encoding='utf-8'))
         # Retire the old empty final field without invalidating paid label caches.
         result = compact_change_analysis(saved["analysis"])
         if (saved.get("schema_version") == "change-analysis-cache-1.0" and saved.get("policy") == CHANGE_POLICY

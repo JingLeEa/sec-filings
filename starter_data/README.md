@@ -38,8 +38,17 @@ rolls back and can be retried by reloading the app.
 These files are shipped inputs, separate from generated pipeline output. The
 test-data branch does not contain original raw preprocessing inputs, XBRL facts
 or the complete extraction/alignment audit metadata. The bootstrap does not
-invent them or mark a full pipeline as complete. The starter results support
-browsing, chatbot queries and stored peer reports. Run the real pipeline to
+invent those inputs or historical execution records. When stored disclosures,
+completed adjacent-year alignments, and a matching synthesis report are all
+available, it writes a completion marker tagged `completion_source=starter_data`.
+This also backfills earlier installations without reimporting their reports.
+Existing pipeline checkpoints, including unfinished runs, are preserved; active
+pipeline locks are respected. The dashboard shows that starter results are ready
+and does not offer another run for that exact company/year selection.
+
+The starter results support browsing, chatbot queries and stored peer reports.
+The normal full-pipeline command also reuses that completion marker. A deliberate
+fresh execution requires `--no-resume`. Run the real pipeline to
 obtain full preprocessing inputs before using downstream manual-review reruns.
 Historical request/job caches are excluded from the bundle.
 

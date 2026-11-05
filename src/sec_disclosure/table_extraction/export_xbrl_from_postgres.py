@@ -139,17 +139,18 @@ def write_export(path, output_format, snapshot, document):
     path = Path(path).expanduser()
     path.parent.mkdir(parents=True, exist_ok=True)
     # Exclusive creation also protects existing exports and symlink targets.
-    with path.open('x', encoding='utf-8', newline='') as output:
-        try:
+    output = path.open('x', encoding='utf-8', newline='')
+    try:
+        with output:
             if output_format == 'json':
                 output.write(database.json_text(document) + '\n')
             else:
                 writer = csv.DictWriter(output, fieldnames=CSV_COLUMNS)
                 writer.writeheader()
                 writer.writerows(csv_rows(snapshot, document))
-        except Exception:
-            path.unlink()
-            raise
+    except Exception:
+        path.unlink()
+        raise
     return path
 
 

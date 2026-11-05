@@ -32,12 +32,12 @@ def pipeline(monkeypatch):
     monkeypatch.setenv("SEC_UI_DATA_SOURCE", "files")
     monkeypatch.setenv("SEC_UI_REFRESH_AUTOSTART", "0")
     for path in (root / "disclosures").rglob("disclosures.json"):
-        report = json.loads(path.read_text())
+        report = json.loads(path.read_text(encoding='utf-8'))
         for row in report["disclosures"]:
             row["verification"]["source_unit_count"] = 2
         write_json(path, report)
     for path in (root / "disclosures").rglob("*.json"):
-        report = json.loads(path.read_text())
+        report = json.loads(path.read_text(encoding='utf-8'))
         if "input_hashes" in report:
             report["schema_version"] = "4"
             write_json(path, report)
@@ -99,10 +99,10 @@ def run_offline(case, queue, observed):
 def clone_year(case, original, year):
     raw = case.root / f"raw/amd/{year}"
     for path in (case.root / f"raw/amd/{original}").glob("*.json"):
-        payload = json.loads(path.read_text().replace(str(original), str(year)))
+        payload = json.loads(path.read_text(encoding='utf-8').replace(str(original), str(year)))
         write_json(raw / path.name.replace(str(original), str(year)), payload)
     for path in (case.root / f"disclosures/amd/{original}").glob("*.json"):
-        payload = json.loads(path.read_text().replace(str(original), str(year)))
+        payload = json.loads(path.read_text(encoding='utf-8').replace(str(original), str(year)))
         if "input_hashes" in payload:
             payload["input_hashes"] = {str(p): digest(p.read_bytes()) for p in raw.glob("*.json")}
         write_json(case.root / f"disclosures/amd/{year}" / path.name, payload)
@@ -112,14 +112,14 @@ def test_disclosure_review_refreshes_both_adjacent_pairs_through_materiality(pip
     case = pipeline
     clone_year(case, 2023, 2025)
     path = case.root / "disclosures/amd/2024/disclosures.json"
-    report = json.loads(path.read_text())
+    report = json.loads(path.read_text(encoding='utf-8'))
     row = report["disclosures"][0]
     row["verification"].update(status="needs_review", review_reasons=["model_requested_review"],
                                 model_review_reason="Confirm disclosure type.")
     report["disclosures"].remove(row)
     write_json(path, report)
     review_path = path.with_name("review_candidates.json")
-    candidates = json.loads(review_path.read_text())
+    candidates = json.loads(review_path.read_text(encoding='utf-8'))
     candidates["disclosures"].append(row)
     write_json(review_path, candidates)
     saved = review.save_disclosure_review({**row, "fiscal_year": 2024}, "Operations & Capacity", "Human decision.", expected=None)
@@ -129,7 +129,7 @@ def test_disclosure_review_refreshes_both_adjacent_pairs_through_materiality(pip
     finished = review_jobs.jobs(queue)[0]
     assert finished["status"] == "complete", finished.get("error")
     assert finished["affected_pairs"] == [[2023, 2024], [2024, 2025]]
-    corrected = next(row for row in json.loads(path.read_text())["disclosures"] if row["disclosure_id"] == saved["disclosure_id"])
+    corrected = next(row for row in json.loads(path.read_text(encoding='utf-8'))["disclosures"] if row["disclosure_id"] == saved["disclosure_id"])
     assert corrected["taxonomy"] == "Operations & Capacity"
     assert corrected["llm_disclosure_type"] == "Financial & Capital Resources"
     assert corrected["verification"]["status"] == "source_validated"
@@ -257,7 +257,7 @@ def test_failed_materiality_keeps_review_and_retry_finishes_downstream(pipeline)
 def test_pipeline_rejects_superseded_review_without_model_requests(pipeline):
     case = pipeline
     path = case.root / "disclosures/amd/2024/disclosures.json"
-    row = json.loads(path.read_text())["disclosures"][0]
+    row = json.loads(path.read_text(encoding='utf-8'))["disclosures"][0]
     display = {**row, "fiscal_year": 2024}
     first = review.save_disclosure_review(display, "Operations & Capacity", "", expected=None)
     queue, old = queue_job(case, "disclosure", row, first)
@@ -278,7 +278,7 @@ def test_postgres_refresh_publishes_consistent_snapshots_and_normalized_inputs(p
     from artifact_support import MemoryArtifactStore, workspace_factory
     from unittest.mock import MagicMock
     case = pipeline
-    row = json.loads((case.root / "disclosures/amd/2024/disclosures.json").read_text())["disclosures"][0]
+    row = json.loads((case.root / "disclosures/amd/2024/disclosures.json").read_text(encoding='utf-8'))["disclosures"][0]
     saved = review.save_disclosure_review({**row, "fiscal_year": 2024}, "Operations & Capacity", "Human.", expected=None)
     queue, job = queue_job(case, "disclosure", row, saved)
     job["settings"]["input_source"] = "postgres"
@@ -379,7 +379,7 @@ def test_actual_background_worker_applies_review_without_comparison_or_model_cal
     case = pipeline
     shutil.rmtree(case.root / "disclosures/amd/2023")
     path = case.root / "disclosures/amd/2024/disclosures.json"
-    row = json.loads(path.read_text())["disclosures"][0]
+    row = json.loads(path.read_text(encoding='utf-8'))["disclosures"][0]
     saved = review.save_disclosure_review({**row, "fiscal_year": 2024}, "Operations & Capacity", "Human.", expected=None)
     queue, job = queue_job(case, "disclosure", row, saved)
     monkeypatch.setenv("SEC_UI_REFRESH_AUTOSTART", "1")
@@ -389,18 +389,18 @@ def test_actual_background_worker_applies_review_without_comparison_or_model_cal
     assert finished["status"] == "complete", finished.get("error")
     assert finished["affected_pairs"] == []
     assert "no comparison" in finished["phase"]
-    corrected = next(item for item in json.loads(path.read_text())["disclosures"] if item["disclosure_id"] == row["disclosure_id"])
+    corrected = next(item for item in json.loads(path.read_text(encoding='utf-8'))["disclosures"] if item["disclosure_id"] == row["disclosure_id"])
     assert corrected["taxonomy"] == "Operations & Capacity"
 
 
 def test_unrelated_review_does_not_cancel_other_required_comparisons(pipeline):
     case = pipeline
-    row = json.loads((case.root / "disclosures/amd/2024/disclosures.json").read_text())["disclosures"][0]
+    row = json.loads((case.root / "disclosures/amd/2024/disclosures.json").read_text(encoding='utf-8'))["disclosures"][0]
     view = {**row, "fiscal_year": 2024}
     saved = review.save_disclosure_review(view, "Operations & Capacity", "", expected=None)
     queue, job = queue_job(case, "disclosure", row, saved)
     runner = review_refresh.Refresh(job, queue / "test-run", lambda **values: None)
-    other = json.loads((case.root / "disclosures/amd/2023/disclosures.json").read_text())["disclosures"][0]
+    other = json.loads((case.root / "disclosures/amd/2023/disclosures.json").read_text(encoding='utf-8'))["disclosures"][0]
     review.save_disclosure_review({**other, "fiscal_year": 2023}, "Technology & AI", "Another filing.", expected=None)
     runner.check_current()
     review.save_disclosure_review(view, "Technology & AI", "Replaced this review.", expected=saved)

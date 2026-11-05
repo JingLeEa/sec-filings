@@ -40,6 +40,67 @@ def test_existing_database_skips_archive_read_and_all_imports():
     assert result["imported"] == {} and result["skipped"] == 77
 
 
+def marker_cursor(company='mu', pairs=((2023, 2024), (2024, 2025))):
+    cur = MagicMock()
+    cur.fetchall.return_value = [(company, previous, current) for previous, current in pairs]
+    cur.fetchone.return_value = (True,)
+    cur.rowcount = 1
+    return cur
+
+
+def marker_documents(cur):
+    return [(call.args[1][0], json.loads(call.args[1][1]))
+            for call in cur.execute.call_args_list
+            if "VALUES ('main',%s,'file',%s)" in call.args[0]]
+
+
+def test_completed_starter_reports_get_an_honest_completion_marker():
+    manifest = seed.read_manifest()
+    available = {seed.scope_key(entry['scope']) for entry in manifest['files']}
+    cur = marker_cursor()
+    assert seed.mark_completed_starter_reports(cur, manifest, available) == 1
+    [(key, marker)] = marker_documents(cur)
+    assert key == 'pipeline_runs/mu/2023-2024-2025/status.json'
+    assert marker['full_pipeline_complete'] is True and marker['complete'] is True
+    assert marker['completion_source'] == 'starter_data'
+    assert marker['stages'] == []  # Do not invent raw preprocessing or paid requests.
+    assert marker['source_commit'] == manifest['source_commit']
+    insert = next(call.args[0] for call in cur.execute.call_args_list if "VALUES ('main',%s,'file',%s)" in call.args[0])
+    assert 'DO NOTHING' in insert  # Real completed or unfinished runs retain their checkpoints.
+
+
+def test_incomplete_starter_scopes_and_active_pipelines_are_not_marked_complete():
+    manifest = seed.read_manifest()
+    available = {seed.scope_key(entry['scope']) for entry in manifest['files']}
+    cur = marker_cursor()
+    missing = available - {('disclosures', 'mu', (2025,), (), (), '')}
+    assert seed.mark_completed_starter_reports(cur, manifest, missing) == 0
+    assert not marker_documents(cur)
+    cur = marker_cursor()
+    cur.fetchone.return_value = (False,)
+    assert seed.mark_completed_starter_reports(cur, manifest, available) == 0
+    assert not marker_documents(cur)
+
+
+def test_marker_period_matches_the_available_synthesis_report():
+    manifest = seed.read_manifest()
+    available = {seed.scope_key(entry['scope']) for entry in manifest['files']}
+    cur = marker_cursor('gs', ((2023, 2024), (2024, 2025)))
+    assert seed.mark_completed_starter_reports(cur, manifest, available) == 1
+    assert marker_documents(cur)[0][0] == 'pipeline_runs/gs/2023-2024/status.json'
+
+
+def test_existing_imports_are_backfilled_without_rereading_the_archive():
+    manifest = seed.read_manifest()
+    available = {seed.scope_key(entry['scope']) for entry in manifest['files']}
+    with patch.object(seed, 'existing_scopes', return_value=available), \
+         patch.object(seed, 'mark_completed_starter_reports', return_value=1) as mark, \
+         patch.object(seed, 'report_groups', side_effect=AssertionError('No report reimport')):
+        result = seed.seed_connection(MagicMock())
+    mark.assert_called_once()
+    assert result['completion_markers'] == 1 and not result['imported']
+
+
 def test_database_error_rolls_back_without_exposing_credentials():
     connection = MagicMock()
     with patch("psycopg.connect", return_value=connection), \
@@ -104,6 +165,11 @@ def test_fresh_database_parallel_startup_preserves_new_results_and_repairs_missi
                 for table, count in (("filings", 33), ("alignment_runs", 22),
                                      ("synthesis_reports", 10), ("peer_comparison_reports", 12)):
                     assert conn.execute(sql.SQL("SELECT count(*) FROM {}").format(sql.Identifier(table))).fetchone()[0] == count
+                markers = conn.execute("SELECT path,content FROM pipeline_artifacts WHERE namespace='main' AND path LIKE 'pipeline_runs/%/status.json'").fetchall()
+                assert len(markers) == 10
+                mu = next(json.loads(bytes(content)) for path, content in markers if '/mu/' in path)
+                assert mu['full_pipeline_complete'] and mu['completion_source'] == 'starter_data'
+                assert not any('/c/' in path for path, _ in markers)  # No bundled synthesis for Citigroup.
                 disclosure = conn.execute("SELECT disclosure_id FROM disclosures ORDER BY disclosure_id LIMIT 1").fetchone()[0]
                 conn.execute("UPDATE disclosures SET summary='Newer pipeline result' WHERE disclosure_id=%s", (disclosure,))
                 conn.execute("UPDATE synthesis_reports SET report=jsonb_set(report,'{report,executive_summary}',%s::jsonb) "
@@ -112,6 +178,16 @@ def test_fresh_database_parallel_startup_preserves_new_results_and_repairs_missi
             with psycopg.connect(**target) as conn:
                 assert conn.execute("SELECT summary FROM disclosures WHERE disclosure_id=%s", (disclosure,)).fetchone()[0] == "Newer pipeline result"
                 assert conn.execute("SELECT report->'report'->>'executive_summary' FROM synthesis_reports WHERE company='AMD'").fetchone()[0] == "Newer synthesis result"
+                key = 'pipeline_runs/mu/2023-2024-2025/status.json'
+                running = json.dumps({'ticker': 'mu', 'years': [2023, 2024, 2025], 'stages': [],
+                                      'full_pipeline_complete': False, 'complete': False}).encode('utf-8')
+                conn.execute("UPDATE pipeline_artifacts SET content=%s WHERE namespace='main' AND path=%s", (running, key))
+            assert launch(0)['completion_markers'] == 0
+            with psycopg.connect(**target) as conn:
+                assert bytes(conn.execute("SELECT content FROM pipeline_artifacts WHERE namespace='main' AND path=%s", (key,)).fetchone()[0]) == running
+                conn.execute("DELETE FROM pipeline_artifacts WHERE namespace='main' AND path=%s", (key,))
+            assert launch(0)['completion_markers'] == 1  # Repair installations imported before markers existed.
+            with psycopg.connect(**target) as conn:
                 conn.execute("DELETE FROM synthesis_reports WHERE company='GS'")
             # Launching the actual app repairs the missing report automatically.
             import streamlit as st
@@ -129,6 +205,12 @@ def test_fresh_database_parallel_startup_preserves_new_results_and_repairs_missi
                 assert not at.exception and not at.error
                 assert len(at.sidebar.selectbox(key="sel_company").options) == 11
                 assert any(caption.value == "Data from PostgreSQL" for caption in at.sidebar.caption)
+                at.switch_page('pages/0_Run_Pipeline.py').run()
+                at.text_input(key='pipeline_setup_ticker').set_value('MU').run()
+                at.text_input(key='pipeline_setup_years').set_value('2023, 2024, 2025').run()
+                assert not at.exception and not at.error
+                assert not any(button.label in {'Start pipeline', 'Resume pipeline'} for button in at.button)
+                assert any('Starter results' in message.value for message in at.success)
                 assert len(disclosure_data.discover_source().scopes) == 33
                 source = data.discover_source()
                 assert len(source.scopes) == 22

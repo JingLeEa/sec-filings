@@ -49,7 +49,7 @@ class MaterialityRuntime:
         self.in_flight = set()
         self.directory = output / "requests"
         self.directory.mkdir(parents=True, exist_ok=True)
-        all_requests = [json.loads(path.read_text()) for path in sorted(self.directory.glob("*.json"))]
+        all_requests = [json.loads(path.read_text(encoding='utf-8')) for path in sorted(self.directory.glob("*.json"))]
         self.requests = [
             request for request in all_requests
             if request.get("classification_run_id") == classification_run_id

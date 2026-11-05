@@ -18,7 +18,7 @@ if __name__ == "__main__":
     if args.postgres:
         from sec_disclosure.storage.human_reviews import workspace
         from sec_disclosure.storage.artifacts import ArtifactPath
-        prefix = str(args.queue_dir).split("/manual_reviews/", 1)[0]
+        prefix = args.queue_dir.as_posix().split("/manual_reviews/", 1)[0]
         with workspace(args.env_file, prefix=prefix):
             queue = ArtifactPath(args.queue_dir)
             process_queue(queue, wait_for_pipeline=True, capture_output=True)

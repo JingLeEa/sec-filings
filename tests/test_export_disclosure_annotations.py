@@ -192,14 +192,14 @@ class DisclosureExporterTests(unittest.TestCase):
             root = Path(temporary)
             document = heading_comparison("Income Taxes", "Note 25. Income Taxes")
             source = root / "input.json"
-            source.write_text(json.dumps(document))
+            source.write_text(json.dumps(document), encoding='utf-8')
             write_chunk_files(document, root / "raw")
             output = root / "export"
             messages = io.StringIO()
             with redirect_stdout(messages):
                 code = main(["--input", str(source), "--chunks-root", str(root / "raw"), "--output-dir", str(output)])
             self.assertEqual(code, 0)
-            with (output / "disclosure_annotations.tsv").open(newline="") as handle:
+            with (output / "disclosure_annotations.tsv").open(encoding='utf-8', newline="") as handle:
                 rows = list(csv.DictReader(handle, delimiter="\t"))
             self.assertEqual(len(rows), 1)
             self.assertEqual(len(rows[0]), 20)
@@ -361,9 +361,9 @@ class DisclosureExporterTests(unittest.TestCase):
                 code = main(["--input", str(source), "--output-dir", str(output), "--items", "1", "--chunks-root", str(root / "raw")])
             self.assertEqual(code, 0)
             self.assertEqual(source.read_bytes(), before)
-            with (output / "disclosure_annotations.tsv").open(newline="") as handle:
+            with (output / "disclosure_annotations.tsv").open(encoding='utf-8', newline="") as handle:
                 headered = list(csv.reader(handle, delimiter="\t", strict=True))
-            with (output / "paste_into_sheets.tsv").open(newline="") as handle:
+            with (output / "paste_into_sheets.tsv").open(encoding='utf-8', newline="") as handle:
                 rows = list(csv.reader(handle, delimiter="\t", strict=True))
             self.assertEqual(headered, [COLUMNS, *rows])
             self.assertEqual(len(rows), 6)
@@ -373,12 +373,12 @@ class DisclosureExporterTests(unittest.TestCase):
             self.assertEqual(unsafe_row[13], "'" + document["items"][0]["item_titles"][0]["2025_only"][0]["sentence"])
             for year, path in paths.items():
                 self.assertEqual(path.read_bytes(), original_bytes[year])
-                originals = {chunk["id"]: chunk["text"] for chunk in json.loads(path.read_text())}
+                originals = {chunk["id"]: chunk["text"] for chunk in json.loads(path.read_text(encoding='utf-8'))}
                 id_index, paragraph_index = (9, 18) if year == "2024" else (12, 19)
                 for row in rows:
                     self.assertEqual(row[paragraph_index], originals[row[id_index]] if row[id_index] else "")
                     self.assertEqual(row[17], "")
-            page = (output / "paste_into_sheets.html").read_text()
+            page = (output / "paste_into_sheets.html").read_text(encoding='utf-8')
             self.assertNotIn('</script><script>alert("x")', page)
             parser = PageParser()
             parser.feed(page)
@@ -404,8 +404,8 @@ class DisclosureExporterTests(unittest.TestCase):
                 document["items"] = document["items"][:1]
                 source.write_text(json.dumps(document), encoding="utf-8")
                 self.assertEqual(main(["--input", str(source), "--output-dir", str(output)]), 0)
-            self.assertEqual((output / "paste_into_sheets.tsv").read_text(), "")
-            self.assertEqual((output / "disclosure_annotations.tsv").read_text(), quoted_tsv([COLUMNS]))
+            self.assertEqual((output / "paste_into_sheets.tsv").read_text(encoding='utf-8'), "")
+            self.assertEqual((output / "disclosure_annotations.tsv").read_text(encoding='utf-8'), quoted_tsv([COLUMNS]))
 
     def test_original_paragraph_joins_only_chunks_with_same_item_source_and_block(self):
         with TemporaryDirectory() as temporary:
@@ -435,7 +435,7 @@ class DisclosureExporterTests(unittest.TestCase):
             }]}
             current = root / "current.json"
             full_paragraph = "Unchanged introduction. Micron’s “platform” expanded — significantly. Unchanged conclusion."
-            current.write_text(json.dumps([{"id": "2025_1_P001", "year": "2025", "company": "mu", "item": "1", "text": full_paragraph}]))
+            current.write_text(json.dumps([{"id": "2025_1_P001", "year": "2025", "company": "mu", "item": "1", "text": full_paragraph}]), encoding='utf-8')
             records = make_annotations(document)
             fill_original_paragraphs(records, document, root / "input.json", previous_json=root / "missing.json", current_json=current)
             self.assertEqual(records[0]["Previous Original Paragraph"], "")
@@ -450,11 +450,11 @@ class DisclosureExporterTests(unittest.TestCase):
             source.write_text(json.dumps(document), encoding="utf-8")
             output.mkdir()
             saved = output / "paste_into_sheets.tsv"
-            saved.write_text("Keep the previous successful export.")
+            saved.write_text("Keep the previous successful export.", encoding='utf-8')
             for problem in ("missing_file", "missing_id", "wrong_text", "wrong_year", "wrong_company", "wrong_item", "duplicate_id"):
                 with self.subTest(problem=problem):
                     paths = write_chunk_files(document, root / "raw")
-                    chunks = json.loads(paths["2024"].read_text())
+                    chunks = json.loads(paths["2024"].read_text(encoding='utf-8'))
                     if problem == "missing_id":
                         chunks[0]["id"] = "missing-reference"
                     elif problem == "wrong_text":
@@ -467,14 +467,14 @@ class DisclosureExporterTests(unittest.TestCase):
                         chunks[0]["item"] = "8"
                     elif problem == "duplicate_id":
                         chunks.append(copy.deepcopy(chunks[0]))
-                    paths["2024"].write_text(json.dumps(chunks))
+                    paths["2024"].write_text(json.dumps(chunks), encoding='utf-8')
                     previous_path = root / "missing.json" if problem == "missing_file" else paths["2024"]
                     errors = io.StringIO()
                     with redirect_stdout(io.StringIO()), redirect_stderr(errors):
                         code = main(["--input", str(source), "--output-dir", str(output), "--previous-json", str(previous_path), "--current-json", str(paths["2025"])])
                     self.assertEqual(code, 2)
                     self.assertIn("Error:", errors.getvalue())
-                    self.assertEqual(saved.read_text(), "Keep the previous successful export.")
+                    self.assertEqual(saved.read_text(encoding='utf-8'), "Keep the previous successful export.")
 
     def test_invalid_data_reports_error_without_replacing_outputs(self):
         bad_sentence = comparison()
@@ -493,7 +493,7 @@ class DisclosureExporterTests(unittest.TestCase):
                     with redirect_stderr(errors):
                         self.assertEqual(main(["--input", str(source), "--output-dir", str(output)]), 2)
                     self.assertIn("Error:", errors.getvalue())
-                    self.assertEqual(saved.read_text(), "Previous successful export")
+                    self.assertEqual(saved.read_text(encoding='utf-8'), "Previous successful export")
 
     def test_missing_item_filter_fails_instead_of_silently_exporting_nothing(self):
         with self.assertRaisesRegex(ValueError, "absent from input"):

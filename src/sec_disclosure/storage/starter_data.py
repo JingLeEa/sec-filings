@@ -2,19 +2,22 @@
 from __future__ import annotations
 
 from collections import Counter
+from datetime import datetime, timezone
 import hashlib
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import tarfile
 
 from . import alignments, disclosures, peer_comparisons
 from .chatbot_schema import apply_outdated
 from .pipeline_snapshots import publish
 from .alignment_cleanup import cleanup_existing, replace_document
+from .artifacts import artifact_lock_key
 from sec_disclosure.alignment_policy import exclude_from_reports
 
 ROOT = Path(__file__).resolve().parents[3]
 BUNDLE = ROOT / "starter_data"
+COMPLETION_MARKER_VERSION = 1
 
 
 class StarterDataError(RuntimeError):
@@ -27,7 +30,7 @@ def scope_key(scope):
 
 
 def read_manifest(bundle=BUNDLE):
-    manifest = json.loads((Path(bundle) / "manifest.json").read_text())
+    manifest = json.loads((Path(bundle) / "manifest.json").read_text(encoding='utf-8'))
     if manifest.get("version") != 1 or not manifest.get("files") or not manifest.get("source_commit"):
         raise ValueError("The bundled starter-data manifest is invalid.")
     paths = [entry["path"] for entry in manifest["files"]]
@@ -159,6 +162,51 @@ def import_report(cur, kind, document):
     return True
 
 
+def mark_completed_starter_reports(cur, manifest, available):
+    """Backfill report-completion markers without replacing real run progress."""
+    cur.execute('SELECT company,previous_year,current_year FROM alignment_runs WHERE run_complete IS TRUE')
+    completed_pairs = {(company.lower(), previous, current) for company, previous, current in cur.fetchall()}
+    candidates = []
+    scopes = {scope_key(entry['scope']) for entry in manifest['files']}
+    for scope in sorted(scopes):
+        kind, company, years, *_ = scope
+        if kind != 'synthesis' or len(years) < 2:
+            continue
+        pairs = list(zip(years, years[1:]))
+        required = {scope}
+        required.update(('disclosures', company, (year,), (), (), '') for year in years)
+        required.update(('alignments', company, pair, (), (), '') for pair in pairs)
+        if required <= available and all((company, *pair) in completed_pairs for pair in pairs):
+            candidates.append((company, years))
+    if not candidates:
+        return 0
+    cur.execute('SELECT pg_advisory_xact_lock(80808008)')
+    cur.execute((ROOT / 'db/init/08_pipeline_artifacts.sql').read_text(encoding='utf-8'))
+    imported_at = datetime.now(timezone.utc).isoformat()
+    written = 0
+    for company, years in candidates:
+        # A running pipeline owns this company even before its first checkpoint.
+        cur.execute('SELECT pg_try_advisory_xact_lock(%s)',
+                    (artifact_lock_key('main', 'pipeline_runs/' + company),))
+        if not cur.fetchone()[0]:
+            continue
+        marker = {'ticker': company, 'years': list(years), 'complete': True,
+                  'full_pipeline_complete': True, 'until': 'synthesis',
+                  'completion_source': 'starter_data', 'completion_marker_version': COMPLETION_MARKER_VERSION,
+                  'source_commit': manifest['source_commit'], 'started_at': imported_at,
+                  'last_invocation_at': imported_at, 'completed_at': imported_at, 'stages': []}
+        key = f"pipeline_runs/{company}/{'-'.join(map(str, years))}/status.json"
+        cur.execute('''INSERT INTO pipeline_artifacts(namespace,path,kind)
+            SELECT 'main',path,'directory' FROM unnest(%s::text[]) AS path
+            ON CONFLICT(namespace,path) DO NOTHING''',
+            ([str(parent) for parent in PurePosixPath(key).parents],))
+        cur.execute('''INSERT INTO pipeline_artifacts(namespace,path,kind,content)
+            VALUES ('main',%s,'file',%s) ON CONFLICT(namespace,path) DO NOTHING''',
+            (key, json.dumps(marker).encode('utf-8')))
+        written += cur.rowcount
+    return written
+
+
 def seed_connection(conn, bundle=BUNDLE):
     """One atomic import; repeated launches only inspect existing scope keys."""
     manifest = read_manifest(bundle)
@@ -168,10 +216,13 @@ def seed_connection(conn, bundle=BUNDLE):
         wanted = {scope_key(entry["scope"]) for entry in manifest["files"]}
         pending = set()
         excluded = cleanup_existing(cur, pending=pending)
-        missing = wanted - existing_scopes(cur)
+        available = existing_scopes(cur)
+        missing = wanted - available
         if not missing:
+            markers = mark_completed_starter_reports(cur, manifest, available)
             return {"imported": {}, "skipped": len(wanted), "companies": manifest["companies"],
-                    "excluded_alignments": excluded, "cleanup_pending": sorted(pending)}
+                    "excluded_alignments": excluded, "cleanup_pending": sorted(pending),
+                    "completion_markers": markers}
         apply_outdated(cur)
         for key, documents in report_groups(bundle, manifest, missing):
             kind, company, years, *_ = key
@@ -185,8 +236,10 @@ def seed_connection(conn, bundle=BUNDLE):
             else:
                 saved = import_report(cur, kind, next(iter(documents.values())))
             imported[kind] += bool(saved)
+        markers = mark_completed_starter_reports(cur, manifest, existing_scopes(cur))
         return {"imported": dict(imported), "skipped": len(wanted) - sum(imported.values()),
-                "companies": manifest["companies"], "excluded_alignments": excluded, "cleanup_pending": sorted(pending)}
+                "companies": manifest["companies"], "excluded_alignments": excluded, "cleanup_pending": sorted(pending),
+                "completion_markers": markers}
 
 
 def seed_database(*, bundle=BUNDLE, env_file=None):
