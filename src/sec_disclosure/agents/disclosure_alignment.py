@@ -584,9 +584,9 @@ def write_alignment_reports(output, report, usage, *, preserve_change_analysis=T
                       "Previous: " + (", ".join(row["previous_ids"]) or "No counterpart found"), "",
                       "Current: " + (", ".join(row["current_ids"]) or "No counterpart found"), "", row["explanation"], ""])
         if row["review_reasons"]:
-            lines.extend(["Review: " + "; ".join(row["review_reasons"]) + ". " + row["verifier_review_reason"], ""])
+            lines.extend(["Review: " + "; ".join(row["review_reasons"]) + ". " + (row.get("verifier_review_reason") or "Verification has not completed."), ""])
         if row.get("unmatched_notes"):
-            lines.extend(["Unmatched notes: " + "; ".join(row["unmatched_notes"]) + ". " + row["verifier_review_reason"], ""])
+            lines.extend(["Unmatched notes: " + "; ".join(row["unmatched_notes"]) + ". " + (row.get("verifier_review_reason") or "Verification has not completed."), ""])
         if row.get("grouping"):
             sources = row["grouping"]["source_alignments"]
             identifiers = [source["match_id"] for source in sources if "match_id" in source]
@@ -852,7 +852,9 @@ def checkpoint_decisions(output):
     rows = json.loads(automatic.read_text(encoding='utf-8'))["alignments"] if automatic.exists() else []
     for path in sorted((output / "jobs").glob("verification_*.json")):
         saved = json.loads(path.read_text(encoding='utf-8'))
-        rows.extend(saved["result"] if saved["result"] is not None else [review_row(group, saved["error"]) for group in saved["groups"]])
+        rows.extend(saved["result"] if saved["result"] is not None else
+                    [review_row(group, saved.get('error') or 'Verification has not completed; saved progress needs recovery.')
+                     for group in saved["groups"]])
     return rows
 
 

@@ -160,7 +160,18 @@ class MaterialityAgentGraph:
                 raise ValueError("Materiality checkpoint does not match this job or its source rows.")
             try:
                 if snapshot.values:
-                    result = graph.invoke(None, config, durability="sync") if snapshot.next else snapshot.values
+                    if snapshot.next:
+                        result = graph.invoke(None, config, durability='sync')
+                    elif snapshot.values.get('result') is None:
+                        values = snapshot.values
+                        if values.get('action') is not None or values.get('action_error'):
+                            graph.update_state(config, values, as_node='model')
+                            result = graph.invoke(None, config, durability='sync')
+                        else:
+                            result = graph.invoke(values, config, durability='sync')
+                        print(f'{self.job_id}: recovered unfinished materiality progress.', flush=True)
+                    else:
+                        result = snapshot.values
                 else:
                     result = graph.invoke(initial, config, durability="sync")
             finally:

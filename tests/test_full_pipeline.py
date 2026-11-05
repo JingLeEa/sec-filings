@@ -101,6 +101,71 @@ class FullPipelineTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(resumed, ['materiality_2024_2025', 'save_materiality_2024_2025'])
 
+    def test_unusable_alignment_progress_restarts_only_failed_pair_and_keeps_api_ledger(self):
+        attempts = 0
+        pair = 'alignments/amd/2023-2024/'
+        for key, content in (('graph/checkpoints.sqlite', b'broken graph'),
+                             ('jobs/verification_001.json', b'{"result":null,"error":null}'),
+                             ('requests/paid.json', b'paid response and usage'),
+                             ('token_usage.json', b'preserved budget')):
+            self.artifacts.import_files([(pair + key, content)])
+
+        def execute(stage, **kwargs):
+            nonlocal attempts
+            if stage.name != 'align_and_save_2023_2024':
+                return 0
+            attempts += 1
+            if attempts < 3:
+                self.assertIsNotNone(self.artifacts.get(pair + 'graph/checkpoints.sqlite'))
+                return 1
+            self.assertIsNone(self.artifacts.get(pair + 'graph/checkpoints.sqlite'))
+            self.assertIsNone(self.artifacts.get(pair + 'jobs/verification_001.json'))
+            self.assertEqual(self.artifacts.get(pair + 'requests/paid.json')[1], b'paid response and usage')
+            self.assertEqual(self.artifacts.get(pair + 'token_usage.json')[1], b'preserved budget')
+            return 0
+
+        with patch.object(runner.time, 'sleep'):
+            code, executed, log = self.run_mock_pipeline(['--stage-retries', '5'], effect=execute)
+        self.assertEqual(code, 0)
+        self.assertEqual(attempts, 3)
+        self.assertEqual(executed.count('extract_disclosures_and_save'), 1)
+        self.assertEqual(executed.count('align_and_save_2024_2025'), 1)
+        self.assertIn('restarting this stage', log)
+        archived = [row for key, row in self.artifacts.rows.items() if '/archives/' in key and key.endswith('checkpoints.sqlite')]
+        self.assertEqual([row[1] for row in archived], [b'broken graph'])
+        entry = next(row for row in json.loads(self.progress_path.read_text())['stages']
+                     if row['stage'] == 'align_and_save_2023_2024')
+        self.assertTrue(entry['stage_restarted'])
+        self.assertEqual(len(entry['recovery_archives']), 1)
+
+    def test_storage_disconnect_does_not_restart_or_discard_stage_progress(self):
+        from sec_disclosure.storage.artifacts import ArtifactStorageError
+        def execute(stage, **kwargs):
+            if stage.name == 'align_and_save_2023_2024':
+                raise ArtifactStorageError('Database disconnected')
+            return 0
+        with patch.object(runner, 'restart_stage') as restart, patch.object(runner.time, 'sleep') as sleep:
+            code, executed, _ = self.run_mock_pipeline(['--stage-retries', '5'], effect=execute)
+        self.assertEqual(code, 1)
+        self.assertEqual(executed.count('align_and_save_2023_2024'), 1)
+        restart.assert_not_called()
+        sleep.assert_not_called()
+
+    def test_stage_restart_is_bounded_even_when_rebuilt_progress_still_fails(self):
+        graph = 'alignments/amd/2023-2024/graph/checkpoints.sqlite'
+        def execute(stage, **kwargs):
+            if stage.name == 'align_and_save_2023_2024':
+                self.artifacts.import_files([(graph, b'unrecoverable progress')])
+                return 1
+            return 0
+        with patch.object(runner.time, 'sleep'):
+            code, executed, _ = self.run_mock_pipeline(['--stage-retries', '3'], effect=execute)
+        self.assertEqual(code, 1)
+        self.assertEqual(executed.count('align_and_save_2023_2024'), 4)
+        archives = [key for key in self.artifacts.rows if '/archives/' in key and key.endswith('checkpoints.sqlite')]
+        self.assertEqual(len(archives), 1)
+        self.assertNotIn('llm_changes_2023_2024', executed)
+
     def test_automatic_retries_do_not_override_budget_pauses_or_manual_stops(self):
         for stopped_code in (2, 130, 143):
             def execute(stage, **kwargs):

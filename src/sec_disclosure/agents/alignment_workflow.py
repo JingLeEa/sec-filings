@@ -53,6 +53,11 @@ class AlignmentWorkflow:
         if checkpoint.exists():
             saved = json.loads(checkpoint.read_text(encoding='utf-8'))
         else:
+            saved = None
+        if saved is not None and saved.get('result') is None and not saved.get('error'):
+            print(f'{job_id}: incomplete saved result; recovering from graph/API checkpoints.', flush=True)
+            saved = None
+        if saved is None:
             visible = set(anchors) | {hit["disclosure_id"] for anchor in anchors for hit in self.candidates[anchor]}
             payload = {"previous_year": self.data.years[0], "current_year": self.data.years[1], "anchors": anchors,
                        "item": self.data.item_for(anchors),
@@ -95,6 +100,9 @@ class AlignmentWorkflow:
         job_id, batch = planned["job_id"], planned["groups"]
         checkpoint = self.output / "jobs" / f"{job_id}.json"
         saved = json.loads(checkpoint.read_text(encoding='utf-8')) if checkpoint.exists() else None
+        if saved is not None and saved.get('result') is None and not saved.get('error'):
+            print(f'{job_id}: incomplete saved result; recovering from graph/API checkpoints.', flush=True)
+            saved = None
         if saved is None or saved.get("repair_pending") and not self.args.offline_repair:
             members = {key for group in batch for key in group["previous_ids"] + group["current_ids"]}
             required = members - self.exact_ids
@@ -158,8 +166,10 @@ class AlignmentWorkflow:
         return ("verification_phase" if self.args.workers > 1 else "verification_job") if state["verification_index"] < len(state["verification_plan"]) else "finish"
 
     def finish(self, state):
-        return {"complete": not any(json.loads(p.read_text(encoding='utf-8')).get("repair_pending")
-                                     for p in (self.output / "jobs").glob("verification_*.json"))}
+        jobs = [json.loads(p.read_text(encoding='utf-8'))
+                for p in (self.output / "jobs").glob("verification_*.json")]
+        return {"complete": not any(job.get('repair_pending') or
+                    job.get('result') is None and not job.get('error') for job in jobs)}
 
     def build(self):
         builder = StateGraph(WorkflowState)

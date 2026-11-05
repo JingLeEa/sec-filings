@@ -26,7 +26,8 @@ from sec_disclosure.llm.concurrency import run_jobs
 from sec_disclosure.llm.disclosures import write_json
 from sec_disclosure.llm.request_pacing import RequestPacer
 from sec_disclosure.storage.disclosures import connection_arguments
-from sec_disclosure.storage.artifacts import PostgresWorkspace
+from sec_disclosure.storage.artifacts import ArtifactStorageError, PostgresWorkspace
+from sec_disclosure.pipelines.stage_recovery import restart_stage
 from sec_disclosure.pipelines.pipeline_progress import (
     invocation_lock, read_progress, resumable_entries, stage_signature,
 )
@@ -507,6 +508,15 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
             state["stages"] = [entries[s.name] for s in all_stages if s.name in entries]
             write_json(log_dir / "status.json", state)
         for retry in range(args.stage_retries + 1):
+            # First attempt normal resume, then retry reusable work. If that
+            # still fails, rebuild this stage's derived progress once, within
+            # the existing retry limit. Never discard upstream data or requests.
+            if retry and (retry >= 2 or retry == args.stage_retries) and not entry.get('stage_restarted'):
+                archives = restart_stage(stage, args)
+                if archives:
+                    entry.update(stage_restarted=True, recovery_archives=archives)
+                    print(f'{stage.name}: saved progress could not be reused; restarting this stage '
+                          'from its saved upstream inputs. API responses and usage history are retained.', flush=True)
             with state_lock:
                 entry.update(attempts=retry + 1, retries_used=retry, retrying=False,
                              retry_exhausted=False, exit_code=None)
@@ -524,6 +534,10 @@ def run_pipeline(args, stages, all_stages, log_dir, previous, entries, pending, 
                 code = 130
             except SystemExit as error:
                 code = error.code if isinstance(error.code, int) else 1
+            except ArtifactStorageError:
+                # There is no safe recovery/archive while durable storage is
+                # unavailable. Leave the last saved state for the next Resume.
+                raise
             except Exception as error:
                 print(f"{stage.name} failed ({type(error).__name__}); saved work is retained.", file=sys.stderr)
                 code = 1

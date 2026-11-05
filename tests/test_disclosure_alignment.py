@@ -861,6 +861,89 @@ class AlignmentTests(unittest.TestCase):
         with patch.object(alignment_runtime.Runtime, "call", reject_repeated_matching):
             self.assertEqual(self.run_cli(), (0, 1))
 
+    def test_null_job_result_recovers_from_completed_graph_without_new_api_calls(self):
+        self.assertEqual(self.run_cli(), (0, 2))
+        output = self.root / 'alignments/amd/2023-2024'
+        checkpoint = next((output / 'jobs').glob('verification_*.json'))
+        job = json.loads(checkpoint.read_text(encoding='utf-8'))
+        original_result = job['result']
+        job.update(result=None, error=None, repair_pending=False)
+        write_json(checkpoint, job)
+        self.assertEqual(self.run_cli(), (0, 0))
+        recovered = json.loads(checkpoint.read_text(encoding='utf-8'))
+        self.assertEqual(recovered['result'], original_result)
+        self.assertTrue(self.saved_report()['run_complete'])
+
+    def test_unreadable_graph_can_restart_alignment_from_disclosures_and_reuse_paid_responses(self):
+        from sec_disclosure.pipelines.stage_recovery import restart_stage
+        self.assertEqual(self.run_cli(), (0, 2))
+        output = self.root / 'alignments/amd/2023-2024'
+        checkpoint = next((output / 'jobs').glob('verification_*.json'))
+        job = json.loads(checkpoint.read_text(encoding='utf-8'))
+        job.update(result=None, error=None)
+        write_json(checkpoint, job)
+        (output / 'graph/checkpoints.sqlite').write_bytes(b'unreadable interrupted graph')
+        self.assertEqual(self.run_cli(), (1, 0))
+        before = {p.name:p.read_bytes() for p in (output / 'requests').glob('*.json')}
+        stage = SimpleNamespace(script='align_disclosures.py', phase='alignment',
+                                arguments=('--output-dir', str(output)))
+        archives = restart_stage(stage, SimpleNamespace())
+        self.assertEqual(len(archives), 1)
+        self.assertEqual((Path(archives[0]) / 'graph/checkpoints.sqlite').read_bytes(), b'unreadable interrupted graph')
+        self.assertEqual(self.run_cli(), (0, 0))
+        self.assertEqual(self.saved_report()['counts'], {'ai_verified': 3})
+        self.assertEqual({p.name:p.read_bytes() for p in (output / 'requests').glob('*.json')}, before)
+        self.assertEqual(self.output('token_usage.json')['reported_tokens']['total_tokens'], 250)
+
+    def orphan_graph_tasks(self):
+        original = AlignmentAgentGraph.build
+        def build(agent, saver):
+            graph = original(agent, saver)
+            get_state = graph.get_state
+            inspected = False
+            def orphan_once(config, **kwargs):
+                nonlocal inspected
+                state = get_state(config, **kwargs)
+                if not inspected and state.values and state.next:
+                    inspected = True
+                    return state._replace(next=())
+                return state
+            graph.get_state = orphan_once
+            return graph
+        return patch.object(AlignmentAgentGraph, 'build', build)
+
+    def test_orphaned_graph_replays_cached_response_without_paying_again(self):
+        original = alignment_runtime.Runtime.call
+        def interrupt_after_response(runtime, *args):
+            result = original(runtime, *args)
+            raise KeyboardInterrupt()
+        with patch.object(alignment_runtime.Runtime, 'call', interrupt_after_response), self.assertRaises(KeyboardInterrupt):
+            self.run_cli()
+        with self.orphan_graph_tasks():
+            self.assertEqual(self.run_cli(), (0, 1))
+        self.assertEqual(self.output('token_usage.json')['reported_tokens']['total_tokens'], 250)
+
+    def test_orphaned_model_result_is_validated_without_repeating_matching_request(self):
+        with patch.object(AlignmentAgentGraph, 'validate_action', side_effect=KeyboardInterrupt), self.assertRaises(KeyboardInterrupt):
+            self.run_cli()
+        original = alignment_runtime.Runtime.call
+        def reject_repeated_matching(runtime, role, *args):
+            self.assertNotEqual(role, 'matching')
+            return original(runtime, role, *args)
+        with self.orphan_graph_tasks(), patch.object(alignment_runtime.Runtime, 'call', reject_repeated_matching):
+            self.assertEqual(self.run_cli(), (0, 1))
+
+    def test_partial_null_job_can_be_reported_without_hiding_incomplete_work(self):
+        self.assertEqual(self.run_cli(), (0, 2))
+        output = self.root / 'alignments/amd/2023-2024'
+        checkpoint = next((output / 'jobs').glob('verification_*.json'))
+        job = json.loads(checkpoint.read_text(encoding='utf-8'))
+        job.update(result=None, error=None)
+        write_json(checkpoint, job)
+        decisions = module.checkpoint_decisions(output)
+        self.assertTrue(all(isinstance(row['verifier_review_reason'], str) for row in decisions))
+        self.assertTrue(all(row['status'] == 'needs_review' for row in decisions))
+
     def test_langgraph_revalidation_archives_database_and_legacy_manifest_is_supported(self):
         self.assertEqual(self.run_cli(), (0, 2))
         output = self.root / "alignments/amd/2023-2024"

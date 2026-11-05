@@ -284,6 +284,19 @@ Completed stages and successful year pairs are retained. Budget/input pauses and
 manual interruptions stop immediately. Existing request-level retry and timeout
 recovery policies still apply inside each stage attempt.
 
+Resume first checks whether unfinished graph work can be recovered, including a
+saved model response that still needs validation. An empty verification result
+without an error is treated as unfinished work, not a completed checkpoint.
+If normal resume attempts still fail, the runner archives that stage's derived
+progress and restarts it once within the same retry allowance. For example,
+alignment restarts the failed year pair from its saved PostgreSQL disclosures;
+preprocessing, extraction, and successful pairs stay complete. Request caches,
+token/unknown-usage ledgers, and budgets are retained, so valid API responses can
+still be reused. Archived progress stays under that stage's `archives` directory.
+A database outage stops the run without trying to rebuild unavailable storage;
+start PostgreSQL again before resuming. Budget pauses and manual stops continue
+to stop immediately.
+
 After all five stage retries fail, the dashboard reports that automatic retries
 are exhausted and provides **Resume pipeline**. Selecting it allows failed AI
 requests to be retried while reusing successful responses. A new manual resume

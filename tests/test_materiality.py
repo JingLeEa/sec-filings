@@ -251,6 +251,29 @@ class MaterialityTests(unittest.TestCase):
         self.assertEqual(self.run_cli("--batch-size", "1"), (0, 2))
         self.assertTrue(all(module.MATERIALITY_FIELD in row for row in self.saved()["alignments"]))
 
+    def test_orphaned_model_checkpoint_recovers_without_repeating_paid_request(self):
+        from sec_disclosure.agents.materiality_graph import MaterialityAgentGraph
+        options = ('--concurrency', '1', '--skip-verification')
+        with patch.object(MaterialityAgentGraph, 'validate_action', side_effect=KeyboardInterrupt), self.assertRaises(KeyboardInterrupt):
+            self.run_cli(*options)
+        original = MaterialityAgentGraph.build
+        def build(agent, saver):
+            graph = original(agent, saver)
+            get_state = graph.get_state
+            inspected = False
+            def orphan_once(config, **kwargs):
+                nonlocal inspected
+                snapshot = get_state(config, **kwargs)
+                if not inspected and snapshot.values and snapshot.next:
+                    inspected = True
+                    return snapshot._replace(next=())
+                return snapshot
+            graph.get_state = orphan_once
+            return graph
+        with patch.object(MaterialityAgentGraph, 'build', build):
+            self.assertEqual(self.run_cli(*options), (0, 0))
+        self.assertTrue(all(module.MATERIALITY_FIELD in row for row in self.saved()['alignments']))
+
     def test_validation_exhaustion_automatically_splits_classifier_batch(self):
         rows = [self.row(number) for number in range(1, 9)]
         write_json(self.output / "alignments.json", self.document(rows))

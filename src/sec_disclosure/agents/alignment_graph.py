@@ -277,7 +277,23 @@ class AlignmentAgentGraph:
                     # proposals can start correction turns without reapplying its seed.
                     result = graph.invoke({**snapshot.values, "offline": False}, config, durability="sync")
                 elif snapshot.values:
-                    result = graph.invoke(None, config, durability="sync") if snapshot.next else snapshot.values
+                    if snapshot.next:
+                        result = graph.invoke(None, config, durability="sync")
+                    elif snapshot.values.get('result') is None and not snapshot.values.get('reason'):
+                        # A storage interruption can retain channel values while
+                        # losing the next task. Reconstruct routing from those
+                        # values, including any already returned model action.
+                        values = snapshot.values
+                        action = values.get('action')
+                        handled = any(entry.get('action') == action for entry in values.get('trace', []))
+                        if (action is not None or values.get('action_error')) and not handled:
+                            graph.update_state(config, values, as_node='model')
+                            result = graph.invoke(None, config, durability='sync')
+                        else:
+                            result = graph.invoke(values, config, durability='sync')
+                        print(f'{self.job_id}: recovered unfinished graph progress.', flush=True)
+                    else:
+                        result = snapshot.values
                 else:
                     result = graph.invoke(initial, config, durability="sync")
             finally:
