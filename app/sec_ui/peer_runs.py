@@ -47,6 +47,18 @@ def command_arguments(value):
             "--items", *value["items"], "--target-selection", value["target_selection"]]
 
 
+def available_items(ticker, peers, year):
+    """Offer Item 15 only when a selected company has saved disclosures for it."""
+    value = selection(ticker, peers, year)
+    rows = _query("disclosures", """
+        SELECT 1 FROM disclosures d JOIN filings f ON f.filing_id=d.filing_id
+        WHERE lower(f.company) = ANY(%s) AND f.fiscal_year=%s AND f.form_type='10-K'
+          AND d.item='15'
+        LIMIT 1
+    """, ([value["ticker"], *value["peers"]], value["year"]))
+    return ITEMS if rows else tuple(item for item in ITEMS if item != "15")
+
+
 def check_inputs(value):
     """Apply the backend's evidence and materiality gates without LLM calls."""
     value = selection(**value)
@@ -70,22 +82,47 @@ def _folder(value):
     return pipeline_runs.ROOT / "data/peer_runs" / selection_key(value)
 
 
-def active_run():
+def _saved_runs():
     for path in (pipeline_runs.ROOT / "data/peer_runs").glob("*/ui_run.json"):
         try:
             job = pipeline_runs._read_json(path)
         except RunError:
             continue
-        if job and job.get("status") in {"starting", "running"} and pipeline_runs._pid_alive(job.get("pid")):
+        if job:
+            yield _current_status(job)
+
+
+def _current_status(job):
+    if job.get("status") in {"starting", "running"}:
+        log = log_tail(job)
+        # A server reload can lose the process-watcher thread. A terminal CLI
+        # message is authoritative even if its PID still exists (or was reused).
+        if any(line.startswith("Peer comparison pipeline failed:") for line in log.splitlines()):
+            return dict(job, status="stopped", exit_code=1)
+        if "Peer comparison and token usage saved to PostgreSQL peer_comparison_reports." in log:
+            if "Saved complete peer comparison:" in log:
+                return dict(job, status="complete", exit_code=0)
+            if "Saved partial peer comparison:" in log:
+                return dict(job, status="stopped", exit_code=2)
+        if not pipeline_runs._pid_alive(job.get("pid")):
+            return dict(job, status="stopped")
+    return job
+
+
+def active_run():
+    for job in _saved_runs():
+        if job.get("status") in {"starting", "running"}:
             return job
     return None
 
 
+def latest_run():
+    return max(_saved_runs(), key=lambda job: job.get("started_at", ""), default=None)
+
+
 def read_run(value):
     job = pipeline_runs._read_json(_folder(value) / "ui_run.json")
-    if job and job.get("status") == "running" and not pipeline_runs._pid_alive(job.get("pid")):
-        job = dict(job, status="stopped")
-    return job
+    return _current_status(job) if job else None
 
 
 def start_run(value):
@@ -171,17 +208,32 @@ def load_report(value):
 def progress(job):
     prefix = f"peer_comparison/{job['ticker'].lower()}/{job['year']}/{'-'.join(sorted(peer.lower() for peer in job['peers']))}/runs/"
     rows = _query("pipeline_artifacts", """
-        SELECT content FROM pipeline_artifacts
+        SELECT path, content FROM pipeline_artifacts
         WHERE namespace='peer' AND kind='file' AND starts_with(path, %s)
           AND path LIKE %s AND modified_at >= %s::timestamptz
         ORDER BY modified_at DESC LIMIT 10
     """, (prefix, "%/peer_comparison.json", job["started_at"]))
-    for (content,) in rows:
+    for path, content in rows:
         try:
             report = json.loads(bytes(content))
         except (ValueError, TypeError):
             continue
         if (isinstance(report, dict) and report.get("target_selection") == job["target_selection"]
                 and sorted(report.get("items", [])) == sorted(job["items"])):
-            return {key: report.get(key) for key in ("jobs_completed", "jobs_planned", "run_complete")}
+            work = {key: report.get(key) for key in
+                    ("jobs_completed", "jobs_planned", "jobs_failed", "run_complete")}
+            # A worker failure in older runners can leave the summary frozen while
+            # other workers keep saving validated jobs. Count only this profile.
+            job_prefix = path.rsplit("/", 1)[0] + "/jobs/"
+            saved = _query("pipeline_artifacts", """
+                SELECT count(*), max(modified_at) FROM pipeline_artifacts
+                WHERE namespace='peer' AND kind='file' AND starts_with(path, %s)
+                  AND path LIKE %s
+            """, (job_prefix, "%.json"))
+            if saved:
+                count, updated_at = saved[0]
+                work["progress_recovered"] = count > (work["jobs_completed"] or 0)
+                work["jobs_completed"] = max(count, work["jobs_completed"] or 0)
+                work["updated_at"] = updated_at
+            return work
     return None

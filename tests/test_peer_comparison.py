@@ -8,7 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from sec_disclosure.llm.client import CompletionResult
+from sec_disclosure.llm.client import CompletionResult, LLMError
 from sec_disclosure.agents.peer_comparison import (
     attach_alignment_context,
     load_company,
@@ -73,6 +73,127 @@ class PeerComparisonTests(unittest.TestCase):
         peers = {"bbb": load_company(self.root / "disclosures", "bbb", "2024")}
         ranked = make_candidates(targets, peers, 3)[self.target["disclosure_id"]]["bbb"]
         return targets[0], ranked
+
+    def retry_args(self):
+        return Namespace(ticker="aaa", peers=["bbb"], year="2024", items=["1A"],
+                         data_dir=self.root, output_dir=self.root / "retry-output", top_k=3,
+                         dry_run=False, env_file=None, max_requests=-1, max_validation_attempts=3,
+                         max_tokens=100, max_prompt_chars=10000, timeout=10, workers=1,
+                         max_retries=2, retry_backoff=5)
+
+    def valid_retry_response(self):
+        return CompletionResult(json.dumps({"comparisons": [], "no_match": [
+            {"peer_ticker": "BBB", "reason": "No sufficiently comparable candidate."}
+        ]}), "test-model", "stop", {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15})
+
+    def retry_patches(self, responses):
+        from contextlib import ExitStack
+        from sec_disclosure.agents import peer_comparison as agent
+        stack = ExitStack()
+        self.addCleanup(stack.close)
+        stack.enter_context(patch.object(agent, "load_config", return_value=SimpleNamespace(
+            model="test-model", base_url="https://llm.example")))
+        request = stack.enter_context(patch.object(agent, "request_completion", side_effect=responses))
+        sleep = stack.enter_context(patch.object(agent.time, "sleep"))
+        return request, sleep
+
+    def test_temporary_api_errors_retry_automatically_and_preserve_all_attempts(self):
+        args = self.retry_args()
+        request, sleep = self.retry_patches([
+            LLMError("Timeout", retryable=True),
+            LLMError("Service unavailable", status_code=503, retryable=True),
+            self.valid_retry_response(),
+        ])
+        report = run(args)
+        self.assertTrue(report["run_complete"])
+        self.assertEqual(report["jobs_failed"], 0)
+        self.assertEqual(request.call_count, 3)
+        self.assertEqual([call.args[0] for call in sleep.call_args_list], [5, 10])
+        self.assertEqual(report["token_usage"]["requests"], 3)
+        self.assertEqual(report["token_usage"]["unknown_usage_requests"], 2)
+        records = [json.loads(path.read_text()) for path in (args.output_dir / "requests").glob("*.json")]
+        self.assertEqual(sorted(row["retry_round"] for row in records), [0, 1, 2])
+        self.assertEqual(sum(row["status"] == "failed" for row in records), 2)
+        request.reset_mock()
+        sleep.reset_mock()
+        args.max_retries = 0
+        self.assertTrue(run(args)["run_complete"])
+        request.assert_not_called()
+        sleep.assert_not_called()
+
+    def test_exhausted_citation_corrections_get_an_automatic_fresh_round(self):
+        args = self.retry_args()
+        invalid = CompletionResult("{}", "test-model", "stop",
+                                   {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15})
+        request, sleep = self.retry_patches([invalid, invalid, invalid, self.valid_retry_response()])
+        report = run(args)
+        self.assertTrue(report["run_complete"])
+        self.assertEqual(request.call_count, 4)
+        sleep.assert_called_once_with(5)
+        self.assertEqual(report["token_usage"]["requests"], 4)
+        self.assertEqual(report["token_usage"]["total_tokens"], 60)
+        records = [json.loads(path.read_text()) for path in (args.output_dir / "requests").glob("*.json")]
+        self.assertEqual(sum(row.get("validation_status") == "failed" for row in records), 3)
+        audit = json.loads(next((args.output_dir / "validation_errors").glob("*.json")).read_text())
+        self.assertTrue(audit["resolved"])
+
+    def test_automatic_retries_stop_at_the_limit(self):
+        args = self.retry_args()
+        request, sleep = self.retry_patches([LLMError("Timeout", retryable=True)] * 3)
+        with self.assertRaisesRegex(ValueError, "1 target comparisons failed"):
+            run(args)
+        self.assertEqual(request.call_count, 3)
+        self.assertEqual(sleep.call_count, 2)
+        report = json.loads((args.output_dir / "peer_comparison.json").read_text())
+        self.assertEqual(report["jobs_failed"], 1)
+        self.assertEqual(report["token_usage"]["requests"], 3)
+
+    def test_persistent_invalid_responses_stop_after_three_bounded_rounds(self):
+        args = self.retry_args()
+        invalid = CompletionResult("{}", "test-model", "stop",
+                                   {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15})
+        request, sleep = self.retry_patches([invalid] * 9)
+        with self.assertRaisesRegex(ValueError, "1 target comparisons failed"):
+            run(args)
+        self.assertEqual(request.call_count, 9)
+        self.assertEqual(sleep.call_count, 2)
+        report = json.loads((args.output_dir / "peer_comparison.json").read_text())
+        self.assertFalse(report["run_complete"])
+        self.assertEqual(report["token_usage"]["total_tokens"], 135)
+        self.assertEqual(report["token_usage"]["requests"], 9)
+
+    def test_authentication_and_permanent_errors_are_not_retried(self):
+        args = self.retry_args()
+        request, sleep = self.retry_patches([LLMError("Access denied", status_code=401, retryable=False)])
+        with self.assertRaisesRegex(ValueError, "1 target comparisons failed"):
+            run(args)
+        request.assert_called_once()
+        sleep.assert_not_called()
+
+    def test_retry_after_coordinates_workers_and_controls_backoff(self):
+        from sec_disclosure.agents import peer_comparison as agent
+        args = self.retry_args()
+        request, sleep = self.retry_patches([
+            LLMError("Rate limited", status_code=429, retryable=True, retry_after=17),
+            self.valid_retry_response(),
+        ])
+        with patch.object(agent, "RequestPacer") as pacer:
+            report = run(args)
+        self.assertTrue(report["run_complete"])
+        pacer.return_value.rate_limited.assert_called_once_with(17)
+        self.assertEqual(pacer.return_value.request.call_count, 2)
+        sleep.assert_called_once_with(17)
+        self.assertEqual(request.call_count, 2)
+
+    def test_retry_respects_the_global_request_budget(self):
+        args = self.retry_args()
+        args.max_requests = 2
+        request, sleep = self.retry_patches([LLMError("Timeout", retryable=True)] * 2)
+        report = run(args)
+        self.assertFalse(report["run_complete"])
+        self.assertEqual(request.call_count, 2)
+        sleep.assert_called_once_with(5)
+        self.assertEqual(report["token_usage"]["requests"], 2)
 
     def test_same_item_candidates_and_multiple_peer_matches(self):
         target, ranked = self._inputs()
@@ -296,6 +417,77 @@ class PeerComparisonTests(unittest.TestCase):
         self.assertTrue(report["run_complete"])
         self.assertEqual(report["jobs_completed"], 2)
         self.assertEqual(max_active, 2)
+
+    def test_failed_worker_keeps_progress_updating_and_resume_reuses_successes(self):
+        from sec_disclosure.agents import peer_comparison as agent
+        target2 = disclosure("AAA", "aaa_2024_1A_D002", "1A", "Our chip supplier creates risk.", "a2")
+        folder = self.root / "disclosures/aaa/2024/disclosures.json"
+        folder.write_text(json.dumps({"company": "aaa", "fiscal_year": "2024",
+                                      "disclosures": [self.target, target2]}))
+        for failure in ("api", "validation"):
+            with self.subTest(failure=failure):
+                output = self.root / failure
+                args = Namespace(ticker="aaa", peers=["bbb"], year="2024", items=["1A"],
+                                 data_dir=self.root, output_dir=output, top_k=3, dry_run=False,
+                                 env_file=None, max_requests=-1, max_validation_attempts=1,
+                                 max_tokens=100, max_prompt_chars=10000, timeout=10, workers=2,
+                                 max_retries=0, retry_backoff=0)
+                failure_saved = threading.Event()
+                snapshots = []
+                write = agent.write_json
+
+                def save(path, payload):
+                    write(path, payload)
+                    if path.name == "peer_comparison.json":
+                        snapshots.append((payload["jobs_completed"], payload.get("jobs_failed", 0)))
+                        if payload.get("jobs_failed"):
+                            failure_saved.set()
+
+                valid = CompletionResult(json.dumps({"comparisons": [], "no_match": [
+                    {"peer_ticker": "BBB", "reason": "No sufficiently comparable candidate."}
+                ]}), "test-model", "stop", {"total_tokens": 15})
+
+                def complete(prompt, **kwargs):
+                    target = json.loads(prompt)["target"]["disclosure_id"]
+                    if target == self.target["disclosure_id"]:
+                        if failure == "api":
+                            raise LLMError("SoCLaaS request exceeded its deadline.")
+                        return CompletionResult("{}", "test-model", "stop", {"total_tokens": 15})
+                    # The successful worker finishes only once the failure has
+                    # been checkpointed, proving progress continues afterwards.
+                    self.assertTrue(failure_saved.wait(timeout=5))
+                    return valid
+
+                with patch.object(agent, "load_config", return_value=SimpleNamespace(
+                        model="test-model", base_url="https://llm.example")), \
+                     patch.object(agent, "write_json", side_effect=save), \
+                     patch.object(agent, "request_completion", side_effect=complete), \
+                     self.assertRaisesRegex(ValueError, "1 target comparisons failed; 1 of 2"):
+                    run(args)
+                partial = json.loads((output / "peer_comparison.json").read_text())
+                self.assertFalse(partial["run_complete"])
+                self.assertEqual(partial["jobs_completed"], 1)
+                self.assertEqual(partial["jobs_failed"], 1)
+                self.assertEqual(partial["failed_jobs"][0]["target_id"], self.target["disclosure_id"])
+                self.assertIn((0, 1), snapshots)
+                self.assertIn((1, 1), snapshots)
+                cached = {path: path.read_bytes() for path in (output / "jobs").glob("*.json")}
+                if failure == "validation":
+                    # Simulate invalid responses written by the older runner,
+                    # which recorded HTTP success without a validation marker.
+                    for path in (output / "requests").glob("*.json"):
+                        record = json.loads(path.read_text())
+                        record.pop("validation_status", None)
+                        record.pop("validation_error", None)
+                        path.write_text(json.dumps(record))
+                with patch.object(agent, "load_config", return_value=SimpleNamespace(
+                        model="test-model", base_url="https://llm.example")), \
+                     patch.object(agent, "request_completion", return_value=valid) as request:
+                    resumed = run(args)
+                self.assertTrue(resumed["run_complete"])
+                self.assertEqual(resumed["jobs_failed"], 0)
+                request.assert_called_once()
+                self.assertEqual({path: path.read_bytes() for path in cached}, cached)
 
 
 if __name__ == "__main__":

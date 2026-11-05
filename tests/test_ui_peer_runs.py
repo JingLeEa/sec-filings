@@ -82,6 +82,32 @@ class PeerRunUiTests(unittest.TestCase):
             peer_runs.start_run(self.value)
         check.assert_not_called()
 
+    def test_terminal_failure_log_recovers_status_when_watcher_was_lost(self):
+        job = {**self.value, "status": "running", "pid": 12345, "run_id": "old",
+               "started_at": "2026-11-05T15:09:00+00:00", "log_file": "ui_run_0123456789ab.log"}
+        folder = peer_runs._folder(job)
+        folder.mkdir(parents=True)
+        pipeline_runs._write_json(folder / "ui_run.json", job)
+        (folder / job["log_file"]).write_text("Peer comparison pipeline failed: Invalid citations.\n")
+        with patch.object(pipeline_runs, "_pid_alive", return_value=True):
+            self.assertIsNone(peer_runs.active_run())
+            self.assertEqual(peer_runs.read_run(self.value)["status"], "stopped")
+            self.assertEqual(peer_runs.latest_run()["exit_code"], 1)
+
+    def test_terminal_saved_log_distinguishes_complete_and_partial_runs(self):
+        job = {**self.value, "status": "running", "pid": 12345, "run_id": "old",
+               "started_at": "2026-11-05T15:09:00+00:00", "log_file": "ui_run_0123456789ab.log"}
+        folder = peer_runs._folder(job)
+        folder.mkdir(parents=True)
+        pipeline_runs._write_json(folder / "ui_run.json", job)
+        for result, status in (("complete", "complete"), ("partial", "stopped")):
+            with self.subTest(result=result), patch.object(pipeline_runs, "_pid_alive", return_value=True):
+                (folder / job["log_file"]).write_text(
+                    f"Saved {result} peer comparison: report.json\n"
+                    "Peer comparison and token usage saved to PostgreSQL peer_comparison_reports.\n")
+                self.assertEqual(peer_runs.read_run(self.value)["status"], status)
+                self.assertIsNone(peer_runs.active_run())
+
     def test_invalid_and_changed_selections_cannot_reuse_the_same_check(self):
         for peers in ([], ["AAA"], ["bbb", "BBB"], ["../BBB"]):
             with self.subTest(peers=peers), self.assertRaises(peer_runs.RunError):
@@ -97,14 +123,39 @@ class PeerRunUiTests(unittest.TestCase):
             self.assertIs(peer_runs.load_report(self.value), report)
         self.assertEqual(query.call_args.args[2], ("AAA", 2024, ["BBB"], ["1A"], "all"))
 
+    def test_item_15_availability_checks_target_and_every_peer_in_selected_year(self):
+        for found in ([], [(1,)]):
+            with self.subTest(found=found), patch.object(peer_runs, "_query", return_value=found) as query:
+                options = peer_runs.available_items("MRVL", ["SWKS", "CRUS"], 2024)
+            self.assertEqual("15" in options, bool(found))
+            self.assertEqual(set(options) - {"15"}, {"1", "1A", "7", "8"})
+            self.assertEqual(query.call_args.args[2], (["mrvl", "crus", "swks"], 2024))
+            self.assertIn("f.fiscal_year=%s", query.call_args.args[1])
+            self.assertIn("f.form_type='10-K'", query.call_args.args[1])
+            self.assertIn("d.item='15'", query.call_args.args[1])
+
     def test_progress_filters_current_attempt_and_ignores_other_selection(self):
         wrong = {"target_selection": "material_changes", "items": ["1A"], "jobs_completed": 99}
         current = {"target_selection": "all", "items": ["1A"], "jobs_completed": 2, "jobs_planned": 5}
         job = {**self.value, "started_at": "2026-10-31T10:00:00+00:00"}
-        with patch.object(peer_runs, "_query", return_value=[(json.dumps(row).encode(),) for row in (wrong, current)]) as query:
+        paths = [f"peer_comparison/aaa/2024/bbb/runs/{name}/peer_comparison.json" for name in ("wrong", "current")]
+        rows = [(path, json.dumps(row).encode()) for path, row in zip(paths, (wrong, current))]
+        with patch.object(peer_runs, "_query", side_effect=[rows, [(2, None)]]) as query:
             self.assertEqual(peer_runs.progress(job)["jobs_completed"], 2)
-        self.assertIn("modified_at >=", query.call_args.args[1])
-        self.assertEqual(query.call_args.args[2][2], job["started_at"])
+        self.assertIn("modified_at >=", query.call_args_list[0].args[1])
+        self.assertEqual(query.call_args_list[0].args[2][2], job["started_at"])
+        self.assertEqual(query.call_args_list[1].args[2][0], paths[1].rsplit("/", 1)[0] + "/jobs/")
+
+    def test_progress_recovers_frozen_summary_from_saved_validated_jobs(self):
+        report = {"target_selection": "all", "items": ["1A"], "jobs_completed": 42,
+                  "jobs_planned": 419, "run_complete": False}
+        path = "peer_comparison/aaa/2024/bbb/runs/current/peer_comparison.json"
+        job = {**self.value, "started_at": "2026-10-31T10:00:00+00:00"}
+        with patch.object(peer_runs, "_query", side_effect=[[(path, json.dumps(report).encode())], [(297, "latest")]]):
+            work = peer_runs.progress(job)
+        self.assertEqual(work["jobs_completed"], 297)
+        self.assertTrue(work["progress_recovered"])
+        self.assertFalse(work["run_complete"])
 
     def test_query_failures_never_expose_connection_secrets(self):
         with patch.object(data, "_postgres_connection", side_effect=RuntimeError("password=secret")), \
@@ -130,7 +181,10 @@ class PeerPageTests(unittest.TestCase):
             patch.object(pipeline_runs, "ROOT", Path(self.temp.name)),
             patch.object(pipeline_runs, "active_run", return_value=None),
             patch.object(peer_runs, "active_run", return_value=None),
+            patch.object(peer_runs, "latest_run", return_value=None),
             patch.object(peer_runs, "read_run", return_value=None),
+            patch.object(peer_runs, "progress", return_value=None),
+            patch.object(peer_runs, "available_items", return_value=("1", "1A", "7", "8")),
             patch.dict(os.environ, {"SEC_UI_DATA_SOURCE": "files", "SEC_UI_PEER_DIR": str(fixture),
                                     "SEC_UI_BOOTSTRAP_TEST_DATA": "0"}),
         ):
@@ -159,6 +213,37 @@ class PeerPageTests(unittest.TestCase):
         metrics = {metric.label: metric.value for metric in page.metric}
         self.assertEqual(metrics["Peer comparisons made"], "3")
         self.assertTrue(any("Sample data" in row.value for row in page.warning))
+
+    def test_item_15_is_hidden_when_no_selected_company_has_it(self):
+        page = self.page()
+        self.assertNotIn("15", page.multiselect(key="peer_run_items").options)
+
+    def test_item_15_updates_for_changed_companies_and_year_and_clears_stale_selection(self):
+        def available(ticker, peers, year):
+            has_item_15 = "SWKS" in [ticker, *peers] and year == 2024
+            return peer_runs.ITEMS if has_item_15 else ("1", "1A", "7", "8")
+
+        with patch.object(peer_runs, "available_items", side_effect=available):
+            page = self.page()
+            page.text_input(key="peer_run_peers").set_value("CRUS, SWKS").run()
+            self.assertIn("15", page.multiselect(key="peer_run_items").options)
+            page.multiselect(key="peer_run_items").select("15").run()
+            self.assertIn("15", page.multiselect(key="peer_run_items").value)
+            page.number_input(key="peer_run_year").set_value(2025).run()
+            self.assertNotIn("15", page.multiselect(key="peer_run_items").options)
+            self.assertNotIn("15", page.multiselect(key="peer_run_items").value)
+            page.number_input(key="peer_run_year").set_value(2024).run()
+            page.text_input(key="peer_run_peers").set_value("CRUS").run()
+            self.assertNotIn("15", page.multiselect(key="peer_run_items").options)
+            page.text_input(key="peer_run_ticker").set_value("SWKS").run()
+            self.assertIn("15", page.multiselect(key="peer_run_items").options)
+        self.assertFalse(page.exception, [error.value for error in page.exception])
+
+    def test_item_availability_failure_does_not_offer_unverified_item_15(self):
+        with patch.object(peer_runs, "available_items", side_effect=peer_runs.RunError("Database unavailable")):
+            page = self.page()
+        self.assertNotIn("15", page.multiselect(key="peer_run_items").options)
+        self.assertTrue(any("Database unavailable" in row.value for row in page.warning))
 
     def test_missing_inputs_show_warning_and_cannot_launch(self):
         with patch.object(peer_runs, "check_inputs", side_effect=peer_runs.RunError("No saved INTC disclosures for 2024")), \
@@ -204,12 +289,67 @@ class PeerPageTests(unittest.TestCase):
         job = {**peer_runs.selection("NVDA", ["AMD", "AVGO", "INTC"], 2024),
                "status": "running", "run_id": "running", "started_at": "2026-10-31T10:00:00+00:00"}
         with patch.object(peer_runs, "read_run", return_value=job), \
-             patch.object(peer_runs, "progress", return_value={"jobs_completed": 3, "jobs_planned": 10}), \
+             patch.object(peer_runs, "progress", return_value={"jobs_completed": 3, "jobs_planned": 10,
+                                                              "jobs_failed": 1}), \
              patch.object(peer_runs, "log_tail", return_value="Comparing saved disclosures"):
             page = self.page()
         self.assertTrue(any("3 of 10 target disclosures compared" in row.text for row in page.get("progress")))
         self.assertTrue(self.button(page, "Start peer comparison").disabled)
         self.assertTrue(any(status.label == "Peer comparison running" for status in page.get("status")))
+        self.assertTrue(any("1 target comparisons failed" in row.value for row in page.warning))
+
+    def test_refresh_restores_all_running_inputs_in_a_new_session(self):
+        job = {**peer_runs.selection("MRVL", ["SWKS", "CRUS"], 2025, ["1A", "15"], "all"),
+               "status": "running", "run_id": "active", "started_at": "2026-11-05T15:09:00+00:00"}
+        with patch.object(peer_runs, "active_run", return_value=job), \
+             patch.object(peer_runs, "progress", return_value={"jobs_completed": 297, "jobs_planned": 419,
+                                                              "progress_recovered": True}), \
+             patch.object(peer_runs, "log_tail", return_value=""):
+            # A second AppTest creates fresh session state, like a browser refresh.
+            for _ in range(2):
+                page = self.page()
+                for collection, key, expected in (
+                    (page.text_input, "peer_run_ticker", "MRVL"),
+                    (page.text_input, "peer_run_peers", "CRUS, SWKS"),
+                    (page.number_input, "peer_run_year", 2025),
+                    (page.multiselect, "peer_run_items", ["15", "1A"]),
+                    (page.selectbox, "peer_run_mode", "all"),
+                ):
+                    widget = collection(key=key)
+                    self.assertEqual(widget.value, expected)
+                    self.assertTrue(widget.disabled)
+                self.assertTrue(self.button(page, "Start peer comparison").disabled)
+                self.assertTrue(any("297 of 419" in row.text for row in page.get("progress")))
+                self.assertFalse(any("report summary is behind" in row.value for row in page.caption))
+
+    def test_active_run_replaces_old_form_values_then_unlocks_on_completion(self):
+        page = self.page()
+        page.text_input(key="peer_run_ticker").set_value("AMD").run()
+        job = {**peer_runs.selection("MRVL", ["SWKS", "CRUS"], 2024, ["7"], "all"),
+               "status": "running", "run_id": "active", "started_at": "2026-11-05T15:09:00+00:00"}
+        with patch.object(peer_runs, "active_run", return_value=job), \
+             patch.object(peer_runs, "progress", return_value=None), \
+             patch.object(peer_runs, "log_tail", return_value=""):
+            page.run()
+        self.assertEqual(page.text_input(key="peer_run_ticker").value, "MRVL")
+        self.assertTrue(page.text_input(key="peer_run_ticker").disabled)
+        page.run()
+        self.assertEqual(page.text_input(key="peer_run_ticker").value, "MRVL")
+        self.assertFalse(page.text_input(key="peer_run_ticker").disabled)
+
+    def test_refresh_after_failure_restores_last_selection_for_resume(self):
+        job = {**peer_runs.selection("MRVL", ["SWKS", "CRUS"], 2024, list(peer_runs.ITEMS), "all"),
+               "status": "stopped", "run_id": "failed"}
+        with patch.object(peer_runs, "latest_run", return_value=job), \
+             patch.object(peer_runs, "read_run", return_value=job), \
+             patch.object(peer_runs, "progress", return_value={"jobs_completed": 405, "jobs_planned": 419}), \
+             patch.object(peer_runs, "log_tail", return_value="Peer comparison pipeline failed: Invalid citations."):
+            page = self.page()
+        self.assertEqual(page.text_input(key="peer_run_ticker").value, "MRVL")
+        self.assertEqual(page.text_input(key="peer_run_peers").value, "CRUS, SWKS")
+        self.assertFalse(page.text_input(key="peer_run_ticker").disabled)
+        self.assertTrue(self.button(page, "Resume peer comparison").disabled)
+        self.assertTrue(any("405 of 419" in row.value for row in page.caption))
 
     def test_partial_run_requires_new_readiness_check_before_resume(self):
         job = {**peer_runs.selection("NVDA", ["AMD", "AVGO", "INTC"], 2024), "status": "stopped", "run_id": "partial"}

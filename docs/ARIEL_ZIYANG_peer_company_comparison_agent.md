@@ -121,10 +121,19 @@ workers. Peer comparison never starts the main pipeline or downloads filings.
 | `--workers` | `6` | Concurrent target comparisons; maximum `20` |
 | `--top-k` | `3` | Retrieved candidates per peer and target |
 | `--max-requests` | `-1` | New requests allowed this invocation; `-1` is unlimited |
-| `--max-validation-attempts` | `3` | Maximum attempts to produce a valid cited result |
+| `--max-validation-attempts N` | `3` | Response attempts per target per round, including the first response and any corrections |
+| `--max-retries N` | `2` | Additional automatic retry rounds per target after a retryable failure: `2` allows three rounds total; `0` disables additional rounds |
+| `--retry-backoff SECONDS` | `5 seconds` | Delay before the first automatic retry; subsequent delays double, capped at 60 seconds unless the server requests a longer wait |
 | `--data-dir` | Repository `data` | Root for optional local report exports |
 | `--output-dir` | Derived from target/year/peers | Local result destination when `--save-local-output` is set |
 | `--save-local-output` | Disabled | Export reports and token usage locally; caches remain in PostgreSQL |
+
+With the defaults, automatic retries wait 5 seconds before the first retry and
+10 seconds before the second. Each round allows up to three response-validation
+attempts, so persistently invalid responses can require up to nine API calls per
+target across all three rounds. Temporary API failures can end a round earlier.
+Every new call counts toward `--max-requests`. A server `Retry-After` can extend
+the wait, and HTTP 429 also applies a shared cooldown across workers.
 
 ## PostgreSQL output and resume
 

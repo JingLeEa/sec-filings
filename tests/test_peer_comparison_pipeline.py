@@ -13,7 +13,7 @@ from unittest.mock import MagicMock, patch
 import psycopg
 
 from sec_disclosure.agents import peer_comparison as agent
-from sec_disclosure.llm.client import CompletionResult
+from sec_disclosure.llm.client import CompletionResult, LLMError
 from sec_disclosure.pipelines import run_peer_comparison_pipeline as pipeline
 from sec_disclosure.storage import peer_comparison as storage
 from test_peer_comparison import disclosure
@@ -121,6 +121,25 @@ class PeerComparisonPipelineTests(unittest.TestCase):
         self.assertIn("Save failed", errors.getvalue())
         self.assertNotIn("saved to PostgreSQL", output.getvalue())
 
+    def test_backend_retries_temporary_failure_and_saves_without_manual_resume(self):
+        response = CompletionResult(json.dumps({"comparisons": [], "no_match": [
+            {"peer_ticker": "BBB", "reason": "No sufficiently comparable candidate."}
+        ]}), "test-model", "stop", {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15})
+        with patch.object(pipeline, "read_peer_inputs", return_value=inputs()), \
+             patch.object(agent, "load_config", return_value=SimpleNamespace(
+                 model="test-model", base_url="https://example.test")), \
+             patch.object(agent, "request_completion", side_effect=[
+                 LLMError("Temporary connection failure", retryable=True), response]) as request, \
+             patch.object(agent.time, "sleep") as sleep, \
+             patch.object(pipeline, "store_peer_report") as save, redirect_stdout(io.StringIO()):
+            self.assertEqual(pipeline.main(self.args), 0)
+        self.assertEqual(request.call_count, 2)
+        sleep.assert_called_once_with(5)
+        saved = save.call_args.args[0]
+        self.assertTrue(saved["run_complete"])
+        self.assertEqual(saved["token_usage"]["requests"], 2)
+        self.assertEqual(saved["token_usage"]["unknown_usage_requests"], 1)
+
     def test_partial_comparison_is_saved_but_has_nonzero_exit_status(self):
         with patch.object(pipeline, "read_peer_inputs", return_value=inputs()), \
              patch.object(agent, "run", return_value=report(False)), \
@@ -147,7 +166,9 @@ class PeerComparisonPipelineTests(unittest.TestCase):
 
     def test_scope_and_workers_are_validated_before_database_access(self):
         for options in (["--peers", "AAA"], ["--peers", "BBB", "bbb"], ["--workers", "21"],
-                        ["--workers", "0"], ["--year", "1899"], ["--timeout", "nan"]):
+                        ["--workers", "0"], ["--year", "1899"], ["--timeout", "nan"],
+                        ["--max-retries", "-1"], ["--retry-backoff", "nan"],
+                        ["--retry-backoff", "-1"]):
             with self.subTest(options=options), patch.object(pipeline, "read_peer_inputs") as read, \
                  redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 pipeline.main(self.args + options)
@@ -156,6 +177,8 @@ class PeerComparisonPipelineTests(unittest.TestCase):
     def test_defaults_keep_peer_comparison_separate_and_isolate_peer_sets(self):
         args = agent.parse_args(self.args)
         self.assertEqual(args.workers, 6)
+        self.assertEqual(args.max_retries, 2)
+        self.assertEqual(args.retry_backoff, 5)
         self.assertEqual(args.output_dir, self.root / "peer_comparison/aaa/2024/bbb")
         other = agent.parse_args(self.args + ["--peers", "CCC"])
         self.assertNotEqual(args.output_dir, other.output_dir)

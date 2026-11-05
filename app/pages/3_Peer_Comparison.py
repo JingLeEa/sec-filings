@@ -76,6 +76,9 @@ def run_peer_panel(value):
             done = work.get("jobs_completed") or 0
             st.progress(min(1.0, done / work["jobs_planned"]),
                         text=f"{done} of {work['jobs_planned']} target disclosures compared")
+            if work.get("jobs_failed"):
+                st.warning(f"{work['jobs_failed']} target comparisons failed after automatic recovery. Other comparisons continue; "
+                           "successful jobs are retained for resume.")
         else:
             st.caption("Preparing saved evidence and comparison jobs.")
     elif status == "complete":
@@ -88,6 +91,13 @@ def run_peer_panel(value):
     elif status == "stopped":
         st.warning("Peer comparison stopped or is incomplete. Saved comparison jobs are retained. "
                    "Review the activity log, check prerequisites, and resume the same selection.")
+        try:
+            work = peer_runs.progress(job)
+            if work and work.get("jobs_planned"):
+                st.caption(f"{work.get('jobs_completed') or 0} of {work['jobs_planned']} target comparisons "
+                           "are saved and will be reused on resume.")
+        except peer_runs.RunError as error:
+            st.warning(str(error))
     log = peer_runs.log_tail(job)
     if log:
         with st.expander("Peer comparison activity log", expanded=status == "stopped"):
@@ -99,12 +109,46 @@ st.info("Prepare the target company and every peer in Run pipeline first. Each m
         "and extracted disclosures for the same fiscal year. Material changes also needs the target's "
         "adjacent-year materiality results. Peer comparison uses these saved inputs; it does not run the main pipeline.")
 st.page_link("pages/0_Run_Pipeline.py", label="Open Run pipeline", icon=":material/play_circle:")
+active = peer_runs.active_run()
+previous = active or peer_runs.latest_run()
+form_values = {
+    "peer_run_ticker": previous["ticker"].upper() if previous else "NVDA",
+    "peer_run_peers": ", ".join(peer.upper() for peer in previous["peers"]) if previous else "AMD, AVGO, INTC",
+    "peer_run_year": previous["year"] if previous else 2024,
+    "peer_run_items": previous["items"] if previous else ["1", "1A", "7", "8"],
+    "peer_run_mode": previous["target_selection"] if previous else "material_changes",
+}
+for field, default in form_values.items():
+    if active or field not in st.session_state:
+        st.session_state[field] = default
+if active:
+    st.caption("Inputs show the active comparison and can be edited after it finishes.")
 left, middle, right = st.columns([1, 2, 1])
-ticker = left.text_input("Target ticker", value="NVDA", max_chars=20).strip().upper()
-peer_text = middle.text_input("Peer tickers", value="AMD, AVGO, INTC", help="Separate tickers with commas or spaces.")
-year = right.number_input("Fiscal year", min_value=1900, max_value=2200, value=2024, step=1)
-items = st.multiselect("Items to compare", peer_runs.ITEMS, default=["1", "1A", "7", "8"])
+ticker = left.text_input("Target ticker", key="peer_run_ticker", disabled=bool(active), max_chars=20).strip().upper()
+peer_text = middle.text_input("Peer tickers", key="peer_run_peers", disabled=bool(active),
+                              help="Separate tickers with commas or spaces.")
+year = right.number_input("Fiscal year", min_value=1900, max_value=2200, step=1,
+                          key="peer_run_year", disabled=bool(active))
+peer_tickers = [part for part in re.split(r"[,\s]+", peer_text.strip()) if part]
+item_options = tuple(item for item in peer_runs.ITEMS if item != "15")
+if active:
+    # The disabled form describes the exact running selection, including its
+    # original Items, even if saved company data changes during the run.
+    item_options = tuple(item for item in peer_runs.ITEMS if item != "15" or item in active["items"])
+else:
+    try:
+        valid_selection = peer_runs.selection(ticker, peer_tickers, int(year))
+    except peer_runs.RunError:
+        valid_selection = None
+    if valid_selection:
+        try:
+            item_options = peer_runs.available_items(ticker, peer_tickers, int(year))
+        except peer_runs.RunError as error:
+            st.warning(str(error))
+st.session_state["peer_run_items"] = [item for item in st.session_state["peer_run_items"] if item in item_options]
+items = st.multiselect("Items to compare", item_options, key="peer_run_items", disabled=bool(active))
 mode = st.selectbox("Target disclosures", ["material_changes", "all"],
+                    key="peer_run_mode", disabled=bool(active),
                     format_func=lambda value: "Material changes" if value == "material_changes" else "All disclosures")
 if mode == "material_changes":
     adjacent = int(year) - 1 if year > 1900 else int(year) + 1
@@ -113,8 +157,7 @@ if mode == "material_changes":
 else:
     st.caption("All disclosures still requires saved disclosures for every company. Materiality is not required.")
 try:
-    value = peer_runs.selection(ticker, [part for part in re.split(r"[,\s]+", peer_text.strip()) if part],
-                                int(year), items, mode)
+    value = peer_runs.selection(ticker, peer_tickers, int(year), items, mode)
 except peer_runs.RunError as error:
     st.warning(str(error))
     value = None
