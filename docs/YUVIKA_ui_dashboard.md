@@ -15,7 +15,7 @@ Implemented:
 - **Side by side**: earlier and later disclosure text next to each other, with words removed (red, struck through) and added (green, underlined). Filters appear in the page above the disclosure selector, while company and years remain in the sidebar. One-sided matches show "No counterpart found". Sentence IDs, disclosure IDs and SEC links are listed under the text.
 - **Synthesis report**: reads saved PostgreSQL reports or local JSON exports, shows each finding with its cited evidence, financial figures, limitations and validation result; downloads as Markdown, evidence CSV and JSON.
 - **Peer comparison**: checks saved company/year prerequisites, launches or resumes `run_peer_comparison_pipeline.py` in the background, and polls comparison counts and the activity log. Reads PostgreSQL reports or local exports, shows cited sentences on both sides, and downloads Markdown, CSV and JSON.
-- **Run pipeline**: accepts a ticker and comma-separated fiscal years (1900-2200), shows the exact comparison pairs, confirms selections spanning more than two years, and starts or resumes `run_full_pipeline.py` in the background. Shows all six phases through synthesis, PostgreSQL saves, activity logs, and an in-app completion or failure notice. Filing-section recovery and download-timeout retries are automatic inside the extractor.
+- **Run pipeline**: accepts a ticker and comma-separated fiscal years (1900-2200), shows the exact comparison pairs, confirms selections spanning more than two years, and starts or resumes `run_full_pipeline.py` in the background. Shows all six phases through synthesis, PostgreSQL saves, activity logs, and an in-app completion or failure notice. The **Run history** tab lists previous selections, Singapore timestamps, outcome and last saved stage, with filters, CSV download and attempt details. Filing-section recovery and download-timeout retries are automatic inside the extractor.
 - The shared data layer (`app/sec_ui/data.py`) reads PostgreSQL results, including the bundled starter reports imported at startup. Explicit file mode also supports legacy JSON inputs.
 
 User accounts are not implemented. Human review supports saved labels and notes;
@@ -31,7 +31,7 @@ Verification: see section 8.
 | --- | --- |
 | `app/Home.py` | Overview page and the entry point. |
 | `app/pages/*.py` | Pages ordered by filename prefix; the run page launches and monitors the full pipeline. |
-| `app/sec_ui/pipeline_runs.py` | Safe local subprocess launch, persisted UI job state, console-log tail, PostgreSQL checkpoint reads, and mapping of database saves to pipeline phases. |
+| `app/sec_ui/pipeline_runs.py` | Safe local subprocess launch, persisted UI job state, PostgreSQL run history and checkpoint reads, console-log tail, and mapping of database saves to pipeline phases. |
 | `app/sec_ui/peer_runs.py` | Peer prerequisites using backend validation, background peer CLI launch, progress polling, and PostgreSQL report reads. |
 | `app/sec_ui/config.py` | Data folders, environment variables, company names. |
 | `app/sec_ui/data.py` | Finds data, loads a comparison, flattens each alignment into one record, filters and exports. No Streamlit code. |
@@ -59,7 +59,7 @@ The overview, explorer, side-by-side and synthesis report pages remain read-only
 
 ## 3. Setup
 
-Python 3.11 or newer and the packages in `requirements.txt` (the dashboard adds `streamlit>=1.50,<2`). Browsing saved data needs no API keys; starting a run requires PostgreSQL, `SEC_USER_AGENT`, `SEC_API_KEY`, and the SoCLaaS settings described in [the full pipeline guide](ZIYANG_full_pipeline.md).
+Python 3.11 or newer and the packages in `requirements.txt` (the dashboard adds `streamlit>=1.52,<2`). Browsing saved data needs no API keys; starting a run requires PostgreSQL, `SEC_USER_AGENT`, `SEC_API_KEY`, and the SoCLaaS settings described in [the full pipeline guide](ZIYANG_full_pipeline.md).
 
 ```bash
 pip install -r requirements.txt
@@ -107,6 +107,27 @@ The Run Pipeline page can launch jobs directly. While a run is active, Run setup
 
 The runner stores `pipeline_runs/<ticker>/<years>/status.json` and its detailed checkpoints in PostgreSQL's `pipeline_artifacts` table. The UI keeps only its process metadata (`ui_run.json`) and per-attempt activity log (`ui_run_*.log`) locally under `data/pipeline_runs/<ticker>/<years>/`, so preflight errors and process exits are visible even before the runner creates status. A PostgreSQL connection failure shows a reminder to start Docker Desktop, run `docker compose up -d`, and resume. "Loaded to database" appears only after the corresponding save step reports completion, including each year's `save_xbrl` step. Completion waits for synthesis as the sixth phase. After completion, the overview and explorer use PostgreSQL results in `auto` mode; click "Reload data" if a previously opened page still shows old data. To preview the peer page before real peer output exists, point `SEC_UI_PEER_DIR` at `tests/fixtures/peer_comparison`; the page shows a sample-data banner.
 
+Open **Run pipeline → Run history** to see previous companies and fiscal years. Each new dashboard Start or Resume gets its own `pipeline_run_history/<run_id>.json` artifact in PostgreSQL's `main` namespace, recording start/finish time, process outcome, associated checkpoint progress and the last 100 activity lines available at lifecycle updates. Starting the same selection again preserves earlier attempts. The history list refreshes every ten seconds and has company, status and fiscal-year filters, CSV download and a details panel. All displayed times use Singapore time (SGT). **Load selection in Run setup** fills the ticker and years without launching anything; it is disabled while another pipeline is running.
+
+In **Run details**, select a failed, interrupted, stopped or unfinished attempt
+and click **Resume pipeline** to launch that company/year selection directly from
+history. The action uses its latest saved checkpoints, retains successful caches,
+and creates a new PostgreSQL history entry; the old failure stays in history.
+The selected company and years appear above the button. It is disabled while
+another pipeline is active or a later attempt has already completed that selection.
+Completion is checked again by the launcher before it starts a process. The same
+failed-AI-request retry option used in Run setup appears here when required, and
+retry permission resets for each new failed invocation. After resuming, a notice
+directs the user to **Run setup & progress** for live progress.
+
+When Run setup opens without an explicit ticker/year URL selection, it defaults to
+the newest history row's company and fiscal years. An active run takes precedence
+and locks the fields. Editing a selection keeps those edits during progress/history
+refreshes; selecting an older run through **Load selection in Run setup** also
+takes precedence. With no available history, the sample AMD 2023–2025 default remains.
+
+History also discovers existing PostgreSQL status checkpoints and local launcher metadata. Older overwritten attempts cannot be reconstructed reliably, and CLI runs contribute their retained status checkpoint rather than a separate history entry for every invocation. Viewing history reads stored data; launching requires clicking **Resume pipeline**. If PostgreSQL is unavailable, it shows a warning and available local launcher records. A new dashboard run requires its initial history entry to save successfully; a later history-write error is recorded in launcher metadata without stopping the runner. New history records are stored in PostgreSQL, with no additional local history cache.
+
 Text preprocessing first uses code extraction, then automatically checks unresolved sections with the baseline LLM and page recovery as needed. SEC download timeouts restart extraction with 60-, 180-, then 300-second per-download limits. During recovery and retries the preprocessing phase stays running; its activity log contains the detailed messages. No manual recovery toggle is needed. A completed database save does not certify that every requested Item was recovered; review extractor warnings for missing sections.
 
 When a stopped run's log asks for `--retry-failed`, the page shows **Retry failed AI requests on resume**. Select it and click **Resume pipeline** to allow new attempts in unfinished disclosure extraction, alignment, change analysis or materiality. Completed stages and successful responses are reused. Request history, unknown-usage estimates and token/request budgets are retained, and retry permission resets for each new failed invocation. Existing automatic rate-limit and timeout recovery remains unchanged; this option does not fix credentials, quota, invalid inputs or incompatible cache settings. Resolve those causes before retrying. Synthesis already resumes using its own successful-response cache and does not accept this flag.
@@ -133,7 +154,7 @@ The exploration and synthesis report pages do not write pipeline outputs. Run pi
 
 ## 8. Validation and limitations
 
-Dashboard data and page tests are in `tests/test_ui_data.py` and `tests/test_ui_pages.py`. The run-page service and headless Streamlit checks in `tests/test_ui_pipeline_runs.py` cover database checkpoint reads, stale local progress, yearly table saves, recovery/retry messages, synthesis, completion, and stopped runs. They mock process launch and PostgreSQL and never make SEC or LLM requests. Run these checks with `PYTHONPATH=src:app .venv/bin/python -m unittest discover -s tests -p 'test_ui_pipeline_runs.py'`. Peer UI checks are in `tests/test_ui_peer_runs.py`, including readiness gates, selection changes, process launch and report rendering. Run them with `PYTHONPATH=src:app .venv/bin/python -m unittest discover -s tests -p 'test_ui_peer_runs.py'`. Neither pipeline has been launched end to end from the UI in these tests. Earlier checks found that AMD 2024-2025 loads 432 matches (387 aligned + 45 needing review) identically from files and PostgreSQL when `SEC_UI_TEST_POSTGRES=1` and a matching database is available.
+Dashboard data and page tests are in `tests/test_ui_data.py` and `tests/test_ui_pages.py`. The run-page service and headless Streamlit checks in `tests/test_ui_pipeline_runs.py` cover database checkpoint reads, stale local progress, yearly table saves, recovery/retry messages, synthesis, completion, stopped runs and history filters/loading. `tests/test_ui_pipeline_history.py` checks durable separate attempts, restart discovery, failure handling and read-only history queries. They mock process launch and PostgreSQL and never make SEC or LLM requests. Run these checks with `PYTHONPATH=src:app:tests .venv/bin/python -m pytest tests/test_ui_pipeline_runs.py tests/test_ui_pipeline_history.py`. Peer UI checks are in `tests/test_ui_peer_runs.py`, including readiness gates, selection changes, process launch and report rendering. Run them with `PYTHONPATH=src:app .venv/bin/python -m unittest discover -s tests -p 'test_ui_peer_runs.py'`. Neither pipeline has been launched end to end from the UI in these tests. A read-only history check on 5 November 2026 found retained selections for USB, WFC, CAT and PEP. Earlier checks found that AMD 2024-2025 loads 432 matches (387 aligned + 45 needing review) identically from files and PostgreSQL when `SEC_UI_TEST_POSTGRES=1` and a matching database is available.
 
 Limitations:
 
@@ -142,6 +163,6 @@ Limitations:
 - Synthesis "citation check passed" means IDs exist, not that the claims follow from the text.
 - The peer page has only been run on made-up sample output, because no real peer output is committed yet.
 - The PostgreSQL check used a database without the pgvector extension (the vector tables are not needed by the dashboard); a database created from the full Docker image was not tested here.
-- The Run pipeline notification is in-app only; it does not send email or desktop alerts. The UI is intended for local, single-server use and does not yet offer a stop/cancel button.
+- The Run pipeline notification is in-app only; it does not send email or desktop alerts. The UI is intended for local, single-server use; process controls and liveness checks use the machine hosting Streamlit.
 - Tested on Python 3.13 and Streamlit 1.66. The Python 3.14 setup used by the team was not tested.
 - Very large comparisons (Citigroup has about 1,100 matches) load in under a second from files; the first PostgreSQL load of a large pair has not been timed.

@@ -84,10 +84,13 @@ def human_review_status(saved, final_label):
 def review_decision(ai_label, final_label, saved, *, kind):
     """Put the saved decision and its source above the evidence, before editing."""
     with st.container(border=True, key="human_review_decision"):
-        original, final = st.columns([1, 2], gap="large")
+        original, final = st.columns(2, gap="large")
         with original:
-            st.caption(f"Original AI {kind}")
-            st.markdown(f"**{safe(ai_label)}**")
+            missing_ai = not ai_label or ai_label in {data.NOT_LABELLED, data.NOT_CLASSIFIED}
+            shown_ai = "Not assigned" if missing_ai else ai_label
+            st.info(safe(f"**Original AI {kind}: {shown_ai}**"), icon=":material/smart_toy:")
+            st.caption(f"The AI did not assign a {kind} to this record." if missing_ai
+                       else "AI result before human review.")
         with final:
             if saved:
                 title = (f"Human-reviewed {kind}" if review.label_source(saved) == "manual"

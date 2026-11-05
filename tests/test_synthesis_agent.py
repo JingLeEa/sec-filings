@@ -486,7 +486,7 @@ class SynthesisAgentTests(unittest.TestCase):
         self.assertEqual(len(metrics), 2)
         self.assertEqual({metric["unit"] for metric in metrics}, {"USD", "shares"})
 
-    def test_conflicting_facts_for_same_reporting_period_across_filings_fail(self):
+    def test_different_values_across_filing_years_use_latest_with_audit_trail(self):
         connection = FinancialConnection([
             financial_row(
                 2023, 100.0, start=date(2022, 1, 1), end=date(2022, 12, 31),
@@ -495,8 +495,19 @@ class SynthesisAgentTests(unittest.TestCase):
                 2024, 110.0, start=date(2022, 1, 1), end=date(2022, 12, 31),
             ),
         ])
-        with self.assertRaisesRegex(ValueError, "Conflicting financial facts"):
-            fetch_financial_metrics(connection, "EXAMPLE", [2023, 2024])
+        diagnostics = []
+        metrics = fetch_financial_metrics(connection, "EXAMPLE", [2023, 2024], diagnostics=diagnostics)
+        self.assertEqual(len(metrics), 1)
+        self.assertEqual(metrics[0]['value'], Decimal('110'))
+        self.assertEqual(metrics[0]['source_filing_year'], 2024)
+        self.assertEqual(diagnostics[0]['resolution'], 'selected_latest_filing')
+        self.assertEqual(diagnostics[0]['selected_id'], metrics[0]['id'])
+        self.assertEqual([item['value'] for item in diagnostics[0]['candidates']], [Decimal('100'), Decimal('110')])
+        reversed_diagnostics = []
+        reversed_metrics = fetch_financial_metrics(FinancialConnection(connection.last_cursor.rows[::-1]),
+            'EXAMPLE', [2023, 2024], diagnostics=reversed_diagnostics)
+        self.assertEqual(reversed_metrics, metrics)
+        self.assertEqual(reversed_diagnostics, diagnostics)
 
     def test_equal_values_with_different_accuracy_metadata_are_deduplicated(self):
         for first_accuracy, second_accuracy in (
@@ -529,15 +540,93 @@ class SynthesisAgentTests(unittest.TestCase):
                 reverse = FinancialConnection(list(reversed(connection.last_cursor.rows)))
                 self.assertEqual(fetch_financial_metrics(reverse, "EXAMPLE", [2023, 2024]), metrics)
 
-    def test_different_amounts_still_conflict_when_accuracy_metadata_differs(self):
+    def test_different_accuracy_does_not_round_unequal_values_into_agreement(self):
         connection = FinancialConnection([
             financial_row(2023, Decimal("1292300000"), period_type="instant",
                           instant=date(2023, 9, 29), decimals="-3"),
             financial_row(2024, Decimal("1292400000"), period_type="instant",
                           instant=date(2023, 9, 29), decimals="-5"),
         ])
-        with self.assertRaisesRegex(ValueError, "Conflicting financial facts"):
-            fetch_financial_metrics(connection, "EXAMPLE", [2023, 2024])
+        diagnostics = []
+        metrics = fetch_financial_metrics(connection, 'EXAMPLE', [2023, 2024], diagnostics=diagnostics)
+        self.assertEqual(metrics[0]['value'], Decimal('1292400000'))
+        self.assertEqual(metrics[0]['decimals'], '-5')
+        self.assertEqual([item['value'] for item in diagnostics[0]['candidates']],
+                         [Decimal('1292300000'), Decimal('1292400000')])
+
+    def usb_cash_flow_rows(self):
+        return [financial_row(source_year, Decimal(amount), company='USB',
+            concept='us-gaap:NetCashProvidedByUsedInOperatingActivities',
+            start=date(year, 1, 1), end=date(year, 12, 31), decimals='-6', value_index=index)
+            for year, source_year, amount, index in (
+                (2023, 2023, '8447000000', 4), (2023, 2024, '8447000000', 2),
+                (2023, 2025, '8393000000', 0), (2024, 2024, '11273000000', 4),
+                (2024, 2025, '11350000000', 2))]
+
+    def test_usb_reported_failure_uses_2025_comparatives_in_both_years_and_trend(self):
+        diagnostics = []
+        metrics = fetch_financial_metrics(FinancialConnection(self.usb_cash_flow_rows()),
+            'USB', [2023, 2024, 2025], diagnostics=diagnostics)
+        self.assertEqual([(metric['year'], metric['value'], metric['source_filing_year']) for metric in metrics],
+            [(2023, Decimal('8393000000'), 2025), (2024, Decimal('11350000000'), 2025)])
+        self.assertEqual(len(diagnostics), 2)
+        self.assertEqual(sum(len(item['candidates']) for item in diagnostics), 5)
+        trend, = calculate_trends(metrics)
+        self.assertEqual((trend['old_value'], trend['new_value']), (Decimal('8393000000'), Decimal('11350000000')))
+        self.assertEqual(trend['growth_pct'], Decimal('35.23'))
+        self.assertEqual(trend['source_ids'], [metric['id'] for metric in metrics])
+
+    def test_ambiguous_latest_filing_is_omitted_and_unaffected_contexts_continue(self):
+        rows = [financial_row(year, Decimal(amount), start=date(2023, 1, 1), end=date(2023, 12, 31),
+                value_index=index) for year, amount, index in (
+                    (2023, '100', 0), (2024, '110', 0), (2024, '120', 1))]
+        rows.append(financial_row(2024, Decimal('150'), start=date(2024, 1, 1), end=date(2024, 12, 31)))
+        diagnostics = []
+        metrics = fetch_financial_metrics(FinancialConnection(rows), 'EXAMPLE', [2023, 2024], diagnostics=diagnostics)
+        self.assertEqual([(metric['year'], metric['value']) for metric in metrics], [(2024, Decimal('150'))])
+        self.assertEqual(diagnostics[0]['resolution'], 'omitted_ambiguous_latest_filing')
+        self.assertIsNone(diagnostics[0]['selected_id'])
+        self.assertEqual(len(diagnostics[0]['candidates']), 3)
+        self.assertFalse(calculate_trends(metrics))
+
+    def test_conflicting_older_exports_do_not_override_an_unambiguous_later_filing(self):
+        rows = [financial_row(year, Decimal(amount), start=date(2023, 1, 1), end=date(2023, 12, 31),
+                value_index=index) for year, amount, index in (
+                    (2023, '100', 0), (2023, '120', 1), (2024, '110', 0), (2024, '110', 1))]
+        metrics = fetch_financial_metrics(FinancialConnection(rows), 'EXAMPLE', [2023, 2024])
+        self.assertEqual(len(metrics), 1)
+        self.assertEqual(metrics[0]['value'], Decimal('110'))
+        self.assertEqual(metrics[0]['source_filing_year'], 2024)
+
+    def test_fact_selection_notes_reach_final_model_and_cannot_be_silently_dropped(self):
+        diagnostics = []
+        request = self.request()
+        request['financial_metrics'] = fetch_financial_metrics(FinancialConnection(self.usb_cash_flow_rows()),
+            'USB', [2023, 2024, 2025], diagnostics=diagnostics)
+        request['financial_fact_diagnostics'] = diagnostics
+        calls = FakeCalls([finding('c1'), finding('c2'), FINAL_REPORT])
+        result = synthesize(request, calls)
+        final_payload = json.loads(calls.prompts[-1][1])
+        self.assertEqual(len(final_payload['financial_data_notes']), 2)
+        self.assertNotIn('8447000000', calls.prompts[-1][1])
+        self.assertNotIn('11273000000', calls.prompts[-1][1])
+        for note in final_payload['financial_data_notes']:
+            self.assertIn(note, result['report']['limitations'])
+        self.assertTrue(result['validation']['valid'])
+
+    def test_all_ambiguous_financial_contexts_still_allow_disclosure_synthesis(self):
+        diagnostics = []
+        rows = [financial_row(2024, amount, start=date(2023, 1, 1), end=date(2023, 12, 31), value_index=index)
+                for index, amount in enumerate((Decimal('100'), Decimal('110')))]
+        request = self.request()
+        request['financial_metrics'] = fetch_financial_metrics(FinancialConnection(rows),
+            'EXAMPLE', [2023, 2024], diagnostics=diagnostics)
+        request['financial_fact_diagnostics'] = diagnostics
+        result = synthesize(request, FakeCalls([finding('c1'), finding('c2'), FINAL_REPORT]))
+        self.assertTrue(result['validation']['valid'])
+        self.assertEqual(result['financial_trends'], [])
+        self.assertIn('financial trends could not be calculated', result['report']['financial_analysis'])
+        self.assertTrue(any(note.startswith('Omitted ') for note in result['report']['limitations']))
 
     def test_swks_identical_facts_with_mixed_decimals_are_deduplicated(self):
         rows = [

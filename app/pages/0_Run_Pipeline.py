@@ -1,6 +1,7 @@
 """Launch and monitor the PostgreSQL-backed SEC disclosure pipeline."""
 import re
 
+import pandas as pd
 import streamlit as st
 
 from sec_ui import components, pipeline_runs
@@ -162,9 +163,18 @@ def show_progress(ticker, years):
 
 def run_setup(running):
     st.subheader("Run setup")
-    query = (st.query_params.get("ticker", "AMD"), st.query_params.get("years", "2023, 2024, 2025"))
-    if not running and st.session_state.get("pipeline_setup_query") != query:
-        st.session_state["pipeline_setup_ticker"], st.session_state["pipeline_setup_years"] = query
+    query = (st.query_params.get("ticker"), st.query_params.get("years"))
+    fields = ("pipeline_setup_ticker", "pipeline_setup_years")
+    initialize = any(key not in st.session_state for key in fields)
+    if not running and (initialize or st.session_state.get("pipeline_setup_query") != query):
+        defaults = ("AMD", "2023, 2024, 2025")
+        if None in query:
+            history, _ = pipeline_runs.read_run_history()
+            if history:
+                latest = history[0]
+                defaults = (latest['ticker'].upper(), ', '.join(map(str, latest['years'])))
+        for key, value, default in zip(fields, query, defaults):
+            st.session_state[key] = default if value is None else value
     st.session_state["pipeline_setup_query"] = query
     if running:
         st.session_state["pipeline_setup_ticker"] = running["ticker"].upper()
@@ -225,6 +235,26 @@ def run_setup(running):
     return ticker, years, confirmed, job, progress
 
 
+def resume_retry_options(ticker, years, job, progress, *, prefix='pipeline_retry', log=None):
+    exhausted = any(entry.get('status') == 'stopped' and entry.get('retry_exhausted')
+                    for entry in (progress or {}).get('stages', []))
+    manual_stop = bool(job and job.get('stopped_by_user'))
+    retry_failed = exhausted or manual_stop
+    log = pipeline_runs.log_tail(ticker, years, job) if log is None else log
+    retry_required = bool(job and job.get("status") == "stopped"
+                          and not (exhausted or manual_stop) and "--retry-failed" in log)
+    if retry_required:
+        st.warning("An AI request failed or was interrupted. Select the retry option below to resume. "
+                   "Successful responses and completed stages will be reused.")
+        retry_failed = st.checkbox(
+            "Retry failed AI requests on resume",
+            key=f"{prefix}_{ticker}_{'-'.join(map(str, years))}_{job.get('run_id', '')}",
+            help="Applies to failed requests in unfinished extraction, alignment, change analysis and materiality. "
+                 "Existing request and token limits still apply.",
+        )
+    return retry_failed, not retry_required or retry_failed
+
+
 @st.fragment(run_every="3s")
 def run_panel():
     running = pipeline_runs.active_run()
@@ -248,24 +278,9 @@ def run_panel():
                 st.rerun()
     elif not complete:
         label = "Resume pipeline" if job or progress else "Start pipeline"
-        exhausted = any(entry.get('status') == 'stopped' and entry.get('retry_exhausted')
-                        for entry in (progress or {}).get('stages', []))
-        manual_stop = bool(job and job.get('stopped_by_user'))
-        retry_failed = exhausted or manual_stop
-        retry_required = bool(job and job.get("status") == "stopped"
-                              and not (exhausted or manual_stop)
-                              and "--retry-failed" in pipeline_runs.log_tail(ticker, years, job))
-        if retry_required:
-            st.warning("An AI request failed or was interrupted. Select the retry option below to resume. "
-                       "Successful responses and completed stages will be reused.")
-            retry_failed = st.checkbox(
-                "Retry failed AI requests on resume",
-                key=f"pipeline_retry_{ticker}_{'-'.join(map(str, years))}_{job.get('run_id', '')}",
-                help="Applies to failed requests in unfinished extraction, alignment, change analysis and materiality. "
-                     "Existing request and token limits still apply.",
-            )
+        retry_failed, retry_allowed = resume_retry_options(ticker, years, job, progress)
         if st.button(label, icon=":material/play_arrow:", type="primary",
-                     disabled=not (valid and confirmed and (not retry_required or retry_failed))):
+                     disabled=not (valid and confirmed and retry_allowed)):
             try:
                 options = {"retry_failed": True} if retry_failed else {}
                 pipeline_runs.start_run(ticker, years, **options)
@@ -283,6 +298,124 @@ def run_panel():
         show_progress(ticker, years)
     else:
         st.caption("Run status will appear after a valid ticker and fiscal years are entered.")
+
+
+def history_resume(record, records, active):
+    if record['display_status'] not in {'Failed', 'Interrupted', 'Stopped by user', 'Unfinished'}:
+        return
+    ticker, years = record['ticker'].upper(), record['years']
+    selection = f"{ticker} | FY{', FY'.join(map(str, years))}"
+    st.markdown(f'**Resume {selection}**')
+    st.caption('Continues from the latest saved checkpoints for this company and these years. '
+               'Completed stages and successful responses are reused; a new history entry records the resume attempt.')
+    latest = next(row for row in records if (row['ticker'], row['years']) == (record['ticker'], years))
+    try:
+        job, progress = pipeline_runs.read_run(ticker, years)
+    except pipeline_runs.RunError as error:
+        st.error(str(error))
+        return
+    complete = bool(progress and progress.get('full_pipeline_complete')) or latest['display_status'] == 'Completed'
+    if complete:
+        st.info('This company and fiscal-year selection has completed in a later attempt. View its saved Synthesis Report.')
+    if active:
+        st.info(f"{active['ticker'].upper()} is already running. Wait for it to finish or stop it before resuming another run.")
+    retry_failed, retry_allowed = False, True
+    if not complete and not active:
+        job = job or latest
+        retry_failed, retry_allowed = resume_retry_options(ticker, years, job, progress or latest.get('progress'),
+            prefix='pipeline_history_retry', log=pipeline_runs.history_log(job))
+    can_resume = not complete and active is None and retry_allowed
+    if st.button('Resume pipeline', key='pipeline_history_resume', icon=':material/play_arrow:',
+                 type='primary', disabled=not can_resume) and can_resume:
+        try:
+            pipeline_runs.start_run(ticker, years, resume_only=True, retry_failed=retry_failed)
+        except pipeline_runs.RunError as error:
+            st.error(str(error))
+        else:
+            st.query_params['ticker'] = ticker
+            st.query_params['years'] = ', '.join(map(str, years))
+            st.session_state['pipeline_history_notice'] = f'Resumed {selection}. Watch progress in Run setup & progress.'
+            st.rerun(scope='app')
+
+
+@st.fragment(run_every="10s")
+def history_panel():
+    st.subheader('Run history')
+    st.caption('Past companies and fiscal years, newest first. Times are in Singapore time (SGT). '
+               'New Start and Resume attempts are retained separately in PostgreSQL.')
+    records, warning = pipeline_runs.read_run_history()
+    if warning:
+        st.warning(warning)
+    if notice := st.session_state.pop('pipeline_history_notice', None):
+        st.success(notice)
+    st.button('Refresh history', icon=':material/refresh:', key='pipeline_history_refresh')
+    if not records:
+        st.info('No previous pipeline runs found. Your next run will appear here automatically.')
+        return
+
+    company, status, fiscal = st.columns(3)
+    companies = {row['ticker'].upper() for row in records}
+    previous_company = st.session_state.get('pipeline_history_company')
+    if previous_company and previous_company != 'All companies':
+        companies.add(previous_company)
+    statuses = {row['display_status'] for row in records}
+    previous_status = st.session_state.get('pipeline_history_status')
+    if previous_status and previous_status != 'All statuses':
+        statuses.add(previous_status)
+    years = {year for row in records for year in row['years']}
+    years.update(st.session_state.get('pipeline_history_years', []))
+    chosen_company = company.selectbox('Company', ['All companies', *sorted(companies)],
+                                       key='pipeline_history_company')
+    chosen_status = status.selectbox('Status', ['All statuses', *sorted(statuses)],
+                                    key='pipeline_history_status')
+    chosen_years = fiscal.multiselect('Contains fiscal years', sorted(years),
+                                      key='pipeline_history_years', help='Show runs containing every selected fiscal year.')
+    filtered = [row for row in records if (chosen_company == 'All companies' or row['ticker'].upper() == chosen_company)
+                and (chosen_status == 'All statuses' or row['display_status'] == chosen_status)
+                and set(chosen_years).issubset(row['years'])]
+    if not filtered:
+        st.info('No runs match these filters.')
+        return
+    table = pd.DataFrame([{
+        'Company': row['ticker'].upper(), 'Fiscal years': ', '.join(map(str, row['years'])),
+        'Started (SGT)': pipeline_runs.history_time_label(row.get('started_at')),
+        'Finished (SGT)': pipeline_runs.history_time_label(row['completed_at']) if row.get('completed_at') else '—',
+        'Status': row['display_status'], 'Last stage': row['last_stage'],
+    } for row in filtered])
+    st.caption(f'{len(filtered)} run record(s). Older runs show the records/checkpoints that were retained; '
+               'overwritten attempts cannot be reconstructed reliably.')
+    st.dataframe(table, hide_index=True, width='stretch')
+    st.download_button('Download run history CSV', table.to_csv(index=False).encode('utf-8'),
+                       file_name='pipeline_run_history.csv', mime='text/csv', key='pipeline_history_download')
+
+    with st.expander('Run details', expanded=True):
+        lookup = {row['run_id']: row for row in filtered}
+        if st.session_state.get('pipeline_history_run') not in lookup:
+            st.session_state['pipeline_history_run'] = next(iter(lookup))
+
+        def label(run_id):
+            row = lookup[run_id]
+            return (f"{pipeline_runs.history_time_label(row.get('started_at'))} | {row['ticker'].upper()} | "
+                    f"FY{', FY'.join(map(str, row['years']))} | {row['display_status']}")
+
+        selected = st.selectbox('Saved run', list(lookup), format_func=label, key='pipeline_history_run')
+        record = lookup[selected]
+        st.caption('History source: ' + record.get('source', 'Saved run'))
+        if record.get('error'):
+            st.warning(record['error'])
+        active = pipeline_runs.active_run()
+        history_resume(record, records, active)
+        if st.button('Load selection in Run setup', key='pipeline_history_load', disabled=active is not None,
+                     help='Fills in the company and years without starting a pipeline. Stop an active run before changing its setup.'):
+            st.query_params['ticker'] = record['ticker'].upper()
+            st.query_params['years'] = ', '.join(map(str, record['years']))
+            st.rerun(scope='app')
+        log = pipeline_runs.history_log(record)
+        if log:
+            st.caption('Recent activity from this attempt (up to 100 lines)')
+            st.code(log, language='text')
+        else:
+            st.caption('Detailed activity text was not retained for this older run.')
 
 
 components.setup("Run pipeline")
@@ -321,4 +454,8 @@ st.caption("Runs locally using PostgreSQL and the configured SEC and SoCLaaS cre
 st.caption("Before starting, make sure Docker Desktop is running and run `docker compose up -d` "
            "in the project folder to start PostgreSQL.")
 
-run_panel()
+setup_tab, history_tab = st.tabs(['Run setup & progress', 'Run history'])
+with setup_tab:
+    run_panel()
+with history_tab:
+    history_panel()

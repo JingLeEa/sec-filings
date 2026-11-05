@@ -5,6 +5,13 @@
 The player is centered and capped at 640 pixels wide (360 pixels tall at its
 16:9 aspect ratio). It shrinks to fit narrower screens.
 
+`home_intro.js` initializes muted playback before loading the source and retries
+when the player becomes ready or visible. This handles first-visit playback
+without navigating away and back. It runs through `st.html` with JavaScript
+enabled for these bundled assets only (Streamlit 1.52+). The player remains
+outside keyboard focus, has no controls, and blocks its media context menu.
+Explicit browser autoplay restrictions are respected.
+
 The animation introduces disclosure changes, then peer comparison, then the chatbot. The peer comparison is an illustration; the chatbot uses a saved result from the app. Numbered “Feature” labels are omitted.
 
 To update the animation, replace this file with a browser-compatible H.264 MP4 using the same filename. The current export is 1920 × 1080 at 30 fps, approximately 1.8 MB. No video-generation tools are needed to run or deploy the app.

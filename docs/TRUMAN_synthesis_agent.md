@@ -113,16 +113,44 @@ explicit file-oriented workflow.
 
 ## Outputs and validation
 
-Jing Le's fix deduplicates financial facts for the same concept, reporting period,
-unit and company-wide scope when their numeric amounts are exactly equal, even when
-their XBRL `decimals` or `precision` declarations differ. These declarations
-describe accuracy; they do not rescale the stored amount. The earliest source
-filing is selected with stable source-ID tie-breakers, retaining that source's
-accuracy metadata unchanged. Different numeric amounts still stop synthesis as
-conflicting facts; synthesis does not round them into agreement or automatically
-choose between possible restatements. This allows repeated equal comparative
-facts, such as SWKS's 2023 facts repeated in its 2024 and 2025 filings, without
-disabling the conflict check. See the [XBRL accuracy definitions](https://www.xbrl.org/Specification/XBRL-2.1/REC-2003-12-31/XBRL-2.1-REC-2003-12-31%2Bcorrected-errata-2013-02-20.html).
+Financial facts are grouped by concept, exact reporting period, unit and
+company-wide scope. Equal amounts are deduplicated even when XBRL `decimals` or
+`precision` declarations differ; these describe accuracy and do not rescale the
+stored amount. The earliest equivalent source is retained with stable source-ID
+tie-breakers, preserving its original accuracy metadata. See the
+[XBRL accuracy definitions](https://www.xbrl.org/Specification/XBRL-2.1/REC-2003-12-31/XBRL-2.1-REC-2003-12-31%2Bcorrected-errata-2013-02-20.html).
+
+When amounts differ between filing years, synthesis uses the value from the
+latest **selected source filing year** if that year's values agree. Its numeric
+value is used unchanged in trends and ratios. If the latest year itself contains
+unequal values, including conflicting extraction snapshots or filing forms, that
+context is omitted. Synthesis continues with other figures and disclosure
+findings; calculations requiring an omitted figure are excluded. It does not
+average amounts, round unequal values into agreement, or ask the LLM to choose.
+Source filing years establish this policy; database insertion/extraction IDs do
+not establish which unequal value is newer within the same year.
+
+The JSON's `financial_fact_diagnostics` records each affected context, every
+candidate's original value/text, accuracy metadata and source IDs, and the selected
+ID or omission reason. Selected metrics carry `fact_selection` metadata. Mandatory
+notes appear in both report limitations and the final model's input, so source
+differences and omissions remain visible even if the model omits them. Alternative
+values are retained for audit and are excluded from the model's financial inputs.
+The reason for a difference is not assumed to be a restatement, reclassification
+or extraction error. PostgreSQL XBRL source rows are not modified. The pipeline
+saves this report/audit metadata using its existing PostgreSQL storage.
+
+**USB failure:** `Conflicting financial facts share the same reporting period,
+concept, unit, and scope` stopped `synthesis_and_save`. The saved FY2023 operating
+cash flow was USD 8.447bn in the FY2023/FY2024 filings and USD 8.393bn in FY2025;
+FY2024 was USD 11.273bn in FY2024 and USD 11.350bn in FY2025. The former retrieval
+rule rejected any unequal amounts across filings; all five automatic retries
+therefore repeated the same deterministic error. The new policy selects FY2025's
+comparatives, retains all earlier versions and adds two report limitations.
+An offline regression reproduces these exact values, and read-only retrieval
+against the saved USB database returns 28 financial contexts and 27 calculations,
+resolving these two differences without an LLM call. Use **Resume pipeline** to
+retry the failed synthesis stage with saved upstream work.
 
 For the standalone file workflow, synthesis writes:
 

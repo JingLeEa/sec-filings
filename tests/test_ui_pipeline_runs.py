@@ -10,6 +10,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from sec_ui import pipeline_runs
+from artifact_support import MemoryArtifactStore
 
 
 class PipelineRunUiTests(unittest.TestCase):
@@ -22,6 +23,10 @@ class PipelineRunUiTests(unittest.TestCase):
         self.postgres_patch = patch.object(pipeline_runs, "_postgres_documents", return_value={})
         self.postgres_patch.start()
         self.addCleanup(self.postgres_patch.stop)
+        self.history_store = MemoryArtifactStore()
+        self.history_patch = patch.object(pipeline_runs, '_history_store', return_value=self.history_store)
+        self.history_patch.start()
+        self.addCleanup(self.history_patch.stop)
 
     def running_job(self):
         folder = pipeline_runs.run_folder('wfc', [2023, 2024, 2025])
@@ -30,6 +35,19 @@ class PipelineRunUiTests(unittest.TestCase):
                'status': 'running', 'pid': 12345}
         pipeline_runs._write_json(folder / 'ui_run.json', job)
         return folder, job
+
+    def test_history_resume_rechecks_completed_progress_before_launching_or_overwriting_metadata(self):
+        folder, job = self.running_job()
+        job.update(status='stopped', exit_code=1)
+        pipeline_runs._write_json(folder / 'ui_run.json', job)
+        original = (folder / 'ui_run.json').read_bytes()
+        with patch.object(pipeline_runs, 'active_run', return_value=None), \
+             patch.object(pipeline_runs, 'read_run', return_value=(job, {'full_pipeline_complete': True})), \
+             patch.object(pipeline_runs.subprocess, 'Popen') as launch:
+            with self.assertRaisesRegex(pipeline_runs.RunError, 'already completed'):
+                pipeline_runs.start_run('WFC', job['years'], resume_only=True)
+        launch.assert_not_called()
+        self.assertEqual((folder / 'ui_run.json').read_bytes(), original)
 
     @unittest.skipUnless(os.name == 'posix', 'POSIX process groups')
     def test_stop_targets_only_the_verified_runner_and_resume_reuses_cached_work(self):
@@ -397,6 +415,8 @@ class RunPipelinePageTests(unittest.TestCase):
             patch.dict(os.environ, {"SEC_UI_BOOTSTRAP_TEST_DATA": "0"}),
             patch.object(pipeline_runs, "ROOT", Path(self.temp.name)),
             patch.object(pipeline_runs, "_postgres_documents", return_value={}),
+            patch.object(pipeline_runs, "_history_documents", return_value={}),
+            patch.object(pipeline_runs, '_history_store', return_value=MemoryArtifactStore()),
         ):
             context.start()
             self.addCleanup(context.stop)
@@ -408,6 +428,193 @@ class RunPipelinePageTests(unittest.TestCase):
         page = AppTest.from_file(str(path), default_timeout=20).run()
         self.assertFalse(page.exception, [error.value for error in page.exception])
         return page
+
+    def history_documents(self):
+        return {
+            pipeline_runs.HISTORY_PREFIX + 'wfc.json': {
+                'ticker': 'wfc', 'years': [2023, 2024], 'run_id': 'wfc-past',
+                'status': 'stopped', 'exit_code': 1,
+                'started_at': '2026-11-04T23:10:00Z', 'completed_at': '2026-11-04T23:20:00Z',
+                'activity_log': 'Materiality request timed out.',
+                'progress': {'stages': [{'stage': 'materiality_2023_2024', 'status': 'stopped', 'exit_code': 1}]}},
+            pipeline_runs.HISTORY_PREFIX + 'amd.json': {
+                'ticker': 'amd', 'years': [2022, 2023], 'run_id': 'amd-past',
+                'status': 'complete', 'started_at': '2026-11-03T01:00:00Z',
+                'completed_at': '2026-11-03T02:00:00Z',
+                'progress': {'full_pipeline_complete': True}},
+        }
+
+    def test_history_filters_show_past_company_years_singapore_time_and_details(self):
+        with patch.object(pipeline_runs, '_history_documents', return_value=self.history_documents()):
+            page = self.page()
+            self.assertEqual([tab.label for tab in page.tabs], ['Run setup & progress', 'Run history'])
+            table = page.dataframe[0].value
+            self.assertEqual(table['Company'].tolist(), ['WFC', 'AMD'])
+            self.assertEqual(table.iloc[0]['Fiscal years'], '2023, 2024')
+            self.assertEqual(table.iloc[0]['Started (SGT)'], '05 Nov 2026, 07:10:00')
+            self.assertTrue(any(code.value == 'Materiality request timed out.' for code in page.code))
+            self.assertTrue(any(button.proto.label == 'Download run history CSV'
+                                for button in page.get('download_button')))
+            page.selectbox(key='pipeline_history_status').select('Completed').run()
+            self.assertEqual(page.dataframe[0].value['Company'].tolist(), ['AMD'])
+            page.multiselect(key='pipeline_history_years').select(2024).run()
+            self.assertTrue(any(info.value == 'No runs match these filters.' for info in page.info))
+            page.multiselect(key='pipeline_history_years').unselect(2024).run()
+            page.selectbox(key='pipeline_history_status').select('All statuses').run()
+            page.selectbox(key='pipeline_history_company').select('WFC').run()
+            self.assertEqual(page.dataframe[0].value['Company'].tolist(), ['WFC'])
+        self.assertFalse(page.exception)
+
+    def test_history_selection_fills_run_setup_without_starting_pipeline(self):
+        with patch.object(pipeline_runs, '_history_documents', return_value=self.history_documents()), \
+             patch.object(pipeline_runs, 'start_run') as start:
+            page = self.page()
+            page.selectbox(key='pipeline_history_run').select('amd-past').run()
+            page.button(key='pipeline_history_load').click().run()
+            self.assertEqual(page.text_input(key='pipeline_setup_ticker').value, 'AMD')
+            self.assertEqual(page.text_input(key='pipeline_setup_years').value, '2022, 2023')
+            self.assertFalse(page.exception)
+        start.assert_not_called()
+
+    def test_run_setup_defaults_to_newest_history_row_and_reads_its_progress(self):
+        with patch.object(pipeline_runs, '_history_documents', return_value=self.history_documents()), \
+             patch.object(pipeline_runs, 'read_run', return_value=(None, None)) as read, \
+             patch.object(pipeline_runs, 'start_run') as start:
+            page = self.page()
+            self.assertEqual(page.text_input(key='pipeline_setup_ticker').value, 'WFC')
+            self.assertEqual(page.text_input(key='pipeline_setup_years').value, '2023, 2024')
+            self.assertTrue(any('WFC | FY2023, FY2024' in caption.value for caption in page.caption))
+            self.assertTrue(all(call.args == ('WFC', [2023, 2024]) for call in read.call_args_list))
+        start.assert_not_called()
+
+    def test_latest_history_default_does_not_overwrite_edits_when_history_refreshes(self):
+        documents = self.history_documents()
+        with patch.object(pipeline_runs, '_history_documents', side_effect=lambda: documents):
+            page = self.page()
+            page.text_input(key='pipeline_setup_ticker').set_value('NVDA').run()
+            page.text_input(key='pipeline_setup_years').set_value('2021, 2022').run()
+            documents[pipeline_runs.HISTORY_PREFIX + 'new.json'] = {
+                'run_id': 'newest', 'ticker': 'usb', 'years': [2024, 2025],
+                'started_at': '2026-11-05T23:00:00Z', 'status': 'complete'}
+            page.run()
+            self.assertEqual(page.text_input(key='pipeline_setup_ticker').value, 'NVDA')
+            self.assertEqual(page.text_input(key='pipeline_setup_years').value, '2021, 2022')
+            self.assertFalse(page.exception)
+
+    def test_explicit_url_selection_takes_precedence_over_history_default(self):
+        from streamlit.testing.v1 import AppTest
+
+        path = Path(__file__).resolve().parents[1] / 'app/pages/0_Run_Pipeline.py'
+        with patch.object(pipeline_runs, '_history_documents', return_value=self.history_documents()):
+            page = AppTest.from_file(str(path), default_timeout=20)
+            page.query_params.update(ticker='CAT', years='2020, 2021')
+            page.run()
+            self.assertFalse(page.exception)
+            self.assertEqual(page.text_input(key='pipeline_setup_ticker').value, 'CAT')
+            self.assertEqual(page.text_input(key='pipeline_setup_years').value, '2020, 2021')
+
+    def test_empty_history_keeps_the_existing_sample_defaults(self):
+        page = self.page()
+        self.assertEqual(page.text_input(key='pipeline_setup_ticker').value, 'AMD')
+        self.assertEqual(page.text_input(key='pipeline_setup_years').value, '2023, 2024, 2025')
+
+    def test_history_selection_cannot_change_setup_during_an_active_run(self):
+        active = {'ticker': 'usb', 'years': [2023, 2024], 'run_id': 'active', 'status': 'running'}
+        with patch.object(pipeline_runs, '_history_documents', return_value=self.history_documents()), \
+             patch.object(pipeline_runs, 'active_run', return_value=active):
+            page = self.page()
+            self.assertTrue(page.button(key='pipeline_history_load').disabled)
+            self.assertTrue(page.button(key='pipeline_history_resume').disabled)
+            self.assertEqual(page.text_input(key='pipeline_setup_ticker').value, 'USB')
+
+    def test_failed_history_run_resumes_its_company_years_without_changing_other_history(self):
+        documents = self.history_documents()
+        with patch.object(pipeline_runs, '_history_documents', return_value=documents), \
+             patch.object(pipeline_runs, 'start_run') as start:
+            page = self.page()
+            page.text_input(key='pipeline_setup_ticker').set_value('NVDA').run()
+            page.text_input(key='pipeline_setup_years').set_value('2021, 2022').run()
+            self.assertFalse(page.button(key='pipeline_history_resume').disabled)
+            page.button(key='pipeline_history_resume').click().run()
+            self.assertFalse(page.exception)
+            self.assertEqual(page.text_input(key='pipeline_setup_ticker').value, 'WFC')
+            self.assertEqual(page.text_input(key='pipeline_setup_years').value, '2023, 2024')
+            self.assertTrue(any('Resumed WFC | FY2023, FY2024' in item.value for item in page.success))
+            self.assertEqual(documents[pipeline_runs.HISTORY_PREFIX + 'wfc.json']['status'], 'stopped')
+        start.assert_called_once_with('WFC', [2023, 2024], resume_only=True, retry_failed=False)
+
+    def test_old_failed_history_cannot_resume_after_a_later_attempt_completed(self):
+        documents = self.history_documents()
+        documents[pipeline_runs.HISTORY_PREFIX + 'later.json'] = {
+            'ticker': 'wfc', 'years': [2023, 2024], 'run_id': 'wfc-completed',
+            'status': 'complete', 'started_at': '2026-11-05T01:00:00Z',
+            'progress': {'full_pipeline_complete': True}}
+        with patch.object(pipeline_runs, '_history_documents', return_value=documents), \
+             patch.object(pipeline_runs, 'start_run') as start:
+            page = self.page()
+            page.selectbox(key='pipeline_history_run').select('wfc-past').run()
+            self.assertTrue(page.button(key='pipeline_history_resume').disabled)
+            self.assertTrue(any('completed in a later attempt' in item.value for item in page.info))
+            page.selectbox(key='pipeline_history_run').select('wfc-completed').run()
+            self.assertFalse(any(button.key == 'pipeline_history_resume' for button in page.button))
+        start.assert_not_called()
+
+    def test_current_database_completion_blocks_history_resume_even_before_history_refresh(self):
+        with patch.object(pipeline_runs, '_history_documents', return_value=self.history_documents()), \
+             patch.object(pipeline_runs, 'read_run', return_value=(None, {'full_pipeline_complete': True})), \
+             patch.object(pipeline_runs, 'start_run') as start:
+            page = self.page()
+            self.assertTrue(page.button(key='pipeline_history_resume').disabled)
+        start.assert_not_called()
+
+    def test_history_resume_uses_latest_attempt_retry_option_and_resets_for_a_new_failure(self):
+        documents = self.history_documents()
+        latest = documents[pipeline_runs.HISTORY_PREFIX + 'wfc.json']
+        latest['activity_log'] = 'An earlier API attempt failed. Use --retry-failed for another attempt.'
+        with patch.object(pipeline_runs, '_history_documents', side_effect=lambda: documents), \
+             patch.object(pipeline_runs, 'start_run') as start:
+            page = self.page()
+            self.assertTrue(page.button(key='pipeline_history_resume').disabled)
+            page.checkbox(key='pipeline_history_retry_WFC_2023-2024_wfc-past').check().run()
+            self.assertFalse(page.button(key='pipeline_history_resume').disabled)
+            latest['run_id'] = 'new-failure'
+            page.run()
+            self.assertTrue(page.button(key='pipeline_history_resume').disabled)
+            page.checkbox(key='pipeline_history_retry_WFC_2023-2024_new-failure').check().run()
+            page.button(key='pipeline_history_resume').click().run()
+            self.assertFalse(page.exception)
+        start.assert_called_once_with('WFC', [2023, 2024], resume_only=True, retry_failed=True)
+
+    def test_history_resume_automatically_permits_retry_after_exhausted_stage_retries(self):
+        documents = self.history_documents()
+        documents[pipeline_runs.HISTORY_PREFIX + 'wfc.json']['progress']['stages'][0]['retry_exhausted'] = True
+        with patch.object(pipeline_runs, '_history_documents', return_value=documents), \
+             patch.object(pipeline_runs, 'start_run') as start:
+            page = self.page()
+            page.button(key='pipeline_history_resume').click().run()
+            self.assertFalse(page.exception)
+        start.assert_called_once_with('WFC', [2023, 2024], resume_only=True, retry_failed=True)
+
+    def test_history_resume_failure_stays_visible_without_automatic_relaunch(self):
+        with patch.object(pipeline_runs, '_history_documents', return_value=self.history_documents()), \
+             patch.object(pipeline_runs, 'start_run', side_effect=pipeline_runs.RunError('Database unavailable')) as start:
+            page = self.page()
+            page.button(key='pipeline_history_resume').click().run()
+            self.assertTrue(any(item.value == 'Database unavailable' for item in page.error))
+            self.assertFalse(page.exception)
+        self.assertEqual(start.call_count, 1)
+
+    def test_history_filters_remain_selected_when_a_run_status_changes(self):
+        documents = self.history_documents()
+        with patch.object(pipeline_runs, '_history_documents', side_effect=lambda: documents):
+            page = self.page()
+            page.selectbox(key='pipeline_history_status').select('Failed').run()
+            documents[pipeline_runs.HISTORY_PREFIX + 'wfc.json']['status'] = 'complete'
+            documents[pipeline_runs.HISTORY_PREFIX + 'wfc.json']['progress'] = {'full_pipeline_complete': True}
+            page.run()
+            self.assertFalse(page.exception)
+            self.assertEqual(page.selectbox(key='pipeline_history_status').value, 'Failed')
+            self.assertTrue(any(info.value == 'No runs match these filters.' for info in page.info))
 
     def test_download_retry_remains_running_and_recovery_is_explained(self):
         progress = {"stages": [{"stage": "text_2023", "phase": "preprocessing", "status": "running"}]}

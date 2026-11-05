@@ -109,13 +109,17 @@ def fetch_change_evidence(conn, company: str, previous_year: int,
     return results
 
 
-def fetch_financial_metrics(conn, company: str, years: list[int]) -> list[dict]:
+def fetch_financial_metrics(conn, company: str, years: list[int], *,
+                            diagnostics: list[dict] | None = None) -> list[dict]:
     """Fetch annual company-wide XBRL facts from the loaded XBRL view.
 
     Instant facts are labeled with the calendar year of ``instant_date``. The
     view has no verified issuer fiscal-year-end date with which to validate it.
     Equal amounts for the same context are deduplicated even when their accuracy
     declarations differ; the selected source's metadata is retained unchanged.
+    Differing comparative values use the latest selected source filing year.
+    If that latest year is itself ambiguous, omit the context. Diagnostics retain
+    every version and the selection/omission reason without changing stored facts.
     """
     if not years:
         return []
@@ -175,7 +179,7 @@ def fetch_financial_metrics(conn, company: str, years: list[int]) -> list[dict]:
         )
         rows = cursor.fetchall()
 
-    grouped: dict[tuple, list[dict]] = defaultdict(list)
+    grouped: dict[tuple, list[tuple[dict, tuple]]] = defaultdict(list)
     for row in rows:
         (row_company, year, form_type, filing_id, extraction_id, taxonomy_year,
          concept, label, amount, unit, period_type, scope, value_index, value_text,
@@ -231,36 +235,43 @@ def fetch_financial_metrics(conn, company: str, years: list[int]) -> list[dict]:
         grouped[period_key].append((metric, equivalence_key))
 
     selected_metrics = []
-    conflicts = {}
-    for period_key, records in grouped.items():
+    for period_key in sorted(grouped, key=lambda key: tuple(map(str, key))):
+        records = grouped[period_key]
+        ordered = sorted((metric for metric, _ in records), key=lambda metric: (
+            metric['source_filing_year'], metric['filing_id'],
+            metric['extraction_id'], metric['value_index'], metric['id']))
         # decimals/precision declare accuracy, not a different amount or scale.
-        # Identical normalized amounts are safe to deduplicate; unequal amounts
-        # still fail rather than being rounded, averaged, or silently preferred.
-        if len({equivalence_key for _, equivalence_key in records}) > 1:
-            conflicts[period_key] = [
-                {"source_filing_year": metric["source_filing_year"],
-                 "value": metric["value"], "unit": metric["unit"],
-                 "scope": metric["metric_scope"],
-                 "decimals": metric["decimals"], "precision": metric["precision"],
-                 "id": metric["id"]}
-                for metric, _ in records
-            ]
+        # Preserve existing provenance for equal values. A different amount in
+        # a later annual filing is a new version, not an arithmetic/API failure.
+        if len({equivalence_key for _, equivalence_key in records}) == 1:
+            selected_metrics.append(ordered[0])
             continue
-        # Prefer the earliest source filing containing the equivalent fact.
-        # Stable tie-breakers preserve deterministic provenance across query plans.
-        selected_metrics.append(min(
-            (metric for metric, _ in records),
-            key=lambda metric: (
-                metric["source_filing_year"], metric["filing_id"],
-                metric["extraction_id"], metric["value_index"], metric["id"],
-            ),
-        ))
-    if conflicts:
-        raise ValueError(
-            "Conflicting financial facts share the same reporting period, concept, "
-            "unit, and scope: "
-            f"{conflicts}"
-        )
+        latest_year = ordered[-1]['source_filing_year']
+        latest = [(metric, key) for metric, key in records
+                  if metric['source_filing_year'] == latest_year]
+        ambiguous = len({key for _, key in latest}) > 1
+        chosen = next(metric for metric in ordered if metric['source_filing_year'] == latest_year)
+        diagnostic = {
+            **{key: chosen[key] for key in ('concept', 'year', 'unit', 'metric_scope',
+                'concept_period_type', 'period_start_date', 'period_end_date', 'instant_date')},
+            'policy': 'latest_available_source_filing_year',
+            'latest_source_filing_year': latest_year,
+            'resolution': 'omitted_ambiguous_latest_filing' if ambiguous else 'selected_latest_filing',
+            'selected_id': None if ambiguous else chosen['id'],
+            'candidates': [{key: metric[key] for key in (
+                'id', 'source_filing_year', 'form_type', 'filing_id', 'extraction_id',
+                'value', 'value_text', 'decimals', 'precision',
+                'decimals_missing', 'precision_missing')} for metric in ordered],
+        }
+        if diagnostics is not None:
+            diagnostics.append(diagnostic)
+        if not ambiguous:
+            chosen['fact_selection'] = {
+                'policy': diagnostic['policy'],
+                'differing_source_values': True,
+                'alternative_source_ids': [metric['id'] for metric in ordered if metric['id'] != chosen['id']],
+            }
+            selected_metrics.append(chosen)
     return sorted(
         selected_metrics,
         key=lambda metric: (

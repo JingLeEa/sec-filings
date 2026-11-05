@@ -2,6 +2,7 @@
 
 from contextlib import redirect_stderr, redirect_stdout
 from contextlib import contextmanager
+from decimal import Decimal
 import io
 import json
 import os
@@ -30,13 +31,19 @@ class SynthesisStorageTests(unittest.TestCase):
             "members": [], "source_evidence": [], "evidence_count": 0,
         }
         self.result = {"report": {"key_findings": [{"evidence_ids": ["change-1"]}]}}
+        self.metrics, self.financial_diagnostics = [], []
         self.usage = {"attempted_requests": 2, "reported_tokens": {"total_tokens": 25}}
         self.read_conn, self.write_conn = MagicMock(), MagicMock()
         for conn in (self.read_conn, self.write_conn):
             conn.__enter__.return_value = conn
 
     def run_synthesis(self):
+        def financial_facts(*args, diagnostics):
+            diagnostics.extend(self.financial_diagnostics)
+            return self.metrics
+
         def model(request, calls):
+            self.model_request = request
             calls.usage_path.parent.mkdir(parents=True, exist_ok=True)
             calls.usage_path.write_text(json.dumps(self.usage))
             # A completed model response remains reusable after database errors.
@@ -48,7 +55,7 @@ class SynthesisStorageTests(unittest.TestCase):
              patch.object(storage, "connection_arguments", return_value={}), \
              patch.object(psycopg, "connect", side_effect=[self.read_conn, self.write_conn]), \
              patch.object(synthesis, "fetch_change_evidence", return_value=[self.change]), \
-             patch.object(synthesis, "fetch_financial_metrics", return_value=[]), \
+             patch.object(synthesis, "fetch_financial_metrics", side_effect=financial_facts), \
              patch.object(synthesis, "synthesize", side_effect=model), \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()) as errors:
             code = synthesis.main(["--company", "AMD", "--years", "2024", "2025",
@@ -74,6 +81,27 @@ class SynthesisStorageTests(unittest.TestCase):
         self.assertNotIn("private-test-secret", errors)
         self.assertFalse(self.report.exists())
         self.assertTrue((self.root / "synthesis/cache/completed.json").exists())
+
+    def test_financial_versions_and_mandatory_notes_are_saved_in_postgres_and_report(self):
+        self.metrics = [{'id': 'xbrl:chosen', 'value': Decimal('8393000000'), 'value_text': '8393000000'}]
+        self.financial_diagnostics = [{
+            'concept': 'us-gaap:NetCashProvidedByUsedInOperatingActivities',
+            'year': 2023, 'unit': 'USD', 'concept_period_type': 'duration',
+            'period_start_date': '2023-01-01', 'period_end_date': '2023-12-31',
+            'latest_source_filing_year': 2025, 'selected_id': 'xbrl:chosen',
+            'resolution': 'selected_latest_filing', 'candidates': [
+                {'id': 'xbrl:older', 'source_filing_year': 2023, 'value': Decimal('8447000000'), 'value_text': '8447000000'},
+                {'id': 'xbrl:chosen', 'source_filing_year': 2025, 'value': Decimal('8393000000'), 'value_text': '8393000000'}]}]
+        code, errors = self.run_synthesis()
+        self.assertEqual(code, 0, errors)
+        serialized = self.write_conn.cursor.return_value.__enter__.return_value.execute.call_args.args[1][2]
+        stored = json.loads(serialized)
+        self.assertEqual(stored, json.loads(self.report.read_text()))
+        self.assertEqual(self.model_request['financial_fact_diagnostics'], self.financial_diagnostics)
+        self.assertEqual([item['value_text'] for item in stored['financial_fact_diagnostics'][0]['candidates']],
+                         ['8447000000', '8393000000'])
+        self.assertTrue(any('latest selected FY2025' in note for note in stored['report']['limitations']))
+        self.assertTrue(any('latest selected FY2025' in note for note in stored['limitations']))
 
     def test_failed_upsert_rolls_back_and_publishes_no_report(self):
         cursor = self.write_conn.cursor.return_value.__enter__.return_value

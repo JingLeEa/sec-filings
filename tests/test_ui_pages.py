@@ -25,6 +25,7 @@ def sample_environment(monkeypatch, tmp_path):
     monkeypatch.setenv("SEC_UI_REFRESH_AUTOSTART", "0")
     monkeypatch.setattr(pipeline_runs, "ROOT", tmp_path)
     monkeypatch.setattr(pipeline_runs, "_postgres_documents", lambda *args: {})
+    monkeypatch.setattr(pipeline_runs, "_history_documents", lambda: {})
     st.cache_data.clear()
     yield
     st.cache_data.clear()
@@ -503,7 +504,7 @@ def test_ai_approved_scope_shows_labels_and_allows_manual_override_across_pages(
     match_id, llm = record["match_id"], record["methods"]["llm"]
     at.selectbox(key="manual_selected").select(match_id).run()
     assert not at.selectbox(key="manual_label").disabled
-    assert any(message.value == f"**{llm}**" for message in at.markdown)
+    assert any(f"Original AI change label: {llm}" in message.value for message in at.info)
     assert any("No human review saved" in message.value for message in at.caption)
     assert any(f"AI label: {llm}" in label for label in at.selectbox(key="manual_selected").options)
     manual = "Reduced" if llm != "Reduced" else "Expanded"
@@ -524,7 +525,7 @@ def test_ai_approved_scope_shows_labels_and_allows_manual_override_across_pages(
     fresh.segmented_control(key="review_scope").select("AI approved").run()
     fresh.selectbox(key="manual_selected").select(match_id).run()
     assert fresh.selectbox(key="manual_label").value == manual
-    assert any(message.value == f"**{llm}**" for message in fresh.markdown)
+    assert any(f"Original AI change label: {llm}" in message.value for message in fresh.info)
     assert any(f"Human-reviewed change label: {manual}" in message.value for message in fresh.success)
     assert not fresh.exception and not fresh.error
     final = next(row for row in data.load_comparison("amd", 2024, 2025)["records"] if row["match_id"] == match_id)

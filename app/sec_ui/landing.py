@@ -13,6 +13,7 @@ import streamlit as st
 
 PAGES_DIR = Path(__file__).resolve().parents[1] / "pages"
 INTRO_VIDEO = Path(__file__).resolve().parents[1] / "assets" / "sec-filings-intro.mp4"
+INTRO_SCRIPT = INTRO_VIDEO.with_name("home_intro.js")
 
 BLUE, TEAL, PURPLE, AMBER, GREEN, ROSE, INDIGO, GREY = (
     "#2563eb", "#0d9488", "#7c3aed", "#d97706", "#16a34a", "#e11d48", "#4f46e5", "#64748b")
@@ -70,7 +71,9 @@ STATUS_INFO = {
 CSS = """
 .st-key-home_intro video { border-radius: 14px; border: 1px solid rgba(128,128,128,0.28);
                            background: #f4f1e8; display: block; width: 100%; height: auto;
+                           aspect-ratio: 16 / 9;
                            pointer-events: none; user-select: none; }
+.st-key-home_intro video::-webkit-media-controls { display: none !important; }
 .hero { padding: 1.4rem 1.6rem; border-radius: 14px; margin-bottom: 1rem;
         border: 1px solid rgba(128,128,128,0.28);
         background: linear-gradient(135deg, rgba(37,99,235,0.13), rgba(124,58,237,0.10) 55%, rgba(13,148,136,0.10)); }
@@ -132,11 +135,15 @@ def render_intro() -> None:
         encoded = b64encode(INTRO_VIDEO.read_bytes()).decode("ascii")
         with st.container(key="home_intro", horizontal_alignment="center"):
             st.html(
-                '<video autoplay muted loop playsinline tabindex="-1" '
+                '<div role="img" aria-label="SEC disclosure comparison introduction">'
+                '<video id="sec-home-intro-video" autoplay muted loop playsinline preload="auto" '
+                'width="1920" height="1080" tabindex="-1" inert '
                 'disablepictureinpicture disableremoteplayback '
-                'aria-label="SEC disclosure comparison introduction" '
-                f'src="data:video/mp4;base64,{encoded}"></video>',
+                f'data-src="data:video/mp4;base64,{encoded}"></video></div>'
+                # Both the script and video are bundled project assets, never external/user HTML.
+                f'<script>{INTRO_SCRIPT.read_text(encoding="utf-8")}</script>',
                 width=640,
+                unsafe_allow_javascript=True,
             )
 
 
