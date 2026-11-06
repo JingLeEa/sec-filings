@@ -45,13 +45,16 @@ class DisclosureIndex:
         self.section = Tfidf({key: str(d.get("section", "")) for key, d in records.items()})
 
     def search(self, query: str, year: str, *, item: str | None = None, anchor: dict | None = None,
-               limit: int = 5, offset: int = 0) -> list[dict]:
+               limit: int = 5, offset: int = 0, eligible_items: set[str] | None = None) -> list[dict]:
         if anchor is not None:
             if item is not None and item != anchor["item"]:
                 raise ValueError("Search Item must match the anchor's Item.")
             item = anchor["item"]
         if not isinstance(item, str) or not item:
             raise ValueError("Search requires a specific SEC Item.")
+        allowed_items = {item} if eligible_items is None else eligible_items
+        if item not in allowed_items:
+            raise ValueError("Eligible Items must include the search Item.")
         if anchor:
             summary = self.summary.vector(anchor.get("summary", ""))
             content = self.content.vector(anchor["content"])
@@ -60,7 +63,7 @@ class DisclosureIndex:
             summary, content, section = (self.summary.vector(query), self.content.vector(query), {})
         hits = []
         for key, record in self.records.items():
-            if record["fiscal_year"] != year or record["item"] != item:
+            if record["fiscal_year"] != year or record["item"] not in allowed_items:
                 continue
             s = self.summary.cosine(summary, self.summary.vectors[key])
             c = self.content.cosine(content, self.content.vectors[key])
@@ -71,7 +74,7 @@ class DisclosureIndex:
                 bonus = (.02 * (anchor.get("taxonomy") == record.get("taxonomy"))
                          + .03 * self.section.cosine(section, self.section.vectors[key]))
             hits.append({"disclosure_id": key, "score": round(base + bonus, 6),
-                         "text_score": round(base, 6), "same_item": True})
+                         "text_score": round(base, 6), "same_item": record["item"] == item})
         return sorted(hits, key=lambda hit: (-hit["score"], hit["disclosure_id"]))[offset:offset + limit]
 
     def candidates(self, previous_year: str, current_year: str, top_k: int = 5) -> dict[str, list[dict]]:

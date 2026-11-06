@@ -221,7 +221,7 @@ def progress(job):
         if (isinstance(report, dict) and report.get("target_selection") == job["target_selection"]
                 and sorted(report.get("items", [])) == sorted(job["items"])):
             work = {key: report.get(key) for key in
-                    ("jobs_completed", "jobs_planned", "jobs_failed", "run_complete")}
+                    ("jobs_completed", "jobs_planned", "jobs_failed", "run_complete", "jobs_reused", "new_api_requests")}
             # A worker failure in older runners can leave the summary frozen while
             # other workers keep saving validated jobs. Count only this profile.
             job_prefix = path.rsplit("/", 1)[0] + "/jobs/"

@@ -9,8 +9,10 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from sec_disclosure.llm.client import CompletionResult, LLMError
+from sec_disclosure.indexing.disclosure_retrieval import DisclosureIndex
 from sec_disclosure.agents.peer_comparison import (
     attach_alignment_context,
+    build_agent_payload,
     load_company,
     make_candidates,
     run,
@@ -73,6 +75,76 @@ class PeerComparisonTests(unittest.TestCase):
         peers = {"bbb": load_company(self.root / "disclosures", "bbb", "2024")}
         ranked = make_candidates(targets, peers, 3)[self.target["disclosure_id"]]["bbb"]
         return targets[0], ranked
+
+    def matching_record(self, ticker, item, year="2025"):
+        did = f"{ticker.lower()}_{year}_{item}_D001"
+        row = disclosure(ticker, did, item, "Credit losses increased as loan quality deteriorated.", did + "_S1")
+        return {**row, "ticker": ticker.upper(), "record_id": ticker.lower() + "::" + did,
+                "fiscal_year": year, "source_status": "source_validated",
+                "sentences": row["sources"][0]["sentences"], "year_over_year_context": []}
+
+    def test_peer_item_matrix_is_bidirectional_and_always_same_year(self):
+        expected = {"1": {"1"}, "1A": {"1A"}, "7": {"7", "15"},
+                    "8": {"8", "15"}, "15": {"7", "8", "15"}}
+        targets = [self.matching_record("AAA", item) for item in expected]
+        peers = {"bbb": [self.matching_record("BBB", item, year)
+                         for year in ("2024", "2025") for item in expected]}
+        candidates = make_candidates(targets, peers, 50)
+        for target in targets:
+            with self.subTest(item=target["item"]):
+                selected = candidates[target["disclosure_id"]]["bbb"]
+                self.assertEqual({row["item"] for row in selected}, expected[target["item"]])
+                self.assertTrue(all(row["fiscal_year"] == "2025" for row in selected))
+
+    def test_shared_index_keeps_strict_item_scoping_unless_explicitly_expanded(self):
+        target = self.matching_record("AAA", "7")
+        peers = [self.matching_record("BBB", item) for item in ("7", "8", "15")]
+        records = {row["record_id"]: row for row in [target, *peers]}
+        index = DisclosureIndex(records)
+        strict = index.search("", "2025", anchor=target, limit=50)
+        self.assertEqual({records[hit["disclosure_id"]]["item"] for hit in strict}, {"7"})
+        expanded = index.search("", "2025", anchor=target, limit=50, eligible_items={"7", "15"})
+        self.assertEqual({records[hit["disclosure_id"]]["item"] for hit in expanded}, {"7", "15"})
+        self.assertTrue(any(not hit["same_item"] for hit in expanded))
+
+    def test_cross_item_prompt_result_and_citations_preserve_original_items(self):
+        target = self.matching_record("AAA", "7")
+        peer = self.matching_record("BBB", "15")
+        candidates = make_candidates([target], {"bbb": [peer]}, 3)[target["disclosure_id"]]
+        payload, checked_target, checked_peers = build_agent_payload(target, candidates, ["bbb"], "2025")
+        self.assertEqual(payload["target"]["item"], "7")
+        self.assertEqual(payload["peer_candidates"]["BBB"][0]["item"], "15")
+        result = validate_response({"comparisons": [{
+            "peer_ticker": "BBB", "peer_disclosure_id": peer["disclosure_id"],
+            "relationship": "same_topic", "comparison": "Both describe deteriorating loan quality.",
+            "target_sentence_ids": [target["sentences"][0]["sentence_id"]],
+            "peer_sentence_ids": [peer["sentences"][0]["sentence_id"]],
+        }], "no_match": []}, checked_target, checked_peers, ["bbb"])
+        comparison = result[0]["comparisons"][0]
+        self.assertEqual((comparison["target_item"], comparison["peer_item"]), ("7", "15"))
+        self.assertTrue(comparison["cross_item"])
+        self.assertEqual([row["item"] for row in comparison["evidence"]], ["7", "15"])
+        self.assertEqual((target["item"], peer["item"]), ("7", "15"))
+
+    def test_validation_rejects_disallowed_item_pairs_and_wrong_years(self):
+        for target_item, peer_item, peer_year, message in (
+            ("1", "15", "2025", "disallowed SEC Item"),
+            ("1A", "15", "2025", "disallowed SEC Item"),
+            ("7", "8", "2025", "disallowed SEC Item"),
+            ("8", "7", "2025", "disallowed SEC Item"),
+            ("15", "1A", "2025", "disallowed SEC Item"),
+            ("7", "15", "2024", "same fiscal year"),
+        ):
+            with self.subTest(target=target_item, peer=peer_item, year=peer_year):
+                target = self.matching_record("AAA", target_item)
+                peer = self.matching_record("BBB", peer_item, peer_year)
+                with self.assertRaisesRegex(ValueError, message):
+                    validate_response({"comparisons": [{
+                        "peer_ticker": "BBB", "peer_disclosure_id": peer["disclosure_id"],
+                        "relationship": "same_topic", "comparison": "Related loan quality.",
+                        "target_sentence_ids": [target["sentences"][0]["sentence_id"]],
+                        "peer_sentence_ids": [peer["sentences"][0]["sentence_id"]],
+                    }], "no_match": []}, target, {"bbb": [peer]}, ["bbb"])
 
     def retry_args(self):
         return Namespace(ticker="aaa", peers=["bbb"], year="2024", items=["1A"],

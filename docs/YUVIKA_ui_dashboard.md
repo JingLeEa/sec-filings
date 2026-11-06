@@ -137,6 +137,31 @@ When a stopped run's log asks for `--retry-failed`, the page shows **Retry faile
 
 For **Peer comparison**, first prepare the target and every peer for the same fiscal year in Run pipeline. At minimum, all companies need stored 10-K filings and extracted disclosures. The default material-changes selection also needs a target disclosure marked material in a completed adjacent-year alignment; synthesis is not a peer prerequisite. The all-disclosures selection does not require materiality. The page explains this requirement and links to Run pipeline.
 
+Items 1 and 1A compare only within their original Item. Items 7 and 8 may each
+match Item 15 in either direction; Item 15 can match Items 7, 8 and 15, while
+Item 7 does not directly match Item 8. Selecting Item 7 or 8 automatically adds
+Item 15 targets and eligible candidates. The readiness count includes these
+additional targets, and material-change filtering still applies. The same
+fiscal year and source-citation validation are required for every match. The
+page and exports preserve both source Item labels (for example, JPM Item 15
+against BAC Item 7); eligibility does not guarantee topic comparability.
+An information notice immediately below the Item selector confirms automatic
+Item 15 inclusion when Item 7 or 8 is selected and at least one selected company
+has saved Item 15 disclosures for that fiscal year. It is hidden when Item 15
+is already explicitly selected or when the conditions no longer apply.
+
+Expanding a peer selection within the same target-disclosure mode reuses compatible completed target comparisons and
+runs only additional or changed work. The progress panel and saved report show
+the number of reused target comparisons and new API requests. Adding Item 8 can
+change Item 15's candidate pool, so affected Item 15 jobs are recomputed even
+when other Items are reused. Cached comparison provenance and original request
+ledgers remain available in PostgreSQL; reuse does not duplicate API usage.
+Different Item selections keep separate saved-report rows, and rerunning the
+same selection updates its existing row. No manual cache toggle is required.
+**Material changes** and **All disclosures** use separate caches, even if they
+currently select the same disclosures. Switching modes does not reuse the other
+mode's results; switching back can reuse that mode's existing cache.
+
 Choose the target, peers, fiscal year, Items and selection mode, then click **Check prerequisites**. Missing company data or material target disclosures disables launch and shows the backend's reason. Editing the selection requires a fresh check. **Start peer comparison** rechecks inputs and starts `run_peer_comparison_pipeline.py` in a background process; the backend checks again before model requests. One UI-launched peer run is allowed at a time, and launch waits while a UI-launched main pipeline is running. The page polls saved target-comparison counts every three seconds, retains an activity log, and supports resuming stopped/partial runs. It does not automatically run the main pipeline.
 
 Peer reports appear directly from PostgreSQL in the saved-comparison selector in `auto` or `postgres` mode. `SEC_UI_DATA_SOURCE=files` restricts that viewer to local exports and fixtures. Different peer sets, Items and target selections have separate database records. UI process metadata and logs live under `data/peer_runs/`; model caches and progress remain in PostgreSQL. The source is labelled, and fixture reports retain their sample-data warning.

@@ -13,10 +13,15 @@ It describes what happens from SEC filing input through cleaned chunk output, se
 SEC 10-K source
   -> download or read HTML
   -> parse visible HTML blocks
-  -> detect Items
-  -> if an Item is still missing, try the SoCLaaS/Qwen boundary fallback
-  -> optionally follow incorporated annual/financial report references
+  -> detect Items using headings and cross-reference indexes
+  -> include Item 15 when explicitly requested or triggered by reference text
+  -> recover missing supported Items with the baseline LLM and page fallback
+  -> reassign qualifying embedded report content between Items 7, 8 and 15
   -> merge continued narrative blocks
+  -> optionally follow incorporated annual/financial report references
+  -> recheck embedded report ownership
+  -> recover recognized short Item 7/8 pointers that remain unresolved
+  -> deduplicate shared source blocks
   -> resolve inline footnotes
   -> detect section/subsection headers
   -> assign paragraph/chunk IDs
@@ -234,17 +239,22 @@ Refer to Note 1 of the Notes to the Consolidated Financial Statements in Part IV
 
 This is intentionally not fuzzy matching. It is a narrow rule for short pointer sections and explicit Item 15 references.
 
+Missing or empty Items 7 and 8 do not, by themselves, trigger Item 15 inclusion.
+Without recognizable reference text, request Item 15 explicitly if it is needed.
+This extraction rule is separate from peer comparison's automatic inclusion of
+saved Item 15 disclosures when the user selects Item 7 or 8.
+
 ## 5. Item Boundary Detection
 
-The current Item end boundaries are:
+The initial heading-based boundaries are:
 
-```text
-Item 1  ends at Item 1A, 1B, 1C, or 2
-Item 1A ends at Item 1B, 1C, or 2
-Item 7  ends at Item 7A or 8
-Item 8  ends at Item 9, 9A, 9B, or 9C
-Item 15 ends at Item 16 or Signatures
-```
+| Item | Candidate start | End boundary |
+| --- | --- | --- |
+| 1 | After an Item 1 heading | Nearest later Item 1A, 1B, 1C or 2 |
+| 1A | After an Item 1A heading | Nearest later Item 1B, 1C or 2 |
+| 7 | After an Item 7 heading | Nearest later Item 7A or 8 |
+| 8 | After an Item 8 heading | Nearest later Item 9, 9A, 9B or 9C |
+| 15 | After an Item 15 heading | Nearest later Item 16 or Signatures; document end if neither exists |
 
 The block-based path finds Item headings by applying `parse_item_heading` to each block.
 
@@ -279,6 +289,59 @@ For each requested or auto-included Item:
 4. If Item 15 has no explicit end marker, allow it to run to the end of the document.
 5. Build all candidate ranges.
 6. Choose the candidate with the greatest total block-text length.
+
+Items 7 and 8 require a recognized end boundary for this initial method; a
+candidate without one is skipped. A zero-length candidate is also skipped.
+The document-end exception applies to Item 15, not Items 7 and 8. These are
+initial ranges: index recovery, report-reference resolution, LLM recovery and
+embedded-report reassignment can replace them before output is written.
+
+### Missing bodies versus reference-only Items 7 and 8
+
+The amount of extracted text does not itself determine where an Item starts.
+The extractor distinguishes these cases:
+
+| Situation | Current behavior |
+| --- | --- |
+| Item heading/range is missing or yields no text | Try index-guided extraction, then LLM recovery if still missing |
+| Item contains a short paragraph pointing to content elsewhere | Retain the initial range, inspect references, and recheck qualifying unresolved pointers later |
+| Item is small but does not satisfy the pointer rules | It is not automatically treated as missing; use `--agent-check-items` to force a check |
+| Item 15 contains an embedded annual/financial report | Use its TOC and, when the safeguards apply, reassign the report's content to Items 7 and 8 |
+
+The workflow in `extract_filing` is:
+
+1. Try explicit Item headings. Run the index-guided extractor for missing Items
+   and also for Item 7 even if an initial Item 7 range was found. Index titles
+   and page references can locate a descriptive body heading such as
+   `Management's discussion and analysis`; the body need not repeat `Item 7`.
+2. If Item 15 is requested or its pointer trigger fires, try Item 15's supported
+   TOC layout, then its direct heading/index paths as needed. If no structured
+   sections exist at all, also try headings in cleaned plain text.
+3. Send still-missing supported Items to the baseline LLM locator, with automatic
+   printed-page recovery when unresolved references/boundaries require it.
+   The model selects existing source blocks; it does not generate Item bodies.
+   Only Items 1, 1A, 7 and 8 are supported LLM outputs. Item 15 remains code-based.
+4. Reassign qualifying embedded report blocks, merge narrative blocks, follow
+   incorporated-report references when enabled, and recheck embedded ownership.
+5. Recheck recognized short Item 7/8 pointers that were not already recovered or
+   resolved through an incorporated report. The extractor's pointer-only check
+   currently requires at most three blocks and 450 normalized characters, plus
+   pointer wording and a destination. This is distinct from the 1,800-character
+   short-reference branch of Item 15 auto-inclusion. Inside the locator, its
+   additional page-pointer check has its own scope of fewer than 1,000 characters.
+6. Remove shared source blocks, resolve footnotes and write the final Item text,
+   chunks and sentences.
+
+Printed-page recovery uses index/body page references and verified footer
+source IDs to establish intervals. A single TOC start page is not sufficient
+evidence for a complete body range, and missing page boundaries are not filled
+by guessing. If reliable boundaries cannot be established, recovery can leave
+the Item unresolved. Other available Items may still be written; successful
+extraction is not a guarantee that every requested Item was recovered.
+
+See the [LLM fallback guide](JINGLE_fallback_llm_extraction.md),
+[Item 15 TOC handling](#12-item-15-toc-guided-extraction), and
+[shared-source deduplication](#shared-source-deduplication) for the individual paths.
 
 Important implication:
 
@@ -1060,6 +1123,18 @@ If there are overlapping referenced sections and `--include-reference-overlaps` 
 
 Before chunk records are built, the extractor resolves overlapping Item blocks:
 
+`assign_embedded_report_blocks` is a guarded reassignment step, not a missing-Item
+locator. It requires existing nonempty block lists for all three Items 7, 8 and
+15, a common source document, an Item 8 financial-report reference trigger, and
+at least ten Item 15 blocks before the financial-report boundary that also occur
+in Item 7. Missing Items must first be located by the heading, index or agent paths.
+
+The financial boundary prefers the first recognized
+`Management's Report on Internal Control Over Financial Reporting` or
+`Report of Independent Registered Public Accounting Firm` heading. If neither is
+found, it can use `Notes to Consolidated Financial Statements`. Item 8 then runs
+to the glossary heading, Signatures, or the end of that selected Item 15 range.
+
 1. If Items 7, 8, and 15 come from the same source, Item 8 points into the
    financial report, and Item 15 substantially repeats Item 7 before a
    financial-report heading, the embedded report is assigned to one Item at a
@@ -1076,6 +1151,17 @@ paragraphs. The same wording at a different source position, or in a different
 referenced report, is retained. Different text at the same position is also
 retained. `--include-reference-overlaps` disables both overlap reassignment and
 this final shared-source deduplication.
+
+For a JPM-style filing, this can leave MD&A in the final Item 7 file, the
+internal-control/auditor/financial-report narrative in Item 8, and exhibit notes
+in Item 15, even when the annual-report body appears physically after the Item
+15 exhibit index in the HTML. The final files describe assigned content ownership;
+they are not necessarily literal slices between the original numbered headings.
+Exact source-block IDs vary by filing and parser output and are not hardcoded
+boundary rules. Item text and chunk files alone do not show which recovery
+stage ran; `<year>_sources.json` records incorporated-report sources, not complete
+per-Item agent provenance. Retain extraction logs or diagnostic response traces
+when that distinction is needed.
 
 For referenced reports:
 

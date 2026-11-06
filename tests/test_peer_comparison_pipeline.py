@@ -74,6 +74,58 @@ class PeerComparisonPipelineTests(unittest.TestCase):
         self.assertIn('"input_source": "postgres"', output.getvalue())
         self.assertEqual(list(self.root.iterdir()), [])
 
+    def test_financial_items_expand_to_item15_targets_and_candidates(self):
+        for selected, target_item, peer_item in (("7", "7", "15"), ("7", "15", "7"),
+                                                ("8", "8", "15"), ("8", "15", "8"),
+                                                ("15", "15", "7"), ("15", "15", "8")):
+            with self.subTest(selected=selected, target=target_item, peer=peer_item):
+                records = inputs()
+                for ticker, item in (("aaa", target_item), ("bbb", peer_item)):
+                    row = records["disclosures"][ticker]["disclosures.json"]["disclosures"][0]
+                    row["item"] = item
+                args = agent.parse_args(self.args + ["--items", selected])
+                targets, peers, _, count = agent.prepare_comparison_inputs(args, records)
+                self.assertEqual(targets[0]["item"], target_item)
+                self.assertEqual(peers["bbb"][0]["item"], peer_item)
+                self.assertEqual(count, 1)
+                self.assertEqual(args.items, [selected])
+
+    def test_item7_selection_does_not_enable_direct_item8_comparisons(self):
+        records = inputs()
+        records["disclosures"]["aaa"]["disclosures.json"]["disclosures"][0]["item"] = "7"
+        records["disclosures"]["bbb"]["disclosures.json"]["disclosures"][0]["item"] = "8"
+        args = agent.parse_args(self.args + ["--items", "7"])
+        with self.assertRaisesRegex(ValueError, "no disclosures for eligible comparison Items"):
+            agent.prepare_comparison_inputs(args, records)
+
+    def test_cross_item_comparison_is_stored_and_old_policy_cache_is_not_reused(self):
+        records = inputs()
+        records["disclosures"]["aaa"]["disclosures.json"]["disclosures"][0]["item"] = "7"
+        records["disclosures"]["bbb"]["disclosures.json"]["disclosures"][0]["item"] = "15"
+        response = CompletionResult(json.dumps({"comparisons": [{
+            "peer_ticker": "BBB", "peer_disclosure_id": "bbb_2024_1A_D001",
+            "relationship": "same_topic", "comparison": "Both describe supplier concentration.",
+            "target_sentence_ids": ["aaa-s1"], "peer_sentence_ids": ["bbb-s1"],
+        }], "no_match": []}), "test-model", "stop",
+            {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15})
+        with patch.object(pipeline, "read_peer_inputs", return_value=records), \
+             patch.object(agent, "load_config", return_value=SimpleNamespace(
+                 model="test-model", base_url="https://example.test")), \
+             patch.object(agent, "request_completion", return_value=response) as request, \
+             patch.object(pipeline, "store_peer_report") as save, redirect_stdout(io.StringIO()):
+            # Keep the old cache profile separate even when the selected Items
+            # and input documents are identical to the new policy's inputs.
+            with patch.object(agent, "POLICY_VERSION", "peer_comparison_v3"):
+                self.assertEqual(pipeline.main(self.args + ["--items", "7"]), 0)
+            self.assertEqual(pipeline.main(self.args + ["--items", "7"]), 0)
+            self.assertEqual(pipeline.main(self.args + ["--items", "7"]), 0)
+        self.assertEqual(request.call_count, 2)
+        saved = save.call_args.args[0]
+        self.assertEqual(saved["items"], ["7"])
+        self.assertEqual(saved["included_target_items"], ["15", "7"])
+        compared = saved["comparisons"][0]["peer_results"][0]["comparisons"][0]
+        self.assertEqual((compared["target_item"], compared["peer_item"]), ("7", "15"))
+
     def test_peer_report_is_stored_only_after_comparison(self):
         events = []
         with patch.object(pipeline, "read_peer_inputs", side_effect=lambda *a, **k: events.append("checked") or inputs()), \

@@ -9,7 +9,7 @@ from sec_ui import components, config, data, peer_runs, pipeline_runs, reports
 
 components.setup("Peer comparison")
 st.title("Peer comparison")
-st.caption("How a company's disclosure on a topic compares with its peers' disclosures in the same year and SEC Item.")
+st.caption("How a company's disclosure on a topic compares with its peers' disclosures in the same fiscal year.")
 
 
 @st.fragment(run_every="3s")
@@ -76,6 +76,8 @@ def run_peer_panel(value):
             done = work.get("jobs_completed") or 0
             st.progress(min(1.0, done / work["jobs_planned"]),
                         text=f"{done} of {work['jobs_planned']} target disclosures compared")
+            if work.get("jobs_reused"):
+                st.caption(f"Reused {work['jobs_reused']} saved target comparisons.")
             if work.get("jobs_failed"):
                 st.warning(f"{work['jobs_failed']} target comparisons failed after automatic recovery. Other comparisons continue; "
                            "successful jobs are retained for resume.")
@@ -131,25 +133,30 @@ year = right.number_input("Fiscal year", min_value=1900, max_value=2200, step=1,
                           key="peer_run_year", disabled=bool(active))
 peer_tickers = [part for part in re.split(r"[,\s]+", peer_text.strip()) if part]
 item_options = tuple(item for item in peer_runs.ITEMS if item != "15")
+has_item15 = False
+try:
+    valid_selection = peer_runs.selection(ticker, peer_tickers, int(year))
+except peer_runs.RunError:
+    valid_selection = None
+if valid_selection:
+    try:
+        item_options = peer_runs.available_items(ticker, peer_tickers, int(year))
+        has_item15 = "15" in item_options
+    except peer_runs.RunError as error:
+        st.warning(str(error))
 if active:
     # The disabled form describes the exact running selection, including its
     # original Items, even if saved company data changes during the run.
     item_options = tuple(item for item in peer_runs.ITEMS if item != "15" or item in active["items"])
-else:
-    try:
-        valid_selection = peer_runs.selection(ticker, peer_tickers, int(year))
-    except peer_runs.RunError:
-        valid_selection = None
-    if valid_selection:
-        try:
-            item_options = peer_runs.available_items(ticker, peer_tickers, int(year))
-        except peer_runs.RunError as error:
-            st.warning(str(error))
 st.session_state["peer_run_items"] = [item for item in st.session_state["peer_run_items"] if item in item_options]
 items = st.multiselect("Items to compare", item_options, key="peer_run_items", disabled=bool(active))
+if has_item15 and set(items) & {"7", "8"} and "15" not in items:
+    st.info("Item 15 is automatically included with your selected Item 7 or 8 because it is available "
+            "for at least one selected company. No separate selection is needed.", icon=":material/info:")
 mode = st.selectbox("Target disclosures", ["material_changes", "all"],
                     key="peer_run_mode", disabled=bool(active),
                     format_func=lambda value: "Material changes" if value == "material_changes" else "All disclosures")
+st.caption("Items 1 and 1A match within their own Item. Items 7 and 8 can also match Item 15 in either direction.")
 if mode == "material_changes":
     adjacent = int(year) - 1 if year > 1900 else int(year) + 1
     st.caption(f"For the target, complete Run pipeline through Materiality with FY{year} and an adjacent year "
@@ -197,6 +204,9 @@ except (data.DataError, peer_runs.RunError) as error:
     st.error(str(error))
     st.stop()
 st.caption("Report source: PostgreSQL" if source == "postgres" else "Report source: local file")
+if peer.get("jobs_reused"):
+    st.caption(f"Reused {peer['jobs_reused']} saved target comparisons; "
+               f"{peer.get('new_api_requests', 0)} new API requests in that invocation.")
 
 if peer.get("_sample_data"):
     st.warning(components.safe(f"Sample data: {peer['_sample_data']}"))
@@ -255,6 +265,9 @@ for disclosure_id, group in view.groupby("target_disclosure_id", sort=False):
             if row["status"] != "compared":
                 st.caption("A missing comparison does not show the peer is silent on this topic; it means the saved retrieval found nothing usable.")
                 continue
+            if row["peer_item"]:
+                st.caption(f"{row['target_ticker']} Item {row['target_item']} ↔ "
+                           f"{row['peer_ticker']} Item {row['peer_item']}")
             peer_result = next((p for p in job.get("peer_results", []) if p.get("peer_ticker") == row["peer_ticker"]), {})
             comp = next((c for c in peer_result.get("comparisons", []) if c.get("peer_disclosure_id") == row["peer_disclosure_id"]), {})
             left, right = st.columns(2)

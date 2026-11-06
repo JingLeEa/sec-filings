@@ -214,9 +214,51 @@ class PeerPageTests(unittest.TestCase):
         self.assertEqual(metrics["Peer comparisons made"], "3")
         self.assertTrue(any("Sample data" in row.value for row in page.warning))
 
+    def test_cross_item_report_displays_both_source_items_and_exports_them(self):
+        fixture = Path(__file__).parent / "fixtures/peer_comparison/NVDA/2024/peer_comparison.json"
+        report = json.loads(fixture.read_text())
+        report.update(jobs_reused=1, new_api_requests=2)
+        job = report["comparisons"][0]
+        job["item"] = "7"
+        comp = job["peer_results"][0]["comparisons"][0]
+        comp.update(target_item="7", peer_item="15", cross_item=True)
+        with patch.object(reports, "load_peer", return_value=report):
+            page = self.page()
+        self.assertTrue(any("NVDA Item 7 ↔ AMD Item 15" in row.value for row in page.caption))
+        flat = next(row for row in reports.peer_rows(report) if row["peer_disclosure_id"] == comp["peer_disclosure_id"])
+        self.assertEqual((flat["target_item"], flat["peer_item"], flat["cross_item"]), ("7", "15", True))
+        self.assertIn("NVDA Item 7 ↔ AMD Item 15", reports.peer_markdown(report))
+        self.assertIn("peer_item", reports.rows_to_csv([flat]))
+        self.assertTrue(any("Reused 1 saved target comparisons" in row.value for row in page.caption))
+        self.assertIn("Reused 1 saved target comparisons", reports.peer_markdown(report))
+        self.assertTrue(any("Items 7 and 8 can also match Item 15" in row.value for row in page.caption))
+
     def test_item_15_is_hidden_when_no_selected_company_has_it(self):
         page = self.page()
         self.assertNotIn("15", page.multiselect(key="peer_run_items").options)
+        self.assertFalse(any("Item 15 is automatically included" in row.value for row in page.info))
+
+    def test_auto_item15_notice_follows_selected_items_without_changing_selection(self):
+        with patch.object(peer_runs, "available_items", return_value=peer_runs.ITEMS):
+            page = self.page()
+            self.assertTrue(any("Item 15 is automatically included" in row.value for row in page.info))
+            self.assertNotIn("15", page.multiselect(key="peer_run_items").value)
+            page.multiselect(key="peer_run_items").unselect("7").unselect("8").run()
+            self.assertFalse(any("Item 15 is automatically included" in row.value for row in page.info))
+            page.multiselect(key="peer_run_items").select("8").run()
+            self.assertTrue(any("Item 15 is automatically included" in row.value for row in page.info))
+            page.multiselect(key="peer_run_items").select("15").run()
+            self.assertFalse(any("Item 15 is automatically included" in row.value for row in page.info))
+
+    def test_active_run_shows_auto_item15_notice_without_adding_explicit_item15(self):
+        job = {**peer_runs.selection("JPM", ["BAC"], 2025, ["7"], "all"),
+               "status": "running", "run_id": "active", "started_at": "2026-11-06T03:00:00+00:00"}
+        with patch.object(peer_runs, "active_run", return_value=job), \
+             patch.object(peer_runs, "available_items", return_value=peer_runs.ITEMS):
+            page = self.page()
+        self.assertTrue(any("Item 15 is automatically included" in row.value for row in page.info))
+        self.assertEqual(page.multiselect(key="peer_run_items").value, ["7"])
+        self.assertTrue(page.multiselect(key="peer_run_items").disabled)
 
     def test_item_15_updates_for_changed_companies_and_year_and_clears_stale_selection(self):
         def available(ticker, peers, year):
@@ -227,11 +269,13 @@ class PeerPageTests(unittest.TestCase):
             page = self.page()
             page.text_input(key="peer_run_peers").set_value("CRUS, SWKS").run()
             self.assertIn("15", page.multiselect(key="peer_run_items").options)
+            self.assertTrue(any("Item 15 is automatically included" in row.value for row in page.info))
             page.multiselect(key="peer_run_items").select("15").run()
             self.assertIn("15", page.multiselect(key="peer_run_items").value)
             page.number_input(key="peer_run_year").set_value(2025).run()
             self.assertNotIn("15", page.multiselect(key="peer_run_items").options)
             self.assertNotIn("15", page.multiselect(key="peer_run_items").value)
+            self.assertFalse(any("Item 15 is automatically included" in row.value for row in page.info))
             page.number_input(key="peer_run_year").set_value(2024).run()
             page.text_input(key="peer_run_peers").set_value("CRUS").run()
             self.assertNotIn("15", page.multiselect(key="peer_run_items").options)

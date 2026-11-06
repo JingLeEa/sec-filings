@@ -285,6 +285,7 @@ def peer_rows(data: dict) -> list:
         for peer in job.get("peer_results", []):
             base = {"target_ticker": job.get("target_ticker", data.get("target", "")),
                     "fiscal_year": data.get("fiscal_year", ""), "item": job.get("item", ""),
+                    "target_item": job.get("item", ""),
                     "target_disclosure_id": job.get("target_disclosure_id", ""), "target_topic": job.get("target_topic", ""),
                     "peer_ticker": peer.get("peer_ticker", ""), "status": peer.get("status", ""),
                     "status_label": PEER_STATUS_LABELS.get(peer.get("status", ""), peer.get("status", "")),
@@ -292,6 +293,7 @@ def peer_rows(data: dict) -> list:
             comparisons = peer.get("comparisons") or []
             if not comparisons:
                 rows.append({**base, "peer_disclosure_id": "", "relationship": "", "comparison": peer.get("rationale", ""),
+                             "peer_item": "", "cross_item": False,
                              "target_sentence_ids": "", "peer_sentence_ids": "", "source_urls": ""})
             for comp in comparisons:
                 target_ids, peer_ids, urls = [], [], []
@@ -301,6 +303,7 @@ def peer_rows(data: dict) -> list:
                         if sentence.get("source_url"):
                             urls.append(sentence["source_url"])
                 rows.append({**base, "peer_disclosure_id": comp.get("peer_disclosure_id", ""),
+                             "peer_item": comp.get("peer_item", ""), "cross_item": comp.get("cross_item", False),
                              "relationship": comp.get("relationship", ""), "comparison": comp.get("comparison", ""),
                              "target_sentence_ids": "; ".join(target_ids), "peer_sentence_ids": "; ".join(peer_ids),
                              "source_urls": "; ".join(dict.fromkeys(urls))})
@@ -310,6 +313,9 @@ def peer_rows(data: dict) -> list:
 def peer_markdown(data: dict) -> str:
     lines = [f"# Peer comparison: {data.get('target', '')} {data.get('fiscal_year', '')}",
              f"Peers: {', '.join(data.get('peers', []))}", ""]
+    if data.get('jobs_reused'):
+        lines += [f"Reused {data['jobs_reused']} saved target comparisons; "
+                  f"{data.get('new_api_requests', 0)} new API requests in this invocation.", ""]
     if not data.get("run_complete", True):
         lines += [f"Partial run: {data.get('jobs_completed', '?')} of {data.get('jobs_planned', '?')} disclosures compared.", ""]
     for job in data.get("comparisons", []):
@@ -323,6 +329,9 @@ def peer_markdown(data: dict) -> str:
             for comp in peer.get("comparisons") or []:
                 lines += ["", f"{comp.get('comparison', '')}", "", f"- Relationship: {comp.get('relationship', '')}",
                           f"- Peer disclosure: {comp.get('peer_disclosure_id', '')}"]
+                if comp.get('peer_item'):
+                    lines.append(f"- Source Items: {data.get('target', '')} Item {job.get('item', '')} ↔ "
+                                 f"{peer.get('peer_ticker', '')} Item {comp['peer_item']}")
                 for citation in comp.get("evidence", []):
                     for sentence in citation.get("sentences", []):
                         lines.append(f"- {citation.get('side', '')} sentence {sentence.get('sentence_id', '')}: {sentence.get('source_url', '')}")

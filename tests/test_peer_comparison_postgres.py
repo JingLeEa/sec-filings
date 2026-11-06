@@ -216,6 +216,56 @@ class PeerComparisonPostgresTests(unittest.TestCase):
             with checkpoint_saver(workspace.root / 'graph/checkpoints.sqlite') as saver:
                 self.assertEqual(saver.conn.execute('SELECT id FROM saved_jobs').fetchone()[0], 7)
 
+    def test_incremental_items_reuse_jobs_without_report_or_request_ledger_conflicts(self):
+        with psycopg.connect(**self.arguments) as conn:
+            for ticker in ("aaa", "bbb"):
+                row = disclosure(ticker, f"{ticker}_2024_1_D001", "1",
+                                 "We manufacture semiconductor processors for cloud customers.", f"{ticker}-1-s1")
+                conn.execute("""INSERT INTO disclosures
+                    (disclosure_id,filing_id,item,topic,summary,content,taxonomy,review_status,sources)
+                    SELECT %s,filing_id,%s,%s,%s,%s,%s,'accepted',%s::jsonb
+                    FROM filings WHERE company=%s AND fiscal_year=2024""",
+                    (row['disclosure_id'], row['item'], row['topic'], row['summary'], row['content'],
+                     row['taxonomy'], json.dumps(row['sources']), ticker))
+        response = CompletionResult(json.dumps({"comparisons": [], "no_match": [
+            {"peer_ticker": "BBB", "reason": "No sufficiently comparable candidate."}]}),
+            "test-model", "stop", {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15})
+        with patch.object(agent, "load_config", return_value=SimpleNamespace(
+                model="test-model", base_url="https://example.test")), \
+             patch.object(agent, "request_completion", return_value=response) as request, \
+             redirect_stdout(io.StringIO()):
+            self.assertEqual(pipeline.main(self.args + ["--items", "1"]), 0)
+            with psycopg.connect(**self.arguments) as conn:
+                before = dict(conn.execute("SELECT path,content FROM pipeline_artifacts "
+                    "WHERE namespace='peer' AND path LIKE '%/requests/%.json'").fetchall())
+            self.assertEqual(pipeline.main(self.args + ["--items", "1", "1A"]), 0)
+            self.assertEqual(request.call_count, 2)
+            with psycopg.connect(**self.arguments) as conn:
+                reports = conn.execute("SELECT items,report FROM peer_comparison_reports "
+                    "WHERE target_ticker='AAA' AND peer_tickers=ARRAY['BBB']::text[]").fetchall()
+                self.assertEqual(len(reports), 2)
+                expanded = next(report for items, report in reports if items == ['1', '1A'])
+                self.assertTrue(expanded['run_complete'])
+                self.assertEqual(expanded['jobs_reused'], 1)
+                self.assertEqual(expanded['new_api_requests'], 1)
+                self.assertEqual(len({row['target_disclosure_id'] for row in expanded['comparisons']}), 2)
+                after = dict(conn.execute("SELECT path,content FROM pipeline_artifacts "
+                    "WHERE namespace='peer' AND path LIKE '%/requests/%.json'").fetchall())
+                self.assertEqual(len(after), 2)
+                self.assertTrue(all(after[key] == value for key, value in before.items()))
+                self.assertEqual(conn.execute("SELECT count(*) FROM pipeline_artifacts "
+                    "WHERE namespace='peer' AND path LIKE '%/shared_jobs/%.json'").fetchone()[0], 2)
+            self.assertEqual(pipeline.main(self.args + ["--items", "1", "1A"]), 0)
+            self.assertEqual(request.call_count, 2)
+            with psycopg.connect(**self.arguments) as conn:
+                self.assertEqual(conn.execute("SELECT count(*) FROM peer_comparison_reports").fetchone()[0], 2)
+            # Different Item profiles still share the same writer lock.
+            with PostgresArtifactStore('peer').lock('peer_comparison/aaa/2024/bbb'), \
+                 redirect_stderr(io.StringIO()):
+                self.assertEqual(pipeline.main(self.args + ["--items", "1", "1A", "7"]), 1)
+            self.assertEqual(request.call_count, 2)
+        self.assertEqual(list(self.root.iterdir()), [])
+
     def test_fallback_page_and_pointer_caches_persist_in_postgres_without_local_files(self):
         from sec_disclosure.pipelines import run_full_pipeline as full
         from sec_disclosure.extraction import sec_10k_extractor as extractor
