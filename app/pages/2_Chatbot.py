@@ -34,9 +34,41 @@ except Exception as error:  # noqa: BLE001 - never show a stack trace to a reade
 st.sidebar.caption(components.safe(f"Answers: {bot.llm_description}"))
 if use_llm and not bot.llm_enabled:
     st.sidebar.info("No AI key found, so answers are templates built from the search results.")
-if st.sidebar.button("Clear conversation", width="stretch"):
+chat.restore_latest_conversation(bot)
+if st.sidebar.button("New conversation", width="stretch", icon=":material/add_comment:",
+                     help="Start fresh. This conversation stays saved and can be reopened below."):
     chat.forget_conversation()
     st.rerun()
+
+saved = chat.saved_conversations()
+if saved:
+    current_id = st.session_state.get("chat_conversation_id")
+    by_id = {c["conversation_id"]: c for c in saved}
+    options = ([None] if current_id is None else []) + list(by_id)
+    if current_id is not None and current_id not in by_id:
+        options.insert(0, current_id)
+
+    def _label(conversation_id):
+        if conversation_id is None:
+            return "New conversation (not saved yet)"
+        found = by_id.get(conversation_id)
+        if found is None:
+            return "This conversation"
+        when = found["updated_at"].astimezone().strftime("%d %b %H:%M") if found.get("updated_at") else ""
+        count = found.get("questions") or 0
+        return f"{found['title']} · {count} question{'s' if count != 1 else ''} · {when}"
+
+    picked = st.sidebar.selectbox("Past conversations", options, index=options.index(current_id),
+                                  format_func=_label, key=f"chat_pick_{current_id}")
+    if picked != current_id and picked is not None:
+        chat.open_conversation(bot, picked)
+        st.rerun()
+    if current_id is not None and st.sidebar.button("Delete this conversation", width="stretch",
+                                                    icon=":material/delete:"):
+        chat.delete_conversation(current_id)
+        st.rerun()
+if problem := st.session_state.get("chat_history_problem"):
+    st.sidebar.caption(components.safe(problem))
 last = st.session_state["chat_history"][-1] if st.session_state["chat_history"] else None
 if last is not None and getattr(last, "filters", None):
     shown = last.filters
@@ -150,7 +182,9 @@ if question:
                 message = components.safe(f"Sorry, that question could not be answered. {error}")
                 st.error(message)
                 st.session_state["chat_history"].append({"question": question, "error": message})
+                chat.save_turn(question, error=message)
         if reply is not None:
             st.session_state["chat_history"].append(reply)
+            chat.save_turn(question, reply=reply, plan=bot.last_plan)
     if reply is not None or st.session_state["chat_history"][-1:] and isinstance(st.session_state["chat_history"][-1], dict):
         st.rerun()  # redraw from the saved history so the page looks the same as after any other action

@@ -14,6 +14,7 @@ SCHEMAS: list[tuple[Path, str, str]] = [
     (INIT / "09_chatbot.sql", "chatbot_schema_version", "1"),
     (INIT / "10_chatbot_peer_comparisons.sql", "peer_comparison_schema_version", "3"),
     (INIT / "11_chatbot_synthesis.sql", "synthesis_schema_version", "2"),
+    (INIT / "12_chatbot_history.sql", "chatbot_history_schema_version", "1"),
 ]
 
 
