@@ -36,7 +36,8 @@ class PeerComparisonPostgresTests(unittest.TestCase):
         cls.addClassCleanup(cls.drop_database)
         with psycopg.connect(**cls.arguments) as conn:
             for name in ("01_schema.sql", "02_disclosures_alignments.sql", "04_xbrl_data.sql",
-                         "05_pipeline_stage_snapshots.sql", "06_synthesis_reports.sql", "07_peer_comparison_reports.sql"):
+                         "05_pipeline_stage_snapshots.sql", "06_synthesis_reports.sql", "07_peer_comparison_reports.sql",
+                         "08_pipeline_artifacts.sql"):
                 conn.execute((storage.ROOT / "db/init" / name).read_text())
 
     @classmethod
@@ -60,7 +61,11 @@ class PeerComparisonPostgresTests(unittest.TestCase):
         self.args = ["--ticker", "AAA", "--peers", "BBB", "--year", "2024", "--items", "1A",
                      "--target-selection", "all", "--data-dir", str(self.root)]
         with psycopg.connect(**self.arguments) as conn:
-            conn.execute("TRUNCATE filings, alignment_runs, peer_comparison_reports RESTART IDENTITY CASCADE")
+            # This disposable database is shared by the class. Reset durable
+            # caches too, so another test's compatible AAA/BBB job cannot skip
+            # this test's mocked request. Calls within one test still resume.
+            conn.execute("TRUNCATE filings, alignment_runs, peer_comparison_reports, "
+                         "pipeline_stage_snapshots, pipeline_artifacts RESTART IDENTITY CASCADE")
             for ticker in ("aaa", "bbb"):
                 self.insert_disclosure(conn, ticker, 2024)
 
@@ -188,6 +193,7 @@ class PeerComparisonPostgresTests(unittest.TestCase):
              patch.object(agent, "request_completion", return_value=response) as request, \
              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             self.assertEqual(pipeline.main(self.args), 0)
+            self.assertEqual(request.call_count, 1)
             self.assertEqual(list(self.root.iterdir()), [])
             self.assertEqual(pipeline.main(self.args + ['--data-dir', str(self.root / 'other-machine')]), 0)
             self.assertEqual(list(self.root.iterdir()), [])
@@ -248,6 +254,8 @@ class PeerComparisonPostgresTests(unittest.TestCase):
                 self.assertTrue(expanded['run_complete'])
                 self.assertEqual(expanded['jobs_reused'], 1)
                 self.assertEqual(expanded['new_api_requests'], 1)
+                self.assertEqual(expanded['token_usage']['requests'], 1)
+                self.assertEqual(expanded['token_usage']['total_tokens'], 15)
                 self.assertEqual(len({row['target_disclosure_id'] for row in expanded['comparisons']}), 2)
                 after = dict(conn.execute("SELECT path,content FROM pipeline_artifacts "
                     "WHERE namespace='peer' AND path LIKE '%/requests/%.json'").fetchall())
@@ -259,6 +267,19 @@ class PeerComparisonPostgresTests(unittest.TestCase):
             self.assertEqual(request.call_count, 2)
             with psycopg.connect(**self.arguments) as conn:
                 self.assertEqual(conn.execute("SELECT count(*) FROM peer_comparison_reports").fetchone()[0], 2)
+                resumed = conn.execute("SELECT report FROM peer_comparison_reports WHERE items=ARRAY['1','1A']::text[]")
+                self.assertEqual(resumed.fetchone()[0]['token_usage']['total_tokens'], 15)
+            # A new profile can reuse all work from the expanded selection.
+            # It has no own API requests, so its usage is zero without counting
+            # another profile's recorded tokens again.
+            self.assertEqual(pipeline.main(self.args), 0)
+            self.assertEqual(request.call_count, 2)
+            with psycopg.connect(**self.arguments) as conn:
+                reused = conn.execute("SELECT report FROM peer_comparison_reports WHERE items=ARRAY['1A']::text[]").fetchone()[0]
+                self.assertEqual(reused['jobs_reused'], 1)
+                self.assertEqual(reused['new_api_requests'], 0)
+                self.assertEqual(reused['token_usage']['requests'], 0)
+                self.assertEqual(reused['token_usage']['total_tokens'], 0)
             # Different Item profiles still share the same writer lock.
             with PostgresArtifactStore('peer').lock('peer_comparison/aaa/2024/bbb'), \
                  redirect_stderr(io.StringIO()):
