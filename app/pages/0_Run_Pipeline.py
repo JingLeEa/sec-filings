@@ -177,7 +177,10 @@ def run_setup(running):
         if None in query:
             history, _ = pipeline_runs.read_run_history()
             if history:
-                latest = history[0]
+                latest = next((row for row in history
+                               if row.get('source') != 'Starter data'
+                               and (row.get('progress') or {}).get('completion_source') != 'starter_data'),
+                              history[0])
                 defaults = (latest['ticker'].upper(), ', '.join(map(str, latest['years'])))
         for key, value, default in zip(fields, query, defaults):
             st.session_state[key] = default if value is None else value

@@ -569,6 +569,45 @@ class RunPipelinePageTests(unittest.TestCase):
             self.assertTrue(all(call.args == ('WFC', [2023, 2024]) for call in read.call_args_list))
         start.assert_not_called()
 
+    def test_run_setup_prefers_latest_actual_run_over_newer_starter_imports(self):
+        documents = self.history_documents()
+        documents['pipeline_runs/amd/2023-2024-2025/status.json'] = {
+            'ticker': 'amd', 'years': [2023, 2024, 2025],
+            'started_at': '2026-11-06T01:00:00Z', 'completed_at': '2026-11-06T01:00:00Z',
+            'full_pipeline_complete': True, 'completion_source': 'starter_data', 'stages': []}
+        with patch.object(pipeline_runs, '_history_documents', return_value=documents), \
+             patch.object(pipeline_runs, 'start_run') as start:
+            page = self.page()
+        self.assertEqual(page.text_input(key='pipeline_setup_ticker').value, 'WFC')
+        self.assertEqual(page.text_input(key='pipeline_setup_years').value, '2023, 2024')
+        # History still shows every entry in chronological order.
+        self.assertEqual(page.dataframe[0].value['Company'].tolist(), ['AMD', 'WFC', 'AMD'])
+        start.assert_not_called()
+
+    def test_saved_actual_checkpoint_takes_priority_over_starter_data(self):
+        documents = self.history_documents()
+        documents['pipeline_runs/swks/2023-2024-2025/status.json'] = {
+            'ticker': 'swks', 'years': [2023, 2024, 2025],
+            'started_at': '2026-11-05T01:00:00Z', 'full_pipeline_complete': True, 'stages': []}
+        documents['pipeline_runs/amd/2023-2024-2025/status.json'] = {
+            'ticker': 'amd', 'years': [2023, 2024, 2025],
+            'started_at': '2026-11-06T01:00:00Z',
+            'full_pipeline_complete': True, 'completion_source': 'starter_data', 'stages': []}
+        with patch.object(pipeline_runs, '_history_documents', return_value=documents):
+            page = self.page()
+        self.assertEqual(page.text_input(key='pipeline_setup_ticker').value, 'SWKS')
+        self.assertEqual(page.text_input(key='pipeline_setup_years').value, '2023, 2024, 2025')
+
+    def test_only_starter_history_remains_available_as_fallback(self):
+        documents = {'pipeline_runs/nvda/2023-2024-2025/status.json': {
+            'ticker': 'nvda', 'years': [2023, 2024, 2025],
+            'started_at': '2026-11-06T01:00:00Z',
+            'full_pipeline_complete': True, 'completion_source': 'starter_data', 'stages': []}}
+        with patch.object(pipeline_runs, '_history_documents', return_value=documents):
+            page = self.page()
+        self.assertEqual(page.text_input(key='pipeline_setup_ticker').value, 'NVDA')
+        self.assertEqual(page.text_input(key='pipeline_setup_years').value, '2023, 2024, 2025')
+
     def test_latest_history_default_does_not_overwrite_edits_when_history_refreshes(self):
         documents = self.history_documents()
         with patch.object(pipeline_runs, '_history_documents', side_effect=lambda: documents):

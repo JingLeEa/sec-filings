@@ -121,7 +121,10 @@ retry permission resets for each new failed invocation. After resuming, a notice
 directs the user to **Run setup & progress** for live progress.
 
 When Run setup opens without an explicit ticker/year URL selection, it defaults to
-the newest history row's company and fiscal years. An active run takes precedence
+the latest actual run's company and fiscal years, ahead of newer starter-data
+imports. Actual dashboard attempts and saved non-starter pipeline checkpoints
+qualify; starter reports are used only when no actual run is available. The run
+history table keeps its chronological ordering. An active run takes precedence
 and locks the fields. Editing a selection keeps those edits during progress/history
 refreshes; selecting an older run through **Load selection in Run setup** also
 takes precedence. With no available history, the sample AMD 2023–2025 default remains.
