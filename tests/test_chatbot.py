@@ -223,9 +223,11 @@ class FilterEvalFixTests(unittest.TestCase):
         self.assertEqual(self.plan("How does Qualcomm's AI disclosure stack up against Broadcom's?").topic, "ai")
 
     def test_sector_words_and_limits(self):
-        self.assertEqual(self.plan("Which chipmaker revised its 10-K the least?").filters.companies,
-                         ["intc", "amd", "nvda", "avgo", "qcom", "mu"])
-        self.assertEqual(self.plan("Which bank changed the most?").filters.companies, ["bac", "jpm", "c", "gs", "ms"])
+        # only the sector's companies that are loaded (RUNS: bac, intc, jpm)
+        self.assertEqual(self.plan("Which chipmaker revised its 10-K the least?").filters.companies, ["intc"])
+        self.assertEqual(self.plan("Which bank changed the most?").filters.companies, ["bac", "jpm"])
+        everything = plan_question("Which chipmaker revised its 10-K the least?", []).filters.companies
+        self.assertLessEqual({"intc", "amd", "nvda", "avgo", "qcom", "mu", "txn", "adi", "mchp"}, set(everything))
         self.assertEqual(self.plan("Bank of America's top changes").filters.companies, ["bac"])
         self.assertIsNone(self.plan("where the two change-detection methods differ").filters.limit)
         self.assertEqual(self.plan("top 5 changes for AMD").filters.limit, 5)
@@ -298,6 +300,35 @@ class SqlAccuracyFixTests(unittest.TestCase):
                          "How many material changes did each chipmaker have in 2025?"):
             with self.subTest(question=question):
                 self.assertNotEqual(self.plan(question).intent, Intent.CUSTOM_SQL)
+
+
+class NewCompanyTests(unittest.TestCase):
+    """Companies added after the first 11 (team assignments): names, tickers, sectors, word-like tickers."""
+    LOADED = [(c, y, y + 1) for c in ("txn", "adi", "mchp", "on", "rf", "hban", "swks", "amd") for y in (2023, 2024)]
+
+    def companies(self, question, runs=None):
+        return plan_question(question, self.LOADED if runs is None else runs).filters.companies
+
+    def test_names_and_tickers(self):
+        self.assertEqual(self.companies("How many new risk factors did Texas Instruments add in 2025?"), ["txn"])
+        self.assertEqual(self.companies("Compare Analog Devices and Microchip on supply chain"), ["adi", "mchp"])
+        self.assertEqual(self.companies("Summarise MCHP from 2023 to 2025"), ["mchp"])
+        self.assertEqual(self.companies("What did Fifth Third say about deposits?"), ["fitb"])
+        self.assertEqual(self.companies("Capital One credit card risk"), ["cof"])
+        plan = plan_question("How does Microchip compare to its peers on tariffs?", self.LOADED)
+        self.assertEqual((plan.intent, plan.filters.companies), (Intent.PEER_COMPARE, ["mchp"]))
+
+    def test_word_like_tickers(self):
+        self.assertEqual(self.companies("What did ON say about silicon carbide?"), ["on"])
+        self.assertEqual(self.companies("What did ON say about silicon carbide?", runs=[]), [])   # not loaded
+        self.assertEqual(self.companies("How did Skyworks describe RF demand?"), ["swks"])     # RF = radio frequency
+        self.assertEqual(self.companies("Compare RF and HBAN on credit risk"), ["rf", "hban"])
+        self.assertEqual(plan_question("What did ON say about silicon carbide?", self.LOADED).topic, "silicon carbide")
+
+    def test_sectors_use_loaded_companies(self):
+        self.assertEqual(self.companies("Which semiconductor company changed the most in 2025?"),
+                         ["amd", "txn", "adi", "mchp", "on", "swks"])
+        self.assertEqual(self.companies("Which bank changed the most?"), ["rf", "hban"])
 
 
 class SqlGuardTests(unittest.TestCase):

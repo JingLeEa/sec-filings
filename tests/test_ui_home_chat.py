@@ -25,6 +25,46 @@ def sample_environment(monkeypatch):
     st.cache_data.clear()
 
 
+class FakeHistory:
+    """In-memory stand-in for the saved-conversation store, shared across page reruns and new sessions."""
+
+    def __init__(self):
+        self.saved: dict[str, dict] = {}
+
+    def save_turn(self, conversation_id, question, *, reply=None, plan=None, error=None, source="app"):
+        if conversation_id not in self.saved:
+            conversation_id = f"c{len(self.saved) + 1}"
+            self.saved[conversation_id] = {"title": question, "turns": [], "plans": []}
+        self.saved[conversation_id]["turns"].append(reply if reply is not None else {"question": question, "error": error})
+        self.saved[conversation_id]["plans"].append(plan)
+        return conversation_id
+
+    def conversations(self, limit=50, source=None):
+        from datetime import datetime, timezone
+        return [{"conversation_id": cid, "title": c["title"], "source": "app", "questions": len(c["turns"]),
+                 "updated_at": datetime(2026, 1, 1, tzinfo=timezone.utc)} for cid, c in reversed(self.saved.items())][:limit]
+
+    def latest(self, source=None):
+        return next(reversed(self.saved), None)
+
+    def turns(self, conversation_id):
+        return list(self.saved.get(conversation_id, {}).get("turns", []))
+
+    def last_plan(self, conversation_id):
+        plans = [p for p in self.saved.get(conversation_id, {}).get("plans", []) if p is not None]
+        return plans[-1] if plans else None
+
+    def delete(self, conversation_id):
+        self.saved.pop(conversation_id, None)
+
+
+@pytest.fixture(autouse=True)
+def history(monkeypatch):
+    store = FakeHistory()
+    monkeypatch.setattr(chat, "chat_history_store", lambda: store)
+    return store
+
+
 def run(page: str, **state) -> AppTest:
     at = AppTest.from_file(str(APP / page), default_timeout=60)
     for key, value in state.items():
@@ -211,11 +251,11 @@ def test_follow_up_scope_is_shown_in_the_sidebar(bot):
     assert "Remembered for follow-ups" in sidebar and "AMD" in sidebar and "FY2025 10-K" in sidebar and "?" not in sidebar
 
 
-def test_clear_conversation_empties_the_page(bot):
+def test_new_conversation_empties_the_page(bot):
     at = run("pages/2_Chatbot.py")
     at.chat_input[0].set_value("What changed at AMD?").run()
     assert len(at.chat_message) == 2
-    next(b for b in at.sidebar.button if b.label == "Clear conversation").click().run()
+    next(b for b in at.sidebar.button if b.label == "New conversation").click().run()
     assert len(at.chat_message) == 0 and "Try one of these" in text_of(at)
 
 
@@ -254,3 +294,46 @@ def test_missing_chatbot_code_gives_a_readable_reason(monkeypatch):
     monkeypatch.setattr(builtins, "__import__", fake_import)
     with pytest.raises(chat.ChatUnavailable, match="not part of this branch"):
         chat._load_chatbot()
+
+
+# ------------------------------------------------------------------ saved conversations
+
+
+def test_questions_are_still_there_after_a_restart(bot, history):
+    at = run("pages/2_Chatbot.py")
+    at.chat_input[0].set_value("What changed at AMD?").run()
+    assert [t.question for t in history.turns("c1")] == ["What changed at AMD?"]
+    again = run("pages/2_Chatbot.py")           # a new browser session, as after closing the app
+    assert not again.exception, [e.value for e in again.exception]
+    assert [m.name for m in again.chat_message] == ["user", "assistant"]
+    assert "What changed at AMD?" in text_of(again) and "An answer." in text_of(again)
+    assert "Try one of these" not in text_of(again)
+
+
+def test_new_conversation_keeps_the_old_one(bot, history):
+    at = run("pages/2_Chatbot.py")
+    at.chat_input[0].set_value("What changed at AMD?").run()
+    next(b for b in at.sidebar.button if b.label == "New conversation").click().run()
+    assert not at.chat_message and "Try one of these" in text_of(at)
+    at.chat_input[0].set_value("And Intel?").run()
+    assert [c["title"] for c in history.conversations()] == ["And Intel?", "What changed at AMD?"]
+    picker = next(s for s in at.sidebar.selectbox if s.label == "Past conversations")
+    picker.set_value("c1").run()
+    assert "What changed at AMD?" in text_of(at) and "And Intel?" not in text_of(at)
+
+
+def test_failed_questions_are_saved_too(monkeypatch, history):
+    fake = FakeBot(error=RuntimeError("database went away"))
+    monkeypatch.setattr(chat, "create_bot", lambda use_llm, use_embeddings: fake)
+    at = run("pages/2_Chatbot.py")
+    at.chat_input[0].set_value("What changed?").run()
+    assert history.turns("c1")[0]["question"] == "What changed?"
+    again = run("pages/2_Chatbot.py")
+    assert any("database went away" in e.value for e in again.error)
+
+
+def test_delete_conversation(bot, history):
+    at = run("pages/2_Chatbot.py")
+    at.chat_input[0].set_value("What changed at AMD?").run()
+    next(b for b in at.sidebar.button if b.label == "Delete this conversation").click().run()
+    assert history.conversations() == [] and not at.chat_message

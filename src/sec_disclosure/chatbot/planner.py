@@ -56,6 +56,7 @@ GENERIC_TOPIC_WORDS = {
     "anything", "something", "things", "what", "how", "was", "were", "is", "are", "they", "we",
     "rewrote", "rewritten", "rewrite", "revised", "revision", "revisions", "updated", "update", "updates",
     "top", "first", "least", "lowest", "highest", "biggest", "largest", "significant", "important",
+    "say", "says", "said", "talk", "talks", "describe", "describes", "described", "on", "about", "with",
 }
 # Calculations the built-in queries don't produce: averages, medians, shares, rankings of sections, differences.
 # With an LLM configured these go to the LLM SQL writer; offline the closest rule answer is shown and flagged.
@@ -142,7 +143,7 @@ def _strip_known_terms(text: str) -> str:
     for _, pattern in ITEM_PATTERNS + STATUS_PATTERNS + RELATIONSHIP_PATTERNS:   # filters, not subjects
         lowered = re.sub(pattern, " ", lowered)
     words = [w for w in re.findall(r"[a-z0-9&'-]+", lowered)
-             if w not in GENERIC_TOPIC_WORDS and not re.fullmatch(r"\d+(?:\.\d+)?%?", w)]
+             if re.sub(r"'s$", "", w) not in GENERIC_TOPIC_WORDS and not re.fullmatch(r"\d+(?:\.\d+)?%?", w)]
     return " ".join(words).strip()
 
 

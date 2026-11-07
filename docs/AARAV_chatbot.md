@@ -43,8 +43,9 @@ python scripts/load_peer_comparisons_to_postgres.py test_data/peer_comparison
 python scripts/load_synthesis_to_postgres.py test_data/synthesis
 
 # 3. Chat
-streamlit run app/streamlit_app.py                       # web UI
-PYTHONPATH=src python -m sec_disclosure.chatbot          # interactive CLI
+streamlit run app/Home.py                                # web UI (Chatbot page)
+PYTHONPATH=src python -m sec_disclosure.chatbot          # interactive CLI (continues your last conversation)
+PYTHONPATH=src python -m sec_disclosure.chatbot --history   # list saved conversations
 PYTHONPATH=src python -m sec_disclosure.chatbot --show-sql "How many new risk factors did Intel add in 2025?"
 ```
 
@@ -228,9 +229,27 @@ Tests use the AMD sample in `test_data/synthesis`. AMD 2023-2025: all 180 match_
 test_data and are marked material. GS 2023-2024: 179 of 180 exist, but only 37 of them are marked material in the
 test_data alignments, so GS answers can show a cited finding next to an "Unchanged" or "needs review" label.
 
-The chatbot's schema files (09–11, after main's 01–08) record a version in `schema_info`; the chatbot and the
+The chatbot's schema files (09–12, after main's 01–08) record a version in `schema_info`; the chatbot and the
 loaders re-apply any file whose version is missing or older, so an existing Docker volume picks up new columns,
 tables and views without a reset. (They were numbered 06–08 before main added its own 06–08.)
+
+## Conversation history
+
+Every question and answer is saved in PostgreSQL (`db/init/12_chatbot_history.sql`, created automatically), so
+nothing asked is lost when the page reloads, the app restarts or the CLI is run again. The Streamlit page and the
+CLI share one history.
+
+- **Chatbot page:** opens the most recent conversation. The sidebar has *New conversation* (the current one stays
+  saved), *Past conversations* (reopen any earlier one) and *Delete this conversation*. A reopened conversation
+  keeps its follow-up context, so "what about Intel?" still reuses its company, years and item.
+- **CLI:** interactive mode continues the most recent conversation and lists its last questions; type `new` to
+  start another, `history` to list saved ones. One-off questions start a new conversation unless `--continue`
+  is given. `--history` lists everything; `--no-history` neither loads nor saves.
+- Questions that failed are saved with their error message. Each answer keeps its text, citations, grounding
+  check, SQL and up to 200 evidence rows per search (embedding vectors are not stored).
+- Tables: `chatbot_conversations` (one row per conversation, titled by its first question) and `chatbot_turns`
+  (one row per question, with the answer as JSON). Each person runs their own database, so history is not split by
+  user. To wipe it: `TRUNCATE chatbot_conversations CASCADE;`.
 
 ## Data model
 
@@ -261,6 +280,8 @@ python -m pytest tests/test_chatbot.py                # no database needed
 python -m pytest tests/test_chatbot_integration.py    # needs the six fixture runs loaded; skips otherwise
 python -m pytest tests/test_peer_chatbot_integration.py       # real NVDA/AMD pilot + pipeline-save sync; needs NVDA and AMD alignments
 python -m pytest tests/test_synthesis_chatbot_integration.py  # AMD 2023-2025 report; needs AMD alignments
+python -m pytest tests/test_chatbot_history.py        # saved conversations (database part skips without one)
+python -m pytest tests/test_ui_home_chat.py           # chatbot page, incl. history across sessions (no database)
 ```
 
 Integration tests compute expected numbers from the fixture JSON files independently of the chatbot's SQL
@@ -282,8 +303,9 @@ src/sec_disclosure/chatbot/
   grounding.py   citation and quotation checks
   db.py          read-only PostgreSQL access via storage.disclosures.connection_arguments()
   config.py      SOCLAAS_* settings and where each came from
+  history.py     saved conversations: save, list, reopen, delete; restores follow-up context
   __main__.py    CLI
-app/streamlit_app.py                 web UI
+app/pages/2_Chatbot.py, app/sec_ui/chat.py   web UI (history sidebar and helpers)
 db/init/09_chatbot.sql               alignment_changes view, chatbot_evidence_embeddings table
 scripts/embed_alignment_evidence.py  optional bge-m3 vectors for pgvector search
 db/init/10_chatbot_peer_comparisons.sql      peer-comparison tables and peer_comparison_pairs view
@@ -292,5 +314,6 @@ src/sec_disclosure/chatbot/peers.py  peer lookup, year-over-year join, fallback 
 src/sec_disclosure/chatbot/reports.py  synthesis-report lookup: summaries, findings evidence, financial trends
 db/init/11_chatbot_synthesis.sql     chatbot_synthesis_* views over the agent's synthesis_reports
 src/sec_disclosure/storage/synthesis_reports.py, scripts/load_synthesis_to_postgres.py   loader
-src/sec_disclosure/storage/chatbot_schema.py   versioned schema files 09-11
+db/init/12_chatbot_history.sql       chatbot_conversations, chatbot_turns
+src/sec_disclosure/storage/chatbot_schema.py   versioned schema files 09-12
 ```

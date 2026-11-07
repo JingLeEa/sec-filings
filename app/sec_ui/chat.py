@@ -101,10 +101,82 @@ def session_bot(use_llm: bool, use_embeddings: bool):
 
 
 def forget_conversation():
+    """Start a new, empty conversation. Earlier ones stay saved and can be reopened from the sidebar."""
     st.session_state["chat_history"] = []
+    st.session_state["chat_conversation_id"] = None
     bot = st.session_state.get("chat_bot")
     if bot is not None:
         bot.reset()
+
+
+# ------------------------------------------------------------------ saved conversations
+
+def chat_history_store():
+    """The saved-conversation store (chatbot_conversations / chatbot_turns), or None if it cannot be used.
+    History is a convenience: when it fails, the chatbot still answers, it just does not remember."""
+    try:
+        from sec_disclosure.chatbot.history import ChatHistory
+        return ChatHistory(_shared_database())
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def restore_latest_conversation(bot) -> None:
+    """On the first visit in a browser session, reopen the most recent conversation so nothing asked earlier
+    is lost after a reload or an app restart."""
+    if "chat_conversation_id" in st.session_state:
+        return
+    st.session_state["chat_conversation_id"] = None
+    store = chat_history_store()
+    if store is None:
+        return
+    try:
+        latest = store.latest()
+        if latest:
+            open_conversation(bot, latest, store)
+    except Exception:  # noqa: BLE001
+        st.session_state["chat_history_problem"] = "Earlier questions could not be loaded."
+
+
+def open_conversation(bot, conversation_id: str, store=None) -> None:
+    """Show a saved conversation and continue it: follow-ups reuse its last company and years."""
+    store = store or chat_history_store()
+    if store is None:
+        return
+    st.session_state["chat_history"] = store.turns(conversation_id)
+    st.session_state["chat_conversation_id"] = conversation_id
+    bot.last_plan = store.last_plan(conversation_id)
+
+
+def save_turn(question: str, *, reply=None, plan=None, error: str | None = None) -> None:
+    """Save one question to the current conversation (creating it on the first question)."""
+    store = chat_history_store()
+    if store is None:
+        st.session_state["chat_history_problem"] = "Questions are not being saved (the history table is unavailable)."
+        return
+    try:
+        st.session_state["chat_conversation_id"] = store.save_turn(
+            st.session_state.get("chat_conversation_id"), question, reply=reply, plan=plan, error=error, source="app")
+        st.session_state.pop("chat_history_problem", None)
+    except Exception:  # noqa: BLE001
+        st.session_state["chat_history_problem"] = "The last question could not be saved to the history."
+
+
+def saved_conversations(limit: int = 50) -> list:
+    store = chat_history_store()
+    if store is None:
+        return []
+    try:
+        return store.conversations(limit=limit)
+    except Exception:  # noqa: BLE001
+        return []
+
+
+def delete_conversation(conversation_id: str) -> None:
+    store = chat_history_store()
+    if store is not None:
+        store.delete(conversation_id)
+    forget_conversation()
 
 
 def example_questions(company_name: str, previous: int, current: int) -> list:

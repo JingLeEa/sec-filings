@@ -10,24 +10,54 @@ import re
 from dataclasses import asdict, dataclass, field
 from typing import Iterable
 
+# Names people use for each company. Any other company loaded in the database is still found by its ticker.
 COMPANY_ALIASES: dict[str, tuple[str, ...]] = {
+    # banks
     "bac": ("bank of america", "bofa", "boa", "bankamerica", "bac"),
     "jpm": ("jpmorgan chase", "jp morgan chase", "jpmorgan", "jp morgan", "j.p. morgan", "chase", "jpmc", "jpm"),
     "c": ("citigroup", "citibank", "citi"),
     "gs": ("goldman sachs", "goldman"),
     "ms": ("morgan stanley",),
+    "wfc": ("wells fargo", "wfc"),
+    "usb": ("u.s. bancorp", "us bancorp", "u.s. bank"),
+    "pnc": ("pnc financial services", "pnc financial", "pnc"),
+    "tfc": ("truist financial", "truist", "tfc"),
+    "cof": ("capital one financial", "capital one", "cof"),
+    "fitb": ("fifth third bancorp", "fifth third", "fitb"),
+    "rf": ("regions financial", "regions bank"),
+    "hban": ("huntington bancshares", "huntington", "hban"),
+    "cfg": ("citizens financial group", "citizens financial", "cfg"),
+    # semiconductors
     "intc": ("intel corporation", "intel", "intc"),
     "amd": ("advanced micro devices", "amd"),
     "nvda": ("nvidia", "nvda"),
     "avgo": ("broadcom", "avgo"),
     "qcom": ("qualcomm", "qcom"),
     "mu": ("micron technology", "micron"),
+    "txn": ("texas instruments", "txn"),
+    "adi": ("analog devices", "adi"),
+    "mchp": ("microchip technology", "microchip", "mchp"),
+    "on": ("onsemi", "on semiconductor", "on semi"),
+    "nxpi": ("nxp semiconductors", "nxp", "nxpi"),
+    "mpwr": ("monolithic power systems", "monolithic power", "mpwr"),
+    "mrvl": ("marvell technology", "marvell", "mrvl"),
+    "swks": ("skyworks solutions", "skyworks", "swks"),
+    "crus": ("cirrus logic", "crus"),
 }
-# Tickers that are also ordinary words or abbreviations: only matched as an upper-case word ("C", "MS").
-SHORT_TICKERS = {"c", "gs", "ms", "mu"}
+# Tickers that are also ordinary words or abbreviations: only matched as an upper-case word ("C", "MS", "ON").
+SHORT_TICKERS = {"c", "gs", "ms", "mu", "on", "rf", "usb"}
+WORD_TICKERS = {"on", "rf", "usb"}
 COMPANY_NAMES = {"bac": "Bank of America", "jpm": "JPMorgan Chase", "c": "Citigroup", "gs": "Goldman Sachs",
-                 "ms": "Morgan Stanley", "intc": "Intel", "amd": "AMD", "nvda": "NVIDIA", "avgo": "Broadcom",
-                 "qcom": "Qualcomm", "mu": "Micron"}
+                 "ms": "Morgan Stanley", "wfc": "Wells Fargo", "usb": "U.S. Bancorp", "pnc": "PNC Financial Services",
+                 "tfc": "Truist Financial", "cof": "Capital One", "fitb": "Fifth Third Bancorp",
+                 "rf": "Regions Financial", "hban": "Huntington Bancshares", "cfg": "Citizens Financial Group",
+                 "intc": "Intel", "amd": "AMD", "nvda": "NVIDIA", "avgo": "Broadcom", "qcom": "Qualcomm",
+                 "mu": "Micron", "txn": "Texas Instruments", "adi": "Analog Devices", "mchp": "Microchip Technology",
+                 "on": "onsemi", "nxpi": "NXP Semiconductors", "mpwr": "Monolithic Power Systems",
+                 "mrvl": "Marvell Technology", "swks": "Skyworks Solutions", "crus": "Cirrus Logic"}
+BANKS = ["bac", "jpm", "c", "gs", "ms", "wfc", "usb", "pnc", "tfc", "cof", "fitb", "rf", "hban", "cfg"]
+SEMICONDUCTORS = ["intc", "amd", "nvda", "avgo", "qcom", "mu", "txn", "adi", "mchp", "on", "nxpi", "mpwr", "mrvl",
+                  "swks", "crus"]
 
 ITEM_PATTERNS: list[tuple[str, str]] = [
     ("1A", r"\bitem\s*1\s*a\b|\brisk\s+factors?\b"),
@@ -151,13 +181,22 @@ def find_companies(text: str, known: Iterable[str] = ()) -> list[str]:
             m = re.search(rf"(?<![\w.]){re.escape(alias)}(?:'s)?(?![\w])", lowered)
             if m:
                 first[ticker] = min(first.get(ticker, m.start()), m.start())
-    for ticker in SHORT_TICKERS | {t.lower() for t in known}:  # tickers typed as tickers
+    known = {t.lower() for t in known}
+    for ticker in SHORT_TICKERS | known:  # tickers typed as tickers
+        if ticker in WORD_TICKERS and ticker not in known:
+            continue   # "ON", "RF", "USB" are also ordinary words or abbreviations: only once that company is loaded
         if ticker in SHORT_TICKERS or len(ticker) <= 2:
             m = re.search(rf"(?<![\w.&]){re.escape(ticker.upper())}(?:'s)?(?![\w&])", text)
         else:
             m = re.search(rf"\b{re.escape(ticker)}\b", lowered)
         if m:
             first[ticker] = min(first.get(ticker, m.start()), m.start())
+    if len(first) > 1:   # "Skyworks ... RF demand": a word ticker next to another company only counts as a company
+        for ticker in [t for t in first if t in WORD_TICKERS]:
+            up = re.escape(ticker.upper())
+            if not re.search(rf"\b(?:and|vs\.?|versus|or|with|than|to)\s+{up}\b|\b{up}(?:'s)?\s+(?:and|vs\.?|versus|or)\b|"
+                             rf"\b{up}'s\b", text):
+                del first[ticker]   # when named alongside it ("RF and HBAN", "TXN vs ON") or possessive ("ON's")
     return sorted(first, key=lambda t: (first[t], t))
 
 
@@ -273,7 +312,7 @@ def normalise_match_id(value: str) -> str:
     return f"{head.lower()}_M{int(number[1:]):04d}"
 
 
-SECTORS = {"banks": ["bac", "jpm", "c", "gs", "ms"], "chips": ["intc", "amd", "nvda", "avgo", "qcom", "mu"]}
+SECTORS = {"banks": BANKS, "chips": SEMICONDUCTORS}
 SECTOR_RES = {"banks": re.compile(r"\bbanks?\b(?!\s+of\b)|\bbanking\s+(?:companies|firms|names)\b"),
               "chips": re.compile(r"\bchip\s?-?makers?\b|\bsemiconductors?(?:\s+(?:companies|firms|names))?\b|"
                                   r"\bchip\s+(?:companies|firms|names)\b")}
@@ -286,10 +325,11 @@ def parse_filters(question: str, runs: Iterable[tuple[str, int, int]] = ()) -> Q
     filters = QueryFilters()
     filters.match_ids = sorted({normalise_match_id(m) for m in MATCH_ID_RE.findall(question)})
     filters.companies = find_companies(question, {r[0] for r in run_list})
-    if not filters.companies:   # "which bank ...", "the chipmakers": the sector's loaded companies
+    if not filters.companies:   # "which bank ...", "the chipmakers": the sector's companies that are loaded
+        loaded = {r[0] for r in run_list}
         for sector, pattern in SECTOR_RES.items():
             if pattern.search(text):
-                filters.companies.extend(SECTORS[sector])
+                filters.companies.extend(c for c in SECTORS[sector] if not loaded or c in loaded)
     company_runs = [(p, c) for co, p, c in run_list if not filters.companies or co in filters.companies]
     filters.previous_year, filters.current_year = resolve_years(
         question, company_runs or [(p, c) for _, p, c in run_list], filters.clarifications)
