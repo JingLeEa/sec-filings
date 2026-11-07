@@ -13,6 +13,18 @@ PERSISTED_KEYS = [
 
 CSS = """
 <style>
+[data-testid="stSidebarHeader"] {
+    height: auto;
+    padding-block: 1.25rem;
+    margin-bottom: 0;
+}
+[data-testid="stSidebarHeader"] [data-testid="stSidebarLogo"] {
+    height: 4rem;
+    width: auto;
+    max-width: 100%;
+    border-radius: 0.5rem;
+    margin-block: 0;
+}
 :root { --del-bg: rgba(220, 38, 38, 0.18); --ins-bg: rgba(22, 163, 74, 0.20); --chip-bg: rgba(128,128,128,0.16); }
 .diffbox { white-space: pre-wrap; line-height: 1.6; padding: 0.75rem 1rem; border: 1px solid rgba(128,128,128,0.35);
            border-radius: 8px; font-size: 0.95rem; overflow-wrap: anywhere; }
@@ -35,6 +47,7 @@ CSS = """
 def setup(title: str):
     """Call first on every page."""
     st.set_page_config(page_title=f"{title} | SEC Disclosure Comparison", layout="wide")
+    st.logo(str(config.ROOT / 'app' / 'assets' / 'f2f-logo.png'), size='large')
     st.markdown(CSS, unsafe_allow_html=True)
     from .bootstrap import ensure_starter_data
     ensure_starter_data()

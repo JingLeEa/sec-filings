@@ -36,7 +36,7 @@ FEATURES = [
      "title": "Read the synthesis report", "tagline": "The multi-year story for one company",
      "bullets": ["Key findings and financial figures", "Every finding links to its evidence",
                  "Download the report"]},
-    {"key": "peer", "cta": "Open peer comparison", "file": "3_Peer_Comparison.py", "icon": ":material/groups:", "color": GREEN,
+    {"key": "peer", "cta": "Open peer comparison", "file": "7_Peer_Comparison.py", "icon": ":material/groups:", "color": GREEN,
      "title": "Compare with peers", "tagline": "How competitors disclose a topic",
      "bullets": ["Same year and same SEC Item only", "Cited sentences from both sides",
                  "No match does not mean silence"]},

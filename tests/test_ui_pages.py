@@ -9,7 +9,7 @@ from streamlit.testing.v1 import AppTest  # noqa: E402
 APP = Path(__file__).resolve().parents[1] / "app"
 FIXTURES = Path(__file__).parent / "fixtures"
 PAGES = ["Home.py", "pages/0_Run_Pipeline.py", "pages/6_Change_Explorer.py", "pages/4_Side_by_Side.py",
-         "pages/1_Synthesis_Report.py", "pages/3_Peer_Comparison.py", "pages/5_Manual_Review.py"]
+         "pages/1_Synthesis_Report.py", "pages/7_Peer_Comparison.py", "pages/5_Manual_Review.py"]
 
 
 @pytest.fixture(autouse=True)
@@ -32,7 +32,7 @@ def sample_environment(monkeypatch, tmp_path):
 
 
 def run(page: str) -> AppTest:
-    if page == "pages/3_Peer_Comparison.py":
+    if page == "pages/7_Peer_Comparison.py":
         return AppTest.from_file(str(APP / "Home.py"), default_timeout=60).run().switch_page(page).run()
     return AppTest.from_file(str(APP / page), default_timeout=60).run()
 
@@ -446,7 +446,7 @@ def test_synthesis_page_escapes_dollar_signs_and_links_evidence():
 
 
 def test_peer_page_shows_sample_banner_and_results():
-    at = run("pages/3_Peer_Comparison.py")
+    at = run("pages/7_Peer_Comparison.py")
     assert any("Sample data" in w.value for w in at.warning)
     shown = metrics(at)
     assert shown["Target disclosures"] == "2" and shown["Peer comparisons made"] == "3"
@@ -466,7 +466,7 @@ def test_no_data_gives_empty_states_not_crashes(monkeypatch, tmp_path):
     assert any("No comparison data" in e.value for e in home.error)
     assert any(link.label == "Run pipeline" for link in home.get("page_link"))
     assert any("No synthesis output" in i.value for i in run("pages/1_Synthesis_Report.py").info)
-    assert any("No peer comparison output" in i.value for i in run("pages/3_Peer_Comparison.py").info)
+    assert any("No peer comparison output" in i.value for i in run("pages/7_Peer_Comparison.py").info)
 
 
 def test_broken_alignment_file_shows_error_message(monkeypatch, tmp_path):
