@@ -1,254 +1,117 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "0c34d255ce678b96b32242c548d35602e672defc13e2d345a31ae81881706491",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "a9be8d8962e720fb80427580bffb2157c4bc7923e1647ae73a293cf241a3ff2e",
+  "request_hash": "c0a603c0dd91c1008403bf0c116e39378946615054b9568ac3d08fd12d87771b",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1A_D062\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Nvidia and AMD disclose that they are subject to strict, evolving data privacy laws like the GDPR and CCPA, and that non-compliance or concerns regarding data practices can lead to significant financial penalties, litigation, and reputational harm. However, Nvidia explicitly highlights the risk of reputational damage and adverse operating results stemming from consumer concerns about the use of their products for AI, whereas AMD focuses more on the direct financial burdens, citing ongoing and increasing costs for security enhancements, employee training, and remediation activities required to comply with these regulations.\",\n\"target_sentence_ids\": [\n\"nvda_2024_1A_P090_S001\",\n\"nvda_2024_1A_P091_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1A_P057_S002\",\n\"amd_2024_1A_P057_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The other candidate disclosures (amd_2024_1A_D087 and amd_2024_1A_D079) are already represented by the selected disclosure amd_2024_1A_D062 for AMD, or focus on different specific aspects (general PII sanctions or export controls/AI specific regulatory barriers) that are less central to the primary data privacy/security operational compliance theme compared to the selected peer disclosure. Per instructions, a peer ticker appears in ONLY ONE list. Since AMD has a valid comparison, it is not in no_match.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1A_D044",
     "item": "1A",
-    "target_topic": "Impact of Export Controls and Supply Chain Restrictions on Business and Competitive Position",
-    "target_summary": "US export controls have restricted NVIDIA's ability to ship specific high-performance products to China and other regions, resulting in no granted licenses for these products and harming the company's competitive position. Additionally, NVIDIA's business depends on consistent supply from overseas partners, particularly in Taiwan, and new restrictions impacting this supply or the ability to transition operations out of restricted regions would negatively affect business results, revenue, and operational flexibility.",
+    "target_topic": "Data Privacy and Security Regulatory Compliance",
+    "target_summary": "Nvidia is subject to stringent and changing data privacy laws globally, including the GDPR, CCPA/CPRA, and emerging AI regulations, which impose obligations on data handling, consent, and rights like access and deletion. Non-compliance could lead to significant fines, litigation, reputational damage, and operational disruptions, while consumer concerns about data use in AI could also harm business results.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0231",
-        "relationship": "many_to_one",
+        "match_id": "nvda_2023_2024_M0068",
+        "relationship": "one_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "The 2023 disclosures (D039, D041, D042, D044, D045) detail the initial announcement of US export controls on AI semiconductors to China, the resulting licensing requirements, the impact on specific products (A100, H100), the offer of alternatives (A800), and the burdensome nature of the license management process which creates competitive disadvantage. The 2024 disclosure (D044) confirms these restrictions remain in effect, notes that no licenses have been granted for certain products (NAC), describes the continued time-consuming and burdensome licensing process, the imposition of burdensome conditions, and the ongoing competitive disadvantage. While the specific topic of 'transitioning operations' (D043) is mentioned in D044, the core theme of export control restrictions, licensing burdens, and competitive impact is the dominant shared subject. D043 is treated separately below as its primary specific topic (mandatory operational transition) is only partially addressed by D044's mention of having transitioned, but D044's main focus is the ongoing licensing/compliance regime described in the other 2023 disclosures.",
+        "explanation": "The 2023 disclosure (nvda_2023_1A_D037) establishes the general risk of stringent privacy/security laws (CCPA, CPRA, GDPR) and reputational/legal harm. This maps to the 2024 disclosure nvda_2024_1A_D010 which cites the same general subject: 'We are subject to stringent and changing data privacy and security laws... These areas could damage our reputation, deter customers... or result in legal or regulatory proceedings' (nvda_2024_1A_P005_S005). It also maps to nvda_2024_1A_D044 which reiterates this general obligation and risk, adding specific reference to CCPA and AI concerns: 'We are subject to stringent and changing data privacy and security laws... Concerns about our practices... including for use in AI... could damage our reputation' (nvda_2024_1A_P090_S001, nvda_2024_1A_P091_S002). Both 2024 disclosures cover the same core topic of general privacy law compliance risk.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_1A_D039",
+            "disclosure_id": "nvda_2023_1A_D037",
             "item": "1A",
             "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
             "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "Government actions such as tariffs, export regulations, and sanctions could restrict NVIDIA's ability to ship products, provide services, and fulfill contracts, with potential violations of export control laws leading to significant penalties.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2023_1A_D041",
-            "item": "1A",
-            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "Increasing focus on AI technologies has led to regulatory restrictions and proposed export controls on semiconductors associated with AI, such as GPUs, which could prohibit exports to key markets like China, create competitive disadvantages, and restrict R&D teams from executing roadmaps due to deemed export limitations.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2023_1A_D042",
-            "item": "1A",
-            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "In Q3 FY2023, the USG announced new export restrictions targeting China's semiconductor industry, impacting exports of specific chips (A100, H100), systems incorporating them, and networking products, with future thresholds also captured.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2023_1A_D044",
-            "item": "1A",
-            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "To comply with new restrictions, NVIDIA offers alternative products like the A800; however, inability to obtain USG licenses or customer rejection of alternatives could harm revenue, create excess inventory, and disadvantage NVIDIA against competitors.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2023_1A_D045",
-            "item": "1A",
-            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "Managing new license requirements is complex and time-consuming; failure to secure licenses in a timely manner, or burdensome conditions on licenses, may harm competitive position, increase support costs, and encourage customers to pursue alternatives from competitors.",
+            "summary": "NVIDIA is subject to stringent and changing data privacy and security laws, including the CCPA, CPRA, GDPR, and laws in Virginia, Colorado, Utah, and Connecticut, with potential penalties for non-compliance and private rights of action for data breaches.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
+            "disclosure_id": "nvda_2024_1A_D010",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The company is subject to stringent and changing data privacy and security laws and obligations, which could damage its reputation, deter customers, affect product design, or result in legal proceedings and liability.",
+            "extraction_status": "source_validated"
+          },
+          {
             "disclosure_id": "nvda_2024_1A_D044",
             "item": "1A",
             "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "US export controls have restricted NVIDIA's ability to ship specific high-performance products to China and other regions, resulting in no granted licenses for these products and harming the company's competitive position. Additionally, NVIDIA's business depends on consistent supply from overseas partners, particularly in Taiwan, and new restrictions impacting this supply or the ability to transition operations out of restricted regions would negatively affect business results, revenue, and operational flexibility.",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Nvidia is subject to stringent and changing data privacy laws globally, including the GDPR, CCPA/CPRA, and emerging AI regulations, which impose obligations on data handling, consent, and rights like access and deletion. Non-compliance could lead to significant fines, litigation, reputational damage, and operational disruptions, while consumer concerns about data use in AI could also harm business results.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.896742,
-            "sequence_match_ratio": 0.244692,
-            "length_ratio": 1.095339,
-            "word_count_delta": 90,
-            "added_tokens_sample": [
-              "following",
-              "these",
-              "we",
-              "transitioned",
-              "some",
-              "operations",
-              "including",
-              "testing",
-              "validation",
-              "supply",
-              "and",
-              "distribution",
-              "operations",
-              "out",
-              "hong",
-              "kong",
-              "any",
-              "future",
-              "transitions",
-              "be"
-            ],
-            "removed_tokens_sample": [
-              "government",
-              "actions",
-              "including",
-              "trade",
-              "protection",
-              "and",
-              "national",
-              "security",
-              "policies",
-              "of",
-              "u",
-              "s",
-              "and",
-              "foreign",
-              "government",
-              "bodies",
-              "such",
-              "as",
-              "tariffs",
-              "import"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2023_1A_D041",
-            "score": 0.800328,
-            "normalised_score": 0.8003,
-            "rationale": "Merge: 5 previous → 1 current. Best pair scored 80.03% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.85,
-          "confidence_score": 0.85,
-          "reason": "Disclosure evolves from general export control risks to confirming specific negative outcomes (no licenses granted for NAC products), explicitly stating competitive harm has occurred, and adding specific risks regarding supply chain transitions.",
-          "key_change": "Confirmation of export control license denials and competitive harm"
+          "materiality_score": 0.7,
+          "confidence_score": 0.8,
+          "reason": "The 2024 disclosure adds a specific, company-relevant dimension to the privacy risk: concerns about data use 'for use in AI'. This explicitly links general privacy compliance (CCPA/GDPR) to the company's core AI product strategy, indicating that public perception of AI data handling is a distinct and material reputational risk driver, beyond standard data breach fears.",
+          "key_change": "AI-specific data privacy reputational risk"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0204",
+        "match_id": "nvda_2024_2025_M0078",
         "relationship": "many_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures address the risks associated with US export controls on high-performance computing products, particularly regarding shipments to China and the associated licensing requirements. D044 (2024) cites the transition of operations out of China/Hong Kong, the time-consuming licensing process, and the lack of assurance for license grants. D037 (2025) details the evolution of these controls (including the 'AI Diffusion' IFR), the continued reliance on licensing, the specific impact on products like A100/H100, and similar risks regarding license denials or burdensome conditions. The shared specific topic is the impact of US export licensing regimes on NVIDIA's product sales and operational transitions in restricted regions.\n\nD045 (2024) describes the risk that the Chinese government will impose restrictions on sales of products containing components from suppliers like Micron. D037 (2025) contains specific sentences (S002-S003 in P093) that repeat this exact example and risk, detailing that the Chinese government may impose such restrictions and citing the Micron supplier example again. This confirms a shared specific topic regarding retaliatory or regulatory restrictions fr",
+        "explanation": "Both 2024 disclosures (D010 summary and D044 detailed) and 2025 disclosure (D064) describe the risk of stringent/changing data privacy and security laws, reputational damage, and impacts on product design/customer deterrence. D044 is the direct counterpart regarding global privacy laws (GDPR/CCPA). Evidence 2025: nvda_2025_1A_P103_S001, nvda_2025_1A_P103_S002, nvda_2025_1A_P106_S002.",
         "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1A_D010",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The company is subject to stringent and changing data privacy and security laws and obligations, which could damage its reputation, deter customers, affect product design, or result in legal proceedings and liability.",
+            "extraction_status": "source_validated"
+          },
           {
             "disclosure_id": "nvda_2024_1A_D044",
             "item": "1A",
             "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "US export controls have restricted NVIDIA's ability to ship specific high-performance products to China and other regions, resulting in no granted licenses for these products and harming the company's competitive position. Additionally, NVIDIA's business depends on consistent supply from overseas partners, particularly in Taiwan, and new restrictions impacting this supply or the ability to transition operations out of restricted regions would negatively affect business results, revenue, and operational flexibility.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_1A_D045",
-            "item": "1A",
-            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "The Chinese government may impose restrictions on the sale of NVIDIA's products or products containing components from suppliers like Micron, which could negatively impact business and financial results.",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Nvidia is subject to stringent and changing data privacy laws globally, including the GDPR, CCPA/CPRA, and emerging AI regulations, which impose obligations on data handling, consent, and rights like access and deletion. Non-compliance could lead to significant fines, litigation, reputational damage, and operational disruptions, while consumer concerns about data use in AI could also harm business results.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_1A_D037",
+            "disclosure_id": "nvda_2025_1A_D064",
             "item": "1A",
             "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
             "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "NVIDIA is subject to complex export controls, sanctions, and trade regulations that may restrict its ability to ship products, fulfill obligations, and serve customers. Specific risks include the impact of Ukraine war sanctions which led to the cessation of sales in Russia; restrictions targeting AI technologies that limit downstream customer acquisition and use of GPUs; and evolving US export licensing requirements, such as the January 2025 'AI Diffusion' IFR, which imposes worldwide licensing on advanced AI systems and divides the world into tiers, potentially reducing markets and favoring non-US alternatives. These controls disrupt supply chains, impose compliance burdens, encourage customers to use competitors or design out US semiconductors, and may lead to significant inventory provisions. Additionally, foreign governments, particularly China, may impose retaliatory restrictions, investigate NVIDIA's compliance, or encourage purchasing from local competitors, further harming business operations and financial results.",
+            "summary": "NVIDIA is subject to stringent and changing data privacy and security laws globally, including the GDPR, CCPA, and emerging state and federal regulations, as well as obligations related to AI usage; violations or concerns about data practices could damage reputation, deter customers, trigger regulatory proceedings, fines, or require changes to product design.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reworded",
-            "cosine_similarity": 0.95623,
-            "sequence_match_ratio": 0.48,
-            "length_ratio": 2.928885,
-            "word_count_delta": 2197,
-            "added_tokens_sample": [
-              "revisions",
-              "to",
-              "laws",
-              "or",
-              "regulations",
-              "or",
-              "their",
-              "interpretation",
-              "and",
-              "enforcement",
-              "could",
-              "also",
-              "result",
-              "in",
-              "increased",
-              "taxation",
-              "trade",
-              "sanctions",
-              "the",
-              "imposition"
-            ],
-            "removed_tokens_sample": [
-              "are",
-              "working",
-              "to",
-              "expand",
-              "offered",
-              "is",
-              "evaluating",
-              "countries",
-              "outside",
-              "china",
-              "management",
-              "of",
-              "these",
-              "new",
-              "licenses",
-              "and",
-              "other",
-              "requirements",
-              "is",
-              "complicated"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2024_1A_D044",
-            "score": 0.874357,
-            "normalised_score": 0.8744,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 87.44% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
-          "materiality": "Yes",
-          "materiality_score": 0.8,
-          "confidence_score": 0.85,
-          "reason": "Significant expansion of export control risks. The 2025 disclosure adds specific details on the January 2025 'AI Diffusion' IFR, worldwide licensing tiers for advanced AI systems, and specific retaliatory measures from China (e.g., compute standards). This quantifies and escalates the operational and market restrictions beyond the general risks in 2024.",
-          "key_change": "Escalation of export control and retaliatory risk details"
+          "materiality": "No",
+          "materiality_score": 0.15,
+          "confidence_score": 0.9,
+          "reason": "The 2025 disclosure consolidates risks from multiple 2024 sources but maintains the same core risk: adherence to stringent privacy laws (GDPR, CCPA) and AI obligations. The addition of 'emerging state and federal regulations' and 'AI usage' obligations is a standard expansion of scope for a tech company and does not materially alter the nature or magnitude of the privacy/security risk profile compared to the prior year's comprehensive disclosure.",
+          "key_change": "Consolidation and standard scope expansion of privacy risks"
         }
       }
     ],
@@ -259,32 +122,36 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1A_D079",
-            "peer_topic": "AI Regulatory and Export Control Risks",
-            "peer_summary": "AMD faces significant risks from evolving AI regulations and export controls. U.S. BIS restrictions prevent shipping certain AMD Instinct ICs and Versal FPGAs to China and other sanctioned regions without licenses, and require NAC notifications, creating uncertainty around product roadmaps and market access. Additionally, evolving AI-specific laws like the EU AI Act and regulations on the responsible use of AI may impede the ability to offer certain products, increase compliance costs, create potential liability for third-party misuse or IP infringement, and raise complex intellectual property issues.",
+            "peer_disclosure_id": "amd_2024_1A_D062",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Regulatory Compliance and Security Costs",
+            "peer_summary": "Strict privacy laws like GDPR and CCPA impose fines and penalties for data breaches, leading to ongoing costs for security enhancements, training, and remediation.",
             "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.140484,
+            "retrieval_score": 0.187901,
             "relationship": "same_topic",
-            "comparison": "Both AMD and NVIDIA disclose that U.S. export controls on AI-associated semiconductors and GPUs have directly restricted their ability to ship products to specific markets like China, negatively impacting their competitive positions and business results. While NVIDIA specifically notes that these restrictions have already disadvantaged it against competitors who sell non-restricted products or can secure licenses, AMD highlights the risk that further tightening of controls targeting AI/GPUs could further restrict exports, cause greater compliance costs, and reduce the customer base for AI-related products. Both companies face uncertainty regarding license grants and potential expansion of control scopes.",
+            "comparison": "Both Nvidia and AMD disclose that they are subject to strict, evolving data privacy laws like the GDPR and CCPA, and that non-compliance or concerns regarding data practices can lead to significant financial penalties, litigation, and reputational harm. However, Nvidia explicitly highlights the risk of reputational damage and adverse operating results stemming from consumer concerns about the use of their products for AI, whereas AMD focuses more on the direct financial burdens, citing ongoing and increasing costs for security enhancements, employee training, and remediation activities required to comply with these regulations.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1A",
                 "disclosure_id": "nvda_2024_1A_D044",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1A_P077_S011",
-                    "paragraph_id": "nvda_2024_1A_P077",
+                    "sentence_id": "nvda_2024_1A_P090_S001",
+                    "paragraph_id": "nvda_2024_1A_P090",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "The requirements have a disproportionate impact on NVIDIA and already have disadvantaged and may in the future disadvantage NVIDIA against certain of our competitors who sell products that are not subject to the new restrictions or may be able to acquire licenses for their products.",
+                    "text": "We are subject to stringent and changing data privacy and security laws, rules, regulations and other obligations.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "nvda_2024_1A_P078_S002",
-                    "paragraph_id": "nvda_2024_1A_P078",
+                    "sentence_id": "nvda_2024_1A_P091_S002",
+                    "paragraph_id": "nvda_2024_1A_P091",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our competitive position has been harmed, and our competitive position and future results may be further harmed, over the long-term, if there are further changes in the USG's export controls, including further expansion of the geographic, customer, or product scope of the controls, if customers purchase product from competitors, if customers develop their own internal solution, if we are unable to provide contractual warranty or other extended service obligations, if the USG does not grant licenses in a timely manner or denies licenses to significant customers or if we incur significant transition costs.",
+                    "text": "Concerns about our practices or the ultimate use of our products and services with regard to the collection, use, retention, security or disclosure of personal information or other privacy-related matters, including for use in AI, even if unfounded, could damage our reputation and adversely affect our operating results.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -292,27 +159,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1A_D079",
+                "item": "1A",
+                "disclosure_id": "amd_2024_1A_D062",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1A_P092_S005",
-                    "paragraph_id": "amd_2024_1A_P092",
+                    "sentence_id": "amd_2024_1A_P057_S002",
+                    "paragraph_id": "amd_2024_1A_P057",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The scope and application of such controls have been and may again be very broad, which may prohibit us from exporting or providing access to our products to any or all customers in one or more markets, including but not limited to China, and could negatively impact our manufacturing, testing and warehousing locations, or could impose other conditions that limit our ability to meet demand abroad.",
+                    "text": "In addition, many governments have enacted and are continuing to enact strict privacy and security laws, such as the UK's and European Union's General Data Protection Regulation (GDPR) and the California Consumer Privacy Act of 2018 (CCPA), as amended by the California Privacy Rights Act (CPRA), which provide for fines, penalties, and in the case of the CCPA and similar legislation, the basis for private claims for certain types of data breaches.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_1A_P092_S006",
-                    "paragraph_id": "amd_2024_1A_P092",
+                    "sentence_id": "amd_2024_1A_P057_S003",
+                    "paragraph_id": "amd_2024_1A_P057",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "If these export controls targeting semiconductors associated with AI including GPUs and associated products and services are further tightened, our ability to export our technology, products or services could be further restricted.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_1A_P117_S005",
-                    "paragraph_id": "amd_2024_1A_P117",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Such regulations and changes thereto could cause us to incur greater compliance costs, could impact our ability to sell or the ability of our customers and users worldwide to acquire, deploy and use systems that include our AI-related products and services and reduce the number of customers, which could negatively impact our business and financial results.",
+                    "text": "We anticipate ongoing and increasing costs related to enhancing and implementing information security controls, including costs related to upgrading application, computer, and network security components; training workers to maintain and monitor our security controls; investigating, responding to and remediating any data security breach, and addressing any related litigation or regulatory proceedings; mitigating reputational harm; and complying with external regulations.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -325,6 +186,11 @@
           "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "a9be8d8962e720fb80427580bffb2157c4bc7923e1647ae73a293cf241a3ff2e",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "c0a603c0dd91c1008403bf0c116e39378946615054b9568ac3d08fd12d87771b"
+    }
   }
 }

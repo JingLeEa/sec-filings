@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "23a3ebb11a473a8052082a28ee7a78b56e8bc86b80d7c7947b42bd87c90e7324",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "bf65cb5649818f57510bac2f71e7473e65b446b3b8c14a80530b049a3d059100",
+  "request_hash": "8b4734a9b0fbdd1bcdd759c5c38cde5ec63d57d2bca9ac3335117ae7cc03aabf",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D121\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both Intel and AMD disclosed significant operational restructuring in FY2024, though the nature and timing differed. Intel's restructuring involved a strategic segment reorganization in Q1 2024, specifically moving Altera from the DCAI segment to 'All other' to operate as a standalone business, which required retrospective adjustment of prior period segment data. In contrast, AMD implemented a workforce reduction plan in Q4 2024 to align resources with AI and enterprise growth, expecting substantial completion by Q1 FY2025. Intel's change was structural and retroactive regarding reporting, while AMD's was a cost-cutting measure executed later in the year.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P076_S003\",\n\"intc_2024_8_P076_S004\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P128_S001\",\n\"amd_2024_8_P128_S005\"\n]\n}\n]\n,\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"Candidate disclosures (avgo_2024_8_D150, avgo_2024_8_D149) discuss segment accounting policies, inter-segment revenue, and depreciation presentation. They do not contain substantive information regarding a restructuring of operating segments, changes to segment reporting boundaries, or the specific business reorganizations that are the focus of the target disclosure.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"Candidate disclosures (mu_2024_8_D114, mu_2024_8_D001) describe static segment identification and general consolidation policies. They do not disclose any restructuring of segments, changes to the composition of reportable units, or adjustments to segment reporting to align with new operating models during FY2024.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"Candidate disclosure (nvda_2024_8_D139) outlines standard segment reporting policies and asset non-review, noting no inter-segment revenue. It does not disclose any changes to segment structures, reorganizations of business units, or retrospective adjustments to segment reporting comparable to Intel's Altera segment relocation.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved for QCOM.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D062",
@@ -206,17 +209,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D121",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "2024 Restructuring Plan details and completion timeline",
             "peer_summary": "In Q4 2024, AMD implemented a restructuring plan to align resources with AI and enterprise growth opportunities, primarily involving a 4% global workforce reduction. The company expects these actions to be substantially completed by the end of Q1 fiscal 2025.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.061148,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and AMD disclose significant restructuring actions in FY2024 aimed at realigning their businesses, though the nature of the changes differs. Intel’s restructuring involved a fundamental change in segment reporting and organizational structure, specifically moving Altera to 'All other' to operate as a standalone business and retrospectively adjusting prior period data to reflect this new operating model. In contrast, AMD’s restructuring was a workforce reduction plan (4% global headcount) focused on aligning resources with AI and enterprise growth, with actions expected to be substantially completed by Q1 FY2025. Both disclose retrospective or realignment aspects tied to management’s internal view of performance, but Intel’s change altered the definition of reportable segments while AMD’s was an operational efficiency measure within its existing segment structure.",
+            "retrieval_score": 0.06019,
+            "relationship": "related_topic",
+            "comparison": "Both Intel and AMD disclosed significant operational restructuring in FY2024, though the nature and timing differed. Intel's restructuring involved a strategic segment reorganization in Q1 2024, specifically moving Altera from the DCAI segment to 'All other' to operate as a standalone business, which required retrospective adjustment of prior period segment data. In contrast, AMD implemented a workforce reduction plan in Q4 2024 to align resources with AI and enterprise growth, expecting substantial completion by Q1 FY2025. Intel's change was structural and retroactive regarding reporting, while AMD's was a cost-cutting measure executed later in the year.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D062",
                 "sentences": [
                   {
@@ -238,6 +245,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D121",
                 "sentences": [
                   {
@@ -248,10 +256,10 @@
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_8_P128_S002",
+                    "sentence_id": "amd_2024_8_P128_S005",
                     "paragraph_id": "amd_2024_8_P128",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The 2024 Restructuring Plan will primarily reduce global workforce by approximately 4% of headcount.",
+                    "text": "The Company expects actions associated with the 2024 Restructuring Plan to be substantially completed by the end of the first quarter of fiscal year 2025.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -265,26 +273,31 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "None of the retrieved candidates (avgo_2024_8_D048 on performance obligations, avgo_2024_8_D150 on inter-segment revenue) concern restructuring, segment realignment, or operational model changes comparable to Intel's disclosure regarding Altera's separation."
+        "rationale": "Candidate disclosures (avgo_2024_8_D150, avgo_2024_8_D149) discuss segment accounting policies, inter-segment revenue, and depreciation presentation. They do not contain substantive information regarding a restructuring of operating segments, changes to segment reporting boundaries, or the specific business reorganizations that are the focus of the target disclosure."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "None of the retrieved candidates (mu_2024_8_D001 on consolidation basis, mu_2024_8_D114 on segment consistency) disclose specific restructuring events, segment reorganizations, or changes in operating model comparable to Intel's Altera divestiture/separation."
+        "rationale": "Candidate disclosures (mu_2024_8_D114, mu_2024_8_D001) describe static segment identification and general consolidation policies. They do not disclose any restructuring of segments, changes to the composition of reportable units, or adjustments to segment reporting to align with new operating models during FY2024."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidate (nvda_2024_8_D001) only identifies the location of required information and does not contain substantive disclosure on restructuring or segment reporting changes."
+        "rationale": "Candidate disclosure (nvda_2024_8_D139) outlines standard segment reporting policies and asset non-review, noting no inter-segment revenue. It does not disclose any changes to segment structures, reorganizations of business units, or retrospective adjustments to segment reporting comparable to Intel's Altera segment relocation."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved for QCOM."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "bf65cb5649818f57510bac2f71e7473e65b446b3b8c14a80530b049a3d059100",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "8b4734a9b0fbdd1bcdd759c5c38cde5ec63d57d2bca9ac3335117ae7cc03aabf"
+    }
   }
 }

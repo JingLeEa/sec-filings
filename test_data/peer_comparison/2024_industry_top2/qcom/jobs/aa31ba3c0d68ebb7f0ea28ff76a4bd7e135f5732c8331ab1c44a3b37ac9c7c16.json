@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
-  "request_hash": "2254a83d4258daf4550b8645485e63d1c68bd931a3c4745e8aedbc37ed38c42a",
+  "input_fingerprint": "e41e6022adb4d847c0289913c33de7b4a26701f19d2828a112ec60fbf96be8dd",
+  "job_fingerprint": "894ad8f5931d7e5caaf8b42443d58a15d97d95cd69308786e2eb692dd23c9b16",
+  "request_hash": "b15eae70e4c32763346d67b28bb036dcd8d093bacd436001fb54371863563885",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_7_D094\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both QCOM and INTC disclosed net gains on equity investments as a key component of their financial performance in fiscal 2024. QCOM attributed the increase in its QSI segment's earnings before taxes to 'net gains on certain of our non-marketable equity investments.' Similarly, INTC recognized 'net gains on equity investments of $242 million' in 2024, primarily driven by gains from its marketable equity investment portfolio, specifically the sale of its interest in Astera Labs. While QCOM's disclosure focuses on the impact on a specific segment (QSI) and includes non-marketable investments, INTC provides a total dollar amount and specifies the realization through sales of marketable securities.\",\n\"target_sentence_ids\": [\n\"qcom_2024_7_P025_S001\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_7_P088_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"While AMD discusses 'Other income (expense), net' which includes 'changes in valuation of equity investments', the primary driver cited for the change year-over-year is 'decreased interest income from lower short-term investment balances', not gains on equity investments. The topic of equity investment gains as a primary driver for income/EBT increase is not substantively comparable to QCOM's QSI segment EBT increase driven by such gains.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"AVGO's Item 7 disclosures focus on operating cash flow changes due to VMware integration and income tax provision changes due to IP transfers. There is no comparable disclosure regarding net gains on equity investments driving income or segment results.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU's Item 7 disclosures focus on drivers of operating cash flow, such as changes in accounts payable, inventories, and receivables. There is no comparable disclosure regarding gains on equity investments.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA's Item 7 disclosures focus on gross margin drivers, specifically Data Center revenue growth and inventory provisions. There is no comparable disclosure regarding gains on equity investments.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
   "result": {
     "target_ticker": "QCOM",
     "target_disclosure_id": "qcom_2024_7_D027",
@@ -280,13 +283,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "While AMD mentions 'changes in valuation of equity investments' as a component of Other income, its primary driver for the change in Other income was a decrease in interest income. Unlike Qualcomm's specific disclosure of QSI EBT increasing due to net gains on non-marketable equity investments, or Intel's specific gain from an equity sale, AMD's equity investment valuation changes are a secondary component within a broader 'Other income' line item that declined overall."
+        "rationale": "While AMD discusses 'Other income (expense), net' which includes 'changes in valuation of equity investments', the primary driver cited for the change year-over-year is 'decreased interest income from lower short-term investment balances', not gains on equity investments. The topic of equity investment gains as a primary driver for income/EBT increase is not substantively comparable to QCOM's QSI segment EBT increase driven by such gains."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Broadcom's candidates discuss operating cash flow changes driven by VMware contributions and unallocated expense increases due to acquisition-related amortization. These topics do not match Qualcomm's specific disclosure regarding QSI segment earnings increases driven by net gains on non-marketable equity investments."
+        "rationale": "AVGO's Item 7 disclosures focus on operating cash flow changes due to VMware integration and income tax provision changes due to IP transfers. There is no comparable disclosure regarding net gains on equity investments driving income or segment results."
       },
       {
         "peer_ticker": "INTC",
@@ -295,17 +298,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_7_D094",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "2024 Gains on Equity Investments",
             "peer_summary": "In 2024, the company recognized net gains on equity investments of $242 million, primarily driven by $460 million in gains from its marketable equity investment portfolio, largely resulting from the sale of its interest in Astera Labs.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.288192,
+            "retrieval_score": 0.306888,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Qualcomm report that non-operating investment gains were a key driver of 2024 earnings/investment performance, though the specific nature of the gains differs. Intel recognized $242 million in net gains on equity investments, specifically driven by realized gains from the sale of its interest in Astera Labs. Qualcomm’s QSI segment EBT increase was also primarily driven by net gains on non-marketable equity investments, without specifying a single divestiture event like Intel's Astera Labs sale. Both disclosures highlight that investment portfolio performance significantly impacted their respective financial results for the year.",
+            "comparison": "Both QCOM and INTC disclosed net gains on equity investments as a key component of their financial performance in fiscal 2024. QCOM attributed the increase in its QSI segment's earnings before taxes to 'net gains on certain of our non-marketable equity investments.' Similarly, INTC recognized 'net gains on equity investments of $242 million' in 2024, primarily driven by gains from its marketable equity investment portfolio, specifically the sale of its interest in Astera Labs. While QCOM's disclosure focuses on the impact on a specific segment (QSI) and includes non-marketable investments, INTC provides a total dollar amount and specifies the realization through sales of marketable securities.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D027",
                 "sentences": [
                   {
@@ -320,6 +327,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D094",
                 "sentences": [
                   {
@@ -340,14 +348,19 @@
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Micron's candidates discuss operating cash flow drivers related to net income, working capital changes, and inventory. There is no disclosure in the supplied candidates regarding equity investment gains or losses impacting earnings, which is the core topic of the Qualcomm disclosure."
+        "rationale": "MU's Item 7 disclosures focus on drivers of operating cash flow, such as changes in accounts payable, inventories, and receivables. There is no comparable disclosure regarding gains on equity investments."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "NVIDIA's candidates focus on gross margin performance driven by Data Center revenue growth and inventory provisions. This is a product and margin metric, distinct from the equity investment gain drivers highlighted in Qualcomm's QSI segment results."
+        "rationale": "NVDA's Item 7 disclosures focus on gross margin drivers, specifically Data Center revenue growth and inventory provisions. There is no comparable disclosure regarding gains on equity investments."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "894ad8f5931d7e5caaf8b42443d58a15d97d95cd69308786e2eb692dd23c9b16",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
+      "request_hash": "b15eae70e4c32763346d67b28bb036dcd8d093bacd436001fb54371863563885"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "180bd8bc9de38f0e49ffdb1b66fdec4519f36a627b6b9b26182f7be530451c49",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "ccb8451e5e667438552a0057673715ea6e7f2cc020ceba601c3e9d3fa2a740ff",
+  "request_hash": "2a15e78b03af19976d4c20c3884b5a086338cbc30ea78073c4aae282362f68a2",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D141\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Broadcom disclose specific accounting policies and actual amounts for interest and penalties related to unresolved tax or regulatory matters. Intel reports a cash settlement of €516 million ($560 million) paid by the European Commission to settle claims for default interest on a historic fine. Similarly, Broadcom recognizes significant interest and penalties ($144 million in 2024) related to unrecognized tax benefits, with total accrued amounts of approximately $701 million, primarily driven by major acquisitions and current accruals.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P218_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P184_S004\",\n\"avgo_2024_8_P184_S005\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"Retrieved candidates cover depreciation expense and marketing/advertising expenses, which are unrelated to the target's topic of legal proceedings and EC competition matter settlements.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"Retrieved candidates cover intangible asset amortization estimates and property, plant, and equipment depreciation/interest capitalization, which are unrelated to the target's topic of legal proceedings and EC competition matter settlements.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"Retrieved candidates cover asset acquisitions via assumed liabilities and depreciation/amortization expenses, which are unrelated to the target's topic of legal proceedings and EC competition matter settlements.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D191",
@@ -209,32 +212,91 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates (Depreciation expense, Marketing and advertising expenses) concern general financial accounting metrics and operational costs, which are substantively different from Intel's specific legal contingency and litigation settlement topic (EC Competition Matter). Shared taxonomy labels are insufficient for a meaningful comparison."
+        "rationale": "Retrieved candidates cover depreciation expense and marketing/advertising expenses, which are unrelated to the target's topic of legal proceedings and EC competition matter settlements."
       },
       {
         "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates (Unrecognized Tax Benefits, Depreciation Expense) concern tax accounting policies and asset depreciation, which are substantively different from Intel's specific legal contingency regarding a European Commission antitrust fine settlement. Shared taxonomy labels are insufficient for a meaningful comparison."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D141",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Unrecognized Tax Benefits Reconciliation and Amounts",
+            "peer_summary": "The company recognized $144 million, $22 million, and $25 million in interest and penalties during fiscal years 2024, 2023, and 2022, respectively, with total accrued interest and penalties reaching approximately $701 million as of November 3, 2024, primarily due to the VMware acquisition and current year accruals. Approximately $6,544 million and $5,044 million of unrecognized tax benefits and accrued interest and penalties would benefit the effective income tax rate if recognized as of November 3, 2024, and October 29, 2023, respectively.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.117434,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Broadcom disclose specific accounting policies and actual amounts for interest and penalties related to unresolved tax or regulatory matters. Intel reports a cash settlement of €516 million ($560 million) paid by the European Commission to settle claims for default interest on a historic fine. Similarly, Broadcom recognizes significant interest and penalties ($144 million in 2024) related to unrecognized tax benefits, with total accrued amounts of approximately $701 million, primarily driven by major acquisitions and current accruals.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D191",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P218_S002",
+                    "paragraph_id": "intc_2024_8_P218",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "In November 2024, the EC paid us approximately €516 million ($560 million) in settlement of the applications.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D141",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P184_S004",
+                    "paragraph_id": "avgo_2024_8_P184",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "During fiscal years 2024, 2023 and 2022, we recognized interest and penalties of $144 million, $22 million and $25 million respectively, within the provision for income taxes.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P184_S005",
+                    "paragraph_id": "avgo_2024_8_P184",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "As of November 3, 2024 and October 29, 2023, the total accrued interest and penalties was approximately $701 million and $389 million, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates (Intangible asset amortization, Property/Plant/Equipment depreciation and capitalized interest) concern asset valuation and accounting methods, which are substantively different from Intel's specific legal contingency regarding a European Commission antitrust fine settlement. Shared taxonomy labels are insufficient for a meaningful comparison."
+        "rationale": "Retrieved candidates cover intangible asset amortization estimates and property, plant, and equipment depreciation/interest capitalization, which are unrelated to the target's topic of legal proceedings and EC competition matter settlements."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "Retrieved candidates cover asset acquisitions via assumed liabilities and depreciation/amortization expenses, which are unrelated to the target's topic of legal proceedings and EC competition matter settlements."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "ccb8451e5e667438552a0057673715ea6e7f2cc020ceba601c3e9d3fa2a740ff",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "2a15e78b03af19976d4c20c3884b5a086338cbc30ea78073c4aae282362f68a2"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
-  "request_hash": "0a276ec64e5d807ae133cea3b9fc6c349860cdc7779dabbe75488fdaa7be6e39",
+  "input_fingerprint": "e41e6022adb4d847c0289913c33de7b4a26701f19d2828a112ec60fbf96be8dd",
+  "job_fingerprint": "458b07e5b5b8982f755b9f551a943948d90021df67c1d72b33b8a493fd1b3b61",
+  "request_hash": "8c8195b35fd56c91c645ad024176c6920347830fd6e35a6e5d5a96d65ee89075",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_7_D080\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both QCOM and INTC discuss specific revenue growth drivers for their core product lines in fiscal 2024. QCOM attributes its 5% QTL revenue increase to higher estimated sales of 3G/4G/5G-based multimode products. Similarly, INTC attributes its 3% Intel Products revenue increase to higher revenue in specific segments, specifically Client Computing Group (CCG) and Data Center and AI (DCAI). While QCOM focuses on technology adoption (multimode connectivity) and INTC focuses on volume/demand shifts in end-markets (notebooks, high-core server products), both disclosures serve to explain the positive revenue variance in their respective primary business units.\",\n\"target_sentence_ids\": [\n\"qcom_2024_7_P007_S004\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_7_P076_S004\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved candidates (amd_2024_7_D033 and amd_2024_7_D032) focus on operating expense increases (MG&A and R&D) and internal cost drivers (go-to-market activities, AI headcount). The target QCOM disclosure focuses on top-line revenue drivers (QTL revenue growth due to multimode product sales). These are distinct financial measures (expense vs. revenue) and distinct operational topics (cost management/strategy execution vs. product demand/sales volume).\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved candidates (avgo_2024_7_D052 and avgo_2024_7_D051) focus on expense increases driven by acquisition integration (VMware Merger) and stock-based compensation. The target QCOM disclosure focuses on organic revenue growth drivers. The topics (acquisition-related expense accretion vs. core product revenue growth) are not substantively comparable.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates (mu_2024_7_D021 and mu_2024_7_D005) focus on SG&A expense trends and total revenue growth driven by commodity volume/ASP in memory products (DRAM/NAND). While mu_2024_7_D005 discusses revenue growth, it attributes it to broad commodity market dynamics (bit shipments and ASPs) for memory, whereas QCOM attributes its growth to specific product adoption (3G/4G/5G multimode). The drivers (commodity cycle vs. specific technology adoption in semiconductors/connectivity) and business units (Memory vs. QTL licensing) are sufficiently distinct in nature and context to preclude a meaningful direct comparison of the specific disclosure topics.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates (nvda_2024_7_D022 and nvda_2024_7_D053) focus on Gross Margin drivers (Data Center revenue mix and inventory provisions). The target QCOM disclosure focuses on Revenue growth drivers. Gross margin profitability drivers are a different financial topic than revenue volume/price drivers.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
   "result": {
     "target_ticker": "QCOM",
     "target_disclosure_id": "qcom_2024_7_D007",
@@ -168,13 +171,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates for AMD (D033, D032) disclose drivers for operating expenses (MG&A and R&D) rather than revenue growth drivers. The target disclosure concerns QTL revenue increases, making the expense-focused candidates on unrelated financial metrics incomparable."
+        "rationale": "The retrieved candidates (amd_2024_7_D033 and amd_2024_7_D032) focus on operating expense increases (MG&A and R&D) and internal cost drivers (go-to-market activities, AI headcount). The target QCOM disclosure focuses on top-line revenue drivers (QTL revenue growth due to multimode product sales). These are distinct financial measures (expense vs. revenue) and distinct operational topics (cost management/strategy execution vs. product demand/sales volume)."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates for Avago (D052, D051) disclose drivers for non-revenue line items (amortization of intangibles and SG&A expenses) related to the VMware merger. These do not compare to the target's focus on specific product-based revenue drivers."
+        "rationale": "The retrieved candidates (avgo_2024_7_D052 and avgo_2024_7_D051) focus on expense increases driven by acquisition integration (VMware Merger) and stock-based compensation. The target QCOM disclosure focuses on organic revenue growth drivers. The topics (acquisition-related expense accretion vs. core product revenue growth) are not substantively comparable."
       },
       {
         "peer_ticker": "INTC",
@@ -182,18 +185,22 @@
         "comparisons": [
           {
             "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_7_D081",
-            "peer_topic": "CCG Revenue Composition Changes",
-            "peer_summary": "CCG revenue increased 4% from 2023 primarily due to higher notebook volume, which was partially offset by lower desktop revenue due to lower demand and lower other CCG revenue resulting from the exit of legacy businesses.",
+            "peer_disclosure_id": "intc_2024_7_D080",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Intel Products Revenue Growth Drivers",
+            "peer_summary": "Intel Products revenue increased 3% from 2023, primarily due to higher Client Computing Group (CCG) and Data Center and AI (DCAI) revenue.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.080615,
+            "retrieval_score": 0.077842,
             "relationship": "same_topic",
-            "comparison": "Both Qualcomm and Intel disclose specific drivers for their respective segment revenue changes in fiscal 2024, focusing on product volume and demand shifts. Qualcomm attributes its QTL revenue increase to estimated sales of 3G/4G/5G-based multimode products, whereas Intel attributes its CCG revenue increase to higher notebook volume, partially offset by lower desktop revenue due to demand decreases. Both disclosures highlight the interplay between specific product categories (multimode chips vs. notebooks/desktops) and end-market demand as key financial drivers.",
+            "comparison": "Both QCOM and INTC discuss specific revenue growth drivers for their core product lines in fiscal 2024. QCOM attributes its 5% QTL revenue increase to higher estimated sales of 3G/4G/5G-based multimode products. Similarly, INTC attributes its 3% Intel Products revenue increase to higher revenue in specific segments, specifically Client Computing Group (CCG) and Data Center and AI (DCAI). While QCOM focuses on technology adoption (multimode connectivity) and INTC focuses on volume/demand shifts in end-markets (notebooks, high-core server products), both disclosures serve to explain the positive revenue variance in their respective primary business units.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D007",
                 "sentences": [
                   {
@@ -208,13 +215,14 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D081",
+                "item": "7",
+                "disclosure_id": "intc_2024_7_D080",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_7_P076_S005",
+                    "sentence_id": "intc_2024_7_P076_S004",
                     "paragraph_id": "intc_2024_7_P076",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "CCG revenue increased 4% from 2023 primarily due to higher notebook volume compared to 2023 and was partially offset by lower other CCG revenue, which decreased from 2023 due to the exit of legacy businesses, and lower desktop revenue, which decreased on lower demand compared to 2023.",
+                    "text": "Intel Products revenue increased 3% from 2023 due primarily to higher CCG and DCAI revenue.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -228,14 +236,19 @@
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates for Micron (D021, D005) disclose drivers for SG&A expenses and total revenue growth (DRAM/NAND bits and ASPs). While D005 discusses revenue, it focuses on memory product dynamics (bits/ASP) which differs from Qualcomm's specific mobile connectivity product sales context. D021 is expense-focused. Thus, no candidate is sufficiently comparable in topic specificity."
+        "rationale": "The retrieved candidates (mu_2024_7_D021 and mu_2024_7_D005) focus on SG&A expense trends and total revenue growth driven by commodity volume/ASP in memory products (DRAM/NAND). While mu_2024_7_D005 discusses revenue growth, it attributes it to broad commodity market dynamics (bit shipments and ASPs) for memory, whereas QCOM attributes its growth to specific product adoption (3G/4G/5G multimode). The drivers (commodity cycle vs. specific technology adoption in semiconductors/connectivity) and business units (Memory vs. QTL licensing) are sufficiently distinct in nature and context to preclude a meaningful direct comparison of the specific disclosure topics."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates for NVIDIA (D068, D022) disclose drivers for cash flow from operations and gross margin trends. These financial measures and their drivers are distinct from the target's disclosure of specific revenue volume drivers for a product segment."
+        "rationale": "The retrieved candidates (nvda_2024_7_D022 and nvda_2024_7_D053) focus on Gross Margin drivers (Data Center revenue mix and inventory provisions). The target QCOM disclosure focuses on Revenue growth drivers. Gross margin profitability drivers are a different financial topic than revenue volume/price drivers."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "458b07e5b5b8982f755b9f551a943948d90021df67c1d72b33b8a493fd1b3b61",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
+      "request_hash": "8c8195b35fd56c91c645ad024176c6920347830fd6e35a6e5d5a96d65ee89075"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "ebb7d4480f87cd15da420bbf429a67ea860b72f4a588e8e2eef214bd62aaab95",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "61a1cd9d5ef31cfbb4b9ce79be88347f0512c6ebabeb5adc9e1c9e7ff6e4ea49",
+  "request_hash": "c4dcacb34573f6b46049da965b098da7fa64ae055a74a0247dae6b26e4fa02ff",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1A_D047\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and AMD disclose risks and strategies specifically tied to the adoption of AI-capable processors in the Client (PC) segment. Intel highlights the introduction of 'Intel Core Ultra processors, powering the latest AI PCs' and 'Intel Xeon 6 processors' as part of its brand portfolio strategy to drive preference and aid consumer choices. Similarly, AMD explicitly states that its Client segment revenue 'will depend in part on the market's adoption of AI PCs' and notes the active building of AI capabilities like 'Ryzen AI PC processors,' while warning that there is 'no assurance about the rate and pace of adoption.' While Intel frames this as a positive brand differentiation and product launch, AMD frames it as a demand-side risk and uncertainty regarding market acceptance.\",\n\"target_sentence_ids\": [\n\"intc_2024_1A_P107_S001\",\n\"intc_2024_1A_P107_S003\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1A_P021_S005\",\n\"amd_2024_1A_P021_S006\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved candidates (D012, D044) focus on supplier concentration risks and VMware merger integration risks, respectively. These do not concern the same specific topic of CPU brand strategy or AI PC market adoption dynamics as Intel's disclosure.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates (D033, D002) focus on customer revenue concentration and IP protection/personnel risks. These are distinct from Intel's disclosure regarding CPU brand portfolio strategy and AI processor market introduction.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates (D019, D020) focus on general competition impacting market share and risks from inaccurate demand estimation/supply mismatches. While they touch on competition and AI, they do not address the specific strategic topic of building specific CPU/client brands or the adoption risks of AI PCs in the manner Intel does.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The retrieved candidates (D018, D073) focus on licensee dependency for product success and general strategic goals for supply chain/acquisitions. These do not share the specific topic of CPU brand strategy or AI PC adoption risks with Intel's disclosure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1A_D058",
@@ -118,18 +121,22 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1A_D034",
-            "peer_topic": "Intel competitive dominance and practices",
-            "peer_summary": "Intel's dominance in the microprocessor market and its aggressive business practices, such as rebating, pricing actions, and exclusivity payments, may limit AMD's ability to compete effectively, potentially resulting in lower unit sales, lower average selling prices, and adversely affected margins and profitability.",
+            "peer_disclosure_id": "amd_2024_1A_D047",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Client segment AI adoption and historical performance risks",
+            "peer_summary": "Client segment revenue depends on AI PC adoption; while AMD is building AI capabilities like Ryzen AI into Client products, adoption pace is uncertain; past revenue declines in Client and Gaming segments have been driven by form factor changes, competition, and replacement cycle changes.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.037389,
+            "retrieval_score": 0.049137,
             "relationship": "same_topic",
-            "comparison": "Both disclosures center on the competitive dynamic within the microprocessor market, but with distinct perspectives: Intel discloses its proactive strategy to build a strong corporate brand and limited portfolio (Core, Xeon) to drive preference, whereas AMD discloses the risk that Intel's market dominance and aggressive practices (rebates, exclusivity) may limit AMD's ability to compete effectively. Intel frames the brand architecture as a strategic objective to aid consumer choice, while AMD frames Intel's market position and incentives as a barrier to fair competition and profitability.",
+            "comparison": "Both Intel and AMD disclose risks and strategies specifically tied to the adoption of AI-capable processors in the Client (PC) segment. Intel highlights the introduction of 'Intel Core Ultra processors, powering the latest AI PCs' and 'Intel Xeon 6 processors' as part of its brand portfolio strategy to drive preference and aid consumer choices. Similarly, AMD explicitly states that its Client segment revenue 'will depend in part on the market's adoption of AI PCs' and notes the active building of AI capabilities like 'Ryzen AI PC processors,' while warning that there is 'no assurance about the rate and pace of adoption.' While Intel frames this as a positive brand differentiation and product launch, AMD frames it as a demand-side risk and uncertainty regarding market acceptance.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D058",
                 "sentences": [
                   {
@@ -140,10 +147,10 @@
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "intc_2024_1A_P107_S002",
+                    "sentence_id": "intc_2024_1A_P107_S003",
                     "paragraph_id": "intc_2024_1A_P107",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "The Intel Core processor family and Intel Xeon trademarks make up our key CPU brands.",
+                    "text": "This year we introduced our new Intel Core Ultra processors, powering the latest AI PCs, and our Intel Xeon 6 processors, built with AI acceleration in every core.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -151,20 +158,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1A_D034",
+                "item": "1A",
+                "disclosure_id": "amd_2024_1A_D047",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1A_P009_S001",
-                    "paragraph_id": "amd_2024_1A_P009",
+                    "sentence_id": "amd_2024_1A_P021_S005",
+                    "paragraph_id": "amd_2024_1A_P021",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Intel Corporation's dominance of the microprocessor market and its aggressive business practices may limit our ability to compete effectively on a level playing field.",
+                    "text": "Also, our Client segment revenue is focused on the consumer desktop and notebook PC segments and will depend in part on the market's adoption of AI PCs.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_1A_P010_S005",
-                    "paragraph_id": "amd_2024_1A_P010",
+                    "sentence_id": "amd_2024_1A_P021_S006",
+                    "paragraph_id": "amd_2024_1A_P021",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We may be materially adversely affected by Intel's business practices, including rebating and allocation strategies and pricing actions designed to limit our market share and margins; product mix and introduction schedules; product bundling, marketing and merchandising strategies; and exclusivity payments to its current and potential customers, retailers and channel partners.",
+                    "text": "We are actively building AI capabilities into all our Client products, such as Ryzen AI PC processors, but there can be no assurance about the rate and pace of adoption of such product offerings.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -178,26 +186,31 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that addresses brand strategy, portfolio management, or competitive positioning in a manner comparable to Intel's disclosure. AVGO candidates focus on supply chain concentration and macroeconomic trade risks, which are unrelated topics."
+        "rationale": "The retrieved candidates (D012, D044) focus on supplier concentration risks and VMware merger integration risks, respectively. These do not concern the same specific topic of CPU brand strategy or AI PC market adoption dynamics as Intel's disclosure."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that addresses brand strategy, portfolio management, or competitive positioning in a manner comparable to Intel's disclosure. MU candidates focus on customer revenue concentration and intellectual property risks, which are unrelated topics."
+        "rationale": "The retrieved candidates (D033, D002) focus on customer revenue concentration and IP protection/personnel risks. These are distinct from Intel's disclosure regarding CPU brand portfolio strategy and AI processor market introduction."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that addresses brand strategy, portfolio management, or competitive positioning in a manner comparable to Intel's disclosure. NVDA candidates focus on customer/channel concentration and risks associated with new cloud/software business models, which are unrelated topics."
+        "rationale": "The retrieved candidates (D019, D020) focus on general competition impacting market share and risks from inaccurate demand estimation/supply mismatches. While they touch on competition and AI, they do not address the specific strategic topic of building specific CPU/client brands or the adoption risks of AI PCs in the manner Intel does."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that addresses brand strategy, portfolio management, or competitive positioning in a manner comparable to Intel's disclosure. QCOM candidates focus on supply chain capacity, acquisitions, and licensee dependency, which are unrelated topics."
+        "rationale": "The retrieved candidates (D018, D073) focus on licensee dependency for product success and general strategic goals for supply chain/acquisitions. These do not share the specific topic of CPU brand strategy or AI PC adoption risks with Intel's disclosure."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "61a1cd9d5ef31cfbb4b9ce79be88347f0512c6ebabeb5adc9e1c9e7ff6e4ea49",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "c4dcacb34573f6b46049da965b098da7fa64ae055a74a0247dae6b26e4fa02ff"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "c0669900fcfa4f86d1d04aed1ec55db3e479ddd7bc628442d7c8c0f100ac5e26",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "1ce103adc3445fc76a6b9f79f743de6782372923d34b70c86a8de8f7ccd4d045",
+  "request_hash": "420c24f5c8f7383acb5159aa0689cc056513000a6d11fad8795e5d3cfce5ac99",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_1_D005\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Broadcom disclose significant debt financing activities and associated interest rate risk within Item 1. Intel explicitly quantifies the sensitivity of its interest expense to rate changes, stating that a 1% increase would increase annual interest expense by approximately $120 million due to fixed-rate debt swapped to floating-rate. Similarly, Broadcom discloses in Item 1 that it funded the cash portion of its VMware acquisition with $30.4 billion in term loans, directly linking its major capital resource action to debt issuance which creates the interest rate exposure described by Intel.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P077_S001\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_1_P004_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"Retrieved candidates (amd_2024_1_D081, amd_2024_1_D100) cover global workforce headcount and fiscal year definitions respectively. Neither discloses interest rate sensitivity, debt swap mechanisms, or specific interest expense quantifications comparable to Intel's Item 1 topic.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"Retrieved candidates (mu_2024_1_D046, mu_2024_1_D092) cover customer revenue concentration and tariff impacts on product costs. These topics are unrelated to Intel's disclosure on interest rate sensitivity and fixed-to-floating debt swaps.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"Retrieved candidates (nvda_2024_1_D071, nvda_2024_1_D026) cover employee turnover rates and RTX AI ecosystem market position. Neither contains substantive disclosures regarding interest rate risk, debt structures, or interest expense sensitivities comparable to Intel's Item 1 topic.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"Retrieved candidates (qcom_2024_1_D060, qcom_2024_1_D072) cover global workforce statistics/demographics and links to Corporate Responsibility Reports. Neither contains substantive disclosures regarding interest rate risk, debt structures, or interest expense sensitivities comparable to Intel's Item 1 topic.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1_D086",
@@ -186,32 +189,84 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates (amd_2024_1_D081: Global Workforce Headcount; amd_2024_1_D100: Fiscal Year Definition) do not concern interest rate sensitivity or financial market risk, which is the topic of the target disclosure (intc_2024_1_D086)."
+        "rationale": "Retrieved candidates (amd_2024_1_D081, amd_2024_1_D100) cover global workforce headcount and fiscal year definitions respectively. Neither discloses interest rate sensitivity, debt swap mechanisms, or specific interest expense quantifications comparable to Intel's Item 1 topic."
       },
       {
         "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "Retrieved candidates (avgo_2024_1_D085: Voluntary attrition rates; avgo_2024_1_D005: VMware Acquisition) do not concern interest rate sensitivity. While the VMware acquisition involved debt, the disclosure focuses on acquisition mechanics and workforce metrics, not quantitative interest rate risk analysis comparable to the target."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_1_D005",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "VMware Acquisition and Related Transactions",
+            "peer_summary": "On November 22, 2023, Broadcom acquired VMware for a fair value of $53.4 billion using $30.4 billion in term loans and cash on hand, and subsequently sold VMware's end-user computing business to KKR for $3.5 billion.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.031862,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Broadcom disclose significant debt financing activities and associated interest rate risk within Item 1. Intel explicitly quantifies the sensitivity of its interest expense to rate changes, stating that a 1% increase would increase annual interest expense by approximately $120 million due to fixed-rate debt swapped to floating-rate. Similarly, Broadcom discloses in Item 1 that it funded the cash portion of its VMware acquisition with $30.4 billion in term loans, directly linking its major capital resource action to debt issuance which creates the interest rate exposure described by Intel.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "1",
+                "disclosure_id": "intc_2024_1_D086",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1_P077_S001",
+                    "paragraph_id": "intc_2024_1_P077",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Taking into account fixed-rate debt that is swapped to floating-rate debt, a hypothetical increase in interest rates of 1% would result in an increase in annual interest expense of approximately $120 million from debt outstanding as of December 28, 2024 ($120 million from debt outstanding as of December 30, 2023).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "1",
+                "disclosure_id": "avgo_2024_1_D005",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1_P004_S002",
+                    "paragraph_id": "avgo_2024_1_P004",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We funded the cash portion of the VMware Merger consideration with net proceeds from the issuance of $30.4 billion in term loans under a credit agreement that we entered into on August 15, 2023, as well as cash on hand.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates (mu_2024_1_D046: Customer revenue concentration; mu_2024_1_D087: External Reporting Disclaimer) do not concern interest rate sensitivity or financial market risk. One candidate addresses customer concentration, the other legal disclaimers."
+        "rationale": "Retrieved candidates (mu_2024_1_D046, mu_2024_1_D092) cover customer revenue concentration and tariff impacts on product costs. These topics are unrelated to Intel's disclosure on interest rate sensitivity and fixed-to-floating debt swaps."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates (nvda_2024_1_D067: Employee Turnover Rate; nvda_2024_1_D052: External reporting disclaimer) do not concern interest rate sensitivity or financial market risk. Both focus on human capital or legal disclaimers."
+        "rationale": "Retrieved candidates (nvda_2024_1_D071, nvda_2024_1_D026) cover employee turnover rates and RTX AI ecosystem market position. Neither contains substantive disclosures regarding interest rate risk, debt structures, or interest expense sensitivities comparable to Intel's Item 1 topic."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates (qcom_2024_1_D060: Global Workforce Statistics; qcom_2024_1_D072: Additional Resources Disclaimer) do not concern interest rate sensitivity or financial market risk. Both focus on human capital demographics or legal disclaimers."
+        "rationale": "Retrieved candidates (qcom_2024_1_D060, qcom_2024_1_D072) cover global workforce statistics/demographics and links to Corporate Responsibility Reports. Neither contains substantive disclosures regarding interest rate risk, debt structures, or interest expense sensitivities comparable to Intel's Item 1 topic."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "1ce103adc3445fc76a6b9f79f743de6782372923d34b70c86a8de8f7ccd4d045",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "420c24f5c8f7383acb5159aa0689cc056513000a6d11fad8795e5d3cfce5ac99"
+    }
   }
 }

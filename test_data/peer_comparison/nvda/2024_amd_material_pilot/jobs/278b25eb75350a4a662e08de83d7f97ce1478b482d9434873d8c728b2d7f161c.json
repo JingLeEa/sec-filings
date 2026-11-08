@@ -1,0 +1,224 @@
+{
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "ef1e2196b511a650922fb4e4daa4aaa2eecba023a498bc4a2224836b6af7ae72",
+  "request_hash": "35b4c3899e9f2bd89b6a49edc982c36a318c260a2965d9bfb3bce937a8009eee",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_8_D136\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both NVDA and AMD disclose purchase obligations but differ significantly in flexibility and cancellation terms. NVDA discloses $16.1 billion in obligations with specific flexibility, stating agreements 'allow us the option to cancel, reschedule, and adjust our requirements... prior to firm orders,' implying operational agility. In contrast, AMD defines its purchase commitments as 'obligations under noncancellable purchase orders' or those with 'significant penalties,' highlighting a rigid, non-cancellable structure without mentioning the same level of pre-order adjustability found in NVDA's disclosures.\",\n      \"target_sentence_ids\": [\n        \"nvda_2024_8_P128_S001\",\n        \"nvda_2024_8_P128_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_8_P144_S002\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_8_D135\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both companies identify their supply chain components, but NVDA quantifies the total liability while AMD details the composition. NVDA reports a total outstanding obligation of '$16.1 billion' for inventory and supply. AMD does not provide a total dollar amount for these commitments in the provided text but specifies the nature of the obligations, stating they 'primarily include the Company's obligations to purchase wafers and substrates from third parties,' whereas NVDA focuses on the aggregate value rather than the specific input types in this excerpt.\",\n      \"target_sentence_ids\": [\n        \"nvda_2024_8_P128_S001\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_8_P144_S001\"\n      ]\n    }\n  ],\n  \"no_match\": []\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_8_D116",
+    "item": "8",
+    "target_topic": "Inventory and Supply Obligations Total and Flexibility",
+    "target_summary": "As of January 28, 2024, NVIDIA had $16.1 billion in outstanding inventory purchase and long-term supply and capacity obligations, governed by agreements with contract manufacturers that allow for cancellation, rescheduling, or adjustment of requirements prior to firm orders, though such changes may incur costs.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0346",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report total outstanding inventory purchase and long-term supply obligations as of fiscal year-end. 2023 evidence: 'As of January 29, 2023, we had outstanding inventory purchase and long-term supply obligations totaling $4.92 billion, inclusive of the $810 million.' (nvda_2023_8_P129_S002). 2024 evidence: 'As of January 28, 2024, we had outstanding inventory purchase and long-term supply and capacity obligations totaling $16.1 billion.' (nvda_2024_8_P128_S001). The 2024 disclosure also details the contractual nature of these obligations (cancellation/rescheduling options), which is implicitly part of the 'purchase obligations' topic, whereas 2023 D103 focused on the aggregate amount. Despite the difference in detail level and taxonomies, they address the same specific financial commitment subject.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_8_D103",
+            "item": "8",
+            "section": "Note 13 - Commitments and Contingencies > Purchase Obligations",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of January 29, 2023, the company had outstanding inventory purchase and long-term supply obligations totaling $4.92 billion, including $810 million remaining unpaid under long-term supply agreements where advance payments have been made.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D116",
+            "item": "8",
+            "section": "Note 13 - Commitments and Contingencies > Purchase Obligations",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "As of January 28, 2024, NVIDIA had $16.1 billion in outstanding inventory purchase and long-term supply and capacity obligations, governed by agreements with contract manufacturers that allow for cancellation, rescheduling, or adjustment of requirements prior to firm orders, though such changes may incur costs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The disclosure represents a significant quantitative change in supply chain commitments, increasing from $4.92 billion to $16.1 billion (a ~227% increase). This reflects a substantial escalation in inventory purchase and long-term supply/capacity obligations, indicating a major shift in operational scale or supply chain risk.",
+          "key_change": "Significant increase in supply obligations"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0325",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure combines total obligations ($16.1B) and contractual terms into one ID. The 2025 filing splits these into two IDs: D108 covers the total amount ($30.8B) and D109 covers the contractual terms (cancellable/adjustable agreements). 2024 cites 'As of January 28, 2024, we had outstanding inventory purchase... obligations totaling $16.1 billion.' (P128_S001) and 'We enter into agreements with contract manufacturers that allow them to procure... allow us the option to cancel, reschedule, and adjust...' (P128_S002). 2025 D108 cites 'As of January 26, 2025, we had outstanding inventory purchase... obligations totaling $30.8 billion...' (P124_S001). 2025 D109 cites 'We enter into agreements with contract manufacturers that allow them to procure... these agreements are cancellable, able to be rescheduled, or adjustable...' (P124_S002, P124_S003).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D116",
+            "item": "8",
+            "section": "Note 13 - Commitments and Contingencies > Purchase Obligations",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "As of January 28, 2024, NVIDIA had $16.1 billion in outstanding inventory purchase and long-term supply and capacity obligations, governed by agreements with contract manufacturers that allow for cancellation, rescheduling, or adjustment of requirements prior to firm orders, though such changes may incur costs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_8_D108",
+            "item": "8",
+            "section": "Note 12 - Commitments and Contingencies > Purchase Obligations",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "As of January 26, 2025, the company had $30.8 billion in outstanding inventory purchase and long-term supply and capacity obligations, an increase driven by commitments for new product introductions including the Blackwell architecture.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_8_D109",
+            "item": "8",
+            "section": "Note 12 - Commitments and Contingencies > Purchase Obligations",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Agreements with contract manufacturers allow for procurements based on defined criteria and are often cancellable, reschedulable, or adjustable, though changes may result in additional costs.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The disclosure shows a significant increase in purchase obligations from $16.1 billion to $30.8 billion (nearly double). Furthermore, the 2025 disclosure explicitly attributes this increase to commitments for new product introductions, specifically the 'Blackwell architecture.' This represents a meaningful change in operational scale, supply chain exposure, and strategic product focus.",
+          "key_change": "Significant increase in purchase obligations for new product architecture"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D136",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Definition of Purchase Commitments",
+            "peer_summary": "Purchase commitments are defined as obligations under noncancellable purchase orders and contractual obligations requiring minimum purchases or carrying significant cancellation penalties.",
+            "peer_taxonomy": "Supply Chain & Third Parties",
+            "retrieval_score": 0.093464,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AMD disclose purchase obligations but differ significantly in flexibility and cancellation terms. NVDA discloses $16.1 billion in obligations with specific flexibility, stating agreements 'allow us the option to cancel, reschedule, and adjust our requirements... prior to firm orders,' implying operational agility. In contrast, AMD defines its purchase commitments as 'obligations under noncancellable purchase orders' or those with 'significant penalties,' highlighting a rigid, non-cancellable structure without mentioning the same level of pre-order adjustability found in NVDA's disclosures.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D116",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P128_S001",
+                    "paragraph_id": "nvda_2024_8_P128",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "As of January 28, 2024, we had outstanding inventory purchase and long-term supply and capacity obligations totaling $16.1 billion.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P128_S002",
+                    "paragraph_id": "nvda_2024_8_P128",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We enter into agreements with contract manufacturers that allow them to procure inventory based upon criteria as defined by us, and in certain instances, these agreements allow us the option to cancel, reschedule, and adjust our requirements based on our business needs prior to firm orders being placed, but these changes may result in the payment of costs incurred through the date of cancellation.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D136",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P144_S002",
+                    "paragraph_id": "amd_2024_8_P144",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Purchase commitments include obligations made under noncancellable purchase orders and contractual obligations requiring minimum purchases or for which cancellation would lead to significant penalties.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D135",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Composition of Purchase Commitments",
+            "peer_summary": "The Company's purchase commitments primarily include obligations to purchase wafers and substrates from third parties, as well as future payments for software, technology licenses, and IP licenses.",
+            "peer_taxonomy": "Supply Chain & Third Parties",
+            "retrieval_score": 0.05325,
+            "relationship": "same_topic",
+            "comparison": "Both companies identify their supply chain components, but NVDA quantifies the total liability while AMD details the composition. NVDA reports a total outstanding obligation of '$16.1 billion' for inventory and supply. AMD does not provide a total dollar amount for these commitments in the provided text but specifies the nature of the obligations, stating they 'primarily include the Company's obligations to purchase wafers and substrates from third parties,' whereas NVDA focuses on the aggregate value rather than the specific input types in this excerpt.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D116",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P128_S001",
+                    "paragraph_id": "nvda_2024_8_P128",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "As of January 28, 2024, we had outstanding inventory purchase and long-term supply and capacity obligations totaling $16.1 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D135",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P144_S001",
+                    "paragraph_id": "amd_2024_8_P144",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The Company's purchase commitments primarily include the Company's obligations to purchase wafers and substrates from third parties and future payments related to certain software and technology licenses and IP licenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "ef1e2196b511a650922fb4e4daa4aaa2eecba023a498bc4a2224836b6af7ae72",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "35b4c3899e9f2bd89b6a49edc982c36a318c260a2965d9bfb3bce937a8009eee"
+    }
+  }
+}

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "743b69cfdf1a0dc1893b9f968711dc71fa791cbabbab212a2bd1d506db507f20",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "515d92c3e81c1533ef81d1a21c585567c74bb713b925cf786831a1dcec7d888a",
+  "request_hash": "89d00f3ea21e51796ebe32f002592f86f9f392a1daad58f78627186dcebfcff1",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D070\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Broadcom disclose significant acquisition-related transaction costs included in operating expenses, though the magnitude and status differ. Broadcom reported $255 million in VMware merger transaction costs primarily in SG&A for fiscal 2024 and noted that immediate integration made it impracticable to determine the effect on net income. In contrast, AMD's Pensando acquisition-related costs were immaterial in fiscal 2024, having been $190 million in 2023 and $102 million in 2022. Both companies classify these costs across similar operating expense categories such as R&D and SG&A.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P099_S003\",\n\"avgo_2024_8_P099_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P073_S001\",\n\"amd_2024_8_P073_S002\",\n\"amd_2024_8_P073_S003\"\n]\n},\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D073\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Similar to the VMware acquisition impact disclosed by Broadcom, AMD's Xilinx acquisition-related costs also illustrate the historical vs. current status of post-acquisition integration costs. Broadcom reported $255 million in current period VMware transaction costs. AMD disclosed that Xilinx acquisition-related costs were significant in prior years ($350 million in 2022 and $26 million in 2023) but were immaterial in fiscal 2024. Both disclosures address the financial impact of major acquisitions on current earnings and the composition of transaction costs.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P099_S003\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P076_S001\",\n\"amd_2024_8_P076_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"Retrieved candidates address hedge effectiveness testing (D150) and depreciation expense imputation in Intel Foundry (D071), which are unrelated to the target topic of acquisition-related financial impact and transaction costs for VMware.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"Retrieved candidates address customer concentration risk (D123) and future performance obligations/contract liabilities (D102), which are unrelated to the target topic of acquisition-related financial impact and transaction costs.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"Retrieved candidates address changes in deferred revenue (D105) and changes in useful lives of property, plant, and equipment (D015), which are unrelated to the target topic of acquisition-related financial impact and transaction costs.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D074",
@@ -150,17 +153,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D070",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Pensando Acquisition-Related Costs",
             "peer_summary": "Acquisition-related costs totaled $190 million in 2023 and $102 million in 2022, recorded across Cost of sales, R&D, and G&A, but were immaterial in 2024. These costs primarily consisted of direct transaction fees, fair value adjustments for acquired inventory, and certain compensation charges.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.108887,
+            "retrieval_score": 0.119391,
             "relationship": "same_topic",
-            "comparison": "Both Broadcom and AMD disclose acquisition-related transaction costs included in operating expenses, but Broadcom's VMware costs were material ($255 million) in fiscal 2024, whereas AMD's Pensando acquisition costs were immaterial in 2024. Broadcom specifically cites these costs in SG&A, while AMD's prior year Pensando costs were recorded across Cost of Sales, R&D, and G&A. Additionally, Broadcom disclosed that immediate integration made it impracticable to determine the net income effect of VMware, a constraint not explicitly applied to AMD's immaterial 2024 costs.",
+            "comparison": "Both AMD and Broadcom disclose significant acquisition-related transaction costs included in operating expenses, though the magnitude and status differ. Broadcom reported $255 million in VMware merger transaction costs primarily in SG&A for fiscal 2024 and noted that immediate integration made it impracticable to determine the effect on net income. In contrast, AMD's Pensando acquisition-related costs were immaterial in fiscal 2024, having been $190 million in 2023 and $102 million in 2022. Both companies classify these costs across similar operating expense categories such as R&D and SG&A.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D074",
                 "sentences": [
                   {
@@ -182,6 +189,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D070",
                 "sentences": [
                   {
@@ -197,6 +205,13 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
                     "text": "Pensando acquisition-related costs were immaterial in 2024.",
                     "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P073_S003",
+                    "paragraph_id": "amd_2024_8_P073",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Acquisition-related costs are primarily comprised of direct transaction costs, fair value adjustments for acquired inventory and certain compensation charges.",
+                    "visible_in_prompt": true
                   }
                 ]
               }
@@ -205,17 +220,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D073",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Xilinx Acquisition-Related Costs",
             "peer_summary": "Acquisition-related costs for Xilinx were $350 million in 2022 and $26 million in 2023, recorded in cost of sales, R&D, and SG&A; costs in 2024 were immaterial, primarily comprising direct transaction costs, inventory fair value adjustments, and compensation charges.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.105857,
+            "retrieval_score": 0.117427,
             "relationship": "same_topic",
-            "comparison": "Similar to Broadcom's disclosure of VMware merger costs, AMD disclosed acquisition-related costs for Xilinx. However, AMD's Xilinx acquisition costs were immaterial in fiscal 2024, whereas Broadcom's VMware merger costs were material at $255 million. Both companies characterize their acquisition-related costs as comprising direct transaction costs, fair value adjustments for inventory, and compensation charges, but the financial impact differs significantly with Broadcom reporting a specific line-item expense while AMD reports immateriality for its recent acquisition costs.",
+            "comparison": "Similar to the VMware acquisition impact disclosed by Broadcom, AMD's Xilinx acquisition-related costs also illustrate the historical vs. current status of post-acquisition integration costs. Broadcom reported $255 million in current period VMware transaction costs. AMD disclosed that Xilinx acquisition-related costs were significant in prior years ($350 million in 2022 and $26 million in 2023) but were immaterial in fiscal 2024. Both disclosures address the financial impact of major acquisitions on current earnings and the composition of transaction costs.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D074",
                 "sentences": [
                   {
@@ -230,20 +249,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D073",
                 "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P076_S001",
+                    "paragraph_id": "amd_2024_8_P076",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "In 2023 and 2022, Xilinx acquisition-related costs of $26 million and $350 million were recorded under Cost of sales, Research and development, and Marketing, general and administrative expenses on the Company's Consolidated Statements of Operations.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "amd_2024_8_P076_S002",
                     "paragraph_id": "amd_2024_8_P076",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
                     "text": "Xilinx acquisition-related costs in 2024 were immaterial.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_8_P076_S003",
-                    "paragraph_id": "amd_2024_8_P076",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Acquisition-related costs are primarily comprised of direct transaction costs, fair value adjustments for acquired inventory and certain compensation charges.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -255,70 +275,33 @@
       },
       {
         "peer_ticker": "INTC",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_8_D071",
-            "peer_topic": "Depreciation expense imputation in Intel Foundry",
-            "peer_summary": "Substantial consolidated depreciation is incurred by Intel Foundry and absorbed into inventory; it is impracticable to determine the total depreciation included in each Intel Products segment's operating income.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.10834,
-            "relationship": "related_topic",
-            "comparison": "While Broadcom and Intel differ in the underlying subject matter (acquisition costs vs. depreciation), they share a specific disclosure constraint regarding financial measurement: Broadcom stated it was \"impracticable to determine the effect on net income\" for VMware due to immediate integration, whereas Intel stated it was \"impracticable to determine the total depreciation expense\" for specific segments due to shared Foundry overhead absorption. Both disclosures highlight operational complexities that prevent precise attribution of costs or expenses to specific reported financial metrics (net income or segment operating income).",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_8_D074",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_8_P099_S002",
-                    "paragraph_id": "avgo_2024_8_P099",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "It is impracticable to determine the effect on net income attributable to VMware as we immediately integrated VMware into our ongoing operations.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D071",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_8_P083_S003",
-                    "paragraph_id": "intc_2024_8_P083",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "As a result, it is impracticable to determine the total depreciation expense included as a component of each Intel Products operating segment's operating income (loss).",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates address hedge effectiveness testing (D150) and depreciation expense imputation in Intel Foundry (D071), which are unrelated to the target topic of acquisition-related financial impact and transaction costs for VMware."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that is substantively comparable. The retrieved candidates (customer concentration and intangible amortization) do not address acquisition transaction costs, integration impacts, or impracticability of income attribution."
+        "rationale": "Retrieved candidates address customer concentration risk (D123) and future performance obligations/contract liabilities (D102), which are unrelated to the target topic of acquisition-related financial impact and transaction costs."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that is substantively comparable. The retrieved candidate is a boilerplate location statement for Item 8, not a substantive disclosure of financial impact, risk, or policy comparable to Broadcom's VMware acquisition details."
+        "rationale": "Retrieved candidates address changes in deferred revenue (D105) and changes in useful lives of property, plant, and equipment (D015), which are unrelated to the target topic of acquisition-related financial impact and transaction costs."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "515d92c3e81c1533ef81d1a21c585567c74bb713b925cf786831a1dcec7d888a",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "89d00f3ea21e51796ebe32f002592f86f9f392a1daad58f78627186dcebfcff1"
+    }
   }
 }

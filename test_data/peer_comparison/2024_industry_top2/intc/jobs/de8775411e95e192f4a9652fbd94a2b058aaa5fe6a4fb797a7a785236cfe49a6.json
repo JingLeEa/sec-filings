@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "34426e0f89baca7f603c811a3b96cf2a987a58562ab1851a4d8b48da2e5947b1",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "e9d5e21e2ab7a0f2983052b58c362de655d3b68a474b5f7be766f4c9dc9aa2cd",
+  "request_hash": "efb0fba79ec7a229428861f469f0843540adb1df77143f3e82ed1300f7198944",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_1_D007\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron discuss the specific production status and utilization of their advanced manufacturing nodes for their core products in 2024. Intel discloses that its 'Intel 7 process node... was utilized for a significant majority of our processor production and products in 2024.' Similarly, Micron states that 'The majority of our DRAM bit production in 2024 was on leading-edge 1α (1-alpha) and 1ß nodes.' Both companies are highlighting the dominance of a specific, established process technology in their respective manufacturing outputs for the year.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P037_S002\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_1_P006_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved candidates discuss AMD's Data Center segment growth and EPYC server processor portfolio announcements, but do not address specific process node production status or utilization metrics comparable to Intel's disclosure of its Intel 7 node being used for the majority of production.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved candidates focus on Broadcom's AIOps software solutions and the general use of silicon wafers/III-V materials for semiconductor products, rather than specific process node production status or utilization metrics for a particular manufacturing node comparable to Intel's Intel 7 disclosure.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates describe NVIDIA's fabless manufacturing strategy and competitive landscape, which differ fundamentally from Intel's internal manufacturing process node utilization disclosure.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The retrieved candidates discuss Qualcomm's customer revenue concentration and wireless connectivity product types, which are not comparable to Intel's disclosure regarding the production status and utilization of its Intel 7 process node.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1_D038",
@@ -160,57 +163,15 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1_D021",
-            "peer_topic": "AMD EPYC Server Processors",
-            "peer_summary": "AMD's server CPU portfolio includes the EPYC Series, based on x86 architecture for high-performance computing and large data centers, with the recent announcement of the 5th generation AMD EPYC family.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.060334,
-            "relationship": "same_topic",
-            "comparison": "Both disclosures address the specific processor products defining the companies' 2024 production and roadmap status. Intel highlights that the Intel 7 process node continues in production for its 13th and 14th Gen Intel Core processors. AMD highlights the announcement of its 5th generation AMD EPYC family of server processors. While the specific processor families and use cases differ (client vs. server), both texts serve to identify the key processor architectures actively produced or announced by each company for the 2024 fiscal year.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D038",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1_P037_S002",
-                    "paragraph_id": "intc_2024_1_P037",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "▪Intel 7 process node continues in production for our 13th and 14th Gen Intel Core processors. Intel 7 was utilized for a significant majority of our processor production and products in 2024, and is expected to continue to be utilized for a significant portion of our processor production and products in 2025.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D021",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1_P017_S004",
-                    "paragraph_id": "amd_2024_1_P017",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We recently announced our 5th generation AMD EPYC family of server processors, further expanding our high-performance server CPU portfolio.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates discuss AMD's Data Center segment growth and EPYC server processor portfolio announcements, but do not address specific process node production status or utilization metrics comparable to Intel's disclosure of its Intel 7 node being used for the majority of production."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate disclosed comparable information regarding specific semiconductor process node production status or specific processor model production volumes. AVGO candidates discuss AIOps software solutions and general semiconductor material technologies (CMOS/III-V), which are not comparable to Intel's specific disclosure on Intel 7 node production utilization."
+        "rationale": "The retrieved candidates focus on Broadcom's AIOps software solutions and the general use of silicon wafers/III-V materials for semiconductor products, rather than specific process node production status or utilization metrics for a particular manufacturing node comparable to Intel's Intel 7 disclosure."
       },
       {
         "peer_ticker": "MU",
@@ -219,17 +180,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1_D007",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "DRAM production nodes and future expectations",
             "peer_summary": "The company shipped its industry's first 1β production node in 2023, produced majority 2024 bits on 1α and 1β nodes, and expects volume shipments of the 1γ node using EUV lithography in 2025.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.072762,
+            "retrieval_score": 0.079122,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose specific status and utilization of advanced semiconductor process nodes in their 2024 fiscal year reports. Intel states that its Intel 7 process node was utilized for a significant majority of its processor production and products in 2024. Similarly, Micron reports that the majority of its DRAM bit production in 2024 was on its leading-edge 1α and 1β nodes. Both companies highlight the dominant role of these specific technology nodes in their respective 2024 manufacturing outputs.",
+            "comparison": "Both Intel and Micron discuss the specific production status and utilization of their advanced manufacturing nodes for their core products in 2024. Intel discloses that its 'Intel 7 process node... was utilized for a significant majority of our processor production and products in 2024.' Similarly, Micron states that 'The majority of our DRAM bit production in 2024 was on leading-edge 1α (1-alpha) and 1ß nodes.' Both companies are highlighting the dominance of a specific, established process technology in their respective manufacturing outputs for the year.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D038",
                 "sentences": [
                   {
@@ -244,6 +209,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D007",
                 "sentences": [
                   {
@@ -264,14 +230,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate disclosed comparable information regarding specific process node production status. NVDA candidates focus on its fabless manufacturing business model strategy and historical R&D investment totals, rather than the operational status or production volume of specific technology nodes."
+        "rationale": "The retrieved candidates describe NVIDIA's fabless manufacturing strategy and competitive landscape, which differ fundamentally from Intel's internal manufacturing process node utilization disclosure."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate disclosed comparable information regarding specific process node production status. QCOM candidates describe product categories (wireless connectivity, Snapdragon platforms) and architectural components, but do not mention the specific semiconductor manufacturing node technology used for production or its utilization share in 2024."
+        "rationale": "The retrieved candidates discuss Qualcomm's customer revenue concentration and wireless connectivity product types, which are not comparable to Intel's disclosure regarding the production status and utilization of its Intel 7 process node."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e9d5e21e2ab7a0f2983052b58c362de655d3b68a474b5f7be766f4c9dc9aa2cd",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "efb0fba79ec7a229428861f469f0843540adb1df77143f3e82ed1300f7198944"
+    }
   }
 }

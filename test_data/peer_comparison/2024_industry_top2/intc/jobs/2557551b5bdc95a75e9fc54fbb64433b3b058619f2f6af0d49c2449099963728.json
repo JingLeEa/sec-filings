@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "8c4ebf869ce29872fbf81547b7401bceb5aee9c2b6dae1cc133e20547e71a531",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "206721d8d1b568c6353a4aabd726a287228e589deb095535027d6fe315e987f7",
+  "request_hash": "f9f381fd9995ab57be7199845e15d6aa56a07cc1f405a5b13f60dfe755dc4ba7",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D034\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and NVIDIA discuss risks associated with product issues affecting inventory and financial results, but NVDA specifically frames this through the lens of inventory obsolescence due to demand and technology shifts, whereas Intel focuses on the broader reputational damage and insurance coverage gaps resulting from product defects. Intel cites that product issues can 'negatively affect product demand' and 'make our products less competitive', while NVIDIA details that situations like 'sudden and significant decreases in demand' or 'inventory obsolescence because of changing technology' result in 'excess or obsolete inventory'. Intel explicitly warns that insurance may not cover these losses, a risk factor not mentioned in the NVIDIA inventory obsolescence disclosure.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P159_S001\",\n\"intc_2024_7_P159_S003\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P031_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved candidates for AMD cover general critical accounting estimates (D006) and product return rights estimation (D009). Neither disclosure addresses product quality issues, reputational harm, legal liability from defects, or insurance coverage limitations. The return rights disclosure (D009) concerns contractual revenue adjustments for OEMs/distributors, which is a distinct financial accounting mechanism from the product defect and reputational risk topic in the Intel disclosure.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved candidates for AVGO cover segment revenue drivers (D048) and general estimation risk/critical accounting policies (D032). Neither disclosure addresses product quality issues, reputational harm, legal liability from defects, or insurance coverage limitations. The critical accounting policies (D032) are generic statements about GAAP estimates and do not substantively discuss product defect risks or insurance.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates for MU cover the general nature of critical accounting estimates (D044) and SG&A expense trends (D021). Neither disclosure addresses product quality issues, reputational harm, legal liability from defects, or insurance coverage limitations. The general estimate disclosure (D044) is a standard accounting policy statement unrelated to product defects.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The retrieved candidates for QCOM cover impairment assessment of non-marketable equity investments (D052) and inventory valuation/demand estimates (D053). While inventory valuation involves estimates of demand, it does not address product quality defects, reputational damage, or insurance exclusions. The inventory disclosure focuses on measuring cost vs. net realizable value based on demand forecasts, which is distinct from the risk of product issues causing reputational harm and uninsured liability as described by Intel.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D132",
@@ -164,22 +167,44 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for AMD cover general critical accounting estimates (D006) and product return rights estimation (D009). Neither disclosure addresses product quality issues, reputational harm, legal liability from defects, or insurance coverage limitations. The return rights disclosure (D009) concerns contractual revenue adjustments for OEMs/distributors, which is a distinct financial accounting mechanism from the product defect and reputational risk topic in the Intel disclosure."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for AVGO cover segment revenue drivers (D048) and general estimation risk/critical accounting policies (D032). Neither disclosure addresses product quality issues, reputational harm, legal liability from defects, or insurance coverage limitations. The critical accounting policies (D032) are generic statements about GAAP estimates and do not substantively discuss product defect risks or insurance."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for MU cover the general nature of critical accounting estimates (D044) and SG&A expense trends (D021). Neither disclosure addresses product quality issues, reputational harm, legal liability from defects, or insurance coverage limitations. The general estimate disclosure (D044) is a standard accounting policy statement unrelated to product defects."
+      },
+      {
+        "peer_ticker": "NVDA",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D009",
-            "peer_topic": "Product return rights estimation",
-            "peer_summary": "Limited product return rights are provided to certain OEMs and most distribution customers, with revenue adjustments estimated using trended historical return rates and adjusted for known information or events.",
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D034",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Causes of Inventory Obsolescence",
+            "peer_summary": "Factors that may result in excess or obsolete inventory include changes in business, economic, or market conditions, sudden decreases in demand, technology obsolescence, new product introductions, failure to estimate demand, ordering ahead of lead times, government regulations, and competitive actions.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.036166,
-            "relationship": "related_topic",
-            "comparison": "Intel and AMD both disclose risks and policies related to product performance and customer obligations, but focus on different mechanisms. Intel's disclosure centers on product issues causing reputational damage and legal liability, exacerbated by potential gaps in insurance coverage. In contrast, AMD's disclosure addresses the estimation of revenue adjustments for limited product return rights provided to OEMs and distributors, relying on historical return rates rather than focusing on liability or insurance risks from defects.",
+            "retrieval_score": 0.055085,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and NVIDIA discuss risks associated with product issues affecting inventory and financial results, but NVDA specifically frames this through the lens of inventory obsolescence due to demand and technology shifts, whereas Intel focuses on the broader reputational damage and insurance coverage gaps resulting from product defects. Intel cites that product issues can 'negatively affect product demand' and 'make our products less competitive', while NVIDIA details that situations like 'sudden and significant decreases in demand' or 'inventory obsolescence because of changing technology' result in 'excess or obsolete inventory'. Intel explicitly warns that insurance may not cover these losses, a risk factor not mentioned in the NVIDIA inventory obsolescence disclosure.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D132",
                 "sentences": [
                   {
@@ -200,21 +225,15 @@
               },
               {
                 "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D009",
+                "ticker": "NVDA",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D034",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P020_S001",
-                    "paragraph_id": "amd_2024_7_P020",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We also provide limited product return rights to certain OEMs and to most distribution customers.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_7_P020_S003",
-                    "paragraph_id": "amd_2024_7_P020",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "In order to estimate adjustments to revenue to account for these returns, including product restocking rights provided to distributor and OEM customers, we utilize relevant, trended actual historical product return rate information gathered, adjusted for actual known information or events, as applicable.",
+                    "sentence_id": "nvda_2024_7_P031_S001",
+                    "paragraph_id": "nvda_2024_7_P031",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Situations that may result in excess or obsolete inventory or excess product purchase commitments include changes in business and economic conditions, changes in market conditions, sudden and significant decreases in demand for our products, inventory obsolescence because of changing technology and customer requirements, new product introductions resulting in less demand for existing products or inconsistent spikes in demand, failure to estimate customer demand properly, ordering in advance of historical lead-times, government regulations and the impact of changes in future demand, or increase in demand for competitive products, including competitive actions.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -225,29 +244,16 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "None of the retrieved candidates (Segment Revenue Drivers, General estimation risk) address product issues, reputational risk, or insurance liability, which are the specific topics of Intel's disclosure."
-      },
-      {
-        "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "None of the retrieved candidates (General nature of critical accounting estimates, Inventory NRV Write-Downs) address product issues, reputational risk, or insurance liability. Inventory write-downs relate to pricing declines, not product defects or liability insurance."
-      },
-      {
-        "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "None of the retrieved candidates (Causes of Inventory Excess, Tax Contingency Liability) address product issues, reputational risk, or insurance liability. Inventory excess causes are operational/market-driven, distinct from product defect liability."
-      },
-      {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "None of the retrieved candidates (Impairment assessment of non-marketable equity investments, Liquidity financial information table reference) address product issues, reputational risk, or insurance liability."
+        "rationale": "The retrieved candidates for QCOM cover impairment assessment of non-marketable equity investments (D052) and inventory valuation/demand estimates (D053). While inventory valuation involves estimates of demand, it does not address product quality defects, reputational damage, or insurance exclusions. The inventory disclosure focuses on measuring cost vs. net realizable value based on demand forecasts, which is distinct from the risk of product issues causing reputational harm and uninsured liability as described by Intel."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "206721d8d1b568c6353a4aabd726a287228e589deb095535027d6fe315e987f7",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "f9f381fd9995ab57be7199845e15d6aa56a07cc1f405a5b13f60dfe755dc4ba7"
+    }
   }
 }

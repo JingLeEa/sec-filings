@@ -1,29 +1,32 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "9ab95b723e6145e3cd601e9933fde2a09585aeef28657784e79989b5a591784d",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "82120c698f6f13f27b7aa6921a472b166b5a04f866b09544d2e24d25a702ec7d",
+  "request_hash": "701e6ffe4396d782727ea70d526e5ff9f10d59b19cd7f212ef5124018d4bf860",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D012\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose how inventory provisions and subsequent sales of written-down items impact gross margin. NVDA quantifies this impact for fiscal year 2024 as an unfavorable 2.7% and for 2023 as 7.5%, noting that selling previously written-down items can affect margins. AMD discloses the mechanism, stating that if assumptions become less favorable, additional write-downs would negatively impact gross margin, while selling previously written-down inventory above its written-down value results in a net benefit to gross margin. While NVDA provides specific historical percentages, AMD describes the conditional impact on gross margin.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P032_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P022_S006\",\n\"amd_2024_7_P022_S007\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The remaining candidates for AMD (amd_2024_7_D031, amd_2024_7_D017) concern overall gross margin drivers and long-lived asset impairment, respectively, which are not substantively comparable to the specific topic of financial impact from inventory provisions and sales of previously written-down items.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D035",
     "item": "7",
-    "target_topic": "Tax Contingency Liability Recognition",
-    "target_summary": "The company recognizes liabilities for potential U.S. and foreign income tax contingencies based on estimates of whether additional taxes may be due, adjusting for benefits or expenses if determinations change.",
+    "target_topic": "Financial Impact of Inventory Provisions",
+    "target_summary": "Inventory provisions and sales of previously written-down items had an unfavorable impact on gross margin of 2.7% in fiscal year 2024 and 7.5% in fiscal year 2023.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0331",
-        "relationship": "one_to_many",
+        "match_id": "nvda_2023_2024_M0206",
+        "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Part of the split: Both disclosures address the policy for recognizing liabilities for potential income tax contingencies and the recognition of benefits if recorded liabilities are determined to be unnecessary or incorrect. 2023 D048 contained this contingency policy alongside the valuation allowance discussion. 2024 splits these: D035 covers the contingency liability/policy, while D036 covers the valuation allowance amounts. The evidence in D035 matches the first part of D048.\n\nPart of the split: Both disclosures detail the valuation allowance amounts for deferred tax assets (capital loss carryforwards, state/other assets) not likely to be realized, specifically mentioning the year-end figures. 2023 D048 contained this valuation allowance data alongside the contingency policy. 2024 isolates this data in D036.",
+        "explanation": "Both disclosures report the specific net unfavorable impact on gross margin from inventory provisions and sales of previously written-down items for the respective fiscal years.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D048",
+            "disclosure_id": "nvda_2023_7_D030",
             "item": "7",
-            "section": "Critical Accounting Policies and Estimates > Income Taxes",
+            "section": "Critical Accounting Policies and Estimates > Inventories",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "If it is determined that recorded tax liabilities are unnecessary or incorrect, income tax benefits or expenses may be recognized; the company maintained a valuation allowance of $1.48 billion and $907 million at the end of fiscal years 2023 and 2022 respectively for deferred tax assets not likely to be realized.",
+            "summary": "Inventory provisions and sales of previously written-down items had an unfavorable impact of 7.5% on gross margin in fiscal year 2023 and 0.9% in fiscal year 2022.",
             "extraction_status": "source_validated"
           }
         ],
@@ -31,150 +34,68 @@
           {
             "disclosure_id": "nvda_2024_7_D035",
             "item": "7",
-            "section": "Critical Accounting Estimates > Income Taxes",
+            "section": "Critical Accounting Estimates > Inventories",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "The company recognizes liabilities for potential U.S. and foreign income tax contingencies based on estimates of whether additional taxes may be due, adjusting for benefits or expenses if determinations change.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_7_D036",
-            "item": "7",
-            "section": "Critical Accounting Estimates > Income Taxes",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "As of fiscal years 2024 and 2023, the company had valuation allowances of $1.6 billion and $1.5 billion, respectively, for capital loss carryforwards and certain state and other deferred tax assets not likely to be realized.",
+            "summary": "Inventory provisions and sales of previously written-down items had an unfavorable impact on gross margin of 2.7% in fiscal year 2024 and 7.5% in fiscal year 2023.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.84871,
-            "sequence_match_ratio": 0.715953,
-            "length_ratio": 1.039683,
-            "word_count_delta": 5,
-            "added_tokens_sample": [
-              "in",
-              "addition",
-              "we",
-              "recognize",
-              "liabilities",
-              "for",
-              "potential",
-              "u",
-              "s",
-              "and",
-              "foreign",
-              "income",
-              "tax",
-              "contingencies",
-              "based",
-              "on",
-              "our",
-              "estimate",
-              "of",
-              "whether"
-            ],
-            "removed_tokens_sample": [
-              "and",
-              "2022",
-              "48",
-              "907",
-              "million",
-              "certain",
-              "to",
-              "the",
-              "extent",
-              "realization",
-              "of",
-              "the",
-              "deferred",
-              "tax",
-              "assets",
-              "becomes",
-              "more",
-              "likely",
-              "than",
-              "not"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2023_7_D048",
-            "score": 0.905682,
-            "normalised_score": 0.9057,
-            "rationale": "Split: 1 previous → 2 current. Best pair scored 90.57% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.6,
-          "confidence_score": 0.8,
-          "reason": "This row represents a split disclosure. While the tax contingency policy remains similar, the valuation allowance amounts materially changed from $1.48B to $1.6B (and prior year from $907M to $1.5B). The split itself indicates a material reorganization of information, and the quantitative update to valuation allowances is a significant financial position change.",
-          "key_change": "Split of disclosure and update to valuation allowances"
+          "materiality_score": 0.85,
+          "confidence_score": 0.95,
+          "reason": "The disclosure updates the quantitative impact of inventory provisions on gross margin. The current year shows a 2.7% unfavorable impact compared to 7.5% in the prior year (which was previously reported as the current year impact). This represents a significant change in operational efficiency and inventory management outcomes, directly affecting financial performance metrics.",
+          "key_change": "Quantitative change in inventory provision impact on gross margin"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0316",
+        "match_id": "nvda_2024_2025_M0185",
         "relationship": "one_to_one",
-        "status": "auto_matched",
+        "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "The complete selected original text is identical within the same SEC Item after removing line-leading bullet formatting and normalizing whitespace. Neither LLM agent was used for this link.",
+        "explanation": "Both disclosures report the net effect on gross margin from inventory provisions and sales of previously written-down items for the current and prior fiscal years. The 2024 sentence reports a 2.7% unfavorable impact in FY2024 and 7.5% in FY2023. The 2025 sentence reports a 2.3% unfavorable impact in FY2025 and 2.7% in FY2024. This is a direct topic match for the same specific disclosure element (inventory provision impact on gross margin).",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_7_D035",
             "item": "7",
-            "section": "Critical Accounting Estimates > Income Taxes",
+            "section": "Critical Accounting Estimates > Inventories",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "The company recognizes liabilities for potential U.S. and foreign income tax contingencies based on estimates of whether additional taxes may be due, adjusting for benefits or expenses if determinations change.",
+            "summary": "Inventory provisions and sales of previously written-down items had an unfavorable impact on gross margin of 2.7% in fiscal year 2024 and 7.5% in fiscal year 2023.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D031",
+            "disclosure_id": "nvda_2025_7_D028",
             "item": "7",
-            "section": "Critical Accounting Estimates > Income Taxes",
+            "section": "Critical Accounting Estimates > Inventories",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "The company recognizes liabilities for potential income tax contingencies based on estimates of whether additional taxes may be due. Adjustments to these liabilities are recognized as income tax benefits or additional expenses if deemed unnecessary or if the recorded liability differs from current assessments.",
+            "summary": "The net unfavorable impact on gross margin from inventory provisions and sales of previously written-down items was 2.3% in fiscal year 2025 and 2.7% in fiscal year 2024.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Unchanged",
-            "cosine_similarity": 1.0,
-            "sequence_match_ratio": 1.0,
-            "length_ratio": 1.0,
-            "word_count_delta": 0,
-            "added_tokens_sample": [],
-            "removed_tokens_sample": []
-          },
-          "semantic": {
-            "matched_id": "nvda_2024_7_D035",
-            "score": 1.02198,
-            "normalised_score": 1.022,
-            "label": "Unchanged",
-            "rationale": "Score 102.20% of ceiling with 100% word overlap — text is effectively identical.",
-            "method": "embedding_cosine"
-          },
-          "llm": "Unchanged",
-          "final_taxonomy": "Unchanged"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "No",
-          "materiality_score": 0.0,
-          "confidence_score": 1.0,
-          "reason": "The aligned disclosures are exact-text matches under the automatic matching policy, so no meaningful disclosure change is identified.",
-          "key_change": "No substantive change"
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "The change reflects a routine update in financial data (gross margin impact decreased from 2.7% to 2.3%). While the number changed, the disclosure topic and nature of the risk (inventory provisions) remain the same. Quantitative updates in routine financial line items are not typically considered material disclosure changes unless they indicate a fundamental shift in accounting policy or risk profile, which is not evidenced here.",
+          "key_change": "Routine update of inventory provision impact percentage"
         }
       }
     ],
@@ -185,25 +106,29 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D018",
-            "peer_topic": "Income tax estimate judgments",
-            "peer_summary": "Estimates and judgments are required for calculating tax liabilities and determining the recoverability of deferred tax assets arising from temporary differences between tax and financial reporting.",
+            "peer_disclosure_id": "amd_2024_7_D012",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Inventory write-down impact on gross margin",
+            "peer_summary": "If assumptions regarding future demand or market conditions become less favorable, additional inventory write-downs may be required, negatively impacting gross margin; conversely, selling previously written-down inventory above its written-down value may result in a net benefit to gross margin.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.102924,
+            "retrieval_score": 0.223079,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD disclose that calculating tax liabilities involves significant estimates and judgments, indicating a shared reliance on management assessment for their tax provisions. NVDA specifically notes recognizing liabilities for contingencies based on whether additional taxes may be due, while AMD broadly states that estimates and judgments are applied in the calculation of certain tax liabilities and deferred tax asset recoverability. Both disclosures highlight the uncertainty inherent in their tax positions.",
+            "comparison": "Both NVDA and AMD disclose how inventory provisions and subsequent sales of written-down items impact gross margin. NVDA quantifies this impact for fiscal year 2024 as an unfavorable 2.7% and for 2023 as 7.5%, noting that selling previously written-down items can affect margins. AMD discloses the mechanism, stating that if assumptions become less favorable, additional write-downs would negatively impact gross margin, while selling previously written-down inventory above its written-down value results in a net benefit to gross margin. While NVDA provides specific historical percentages, AMD describes the conditional impact on gross margin.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D035",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_7_P034_S004",
-                    "paragraph_id": "nvda_2024_7_P034",
+                    "sentence_id": "nvda_2024_7_P032_S001",
+                    "paragraph_id": "nvda_2024_7_P032",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "In addition, we recognize liabilities for potential U.S. and foreign income tax contingencies based on our estimate of whether, and the extent to which, additional taxes may be due.",
+                    "text": "The net effect on our gross margin from inventory provisions and sales of items previously written down was an unfavorable impact of 2.7% in fiscal year 2024 and 7.5% in fiscal year 2023.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -211,54 +136,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D018",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D012",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P026_S002",
-                    "paragraph_id": "amd_2024_7_P026",
+                    "sentence_id": "amd_2024_7_P022_S006",
+                    "paragraph_id": "amd_2024_7_P022",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "In determining taxable income for financial statement reporting purposes, we must make certain estimates and judgments.",
+                    "text": "If in any period we anticipate a change in assumptions such as future demand or market conditions to be less favorable than our previous estimates, additional inventory write-downs may be required and would be reflected in cost of sales, resulting in a negative impact to our gross margin in that period.",
                     "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D019",
-            "peer_topic": "Deferred tax asset valuation allowance policy",
-            "peer_summary": "A valuation allowance is recorded for deferred tax assets unless recovery is considered more-likely-than-not; conversely, if realization is deemed more-likely-than-not, existing valuation allowances may be reversed, resulting in a credit to income tax expense.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.138416,
-            "relationship": "related_topic",
-            "comparison": "While NVDA focuses on the recognition of liabilities for tax contingencies, AMD details the policy for valuation allowances on deferred tax assets, which is a related mechanism for handling tax uncertainty and potential benefits. NVDA mentions adjusting financial statements if recorded tax liabilities are found unnecessary, whereas AMD explicitly describes recording charges or reversing allowances based on the 'more-likely-than-not' assessment of recovering deferred tax assets. Both address how companies adjust for the outcome of tax-related estimates.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D035",
-                "sentences": [
+                  },
                   {
-                    "sentence_id": "nvda_2024_7_P034_S005",
-                    "paragraph_id": "nvda_2024_7_P034",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "If we determine that payment of these amounts is unnecessary or if the recorded tax liability is less than our current assessment, we may be required to recognize an income tax benefit or additional income tax expense in our financial statements accordingly.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D019",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P027_S002",
-                    "paragraph_id": "amd_2024_7_P027",
+                    "sentence_id": "amd_2024_7_P022_S007",
+                    "paragraph_id": "amd_2024_7_P022",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Unless recovery is considered more-likely-than-not (a probability level of more than 50%), we will record a charge to income tax expense in the form of a valuation allowance for the deferred tax assets that we estimate will not ultimately be recoverable or maintain the valuation allowance recorded in prior periods.",
+                    "text": "If in any period we are able to sell inventories that had been written down to a level below the ultimate realized selling price in a previous period, related revenue would be recorded with a lower or no offsetting charge to cost of sales resulting in a net benefit to our gross margin in that period.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -266,8 +158,16 @@
             ]
           }
         ],
-        "rationale": ""
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "82120c698f6f13f27b7aa6921a472b166b5a04f866b09544d2e24d25a702ec7d",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "701e6ffe4396d782727ea70d526e5ff9f10d59b19cd7f212ef5124018d4bf860"
+    }
   }
 }

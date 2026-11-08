@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "9a21b44bb9585380678af0f36bb61ab20aae1f1856f1337c9c61ddaa63b3155d",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "e7def035b7bd41a4d76e7fd0631b24e51b765dd738552e5302616f024a83e81d",
+  "request_hash": "22058358f7e91cbea0d07c2fc863f7b546bec9292ba38eb29143a6299c4f9581",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D120\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Broadcom executed significant common stock capital events in fiscal year 2024. Intel's disclosure focuses on the secondary sale of converted shares from its Mobileye investment, specifically converting 38.5 million Class B shares to Class A and selling them for net proceeds of $1.6 billion. In contrast, Broadcom executed a ten-for-one forward stock split, which increased authorized common stock from 2.9 billion to 29 billion shares but did not generate direct cash proceeds like Intel's offering. While both actions alter the share structure and potentially dilute existing holdings or adjust par values/authorized limits, Intel's event was a liquidity transaction involving specific non-controlling interest shares, whereas Broadcom's was a structural split of its own common stock.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P098_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P160_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"AMD's Item 8 disclosures in the provided candidates focus on Earnings Per Share (EPS) calculation methodology and anti-dilutive shares, which does not match Intel's specific disclosure regarding the IPO conversion and secondary sale of Mobileye shares.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"Micron's Item 8 disclosures in the provided candidates address Employee Stock Purchase Plan (ESPP) share purchases and treasury stock accounting methods, which are distinct from Intel's Mobileye share conversion and offering activity.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVIDIA's Item 8 disclosures in the provided candidates cover Net Income Per Share methodology and non-marketable equity securities valuation/gains. While NVIDIA mentions gains from secondary equity raises of private company investments, it does not disclose a primary/secondary offering or share conversion of a major subsidiary comparable to Intel's Mobileye transaction.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D085",
@@ -209,22 +212,32 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "AMD's Item 8 disclosures in the provided candidates focus on Earnings Per Share (EPS) calculation methodology and anti-dilutive shares, which does not match Intel's specific disclosure regarding the IPO conversion and secondary sale of Mobileye shares."
+      },
+      {
+        "peer_ticker": "AVGO",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_8_D103",
-            "peer_topic": "Basic EPS Calculation Methodology",
-            "peer_summary": "Basic earnings per share is computed based on the weighted-average number of shares outstanding.",
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D120",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Ten-for-one forward stock split execution and share count adjustment",
+            "peer_summary": "On July 12, 2024, the company completed a ten-for-one forward stock split, increasing authorized common stock from 2.9 billion to 29 billion shares without changing the $0.001 par value per share.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.076208,
-            "relationship": "related_topic",
-            "comparison": "Both disclosures discuss the calculation and components of share counts related to equity, but they focus on different specific mechanisms. Intel's Mobileye note details a specific transaction where Class B shares were converted to Class A and sold in a secondary offering to realize net proceeds, directly impacting capital structure and non-controlling interest consolidation. In contrast, AMD's disclosure outlines the general methodology for computing Basic Earnings Per Share (EPS), which relies on the weighted-average number of shares outstanding without referencing specific secondary offerings or share conversion events for capital raising.",
+            "retrieval_score": 0.108395,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Broadcom executed significant common stock capital events in fiscal year 2024. Intel's disclosure focuses on the secondary sale of converted shares from its Mobileye investment, specifically converting 38.5 million Class B shares to Class A and selling them for net proceeds of $1.6 billion. In contrast, Broadcom executed a ten-for-one forward stock split, which increased authorized common stock from 2.9 billion to 29 billion shares but did not generate direct cash proceeds like Intel's offering. While both actions alter the share structure and potentially dilute existing holdings or adjust par values/authorized limits, Intel's event was a liquidity transaction involving specific non-controlling interest shares, whereas Broadcom's was a structural split of its own common stock.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D085",
                 "sentences": [
                   {
@@ -233,26 +246,20 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "During 2023, we converted 38.5 million of our Mobileye Class B shares into Class A shares, representing 5% of Mobileye's outstanding capital stock, and subsequently sold the Class A shares for $42 per share as part of a secondary offering, receiving net proceeds of $1.6 billion and increasing our capital in excess of par value by $663 million, net of tax.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_8_P098_S003",
-                    "paragraph_id": "intc_2024_8_P098",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We continue to consolidate the results of Mobileye into our Consolidated Financial Statements.",
-                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_8_D103",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D120",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_8_P108_S001",
-                    "paragraph_id": "amd_2024_8_P108",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Basic earnings per share is computed based on the weighted-average number of shares outstanding.",
+                    "sentence_id": "avgo_2024_8_P160_S001",
+                    "paragraph_id": "avgo_2024_8_P160",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "On July 12, 2024, we completed a ten-for-one forward stock split of our common stock, proportionately increasing the number of shares of our authorized common stock from 2.9 billion to 29 billion without changing the par value of $0.001 per share.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -263,29 +270,28 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "Candidate disclosures concern the conversion of Mandatory Convertible Preferred Stock (historical 2022 event) and a 2024 forward stock split. These are distinct from Intel's Mobileye Class B to Class A share conversion and secondary offering in 2023. The AVGO preferred stock conversion was an automatic mechanism of a prior financing, while Intel's was a strategic sale of equity to raise proceeds. The AVGO stock split is a proportional adjustment of share counts, not a conversion tied to sale proceeds."
-      },
-      {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidate disclosures concern Employee Stock Purchase Plan (ESPP) purchases and share repurchases. These are employee compensation and treasury stock activities, respectively, which differ fundamentally from Intel's Mobileye share conversion and secondary offering executed for net proceeds and affecting non-controlling interests."
+        "rationale": "Micron's Item 8 disclosures in the provided candidates address Employee Stock Purchase Plan (ESPP) share purchases and treasury stock accounting methods, which are distinct from Intel's Mobileye share conversion and offering activity."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidate disclosure is a navigational statement regarding the location of financial information and does not contain substantive data on share conversions, offerings, or equity transactions comparable to Intel's Mobileye note."
+        "rationale": "NVIDIA's Item 8 disclosures in the provided candidates cover Net Income Per Share methodology and non-marketable equity securities valuation/gains. While NVIDIA mentions gains from secondary equity raises of private company investments, it does not disclose a primary/secondary offering or share conversion of a major subsidiary comparable to Intel's Mobileye transaction."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e7def035b7bd41a4d76e7fd0631b24e51b765dd738552e5302616f024a83e81d",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "22058358f7e91cbea0d07c2fc863f7b546bec9292ba38eb29143a6299c4f9581"
+    }
   }
 }

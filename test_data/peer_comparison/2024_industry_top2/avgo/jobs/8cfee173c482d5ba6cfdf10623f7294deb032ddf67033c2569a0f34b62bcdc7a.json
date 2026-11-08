@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "eee65c4724e480e070cf90988b37d52a2c6a2424fa9df4fefd1e022b88840953",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "96004fd83974a273b9452ceb3cd16ae4a8ec54ce7b79ef3f7ef5e9c7e4e7313c",
+  "request_hash": "b48d2c1bac89abf328ba4a91523af184c6865de23a532174a57fb6fe77d1f339",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D041\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Broadcom estimate forfeiture rates for stock-based compensation and revise these estimates in subsequent periods when actual forfeitures differ from expectations, recognizing the adjustment in the period of change. Broadcom explicitly states that changes can have a significant effect on expense because the adjustment is recognized in the period the estimate changes, while AMD notes forfeiture rates are revised 'if necessary' in subsequent periods.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P079_S001\",\n\"avgo_2024_8_P079_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P048_S006\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D051\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Intel and Broadcom both recognize share-based compensation expense net of estimated forfeitures and adjust for differences between estimated and actual forfeitures. Intel uses the straight-line amortization method over the service period net of estimated forfeitures, whereas Broadcom emphasizes the significance of the impact on expense when forfeiture rate estimates are changed in the period of change.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P079_S001\",\n\"avgo_2024_8_P079_S003\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P067_S001\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D024\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Micron and Broadcom differ fundamentally in their approach to forfeiture accounting. Broadcom estimates expected forfeitures and recognizes expense only for awards expected to vest, adjusting for variances in subsequent periods. In contrast, Micron accounts for forfeitures as they occur, rather than estimating them at the grant date.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P079_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P031_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D029\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVIDIA and Broadcom estimate forfeitures and revise these estimates in subsequent periods if actual forfeitures differ from the estimates. NVIDIA estimates forfeitures semi-annually based on historical experience for RSUs, PSUs, and market-based PSUs, which aligns with Broadcom's practice of recognizing additional expense or benefits when actual forfeitures differ from the initial estimates.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P079_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P038_S006\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D052",
@@ -186,31 +189,35 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D041",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Stock-based compensation valuation models and expense recognition policy",
             "peer_summary": "The Company uses the Black-Scholes and Monte Carlo simulation models to estimate the fair value of stock options, RSUs, and ESPP shares at the grant date. Compensation expense is generally recognized using the straight-line method over the vesting period, with forfeitures estimated at grant and revised if necessary.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.156591,
+            "retrieval_score": 0.149324,
             "relationship": "same_topic",
-            "comparison": "Both Broadcom and AMD estimate forfeiture rates at the time of grant and revise these estimates in subsequent periods if actual forfeitures differ from the original estimates, thereby adjusting the recognized compensation expense. Broadcom explicitly states that changes in estimates have a significant effect on expense and are recognized in the period of change. AMD similarly notes that forfeiture rates are estimated at grant and revised if necessary.",
+            "comparison": "Both AMD and Broadcom estimate forfeiture rates for stock-based compensation and revise these estimates in subsequent periods when actual forfeitures differ from expectations, recognizing the adjustment in the period of change. Broadcom explicitly states that changes can have a significant effect on expense because the adjustment is recognized in the period the estimate changes, while AMD notes forfeiture rates are revised 'if necessary' in subsequent periods.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D052",
                 "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P079_S001",
+                    "paragraph_id": "avgo_2024_8_P079",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We estimate forfeitures expected to occur and recognize stock-based compensation expense for such awards expected to vest.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "avgo_2024_8_P079_S002",
                     "paragraph_id": "avgo_2024_8_P079",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "We will recognize additional expense if actual forfeitures are lower than we estimated, and will recognize a benefit if actual forfeitures are higher than we estimated.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P079_S003",
-                    "paragraph_id": "avgo_2024_8_P079",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Changes in the estimated forfeiture rates can have a significant effect on stock-based compensation expense since the effect of adjusting the rate is recognized in the period the forfeiture estimate is changed.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -218,6 +225,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D041",
                 "sentences": [
                   {
@@ -241,17 +249,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_8_D051",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Share-based compensation amortization and tax asset elimination",
             "peer_summary": "Intel uses the straight-line amortization method to recognize share-based compensation expense over the service period, net of estimated forfeitures. Upon exercise, cancellation, forfeiture, or expiration of stock options or vesting/forfeiture of RSUs, deferred tax assets are eliminated on a first-in, first-out basis for options and RSUs with multiple vesting dates.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.144919,
+            "retrieval_score": 0.134076,
             "relationship": "same_topic",
-            "comparison": "Both Broadcom and Intel recognize share-based compensation expense net of estimated forfeitures. However, Intel explicitly uses the straight-line amortization method to recognize this expense over the service period, whereas Broadcom's disclosure focuses on the estimation of forfeitures and the timing of expense adjustments without specifying the straight-line method in the provided text. Both companies adjust for actual forfeitures differing from estimates.",
+            "comparison": "Intel and Broadcom both recognize share-based compensation expense net of estimated forfeitures and adjust for differences between estimated and actual forfeitures. Intel uses the straight-line amortization method over the service period net of estimated forfeitures, whereas Broadcom emphasizes the significance of the impact on expense when forfeiture rate estimates are changed in the period of change.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D052",
                 "sentences": [
                   {
@@ -262,10 +274,10 @@
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "avgo_2024_8_P079_S002",
+                    "sentence_id": "avgo_2024_8_P079_S003",
                     "paragraph_id": "avgo_2024_8_P079",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We will recognize additional expense if actual forfeitures are lower than we estimated, and will recognize a benefit if actual forfeitures are higher than we estimated.",
+                    "text": "Changes in the estimated forfeiture rates can have a significant effect on stock-based compensation expense since the effect of adjusting the rate is recognized in the period the forfeiture estimate is changed.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -273,6 +285,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D051",
                 "sentences": [
                   {
@@ -296,17 +309,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D024",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Accounting for forfeitures of stock-based awards",
             "peer_summary": "The company accounts for forfeitures of stock-based compensation as they occur rather than estimating them.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.133773,
+            "retrieval_score": 0.127218,
             "relationship": "same_topic",
-            "comparison": "Broadcom and Micron differ significantly in their treatment of stock-based compensation forfeitures. Broadcom estimates forfeiture rates and recognizes expense only for awards expected to vest, adjusting the expense in the period the estimate changes if actual results differ. In contrast, Micron accounts for forfeitures as they occur, rather than estimating them at the grant date.",
+            "comparison": "Micron and Broadcom differ fundamentally in their approach to forfeiture accounting. Broadcom estimates expected forfeitures and recognizes expense only for awards expected to vest, adjusting for variances in subsequent periods. In contrast, Micron accounts for forfeitures as they occur, rather than estimating them at the grant date.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D052",
                 "sentences": [
                   {
@@ -315,19 +332,13 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "We estimate forfeitures expected to occur and recognize stock-based compensation expense for such awards expected to vest.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P079_S003",
-                    "paragraph_id": "avgo_2024_8_P079",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Changes in the estimated forfeiture rates can have a significant effect on stock-based compensation expense since the effect of adjusting the rate is recognized in the period the forfeiture estimate is changed.",
-                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D024",
                 "sentences": [
                   {
@@ -346,16 +357,68 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D029",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Stock-Based Compensation Forfeiture Estimation",
+            "peer_summary": "The company estimates forfeitures for RSUs, PSUs, and market-based PSUs semi-annually, revising estimates if actual forfeitures differ from historical experience-based estimates.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.257055,
+            "relationship": "same_topic",
+            "comparison": "Both NVIDIA and Broadcom estimate forfeitures and revise these estimates in subsequent periods if actual forfeitures differ from the estimates. NVIDIA estimates forfeitures semi-annually based on historical experience for RSUs, PSUs, and market-based PSUs, which aligns with Broadcom's practice of recognizing additional expense or benefits when actual forfeitures differ from the initial estimates.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D052",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P079_S002",
+                    "paragraph_id": "avgo_2024_8_P079",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We will recognize additional expense if actual forfeitures are lower than we estimated, and will recognize a benefit if actual forfeitures are higher than we estimated.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P038_S006",
+                    "paragraph_id": "nvda_2024_8_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Additionally, for RSU, PSU, and market-based PSU awards, we estimate forfeitures semi-annually and revise the estimates of forfeiture in subsequent periods if actual forfeitures differ from those estimates.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "96004fd83974a273b9452ceb3cd16ae4a8ec54ce7b79ef3f7ef5e9c7e4e7313c",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "b48d2c1bac89abf328ba4a91523af184c6865de23a532174a57fb6fe77d1f339"
+    }
   }
 }

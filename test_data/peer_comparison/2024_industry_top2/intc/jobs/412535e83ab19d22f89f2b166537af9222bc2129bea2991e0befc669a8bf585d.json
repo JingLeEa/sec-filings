@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "9e555c4ca654659be1d92a64ba2acea40d439fe8e8433afe8e5241ed02b006a6",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "22a6c3feaae81700063bc64fc602c390883f4a884c665cbdec4bac5ecb14c6c2",
+  "request_hash": "70a11c60761fdb1a08bddfb607c3f985ef857274e63234421586a0a8c36c13b3",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_7_D031\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron disclose significant capital-intensive expansion strategies for manufacturing capacity, highlighting the high stakes and long timelines involved. Intel focuses on establishing a third-party foundry business requiring 'significant ongoing investments to maintain leading-edge process technology,' while Micron details plans for new U.S. fab facilities to 'add new DRAM wafer capacity' with output projected years in the future.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P118_S004\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_7_P031_S004\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"AMD's disclosed candidates (ZT Systems acquisition, International Sales) do not address foundry strategy, manufacturing capacity expansion, or foundry competition risks.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"AVGO's disclosed candidates (Customer Concentration, Strategic Focus on Acquisitions) do not address foundry strategy or manufacturing capacity expansion risks.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA's disclosed candidates (New Use Case Revenue Volatility, Inventory Commitments) focus on demand uncertainty and supply chain ordering, not on building/maintaining foundry capacity or foundry competition.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"QCOM's disclosed candidates (Customer Vertical Integration, Seasonality) do not address foundry strategy, manufacturing capacity expansion, or foundry competition risks.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D119",
@@ -187,55 +190,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates (ZT Systems acquisition and international sales) concern data center infrastructure expansion and revenue geography, which are not substantively comparable to Intel's risks regarding its early-stage third-party foundry business strategy, competitive position against incumbent foundries, and IP confidentiality concerns."
+        "rationale": "AMD's disclosed candidates (ZT Systems acquisition, International Sales) do not address foundry strategy, manufacturing capacity expansion, or foundry competition risks."
       },
       {
         "peer_ticker": "AVGO",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_7_D004",
-            "peer_topic": "Strategic Focus on Leadership and Acquisitions",
-            "peer_summary": "The company's strategy focuses on technology leadership and category-leading solutions, achieved through strategic acquisitions and extensive internal research and development to drive diversified and sustainable results.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.045432,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and Broadcom describe a growth strategy heavily reliant on strategic acquisitions to expand their technology leadership and market position. Intel's foundry strategy involves building capacity to attract external customers, while Broadcom explicitly states it achieves technology leadership through strategic acquisitions and internal R&D to deliver comprehensive infrastructure products.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D119",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P118_S002",
-                    "paragraph_id": "intc_2024_7_P118",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "As we pursue our strategy to establish Intel Foundry as a major provider of foundry capacity to manufacture semiconductors for others, we will face intense competition from well-established competitors such as TSMC, Samsung, Global Foundries (GF), United Microelectronics Corporation (UMC), and Semiconductor Manufacturing International Corporation (SMIC).",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_7_D004",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P006_S002",
-                    "paragraph_id": "avgo_2024_7_P006",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We seek to achieve this through strategic acquisitions of businesses and technologies, as well as extensive internal research and development, to ensure our products retain their technology market leadership.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "AVGO's disclosed candidates (Customer Concentration, Strategic Focus on Acquisitions) do not address foundry strategy or manufacturing capacity expansion risks."
       },
       {
         "peer_ticker": "MU",
@@ -244,17 +205,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_7_D031",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "CHIPS Act-funded U.S. fab expansion plans and timeline",
             "peer_summary": "Plans to invest in two U.S. fab facilities were announced following the CHIPS Act: construction began in Boise, Idaho in October 2023 with output projected in 2027, and a second facility in Clay, New York is expected to begin site preparation in 2025 with production ramping in the latter half of the decade, intended to meet future wafer capacity demand.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.049042,
-            "relationship": "related_topic",
-            "comparison": "Both companies disclose significant capital-intensive expansion plans for U.S. manufacturing facilities to meet future demand. Intel outlines the need for significant ongoing investments to maintain leading-edge process technology and capacity for its foundry business, while Micron details plans to invest in new leading-edge memory fab facilities in Boise, Idaho, and Clay, New York, supported by the CHIPS Act.",
+            "retrieval_score": 0.051919,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Micron disclose significant capital-intensive expansion strategies for manufacturing capacity, highlighting the high stakes and long timelines involved. Intel focuses on establishing a third-party foundry business requiring 'significant ongoing investments to maintain leading-edge process technology,' while Micron details plans for new U.S. fab facilities to 'add new DRAM wafer capacity' with output projected years in the future.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D119",
                 "sentences": [
                   {
@@ -269,15 +234,9 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "7",
                 "disclosure_id": "mu_2024_7_D031",
                 "sentences": [
-                  {
-                    "sentence_id": "mu_2024_7_P031_S002",
-                    "paragraph_id": "mu_2024_7_P031",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Following the enactment of the U.S. CHIPS and Science Act of 2022 (\"CHIPS Act\"), we announced plans to invest in two leading-edge memory manufacturing fab facilities in the United States, based on CHIPS Act support through grants and investment tax credits.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "mu_2024_7_P031_S004",
                     "paragraph_id": "mu_2024_7_P031",
@@ -296,56 +255,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates concern macroeconomic impacts on demand/supply chain and geopolitical risks related to the Israel conflict. These do not match the specific topic of Intel's strategic and operational risks in establishing a new third-party foundry business amidst intense competition and customer trust issues."
+        "rationale": "NVDA's disclosed candidates (New Use Case Revenue Volatility, Inventory Commitments) focus on demand uncertainty and supply chain ordering, not on building/maintaining foundry capacity or foundry competition."
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_7_D030",
-            "peer_topic": "Customer Vertical Integration Competition",
-            "peer_summary": "Qualcomm expects continued intense competition, partly driven by vertical integration by certain customers, such as Apple.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.067937,
-            "relationship": "related_topic",
-            "comparison": "Both Intel and Qualcomm disclose facing intense competition in the semiconductor market, though the specific sources differ. Intel highlights competition from established foundry players like TSMC and Samsung, while Qualcomm notes competition driven by vertical integration by customers like Apple, who may produce their own chips.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D119",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P118_S002",
-                    "paragraph_id": "intc_2024_7_P118",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "As we pursue our strategy to establish Intel Foundry as a major provider of foundry capacity to manufacture semiconductors for others, we will face intense competition from well-established competitors such as TSMC, Samsung, Global Foundries (GF), United Microelectronics Corporation (UMC), and Semiconductor Manufacturing International Corporation (SMIC).",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_7_D030",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P027_S003",
-                    "paragraph_id": "qcom_2024_7_P027",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "• We expect continued intense competition, including from vertical integration by certain of our customers (e.g., Apple).",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "QCOM's disclosed candidates (Customer Vertical Integration, Seasonality) do not address foundry strategy, manufacturing capacity expansion, or foundry competition risks."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "22a6c3feaae81700063bc64fc602c390883f4a884c665cbdec4bac5ecb14c6c2",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "70a11c60761fdb1a08bddfb607c3f985ef857274e63234421586a0a8c36c13b3"
+    }
   }
 }

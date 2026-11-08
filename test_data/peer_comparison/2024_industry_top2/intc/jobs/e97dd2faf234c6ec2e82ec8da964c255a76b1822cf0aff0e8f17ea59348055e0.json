@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "716d1ed5f4a060146beb30bddd22a14c92dd9d89274182540797244fe9421ded",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "9e3cf179f7cf3000c44cd44399172daaf1c866f7e3496f4b2145a65d540d6e1a",
+  "request_hash": "f961018704371449f66425c491395864c8b7673c8e5fbb4932427c7d4aeb9165",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_1_D050\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron disclose their internal manufacturing capabilities and capital-intensive nature, but Intel emphasizes its exclusivity as a few global producers of leading-edge logic chips, whereas Micron highlights its specific multi-country footprint and use of subcontractors for certain processes without claiming a unique global oligopoly position for its specific products.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P042_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_1_P052_S001\",\n\"mu_2024_1_P052_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The provided AMD disclosures focus on high-level mission/vision statements and embedded CPU competitor identification, lacking substantive comparison of internal manufacturing leadership or process technology capabilities relevant to Intel's Item 1 disclosure on leading-edge manufacturing capability.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The provided AVGO disclosures discuss general technology leadership via acquisitions/R&D and list semiconductor competitors, but do not contain specific disclosures comparing internal manufacturing process technology or leading-edge fabrication capabilities.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA's disclosure explicitly states a 'fabless' strategy where it partners with suppliers for fabrication, which is the direct opposite of Intel's disclosure of possessing its own process technology and manufacturing facilities for leading-edge chips; this represents a fundamentally different business model/strategy rather than a comparable discussion of shared manufacturing capabilities or competitive parity in internal fabrication.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"QCOM's disclosures focus on acquisitions for technology needs and internal fabrication only for specific RFFE/RF filter products, contrasting with Intel's broad strategic emphasis on leading-edge logic chip manufacturing leadership.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1_D047",
@@ -136,13 +139,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses internal manufacturing capabilities or process technology ownership. AMD candidates describe its mission/vision or competitor landscape, which do not substantively compare to Intel's specific disclosure about possessing manufacturing facilities and process technology for leading-edge chips."
+        "rationale": "The provided AMD disclosures focus on high-level mission/vision statements and embedded CPU competitor identification, lacking substantive comparison of internal manufacturing leadership or process technology capabilities relevant to Intel's Item 1 disclosure on leading-edge manufacturing capability."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses internal manufacturing capabilities or process technology ownership. AVGO candidates describe its general strategy of technology leadership via acquisitions/R&D or its competitor list, which do not substantively compare to Intel's specific disclosure about possessing manufacturing facilities and process technology for leading-edge chips."
+        "rationale": "The provided AVGO disclosures discuss general technology leadership via acquisitions/R&D and list semiconductor competitors, but do not contain specific disclosures comparing internal manufacturing process technology or leading-edge fabrication capabilities."
       },
       {
         "peer_ticker": "MU",
@@ -151,17 +154,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1_D050",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Global manufacturing footprint and subcontractor use",
             "peer_summary": "Products are manufactured in own facilities across seven countries and utilize subcontractors for certain processes.",
             "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.05235,
+            "retrieval_score": 0.060858,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose the strategic importance and operational reality of their own internal manufacturing capabilities for producing semiconductor products. Intel emphasizes its unique global position possessing the specific process technology and facilities for leading-edge logic chips, while Micron highlights its ownership of manufacturing facilities across seven countries to produce memory products, noting that this manufacturing is capital-intensive. Both disclosures center on the company's direct ownership and operation of fabrication infrastructure as a core component of their business model.",
+            "comparison": "Both Intel and Micron disclose their internal manufacturing capabilities and capital-intensive nature, but Intel emphasizes its exclusivity as a few global producers of leading-edge logic chips, whereas Micron highlights its specific multi-country footprint and use of subcontractors for certain processes without claiming a unique global oligopoly position for its specific products.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D047",
                 "sentences": [
                   {
@@ -176,6 +183,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D050",
                 "sentences": [
                   {
@@ -201,65 +209,21 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1_D040",
-            "peer_topic": "Fabless manufacturing strategy and cost benefits",
-            "peer_summary": "NVIDIA utilizes a fabless and contracting manufacturing strategy, employing partners for wafer fabrication, assembly, testing, and packaging to avoid significant costs and risks associated with owning manufacturing operations. This approach allows the company to focus resources on product design, quality assurance, marketing, and customer support.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.049952,
-            "relationship": "same_topic",
-            "comparison": "This comparison highlights the divergence in manufacturing business models between Intel and NVIDIA. Intel asserts that it is one of very few companies globally with the process technology and facilities to produce leading-edge semiconductor logic chips, indicating an Integrated Device Manufacturer (IDM) or foundry model with significant internal capital assets. In contrast, NVIDIA explicitly states it utilizes a fabless strategy, employing partners for all manufacturing phases including wafer fabrication to avoid the significant costs and risks associated with owning such operations.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D047",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1_P042_S001",
-                    "paragraph_id": "intc_2024_1_P042",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We are one of only a few companies in the world with the process technology and manufacturing facilities to produce leading-edge semiconductor logic chips.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1_D040",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_1_P043_S001",
-                    "paragraph_id": "nvda_2024_1_P043",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "We utilize a fabless and contracting manufacturing strategy, whereby we employ and partner with key suppliers for all phases of the manufacturing process, including wafer fabrication, assembly, testing, and packaging.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_1_P043_S003",
-                    "paragraph_id": "nvda_2024_1_P043",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Additionally, we can avoid many of the significant costs and risks associated with owning and operating manufacturing operations.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "NVDA's disclosure explicitly states a 'fabless' strategy where it partners with suppliers for fabrication, which is the direct opposite of Intel's disclosure of possessing its own process technology and manufacturing facilities for leading-edge chips; this represents a fundamentally different business model/strategy rather than a comparable discussion of shared manufacturing capabilities or competitive parity in internal fabrication."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses internal manufacturing capabilities or process technology ownership. QCOM candidates describe acquisitions/investments for technology needs or corporate responsibility visions, which do not substantively compare to Intel's specific disclosure about possessing manufacturing facilities and process technology for leading-edge chips."
+        "rationale": "QCOM's disclosures focus on acquisitions for technology needs and internal fabrication only for specific RFFE/RF filter products, contrasting with Intel's broad strategic emphasis on leading-edge logic chip manufacturing leadership."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "9e3cf179f7cf3000c44cd44399172daaf1c866f7e3496f4b2145a65d540d6e1a",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "f961018704371449f66425c491395864c8b7673c8e5fbb4932427c7d4aeb9165"
+    }
   }
 }

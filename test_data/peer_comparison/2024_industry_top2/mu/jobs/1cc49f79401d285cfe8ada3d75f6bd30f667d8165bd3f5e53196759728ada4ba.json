@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "dfe5ee501bfd59d70580392e8df08a222e0248c6fd21509f7ff13f68ede42002",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "a691db87a77abecd0f7ba51d06ed6299544c7876234ea9d01ed4ec74b281c33a",
+  "request_hash": "da4c534cd2643939011536a924b10b196e18702b854c1f9500382829a627c4b0",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D081\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and AMD disclose specific term loan agreements with interest rates explicitly tied to SOFR. MU’s Multi-Tranche Term Loan Agreement bears interest at adjusted term SOFR plus a margin of 1.00% to 2.00%, while AMD’s ATMP JV term loan bears interest at three months term SOFR plus 50 basis points. Both disclosures detail the specific benchmark (SOFR) and the applicable margin structure for these floating-rate debt instruments.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P058_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P083_S006\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D115\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and AVGO disclose term loans that bear floating interest rates tied to SOFR. MU’s Multi-Tranche Term Loan Agreement interest is based on adjusted term SOFR plus a margin, whereas AVGO’s 2023 Term Loans bear interest at floating rates tied to SOFR. Both companies use SOFR as the primary reference benchmark for their term loan interest calculations.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P058_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P155_S001\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D138\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"While both companies disclose debt financing activities, MU’s disclosure focuses on Term Loan A payment terms and SOFR-based interest rates, whereas INTC’s disclosure highlights the expansion of revolving credit facility limits and their unsecured nature. INTC explicitly notes its facilities are unsecured general obligations with no borrowings outstanding, differing from MU’s active term loan installments and specific SOFR margin disclosures.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P058_S001\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P158_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA candidates disclose allowance for credit losses methodology and fair value hierarchy reviews, which are unrelated to MU's topic of term loan payment terms and interest rate structures.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D052",
@@ -205,18 +208,22 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_8_D090",
-            "peer_topic": "Revolving Credit Facility Terms and Status",
-            "peer_summary": "The Company has $3 billion available under a revolving credit agreement expiring on April 29, 2027, with no outstanding borrowings as of December 28, 2024, and interest rates tied to SOFR or Base Rate plus margins.",
+            "peer_disclosure_id": "amd_2024_8_D081",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "ATMP Joint Venture Term Loan Agreement",
+            "peer_summary": "On October 9, 2024, the Company entered into a $100 million one-year term loan with an ATMP JV affiliate at SOFR plus 50 basis points, secured by the JV's receivable from the Company, and may be extended for up to twelve months.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.173763,
+            "retrieval_score": 0.165216,
             "relationship": "same_topic",
-            "comparison": "Both AMD and MU disclose debt facilities with interest rates tied to SOFR. MU's Multi-Tranche Term Loan Agreement bears interest at adjusted term SOFR plus a margin of 1.00% to 2.00%, while AMD's Revolving Credit Agreement offers SOFR Loans at SOFR plus a margin of 0.575% to 1.20%. The key difference is the instrument type (term loan vs revolving credit) and the specific margin ranges applied to the SOFR benchmark.",
+            "comparison": "Both MU and AMD disclose specific term loan agreements with interest rates explicitly tied to SOFR. MU’s Multi-Tranche Term Loan Agreement bears interest at adjusted term SOFR plus a margin of 1.00% to 2.00%, while AMD’s ATMP JV term loan bears interest at three months term SOFR plus 50 basis points. Both disclosures detail the specific benchmark (SOFR) and the applicable margin structure for these floating-rate debt instruments.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D052",
                 "sentences": [
                   {
@@ -231,13 +238,14 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_8_D090",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D081",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_8_P093_S004",
-                    "paragraph_id": "amd_2024_8_P093",
+                    "sentence_id": "amd_2024_8_P083_S006",
+                    "paragraph_id": "amd_2024_8_P083",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Each SOFR Loan will bear interest at a rate per annum equal to the applicable SOFR plus a margin between 0.575% and 1.20%.",
+                    "text": "The loan bears interest, payable quarterly, at the three months term Secured Overnight Financing Rate (SOFR) plus 50 basis points.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -254,26 +262,23 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D115",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "2023 Term Loan Interest, Maturity, and Prepayment Terms",
             "peer_summary": "The 2023 Term Loans bear floating interest rates tied to SOFR, with Term A-3 and Term A-5 maturing on the third and fifth anniversaries of the VMware Merger respectively, and allow for penalty-free voluntary prepayments; the obligations are unsecured and not guaranteed by subsidiaries.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.150741,
+            "retrieval_score": 0.144614,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and MU disclose term loan agreements where interest rates are floating and tied to SOFR. AVGO's 2023 Term Loans bear interest at floating rates tied to SOFR, whereas MU's Multi-Tranche Term Loan Agreement bears interest at adjusted term SOFR. Both structures utilize SOFR as the underlying benchmark for their floating rate debt obligations.",
+            "comparison": "Both MU and AVGO disclose term loans that bear floating interest rates tied to SOFR. MU’s Multi-Tranche Term Loan Agreement interest is based on adjusted term SOFR plus a margin, whereas AVGO’s 2023 Term Loans bear interest at floating rates tied to SOFR. Both companies use SOFR as the primary reference benchmark for their term loan interest calculations.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D052",
                 "sentences": [
-                  {
-                    "sentence_id": "mu_2024_8_P058_S001",
-                    "paragraph_id": "mu_2024_8_P058",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "The 2026 Term Loan A and 2027 Term Loan A (the \"Multi-Tranche Term Loan Agreement\") require equal quarterly installment payments in an amount equal to 1.25% of the original principal amount.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "mu_2024_8_P058_S002",
                     "paragraph_id": "mu_2024_8_P058",
@@ -286,6 +291,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D115",
                 "sentences": [
                   {
@@ -304,22 +310,74 @@
       },
       {
         "peer_ticker": "INTC",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates for INTC discuss Arizona Bond Remarketing (fixed coupon, maturity dates) and Short-Term Debt balances, which do not substantively compare to the target's topic of Multi-Tranche Term Loan Payment Terms and SOFR-based interest rates."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D138",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Revolving Credit Facility Limits and Maturities",
+            "peer_summary": "In 2024, the company expanded its 5-year $5.0 billion and 364-day $5.0 billion revolving credit facilities to $7.0 billion and $8.0 billion respectively, with maturity dates extended to February 2029 and January 2025. These facilities are unsecured general obligations and had no borrowings outstanding as of December 28, 2024 and December 30, 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.052042,
+            "relationship": "related_topic",
+            "comparison": "While both companies disclose debt financing activities, MU’s disclosure focuses on Term Loan A payment terms and SOFR-based interest rates, whereas INTC’s disclosure highlights the expansion of revolving credit facility limits and their unsecured nature. INTC explicitly notes its facilities are unsecured general obligations with no borrowings outstanding, differing from MU’s active term loan installments and specific SOFR margin disclosures.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D052",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P058_S001",
+                    "paragraph_id": "mu_2024_8_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "The 2026 Term Loan A and 2027 Term Loan A (the \"Multi-Tranche Term Loan Agreement\") require equal quarterly installment payments in an amount equal to 1.25% of the original principal amount.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D138",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P158_S002",
+                    "paragraph_id": "intc_2024_8_P158",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "These credit facilities are unsecured general obligations.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for NVDA."
+        "rationale": "NVDA candidates disclose allowance for credit losses methodology and fair value hierarchy reviews, which are unrelated to MU's topic of term loan payment terms and interest rate structures."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for QCOM."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "a691db87a77abecd0f7ba51d06ed6299544c7876234ea9d01ed4ec74b281c33a",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "da4c534cd2643939011536a924b10b196e18702b854c1f9500382829a627c4b0"
+    }
   }
 }

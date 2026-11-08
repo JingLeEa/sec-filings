@@ -1,0 +1,318 @@
+{
+  "input_fingerprint": "7ac7e51684ec84d3077e2cb91f5a79d3d16b4e1e9214066f2ee5185d5b16eb45",
+  "job_fingerprint": "77ac0eafc92b6c7520c386c393d604e13dd11f065769daa1b6581e287e8b857f",
+  "request_hash": "528803d9d9a36ded3ee6be35094f6880635f575668e8bcaf784ff4823ebc7610",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D061\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose geographic revenue concentration based on customer billing location. NVDA reports that international sales accounted for 56% of total revenue in fiscal 2024, attributing the shift toward the U.S. to Compute & Networking demand. Similarly, AMD provides a table of sales by geographic region based on billing location but does not explicitly state the total international percentage in the provided text; however, both companies adhere to the same reporting basis for geographic data.\",\n\"target_sentence_ids\": [\n\"nvda_2024_8_P158_S001\",\n\"nvda_2024_8_P158_S004\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P065_S001\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D152\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AVGO disclose net revenue by geographic area. NVDA provides aggregate percentages for sales outside the United States (56% in 2024), while AVGO breaks down net revenue by specific major countries, reporting $12,887 million from the United States, $10,483 million from China, and $18,645 million from other foreign countries for fiscal year 2024. Both disclosures address the geographic distribution of revenue, though AVGO provides specific country-level absolute values whereas NVDA provides the aggregate non-U.S. percentage.\",\n\"target_sentence_ids\": [\n\"nvda_2024_8_P158_S004\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P192_S004\",\n\"avgo_2024_8_P192_S005\",\n\"avgo_2024_8_P192_S007\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D122\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"While NVDA focuses on geographic revenue concentration, its disclosure also relates to business drivers (Compute & Networking) which can imply major customer dynamics. MU explicitly addresses customer concentration risk, noting that one customer accounted for 10% of total revenue in 2024. Both disclosures highlight the significance of specific business units or customers to overall revenue, though NVDA's provided text focuses on the geographic split (56% non-U.S.) driven by segment demand, whereas MU focuses on the dependency on a single customer entity.\",\n\"target_sentence_ids\": [\n\"nvda_2024_8_P158_S005\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P129_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The retrieved candidates for INTC (intc_2024_8_D016 and intc_2024_8_D012) discuss revenue recognition criteria/timing and fiscal year structure/week length, respectively. These topics do not match the target's topic of Geographic Revenue Concentration.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved for QCOM.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/nvda",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_8_D140",
+    "item": "8",
+    "target_topic": "Geographic Revenue Concentration",
+    "target_summary": "Revenue from sales outside the United States accounted for 56%, 69%, and 84% of total revenue in fiscal years 2024, 2023, and 2022 respectively, with the increase in U.S. revenue in 2024 driven by higher demand in the Compute & Networking segment.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0371",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D134 (2023) covers geographic revenue allocation methodology (billing vs end customer) and states no customer was >10%. D140 (2024) covers geographic revenue allocation methodology (billing location) and specific percentage breakdowns. The core subject of geographic revenue presentation and allocation logic matches. The 'no customer >10%' fact from D134 is superseded by different data in D141, but the general geographic revenue topic aligns with D140's primary focus.\n\nD134 (2023) mentions that no customer represented 10% or more of total revenue. D141 (2024) details that one customer represented 13% in 2024 and no customer was >10% in prior years. Both disclosures address customer concentration and the significance of top customers, making them topically linked despite the change in specific figures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_8_D134",
+            "item": "8",
+            "section": "Note 17 - Segment Information",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Revenue by geographic region is allocated based on customer billing location, which may differ from end customer location, and no customer represented 10% or more of total revenue in fiscal years 2023, 2022, and 2021.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D140",
+            "item": "8",
+            "section": "Note 17 - Segment Information",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Revenue from sales outside the United States accounted for 56%, 69%, and 84% of total revenue in fiscal years 2024, 2023, and 2022 respectively, with the increase in U.S. revenue in 2024 driven by higher demand in the Compute & Networking segment.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_8_D141",
+            "item": "8",
+            "section": "Note 17 - Segment Information",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Sales to one customer represented 13% of total revenue for fiscal year 2024 (attributable to Compute & Networking), while no customer represented 10% or more of total revenue in fiscal years 2023 and 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.92,
+          "reason": "The 2024 filing introduces a significant change in customer concentration. While the 2023 disclosure stated no customer represented 10% or more, the 2024 disclosure explicitly identifies a single customer representing 13% of total revenue attributable to the Compute & Networking segment. This is a meaningful change in supply chain/third-party dependency and financial exposure.",
+          "key_change": "Introduction of single significant customer concentration"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0348",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The previous disclosure D140 covers geographic revenue reporting methodology (billing vs end customer) and specific US/Non-US revenue percentages/drivers. D135 covers the methodology (billing location, Singapore example). D136 covers the US/Non-US revenue percentages and the specific driver (Compute & Networking demand). The current disclosures are split: D135 focuses on the *methodology* (matching D140's first part), while D136 focuses on the *results/drivers* (matching D140's second part). They should not be merged into one current disclosure nor should they be kept as one previous to two current in a single row if the topic is split. However, since D140 is a single disclosure covering both aspects, and the current year has split them into two distinct disclosures (one on method, one on results), this is a many-to-many split. D135 matches the methodology aspect. D136 matches the results aspect. I will split the group to ensure precise topic correspondence: D140 -> D135 (method) and D140 -> D136 (results) is not allowed as separate rows for the same previous ID if we want to avoid confusion, but the instructions allow A->[X,Y]. However, D135 and D136 are distinct topics (Method vs",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D140",
+            "item": "8",
+            "section": "Note 17 - Segment Information",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Revenue from sales outside the United States accounted for 56%, 69%, and 84% of total revenue in fiscal years 2024, 2023, and 2022 respectively, with the increase in U.S. revenue in 2024 driven by higher demand in the Compute & Networking segment.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_8_D135",
+            "item": "8",
+            "section": "Note 16 - Segment Information",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Revenue by geographic area is based on customer billing location, which may differ from the end customer or shipping location; Singapore represented 18% of fiscal 2025 revenue based on billing, though shipments to Singapore were less than 2% of total revenue.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_8_D136",
+            "item": "8",
+            "section": "Note 16 - Segment Information",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Revenue from outside the United States accounted for 53%, 56%, and 69% of total revenue in fiscal years 2025, 2024, and 2023, respectively, with the increase in US revenue driven by higher Compute & Networking demand.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.15,
+          "confidence_score": 0.9,
+          "reason": "The change reflects a split of a single previous disclosure into two current disclosures (methodology vs. results) and a routine update of revenue percentages (from 56% to 53% non-US). The underlying reporting methodology (billing location) remains unchanged. The shift in revenue percentages is a result of operational demand fluctuations, not a change in reporting policy or a material change in the nature of the geographic exposure itself. The driver (Compute & Networking demand) remains consistent.",
+          "key_change": "Split of geographic revenue disclosure and routine percentage update"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D061",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Geographic Sales and Major Customer Concentration",
+            "peer_summary": "Tables summarize sales to external customers by geographic regions based on billing location, sales to a major customer accounting for at least 10% of consolidated net revenue, and property and equipment, net by geographic areas.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.176658,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AMD disclose geographic revenue concentration based on customer billing location. NVDA reports that international sales accounted for 56% of total revenue in fiscal 2024, attributing the shift toward the U.S. to Compute & Networking demand. Similarly, AMD provides a table of sales by geographic region based on billing location but does not explicitly state the total international percentage in the provided text; however, both companies adhere to the same reporting basis for geographic data.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D140",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P158_S001",
+                    "paragraph_id": "nvda_2024_8_P158",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Revenue by geographic areas is designated based upon the billing location of the customer.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P158_S004",
+                    "paragraph_id": "nvda_2024_8_P158",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Revenue from sales to customers outside of the United States accounted for 56%, 69%, and 84% of total revenue for fiscal years 2024, 2023, and 2022, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D061",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P065_S001",
+                    "paragraph_id": "amd_2024_8_P065",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The following table summarizes sales to external customers by geographic regions based on billing location of the customer:",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D152",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Net Revenue by Major Country",
+            "peer_summary": "Net revenue from the United States was $12,887 million, from China (including Hong Kong) was $10,483 million, from Singapore was $9,559 million, and from other foreign countries was $18,645 million for fiscal year 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.15066,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AVGO disclose net revenue by geographic area. NVDA provides aggregate percentages for sales outside the United States (56% in 2024), while AVGO breaks down net revenue by specific major countries, reporting $12,887 million from the United States, $10,483 million from China, and $18,645 million from other foreign countries for fiscal year 2024. Both disclosures address the geographic distribution of revenue, though AVGO provides specific country-level absolute values whereas NVDA provides the aggregate non-U.S. percentage.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D140",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P158_S004",
+                    "paragraph_id": "nvda_2024_8_P158",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Revenue from sales to customers outside of the United States accounted for 56%, 69%, and 84% of total revenue for fiscal years 2024, 2023, and 2022, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D152",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P192_S004",
+                    "paragraph_id": "avgo_2024_8_P192",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Net revenue from the United States for fiscal years 2024, 2023 and 2022 was $12,887 million, $6,975 million and $5,915 million, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P192_S005",
+                    "paragraph_id": "avgo_2024_8_P192",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Net revenue from China (including Hong Kong) for fiscal years 2024, 2023 and 2022 was $10,483 million, $11,533 million and $11,637 million, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P192_S007",
+                    "paragraph_id": "avgo_2024_8_P192",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Net revenue from other foreign countries for fiscal years 2024, 2023 and 2022 was $18,645 million, $12,832 million and $11,648 million, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for INTC (intc_2024_8_D016 and intc_2024_8_D012) discuss revenue recognition criteria/timing and fiscal year structure/week length, respectively. These topics do not match the target's topic of Geographic Revenue Concentration."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D122",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Customer Concentration Risk: 2024 Single Customer",
+            "peer_summary": "One customer accounted for 10% of total revenue in 2024, primarily within the MBU, EBU, and CNBU segments, while no single customer reached the 10% threshold in 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.122086,
+            "relationship": "related_topic",
+            "comparison": "While NVDA focuses on geographic revenue concentration, its disclosure also relates to business drivers (Compute & Networking) which can imply major customer dynamics. MU explicitly addresses customer concentration risk, noting that one customer accounted for 10% of total revenue in 2024. Both disclosures highlight the significance of specific business units or customers to overall revenue, though NVDA's provided text focuses on the geographic split (56% non-U.S.) driven by segment demand, whereas MU focuses on the dependency on a single customer entity.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D140",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P158_S005",
+                    "paragraph_id": "nvda_2024_8_P158",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The increase in revenue to the United States for fiscal year 2024 was primarily due to higher U.S.-based Compute & Networking segment demand.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D122",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P129_S001",
+                    "paragraph_id": "mu_2024_8_P129",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Revenue from one customer was 10% (primarily included in MBU, EBU, and CNBU segments) of total revenue for 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved for QCOM."
+      }
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "77ac0eafc92b6c7520c386c393d604e13dd11f065769daa1b6581e287e8b857f",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/nvda",
+      "request_hash": "528803d9d9a36ded3ee6be35094f6880635f575668e8bcaf784ff4823ebc7610"
+    }
+  }
+}

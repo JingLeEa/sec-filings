@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "e6e67a154ee29bae90ae1ab4b90d063a0111eb9b87d4540e4cd3ef98a60fe6e9",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "2c80a4a7c3cd980f337dfe3ef09987c3f10c43c6703982e2959efbe67f28df93",
+  "request_hash": "18c998120d4fd458713e32bf5210b91dd3a41039c1e4439d4e5fc5cfdea1bb17",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D050\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies report depreciation expense for property, plant, and equipment. However, Micron's depreciation expense ($7.70 billion in 2024) is significantly larger in absolute magnitude than AMD's ($454 million in 2024). Additionally, Micron discloses capitalized interest ($225 million), whereas AMD's comparable disclosure does not mention capitalized interest, reflecting differences in capital intensity and financing structures.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P046_S001\",\n\"mu_2024_8_P046_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P055_S001\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D090\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies report depreciation expense as a specific line item. Micron reported $7.70 billion in depreciation expense, while Broadcom reported $593 million. Both companies show depreciation amounts for the current and prior two years (2022-2024), allowing for trend comparison, though Micron's scale is substantially higher.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P046_S001\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P119_S001\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D101\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose interest capitalized as part of the cost of property, plant, and equipment. Micron capitalized $225 million in 2024, while Intel capitalized $1.5 billion in 2024. This indicates both companies are engaged in significant capital investment activities that qualify for interest capitalization, although Intel's absolute amount is much higher.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P046_S002\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P115_S001\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D099\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies report depreciation expense. Micron's depreciation expense was $7.70 billion in 2024, whereas NVIDIA's was $894 million. Both disclosures provide the expense for the current year and the two preceding years, highlighting the similar disclosure practice despite the significant difference in scale between the semiconductor memory/IDM sector (Micron) and the GPU/AI accelerator sector (NVIDIA).\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P046_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P107_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D036",
@@ -192,17 +195,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D050",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Depreciation expense amounts",
             "peer_summary": "Depreciation expense was $454 million for 2024, $441 million for 2023, and $439 million for 2022.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.439161,
+            "retrieval_score": 0.404118,
             "relationship": "same_topic",
-            "comparison": "Both companies report depreciation expense for property, plant, and equipment, but the scale differs significantly. AMD reported $454 million in depreciation expense for 2024, whereas Micron reported $7.70 billion for the same period. Both companies show a slight year-over-year increase in depreciation, with AMD rising from $441 million in 2023 and Micron rising from $7.67 billion in 2023.",
+            "comparison": "Both companies report depreciation expense for property, plant, and equipment. However, Micron's depreciation expense ($7.70 billion in 2024) is significantly larger in absolute magnitude than AMD's ($454 million in 2024). Additionally, Micron discloses capitalized interest ($225 million), whereas AMD's comparable disclosure does not mention capitalized interest, reflecting differences in capital intensity and financing structures.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D036",
                 "sentences": [
                   {
@@ -211,12 +218,20 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "Depreciation expense was $7.70 billion, $7.67 billion, and $7.03 billion for 2024, 2023, and 2022, respectively.",
                     "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_8_P046_S002",
+                    "paragraph_id": "mu_2024_8_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Interest capitalized as part of the cost of property, plant, and equipment was $225 million, $208 million, and $77 million for 2024, 2023, and 2022, respectively.",
+                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D050",
                 "sentences": [
                   {
@@ -240,17 +255,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D090",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Depreciation Expense Amounts",
             "peer_summary": "Depreciation expense recorded was $593 million for fiscal year 2024, compared to $502 million and $529 million for fiscal years 2023 and 2022, respectively.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.328976,
+            "retrieval_score": 0.293092,
             "relationship": "same_topic",
-            "comparison": "Both companies report depreciation expense for property, plant, and equipment. Micron's depreciation expense was $7.70 billion in 2024, significantly higher than Broadcom's $593 million. Micron's depreciation increased slightly from $7.67 billion in 2023, while Broadcom's depreciation increased more markedly from $502 million in 2023 to $593 million in 2024.",
+            "comparison": "Both companies report depreciation expense as a specific line item. Micron reported $7.70 billion in depreciation expense, while Broadcom reported $593 million. Both companies show depreciation amounts for the current and prior two years (2022-2024), allowing for trend comparison, though Micron's scale is substantially higher.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D036",
                 "sentences": [
                   {
@@ -265,6 +284,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D090",
                 "sentences": [
                   {
@@ -288,17 +308,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_8_D101",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Interest Capitalization Policy",
             "peer_summary": "Interest expense for 2024 is presented net of $1.5 billion in interest capitalized, compared to $1.5 billion in 2023 and $785 million in 2022.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.265752,
+            "retrieval_score": 0.260172,
             "relationship": "same_topic",
-            "comparison": "Both Micron and Intel disclose the amount of interest capitalized related to property, plant, and equipment. Micron reported $225 million in capitalized interest for 2024, reflecting a significant increase from $77 million in 2022. In contrast, Intel capitalized $1.5 billion in 2024, a substantially larger absolute amount that remained flat compared to the $1.5 billion capitalized in 2023, though Intel's figure is higher than both Micron's 2024 and 2023 amounts.",
+            "comparison": "Both companies disclose interest capitalized as part of the cost of property, plant, and equipment. Micron capitalized $225 million in 2024, while Intel capitalized $1.5 billion in 2024. This indicates both companies are engaged in significant capital investment activities that qualify for interest capitalization, although Intel's absolute amount is much higher.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D036",
                 "sentences": [
                   {
@@ -313,6 +337,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D101",
                 "sentences": [
                   {
@@ -325,21 +350,32 @@
                 ]
               }
             ]
-          },
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "NVDA",
+        "status": "compared",
+        "comparisons": [
           {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_8_D098",
-            "peer_topic": "Financial impact of capital-related incentives",
-            "peer_summary": "Capital-related incentives reduced gross property, plant, and equipment by $9.5 billion as of December 28, 2024, with $4.1 billion recognized in 2024. These incentives reduced depreciation expense by $594 million in 2024, substantially all of which reduced cost of sales, and $3.3 billion of the total capital-related incentives recognized in 2024 was classified as a non-cash investing activity.",
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D099",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Depreciation and Amortization Expenses",
+            "peer_summary": "Depreciation expense was $894 million, $844 million, and $611 million for fiscal years 2024, 2023, and 2022, respectively, while accumulated amortization of leasehold improvements and finance leases was $400 million and $327 million as of January 28, 2024, and January 29, 2023, respectively.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.158419,
-            "relationship": "related_topic",
-            "comparison": "While Micron focuses on gross depreciation and capitalized interest, Intel discloses how capital-related incentives specifically reduce its depreciation expense. Intel reported that these incentives reduced depreciation expense by $594 million in 2024. Micron does not disclose such incentive-driven depreciation reductions in this section, instead reporting its total depreciation expense of $7.70 billion for 2024 without attributing a specific portion to incentive offsets.",
+            "retrieval_score": 0.211894,
+            "relationship": "same_topic",
+            "comparison": "Both companies report depreciation expense. Micron's depreciation expense was $7.70 billion in 2024, whereas NVIDIA's was $894 million. Both disclosures provide the expense for the current year and the two preceding years, highlighting the similar disclosure practice despite the significant difference in scale between the semiconductor memory/IDM sector (Micron) and the GPU/AI accelerator sector (NVIDIA).",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D036",
                 "sentences": [
                   {
@@ -353,14 +389,15 @@
               },
               {
                 "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D098",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D099",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_8_P111_S002",
-                    "paragraph_id": "intc_2024_8_P111",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Capital-related incentives reduced depreciation expense by $594 million in 2024, of which the substantial majority reduced cost of sales ($226 million in 2023, substantially all of which reduced cost of sales, and $230 million in 2022, all of which reduced cost of sales).",
+                    "sentence_id": "nvda_2024_8_P107_S001",
+                    "paragraph_id": "nvda_2024_8_P107",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Depreciation expense for fiscal years 2024, 2023, and 2022 was $894 million, $844 million, and $611 million, respectively.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -371,17 +408,16 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "no candidate was retrieved"
-      },
-      {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
         "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "2c80a4a7c3cd980f337dfe3ef09987c3f10c43c6703982e2959efbe67f28df93",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "18c998120d4fd458713e32bf5210b91dd3a41039c1e4439d4e5fc5cfdea1bb17"
+    }
   }
 }

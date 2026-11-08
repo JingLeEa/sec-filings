@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "906920753c0f75f6495326adac86df1d34207b4fcc223ab3114650190defa803",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "c37809e049f69f02f5262881c9fbd454029b6e7fb73561e3af345d266c61274d",
+  "request_hash": "61fececa57f101f4bf031d0d5b44b84762e58b883c105de0db4c403e2037944e",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D120\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose their U.S. 401(k) matching contribution structures and annual expense amounts. AVGO matches 100% of employee contributions up to 6% of eligible earnings, resulting in $210 million in contributions for 2024. In contrast, AMD matches only 75% of employee contributions up to 6% of eligible compensation, resulting in $78 million in contributions for 2024.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P147_S002\",\n\"avgo_2024_8_P147_S004\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P127_S003\",\n\"amd_2024_8_P127_S004\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D153\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies report significant U.S. defined contribution matching expenses that fluctuated year-over-year. Intel expensed $541 million in matching contributions in 2024, noting an increase in the matching rate for that year, whereas AVGO reported $210 million in contributions, attributing its increase from $100 million to the VMware Merger. Intel also discloses a supplemental deferred compensation plan not mentioned by AVGO.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P147_S004\",\n\"avgo_2024_8_P147_S005\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P178_S001\",\n\"intc_2024_8_P178_S002\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D093\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies describe a U.S. 401(k) plan with cash matching contributions based on a percentage of eligible earnings. AVGO matches up to 6% of earnings, resulting in $210 million in 2024 contributions. Micron matches up to 5% of annual eligible earnings, resulting in $66 million in 2024 contributions. Both disclosures focus on the match percentage cap and the total expense incurred.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P147_S002\",\n\"avgo_2024_8_P147_S004\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P100_S002\",\n\"mu_2024_8_P100_S003\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D135\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose total contribution expenses for their tax-qualified defined contribution plans for U.S. and other eligible employees. AVGO reported $210 million in 401(k) contributions for 2024, while NVIDIA reported $255 million in contribution expenses for the same fiscal year. Both items present the annual cost associated with these retirement benefits.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P147_S004\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P151_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D107",
@@ -172,17 +175,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D120",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "401(k) Plan Structure and Contributions",
             "peer_summary": "The Company offers a 401(k) plan in the US with a matching contribution of 75% of employee contributions up to 6% of eligible compensation, resulting in Company contributions of approximately $78 million, $70 million, and $47 million in 2024, 2023, and 2022 respectively.",
             "peer_taxonomy": "Human Capital & Organization",
-            "retrieval_score": 0.212031,
+            "retrieval_score": 0.211067,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and AMD provide U.S. 401(k) defined contribution plans with company matching contributions, but they differ in match structure and absolute cost. AVGO matches dollar-for-dollar up to 6% of eligible earnings and incurred $210 million in contributions for fiscal 2024, with the increase attributed to the VMware Merger. In contrast, AMD matches 75% of employee contributions up to 6% of eligible compensation and incurred approximately $78 million in contributions for 2024, reflecting a more conservative matching rate compared to AVGO's 100% match.",
+            "comparison": "Both companies disclose their U.S. 401(k) matching contribution structures and annual expense amounts. AVGO matches 100% of employee contributions up to 6% of eligible earnings, resulting in $210 million in contributions for 2024. In contrast, AMD matches only 75% of employee contributions up to 6% of eligible compensation, resulting in $78 million in contributions for 2024.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D107",
                 "sentences": [
                   {
@@ -198,19 +205,13 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "During fiscal years 2024, 2023 and 2022, we made contributions of $210 million, $100 million and $96 million, respectively, to the 401(k) plan.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P147_S005",
-                    "paragraph_id": "avgo_2024_8_P147",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "The increase in fiscal year 2024 was due to the VMware Merger.",
-                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D120",
                 "sentences": [
                   {
@@ -241,17 +242,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_8_D153",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Retirement Plan Expenses and Matching Contribution Changes",
             "peer_summary": "Matching contribution expenses were $541 million in 2024, $272 million in 2023, and $489 million in 2022. The matching contribution rate in the US qualified plan was increased in 2024 compared to prior years but was reduced in 2023 compared to 2022.",
             "peer_taxonomy": "Human Capital & Organization",
-            "retrieval_score": 0.14085,
+            "retrieval_score": 0.140868,
             "relationship": "same_topic",
-            "comparison": "AVGO and INTC both disclose significant expenses for matching contributions to U.S. defined contribution plans, though INTC's reported expense is substantially higher. AVGO reported $210 million in 401(k) contributions for fiscal 2024, driven by the VMware Merger. INTC expensed $541 million for matching contributions in 2024, noting that the matching contribution rate in its U.S. qualified plan was increased in 2024 compared to prior years. Both companies show a year-over-year increase in matching costs, with INTC explicitly citing a rate increase and AVGO citing merger-driven headcount growth.",
+            "comparison": "Both companies report significant U.S. defined contribution matching expenses that fluctuated year-over-year. Intel expensed $541 million in matching contributions in 2024, noting an increase in the matching rate for that year, whereas AVGO reported $210 million in contributions, attributing its increase from $100 million to the VMware Merger. Intel also discloses a supplemental deferred compensation plan not mentioned by AVGO.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D107",
                 "sentences": [
                   {
@@ -273,6 +278,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D153",
                 "sentences": [
                   {
@@ -303,17 +309,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D093",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Employee Savings Plan 401(k) Features and Expense",
             "peer_summary": "The company maintains a 401(k) plan for U.S. employees matching cash contributions up to 5% of eligible earnings, with an expense of $66 million in 2024. Employees may contribute up to 75% of eligible pay, subject to IRS limits, without direct investment in company stock.",
             "peer_taxonomy": "Human Capital & Organization",
-            "retrieval_score": 0.229665,
+            "retrieval_score": 0.221754,
             "relationship": "same_topic",
-            "comparison": "AVGO and MU both maintain U.S. 401(k) plans with company matching contributions, but differ in match percentage and total expense. AVGO matches employee contributions dollar-for-dollar up to 6% of eligible earnings, resulting in $210 million in fiscal 2024 contributions. MU matches cash contributions up to 5% of the employee's annual eligible earnings, resulting in a $66 million contribution expense in 2024. AVGO's match percentage (6%) is higher than MU's (5%), and AVGO's total contribution amount is significantly larger, likely reflecting differences in workforce size or compensation levels.",
+            "comparison": "Both companies describe a U.S. 401(k) plan with cash matching contributions based on a percentage of eligible earnings. AVGO matches up to 6% of earnings, resulting in $210 million in 2024 contributions. Micron matches up to 5% of annual eligible earnings, resulting in $66 million in 2024 contributions. Both disclosures focus on the match percentage cap and the total expense incurred.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D107",
                 "sentences": [
                   {
@@ -335,6 +345,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D093",
                 "sentences": [
                   {
@@ -360,9 +371,56 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D135",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Defined Contribution Plan Contributions",
+            "peer_summary": "The company provides tax-qualified defined contribution plans to eligible employees in the U.S. and certain other countries, with contribution expenses of $255 million, $227 million, and $168 million for fiscal years 2024, 2023, and 2022, respectively.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.120176,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose total contribution expenses for their tax-qualified defined contribution plans for U.S. and other eligible employees. AVGO reported $210 million in 401(k) contributions for 2024, while NVIDIA reported $255 million in contribution expenses for the same fiscal year. Both items present the annual cost associated with these retirement benefits.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D107",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P147_S004",
+                    "paragraph_id": "avgo_2024_8_P147",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "During fiscal years 2024, 2023 and 2022, we made contributions of $210 million, $100 million and $96 million, respectively, to the 401(k) plan.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D135",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P151_S002",
+                    "paragraph_id": "nvda_2024_8_P151",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our contribution expense for fiscal years 2024, 2023, and 2022 was $255 million, $227 million, and $168 million, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
@@ -370,6 +428,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "c37809e049f69f02f5262881c9fbd454029b6e7fb73561e3af345d266c61274d",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "61fececa57f101f4bf031d0d5b44b84762e58b883c105de0db4c403e2037944e"
+    }
   }
 }

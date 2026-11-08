@@ -1,130 +1,83 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "69bdb2de9218375123a8c504fe307a3bf575694cdbc56c48aa53157b89efaf28",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "649a16a90aaf19033fdecd9cca28c2d79e557fa313c39c222321ed10a2826b99",
+  "request_hash": "b901fb520d8e4c7fe8d8499ff3cf87faa9d274b25aa36ced25a24ca7e9df5494",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D026\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both disclosures discuss the fiscal year 2024 gaming segment financial performance. However, they report opposite trends: NVDA reported Gaming revenue growth of 15% to $10.4 billion, attributing it to channel inventory normalization and growing demand, whereas AMD reported a sharp decline of 58% to $2.6 billion, primarily due to lower semi-custom product revenue.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P026_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P038_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D028",
     "item": "7",
-    "target_topic": "Automotive revenue and partnerships",
-    "target_summary": "Automotive revenue for fiscal year 2024 was $1.1 billion, up 21% from fiscal year 2023. The company partnered with MediaTek for automotive SoCs, collaborated with Foxconn on next-generation EVs, and expanded the adoption of the NVIDIA DRIVE platform with several global OEMs.",
+    "target_topic": "Gaming Revenue and Product Launches",
+    "target_summary": "Gaming revenue for fiscal year 2024 was $10.4 billion, up 15% from fiscal year 2023. The company launched GeForce RTX 4060/4070 GPUs, GeForce RTX 40-Series SUPER GPUs, and DLSS 3.5 Ray Reconstruction.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0326",
-        "relationship": "one_to_one",
+        "match_id": "nvda_2023_2024_M0193",
+        "relationship": "one_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures are the detailed Market Platform Highlights for Automotive revenue. 2023_D034 provides $903M figure, 60% growth, and product highlights (DRIVE Orin, Thor). 2024_D028 provides $1.1B figure, 21% growth, and partnership highlights (MediaTek, Foxconn, OEMs). They share the same specific topic: Automotive Market Platform Highlights.",
+        "explanation": "Both disclosures cover Gaming revenue performance and channel inventory dynamics. 2023 D023 details the revenue decline and efforts to 'lower inventory in the channel', while 2024 D019 reports the revenue increase reflecting 'normalization of channel inventory levels' and higher sell-in.\n\nBoth disclosures cover Gaming revenue performance and product launches. 2023 D023 focuses on revenue decline and inventory correction, while 2024 D028 reports revenue growth and lists specific product launches like 'GeForce RTX 4060 and 4070 GPUs'. They share the specific topic of Gaming segment financial and product highlights.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D034",
+            "disclosure_id": "nvda_2023_7_D023",
             "item": "7",
             "section": "Market Platform Highlights",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Automotive revenue for fiscal year 2023 grew 60% compared to fiscal year 2022 to $903 million. In this segment, NVIDIA started production of the DRIVE Orin autonomous vehicle SOC and introduced the next-generation DRIVE Thor.",
+            "summary": "Gaming revenue for fiscal year 2023 was $9.07 billion, down 27% from fiscal year 2022, due to excess inventory with channel partners caused by rapid economic changes; the company implemented pricing programs and undershipped GPU supply to lower channel inventory, making meaningful progress by fiscal year-end.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
+            "disclosure_id": "nvda_2024_7_D019",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gaming revenue for fiscal year 2024 increased 15%, reflecting higher sell-in to partners following the normalization of channel inventory levels and growing demand.",
+            "extraction_status": "source_validated"
+          },
+          {
             "disclosure_id": "nvda_2024_7_D028",
             "item": "7",
             "section": "Market Platform Highlights",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Automotive revenue for fiscal year 2024 was $1.1 billion, up 21% from fiscal year 2023. The company partnered with MediaTek for automotive SoCs, collaborated with Foxconn on next-generation EVs, and expanded the adoption of the NVIDIA DRIVE platform with several global OEMs.",
+            "summary": "Gaming revenue for fiscal year 2024 was $10.4 billion, up 15% from fiscal year 2023. The company launched GeForce RTX 4060/4070 GPUs, GeForce RTX 40-Series SUPER GPUs, and DLSS 3.5 Ray Reconstruction.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Expanded",
-            "cosine_similarity": 0.341514,
-            "sequence_match_ratio": 0.252252,
-            "length_ratio": 2.083333,
-            "word_count_delta": 39,
-            "added_tokens_sample": [
-              "2024",
-              "was",
-              "1",
-              "1",
-              "billion",
-              "up",
-              "21",
-              "from",
-              "2023",
-              "announced",
-              "a",
-              "partnership",
-              "with",
-              "mediatek",
-              "which",
-              "will",
-              "develop",
-              "mainstream",
-              "automotive",
-              "systems"
-            ],
-            "removed_tokens_sample": [
-              "2023",
-              "grew",
-              "60",
-              "compared",
-              "to",
-              "2022",
-              "to",
-              "903",
-              "million",
-              "started",
-              "production",
-              "the",
-              "orin",
-              "autonomous",
-              "vehicle",
-              "soc",
-              "introduced",
-              "next",
-              "generation",
-              "nvidia"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2023_7_D034",
-            "score": 0.830045,
-            "normalised_score": 0.83,
-            "label": "Expanded",
-            "rationale": "Score 83.00% of ceiling — content grew from ~35 to ~73 words (2.1×).",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.75,
-          "confidence_score": 0.9,
-          "reason": "The disclosure introduces new strategic partnerships (MediaTek, Foxconn) and shifts product narrative focus from the production of DRIVE Orin/Thor to these collaborations, representing a meaningful change in strategic priorities and business activity disclosures.",
-          "key_change": "Introduction of new OEM partnerships and strategic collaborations"
+          "materiality_score": 0.85,
+          "confidence_score": 0.95,
+          "reason": "This row marks a significant turnaround in the Gaming segment, moving from a 27% decline due to channel inventory issues in 2023 to a 15% increase due to inventory normalization and demand growth in 2024. This reversal of a negative trend and the return to growth is a meaningful change in operational condition and business performance.",
+          "key_change": "Gaming segment recovery from inventory correction to growth"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0306",
+        "match_id": "nvda_2024_2025_M0177",
         "relationship": "many_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures report Fiscal Year Automotive revenue performance and growth drivers. 2024 reports a 21% increase driven by self-driving platforms; 2025 reports a 55% increase driven by sales of self-driving platforms. Specific subject: Automotive segment revenue trend.\n\nBoth disclosures concern NVIDIA's Automotive segment revenue performance in their respective fiscal years. nvda_2024_7_D028 details the $1.1 billion revenue and specific partnerships (MediaTek, Foxconn) for FY2024, while nvda_2025_7_D022 reports the FY2025 Automotive revenue increase of 55% driven by self-driving platforms. Despite differences in specific partner details reported (likely due to section constraints or specific FY focus), they represent the same specific topic: the financial and operational highlights of the Automotive segment.",
+        "explanation": "Both disclosures specifically report Gaming revenue performance and growth drivers. 2024 cites 15% increase due to channel inventory normalization (S001, S002); 2025 cites 9% increase driven by GeForce RTX 40 Series sales (S001).\n\nSupported match. Both disclosures report on the Gaming segment's fiscal year revenue performance and growth. D028 (2024) reports $10.4 billion revenue, up 15%, driven by GeForce RTX 40-series products. D019 (2025) reports fiscal year 2025 revenue up 9%, driven by sales of GeForce RTX 40 Series GPUs. They share the same specific topic: Gaming revenue results and primary product drivers for the fiscal year.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2024_7_D021",
+            "disclosure_id": "nvda_2024_7_D019",
             "item": "7",
             "section": "Fiscal Year 2024 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Automotive revenue for fiscal year 2024 increased 21%, primarily reflecting growth in self-driving platforms.",
+            "summary": "Gaming revenue for fiscal year 2024 increased 15%, reflecting higher sell-in to partners following the normalization of channel inventory levels and growing demand.",
             "extraction_status": "source_validated"
           },
           {
@@ -132,82 +85,33 @@
             "item": "7",
             "section": "Market Platform Highlights",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Automotive revenue for fiscal year 2024 was $1.1 billion, up 21% from fiscal year 2023. The company partnered with MediaTek for automotive SoCs, collaborated with Foxconn on next-generation EVs, and expanded the adoption of the NVIDIA DRIVE platform with several global OEMs.",
+            "summary": "Gaming revenue for fiscal year 2024 was $10.4 billion, up 15% from fiscal year 2023. The company launched GeForce RTX 4060/4070 GPUs, GeForce RTX 40-Series SUPER GPUs, and DLSS 3.5 Ray Reconstruction.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D022",
+            "disclosure_id": "nvda_2025_7_D019",
             "item": "7",
             "section": "Fiscal Year 2025 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Automotive revenue increased 55% driven by sales of self-driving platforms.",
+            "summary": "Gaming revenue grew 9% year-over-year, primarily driven by sales of GeForce RTX 40 Series GPUs.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reduced",
-            "cosine_similarity": 0.356803,
-            "sequence_match_ratio": 0.173913,
-            "length_ratio": 0.223404,
-            "word_count_delta": -73,
-            "added_tokens_sample": [
-              "2025",
-              "55",
-              "a",
-              "ago",
-              "driven",
-              "by",
-              "sales",
-              "of",
-              "self",
-              "driving",
-              "platforms"
-            ],
-            "removed_tokens_sample": [
-              "automotive",
-              "revenue",
-              "for",
-              "the",
-              "fiscal",
-              "year",
-              "2024",
-              "was",
-              "up",
-              "21",
-              "the",
-              "increase",
-              "primarily",
-              "reflected",
-              "growth",
-              "in",
-              "self",
-              "driving",
-              "platforms",
-              "2024"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2024_7_D021",
-            "score": 0.889238,
-            "normalised_score": 0.8892,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 88.92% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
-          "materiality": "Yes",
-          "materiality_score": 0.8,
+          "materiality": "No",
+          "materiality_score": 0.1,
           "confidence_score": 0.9,
-          "reason": "Automotive revenue growth accelerated significantly from 21% in FY24 to 55% in FY25. While both cite self-driving platforms, the magnitude of the acceleration and the change from a summary of growth to a specific attribution of 'sales of self-driving platforms' indicates a meaningful escalation in the importance and velocity of this business line.",
-          "key_change": "Significant acceleration in Automotive revenue growth to 55% driven by self-driving platforms"
+          "reason": "This is a routine comparison of Gaming segment performance between FY2024 and FY2025. The growth rate change (15% to 9%) and continued reliance on RTX 40 series products represent normal business fluctuations and product lifecycle stages, not a material change in the company's gaming strategy or risk profile.",
+          "key_change": "Routine fiscal year gaming revenue comparison"
         }
       }
     ],
@@ -219,31 +123,28 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D026",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Gaming Segment Revenue Decline",
             "peer_summary": "Gaming net revenue decreased by 58% to $2.6 billion in 2024 from $6.2 billion in 2023, primarily driven by lower semi-custom product revenue.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.044993,
+            "retrieval_score": 0.066146,
             "relationship": "same_topic",
-            "comparison": "Both companies disclose performance metrics for specific commercial segments within their broader market platforms. NVIDIA highlights growth in its Automotive segment, reporting $1.1 billion in revenue up 21%, driven by partnerships with OEMs like MediaTek and Foxconn. In contrast, AMD reports a significant decline in its Gaming segment, with net revenue falling 58% to $2.6 billion due to lower semi-custom product revenue. While both operate in the semiconductor market and report segment-specific financial outcomes, NVIDIA's disclosed driver was growth in automotive AI platforms, whereas AMD's was a contraction in gaming hardware sales.",
+            "comparison": "Both disclosures discuss the fiscal year 2024 gaming segment financial performance. However, they report opposite trends: NVDA reported Gaming revenue growth of 15% to $10.4 billion, attributing it to channel inventory normalization and growing demand, whereas AMD reported a sharp decline of 58% to $2.6 billion, primarily due to lower semi-custom product revenue.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D028",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_7_P028_S001",
-                    "paragraph_id": "nvda_2024_7_P028",
+                    "sentence_id": "nvda_2024_7_P026_S001",
+                    "paragraph_id": "nvda_2024_7_P026",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Automotive revenue for fiscal year 2024 was $1.1 billion, up 21% from fiscal year 2023.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_7_P028_S002",
-                    "paragraph_id": "nvda_2024_7_P028",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "In Automotive, we announced a partnership with MediaTek, which will develop mainstream automotive systems on chips for global OEMs integrating a new NVIDIA GPU chiplet IP for AI and graphics.",
+                    "text": "Gaming revenue for fiscal year 2024 was $10.4 billion, up 15% from fiscal year 2023.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -251,6 +152,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D026",
                 "sentences": [
                   {
@@ -258,13 +160,6 @@
                     "paragraph_id": "amd_2024_7_P038",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
                     "text": "Gaming net revenue of $2.6 billion in 2024 decreased by 58%, compared to net revenue of $6.2 billion in 2023.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_7_P038_S002",
-                    "paragraph_id": "amd_2024_7_P038",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The decrease in net revenue was primarily due to lower semi-custom product revenue.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -277,6 +172,11 @@
           "ignored_no_match_note_for_unrequested_peer:INTC"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "649a16a90aaf19033fdecd9cca28c2d79e557fa313c39c222321ed10a2826b99",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "b901fb520d8e4c7fe8d8499ff3cf87faa9d274b25aa36ced25a24ca7e9df5494"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "0c271d881c6bcc117b5e71a33ba0b90c6d06aa4cf92b2c0122ff224864514a40",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "9baf93f5723a0bd7d0c9e6e8cbba33775b97f270e87a0cdfed9140aa69d037d1",
+  "request_hash": "af94d2820a90cc3d4b883a712c2c922be7e270a99923437ed154bfee06a966b1",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D034\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Micron disclose holdings of non-marketable equity investments in privately-held companies valued using Level 3 inputs on a non-recurring basis. However, the specific balances and valuation methodologies differ. AMD reported a significant increase in these assets to $468 million as of December 28, 2024, whereas Micron reported a decrease to $190 million as of August 29, 2024. Both companies classify these illiquid private equity stakes as Level 3 due to the unobservable nature of the inputs used to estimate fair value.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P098_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P042_S001\",\n\"mu_2024_8_P042_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved candidates for Broadcom discuss depreciation expense and general fair value hierarchy definitions (Level 1/2/3 inputs for cash, goodwill, etc.), but do not contain substantive disclosures regarding the specific fair value measurement or carrying amount of non-marketable equity securities in privately-held companies comparable to AMD's Item 8 disclosure.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The retrieved candidates for Intel disclose fair values for grants receivable and economically hedged marketable debt investments. These assets differ materially in nature (receivables and debt) and liquidity profile from AMD's non-marketable equity securities in privately-held companies, making them not sufficiently comparable on the same specific topic.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates for NVIDIA disclose policies and valuations for marketable equity securities (publicly traded) and general accounting policies for non-marketable equity. However, unlike AMD and Micron which provide specific balance sheet amounts for their non-marketable private equity holdings, NVIDIA's candidates focus on the accounting treatment of marketable securities or the policy for cost-minus-impairment without providing a comparable specific fair value balance for the same asset class in Item 8.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved for QCOM.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_8_D095",
@@ -197,13 +200,13 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for AVGO concern depreciation expense amounts and net revenue by major country, which are fundamentally different topics from the target's non-marketable securities fair value. No comparable candidate regarding Level 3 non-marketable securities was retrieved."
+        "rationale": "The retrieved candidates for Broadcom discuss depreciation expense and general fair value hierarchy definitions (Level 1/2/3 inputs for cash, goodwill, etc.), but do not contain substantive disclosures regarding the specific fair value measurement or carrying amount of non-marketable equity securities in privately-held companies comparable to AMD's Item 8 disclosure."
       },
       {
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for INTC concern grants receivable and economically hedged marketable debt investments. These topics involve Level 2 inputs or receivables, differing from the target's Level 3 non-marketable equity securities. No comparable candidate regarding non-marketable equity fair value was retrieved."
+        "rationale": "The retrieved candidates for Intel disclose fair values for grants receivable and economically hedged marketable debt investments. These assets differ materially in nature (receivables and debt) and liquidity profile from AMD's non-marketable equity securities in privately-held companies, making them not sufficiently comparable on the same specific topic."
       },
       {
         "peer_ticker": "MU",
@@ -212,17 +215,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D034",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Non-marketable equity investment balances and valuation",
             "peer_summary": "The company held non-marketable equity investments without readily determinable fair values of $190 million as of August 29, 2024, and $218 million as of August 31, 2023. These investments are classified as Level 3 and recorded at fair value on a non-recurring basis.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.212968,
+            "retrieval_score": 0.202768,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Micron disclose holdings of non-marketable equity investments in privately-held or non-traded companies valued using Level 3 inputs on a non-recurring basis. However, AMD's fair value increased significantly from $155 million to $468 million, whereas Micron's balance decreased slightly from $218 million to $190 million over their respective fiscal years.",
+            "comparison": "Both AMD and Micron disclose holdings of non-marketable equity investments in privately-held companies valued using Level 3 inputs on a non-recurring basis. However, the specific balances and valuation methodologies differ. AMD reported a significant increase in these assets to $468 million as of December 28, 2024, whereas Micron reported a decrease to $190 million as of August 29, 2024. Both companies classify these illiquid private equity stakes as Level 3 due to the unobservable nature of the inputs used to estimate fair value.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D095",
                 "sentences": [
                   {
@@ -237,6 +244,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D034",
                 "sentences": [
                   {
@@ -262,16 +270,21 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "The retrieved candidates for NVIDIA disclose policies and valuations for marketable equity securities (publicly traded) and general accounting policies for non-marketable equity. However, unlike AMD and Micron which provide specific balance sheet amounts for their non-marketable private equity holdings, NVIDIA's candidates focus on the accounting treatment of marketable securities or the policy for cost-minus-impairment without providing a comparable specific fair value balance for the same asset class in Item 8."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved for QCOM."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "9baf93f5723a0bd7d0c9e6e8cbba33775b97f270e87a0cdfed9140aa69d037d1",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "af94d2820a90cc3d4b883a712c2c922be7e270a99923437ed154bfee06a966b1"
+    }
   }
 }

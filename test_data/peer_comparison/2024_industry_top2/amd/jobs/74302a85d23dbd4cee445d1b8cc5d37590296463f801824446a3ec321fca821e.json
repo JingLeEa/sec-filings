@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "5aeb389b7bf72f94f66ce4e4ec9d143d5f01e1810c1211882b268fc72d002a2b",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "6e4ec39e1f64698b1b0a94410756aaaac911dca7842eae59e999da3cfd945556",
+  "request_hash": "79309576dd80e510227e8dae54077dfa2cdb16fd958e8e268f26096bcf9c350a",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_7_D014\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Micron discuss segment operating income changes for the fiscal year 2024 driven by lower revenue or pricing, though the magnitude and offsetting factors differ. AMD reports an Embedded operating income decline from $2.6 billion to $1.4 billion, primarily driven by lower revenue. Similarly, Micron reports EBU operating income decreased in 2024 compared to 2023, primarily due to declines in average selling prices, although this was partially offset by higher bit shipments and cost reductions.\",\n\"target_sentence_ids\": [\n\"amd_2024_7_P041_S001\",\n\"amd_2024_7_P041_S002\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_7_P017_S004\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D048\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and NVIDIA analyze the drivers behind changes in operating income for specific segments. AMD attributes its Embedded segment operating income decrease to lower revenue. Conversely, NVIDIA attributes its Compute & Networking and Graphics segment operating income increases to higher revenue. Both disclosures link operating income performance directly to revenue trends, representing a comparable analysis of segment profitability drivers despite opposite directional outcomes.\",\n\"target_sentence_ids\": [\n\"amd_2024_7_P041_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P050_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The candidate disclosures focus on Operating Income increases driven by VMware contributions or AI networking products, which differ materially from AMD's Embedded segment operating income decline driven by lower revenue. While both discuss operating income drivers, the specific segments (Infrastructure Software/Semiconductor Solutions vs. Embedded), financial directions (increase vs. decrease), and primary drivers (acquisitions/AI demand vs. broad revenue decline) are not substantively comparable for the same specific topic.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The candidate disclosures focus on Cost of Sales for 'all other' segments or Operating Expenses for process technology investments. These do not match the specific topic of Segment Operating Income analysis. One candidate discusses cost of sales decreases, while the target discusses operating income declines; another discusses operating expense increases. None provide a direct comparable analysis of segment operating income figures and their specific revenue/price drivers in the same manner as the target.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The candidate disclosures focus on consolidated financial results (revenue and net income) and income tax cash flow impacts. These are company-wide or treasury topics, not comparable to the specific segment-level operating income analysis (Embedded Segment) found in the AMD target disclosure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_7_D029",
@@ -173,64 +176,15 @@
     "peer_results": [
       {
         "peer_ticker": "AVGO",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_7_D057",
-            "peer_topic": "Semiconductor Solutions segment operating income drivers",
-            "peer_summary": "Operating income from the semiconductor solutions segment increased, primarily driven by revenue growth from networking products (including AI networking products), partially offset by lower net revenue from broadband and server storage products.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.169235,
-            "relationship": "same_topic",
-            "comparison": "Both AMD and Broadcom disclose operating income performance for specific semiconductor-focused segments in FY2024, attributing changes primarily to revenue drivers. AMD’s Embedded segment saw operating income decline to $1.4 billion from $2.6 billion, primarily driven by lower revenue. In contrast, Broadcom’s Semiconductor Solutions segment saw operating income increase, primarily driven by revenue growth from networking products (including AI), partially offset by lower revenue from broadband and server storage.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D029",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P041_S001",
-                    "paragraph_id": "amd_2024_7_P041",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Embedded operating income was $1.4 billion in 2024, compared to operating income of $2.6 billion in 2023.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_7_P041_S002",
-                    "paragraph_id": "amd_2024_7_P041",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The decrease in operating income was primarily driven by lower revenue.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_7_D057",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P056_S001",
-                    "paragraph_id": "avgo_2024_7_P056",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Operating income from our semiconductor solutions segment increased mainly driven by revenue growth from networking products, primarily AI networking products, partially offset by lower net revenue from our broadband and server storage products.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosures focus on Operating Income increases driven by VMware contributions or AI networking products, which differ materially from AMD's Embedded segment operating income decline driven by lower revenue. While both discuss operating income drivers, the specific segments (Infrastructure Software/Semiconductor Solutions vs. Embedded), financial directions (increase vs. decrease), and primary drivers (acquisitions/AI demand vs. broad revenue decline) are not substantively comparable for the same specific topic."
       },
       {
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates discuss Intel's 'All Other' segment cost of sales or consolidated operating expenses/process technology investments. These do not compare to AMD's specific Embedded segment operating income decline. The topics (cost of sales vs operating income, different segment scope) are not substantively comparable to the specific business driver and financial measure of AMD's Embedded operating income."
+        "rationale": "The candidate disclosures focus on Cost of Sales for 'all other' segments or Operating Expenses for process technology investments. These do not match the specific topic of Segment Operating Income analysis. One candidate discusses cost of sales decreases, while the target discusses operating income declines; another discusses operating expense increases. None provide a direct comparable analysis of segment operating income figures and their specific revenue/price drivers in the same manner as the target."
       },
       {
         "peer_ticker": "MU",
@@ -239,17 +193,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_7_D014",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "EBU operating income change 2024",
             "peer_summary": "EBU operating income decreased in 2024 compared to 2023, primarily due to declines in average selling prices, partially offset by higher bit shipments and cost reductions.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.168967,
+            "retrieval_score": 0.166898,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Micron report declines in segment operating income for their core memory/processor businesses in fiscal 2024, linking the decline primarily to pricing and volume pressures. AMD’s Embedded operating income decreased to $1.4 billion from $2.6 billion, primarily driven by lower revenue. Micron’s EBU operating income decreased, primarily due to declines in average selling prices, partially offset by higher bit shipments and cost reductions.",
+            "comparison": "Both AMD and Micron discuss segment operating income changes for the fiscal year 2024 driven by lower revenue or pricing, though the magnitude and offsetting factors differ. AMD reports an Embedded operating income decline from $2.6 billion to $1.4 billion, primarily driven by lower revenue. Similarly, Micron reports EBU operating income decreased in 2024 compared to 2023, primarily due to declines in average selling prices, although this was partially offset by higher bit shipments and cost reductions.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D029",
                 "sentences": [
                   {
@@ -271,6 +229,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "7",
                 "disclosure_id": "mu_2024_7_D014",
                 "sentences": [
                   {
@@ -293,27 +252,24 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D047",
-            "peer_topic": "Segment Operating Income Increase",
-            "peer_summary": "The year-on-year increase in Compute & Networking and Graphics operating income was driven by higher revenue.",
+            "peer_disclosure_id": "nvda_2024_7_D048",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Reportable Segment Operating Income Increase",
+            "peer_summary": "Year-on-year increases in operating income for Compute & Networking and Graphics segments were driven by higher revenue.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.213918,
+            "retrieval_score": 0.20474,
             "relationship": "same_topic",
-            "comparison": "Both companies attribute operating income changes in their respective segments to revenue performance. AMD’s Embedded segment operating income decreased due to lower revenue. NVIDIA’s Compute & Networking and Graphics segment operating income increased, which was driven by higher revenue. While the direction of the income change differs (AMD down, NVIDIA up), the underlying business driver cited for the change is revenue volume/pricing.",
+            "comparison": "Both AMD and NVIDIA analyze the drivers behind changes in operating income for specific segments. AMD attributes its Embedded segment operating income decrease to lower revenue. Conversely, NVIDIA attributes its Compute & Networking and Graphics segment operating income increases to higher revenue. Both disclosures link operating income performance directly to revenue trends, representing a comparable analysis of segment profitability drivers despite opposite directional outcomes.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D029",
                 "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P041_S001",
-                    "paragraph_id": "amd_2024_7_P041",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Embedded operating income was $1.4 billion in 2024, compared to operating income of $2.6 billion in 2023.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "amd_2024_7_P041_S002",
                     "paragraph_id": "amd_2024_7_P041",
@@ -326,7 +282,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D047",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D048",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_7_P050_S001",
@@ -346,8 +303,13 @@
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates discuss QCOM’s consolidated financial results (total revenue/net income) or interest income. These are aggregate or non-operating financial measures that do not provide a comparable segment-level operating income analysis to AMD's Embedded segment."
+        "rationale": "The candidate disclosures focus on consolidated financial results (revenue and net income) and income tax cash flow impacts. These are company-wide or treasury topics, not comparable to the specific segment-level operating income analysis (Embedded Segment) found in the AMD target disclosure."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "6e4ec39e1f64698b1b0a94410756aaaac911dca7842eae59e999da3cfd945556",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "79309576dd80e510227e8dae54077dfa2cdb16fd958e8e268f26096bcf9c350a"
+    }
   }
 }

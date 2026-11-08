@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "af523678344082139e159ca3bccdae8cf77a7b1c72f2d45f95a4f2cd8195ce5b",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "a3087a56eb5d5f9dda0c81b5c905032a82f68dc9ccf2685415ebc81fc73c195a",
+  "request_hash": "d6eb674cf707be7b54eeebc8403130e78e28d7b395b5628181873df1426d6e62",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D112\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Broadcom disclose identical change-of-control protection mechanisms, requiring a repurchase price of 101% of principal plus accrued interest. However, they differ in redemption pricing formulas: AMD uses the greater of present value of remaining payments or 100% of principal, whereas Broadcom specifies a 'specified make-whole premium' determined in accordance with the indentures.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P091_S001\",\n\"amd_2024_8_P091_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P152_S001\",\n\"avgo_2024_8_P152_S002\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D050\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"AMD and Micron share a specific redemption pricing formula for notes prior to maturity, defined as the greater of 100% of the principal amount or the present value of remaining scheduled payments (plus accrued interest). Micron further specifies an option to redeem at par between one and six months prior to maturity, a detail not present in AMD's summary.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P091_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P056_S001\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D051\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Micron provide change-of-control protection for their senior notes, triggering a mandatory repurchase offer at 101% of the principal amount plus accrued interest. Micron's disclosure additionally details specific covenants limiting liens, sale-leaseback transactions, and mergers, which are not mentioned in the comparable AMD text.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P091_S002\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P057_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"While Intc discloses general redemption rights for fixed-rate senior notes, it does not mention change-of-control repurchase provisions at 101% of principal plus accrued interest, which is a key component of the target disclosure. The available candidates focus on issuance amounts, payment frequency, and subordination ranking rather than the specific redemption/repurchase mechanics and pricing models shared by the target.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"Nvidia's disclosure mentions redemption subject to a 'make-whole premium' and general seniority/subordination terms, but it does not disclose the specific redemption pricing formula (greater of PV or 100%) or the 101% change-of-control repurchase trigger found in the target filing. The candidate disclosures lack the specific contractual mechanics present in the target text.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_8_D089",
@@ -173,17 +176,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D112",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Redemption and Change of Control Rights for Senior Notes",
             "peer_summary": "Senior notes may be redeemed prior to maturity subject to a make-whole premium and accrued interest, and holders have the right to require repurchase at 101% of principal plus accrued interest in the event of a change in control.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.408453,
+            "retrieval_score": 0.407863,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Broadcom disclose standard redemption and change of control provisions for their senior notes. A key similarity is the specific repurchase price upon a change of control: both companies require paying 101% of the principal amount plus accrued interest (AMD: 'repurchase price of 101% of the principal amount plus accrued and unpaid interest'; AVGO: 'price equal to 101% of the principal amount of such notes, plus accrued and unpaid interest'). A key difference lies in the voluntary redemption mechanics: AMD uses a specific 'greater of' formula comparing present value of remaining payments or 100% of principal, whereas Broadcom explicitly references a 'specified make-whole premium determined in accordance with the indentures' in addition to accrued interest.",
+            "comparison": "Both AMD and Broadcom disclose identical change-of-control protection mechanisms, requiring a repurchase price of 101% of principal plus accrued interest. However, they differ in redemption pricing formulas: AMD uses the greater of present value of remaining payments or 100% of principal, whereas Broadcom specifies a 'specified make-whole premium' determined in accordance with the indentures.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D089",
                 "sentences": [
                   {
@@ -205,6 +212,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D112",
                 "sentences": [
                   {
@@ -232,7 +240,7 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The provided Intc candidates (D134, D135) focus on issuance volumes, settlement of maturities, and general ranking of debt, but do not disclose the specific redemption pricing mechanics (e.g., present value vs. principal comparison) or the specific 101% change of control repurchase price found in AMD's disclosure, making them substantively incomparable on these specific terms."
+        "rationale": "While Intc discloses general redemption rights for fixed-rate senior notes, it does not mention change-of-control repurchase provisions at 101% of principal plus accrued interest, which is a key component of the target disclosure. The available candidates focus on issuance amounts, payment frequency, and subordination ranking rather than the specific redemption/repurchase mechanics and pricing models shared by the target."
       },
       {
         "peer_ticker": "MU",
@@ -241,17 +249,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D050",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Optional Redemption Terms for Senior Unsecured Notes",
             "peer_summary": "The company may redeem its Senior Unsecured Notes prior to maturity at the greater of 100% of principal or the present value of remaining payments, or at par between one and six months prior to maturity.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.29941,
+            "retrieval_score": 0.291605,
             "relationship": "same_topic",
-            "comparison": "Micron and AMD share an identical structure for their voluntary redemption pricing, specifically using the 'greater of' test between 100% of principal and the present value of remaining payments. AMD states redemption at 'the greater of the present value of the principal amount and future interest... or 100% of the principal amount' (mu_2024_8_P056_S001 parallels this with 'greater of (i) 100% of the principal amount... and (ii) the present value of the remaining scheduled payments'). However, Micron includes a distinct provision allowing redemption at par value between one and six months prior to maturity, a feature not disclosed in AMD's excerpt for these specific notes. Regarding change of control, AMD specifies the 101% repurchase price explicitly in the cited text, while Micron references the requirement in a separate covenant section.",
+            "comparison": "AMD and Micron share a specific redemption pricing formula for notes prior to maturity, defined as the greater of 100% of the principal amount or the present value of remaining scheduled payments (plus accrued interest). Micron further specifies an option to redeem at par between one and six months prior to maturity, a detail not present in AMD's summary.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D089",
                 "sentences": [
                   {
@@ -266,6 +278,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D050",
                 "sentences": [
                   {
@@ -282,17 +295,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D051",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Covenants and Change of Control Protection for Senior Unsecured Notes",
             "peer_summary": "Senior Unsecured Notes include covenants limiting liens, sale-leaseback transactions, and mergers, with a change of control trigger requiring a purchase offer at 101% of principal plus accrued interest.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.207312,
+            "retrieval_score": 0.206621,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Micron provide change of control protection for their senior notes requiring a repurchase offer at 101% of principal plus accrued interest. AMD explicitly details this right: 'Holders have the right to require the Company to repurchase... at a repurchase price of 101% of the principal amount plus accrued and unpaid interest.' Micron similarly discloses: 'we will be required to offer to purchase such Senior Unsecured Notes at 101% of the outstanding aggregate principal amount plus accrued interest.' Unlike AMD, Micron's disclosure also explicitly links these protections to broader covenants limiting liens and mergers.",
+            "comparison": "Both AMD and Micron provide change-of-control protection for their senior notes, triggering a mandatory repurchase offer at 101% of the principal amount plus accrued interest. Micron's disclosure additionally details specific covenants limiting liens, sale-leaseback transactions, and mergers, which are not mentioned in the comparable AMD text.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D089",
                 "sentences": [
                   {
@@ -307,6 +324,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D051",
                 "sentences": [
                   {
@@ -327,7 +345,7 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The provided NVDA candidate (D001) is an introductory statement directing readers to the financial statements and contains no specific debt redemption or change of control terms comparable to AMD's detailed note provisions."
+        "rationale": "Nvidia's disclosure mentions redemption subject to a 'make-whole premium' and general seniority/subordination terms, but it does not disclose the specific redemption pricing formula (greater of PV or 100%) or the 101% change-of-control repurchase trigger found in the target filing. The candidate disclosures lack the specific contractual mechanics present in the target text."
       },
       {
         "peer_ticker": "QCOM",
@@ -335,6 +353,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "a3087a56eb5d5f9dda0c81b5c905032a82f68dc9ccf2685415ebc81fc73c195a",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "d6eb674cf707be7b54eeebc8403130e78e28d7b395b5628181873df1426d6e62"
+    }
   }
 }

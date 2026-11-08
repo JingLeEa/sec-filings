@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "30bb50da150c4e46b072bcae2c2452ade368b80aad519161339ce9b31eda0399",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "9ea49759e1633fc4c70fa220e13ef160a22e241aff6bf6c3595e982acc18f3e3",
+  "request_hash": "345983dbbb0a59b0455d8a45bc1241c7bd1e065a7dbe82b7280f30b26bc29a5b",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D088\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and NVDA disclose specific amortization expense figures for intangible assets. MU reports amortization expense of $82 million for 2024 related to capitalized product and process technology, while NVDA reports $614 million for fiscal 2024 for intangible assets (including IPR&D). Both disclosures provide a multi-year historical view of these expenses.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P051_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P090_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"Candidates disclose depreciation expense ($454 million) and stock-based compensation (PRSUs), but do not contain specific amortization expense data for intangible assets comparable to MU's disclosure of product and process technology amortization.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"Candidates disclose depreciation expense ($593 million) and lease expenses, but do not contain specific amortization expense data for intangible assets comparable to MU's disclosure.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"One candidate references amortization expenses in a table but provides no actual numbers or detailed expense history comparable to MU's specific $82 million figure and trend. The other candidate discusses capitalized licensed technology arrangements and subject-to-amortization costs but does not report the resulting amortization expense amounts.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D043",
@@ -213,32 +216,42 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The available candidates for AMD focus on depreciation expense for tangible assets (PPE) and RSU compensation. Depreciation relates to tangible assets, whereas the target disclosure concerns intangible assets (product and process technology capitalization and amortization). These are distinct asset classes and accounting treatments."
+        "rationale": "Candidates disclose depreciation expense ($454 million) and stock-based compensation (PRSUs), but do not contain specific amortization expense data for intangible assets comparable to MU's disclosure of product and process technology amortization."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The available candidates for AVGO focus on depreciation expense for tangible assets and lease expenses. Neither candidate addresses intangible assets or amortization of such assets, making them substantively incomparable to the target disclosure on intangible asset amortization."
+        "rationale": "Candidates disclose depreciation expense ($593 million) and lease expenses, but do not contain specific amortization expense data for intangible assets comparable to MU's disclosure."
       },
       {
         "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "One candidate references amortization expenses in a table but provides no actual numbers or detailed expense history comparable to MU's specific $82 million figure and trend. The other candidate discusses capitalized licensed technology arrangements and subject-to-amortization costs but does not report the resulting amortization expense amounts."
+      },
+      {
+        "peer_ticker": "NVDA",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_8_D130",
-            "peer_topic": "Amortization expense disclosure reference",
-            "peer_summary": "Amortization expenses and weighted average useful lives for identified intangible assets are presented in a table within the Consolidated Statements of Operations.",
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D088",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Amortizable intangible assets and amortization expense",
+            "peer_summary": "The components of amortizable intangible assets are disclosed, including a $630 million in-process research and development asset from the Mellanox acquisition that began amortization in Q1 fiscal 2023. Amortization expense for intangible assets was $614 million in fiscal 2024, $699 million in fiscal 2023, and $563 million in fiscal 2022.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.203489,
-            "relationship": "related_topic",
-            "comparison": "Both MU and INTC disclose details regarding intangible asset amortization. MU provides specific historical amortization expense amounts ($82 million in 2024) and capitalized costs for product/process technology with explicit useful lives (9-10 years). In contrast, INTC's disclosure explicitly states that amortization expense data is presented in a table within the Consolidated Statements of Operations, but the sentence provided only references the existence of this table and weighted average useful lives without restating the specific expense amounts for 2024.",
-            "peer_source_status": "needs_review",
+            "retrieval_score": 0.197752,
+            "relationship": "same_topic",
+            "comparison": "Both MU and NVDA disclose specific amortization expense figures for intangible assets. MU reports amortization expense of $82 million for 2024 related to capitalized product and process technology, while NVDA reports $614 million for fiscal 2024 for intangible assets (including IPR&D). Both disclosures provide a multi-year historical view of these expenses.",
+            "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D043",
                 "sentences": [
                   {
@@ -252,14 +265,15 @@
               },
               {
                 "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D130",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D088",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_8_P148_S001",
-                    "paragraph_id": "intc_2024_8_P148",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Amortization expenses recorded for and the weighted average useful life assigned to identified intangible assets in the Consolidated Statements of Operations for each period were as follows: [footnote 1: These bonds may be remarketed or tendered on a periodic basis and will be classified within the current portion of long-term debt in the 12 months before remarketing or tendering.] Represents weighted average useful life in years of intangible assets as of December 28, 2024.",
+                    "sentence_id": "nvda_2024_8_P090_S001",
+                    "paragraph_id": "nvda_2024_8_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Amortization expense associated with intangible assets for fiscal years 2024, 2023, and 2022 was $614 million, $699 million, and $563 million, respectively.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -270,17 +284,16 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved."
-      },
-      {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "9ea49759e1633fc4c70fa220e13ef160a22e241aff6bf6c3595e982acc18f3e3",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "345983dbbb0a59b0455d8a45bc1241c7bd1e065a7dbe82b7280f30b26bc29a5b"
+    }
   }
 }

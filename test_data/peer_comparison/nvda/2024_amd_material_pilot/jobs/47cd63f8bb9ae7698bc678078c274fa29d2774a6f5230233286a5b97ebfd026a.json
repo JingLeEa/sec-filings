@@ -1,114 +1,161 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "81fee69378ebe30ca46444502100d6b27a6fbd6b15cbd3dcfe4d7390ac6b27ed",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "985a2f1da14089b6f6e30c7751f8083f3a2ae1f176ece7fd566d4793a0dc7de6",
+  "request_hash": "4df123c78b468df1cb18d83bbeaf20ea95c1ff0ca15d050f82cdf143e6937a74",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_1A_D079\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both NVIDIA and AMD disclose specific risks arising from U.S. export controls targeting AI semiconductors, particularly regarding shipments to China. Similar to NVIDIA's statement that licensing processes disadvantage it against competitors, AMD explicitly states, 'We may be at a competitive disadvantage if our competitors are not subject to the same or similar restrictions.' However, while NVIDIA emphasizes the operational burden of a 'closed process that does not have clear standards,' AMD identifies specific product restrictions (Instinct ICs and Versal FPGAs) and broad geographic bans, noting that controls 'could prohibit us from exporting or providing access to our products to any or all customers in one or more markets, including but not limited to China.'\",\n      \"target_sentence_ids\": [\n        \"nvda_2024_1A_P077_S008\",\n        \"nvda_2024_1A_P077_S011\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_1A_P092_S007\",\n        \"amd_2024_1A_P092_S005\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"reason\": \"The candidate amd_2024_1A_D078 discusses general export regulations and tariffs but lacks the specific focus on AI semiconductor restrictions and the resulting competitive disadvantage dynamics central to the target disclosure. The candidate amd_2024_1A_D082 concerns intellectual property litigation, which is a different topic entirely.\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1A_D036",
     "item": "1A",
-    "target_topic": "Third-Party Service Interruption Risks",
-    "target_summary": "Interruptions or delays in services from cloud service providers, data center co-location partners, and other third parties, including due to insolvency, could impair NVIDIA's ability to provide products and services. As reliance on these third-party systems increases, exposure to damage from service interruptions, defects, and outages also increases, particularly regarding dependencies on clean water and predictable energy for data centers.",
-    "target_source_status": "needs_review",
+    "target_topic": "Impact of US export controls on operations and competition",
+    "target_summary": "NVIDIA faces costly operational transitions and competitive harm due to complex US export licensing processes that are time-consuming, lack clear standards, and disadvantage NVIDIA against competitors.",
+    "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0223",
-        "relationship": "current_only",
-        "status": "unmatched",
+        "match_id": "nvda_2023_2024_M0093",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "No 2023 counterpart was found for this specific risk disclosure. The proposed group linked nvda_2023_1A_D029 to nvda_2024_1A_D035 (and D036), but nvda_2023_1A_D029 (Risk of supply chain disruptions) is distinct from nvda_2024_1A_D036 (Risk of third-party CSP/Data Center service interruptions). While both relate to supply chain, the specific subject matter of nvda_2024_1A_D036 (insolvency of CSPs, water/energy dependency for data centers) is new or sufficiently distinct in 2024 that no single 2023 disclosure maps to it exactly. The preserved proposal for nvda_2023_1A_D029 matched D035, which likely covers general supply chain or component shortages, not the specific CSP/Data Center infrastructure risks described in D036. Therefore, D036 is unmatched.",
-        "previous_disclosures": [],
+        "explanation": "2023 D031 covers the specific 2023 export restrictions on AI chips (A100/H100) and the resulting licensing/transition risks. 2024 D036 details the ongoing cumbersome licensing process and competitive disadvantage from those controls. 2024 D037 details the risk of further rule changes expanding restrictions (e.g., gaming GPUs, networking) and the resulting inventory/competitive harm. All three disclosures share the specific topic of US export control regulations targeting NVIDIA's AI products and the associated operational and competitive risks.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_1A_D031",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "Geopolitical tensions have led to US export controls targeting AI semiconductors, with specific restrictions announced in Q3 fiscal 2023 affecting products like the A100, H100, and A100X, as well as future circuits meeting performance thresholds. NVIDIA is required to transition operations out of China, offering alternative products like the A800, but faces risks including customer rejection, license denials, excess inventory, and competitive disadvantages due to cumbersome licensing processes.",
+            "extraction_status": "source_validated"
+          }
+        ],
         "current_disclosures": [
           {
             "disclosure_id": "nvda_2024_1A_D036",
             "item": "1A",
-            "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Supply Chain & Third Parties",
-            "summary": "Interruptions or delays in services from cloud service providers, data center co-location partners, and other third parties, including due to insolvency, could impair NVIDIA's ability to provide products and services. As reliance on these third-party systems increases, exposure to damage from service interruptions, defects, and outages also increases, particularly regarding dependencies on clean water and predictable energy for data centers.",
-            "extraction_status": "needs_review"
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "NVIDIA faces costly operational transitions and competitive harm due to complex US export licensing processes that are time-consuming, lack clear standards, and disadvantage NVIDIA against competitors.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_1A_D037",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The USG may change export control rules at any time, potentially restricting further products, limiting GPU cluster usage, or extending controls to gaming GPUs and networking products, which could disrupt supply chains, disadvantage NVIDIA, and encourage customers to design-out US semiconductors.",
+            "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "New",
-            "cosine_similarity": 0.0,
-            "sequence_match_ratio": 0.0,
-            "length_ratio": 0.0,
-            "word_count_delta": 125,
-            "added_tokens_sample": [
-              "additionally",
-              "interruptions",
-              "or",
-              "delays",
-              "in",
-              "services",
-              "from",
-              "csps",
-              "data",
-              "center",
-              "co",
-              "location",
-              "partners",
-              "and",
-              "other",
-              "third",
-              "parties",
-              "on",
-              "which",
-              "we"
-            ],
-            "removed_tokens_sample": []
-          },
-          "semantic": {
-            "label": "New",
-            "score": null,
-            "normalised_score": null,
-            "matched_id": null,
-            "rationale": "One-sided change established by the finalized alignment.",
-            "method": "alignment_presence"
-          },
-          "llm": "New",
-          "final_taxonomy": "New"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.9,
-          "confidence_score": 0.85,
-          "reason": "New disclosure introducing specific dependencies on cloud service providers and data centers, highlighting risks of insolvency and critical resource dependencies (water/energy) not present in 2023.",
-          "key_change": "Introduction of CSP and data center dependency risks"
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The disclosure evolves from identifying specific restricted products (A100/H100) and the initial licensing burden to detailing the ongoing competitive disadvantage due to ambiguous licensing standards and introducing the risk of further regulatory expansion to gaming GPUs and networking products, which could disrupt supply chains and encourage customers to design out US semiconductors. This represents a meaningful escalation in regulatory exposure and strategic risk.",
+          "key_change": "Expanded regulatory risk to gaming products and supply chain design-out"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0025",
-        "relationship": "previous_only",
-        "status": "needs_review",
-        "review_reasons": [
-          "agent_did_not_finish"
-        ],
-        "explanation": "Automatic repair turn limit reached; remaining disclosures need review.",
+        "match_id": "nvda_2024_2025_M0071",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "The 2025 D058 disclosure details the new 'AI Diffusion' IFR, which expands the scope of export controls and licensing requirements significantly beyond the existing rules described in 2024 D036 (licensing process) and D037 (risk of changing rules). D058 covers the specific mechanisms (tiers, UVEU/NVEU) and broad market impact that result from such rule changes, serving as the comprehensive update to the general export control risks outlined in the two 2024 disclosures.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_1A_D036",
             "item": "1A",
-            "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Supply Chain & Third Parties",
-            "summary": "Interruptions or delays in services from cloud service providers, data center co-location partners, and other third parties, including due to insolvency, could impair NVIDIA's ability to provide products and services. As reliance on these third-party systems increases, exposure to damage from service interruptions, defects, and outages also increases, particularly regarding dependencies on clean water and predictable energy for data centers.",
-            "extraction_status": "needs_review"
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "NVIDIA faces costly operational transitions and competitive harm due to complex US export licensing processes that are time-consuming, lack clear standards, and disadvantage NVIDIA against competitors.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_1A_D037",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The USG may change export control rules at any time, potentially restricting further products, limiting GPU cluster usage, or extending controls to gaming GPUs and networking products, which could disrupt supply chains, disadvantage NVIDIA, and encourage customers to design-out US semiconductors.",
+            "extraction_status": "source_validated"
           }
         ],
-        "current_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_1A_D058",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "The AI Diffusion IFR, effective after a 120-day delay, imposes worldwide licensing requirements on products under ECCNs 3A090.a, 4A090.a, and corresponding .z ECCNs, covering systems like DGX, HGX, and MGX, and divides the world into three tiers, relegating most countries to Tier 2 while conferring benefits on Universal Verified End Users (UVEU) and National Verified End Users (NVEU). This regulation may negatively impact long-term financial results by reducing the market for U.S.-designed products, favoring UVEUs, encouraging customers to invest in non-U.S. alternatives, increasing compliance costs, and exposing the U.S. industry to retaliation risks.",
+            "extraction_status": "source_validated"
+          }
+        ],
         "change_analysis": {
-          "status": "not_started",
+          "status": "completed",
           "lexical": null,
           "semantic": null,
-          "llm": null,
-          "final_taxonomy": null
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
-        "materiality_analysis": null
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.95,
+          "confidence_score": 0.98,
+          "reason": "The 2025 disclosure replaces general statements about export control risks with specific details of the 'AI Diffusion' IFR, including the enactment date, specific ECCNs, tiered licensing structure (UVEU/NVEU/Tier 2), and explicit negative impacts on market size and competitive advantage. This is a major regulatory change with significant financial consequences.",
+          "key_change": "Incorporation of specific AI Diffusion IFR regulations and tiered export control structure"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0072",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specifically address the operational risks and competitive disadvantages arising from the USG's time-consuming, closed, and unpredictable export licensing process. The 2024 text highlights that the process lacks clear standards and has disadvantaged NVIDIA, while the 2025 text confirms this, noting the closed evaluation process, lack of assurances for approvals, and specific examples like the NAC process failures for China.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1A_D036",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "NVIDIA faces costly operational transitions and competitive harm due to complex US export licensing processes that are time-consuming, lack clear standards, and disadvantage NVIDIA against competitors.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_1A_D059",
+            "item": "1A",
+            "section": "Risks Related to Regulatory, Legal, Our Stock and Other Matters",
+            "taxonomy": "Regulation, Legal & Compliance",
+            "summary": "NVIDIA has transitioned some operations out of China and Hong Kong due to 2022 export controls, with future transitions potentially being costly and disruptive. The licensing process is time-consuming, subject to closed evaluation without clear standards, and has historically resulted in denials for China or onerous conditions for D1/D4 countries, disadvantaging NVIDIA against competitors. Existing export controls have harmed NVIDIA's competitive position, which may be further harmed by future regulatory changes, customer attrition to competitors, inability to provide warranties, and significant transition costs, while licensing requirements may benefit competitors by making NVIDIA's support cumbersome and encouraging customers to pursue alternatives.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.95,
+          "reason": "The 2025 disclosure adds a specific factual example: the 'Notified Advanced Computing (NAC)' process has not resulted in approvals for China. This provides concrete evidence of the licensing process's negative impact, escalating the severity of the risk disclosure beyond general statements of disadvantage.",
+          "key_change": "Addition of specific NAC process denial example for China"
+        }
       }
     ],
     "peer_results": [
@@ -118,32 +165,36 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1A_D075",
-            "peer_topic": "Climate Change Physical Impact",
-            "peer_summary": "Climate change may disrupt operations through increased frequency of natural disasters in susceptible regions, affecting water and energy availability for data centers and causing manufacturing or shipping delays, supply chain issues, and contractual disputes.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.144252,
+            "peer_disclosure_id": "amd_2024_1A_D079",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "AI Regulatory and Export Control Risks",
+            "peer_summary": "AMD faces significant risks from evolving AI regulations and export controls. U.S. BIS restrictions prevent shipping certain AMD Instinct ICs and Versal FPGAs to China and other sanctioned regions without licenses, and require NAC notifications, creating uncertainty around product roadmaps and market access. Additionally, evolving AI-specific laws like the EU AI Act and regulations on the responsible use of AI may impede the ability to offer certain products, increase compliance costs, create potential liability for third-party misuse or IP infringement, and raise complex intellectual property issues.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.105822,
             "relationship": "same_topic",
-            "comparison": "Both companies explicitly identify the dependency of data centers on clean water and reliable energy as a critical risk factor. NVIDIA discloses that power or water shortages could impair customers' ability to expand capacity and consume products, while AMD states that potential power or water shortages could impair its customers' ability to expand data center capacity and consume products, adversely impacting AMD's revenue. Although NVIDIA frames this within the context of third-party service interruptions and AMD frames it under climate change physical impacts, the specific operational risk regarding utility availability for data centers is substantively the same.",
+            "comparison": "Both NVIDIA and AMD disclose specific risks arising from U.S. export controls targeting AI semiconductors, particularly regarding shipments to China. Similar to NVIDIA's statement that licensing processes disadvantage it against competitors, AMD explicitly states, 'We may be at a competitive disadvantage if our competitors are not subject to the same or similar restrictions.' However, while NVIDIA emphasizes the operational burden of a 'closed process that does not have clear standards,' AMD identifies specific product restrictions (Instinct ICs and Versal FPGAs) and broad geographic bans, noting that controls 'could prohibit us from exporting or providing access to our products to any or all customers in one or more markets, including but not limited to China.'",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1A",
                 "disclosure_id": "nvda_2024_1A_D036",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1A_P046_S003",
-                    "paragraph_id": "nvda_2024_1A_P046",
+                    "sentence_id": "nvda_2024_1A_P077_S008",
+                    "paragraph_id": "nvda_2024_1A_P077",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Data centers depend on access to clean water and predictable energy.",
+                    "text": "The USG is evaluating license requests in a closed process that does not have clear standards or an opportunity for review.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "nvda_2024_1A_P046_S004",
-                    "paragraph_id": "nvda_2024_1A_P046",
+                    "sentence_id": "nvda_2024_1A_P077_S011",
+                    "paragraph_id": "nvda_2024_1A_P077",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Power or water shortages, or regulations that limit energy or water availability, could impair the ability of our customers to expand their data center capacity and consume our products and services.",
+                    "text": "The requirements have a disproportionate impact on NVIDIA and already have disadvantaged and may in the future disadvantage NVIDIA against certain of our competitors who sell products that are not subject to the new restrictions or may be able to acquire licenses for their products.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -151,13 +202,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1A_D075",
+                "item": "1A",
+                "disclosure_id": "amd_2024_1A_D079",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1A_P086_S009",
-                    "paragraph_id": "amd_2024_1A_P086",
+                    "sentence_id": "amd_2024_1A_P092_S007",
+                    "paragraph_id": "amd_2024_1A_P092",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Data centers depend on access to clean water and reliable energy, thus potential power or water shortages could impair our customers' ability to expand their data center capacity and consume our products and services, which in turn could adversely impact our ability to generate revenue.",
+                    "text": "We may be at a competitive disadvantage if our competitors are not subject to the same or similar restrictions.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1A_P092_S005",
+                    "paragraph_id": "amd_2024_1A_P092",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The scope and application of such controls have been and may again be very broad, which may prohibit us from exporting or providing access to our products to any or all customers in one or more markets, including but not limited to China, and could negatively impact our manufacturing, testing and warehousing locations, or could impose other conditions that limit our ability to meet demand abroad.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -170,6 +229,11 @@
           "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "985a2f1da14089b6f6e30c7751f8083f3a2ae1f176ece7fd566d4793a0dc7de6",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "4df123c78b468df1cb18d83bbeaf20ea95c1ff0ca15d050f82cdf143e6937a74"
+    }
   }
 }

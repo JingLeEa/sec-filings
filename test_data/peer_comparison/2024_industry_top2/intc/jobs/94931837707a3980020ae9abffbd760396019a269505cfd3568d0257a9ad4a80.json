@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "c077fb73972c5e4f8cf51b933ddf857021f1ac45e599973e87b4413773c8e5d5",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "fc76af5d7181eb6fe104302225b89ba464af2e5d4317e6b0447a2fedd257ea79",
+  "request_hash": "d7c315edc7be792442742bfd017ebcb8cceeb56d899a7890124ada55105e985a",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D168\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Broadcom disclose specific non-recurring charges related to intellectual property litigation included within their restructuring and other charges. Intel accrued a $780 million charge for confidential settlements with R2, Third Point, and TRGP in Q2 2024, while Broadcom reported $204 million in non-recurring IP litigation charges for fiscal year 2023.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P213_S001\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P207_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved candidates discuss IPR&D impairment charges ($58 million) and accrued restructuring charges ($89 million) unrelated to legal proceedings or IP litigation settlements. There is no comparable disclosure of legal settlement charges or litigation-specific restructuring accruals.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates detail a specific jury verdict in Netlist patent litigation awarding $445 million in damages. Unlike Intel's disclosure of accrued confidential settlement charges for IP matters, Micron discloses a contested jury verdict and notes an intent to appeal, with no corresponding accrued settlement liability mentioned for this specific matter in the provided text.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates describe general litigation risks and unrecorded indemnification liabilities. There is no specific disclosure of accrued litigation settlement charges or IP-related restructuring charges comparable to Intel's $780 million accrual.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D187",
@@ -184,7 +187,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for AMD discuss $58 million IPR&D impairments and $89 million in accrued restructuring charges, but these are attributed to operational restructuring plans (2024 Restructuring Plan) rather than specific litigation settlements or legal contingency accruals. Unlike Intel's $780 million charge specifically tied to confidential settlement agreements with R2, Third Point, and TRGP, AMD's disclosures do not reference similar litigation-driven restructuring charges or legal settlements in the comparable segment, making them substantively different in the driver of the charge (operational vs. legal)."
+        "rationale": "The retrieved candidates discuss IPR&D impairment charges ($58 million) and accrued restructuring charges ($89 million) unrelated to legal proceedings or IP litigation settlements. There is no comparable disclosure of legal settlement charges or litigation-specific restructuring accruals."
       },
       {
         "peer_ticker": "AVGO",
@@ -193,17 +196,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D168",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "2023 Non-recurring IP Litigation Charges",
             "peer_summary": "Restructuring and other charges for fiscal year 2023 included $204 million in non-recurring charges related to intellectual property litigation.",
             "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.077461,
+            "retrieval_score": 0.08308,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Broadcom disclose specific financial charges related to intellectual property litigation that were categorized within restructuring or similar operating expenses in recent fiscal periods, highlighting how legal settlements impact the income statement. Broadcom explicitly identified $204 million in non-recurring charges for IP litigation as part of its 2023 restructuring and other charges, whereas Intel accrued a $780 million charge in 2024 for confidential settlements in the R2 and related matters, also classified within restructuring. Both disclosures illustrate the material financial impact of resolved or pending IP disputes on reported restructuring metrics.",
+            "comparison": "Both Intel and Broadcom disclose specific non-recurring charges related to intellectual property litigation included within their restructuring and other charges. Intel accrued a $780 million charge for confidential settlements with R2, Third Point, and TRGP in Q2 2024, while Broadcom reported $204 million in non-recurring IP litigation charges for fiscal year 2023.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D187",
                 "sentences": [
                   {
@@ -218,6 +225,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D168",
                 "sentences": [
                   {
@@ -230,118 +238,33 @@
                 ]
               }
             ]
-          },
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_8_D164",
-            "peer_topic": "Uncertainty of litigation outcomes and potential financial impact",
-            "peer_summary": "Broad legal proceedings, regulatory investigations, and tax disputes are inherently uncertain with potential for material adverse outcomes, significant defense costs, and substantial settlement expenses, although no material adverse effect is currently expected.",
-            "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.05286,
-            "relationship": "related_topic",
-            "comparison": "Intel’s disclosure focuses on the actual recognition of a significant liability ($780 million) resulting from specific settlement agreements, while Broadcom provides a broader cautionary statement regarding the uncertainty of litigation outcomes and the potential for substantial costs, including future royalties. Although Intel has already accrued its liability for the R2/Third Point/TRGP settlements, Broadcom notes that while no material amounts were accrued for other proceedings at that time, future settlements could require significant expenses, contrasting the concrete accounting recognition at Intel with the contingent risk disclosure at Broadcom.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D187",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_8_P213_S001",
-                    "paragraph_id": "intc_2024_8_P213",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "In addition, in the second quarter of 2024, we accrued a charge of $780 million within restructuring and other related to three separate confidential settlement agreements with R2, Third Point, and TRGP (see R2 Semiconductor Patent Litigation below).",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_8_D164",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_8_P201_S005",
-                    "paragraph_id": "avgo_2024_8_P201",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Any settlement of pending litigation could require us to incur substantial costs and other ongoing expenses, such as future royalty payments in the case of an IP dispute.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P202_S003",
-                    "paragraph_id": "avgo_2024_8_P202",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "There can be no assurances that the actual amounts required to satisfy any liabilities arising from the matters described above will not have a material adverse effect on our consolidated financial statements.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
           }
         ],
         "rationale": ""
       },
       {
         "peer_ticker": "MU",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_8_D063",
-            "peer_topic": "Netlist E.D. Tex. litigation verdict and PTAB proceedings",
-            "peer_summary": "In Netlist's E.D. Tex. litigation, a jury found Micron liable for infringing two patents, awarding $425 million and $20 million in damages, respectively; Micron intends to appeal, though the PTAB found the asserted claims unpatentable.",
-            "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.043366,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose significant financial exposures or charges related to patent infringement litigation. Intel accrued a $780 million charge in 2024 for confidential settlements regarding R2 Semiconductor patent litigation. Similarly, Micron disclosed a jury verdict in 2024 finding it liable for $445 million in damages in a patent infringement lawsuit filed by Netlist, though Micron intends to appeal and the PTAB had previously found one of the asserted claims unpatentable. Both cases involve substantial monetary values and IP disputes, but Intel settled confidentially while Micron faced a public verdict under appeal.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D187",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_8_P213_S001",
-                    "paragraph_id": "intc_2024_8_P213",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "In addition, in the second quarter of 2024, we accrued a charge of $780 million within restructuring and other related to three separate confidential settlement agreements with R2, Third Point, and TRGP (see R2 Semiconductor Patent Litigation below).",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_8_D063",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_8_P069_S003",
-                    "paragraph_id": "mu_2024_8_P069",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "On May 23, 2024, following a four-day trial regarding the second complaint filed by Netlist in the E.D. Tex., a jury rendered a verdict that Micron's memory modules infringe two asserted patents - U.S. Patent No. 7,619,912 (\"the '912 patent\") and U.S. Patent No. 11,093,417 (\"the '417 patent\") - and found that Micron should pay $425 million for infringement of the '912 patent and $20 million for infringement of the '417 patent.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates detail a specific jury verdict in Netlist patent litigation awarding $445 million in damages. Unlike Intel's disclosure of accrued confidential settlement charges for IP matters, Micron discloses a contested jury verdict and notes an intent to appeal, with no corresponding accrued settlement liability mentioned for this specific matter in the provided text."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidate for Nvidia is a generic table of contents statement ('Location of Required Information') and contains no substantive financial or legal disclosure comparable to Intel's specific accrual for legal settlements."
+        "rationale": "The retrieved candidates describe general litigation risks and unrecorded indemnification liabilities. There is no specific disclosure of accrued litigation settlement charges or IP-related restructuring charges comparable to Intel's $780 million accrual."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for QCOM."
+        "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "fc76af5d7181eb6fe104302225b89ba464af2e5d4317e6b0447a2fedd257ea79",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "d7c315edc7be792442742bfd017ebcb8cceeb56d899a7890124ada55105e985a"
+    }
   }
 }

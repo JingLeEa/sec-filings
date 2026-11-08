@@ -1,29 +1,32 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "f439f3d050c1262daea2da4546ab6a0b9c8864cb7fcb6b8ab79350d816b84f91",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "33fff5524aeb9e2b8aa754df1998f7559737e78e2e721e47362ad71a1007dad7",
+  "request_hash": "ffdf0cf332b7cb54dc88059e4dac93ddd02303ddb48ac22bc42722102e2a2205",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D028\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose that channel inventory normalization drove changes in segment revenue for fiscal year 2024. NVDA's Gaming segment revenue increased 15% as a result of 'higher sell-in to partners following the normalization of channel inventory levels and growing demand.' In contrast, AMD's Embedded segment revenue decreased 33% because the decrease was 'primarily due to lower demand as customers continued to normalize their inventory levels.' While both cite inventory normalization as a key driver, the outcomes diverged significantly: NVDA saw revenue growth due to normalized channels meeting growing demand, whereas AMD saw a revenue decline due to continued lower demand during the normalization process.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P020_S001\",\n\"nvda_2024_7_P020_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P040_S001\",\n\"amd_2024_7_P040_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"No comparable candidate for the Gaming Segment Financial Performance topic was retrieved. The remaining AMD candidate (amd_2024_7_D031) discusses Gross Margin Performance, and (amd_2024_7_D023) discusses Data Center Segment Financial Performance. These do not match the specific Gaming segment topic and metrics of the target.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D019",
     "item": "7",
-    "target_topic": "Gaming Segment Performance",
-    "target_summary": "Gaming revenue for fiscal year 2024 increased 15%, primarily due to higher sell-in to partners as channel inventory levels normalized and demand grew.",
+    "target_topic": "Gaming Segment Financial Performance",
+    "target_summary": "Gaming revenue for fiscal year 2024 increased 15%, reflecting higher sell-in to partners following the normalization of channel inventory levels and growing demand.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0318",
-        "relationship": "one_to_one",
+        "match_id": "nvda_2023_2024_M0193",
+        "relationship": "one_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures focus on Gaming revenue performance in the Fiscal Year Summary. 2023_D022 reports 27% decrease due to channel inventory and macro conditions. 2024_D019 reports 15% increase due to normalized channel inventory and growing demand. They share the same specific topic: Year-over-year Gaming revenue change and primary drivers.",
+        "explanation": "Both disclosures cover Gaming revenue performance and channel inventory dynamics. 2023 D023 details the revenue decline and efforts to 'lower inventory in the channel', while 2024 D019 reports the revenue increase reflecting 'normalization of channel inventory levels' and higher sell-in.\n\nBoth disclosures cover Gaming revenue performance and product launches. 2023 D023 focuses on revenue decline and inventory correction, while 2024 D028 reports revenue growth and lists specific product launches like 'GeForce RTX 4060 and 4070 GPUs'. They share the specific topic of Gaming segment financial and product highlights.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D022",
+            "disclosure_id": "nvda_2023_7_D023",
             "item": "7",
-            "section": "Fiscal Year 2023 Summary",
+            "section": "Market Platform Highlights",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Gaming revenue decreased 27% year-over-year due to reduced sell-ins to partners to lower channel inventory amidst macro-economic conditions and China-related disruptions.",
+            "summary": "Gaming revenue for fiscal year 2023 was $9.07 billion, down 27% from fiscal year 2022, due to excess inventory with channel partners caused by rapid economic changes; the company implemented pricing programs and undershipped GPU supply to lower channel inventory, making meaningful progress by fiscal year-end.",
             "extraction_status": "source_validated"
           }
         ],
@@ -33,175 +36,82 @@
             "item": "7",
             "section": "Fiscal Year 2024 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Gaming revenue for fiscal year 2024 increased 15%, primarily due to higher sell-in to partners as channel inventory levels normalized and demand grew.",
+            "summary": "Gaming revenue for fiscal year 2024 increased 15%, reflecting higher sell-in to partners following the normalization of channel inventory levels and growing demand.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_7_D028",
+            "item": "7",
+            "section": "Market Platform Highlights",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gaming revenue for fiscal year 2024 was $10.4 billion, up 15% from fiscal year 2023. The company launched GeForce RTX 4060/4070 GPUs, GeForce RTX 40-Series SUPER GPUs, and DLSS 3.5 Ray Reconstruction.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reduced",
-            "cosine_similarity": 0.300678,
-            "sequence_match_ratio": 0.375,
-            "length_ratio": 0.72973,
-            "word_count_delta": -10,
-            "added_tokens_sample": [
-              "for",
-              "fiscal",
-              "year",
-              "2024",
-              "up",
-              "15",
-              "the",
-              "increase",
-              "reflects",
-              "higher",
-              "following",
-              "the",
-              "normalization",
-              "of",
-              "growing"
-            ],
-            "removed_tokens_sample": [
-              "down",
-              "27",
-              "from",
-              "a",
-              "year",
-              "ago",
-              "reflecting",
-              "lower",
-              "to",
-              "help",
-              "reduce",
-              "as",
-              "global",
-              "macro",
-              "economic",
-              "conditions",
-              "covid",
-              "19",
-              "related",
-              "disruptions"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2023_7_D022",
-            "score": 0.785356,
-            "normalised_score": 0.7854,
-            "label": "Relocated",
-            "rationale": "Score 78.54% of ceiling — content is similar but section changed from 'Fiscal Year 2023 Summary' to 'Fiscal Year 2024 Summary'.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
           "materiality_score": 0.85,
-          "confidence_score": 0.9,
-          "reason": "The disclosure reverses the primary headwind and direction of the Gaming segment. 2023 cited reduced sell-ins to lower channel inventory and macro/China disruptions as causes for a 27% decline. 2024 cites normalized channel inventory and growing demand as causes for a 15% increase. This represents a fundamental change in the operational and financial condition of a major business segment, moving from inventory correction/decline to organic growth/normalization.",
-          "key_change": "Reversal from channel inventory reduction to normalized demand-driven growth"
+          "confidence_score": 0.95,
+          "reason": "This row marks a significant turnaround in the Gaming segment, moving from a 27% decline due to channel inventory issues in 2023 to a 15% increase due to inventory normalization and demand growth in 2024. This reversal of a negative trend and the return to growth is a meaningful change in operational condition and business performance.",
+          "key_change": "Gaming segment recovery from inventory correction to growth"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0304",
+        "match_id": "nvda_2024_2025_M0177",
         "relationship": "many_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures report Fiscal Year Gaming revenue performance and primary growth drivers. 2024 cites normalization of channel inventory and demand; 2025 cites sales of GeForce RTX 40 Series GPUs. Specific subject: Gaming segment revenue trend.\n\nBoth disclosures report Gaming revenue performance for the fiscal year. nvda_2024_7_D026 reports FY24 Gaming revenue of $10.4B (up 15%) and details product launches (RTX 4060/4070, DLSS 3.5). nvda_2025_7_D020 reports FY25 Gaming revenue up 9%, driven by sales of GeForce RTX 40 Series GPUs. Both focus on the Gaming segment's revenue trend and driver.",
+        "explanation": "Both disclosures specifically report Gaming revenue performance and growth drivers. 2024 cites 15% increase due to channel inventory normalization (S001, S002); 2025 cites 9% increase driven by GeForce RTX 40 Series sales (S001).\n\nSupported match. Both disclosures report on the Gaming segment's fiscal year revenue performance and growth. D028 (2024) reports $10.4 billion revenue, up 15%, driven by GeForce RTX 40-series products. D019 (2025) reports fiscal year 2025 revenue up 9%, driven by sales of GeForce RTX 40 Series GPUs. They share the same specific topic: Gaming revenue results and primary product drivers for the fiscal year.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_7_D019",
             "item": "7",
             "section": "Fiscal Year 2024 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Gaming revenue for fiscal year 2024 increased 15%, primarily due to higher sell-in to partners as channel inventory levels normalized and demand grew.",
+            "summary": "Gaming revenue for fiscal year 2024 increased 15%, reflecting higher sell-in to partners following the normalization of channel inventory levels and growing demand.",
             "extraction_status": "source_validated"
           },
           {
-            "disclosure_id": "nvda_2024_7_D026",
+            "disclosure_id": "nvda_2024_7_D028",
             "item": "7",
             "section": "Market Platform Highlights",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Gaming revenue for fiscal year 2024 was $10.4 billion, up 15% from fiscal year 2023. The company launched GeForce RTX 4060/4070 GPUs, DLSS 3.5 Ray Reconstruction, and TensorRT-LLM for Windows, while achieving a milestone of 500 AI-powered RTX games.",
+            "summary": "Gaming revenue for fiscal year 2024 was $10.4 billion, up 15% from fiscal year 2023. The company launched GeForce RTX 4060/4070 GPUs, GeForce RTX 40-Series SUPER GPUs, and DLSS 3.5 Ray Reconstruction.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D020",
+            "disclosure_id": "nvda_2025_7_D019",
             "item": "7",
             "section": "Fiscal Year 2025 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Gaming revenue increased 9% driven by sales of GeForce RTX 40 Series GPUs.",
+            "summary": "Gaming revenue grew 9% year-over-year, primarily driven by sales of GeForce RTX 40 Series GPUs.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reduced",
-            "cosine_similarity": 0.313226,
-            "sequence_match_ratio": 0.172185,
-            "length_ratio": 0.179688,
-            "word_count_delta": -105,
-            "added_tokens_sample": [
-              "2025",
-              "9",
-              "from",
-              "a",
-              "year",
-              "ago",
-              "driven",
-              "by",
-              "sales",
-              "our"
-            ],
-            "removed_tokens_sample": [
-              "2024",
-              "15",
-              "the",
-              "increase",
-              "reflects",
-              "higher",
-              "sell",
-              "in",
-              "to",
-              "partners",
-              "following",
-              "the",
-              "normalization",
-              "channel",
-              "inventory",
-              "levels",
-              "and",
-              "growing",
-              "demand",
-              "gaming"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2024_7_D019",
-            "score": 0.809418,
-            "normalised_score": 0.8094,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 80.94% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
-          "materiality": "Yes",
-          "materiality_score": 0.75,
+          "materiality": "No",
+          "materiality_score": 0.1,
           "confidence_score": 0.9,
-          "reason": "The disclosure changes from attributing gaming revenue growth to channel inventory normalization (FY24) to specific product sales of GeForce RTX 40 Series GPUs (FY25). This shift in growth driver—from structural/channel dynamics to product-specific demand—meaningfully alters the investor's understanding of the revenue sustainability and primary value driver for the Gaming segment.",
-          "key_change": "Shift in Gaming revenue growth driver from channel normalization to specific GPU product sales"
+          "reason": "This is a routine comparison of Gaming segment performance between FY2024 and FY2025. The growth rate change (15% to 9%) and continued reliance on RTX 40 series products represent normal business fluctuations and product lifecycle stages, not a material change in the company's gaming strategy or risk profile.",
+          "key_change": "Routine fiscal year gaming revenue comparison"
         }
       }
     ],
@@ -213,19 +123,30 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D028",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Embedded segment net revenue and drivers for fiscal year 2024",
             "peer_summary": "Embedded net revenue decreased by 33% to $3.6 billion in 2024 from $5.3 billion in 2023, primarily due to lower demand as customers normalized inventory levels.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.167036,
+            "retrieval_score": 0.133307,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD disclose that channel inventory normalization was a key driver of their fiscal year 2024 performance, but the operational outcome differed significantly by segment. For NVDA's Gaming segment, the normalization of channel inventory levels drove an increase in sell-in and a 15% rise in revenue. In contrast, for AMD's Embedded segment, customers normalizing inventory levels resulted in lower demand and a 33% decrease in net revenue.",
+            "comparison": "Both NVDA and AMD disclose that channel inventory normalization drove changes in segment revenue for fiscal year 2024. NVDA's Gaming segment revenue increased 15% as a result of 'higher sell-in to partners following the normalization of channel inventory levels and growing demand.' In contrast, AMD's Embedded segment revenue decreased 33% because the decrease was 'primarily due to lower demand as customers continued to normalize their inventory levels.' While both cite inventory normalization as a key driver, the outcomes diverged significantly: NVDA saw revenue growth due to normalized channels meeting growing demand, whereas AMD saw a revenue decline due to continued lower demand during the normalization process.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D019",
                 "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P020_S001",
+                    "paragraph_id": "nvda_2024_7_P020",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Gaming revenue for fiscal year 2024 was up 15%.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "nvda_2024_7_P020_S002",
                     "paragraph_id": "nvda_2024_7_P020",
@@ -238,8 +159,16 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D028",
                 "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P040_S001",
+                    "paragraph_id": "amd_2024_7_P040",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Embedded net revenue of $3.6 billion in 2024 decreased by 33%, compared to net revenue of $5.3 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "amd_2024_7_P040_S002",
                     "paragraph_id": "amd_2024_7_P040",
@@ -252,8 +181,16 @@
             ]
           }
         ],
-        "rationale": ""
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "33fff5524aeb9e2b8aa754df1998f7559737e78e2e721e47362ad71a1007dad7",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "ffdf0cf332b7cb54dc88059e4dac93ddd02303ddb48ac22bc42722102e2a2205"
+    }
   }
 }

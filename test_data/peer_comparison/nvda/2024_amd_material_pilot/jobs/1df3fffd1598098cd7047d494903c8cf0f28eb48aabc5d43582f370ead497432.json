@@ -1,192 +1,101 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "e6933e8cda6defdc2f4c780b32544815da1478baf973c49e5f2b0174b7b7f4d0",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "5846824bbe5d35b4455f22688c6ae874dc9b8b39cfac6268b387701b51affa2a",
+  "request_hash": "74b97659e8fb1fcbd03696648ce3c9940252c811b2e78bb3eea70fc1f8b02ef3",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D051\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVIDIA and AMD discuss the drivers of cash provided by operating activities for fiscal year 2024, specifically linking increases to revenue growth while detailing significant outflows from changes in operating assets and liabilities. NVIDIA reports that operating cash increased due to revenue growth and highlights $557 million in accounts receivable from early customer payments. In contrast, AMD reports $3 billion in operating cash flow driven by $1.6 billion in net income, but notes a substantial $1.9 billion increase in accounts receivable (attributed to higher revenue in the last month of 2024 compared to 2023) and a $1.5 billion increase in inventories to support new product ramps. While both companies link cash flow trends to revenue, AMD explicitly details the magnitude of balance sheet shifts (receivables and inventory) as offsetting factors, whereas NVIDIA focuses on the positive revenue driver and specific early payment timing.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P073_S001\",\n\"nvda_2024_7_P073_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P064_S001\",\n\"amd_2024_7_P064_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The other candidate (amd_2024_7_D052) discloses operating cash flow for fiscal year 2023, not 2024, making it not comparable to the target's 2024 fiscal year. The remaining candidate (amd_2024_7_D033) discusses Marketing, General and Administrative expenses, which is a different topic from Operating Cash Flow Drivers.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D064",
     "item": "7",
-    "target_topic": "Resolution of IRS Audit for Fiscal Years 2018 and 2019",
-    "target_summary": "The IRS audit of federal income tax returns for fiscal years 2018 and 2019 was resolved in the third quarter of fiscal 2024, resulting in a $145 million non-cash net benefit from effectively settled positions.",
+    "target_topic": "Operating Cash Flow Drivers",
+    "target_summary": "Cash provided by operating activities increased in fiscal year 2024 compared to 2023 due to revenue growth, while the accounts receivable balance in 2024 included $557 million from customer payments received ahead of invoice due dates.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0357",
-        "relationship": "current_only",
-        "status": "unmatched",
-        "review_reasons": [],
-        "explanation": "nvda_2024_7_D064 details the resolution of the IRS audit for fiscal years 2018 and 2019 and the resulting $145 million benefit. While nvda_2024_7_D065 also mentions the IRS audit resolution as an offset to rate drivers, D064 is the primary disclosure for the audit event itself. In the context of matching, D064 (the 2024 disclosure) has no 2023 counterpart in the required IDs or provided candidates that discusses a similar IRS audit resolution (D068 is about TCJA). The required 2023 ID D068 is unrelated to IRS audits. Thus, nvda_2024_7_D064 is unmatched to any 2023 required ID.",
-        "previous_disclosures": [],
-        "current_disclosures": [
-          {
-            "disclosure_id": "nvda_2024_7_D064",
-            "item": "7",
-            "section": "Results of Operations > Income Taxes",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "The IRS audit of federal income tax returns for fiscal years 2018 and 2019 was resolved in the third quarter of fiscal 2024, resulting in a $145 million non-cash net benefit from effectively settled positions.",
-            "extraction_status": "source_validated"
-          }
-        ],
-        "change_analysis": {
-          "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "New",
-            "cosine_similarity": 0.0,
-            "sequence_match_ratio": 0.0,
-            "length_ratio": 0.0,
-            "word_count_delta": 89,
-            "added_tokens_sample": [
-              "during",
-              "the",
-              "third",
-              "quarter",
-              "of",
-              "fiscal",
-              "year",
-              "2024",
-              "the",
-              "internal",
-              "revenue",
-              "service",
-              "or",
-              "irs",
-              "audit",
-              "of",
-              "our",
-              "federal",
-              "income",
-              "tax"
-            ],
-            "removed_tokens_sample": []
-          },
-          "semantic": {
-            "label": "New",
-            "score": null,
-            "normalised_score": null,
-            "matched_id": null,
-            "rationale": "One-sided change established by the finalized alignment.",
-            "method": "alignment_presence"
-          },
-          "llm": "New",
-          "final_taxonomy": "New"
-        },
-        "materiality_analysis": {
-          "materiality": "Yes",
-          "materiality_score": 0.85,
-          "confidence_score": 0.95,
-          "reason": "The 2024 filing discloses the resolution of a major IRS audit for fiscal years 2018 and 2019, resulting in a $145 million non-cash net benefit. This is a discrete, company-specific event that resolves a significant uncertainty regarding past tax liabilities. The 2023 filing did not disclose this resolution. The financial impact and the closure of this legal/compliance matter are material.",
-          "key_change": "Resolution of IRS audit with material financial benefit"
-        }
-      },
-      {
-        "window": "2024-2025",
-        "side": "previous",
-        "match_id": "nvda_2024_2025_M0341",
-        "relationship": "many_to_one",
+        "match_id": "nvda_2023_2024_M0234",
+        "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Previous disclosures nvda_2024_7_D064 and nvda_2024_7_D065 both concern the resolution of the IRS audit and its benefit to the effective tax rate. Current disclosure nvda_2025_7_D058 explicitly references the 'prior year discrete benefit due to an audit resolution' as a driver for the effective tax rate increase (due to absence of the benefit in 2025). They share the same specific subject: the IRS audit resolution impact on the effective tax rate.",
+        "explanation": "Both disclosures address the change in cash provided by operating activities year-over-year. D072 cites net income and working capital changes; D064 cites revenue growth and prepayments.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2024_7_D064",
+            "disclosure_id": "nvda_2023_7_D072",
             "item": "7",
-            "section": "Results of Operations > Income Taxes",
+            "section": "Liquidity and Capital Resources",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "The IRS audit of federal income tax returns for fiscal years 2018 and 2019 was resolved in the third quarter of fiscal 2024, resulting in a $145 million non-cash net benefit from effectively settled positions.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_7_D065",
-            "item": "7",
-            "section": "Results of Operations > Income Taxes",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "The increase in the effective tax rate due to decreased benefits from FDII, stock-based compensation, and research credits was partially offset by the benefit from the IRS audit resolution, contributing to the 2024 effective tax rate being lower than the statutory rate.",
+            "summary": "Cash provided by operating activities decreased in fiscal year 2023 compared to 2022, primarily due to lower net income adjusted for non-cash items like the $1.35 billion Arm acquisition termination cost and higher tax payments, partially offset by working capital changes driven by lower accounts receivable from strong collections.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D058",
+            "disclosure_id": "nvda_2024_7_D064",
             "item": "7",
-            "section": "Results of Operations > Income Taxes",
+            "section": "Liquidity and Capital Resources",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "The effective tax rate increase was driven by higher pre-tax income and the absence of a prior year discrete benefit from an audit resolution. Rates remained below the 21% U.S. federal statutory rate due to FDII deductions, stock-based compensation, federal research credits, and lower-taxed jurisdictions, with 2024 also benefiting from the audit resolution.",
+            "summary": "Cash provided by operating activities increased in fiscal year 2024 compared to 2023 due to revenue growth, while the accounts receivable balance in 2024 included $557 million from customer payments received ahead of invoice due dates.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.493293,
-            "sequence_match_ratio": 0.224215,
-            "length_ratio": 0.798387,
-            "word_count_delta": -25,
-            "added_tokens_sample": [
-              "increased",
-              "primarily",
-              "due",
-              "to",
-              "higher",
-              "pre",
-              "tax",
-              "income",
-              "and",
-              "prior",
-              "year",
-              "discrete",
-              "an",
-              "our",
-              "effective",
-              "tax",
-              "rates",
-              "for",
-              "fiscal",
-              "years"
-            ],
-            "removed_tokens_sample": [
-              "during",
-              "the",
-              "third",
-              "quarter",
-              "of",
-              "fiscal",
-              "year",
-              "2024",
-              "the",
-              "internal",
-              "revenue",
-              "service",
-              "or",
-              "irs",
-              "audit",
-              "of",
-              "our",
-              "federal",
-              "income",
-              "tax"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2024_7_D065",
-            "score": 0.902072,
-            "normalised_score": 0.9021,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 90.21% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.7,
-          "confidence_score": 0.85,
-          "reason": "The disclosure explains the effective tax rate increase by noting the 'absence of a prior year discrete benefit' from an audit resolution. This clarifies a significant structural difference in the tax rate drivers between years, impacting the comparability and forward-looking nature of the tax burden.",
-          "key_change": "Explanation of tax rate variance via prior year benefit absence"
+          "materiality_score": 0.65,
+          "confidence_score": 0.8,
+          "reason": "The disclosure shifts from a decrease in operating cash flow (driven by acquisition costs and lower income) to an increase (driven by revenue growth). Additionally, it introduces a specific qualitative factor for 2024: '$557 million from customer payments received ahead of invoice due dates'. This highlights a change in working capital dynamics and liquidity drivers, which is meaningful for understanding cash generation trends.",
+          "key_change": "Shift to operating cash increase with new working capital driver"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0213",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures state that cash provided by operating activities increased in the current fiscal year compared to the prior year, primarily driven by growth in revenue. The subject (operating cash flow trend) and driver (revenue growth) are identical.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D064",
+            "item": "7",
+            "section": "Liquidity and Capital Resources",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Cash provided by operating activities increased in fiscal year 2024 compared to 2023 due to revenue growth, while the accounts receivable balance in 2024 included $557 million from customer payments received ahead of invoice due dates.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D065",
+            "item": "7",
+            "section": "Liquidity and Capital Resources",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Cash provided by operating activities increased in fiscal year 2025 compared to fiscal year 2024, driven by growth in revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "The disclosure reports a year-over-year increase in cash from operations driven by revenue growth. While the absolute numbers change annually, the disclosed trend and driver are routine operational updates. The text itself does not introduce new risks, uncertainties, or strategic shifts.",
+          "key_change": "Routine reporting of operating cash flow trend"
         }
       }
     ],
@@ -197,25 +106,36 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D039",
-            "peer_topic": "Income Tax Provision and Effective Rate",
-            "peer_summary": "AMD recorded an income tax provision of $381 million in 2024 with a 19% effective tax rate, compared to a $346 million benefit and (68%) rate in 2023. The 2024 provision increase was driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+            "peer_disclosure_id": "amd_2024_7_D051",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Operating cash flow and drivers in 2024",
+            "peer_summary": "Net cash provided by operating activities was $3 billion in 2024, primarily driven by net income of $1.6 billion, non-cash adjustments of $3.5 billion, and net cash outflows of $2.1 billion from changes in operating assets and liabilities, including a $1.9 billion increase in accounts receivable due to higher year-end revenue and a $1.5 billion increase in inventories to support new product ramps.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.129982,
+            "retrieval_score": 0.175164,
             "relationship": "same_topic",
-            "comparison": "Both companies disclose specific discrete tax events impacting their fiscal 2024 results, but they differ in nature and impact. NVDA reports a specific $145 million non-cash net benefit resulting from the resolution of an IRS audit for fiscal years 2018 and 2019, which served as a positive adjustment to its tax provision. In contrast, AMD reports a total income tax provision of $381 million driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction, with no mention of a discrete audit resolution benefit comparable to NVDA's; AMD's 2024 effective tax rate was 19%, whereas NVDA's specific audit resolution is a discrete item offsetting other factors.",
+            "comparison": "Both NVIDIA and AMD discuss the drivers of cash provided by operating activities for fiscal year 2024, specifically linking increases to revenue growth while detailing significant outflows from changes in operating assets and liabilities. NVIDIA reports that operating cash increased due to revenue growth and highlights $557 million in accounts receivable from early customer payments. In contrast, AMD reports $3 billion in operating cash flow driven by $1.6 billion in net income, but notes a substantial $1.9 billion increase in accounts receivable (attributed to higher revenue in the last month of 2024 compared to 2023) and a $1.5 billion increase in inventories to support new product ramps. While both companies link cash flow trends to revenue, AMD explicitly details the magnitude of balance sheet shifts (receivables and inventory) as offsetting factors, whereas NVIDIA focuses on the positive revenue driver and specific early payment timing.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D064",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_7_P067_S002",
-                    "paragraph_id": "nvda_2024_7_P067",
+                    "sentence_id": "nvda_2024_7_P073_S001",
+                    "paragraph_id": "nvda_2024_7_P073",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "We recognized a non-cash net benefit of $145 million, related to this IRS audit resolution, for effectively settled positions.",
+                    "text": "Cash provided by operating activities increased in fiscal year 2024 compared to fiscal year 2023, due to growth in revenue.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P073_S002",
+                    "paragraph_id": "nvda_2024_7_P073",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Accounts receivable balance in fiscal year 2024 reflected $557 million from customer payments received ahead of the invoice due date.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -223,20 +143,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D039",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D051",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P053_S001",
-                    "paragraph_id": "amd_2024_7_P053",
+                    "sentence_id": "amd_2024_7_P064_S001",
+                    "paragraph_id": "amd_2024_7_P064",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We recorded an income tax provision of $381 million in 2024 and an income tax benefit of $346 million in 2023, representing effective tax rates of 19% and (68%), respectively.",
+                    "text": "Net cash provided by operating activities was $3 billion in 2024, primarily due to our net income of $1.6 billion in 2024, adjusted for non-cash adjustments of $3.5 billion and net cash outflows of $2.1 billion from changes in our operating assets and liabilities.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_7_P053_S002",
-                    "paragraph_id": "amd_2024_7_P053",
+                    "sentence_id": "amd_2024_7_P064_S002",
+                    "paragraph_id": "amd_2024_7_P064",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The increase in income tax provision in 2024 was primarily due to higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+                    "text": "The primary drivers of the changes in operating assets and liabilities included a $1.9 billion increase in accounts receivable driven primarily by higher revenue in the last month of 2024 compared to the last month of 2023, and a $1.5 billion increase in inventories driven primarily by a build of inventory to support the ramp of new products in advanced process nodes.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -249,6 +170,11 @@
           "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "5846824bbe5d35b4455f22688c6ae874dc9b8b39cfac6268b387701b51affa2a",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "74b97659e8fb1fcbd03696648ce3c9940252c811b2e78bb3eea70fc1f8b02ef3"
+    }
   }
 }

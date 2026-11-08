@@ -1,29 +1,32 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "0156c14d3aca49b644104fca935a1baad12e6d2996c98471091af6535c81ea4a",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "7cb23fa1ba1ce860b31a494b73719aff230329d24e93e8427310b2c3cafd73f0",
+  "request_hash": "c98dd64b68371299fca5ef966c5cd3caad71def6499a8fee573129ae09f42ef4",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1A_D063\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose that inaccurate estimation of customer demand leads to mismatches between supply and demand, creating operational and financial risks. NVDA states broadly that failure to estimate accurately leads to these mismatches. AMD provides more specific detail, explaining that it bases inventory levels on customer estimates which may be inaccurate, and that such failures in forecasting can limit the ability to meet demand. Furthermore, AMD specifies the financial consequence of these mismatches as resulting in excess or obsolete inventory write-downs and adverse effects on gross margins, whereas NVDA's disclosure focuses on the general risk to business operations.\",\n\"target_sentence_ids\": [\n\"nvda_2024_1A_P003_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1A_P059_S004\",\n\"amd_2024_1A_P059_S006\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The remaining candidates (amd_2024_1A_D019, amd_2024_1A_D042) do not sufficiently match the specific topic of demand estimation errors causing supply-demand mismatches. amd_2024_1A_D019 addresses general supply chain efficiency and response to demand changes rather than the risk of estimation inaccuracy. amd_2024_1A_D042 addresses the cyclical nature of the industry and broad supply/demand imbalances driven by price erosion and economic weakness, rather than the specific mechanism of flawed customer demand forecasting leading to inventory mismatches.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1A_D002",
     "item": "1A",
-    "target_topic": "Demand estimation inaccuracies",
-    "target_summary": "Failure to accurately estimate customer demand has led to and could continue to cause mismatches between supply and demand.",
+    "target_topic": "Demand Estimation Risks",
+    "target_summary": "Failure to estimate customer demand accurately has led to and could lead to mismatches between supply and demand.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0195",
+        "match_id": "nvda_2023_2024_M0060",
         "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures address the specific risk that failure to accurately estimate customer demand leads to mismatches between supply and demand. The 2023 text states 'Failure to estimate customer demand properly has led and could lead to mismatches between supply and demand' (P003 S001). The 2024 text states 'Failure to estimate customer demand accurately has led and could lead to mismatches between supply and demand' (P003 S001). The wording is nearly identical, covering the same specific subject.",
+        "explanation": "Both disclosures state that failure to estimate customer demand properly/accurately has led and could lead to mismatches between supply and demand. The wording is nearly identical.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_1A_D003",
+            "disclosure_id": "nvda_2023_1A_D002",
             "item": "1A",
             "section": "Risks Related to Demand, Supply and Manufacturing",
             "taxonomy": "Strategy & Business Model",
-            "summary": "Failure to estimate customer demand properly has led to and could lead to mismatches between supply and demand.",
+            "summary": "Failure to estimate customer demand properly has led to mismatches between supply and demand and could lead to future mismatches.",
             "extraction_status": "source_validated"
           }
         ],
@@ -33,60 +36,40 @@
             "item": "1A",
             "section": "Risks Related to Demand, Supply and Manufacturing",
             "taxonomy": "Strategy & Business Model",
-            "summary": "Failure to accurately estimate customer demand has led to and could continue to cause mismatches between supply and demand.",
+            "summary": "Failure to estimate customer demand accurately has led to and could lead to mismatches between supply and demand.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reworded",
-            "cosine_similarity": 0.91761,
-            "sequence_match_ratio": 0.941176,
-            "length_ratio": 1.0,
-            "word_count_delta": 0,
-            "added_tokens_sample": [
-              "accurately"
-            ],
-            "removed_tokens_sample": [
-              "properly"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2023_1A_D003",
-            "score": 1.042508,
-            "normalised_score": 1.0425,
-            "label": "Unchanged",
-            "rationale": "Score 104.25% of ceiling — semantically identical despite surface differences (word overlap 88%).",
-            "method": "embedding_cosine"
-          },
-          "llm": "Reworded",
-          "final_taxonomy": "Reworded"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "No",
           "materiality_score": 0.05,
-          "confidence_score": 0.98,
-          "reason": "The change is a stylistic rewording ('properly' to 'accurately') with no substantive change to the risk description or the company's exposure to demand estimation errors.",
-          "key_change": "Stylistic rewording of demand estimation risk"
+          "confidence_score": 0.95,
+          "reason": "The substitution of 'properly' with 'accurately' is a stylistic change with no substantive impact on the meaning of the risk disclosure regarding demand estimation and supply chain mismatches.",
+          "key_change": "Synonymous terminology change"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0171",
+        "match_id": "nvda_2024_2025_M0037",
         "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures address the risk that failure to estimate customer demand accurately leads to mismatches between supply and demand. The 2025 disclosure D001 (P003_S001) explicitly retains this core topic, adding context about long manufacturing lead times, which aligns with the 2024 D002 (P003_S001) subject matter.",
+        "explanation": "Both disclosures discuss the risk that inaccurate customer demand estimation leads to mismatches between supply and demand. 2024 D002 states 'Failure to estimate customer demand accurately has led and could lead to mismatches between supply and demand.' 2025 D001 states 'Long manufacturing lead times and uncertain supply and component availability, combined with a failure to estimate customer demand accurately has led and could lead to mismatches between supply and demand.'",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_1A_D002",
             "item": "1A",
             "section": "Risks Related to Demand, Supply and Manufacturing",
             "taxonomy": "Strategy & Business Model",
-            "summary": "Failure to accurately estimate customer demand has led to and could continue to cause mismatches between supply and demand.",
+            "summary": "Failure to estimate customer demand accurately has led to and could lead to mismatches between supply and demand.",
             "extraction_status": "source_validated"
           }
         ],
@@ -96,53 +79,23 @@
             "item": "1A",
             "section": "Risks Related to Demand, Supply, and Manufacturing",
             "taxonomy": "Supply Chain & Third Parties",
-            "summary": "Long manufacturing lead times and uncertain supply availability, combined with potential failures in estimating customer demand, may cause mismatches between supply and demand.",
+            "summary": "Long manufacturing lead times and uncertain component availability, combined with inaccurate customer demand estimation, have caused and may cause mismatches between supply and demand.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Expanded",
-            "cosine_similarity": 0.788727,
-            "sequence_match_ratio": 0.723404,
-            "length_ratio": 1.764706,
-            "word_count_delta": 13,
-            "added_tokens_sample": [
-              "long",
-              "manufacturing",
-              "lead",
-              "times",
-              "and",
-              "uncertain",
-              "supply",
-              "and",
-              "component",
-              "availability",
-              "combined",
-              "with",
-              "a"
-            ],
-            "removed_tokens_sample": []
-          },
-          "semantic": {
-            "matched_id": "nvda_2024_1A_D002",
-            "score": 0.901033,
-            "normalised_score": 0.901,
-            "label": "Relocated",
-            "rationale": "Score 90.10% of ceiling — content is similar but section changed from 'Risks Related to Demand, Supply and Manufacturing' to 'Risks Related to Demand, Supply, and Manufacturing'.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
           "materiality_score": 0.75,
-          "confidence_score": 0.9,
-          "reason": "The 2025 disclosure explicitly adds 'Long manufacturing lead times and uncertain supply and component availability' as specific drivers for supply-demand mismatches, in addition to demand estimation errors. This expands the risk profile by quantifying specific operational constraints (lead times, supply uncertainty) that were not explicitly detailed in the 2024 statement, indicating a deeper scrutiny or escalation of supply chain risks.",
-          "key_change": "Addition of specific supply chain risk drivers"
+          "confidence_score": 0.85,
+          "reason": "The disclosure expands the risk factors for supply/demand mismatches by explicitly adding 'Long manufacturing lead times' and 'uncertain component availability'. This materially changes the company's stated operational dependencies and risk profile compared to the previous year's focus solely on demand estimation.",
+          "key_change": "Addition of manufacturing lead time and component availability risks"
         }
       }
     ],
@@ -154,17 +107,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_1A_D063",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Demand Forecasting and Inventory Risks",
             "peer_summary": "Uncertainties in customer ordering, short product lifecycles, and reliance on estimates for demand forecasting can lead to mismatches between supply and demand, resulting in excess or obsolete inventory write-downs and adverse effects on gross margins, as seen in the Embedded segment's 2024 revenue decrease.",
             "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.155097,
+            "retrieval_score": 0.168757,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD identify the inaccuracy of customer demand estimates as a primary driver of supply-demand mismatches. NVDA discloses generally that failure to estimate demand accurately has led to and could lead to such mismatches. AMD provides more granular detail, stating it bases inventory levels on customer estimates that may not accurately predict future purchasing needs. Crucially, AMD explicitly links this estimation risk to tangible financial consequences, noting it can result in excess or obsolete inventory write-downs and adverse effects on gross margins, whereas NVDA's disclosure focuses on the operational mismatch itself without specifying the resulting financial impact in this specific sentence.",
+            "comparison": "Both NVDA and AMD disclose that inaccurate estimation of customer demand leads to mismatches between supply and demand, creating operational and financial risks. NVDA states broadly that failure to estimate accurately leads to these mismatches. AMD provides more specific detail, explaining that it bases inventory levels on customer estimates which may be inaccurate, and that such failures in forecasting can limit the ability to meet demand. Furthermore, AMD specifies the financial consequence of these mismatches as resulting in excess or obsolete inventory write-downs and adverse effects on gross margins, whereas NVDA's disclosure focuses on the general risk to business operations.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1A",
                 "disclosure_id": "nvda_2024_1A_D002",
                 "sentences": [
                   {
@@ -179,6 +136,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "1A",
                 "disclosure_id": "amd_2024_1A_D063",
                 "sentences": [
                   {
@@ -200,8 +158,16 @@
             ]
           }
         ],
-        "rationale": ""
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "7cb23fa1ba1ce860b31a494b73719aff230329d24e93e8427310b2c3cafd73f0",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "c98dd64b68371299fca5ef966c5cd3caad71def6499a8fee573129ae09f42ef4"
+    }
   }
 }

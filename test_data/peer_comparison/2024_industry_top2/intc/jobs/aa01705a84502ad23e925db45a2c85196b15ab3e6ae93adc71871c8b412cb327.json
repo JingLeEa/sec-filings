@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "a620e2f738bfdeb602d7acd6c7e9fbc8a4fbf19440808597360465a6311f53f3",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "2ed35760033d6c07cea17af201c30d80914bc58d55dfc2d7941a0b0a3cddaa18",
+  "request_hash": "83d2e23e372f23c8f15cccb790ec0553eb6804d7453ece6d6dc6d82cacadaa6a",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D006\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and NVIDIA disclose significant risks associated with the complexity of manufacturing transitions and new product introduction. Intel highlights 'unexpected delays due to the complexity of interactions among steps in the manufacturing process' and 'failure to achieve expected performance' in developing next-generation nodes. Similarly, NVIDIA describes product transitions as 'complex due to simultaneous shipments of new and prior architectures,' noting that 'increased frequency and complexity of newly introduced products could result in quality or production issues.' While Intel focuses on the technical challenges of process node development and yield, NVIDIA focuses on the supply chain and demand prediction challenges arising from overlapping product generations, but both identify manufacturing/transition complexity as a key operational risk driver.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P123_S002\",\n\"intc_2024_7_P126_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P007_S005\",\n\"nvda_2024_7_P007_S006\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_7_D003\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose risks and actions related to manufacturing capacity utilization and structural capacity adjustments. Intel explicitly lists 'production timing delays, lower-than-anticipated manufacturing yields' and 'construction issues' as risks, and notes a '$3.1 billion charge' related to impairments from these execution challenges. Micron details its proactive reduction of 'structural capacity' by lowering capital expenditures and wafer starts, which led to 'fabrication facility underutilization was reduced.' While Intel's disclosure emphasizes the *risk* of underutilization and delay leading to financial charges, Micron’s disclosure describes the *execution* of capacity reduction strategies and the resulting improvement in utilization rates on high-volume nodes.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P118_S011\",\n\"intc_2024_7_P126_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_7_P005_S001\",\n\"mu_2024_7_P005_S007\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The supplied candidates (amd_2024_7_D051, amd_2024_7_D052) focus on operating cash flow drivers and changes in working capital (accounts receivable, inventories), which is not a comparable topic to Intel's specific disclosure regarding R&D execution risks, manufacturing yields, construction delays, and associated asset impairment risks.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The supplied candidates (avgo_2024_7_D019, avgo_2024_7_D018) focus on the risk of fixed cost absorption in proprietary fabs and the composition of cost of products sold. While avgo_2024_7_D019 touches on utilization, it is limited to the risk of fixed costs not being absorbed if utilization is low, lacking the specific R&D, process node delay, and construction execution risks detailed in Intel's disclosure. avgo_2024_7_D018 is purely a definition of cost components.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The supplied candidates (qcom_2024_7_D029, qcom_2024_7_D052) focus on process technology cost increases and impairment assessments of equity investments. Neither candidate addresses the specific operational risks of manufacturing execution, R&D delays, construction project risks, or production yield issues that characterize Intel's Item 7 disclosure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D120",
@@ -230,64 +233,15 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D051",
-            "peer_topic": "Operating cash flow and drivers in 2024",
-            "peer_summary": "Net cash provided by operating activities was $3 billion in 2024, primarily driven by net income of $1.6 billion, non-cash adjustments of $3.5 billion, and net cash outflows of $2.1 billion from changes in operating assets and liabilities, including a $1.9 billion increase in accounts receivable due to higher year-end revenue and a $1.5 billion increase in inventories to support new product ramps.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.034306,
-            "relationship": "related_topic",
-            "comparison": "Both companies face execution risks associated with advancing manufacturing processes, but they emphasize different aspects of the financial impact. Intel highlights risks of margin pressure and asset impairments from delays and defects in new process nodes, citing a specific $3.1 billion charge in Q3 2024. In contrast, AMD explicitly links its inventory builds to the 'ramp of new products in advanced process nodes,' noting a $1.5 billion increase in inventories to support this ramp, which drove cash outflows. While Intel focuses on the downside risk of delays/defects causing write-downs, AMD discloses the capital commitment (inventory buildup) required to execute the advanced node ramp.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D120",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P126_S001",
-                    "paragraph_id": "intc_2024_7_P126",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Risks inherent in the development of next-generation process technologies include production timing delays, lower-than-anticipated manufacturing yields, longer manufacturing throughput times, failure to achieve expected performance, power, and area improvements, and product defects and errata (deviations from published specifications).",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_7_P118_S011",
-                    "paragraph_id": "intc_2024_7_P118",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Increasing demand for such sources, including from other foundries; supply constraints, labor shortages, and other adverse market conditions; issues with permits or approvals; on-site incidents; and other construction issues arise from time to time and can result in significant delays and increased costs for our projects, as well as legal and reputational harm.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D051",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P064_S002",
-                    "paragraph_id": "amd_2024_7_P064",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The primary drivers of the changes in operating assets and liabilities included a $1.9 billion increase in accounts receivable driven primarily by higher revenue in the last month of 2024 compared to the last month of 2023, and a $1.5 billion increase in inventories driven primarily by a build of inventory to support the ramp of new products in advanced process nodes.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates (amd_2024_7_D051, amd_2024_7_D052) focus on operating cash flow drivers and changes in working capital (accounts receivable, inventories), which is not a comparable topic to Intel's specific disclosure regarding R&D execution risks, manufacturing yields, construction delays, and associated asset impairment risks."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The available candidates for Avago relate to general manufacturing utilization (D019) and cost of products sold composition (D018). Neither addresses the specific R&D, product development delays, construction execution risks, or advanced node yield/defect challenges central to Intel's disclosure. Avago's utilization risk is generic capacity absorption, not tied to the specific next-generation technology development risks Intel cites."
+        "rationale": "The supplied candidates (avgo_2024_7_D019, avgo_2024_7_D018) focus on the risk of fixed cost absorption in proprietary fabs and the composition of cost of products sold. While avgo_2024_7_D019 touches on utilization, it is limited to the risk of fixed costs not being absorbed if utilization is low, lacking the specific R&D, process node delay, and construction execution risks detailed in Intel's disclosure. avgo_2024_7_D018 is purely a definition of cost components."
       },
       {
         "peer_ticker": "MU",
@@ -296,19 +250,30 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_7_D003",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Manufacturing Capacity Reduction and Utilization",
             "peer_summary": "The company proactively lowered structural capacity by reducing capital expenditures and wafer starts in late 2022, and redeploying equipment to leading-edge nodes which reduced wafer processing steps; utilization was high in 2024 following prior underutilization charges.",
             "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.069262,
+            "retrieval_score": 0.076893,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose risks related to the execution of advanced manufacturing nodes and capacity utilization, though their strategic contexts differ. Intel warns that developing next-generation technologies involves risks like 'production timing delays, lower-than-anticipated manufacturing yields' and 'product defects.' Micron describes a proactive management of capacity by 'redeploying equipment from older technology nodes to support conversions to leading-edge nodes,' which resulted in a 'meaningful structural reduction' in capacity. Both texts address the operational complexities and risks inherent in shifting manufacturing focus to advanced nodes, with Intel emphasizing the failure modes (delays/defects) and Micron emphasizing the capacity management actions taken during the transition.",
+            "comparison": "Both companies disclose risks and actions related to manufacturing capacity utilization and structural capacity adjustments. Intel explicitly lists 'production timing delays, lower-than-anticipated manufacturing yields' and 'construction issues' as risks, and notes a '$3.1 billion charge' related to impairments from these execution challenges. Micron details its proactive reduction of 'structural capacity' by lowering capital expenditures and wafer starts, which led to 'fabrication facility underutilization was reduced.' While Intel's disclosure emphasizes the *risk* of underutilization and delay leading to financial charges, Micron’s disclosure describes the *execution* of capacity reduction strategies and the resulting improvement in utilization rates on high-volume nodes.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D120",
                 "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P118_S011",
+                    "paragraph_id": "intc_2024_7_P118",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Increasing demand for such sources, including from other foundries; supply constraints, labor shortages, and other adverse market conditions; issues with permits or approvals; on-site incidents; and other construction issues arise from time to time and can result in significant delays and increased costs for our projects, as well as legal and reputational harm.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "intc_2024_7_P126_S001",
                     "paragraph_id": "intc_2024_7_P126",
@@ -321,68 +286,21 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "7",
                 "disclosure_id": "mu_2024_7_D003",
                 "sentences": [
                   {
-                    "sentence_id": "mu_2024_7_P005_S003",
+                    "sentence_id": "mu_2024_7_P005_S001",
                     "paragraph_id": "mu_2024_7_P005",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "In addition, to improve capital efficiency, we redeployed equipment from older technology nodes to support conversions to leading-edge nodes.",
+                    "text": "In manufacturing, we have been fully utilized throughout most of 2024 on our high-volume manufacturing nodes where we are maximizing output against our current capacity, which we have proactively, structurally lowered.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "mu_2024_7_P005_S004",
+                    "sentence_id": "mu_2024_7_P005_S007",
                     "paragraph_id": "mu_2024_7_P005",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Since the number of wafer processing steps is higher for leading-edge nodes, this approach has resulted in a meaningful structural reduction in DRAM and NAND wafer capacity.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_7_D033",
-            "peer_topic": "Global manufacturing and assembly expansion initiatives",
-            "peer_summary": "The company began enabling cleanroom space for EUV lithography in Hiroshima, Japan, expanded an assembly and test facility in Xi'an, China, and is progressing construction of a facility in Gujarat, India to support future global customer demand.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.053158,
-            "relationship": "related_topic",
-            "comparison": "Both Intel and Micron disclose construction and expansion activities for manufacturing facilities, highlighting the operational scale and execution risk involved. Intel identifies 'construction project risks involving labor, materials, and regulatory constraints' as significant, stating that 'issues with permits or approvals' can lead to 'significant delays and increased costs.' Micron provides specific examples of its own construction progress, noting that it 'began enabling cleanroom space... in Hiroshima' and 'started construction to expand... in Xi'an' and 'Gujarat, India.' Both disclosures confirm active physical expansion, with Intel framing it as a risk factor for delays/costs and Micron framing it as forward-looking capability building.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D120",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P118_S011",
-                    "paragraph_id": "intc_2024_7_P118",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Increasing demand for such sources, including from other foundries; supply constraints, labor shortages, and other adverse market conditions; issues with permits or approvals; on-site incidents; and other construction issues arise from time to time and can result in significant delays and increased costs for our projects, as well as legal and reputational harm.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_7_D033",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_7_P033_S001",
-                    "paragraph_id": "mu_2024_7_P033",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Additionally, we began enablement of cleanroom space within our existing manufacturing fab in Hiroshima, Japan, that will support production of DRAM using EUV lithography.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_7_P033_S003",
-                    "paragraph_id": "mu_2024_7_P033",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "We have started construction to expand our existing assembly and test facility in Xi'an, China, to provide space to add more product capability, to allow us over time to serve more of the demand from our customers in China.",
+                    "text": "Subsequently, fabrication facility underutilization was reduced and principally related to legacy manufacturing capacity.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -398,20 +316,31 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D007",
-            "peer_topic": "Product Transition Complexity and Revenue Volatility",
-            "peer_summary": "Product transitions are complex due to simultaneous shipping of architectures and frequent launches, which magnifies supply/demand management challenges. These transitions can cause revenue volatility through channel inventory reductions, create quality or production issues, and impact demand timing due to deployment complexities, potentially impairing demand prediction and increasing costs.",
+            "peer_disclosure_id": "nvda_2024_7_D006",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Product Transition Complexity and Risks",
+            "peer_summary": "Product transitions are complex due to simultaneous shipments of new and prior architectures, with increased frequency and complexity magnifying challenges related to manufacturing lead times and supply/demand management. These transitions can cause revenue volatility from channel inventory reductions, quality issues, and deployment complexities, potentially impacting demand prediction and incurring additional costs.",
             "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.082063,
+            "retrieval_score": 0.092358,
             "relationship": "same_topic",
-            "comparison": "Both Intel and NVIDIA identify product transitions and manufacturing complexity as primary sources of operational and financial risk, specifically citing quality issues and delays. Intel states that risks in next-generation process technologies include 'production timing delays... and product defects.' NVIDIA echoes this, noting that the 'increasing frequency and complexity of newly introduced products could result in quality or production issues that could increase inventory provisions, warranty or other costs or result in product delays.' Both companies explicitly link the complexity of advancing their product roadmaps to tangible risks of defects, delays, and increased costs.",
+            "comparison": "Both Intel and NVIDIA disclose significant risks associated with the complexity of manufacturing transitions and new product introduction. Intel highlights 'unexpected delays due to the complexity of interactions among steps in the manufacturing process' and 'failure to achieve expected performance' in developing next-generation nodes. Similarly, NVIDIA describes product transitions as 'complex due to simultaneous shipments of new and prior architectures,' noting that 'increased frequency and complexity of newly introduced products could result in quality or production issues.' While Intel focuses on the technical challenges of process node development and yield, NVIDIA focuses on the supply chain and demand prediction challenges arising from overlapping product generations, but both identify manufacturing/transition complexity as a key operational risk driver.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D120",
                 "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P123_S002",
+                    "paragraph_id": "intc_2024_7_P123",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Forecasting our progress and schedule for developing advanced nodes and other technologies is challenging, and at times we encounter unexpected delays due to the complexity of interactions among steps in the manufacturing process, challenges in using new materials or new production equipment, and other issues.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "intc_2024_7_P126_S001",
                     "paragraph_id": "intc_2024_7_P126",
@@ -424,8 +353,16 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D007",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D006",
                 "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P007_S005",
+                    "paragraph_id": "nvda_2024_7_P007",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Qualification time for new products, customers anticipating product transitions and channel partners reducing channel inventory of prior architectures ahead of new product introductions can create reductions or volatility in our revenue.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "nvda_2024_7_P007_S006",
                     "paragraph_id": "nvda_2024_7_P007",
@@ -442,52 +379,15 @@
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_7_D029",
-            "peer_topic": "Process Technology Cost Increases",
-            "peer_summary": "Qualcomm expects transitions to new generations of leading process technology nodes to continue driving product cost increases from key semiconductor wafer suppliers.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.055184,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and Qualcomm discuss the financial and operational implications of transitioning to new process technology nodes. Intel identifies 'development of next-generation process technologies' as a source of risk, including 'production timing delays, lower-than-anticipated manufacturing yields' and 'product defects.' Qualcomm notes that 'transitions to new generations of leading process technology nodes' are expected to 'continue to drive product cost increases from certain of our key semiconductor wafer suppliers.' While Intel focuses on the execution risks (yields/delays) and potential financial charges, Qualcomm focuses on the cost inflation passed through the supply chain during these transitions. Both confirm that node transitions are a critical, risky, and costly operational phase.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D120",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P126_S001",
-                    "paragraph_id": "intc_2024_7_P126",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Risks inherent in the development of next-generation process technologies include production timing delays, lower-than-anticipated manufacturing yields, longer manufacturing throughput times, failure to achieve expected performance, power, and area improvements, and product defects and errata (deviations from published specifications).",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_7_D029",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P027_S002",
-                    "paragraph_id": "qcom_2024_7_P027",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "• We expect transitions to new generations of leading process technology nodes to continue to drive product cost increases from certain of our key semiconductor wafer suppliers.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates (qcom_2024_7_D029, qcom_2024_7_D052) focus on process technology cost increases and impairment assessments of equity investments. Neither candidate addresses the specific operational risks of manufacturing execution, R&D delays, construction project risks, or production yield issues that characterize Intel's Item 7 disclosure."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "2ed35760033d6c07cea17af201c30d80914bc58d55dfc2d7941a0b0a3cddaa18",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "83d2e23e372f23c8f15cccb790ec0553eb6804d7453ece6d6dc6d82cacadaa6a"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "1f71c20c77b2162ccb35aa7b11f054444e4efd2ff3b48fa7daf59f9fb838d575",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "e08e085d70f74e8f986ff507caf2d139e4405f12e91cbc57d841755140b751cc",
+  "request_hash": "bfc64bcf3efbec907ca3e245252b76123dbcc52cf6c3507c4f4f27fee2ce9b82",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D049\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and NVIDIA disclose the performance and drivers of their 'All Other' operating segment, specifically highlighting stock-based compensation and one-time charges as key components of operating loss. Intel reports a flat $2.1 billion in 'All other operating expenses', while NVIDIA reports a decrease in 'All Other operating loss' primarily driven by the absence of a $1.4 billion acquisition termination charge from 2023, partially offset by an $839 million increase in stock-based compensation. Both companies identify stock-based compensation as a significant factor impacting their 'All Other' results.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P070_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P051_S001\"\n]\n},\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D030\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Intel and AMD both report on the operating results of their 'All Other' segment. Intel discloses 'All other operating expenses' of $2.1 billion, roughly flat year-over-year. AMD discloses an 'All Other operating loss' of $4.2 billion, which is broken down into amortization of acquisition-related intangibles ($2.4 billion) and stock-based compensation expense ($1.4 billion). While Intel presents a net expense figure without this specific breakdown in the selected text, AMD's disclosure provides a more granular view of the 'All Other' losses driven by acquisition amortization and compensation, contrasting with Intel's stable total expense figure.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P070_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P042_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The supplied candidates discuss amortization of intangibles and restructuring charges generally within operating expenses, but do not specifically address the 'All Other' segment operating expenses amount or performance in a way directly comparable to Intel's specific segment reporting of $2.1 billion flat expenses.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The supplied candidates are either generic references to financial statement notes (D027) or discuss the CNBU segment operating income (D012), neither of which directly compares to Intel's 'All other operating expenses' metric.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The supplied candidates discuss gross margin stability for the company or the QCT segment, which is a profitability metric, not an operating expense amount or 'All Other' segment operating expense comparison.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D073",
@@ -198,17 +201,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D030",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "All Other operating loss breakdown for 2024 and 2023",
             "peer_summary": "All Other operating loss was $4.2 billion in 2024 and $4.4 billion in 2023, primarily consisting of amortization of acquisition-related intangibles and stock-based compensation expense.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.209775,
+            "retrieval_score": 0.225493,
             "relationship": "same_topic",
-            "comparison": "Both Intel and AMD report an 'All Other' segment category that incurs significant operating losses or expenses, primarily driven by non-recurring or acquisition-related amortization. Intel’s 'All Other' operating expenses were $2.1 billion with no specific breakdown of drivers provided in the excerpt, whereas AMD explicitly details that its $4.2 billion All Other operating loss consisted of $2.4 billion for amortization of acquisition-related intangibles and $1.4 billion for stock-based compensation.",
+            "comparison": "Intel and AMD both report on the operating results of their 'All Other' segment. Intel discloses 'All other operating expenses' of $2.1 billion, roughly flat year-over-year. AMD discloses an 'All Other operating loss' of $4.2 billion, which is broken down into amortization of acquisition-related intangibles ($2.4 billion) and stock-based compensation expense ($1.4 billion). While Intel presents a net expense figure without this specific breakdown in the selected text, AMD's disclosure provides a more granular view of the 'All Other' losses driven by acquisition amortization and compensation, contrasting with Intel's stable total expense figure.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D073",
                 "sentences": [
                   {
@@ -223,6 +230,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D030",
                 "sentences": [
                   {
@@ -243,13 +251,13 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidates address amortization of intangibles (D052) and restructuring charges (D053) separately but do not provide a consolidated 'All Other' operating expense or loss figure comparable to Intel's 'All Other' segment total."
+        "rationale": "The supplied candidates discuss amortization of intangibles and restructuring charges generally within operating expenses, but do not specifically address the 'All Other' segment operating expenses amount or performance in a way directly comparable to Intel's specific segment reporting of $2.1 billion flat expenses."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidates provide a cross-reference to notes for 'Other Operating' items (D027) or discuss specific business unit operating income changes (D012), but do not disclose a consolidated 'All Other' operating expense amount comparable to Intel's disclosure."
+        "rationale": "The supplied candidates are either generic references to financial statement notes (D027) or discuss the CNBU segment operating income (D012), neither of which directly compares to Intel's 'All other operating expenses' metric."
       },
       {
         "peer_ticker": "NVDA",
@@ -257,18 +265,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D048",
-            "peer_topic": "All Other Operating Loss Variance",
-            "peer_summary": "The year-on-year decrease in All Other operating loss was due to a $1.4 billion Arm acquisition termination cost in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
+            "peer_disclosure_id": "nvda_2024_7_D049",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "All Other Operating Loss Reduction",
+            "peer_summary": "The year-on-year decrease in All Other operating loss was attributed to the absence of the $1.4 billion Arm acquisition termination cost incurred in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.165342,
+            "retrieval_score": 0.180427,
             "relationship": "same_topic",
-            "comparison": "Both Intel and NVIDIA discuss the composition and variance of their 'All Other' operating results. Intel reports flat All Other operating expenses of $2.1 billion. NVIDIA explains the variance in its All Other operating loss, attributing it to a $1.4 billion Arm acquisition termination cost in the prior year (2023) and an $839 million increase in stock-based compensation in 2024. Unlike Intel's flat result, NVIDIA's result reflects a year-on-year decrease in loss due to the absence of the large one-time termination charge in 2024.",
+            "comparison": "Both Intel and NVIDIA disclose the performance and drivers of their 'All Other' operating segment, specifically highlighting stock-based compensation and one-time charges as key components of operating loss. Intel reports a flat $2.1 billion in 'All other operating expenses', while NVIDIA reports a decrease in 'All Other operating loss' primarily driven by the absence of a $1.4 billion acquisition termination charge from 2023, partially offset by an $839 million increase in stock-based compensation. Both companies identify stock-based compensation as a significant factor impacting their 'All Other' results.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D073",
                 "sentences": [
                   {
@@ -283,7 +295,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D048",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D049",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_7_P051_S001",
@@ -303,8 +316,13 @@
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidates focus on gross margin stability and segment-specific margins (D011, D024), which are unrelated to the 'All Other' operating expense total disclosed by Intel."
+        "rationale": "The supplied candidates discuss gross margin stability for the company or the QCT segment, which is a profitability metric, not an operating expense amount or 'All Other' segment operating expense comparison."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e08e085d70f74e8f986ff507caf2d139e4405f12e91cbc57d841755140b751cc",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "bfc64bcf3efbec907ca3e245252b76123dbcc52cf6c3507c4f4f27fee2ce9b82"
+    }
   }
 }

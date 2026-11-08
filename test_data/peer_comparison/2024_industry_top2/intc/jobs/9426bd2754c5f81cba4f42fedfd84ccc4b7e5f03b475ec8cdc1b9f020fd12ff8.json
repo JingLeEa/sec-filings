@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "bdcdc91a3567ca50faebcbbccf5386dd90c3a2fe6bb5573051fda580ceeab12c",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "477ecaf988b2cac3651e56dda03bab21baa654541d48d17496ead853d23b1937",
+  "request_hash": "f6e268919286c3fe127957bf002236453f04acd870803541a9891c3f3e619409",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D119\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron disclose methodologies for allocating indirect operating expenses across their operating segments. Intel allocates finance and administration expenses to all segments except Mobileye, while Micron allocates indirect expenses based on cost of goods sold or forecasted wafer production. Intel's approach is function-based (excluding one segment), whereas Micron uses a volume/cost driver metric.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P082_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P126_S001\",\n\"mu_2024_8_P126_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"Retrieved candidates (amd_2024_8_D060, amd_2024_8_D059) discuss asset allocation non-disclosure and composition of segment costs, but do not describe the specific methodology for allocating shared operating expenses (like finance/admin or sales/marketing) across segments comparable to Intel's explicit allocation rules.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"Retrieved candidates (avgo_2024_8_D093, avgo_2024_8_D143) discuss lease expense trends and segment definition factors, but do not provide a comparable description of the methodology for allocating operating expenses among segments.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"Retrieved candidates (nvda_2024_8_D107, nvda_2024_8_D068) discuss foreign currency hedges for operating expenses and adoption of new FASB standards, but do not disclose the internal methodology for allocating operating expenses across operating segments.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D070",
@@ -176,64 +179,15 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_8_D053",
-            "peer_topic": "CODM Performance Review Metrics",
-            "peer_summary": "The Chief Operating Decision Maker, who is the Company's CEO, assesses segment operating performance using segment net revenue, consolidated cost of sales and operating expenses, and operating income (loss), with expenses allocated based on management's judgment.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.102061,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and AMD disclose how operating expenses are allocated to their operating segments for performance evaluation. Intel specifies that sales and marketing expenses are allocated to Intel Products segments, while finance and administration expenses are allocated to all segments except Mobileye. AMD states that the CODM reviews operating performance using consolidated cost of sales and operating expenses, with these expenses allocated to reportable segments based on management's judgment, without detailing specific functional allocations like Intel does.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D070",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_8_P082_S001",
-                    "paragraph_id": "intc_2024_8_P082",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We allocate operating expenses from our sales and marketing group to the Intel Products operating segments and allocate operating expenses from our finance and administration groups to all of our operating segments, except Mobileye.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_8_D053",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_8_P058_S001",
-                    "paragraph_id": "amd_2024_8_P058",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Management, including the Chief Operating Decision Maker (CODM), who is the Company's Chief Executive Officer, reviews and assesses operating performance using segment net revenue, consolidated cost of sales and operating expenses and operating income (loss).",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_8_P058_S002",
-                    "paragraph_id": "amd_2024_8_P058",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "These performance measures include the allocation of expenses to the reportable segments based on management's judgment.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates (amd_2024_8_D060, amd_2024_8_D059) discuss asset allocation non-disclosure and composition of segment costs, but do not describe the specific methodology for allocating shared operating expenses (like finance/admin or sales/marketing) across segments comparable to Intel's explicit allocation rules."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The provided candidates (avgo_2024_8_D093 on lease expenses and avgo_2024_8_D143 on segment definition factors) do not disclose the methodology for allocating operating expenses to segments, which is the specific topic of the target disclosure."
+        "rationale": "Retrieved candidates (avgo_2024_8_D093, avgo_2024_8_D143) discuss lease expense trends and segment definition factors, but do not provide a comparable description of the methodology for allocating operating expenses among segments."
       },
       {
         "peer_ticker": "MU",
@@ -242,17 +196,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D119",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Segment Reporting Methodology and Allocations",
             "peer_summary": "Direct operating expenses are charged to specific segments, while indirect expenses are allocated based on cost of goods sold or forecasted wafer production. The company does not report assets (other than goodwill), capital expenditures, or certain income/expense items by segment.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.125162,
+            "retrieval_score": 0.131107,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose methodologies for allocating operating expenses to segments. Intel allocates sales and marketing expenses to Intel Products segments and finance/administration to all except Mobileye. Micron charges direct operating expenses associated with specific activities to those segments and allocates indirect operating income and expenses based on cost of goods sold or forecasted wafer production.",
+            "comparison": "Both Intel and Micron disclose methodologies for allocating indirect operating expenses across their operating segments. Intel allocates finance and administration expenses to all segments except Mobileye, while Micron allocates indirect expenses based on cost of goods sold or forecasted wafer production. Intel's approach is function-based (excluding one segment), whereas Micron uses a volume/cost driver metric.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D070",
                 "sentences": [
                   {
@@ -267,6 +225,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D119",
                 "sentences": [
                   {
@@ -292,16 +251,21 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "Retrieved candidates (nvda_2024_8_D107, nvda_2024_8_D068) discuss foreign currency hedges for operating expenses and adoption of new FASB standards, but do not disclose the internal methodology for allocating operating expenses across operating segments."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "477ecaf988b2cac3651e56dda03bab21baa654541d48d17496ead853d23b1937",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "f6e268919286c3fe127957bf002236453f04acd870803541a9891c3f3e619409"
+    }
   }
 }

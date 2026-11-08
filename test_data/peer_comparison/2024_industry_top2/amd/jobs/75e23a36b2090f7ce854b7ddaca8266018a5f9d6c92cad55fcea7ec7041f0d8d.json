@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "3d9ddbe9e87efca1c6b8b814da7bec2f331acb54cb8574a059e2025eaac6816e",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "6a578857e51f1b41465b30879223c88c7fab5d50f5d0c44f11a970daaaa156a0",
+  "request_hash": "a3b7f3c633e1bcf4cabd01161dc218f3fa9fd72065e730bfadbe60b3d1431b47",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_1A_D011\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Intel disclose that their financial results are materially affected by fluctuations in product demand driven by varying market conditions and segment shifts. AMD explicitly states that 'Fluctuations in demand for our products or a market decline in any of these industries could have a material adverse effect on our results of operations.' Similarly, Intel warns that 'Changes in product demand and margins can adversely affect our financial results' and notes that 'demand for our products varies within or among them.' Both companies highlight that shifts in demand dynamics, whether due to industry declines (AMD) or macroeconomic/competitive pressures (Intel), pose significant risks to their operational results.\",\n\"target_sentence_ids\": [\n\"amd_2024_1A_P020_S002\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_1A_P024_S001\",\n\"intc_2024_1A_P025_S001\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_1A_D033\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Micron identify that demand for their products is subject to fluctuations beyond their control, which can negatively impact their business. AMD notes that 'Fluctuations in demand for our products... could have a material adverse effect on our results of operations.' Micron echoes this by stating, 'Our customers' demand for our products may fluctuate due to factors beyond our control,' and further specifies that such fluctuations, along with customer consolidation or loss of major accounts, could have a 'material adverse effect on our business, results of operations, or financial condition.' While Micron focuses on customer concentration as a driver of this risk, the core mechanism of demand fluctuation impacting results is shared.\",\n\"target_sentence_ids\": [\n\"amd_2024_1A_P020_S002\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_1A_P062_S004\",\n\"mu_2024_1A_P062_S008\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1A_D020\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and NVIDIA highlight the risk that inaccurate estimation of customer demand leads to supply-demand mismatches that harm financial results. AMD states that 'Fluctuations in demand for our products... could have a material adverse effect on our results of operations.' NVIDIA provides more specific detail on the mechanism, noting that 'Many additional factors have caused and/or could in the future cause us to either underestimate or overestimate our customers' future demand for our products, or otherwise cause a mismatch between supply and demand for our products and impact the timing and volume of our revenue.' Both companies frame demand volatility and forecasting errors as material operational risks.\",\n\"target_sentence_ids\": [\n\"amd_2024_1A_P020_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1A_P016_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"Broadcom's disclosure focuses on 'Manufacturing Demand Matching Risk,' specifically the internal operational failure to 'adjust our manufacturing and supply chain to accurately meet customer demand.' This is distinct from AMD's risk factor, which concerns external market conditions and industry-wide demand fluctuations ('market conditions in the industries into which they are sold') affecting results. While related to supply/demand, AVGO's risk is execution/capacity-based, whereas AMD's is market-dependent.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"Qualcomm's disclosure focuses on 'Impact of rapid technological change and competition' leading to decreased demand or declining prices. It does not address the general 'Industry-dependent demand fluctuations' or market decline risks highlighted by AMD. The specific drivers (technological obsolescence/competition vs. general market conditions) and the nature of the risk (pricing power/adaptation vs. volume/market health) differ substantively.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_1A_D044",
@@ -237,51 +240,9 @@
     "peer_results": [
       {
         "peer_ticker": "AVGO",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_1A_D013",
-            "peer_topic": "Manufacturing Demand Matching Risk",
-            "peer_summary": "Failure to adjust manufacturing and supply chain to meet customer demand accurately could adversely affect results of operations.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.095522,
-            "relationship": "related_topic",
-            "comparison": "While AMD focuses on external market condition-driven demand fluctuations, Broadcom specifically highlights the operational risk of failing to match manufacturing capacity to that demand. AMD warns that 'Fluctuations in demand for our products... could have a material adverse effect on our results of operations.' Broadcom details the operational consequence: 'Failure to adjust our manufacturing and supply chain to accurately meet customer demand could adversely affect our results of operations.' Both identify customer demand variability as a key risk to financial performance, though Broadcom specifies the supply chain execution aspect.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1A_D044",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1A_P020_S002",
-                    "paragraph_id": "amd_2024_1A_P020",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Fluctuations in demand for our products or a market decline in any of these industries could have a material adverse effect on our results of operations.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_1A_D013",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_1A_P003_S015",
-                    "paragraph_id": "avgo_2024_1A_P003",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "• Failure to adjust our manufacturing and supply chain to accurately meet customer demand could adversely affect our results of operations.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Broadcom's disclosure focuses on 'Manufacturing Demand Matching Risk,' specifically the internal operational failure to 'adjust our manufacturing and supply chain to accurately meet customer demand.' This is distinct from AMD's risk factor, which concerns external market conditions and industry-wide demand fluctuations ('market conditions in the industries into which they are sold') affecting results. While related to supply/demand, AVGO's risk is execution/capacity-based, whereas AMD's is market-dependent."
       },
       {
         "peer_ticker": "INTC",
@@ -290,26 +251,23 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_1A_D011",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Product demand and margin variability risks",
             "peer_summary": "Changes in product demand, macroeconomic conditions, and competitive pressures can adversely affect Intel's revenue and margins, with shifts from higher-margin to lower-margin products (e.g., Intel Core Ultra 200V) causing margin decreases.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.084341,
+            "retrieval_score": 0.076568,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Intel disclose that demand for their products is dependent on fluctuating market conditions, which can materially adversely affect their results of operations. AMD states that 'fluctuations in demand for our products or a market decline in any of these industries could have a material adverse effect on our results of operations,' while Intel notes that 'Changes in product demand and margins can adversely affect our financial results' and that 'demand for our products varies within or among them.' Both companies highlight that their revenue is sensitive to the specific market segments and economic conditions in which their products are sold.",
+            "comparison": "Both AMD and Intel disclose that their financial results are materially affected by fluctuations in product demand driven by varying market conditions and segment shifts. AMD explicitly states that 'Fluctuations in demand for our products or a market decline in any of these industries could have a material adverse effect on our results of operations.' Similarly, Intel warns that 'Changes in product demand and margins can adversely affect our financial results' and notes that 'demand for our products varies within or among them.' Both companies highlight that shifts in demand dynamics, whether due to industry declines (AMD) or macroeconomic/competitive pressures (Intel), pose significant risks to their operational results.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "1A",
                 "disclosure_id": "amd_2024_1A_D044",
                 "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1A_P020_S001",
-                    "paragraph_id": "amd_2024_1A_P020",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The demand for our products depends in part on the market conditions in the industries into which they are sold.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "amd_2024_1A_P020_S002",
                     "paragraph_id": "amd_2024_1A_P020",
@@ -322,6 +280,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D011",
                 "sentences": [
                   {
@@ -352,17 +311,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1A_D033",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Customer Revenue Concentration and Dependency",
             "peer_summary": "A significant portion of revenue is concentrated among a select number of customers, including the top ten customers accounting for approximately one-half of total revenue, creating risks from disruptions in relationships, demand fluctuations, customer consolidation, or changes in inventory strategy.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.089198,
+            "retrieval_score": 0.07812,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Micron face risks from demand fluctuations tied to customer relationships and market conditions. AMD notes that 'Fluctuations in demand for our products... could have a material adverse effect on our results of operations.' Micron explicitly states that 'Our customers' demand for our products may fluctuate due to factors beyond our control' and that disruptions in customer relationships could adversely affect the business. Both emphasize that external market factors drive these demand variations.",
+            "comparison": "Both AMD and Micron identify that demand for their products is subject to fluctuations beyond their control, which can negatively impact their business. AMD notes that 'Fluctuations in demand for our products... could have a material adverse effect on our results of operations.' Micron echoes this by stating, 'Our customers' demand for our products may fluctuate due to factors beyond our control,' and further specifies that such fluctuations, along with customer consolidation or loss of major accounts, could have a 'material adverse effect on our business, results of operations, or financial condition.' While Micron focuses on customer concentration as a driver of this risk, the core mechanism of demand fluctuation impacting results is shared.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "1A",
                 "disclosure_id": "amd_2024_1A_D044",
                 "sentences": [
                   {
@@ -377,6 +340,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1A",
                 "disclosure_id": "mu_2024_1A_D033",
                 "sentences": [
                   {
@@ -384,6 +348,13 @@
                     "paragraph_id": "mu_2024_1A_P062",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "Our customers' demand for our products may fluctuate due to factors beyond our control.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1A_P062_S008",
+                    "paragraph_id": "mu_2024_1A_P062",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "The loss of, or restrictions on our ability to sell to, one or more of our major customers, or any significant reduction in orders from, or a shift in product mix by, customers could have a material adverse effect on our business, results of operations, or financial condition.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -399,25 +370,29 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1A_D024",
-            "peer_topic": "Demand volatility from unpredictable market dynamics",
-            "peer_summary": "Demand estimates for new use cases like generative AI and DGX Cloud are difficult to predict and can create volatility, and demand for newly shipped CPU products also creates prediction volatility. Unexpected use cases such as cryptocurrency mining have impacted demand with volatile spikes and drops; while Ethereum 2.0 reduced GPU mining usage creating aftermarket sales that may hurt new GPU demand, forecasting remains difficult due to gray market reselling.",
+            "peer_disclosure_id": "nvda_2024_1A_D020",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Demand estimation risks and mismatches",
+            "peer_summary": "The company faces risks from inaccurate demand estimation, which has historically caused significant supply-demand mismatches, product shortages, and excess inventory that harmed financial results. These mismatches stem from various factors including changing product cycles, economic conditions, new use cases like generative AI and cryptocurrency mining, and the introduction of new products. Underestimating demand leads to fulfillment failures and lost revenue, while overestimating leads to inventory write-downs and penalties. The complexity is amplified by rapid product transitions, indirect sales channels, and the uncertainty of emerging technologies like AI and the Grace CPU.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.063882,
+            "retrieval_score": 0.056646,
             "relationship": "same_topic",
-            "comparison": "Both AMD and NVIDIA identify the difficulty of forecasting demand due to variable market dynamics and product usage patterns. AMD discloses that 'demand for our products depends in part on the market conditions in the industries into which they are sold' and that fluctuations can materially affect results. Similarly, NVIDIA highlights that 'Because our products may be used in multiple use cases and applications, it is difficult for us to estimate with any reasonable degree of precision the impact of generative AI models on our reported revenue or forecasted demand' and that 'unexpected use cases... have impacted and can in the future impact demand for our products, including by leading to inconsistent spikes and drops in demand.'",
+            "comparison": "Both AMD and NVIDIA highlight the risk that inaccurate estimation of customer demand leads to supply-demand mismatches that harm financial results. AMD states that 'Fluctuations in demand for our products... could have a material adverse effect on our results of operations.' NVIDIA provides more specific detail on the mechanism, noting that 'Many additional factors have caused and/or could in the future cause us to either underestimate or overestimate our customers' future demand for our products, or otherwise cause a mismatch between supply and demand for our products and impact the timing and volume of our revenue.' Both companies frame demand volatility and forecasting errors as material operational risks.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "1A",
                 "disclosure_id": "amd_2024_1A_D044",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1A_P020_S001",
+                    "sentence_id": "amd_2024_1A_P020_S002",
                     "paragraph_id": "amd_2024_1A_P020",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The demand for our products depends in part on the market conditions in the industries into which they are sold.",
+                    "text": "Fluctuations in demand for our products or a market decline in any of these industries could have a material adverse effect on our results of operations.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -425,20 +400,14 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1A_D024",
+                "item": "1A",
+                "disclosure_id": "nvda_2024_1A_D020",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1A_P022_S004",
-                    "paragraph_id": "nvda_2024_1A_P022",
+                    "sentence_id": "nvda_2024_1A_P016_S001",
+                    "paragraph_id": "nvda_2024_1A_P016",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Because our products may be used in multiple use cases and applications, it is difficult for us to estimate with any reasonable degree of precision the impact of generative AI models on our reported revenue or forecasted demand.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_1A_P024_S001",
-                    "paragraph_id": "nvda_2024_1A_P024",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "The use of our GPUs other than that for which they were designed and marketed, including new and unexpected use cases, has impacted and can in the future impact demand for our products, including by leading to inconsistent spikes and drops in demand.",
+                    "text": "Many additional factors have caused and/or could in the future cause us to either underestimate or overestimate our customers' future demand for our products, or otherwise cause a mismatch between supply and demand for our products and impact the timing and volume of our revenue, including:",
                     "visible_in_prompt": true
                   }
                 ]
@@ -452,8 +421,13 @@
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for QCOM (qcom_2024_1A_D082 and qcom_2024_1A_D069) focus on product defects/security vulnerabilities and competitive technological change, respectively. Neither disclosure centers on the specific risk of demand fluctuations driven by external market conditions or industry cycles as the primary driver of adverse operational effects, which is the core topic of the AMD disclosure."
+        "rationale": "Qualcomm's disclosure focuses on 'Impact of rapid technological change and competition' leading to decreased demand or declining prices. It does not address the general 'Industry-dependent demand fluctuations' or market decline risks highlighted by AMD. The specific drivers (technological obsolescence/competition vs. general market conditions) and the nature of the risk (pricing power/adaptation vs. volume/market health) differ substantively."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "6a578857e51f1b41465b30879223c88c7fab5d50f5d0c44f11a970daaaa156a0",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "a3b7f3c633e1bcf4cabd01161dc218f3fa9fd72065e730bfadbe60b3d1431b47"
+    }
   }
 }

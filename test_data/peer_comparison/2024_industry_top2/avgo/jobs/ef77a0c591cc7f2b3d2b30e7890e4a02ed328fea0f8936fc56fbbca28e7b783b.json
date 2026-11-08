@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "9afb6abf39eca1dccd61574b450836a03f730fa5a55634bf84d7545a7dc24a2e",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "23eba0fe9c080cadf22905a773d7d311a7db84a851e6e1294a6167feb908e25f",
+  "request_hash": "9c9bf6ae697ac4b77fb5f424abba4afada4f4be704e1a0031f930152ae9019f1",
+  "response_text": "{\n\"comparisons\":[\n{\n\"peer_ticker\":\"AMD\",\n\"peer_disclosure_id\":\"amd_2024_8_D025\",\n\"relationship\":\"same_topic\",\n\"comparison\":\"Both AMD and AVGO disclose methodologies for determining fair value when asset values may not be recoverable or require specific valuation techniques. AMD evaluates long-lived assets by estimating future undiscounted cash flows to determine if a write-down to fair value (based on discounted cash flows or appraisals) is necessary. AVGO explicitly applies the relief-from-royalty method under the income approach to determine the fair value of its VMware trade name intangible asset, relying on forecasted revenue and economic useful life. Both disclosures address the measurement of asset value using discounted cash flow concepts, though AMD focuses on impairment testing triggers and AVGO on acquisition-related intangible valuation.\",\n\"target_sentence_ids\":[\n\"avgo_2024_8_P102_S002\",\n\"avgo_2024_8_P102_S004\"\n],\n\"peer_sentence_ids\":[\n\"amd_2024_8_P033_S002\"\n]\n}\n]\n,\n\"no_match\":[\n{\n\"peer_ticker\":\"INTC\",\n\"reason\":\"Provided candidates discuss depreciation methods (intc_2024_8_D019) and fair value hedges (intc_2024_8_D040), which are unrelated to AVGO's disclosure on valuing intangible trade names using the relief-from-royalty method.\"\n},\n{\n\"peer_ticker\":\"MU\",\n\"reason\":\"Provided candidates discuss revenue adjustments for returns (mu_2024_8_D021) and carrying value methods for sold securities (mu_2024_8_D008), which are unrelated to AVGO's disclosure on valuing intangible trade names.\"\n},\n{\n\"peer_ticker\":\"NVDA\",\n\"reason\":\"Candidate nvda_2024_8_D059 discusses impairment testing for long-lived assets based on undiscounted cash flows. While similar to AMD, it differs from AVGO's specific use of the relief-from-royalty method for intangibles. Candidate nvda_2024_8_D098 discusses PP&E depreciation. Neither is sufficiently comparable to AVGO's intangible valuation methodology.\"\n},\n{\n\"peer_ticker\":\"QCOM\",\n\"reason\":\"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D077",
@@ -143,34 +146,93 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved for a topic comparable to the valuation of the VMware trade name intangible assets using the relief-from-royalty method. The retrieved candidates concern impairment measurement for assets held for use (amd_2024_8_D025) and diluted EPS calculation (amd_2024_8_D104), which address different accounting subjects and methodologies than the fair value estimation of specific intangible assets."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D025",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Impairment measurement for assets held for use",
+            "peer_summary": "When indicators exist, the Company estimates future undiscounted cash flows; if insufficient to recover recorded value, assets are written down to fair value based on discounted cash flows or appraisals, with asset-generating ability being a key factor.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.094774,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and AVGO disclose methodologies for determining fair value when asset values may not be recoverable or require specific valuation techniques. AMD evaluates long-lived assets by estimating future undiscounted cash flows to determine if a write-down to fair value (based on discounted cash flows or appraisals) is necessary. AVGO explicitly applies the relief-from-royalty method under the income approach to determine the fair value of its VMware trade name intangible asset, relying on forecasted revenue and economic useful life. Both disclosures address the measurement of asset value using discounted cash flow concepts, though AMD focuses on impairment testing triggers and AVGO on acquisition-related intangible valuation.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D077",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P102_S002",
+                    "paragraph_id": "avgo_2024_8_P102",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The fair value was determined by applying the relief-from-royalty method under the income approach.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P102_S004",
+                    "paragraph_id": "avgo_2024_8_P102",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The economic useful life was determined based on the expected life of the trade name and the cash flows anticipated over the forecast period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P033_S002",
+                    "paragraph_id": "amd_2024_8_P033",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "In the event such cash flows are not expected to be sufficient to recover the recorded value of the assets, the assets are written down to their estimated fair values based on the expected discounted future cash flows attributable to the asset group or based on appraisals.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for a topic comparable to the valuation of the VMware trade name intangible assets. The retrieved candidates concern depreciation methodology and capitalized interest (intc_2024_8_D019) and a change in estimated useful life for production machinery (intc_2024_8_D015), which relate to tangible assets and accounting estimates rather than the fair value measurement of acquired intangible trade names."
+        "rationale": "Provided candidates discuss depreciation methods (intc_2024_8_D019) and fair value hedges (intc_2024_8_D040), which are unrelated to AVGO's disclosure on valuing intangible trade names using the relief-from-royalty method."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for a topic comparable to the valuation of the VMware trade name intangible assets. The retrieved candidates concern the carrying value determination for sold investment securities (mu_2024_8_D008) and revenue adjustments for returns (mu_2024_8_D021), which are unrelated to intangible asset valuation."
+        "rationale": "Provided candidates discuss revenue adjustments for returns (mu_2024_8_D021) and carrying value methods for sold securities (mu_2024_8_D008), which are unrelated to AVGO's disclosure on valuing intangible trade names."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "Candidate nvda_2024_8_D059 discusses impairment testing for long-lived assets based on undiscounted cash flows. While similar to AMD, it differs from AVGO's specific use of the relief-from-royalty method for intangibles. Candidate nvda_2024_8_D098 discusses PP&E depreciation. Neither is sufficiently comparable to AVGO's intangible valuation methodology."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "23eba0fe9c080cadf22905a773d7d311a7db84a851e6e1294a6167feb908e25f",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "9c9bf6ae697ac4b77fb5f424abba4afada4f4be704e1a0031f930152ae9019f1"
+    }
   }
 }

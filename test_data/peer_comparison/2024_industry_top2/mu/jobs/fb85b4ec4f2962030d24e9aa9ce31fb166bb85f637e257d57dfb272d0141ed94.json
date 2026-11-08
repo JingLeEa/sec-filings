@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "b485dc7e40b5aa5244d687a19f7ae9c5d7f02b955de5254fc98e38116d44d026",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "52650196c355f8530d759ab3f7eb3562f11ecc29e8f875b842216fce352c5ba7",
+  "request_hash": "cf6cdda9852bb6ff1c99be96d3ce021b2dca32f64c84fa4af567ea94c628c7bc",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D009\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Micron disclose the integration of specific AI processing hardware into PC architectures to support next-generation AI workloads. While Micron focuses on the memory subsystem requirements (higher DRAM content and low-power modules) necessitated by these chipsets, AMD highlights its provision of the processing silicon itself, specifically the integration of a neural processing unit (NPU) directly on the System-on-Chip (SoC) alongside the CPU.\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P027_S002\",\n\"mu_2024_1_P028_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P005_S004\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_1_D008\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron identify 'AI PCs' as a key emerging usage and growth driver for their respective technologies. Micron explicitly links the rise of AI PCs to a demand for 'significantly more DRAM content,' whereas Intel describes 'AI PCs' as an emerging usage phase of the AI continuum where the company is infusing AI into its technologies to support such local workloads.\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P027_S001\",\n\"mu_2024_1_P027_S003\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_1_P007_S001\",\n\"intc_2024_1_P007_S006\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1_D010\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVIDIA and Micron discuss the expansion of the PC market driven by generative AI. NVIDIA notes that users are choosing GPUs for running 'generative AI applications locally on their PC' for privacy and latency reasons, which aligns with Micron's observation that AI use cases proliferating to PCs create a need for higher-performance memory subsystems and increased DRAM content.\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P028_S001\",\n\"mu_2024_1_P027_S003\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1_P010_S003\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_1_D022\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Qualcomm and Micron identify the launch of AI-focused PCs in 2024 and the adoption of on-device AI capabilities as a key market trend. Qualcomm highlights the launch of Snapdragon X Series AI PCs and expects 50% of PCs to be AI-capable by 2027, while Micron confirms that next-generation PCs with AI capabilities contain 'significantly more DRAM content than today's average PC.'\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P027_S002\",\n\"mu_2024_1_P027_S003\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_1_P015_S004\",\n\"qcom_2024_1_P015_S005\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved AVGO candidates focus on Tanzu Data services, private cloud infrastructure, and software portfolio. These topics relate to enterprise software and cloud data services, which do not share the same specific topic of PC hardware architecture, AI-driven memory demand, or client computing device trends as the target disclosure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_1_D027",
@@ -204,17 +207,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_1_D009",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "AI-focused product integration in PCs",
             "peer_summary": "AMD was the first company to integrate a dedicated neural processing unit (NPU) on the same SoC as an x86 CPU for AI PCs.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.090002,
+            "retrieval_score": 0.083989,
             "relationship": "same_topic",
-            "comparison": "Both MU and AMD focus on the integration of neural processing capabilities into AI PCs as a key driver for next-generation devices. MU highlights that next-gen PCs contain 'high-performance neural processing chipsets' which drive significantly higher DRAM content, while AMD explicitly notes being the first to integrate a 'dedicated neural processing unit (NPU) on the same SoC as an x86 CPU for AI PCs.' While MU emphasizes the memory subsystem impact of these AI capabilities, AMD emphasizes the silicon-level integration strategy.",
+            "comparison": "Both AMD and Micron disclose the integration of specific AI processing hardware into PC architectures to support next-generation AI workloads. While Micron focuses on the memory subsystem requirements (higher DRAM content and low-power modules) necessitated by these chipsets, AMD highlights its provision of the processing silicon itself, specifically the integration of a neural processing unit (NPU) directly on the System-on-Chip (SoC) alongside the CPU.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D027",
                 "sentences": [
                   {
@@ -223,12 +230,20 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "The next generation PCs that have been announced contain high-performance neural processing chipsets as well as AI.",
                     "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1_P028_S002",
+                    "paragraph_id": "mu_2024_1_P028",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2024, we announced the low-power compression-attached memory module to deliver the required performance to process AI workloads on PCs and provide the potential to scale to applications needing a high performance and low power solution in a compact and modular form factor.",
+                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "1",
                 "disclosure_id": "amd_2024_1_D009",
                 "sentences": [
                   {
@@ -249,7 +264,7 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was substantively comparable. AVGO's candidates focus on Tanzu data services, private cloud software, and enterprise infrastructure, which are distinct from the specific consumer PC hardware, NPU integration, and DRAM memory demand dynamics described in MU's disclosure."
+        "rationale": "The retrieved AVGO candidates focus on Tanzu Data services, private cloud infrastructure, and software portfolio. These topics relate to enterprise software and cloud data services, which do not share the same specific topic of PC hardware architecture, AI-driven memory demand, or client computing device trends as the target disclosure."
       },
       {
         "peer_ticker": "INTC",
@@ -257,25 +272,36 @@
         "comparisons": [
           {
             "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_1_D032",
-            "peer_topic": "Client CPU product launches and performance",
-            "peer_summary": "In 2024, Intel launched Intel Core Ultra Series 1 (first with integrated NPU for AI workloads) and the power-efficient Intel Core Ultra 200V Series. Additionally, the 13th and 14th Gen Intel Core processors continued to serve a significant majority of client sales.",
+            "peer_disclosure_id": "intc_2024_1_D008",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "AI Strategy and Market Vision",
+            "peer_summary": "Intel views AI as a generational shift and aims to bring AI to where data is generated and used, addressing the full AI continuum from GenAI to AI PCs and edge computing. The company leverages a spectrum of hardware and software platforms for open, modular solutions and is infusing AI into its technologies to support current and future workloads.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.051357,
+            "retrieval_score": 0.052163,
             "relationship": "same_topic",
-            "comparison": "Both MU and INTC identify the launch of AI-enabled client processors as a pivotal 2024 event reshaping the PC market. INTC details ramping sales of 'Intel® Core™ Ultra Series 1, our first product with an integrated neural processing unit' which 'introduced the first AI PCs to the market.' Similarly, MU describes 'next generation PCs that have been announced' containing 'high-performance neural processing chipsets as well as AI,' expecting these devices to have 'significantly more DRAM content.' Both disclosures link the specific hardware innovation (NPU/chipset) to the emerging 'AI PC' product category.",
+            "comparison": "Both Intel and Micron identify 'AI PCs' as a key emerging usage and growth driver for their respective technologies. Micron explicitly links the rise of AI PCs to a demand for 'significantly more DRAM content,' whereas Intel describes 'AI PCs' as an emerging usage phase of the AI continuum where the company is infusing AI into its technologies to support such local workloads.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D027",
                 "sentences": [
                   {
-                    "sentence_id": "mu_2024_1_P027_S002",
+                    "sentence_id": "mu_2024_1_P027_S001",
                     "paragraph_id": "mu_2024_1_P027",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "The next generation PCs that have been announced contain high-performance neural processing chipsets as well as AI.",
+                    "text": "PC: Our products sold to the client PC market support both commercial and consumer PC unit growth.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1_P027_S003",
+                    "paragraph_id": "mu_2024_1_P027",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We expect these devices will have significantly more DRAM content than today's average PC.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -283,13 +309,21 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D032",
+                "item": "1",
+                "disclosure_id": "intc_2024_1_D008",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_1_P031_S004",
-                    "paragraph_id": "intc_2024_1_P031",
+                    "sentence_id": "intc_2024_1_P007_S001",
+                    "paragraph_id": "intc_2024_1_P007",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "▪Client CPUs. In 2024, we ramped sales of the Intel® Core™ Ultra Series 1, our first product with an integrated neural processing unit for efficient processing of AI workload. The Intel Core Ultra Series 1, manufactured on the Intel 4 process, introduced the first AI PCs to the market. We also launched the Intel Core Ultra 200V Series, showcasing power efficiency and long-lasting battery life. The 200V Series, manufactured by an external foundry, leverages our Xe2 GPU architecture, bringing improved efficiency, second-generation ray tracing units and XMX AI acceleration to thin and light notebooks. During 2024, a significant majority of our client sales consisted of our 13th and 14th Gen Intel Core processors, manufactured on Intel 7, which allow us to serve the breadth of customer and computing needs in the client market.",
+                    "text": "We also seek to address every phase of the AI continuum, from the largest, most challenging GenAI and large language models to emerging usages like AI PCs and AI at the edge.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_1_P007_S006",
+                    "paragraph_id": "intc_2024_1_P007",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We are infusing AI into Intel technologies, supporting today's GenAI workloads, fueling emerging usages like AI PC and AI at the edge, and pioneering innovations that we believe will help advance the future of AI in the next decade.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -305,18 +339,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1_D007",
-            "peer_topic": "Gaming and Creator Market Expansion",
-            "peer_summary": "Gamers and creators use NVIDIA GPUs for immersive experiences and content creation. The advent of generative AI is expected to drive broader adoption among PC users for local AI applications due to privacy, latency, and cost benefits.",
+            "peer_disclosure_id": "nvda_2024_1_D010",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Gaming and Creator Markets",
+            "peer_summary": "Gamers and creators choose NVIDIA GPUs for immersive experiences, with the market expanding due to live streamers and the advent of generative AI for local PC usage.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.06353,
+            "retrieval_score": 0.056554,
             "relationship": "same_topic",
-            "comparison": "Both MU and NVDA describe the expansion of AI workloads into the PC space as a significant market trend. MU states that as 'AI use cases proliferate to PCs, performance of the memory subsystem becomes more critical' and notes the announcement of low-power memory modules to support this. NVDA similarly observes that 'with the advent of generative AI, we expect a broader set of PC users to choose NVIDIA GPUs for running generative AI applications locally on their PC.' Both companies identify local PC AI execution as a growing driver, though they highlight different components (memory vs. GPU) as central to the experience.",
+            "comparison": "Both NVIDIA and Micron discuss the expansion of the PC market driven by generative AI. NVIDIA notes that users are choosing GPUs for running 'generative AI applications locally on their PC' for privacy and latency reasons, which aligns with Micron's observation that AI use cases proliferating to PCs create a need for higher-performance memory subsystems and increased DRAM content.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D027",
                 "sentences": [
                   {
@@ -325,13 +363,21 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "As AI use cases proliferate to PCs, performance of the memory subsystem becomes more critical.",
                     "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1_P027_S003",
+                    "paragraph_id": "mu_2024_1_P027",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We expect these devices will have significantly more DRAM content than today's average PC.",
+                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1_D007",
+                "item": "1",
+                "disclosure_id": "nvda_2024_1_D010",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_1_P010_S003",
@@ -353,18 +399,22 @@
         "comparisons": [
           {
             "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_1_D029",
-            "peer_topic": "Processor architecture and AI Engine capabilities",
-            "peer_summary": "Qualcomm utilizes System-on-Chip architecture with heterogeneous computing, including Oryon and Kryo CPUs and Adreno GPUs, to enable high-performance, low-power computing. The Qualcomm AI Engine features dedicated hardware and the Hexagon NPU for high-performance on-device AI inference, supported by the AI Stack and AI Hub to simplify developer integration.",
+            "peer_disclosure_id": "qcom_2024_1_D022",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Consumer IoT and AI PCs",
+            "peer_summary": "Consumer IoT products are adopting latest mobile connectivity and on-device AI capabilities, with new AI-focused PCs launching in 2024 and analysts expecting 50% of PCs sold to be AI capable by 2027.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.093974,
+            "retrieval_score": 0.075577,
             "relationship": "same_topic",
-            "comparison": "Both MU and QCOM discuss the role of specific neural processing hardware in enabling high-performance, low-power AI on devices. QCOM highlights its 'Qualcomm® Hexagon™ NPU' as a key processor for 'sustained, high-performance AI inference' within its AI Engine. MU similarly points to 'high-performance neural processing chipsets' in next-gen PCs as a feature driving higher DRAM demand. Both disclosures link the presence of dedicated AI silicon (NPU/chipset) to the capability of handling demanding AI workloads efficiently.",
+            "comparison": "Both Qualcomm and Micron identify the launch of AI-focused PCs in 2024 and the adoption of on-device AI capabilities as a key market trend. Qualcomm highlights the launch of Snapdragon X Series AI PCs and expects 50% of PCs to be AI-capable by 2027, while Micron confirms that next-generation PCs with AI capabilities contain 'significantly more DRAM content than today's average PC.'",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D027",
                 "sentences": [
                   {
@@ -373,19 +423,34 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "The next generation PCs that have been announced contain high-performance neural processing chipsets as well as AI.",
                     "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1_P027_S003",
+                    "paragraph_id": "mu_2024_1_P027",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We expect these devices will have significantly more DRAM content than today's average PC.",
+                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1_D029",
+                "item": "1",
+                "disclosure_id": "qcom_2024_1_D022",
                 "sentences": [
                   {
-                    "sentence_id": "qcom_2024_1_P026_S002",
-                    "paragraph_id": "qcom_2024_1_P026",
+                    "sentence_id": "qcom_2024_1_P015_S004",
+                    "paragraph_id": "qcom_2024_1_P015",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "Our Qualcomm® Hexagon™ NPU is a key processor in our AI Engine and is designed for sustained, high-performance AI inference, enabling leading on-device AI capabilities with very low power consumption.",
+                    "text": "For example, a new class of AI-focused PCs, including those powered by our Snapdragon X Series platforms, launched in 2024, allowing for increased productivity and enhanced use cases enabled by on-device AI processing at low power.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_1_P015_S005",
+                    "paragraph_id": "qcom_2024_1_P015",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "By 2027, analysts expect that at least 50% of PCs sold will be AI capable, compared to 22% of PCs in 2024 (consensus of certain third party analysts as of October 1, 2024).",
                     "visible_in_prompt": true
                   }
                 ]
@@ -395,6 +460,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "52650196c355f8530d759ab3f7eb3562f11ecc29e8f875b842216fce352c5ba7",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "cf6cdda9852bb6ff1c99be96d3ce021b2dca32f64c84fa4af567ea94c628c7bc"
+    }
   }
 }

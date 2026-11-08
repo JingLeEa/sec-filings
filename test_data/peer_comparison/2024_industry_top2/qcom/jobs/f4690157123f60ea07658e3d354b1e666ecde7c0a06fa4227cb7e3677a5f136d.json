@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
-  "request_hash": "7583bf6f9e86da12af6c6120a9d1669af19cd31cd5afe32643311af403fc6124",
+  "input_fingerprint": "e41e6022adb4d847c0289913c33de7b4a26701f19d2828a112ec60fbf96be8dd",
+  "job_fingerprint": "f72692e1d0a576c608ac6a0e805c0baafefc5c3bdb81d69b74a6b8a710f43376",
+  "request_hash": "d93f1b0d39255df6a711461110c10b123044e81c77c70f46c383332dacfb7d2c",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"NVDA\",\n      \"peer_disclosure_id\": \"nvda_2024_1A_D035\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both companies disclose that specific operational and revenue-related factors can directly constrain their available cash resources for general business operations and other strategic purposes like R&D or working capital. Qualcomm warns that any reduction in revenues would impact cash resources available for R&D, while NVIDIA highlights that extended customer payment terms combined with requests from vendors for shorter payment terms reduce the cash available for general business operations.\",\n      \"target_sentence_ids\": [\n        \"qcom_2024_1A_P007_S003\"\n      ],\n      \"peer_sentence_ids\": [\n        \"nvda_2024_1A_P065_S004\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_1A_D109\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both companies identify stock repurchases as a use of cash that can deplete financial reserves, linking cash usage to potential impacts on stock volatility and price. AMD explicitly states that repurchases reduce cash reserves and affect stock volatility/price, which parallels Qualcomm's concern that revenue reductions (and by implication, the cash flow needed to sustain operations and share returns) impact resources for R&D and other purposes.\",\n      \"target_sentence_ids\": [\n        \"qcom_2024_1A_P007_S003\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_1A_P143_S004\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"MU\",\n      \"peer_disclosure_id\": \"mu_2024_1A_D066\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both disclosures highlight that specific capital allocation activities, such as share repurchases, are direct uses of cash that diminish cash reserves and reduce availability for other business purposes. Micron notes that repurchases diminish cash reserves and reduce availability for investments or debt repayment, mirroring Qualcomm's disclosure that revenue limitations impact cash resources available for R&D and other operational needs.\",\n      \"target_sentence_ids\": [\n        \"qcom_2024_1A_P007_S003\"\n      ],\n      \"peer_sentence_ids\": [\n        \"mu_2024_1A_P131_S002\",\n        \"mu_2024_1A_P133_S003\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"INTC\",\n      \"reason\": \"No candidate discusses the direct impact of revenue reduction or operational cash constraints on available funds for R&D or other business purposes; candidates focus on financing strategy risks and debt obligations.\"\n    },\n    {\n      \"peer_ticker\": \"AVGO\",\n      \"reason\": \"No candidate discusses the direct impact of revenue reduction or operational cash constraints on available funds for R&D or other business purposes; candidates focus on the risk of unsuccessful R&D investments rather than the liquidity/cash flow impact of revenue declines or capital allocation constraints.\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
   "result": {
     "target_ticker": "QCOM",
     "target_disclosure_id": "qcom_2024_1A_D010",
@@ -176,18 +179,22 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1A_D038",
-            "peer_topic": "Arm ecosystem and R&D investment risks",
-            "peer_summary": "Increased adoption of Arm-based semiconductor designs could lead to further growth of the Arm ecosystem, while AMD may face delays or disruptions in R&D efforts or be required to invest significantly greater resources in R&D than anticipated.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.064864,
-            "relationship": "related_topic",
-            "comparison": "Both QCOM and AMD disclose risks that their cash resources and R&D capabilities are vulnerable to external market shifts and strategic uncertainties. QCOM specifically highlights that revenue reductions directly constrain cash available for R&D, whereas AMD highlights that adoption trends in the Arm ecosystem may force AMD to invest significantly greater R&D resources than anticipated, or face delays. Both link operational/strategic pressures directly to R&D resource constraints.",
+            "peer_disclosure_id": "amd_2024_1A_D109",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Stock repurchase program",
+            "peer_summary": "AMD has an approved stock repurchase program authorizing up to $12 billion in repurchases, with $4.7 billion available as of December 28, 2024, which may be suspended or discontinued at any time and could affect cash reserves and stock volatility.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.056515,
+            "relationship": "same_topic",
+            "comparison": "Both companies identify stock repurchases as a use of cash that can deplete financial reserves, linking cash usage to potential impacts on stock volatility and price. AMD explicitly states that repurchases reduce cash reserves and affect stock volatility/price, which parallels Qualcomm's concern that revenue reductions (and by implication, the cash flow needed to sustain operations and share returns) impact resources for R&D and other purposes.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D010",
                 "sentences": [
                   {
@@ -202,13 +209,14 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1A_D038",
+                "item": "1A",
+                "disclosure_id": "amd_2024_1A_D109",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1A_P015_S007",
-                    "paragraph_id": "amd_2024_1A_P015",
+                    "sentence_id": "amd_2024_1A_P143_S004",
+                    "paragraph_id": "amd_2024_1A_P143",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We may also face delays or disruptions in research and development efforts, or we may be required to invest significantly greater resources in research and development than anticipated.",
+                    "text": "Our stock repurchases could affect the trading price of our stock, the volatility of our stock price, reduce our cash reserves, and may be suspended or discontinued at any time, which may result in a decrease in our stock price.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -220,99 +228,15 @@
       },
       {
         "peer_ticker": "AVGO",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_1A_D054",
-            "peer_topic": "R&D Investment Risks and AI Technology Development",
-            "peer_summary": "Significant investments in research and development carry the risk of slow or unsuccessful returns, particularly in developing advanced technologies like custom AI accelerators and XPUs; failure to timely develop these or focus on non-adopted technologies could impair competitive position and negatively impact financial results.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.066402,
-            "relationship": "same_topic",
-            "comparison": "Both companies identify research and development investment as a critical area where financial outcomes are at risk due to execution or market adoption. QCOM frames this through the lens of revenue reduction impacting cash for R&D, while AVGO explicitly states that slow or unsuccessful returns on R&D investments (specifically in AI accelerators) could adversely affect financial results. Both acknowledge the necessity of significant R&D spend and the associated financial risk if those investments do not yield expected returns or revenue.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1A_D010",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1A_P007_S003",
-                    "paragraph_id": "qcom_2024_1A_P007",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "Any such reduction in revenues would also impact our cash resources available for other purposes, such as research and development.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_1A_D054",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_1A_P044_S006",
-                    "paragraph_id": "avgo_2024_1A_P044",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Increased investments in research and development, or slow or unsuccessful research and development efforts, would have a negative impact on our financial results.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate discusses the direct impact of revenue reduction or operational cash constraints on available funds for R&D or other business purposes; candidates focus on the risk of unsuccessful R&D investments rather than the liquidity/cash flow impact of revenue declines or capital allocation constraints."
       },
       {
         "peer_ticker": "INTC",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_1A_D010",
-            "peer_topic": "Risks of Smart Capital Strategy, Financing, and Government Grants",
-            "peer_summary": "Intel's Smart Capital approach, including joint investments with partners like Brookfield and Apollo and reliance on government grants like CHIPS Act funding, faces risks such as unfavorable terms, failure to meet metrics, partner default, and compliance restrictions that could materially adversely affect the business.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.042258,
-            "relationship": "same_topic",
-            "comparison": "Both QCOM and INTC disclose risks where specific business strategies or external dependencies threaten the company's ability to maintain sufficient cash flows for capital needs like R&D. QCOM warns that revenue reductions limit cash for R&D, while INTC warns that its 'Smart Capital' approach and reliance on government grants may fail to provide sufficient capital for required investments. Both highlight that failure to secure adequate capital or revenue can materially impact their ability to fund core business activities.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1A_D010",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1A_P007_S003",
-                    "paragraph_id": "qcom_2024_1A_P007",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "Any such reduction in revenues would also impact our cash resources available for other purposes, such as research and development.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1A_D010",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1A_P023_S003",
-                    "paragraph_id": "intc_2024_1A_P023",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "However, any amounts, if any, we may receive under any agreements enabled by such legislation may not be sufficient in amount or timeliness to support our capital investment plans and offset the higher costs of operations in many of the locations of our facilities as compared to those of many of our competitors, we may be unable to comply with the requirements and limitations of any such grants and incentives, or such agreements may contain restrictions that limit our flexibility to pursue changes in business strategy or transactions that may enhance stockholder value.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate discusses the direct impact of revenue reduction or operational cash constraints on available funds for R&D or other business purposes; candidates focus on financing strategy risks and debt obligations."
       },
       {
         "peer_ticker": "MU",
@@ -321,17 +245,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1A_D066",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Share repurchase program specifics",
             "peer_summary": "Share repurchases may fluctuate based on cash flow and priorities; expenditures were $300 million in 2024, and the Board has authorized up to $10 billion in repurchases, though there is no obligation to purchase any specific amount or enhance shareholder value.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.086488,
-            "relationship": "related_topic",
-            "comparison": "Both disclosures concern the impact of cash allocation decisions on available resources. QCOM states that revenue reductions negatively impact cash available for R&D, while MU states that share repurchases diminish cash reserves and reduce availability of cash for other business purposes like investments. Both highlight the trade-off between returning capital to shareholders (or losing it due to revenue drops) and maintaining liquidity for operational growth and R&D.",
+            "retrieval_score": 0.085859,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures highlight that specific capital allocation activities, such as share repurchases, are direct uses of cash that diminish cash reserves and reduce availability for other business purposes. Micron notes that repurchases diminish cash reserves and reduce availability for investments or debt repayment, mirroring Qualcomm's disclosure that revenue limitations impact cash resources available for R&D and other operational needs.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D010",
                 "sentences": [
                   {
@@ -346,8 +274,16 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1A",
                 "disclosure_id": "mu_2024_1A_D066",
                 "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1A_P131_S002",
+                    "paragraph_id": "mu_2024_1A_P131",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Share repurchases could also increase the volatility of the trading price of our stock and will diminish our cash reserves.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "mu_2024_1A_P133_S003",
                     "paragraph_id": "mu_2024_1A_P133",
@@ -368,18 +304,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1A_D043",
-            "peer_topic": "Operating Results Fluctuation and Payment Terms",
-            "peer_summary": "Operating results have fluctuated and may continue to fluctuate due to factors such as product development cycles, vendor payment requirements, and extended customer payment terms. These arrangements, particularly during economic downturns, can impact cash flow availability and collection risk, potentially leading to stock price volatility if results miss expectations.",
+            "peer_disclosure_id": "nvda_2024_1A_D035",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Operating Result Fluctuation and Cash Flow Impacts",
+            "peer_summary": "Operating results may fluctuate due to factors including extended payment terms with customers (which may impact collection) and vendor requests for shorter payment terms (impacting cash flow), potentially creating volatility in profitability levels and causing stock price declines.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.072953,
+            "retrieval_score": 0.058051,
             "relationship": "same_topic",
-            "comparison": "Both QCOM and NVDA disclose that factors impacting their operating results and cash flows can reduce the cash available for general business operations, including R&D and development. QCOM specifically cites revenue reductions impacting cash for R&D, while NVDA cites extended payment terms and vendor requirements that reduce cash available for operations. Both emphasize the sensitivity of their operational liquidity to revenue collection and payment cycle dynamics.",
-            "peer_source_status": "needs_review",
+            "comparison": "Both companies disclose that specific operational and revenue-related factors can directly constrain their available cash resources for general business operations and other strategic purposes like R&D or working capital. Qualcomm warns that any reduction in revenues would impact cash resources available for R&D, while NVIDIA highlights that extended customer payment terms combined with requests from vendors for shorter payment terms reduce the cash available for general business operations.",
+            "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D010",
                 "sentences": [
                   {
@@ -394,7 +334,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1A_D043",
+                "item": "1A",
+                "disclosure_id": "nvda_2024_1A_D035",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_1A_P065_S004",
@@ -410,6 +351,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "f72692e1d0a576c608ac6a0e805c0baafefc5c3bdb81d69b74a6b8a710f43376",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
+      "request_hash": "d93f1b0d39255df6a711461110c10b123044e81c77c70f46c383332dacfb7d2c"
+    }
   }
 }

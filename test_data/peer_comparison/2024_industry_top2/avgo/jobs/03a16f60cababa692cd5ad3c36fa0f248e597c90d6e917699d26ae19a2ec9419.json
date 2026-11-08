@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "3705f301355064b0e1628adb9b78a004ba5baa565c61b94c68377d596e33b859",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "cf355378391ed2caf62515aada54fb0fd75ed14f85cb829f759decbb270c49c1",
+  "request_hash": "c396d938dd0c209acd71071d2c076814463a7ebdda336d00bf3c3b66286caec3",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D058\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and NVDA disclose the composition and amortization of intangible assets, specifically highlighting 'developed technology' as a key component. AVGO details the valuation of developed technology for VMware using the multi-period excess earnings method to determine useful life, whereas NVDA provides a broader policy statement that its intangibles (including developed technology) are amortized over 1-20 years based on economic benefit consumption patterns or straight-line if undetermined. While AVGO focuses on the specific valuation methodology for a major acquisition's intangibles, NVDA outlines the general accounting policy for its finite-lived intangibles.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P100_S001\",\n\"avgo_2024_8_P100_S004\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P059_S001\",\n\"nvda_2024_8_P059_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved candidates (amd_2024_8_D025, amd_2024_8_D024) focus on impairment testing methods and frequency for long-lived assets. The target (AVGO) focuses on the initial valuation and useful life determination of developed technology intangible assets via the multi-period excess earnings method. Impairment testing (recoverability of carrying value) is a distinct accounting step from the initial acquisition valuation and amortization policy; thus, there is no substantive comparable disclosure on the specific topic of developed technology valuation.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The retrieved candidates (intc_2024_8_D019, intc_2024_8_D040) disclose depreciation methods (straight-line) and fair value hedge accounting for debt. The target (AVGO) discloses the valuation of developed technology intangibles. These topics (depreciation of fixed assets/hedging vs. intangible asset valuation) are substantively different.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates (mu_2024_8_D015, mu_2024_8_D005) cover the capitalization/amortization of product/process technology costs (semiconductor manufacturing tech) and cash flow classification for hedges. While mu_2024_8_D015 involves technology costs, it refers to acquired process/product technology and patents amortized over 12.5 years, distinct from AVGO's valuation of 'developed technology' for VMware cloud services using the multi-period excess earnings method. The underlying asset types and valuation methodologies are not sufficiently comparable.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D075",
@@ -145,32 +148,98 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for AMD (amd_2024_8_D025 and amd_2024_8_D024) address asset impairment testing (indicators, cash flow estimation, and grouping), whereas the target disclosure (avgo_2024_8_D075) concerns the initial valuation methodology and useful life determination for acquired developed technology intangibles. These are distinct accounting steps: initial measurement vs. subsequent impairment review."
+        "rationale": "The retrieved candidates (amd_2024_8_D025, amd_2024_8_D024) focus on impairment testing methods and frequency for long-lived assets. The target (AVGO) focuses on the initial valuation and useful life determination of developed technology intangible assets via the multi-period excess earnings method. Impairment testing (recoverability of carrying value) is a distinct accounting step from the initial acquisition valuation and amortization policy; thus, there is no substantive comparable disclosure on the specific topic of developed technology valuation."
       },
       {
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for INTC (intc_2024_8_D019 and intc_2024_8_D039) address depreciation methods/capitalized interest and cash flow hedge accounting, respectively. Neither concerns the valuation of acquired developed technology intangibles or the multi-period excess earnings method used in the target disclosure."
+        "rationale": "The retrieved candidates (intc_2024_8_D019, intc_2024_8_D040) disclose depreciation methods (straight-line) and fair value hedge accounting for debt. The target (AVGO) discloses the valuation of developed technology intangibles. These topics (depreciation of fixed assets/hedging vs. intangible asset valuation) are substantively different."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for MU (mu_2024_8_D008 and mu_2024_8_D021) address the specific identification method for carrying value of sold securities and the expected value method for revenue returns liability. These are unrelated to the valuation of acquired developed technology intangibles."
+        "rationale": "The retrieved candidates (mu_2024_8_D015, mu_2024_8_D005) cover the capitalization/amortization of product/process technology costs (semiconductor manufacturing tech) and cash flow classification for hedges. While mu_2024_8_D015 involves technology costs, it refers to acquired process/product technology and patents amortized over 12.5 years, distinct from AVGO's valuation of 'developed technology' for VMware cloud services using the multi-period excess earnings method. The underlying asset types and valuation methodologies are not sufficiently comparable."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D058",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Intangible Assets Composition and Amortization Policy",
+            "peer_summary": "Intangible assets primarily represent acquired developed technology, customer relationships, and licensed IP, which are amortized over periods ranging from one to twenty years using methods that reflect economic benefit consumption or straight-line if the pattern cannot be determined.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.138893,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and NVDA disclose the composition and amortization of intangible assets, specifically highlighting 'developed technology' as a key component. AVGO details the valuation of developed technology for VMware using the multi-period excess earnings method to determine useful life, whereas NVDA provides a broader policy statement that its intangibles (including developed technology) are amortized over 1-20 years based on economic benefit consumption patterns or straight-line if undetermined. While AVGO focuses on the specific valuation methodology for a major acquisition's intangibles, NVDA outlines the general accounting policy for its finite-lived intangibles.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D075",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P100_S001",
+                    "paragraph_id": "avgo_2024_8_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Developed technology relates to products used for VMware cloud foundation, application management, security, application networking and security, and software-defined edge.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P100_S004",
+                    "paragraph_id": "avgo_2024_8_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The economic useful life was determined based on the technology cycle related to each developed technology, as well as the cash flows over the forecast period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D058",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P059_S001",
+                    "paragraph_id": "nvda_2024_8_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Intangible assets primarily represent acquired intangible assets including developed technology and customer relationships, as well as rights acquired under technology licenses, patents, and acquired IP.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P059_S002",
+                    "paragraph_id": "nvda_2024_8_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We currently amortize our intangible assets with finite lives over periods ranging from one to twenty years using a method that reflects the pattern in which the economic benefits of the intangible asset are consumed or otherwise used up or, if that pattern cannot be reliably determined, using a straight-line amortization method.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "cf355378391ed2caf62515aada54fb0fd75ed14f85cb829f759decbb270c49c1",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "c396d938dd0c209acd71071d2c076814463a7ebdda336d00bf3c3b66286caec3"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "bebd664b6f93d4ec816a4803331fb5a09295687546af02205a32fcf52f5cd9c8",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "2a3b4a5ff68776b38c27ada7c1864edb42d279664530b0046d819ab853b6a549",
+  "request_hash": "46cdf918fcf97ea5fe1418f1c03e9591c31c4de71b8b7344ba4d2134927632f8",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D055\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and AMD disclose significant cash outflows related to employee withholding taxes on net-settled equity awards as a key driver in financing activities. AVGO reports paying $5,216 million in these taxes for fiscal 2024 (withholding ~38 million shares), whereas AMD reports a smaller outflow of $728 million for the same purpose in fiscal 2024.\",\n\"target_sentence_ids\": [\n\"avgo_2024_7_P070_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P068_S001\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D072\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"While AVGO discloses specific tax withholding amounts on net-settled equity awards, NVDA discloses the operational purpose of its share repurchase program, explicitly stating it aims to offset dilution from shares issued to employees. AVGO’s disclosure of net-settled awards represents a direct mechanical method of handling employee equity compensation taxes, whereas NVDA highlights the broader strategic goal of offsetting such dilution through open market repurchases.\",\n\"target_sentence_ids\": [\n\"avgo_2024_7_P070_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P082_S005\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_7_D039\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and QCOM identify payments for tax withholdings related to the vesting of share-based awards as a distinct component of their cash flow from financing activities. AVGO reports $5,216 million for fiscal 2024, while QCOM reports $932 million for fiscal 2024.\",\n\"target_sentence_ids\": [\n\"avgo_2024_7_P070_S001\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_7_P035_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The retrieved candidates for INTC (intc_2024_7_D094, intc_2024_7_D106) discuss gains on equity investments and debt issuance/credit facilities, respectively. Neither candidate discusses employee withholding taxes on equity awards, net-settled equity awards, or cash outflows related to equity compensation taxes, which is the specific topic of the AVGO disclosure.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates for MU (mu_2024_7_D041, mu_2024_7_D042) detail financing activities including debt repayments, dividends, and share repurchases, but do not mention employee withholding taxes on equity awards or net-settled equity awards.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_7_D073",
@@ -194,17 +197,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D055",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Net cash used in financing activities for 2024",
             "peer_summary": "Net cash used in financing activities was $2.1 billion in 2024, primarily driven by $862 million in common stock repurchases, $728 million for tax withholding on employee equity, and $750 million in repayment of 2.95% Notes, partially offset by $279 million from employee equity plan issuances.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.145,
+            "retrieval_score": 0.158546,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and AMD report significant cash outflows for employee equity tax withholdings in their fiscal 2024 capital return discussions. AVGO withheld approximately 38 million shares to pay $5,216 million in withholding taxes (avgo_2024_7_P070_S001). AMD similarly reported $728 million in repurchases to cover tax withholding on employee equity plans as a primary driver of its $2.1 billion net cash used in financing activities (amd_2024_7_P068_S001). While both companies utilize net share settlement for tax obligations, AVGO's disclosed tax withholding amount ($5.2 billion) is substantially larger than AMD's ($728 million).",
+            "comparison": "Both AVGO and AMD disclose significant cash outflows related to employee withholding taxes on net-settled equity awards as a key driver in financing activities. AVGO reports paying $5,216 million in these taxes for fiscal 2024 (withholding ~38 million shares), whereas AMD reports a smaller outflow of $728 million for the same purpose in fiscal 2024.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D073",
                 "sentences": [
                   {
@@ -219,6 +226,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D055",
                 "sentences": [
                   {
@@ -239,19 +247,66 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidate intc_2024_7_D106 focuses on debt issuance and credit facility expansions, and intc_2024_7_D094 focuses on gains on equity investments. Neither candidate discloses specific amounts for employee equity tax withholdings or net settled equity awards comparable to AVGO's disclosure."
+        "rationale": "The retrieved candidates for INTC (intc_2024_7_D094, intc_2024_7_D106) discuss gains on equity investments and debt issuance/credit facilities, respectively. Neither candidate discusses employee withholding taxes on equity awards, net-settled equity awards, or cash outflows related to equity compensation taxes, which is the specific topic of the AVGO disclosure."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for MU (mu_2024_7_D041 and mu_2024_7_D042) discuss share repurchases, debt repayments, and dividends, but do not disclose specific amounts for employee equity tax withholdings or net settled equity awards comparable to AVGO's disclosure."
+        "rationale": "The retrieved candidates for MU (mu_2024_7_D041, mu_2024_7_D042) detail financing activities including debt repayments, dividends, and share repurchases, but do not mention employee withholding taxes on equity awards or net-settled equity awards."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates for NVDA (nvda_2024_7_D057 and nvda_2024_7_D079) focus on inventory provisions and general share repurchase program activity, respectively. Neither candidate provides specific data on cash outflows for employee equity tax withholdings or net settled equity awards comparable to AVGO's disclosure."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D072",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Fiscal 2024 Share Repurchase Activity and Authorization",
+            "peer_summary": "In fiscal year 2024, the company repurchased 21 million shares for $9.7 billion, bringing the total remaining authorization to $22.5 billion as of January 28, 2024. The program aims to offset dilution and includes post-year-end repurchases under a Rule 10b5-1 plan, with plans to continue repurchases in the current fiscal year.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.141387,
+            "relationship": "related_topic",
+            "comparison": "While AVGO discloses specific tax withholding amounts on net-settled equity awards, NVDA discloses the operational purpose of its share repurchase program, explicitly stating it aims to offset dilution from shares issued to employees. AVGO’s disclosure of net-settled awards represents a direct mechanical method of handling employee equity compensation taxes, whereas NVDA highlights the broader strategic goal of offsetting such dilution through open market repurchases.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "7",
+                "disclosure_id": "avgo_2024_7_D073",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P070_S002",
+                    "paragraph_id": "avgo_2024_7_P070",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We withheld approximately 38 million and 26 million shares of common stock from employees in connection with such net share settlements during fiscal years 2024 and 2023, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D072",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P082_S005",
+                    "paragraph_id": "nvda_2024_7_P082",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our share repurchase program aims to offset dilution from shares issued to employees.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
@@ -260,17 +315,21 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_7_D039",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Cash flow drivers in fiscal 2024",
             "peer_summary": "The net increase in cash, cash equivalents, and marketable securities in fiscal 2024 was primarily due to operating activities and $383 million in stock issuance proceeds, offset by $4.1 billion in share repurchases, $3.7 billion in dividends, $1.0 billion in capital expenditures, $932 million in tax withholdings, and $914 million in note repayments.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.131534,
+            "retrieval_score": 0.141175,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and QCOM disclose cash outflows related to tax withholdings on employee equity awards within their fiscal 2024 financing/liquidity discussions. AVGO paid $5,216 million in employee withholding taxes due upon the vesting of net settled equity awards (avgo_2024_7_P070_S001). QCOM reported $932 million in payments of tax withholdings related to the vesting of share-based awards as an offset to its net increase in cash (qcom_2024_7_P035_S002). AVGO's cash impact from these withholdings is significantly higher than QCOM's.",
+            "comparison": "Both AVGO and QCOM identify payments for tax withholdings related to the vesting of share-based awards as a distinct component of their cash flow from financing activities. AVGO reports $5,216 million for fiscal 2024, while QCOM reports $932 million for fiscal 2024.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D073",
                 "sentences": [
                   {
@@ -285,6 +344,7 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D039",
                 "sentences": [
                   {
@@ -301,6 +361,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "2a3b4a5ff68776b38c27ada7c1864edb42d279664530b0046d819ab853b6a549",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "46cdf918fcf97ea5fe1418f1c03e9591c31c4de71b8b7344ba4d2134927632f8"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "3b5b0043bf0c3a971664bb67c971325e0989345d1fde628c6b43ec5307d14239",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "6cd19c3ffa306072a09764dee53aaba3888e44768cb2dc59c601789f00b01a40",
+  "request_hash": "2bdbeb256701b80708006e94e64962ed0d4e6946da4745c27a822d9d79a6b901",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D147\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Broadcom disclose that restructuring and other charges are excluded from segment evaluation and reported in an 'All Other' or 'Unallocated' category. AMD explicitly states its $89 million accrued restructuring charges are in the 'All Other' segment category (Note 4), while Broadcom lists restructuring charges as a component of 'Unallocated expenses' not used in evaluating segment results. Both firms treat these costs as corporate-level or enterprise-wide items rather than direct segment expenses.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P128_S003\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P190_S001\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D094\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Intel disclose specific impairment charges resulting from restructuring plans, classified within unallocated or corporate categories. AMD reports $89 million in accrued restructuring charges within Accrued liabilities and notes that significant asset impairments are covered separately in Note 6, included in the All Other segment. Intel incurred $442 million in non-cash asset impairment charges as a direct result of its 2024 Restructuring Plan, included in 'corporate unallocated expenses' within the restructuring and other category. While the specific nature of charges differs (AMD's $89M is accrued liabilities, Intel's $442M is non-cash asset impairment), both represent financial impacts of restructuring allocated to corporate/unmanaged buckets.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P128_S006\",\n\"amd_2024_8_P128_S004\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P107_S001\",\n\"intc_2024_8_P107_S002\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D108\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both AMD and Micron disclose asset impairment charges, though the specific timing and context differ. AMD's Item 8 disclosure highlights that significant asset impairment charges are covered separately in Note 6, distinct from the $89M accrued restructuring charges in Item 14. Micron's Item 8 disclosure details a $101 million goodwill impairment charge recognized in 2023 for its SBU reporting unit due to macroeconomic challenges. Both disclosures address the financial impact of impairments, with AMD separating the accounting for restructuring accruals and impairments, while Micron explicitly discusses the quantitative assessment and recognition of the impairment charge.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P128_S004\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P115_S003\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D138\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and NVIDIA disclose that restructuring and acquisition-related costs are allocated to an 'All Other' segment category because they are not assigned to specific operating segments by the Chief Operating Decision Maker (CODM). AMD states that restructuring charges are included in the 'All Other' category presented in Note 4 - Segment Reporting. Similarly, NVIDIA's 'All Other' category includes 'acquisition-related and other costs' and other non-recurring charges that the CODM deems enterprise in nature, implying these costs are not attributed to Compute & Networking or Graphics segments.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P128_S003\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P156_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The remaining candidate avgo_2024_8_D168 (avgo_2024_8_D168) regarding IP litigation charges is not comparable to AMD's restructuring accruals. The other MU candidate (mu_2024_8_D014) concerns lease accounting, which is unrelated to restructuring. Only the goodwill impairment candidate (mu_2024_8_D108) was selected as a related topic comparison for impairments. However, per the instruction to return unique peer_disclosure_id entries, and since mu_2024_8_D108 was already used in comparisons, no additional no_match is needed for MU if it has a comparison. Wait, the rule says 'Each peer ticker must appear in EITHER comparisons OR no_match'. MU has a comparison, so it is in comparisons. The prompt failed because I likely omitted a peer or had duplicate keys. I have included AMD, INTC, MU, NVDA, AVGO. All peers are accounted for. QCOM had no candidates, so it should be in no_match.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_8_D122",
@@ -190,17 +193,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D147",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Unallocated Expenses Composition",
             "peer_summary": "Unallocated expenses consist of amortization of acquisition-related intangible assets, stock-based compensation, restructuring and other charges, acquisition-related costs, and other costs, which are excluded from segment evaluation.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.132992,
+            "retrieval_score": 0.139519,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Broadcom disclose that restructuring charges are included in their unallocated or 'All Other' corporate segment categories rather than specific operating segments. AMD specifies that $89 million in accrued restructuring charges are recorded in Accrued liabilities and included in the All Other category (Sentences: amd_2024_8_P128_S003, amd_2024_8_P128_S006). Similarly, Broadcom identifies restructuring and other charges as a component of unallocated expenses that are not used in evaluating segment results (Sentence: avgo_2024_8_P190_S001).",
+            "comparison": "Both AMD and Broadcom disclose that restructuring and other charges are excluded from segment evaluation and reported in an 'All Other' or 'Unallocated' category. AMD explicitly states its $89 million accrued restructuring charges are in the 'All Other' segment category (Note 4), while Broadcom lists restructuring charges as a component of 'Unallocated expenses' not used in evaluating segment results. Both firms treat these costs as corporate-level or enterprise-wide items rather than direct segment expenses.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D122",
                 "sentences": [
                   {
@@ -209,19 +216,13 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
                     "text": "Restructuring charges are included within the All Other category presented in Note 4 - Segment Reporting.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_8_P128_S006",
-                    "paragraph_id": "amd_2024_8_P128",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "As of December 28, 2024, $89 million of accrued restructuring charges are recorded within Accrued liabilities of the Company's Consolidated Balance Sheets.",
-                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D147",
                 "sentences": [
                   {
@@ -245,31 +246,35 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_8_D094",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Restructuring-related impairment charges",
             "peer_summary": "The company incurred $442 million in other non-cash asset impairment charges as a direct result of the 2024 Restructuring Plan, included in corporate unallocated expenses within the restructuring and other category.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.245651,
+            "retrieval_score": 0.252474,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Intel disclose specific accounting treatments for restructuring-related charges within their unallocated or corporate expense categories. AMD records $89 million in accrued restructuring charges within Accrued liabilities and includes these charges in the All Other segment category (Sentences: amd_2024_8_P128_S003, amd_2024_8_P128_S006). Intel incurred $442 million in other non-cash asset impairment charges as a direct result of its 2024 Restructuring Plan, which were included as a component of 'corporate unallocated expenses' (Sentences: intc_2024_8_P107_S001, intc_2024_8_P107_S002). Both companies treat these restructuring costs as non-operating or unallocated items distinct from core segment performance.",
+            "comparison": "Both AMD and Intel disclose specific impairment charges resulting from restructuring plans, classified within unallocated or corporate categories. AMD reports $89 million in accrued restructuring charges within Accrued liabilities and notes that significant asset impairments are covered separately in Note 6, included in the All Other segment. Intel incurred $442 million in non-cash asset impairment charges as a direct result of its 2024 Restructuring Plan, included in 'corporate unallocated expenses' within the restructuring and other category. While the specific nature of charges differs (AMD's $89M is accrued liabilities, Intel's $442M is non-cash asset impairment), both represent financial impacts of restructuring allocated to corporate/unmanaged buckets.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D122",
                 "sentences": [
-                  {
-                    "sentence_id": "amd_2024_8_P128_S003",
-                    "paragraph_id": "amd_2024_8_P128",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Restructuring charges are included within the All Other category presented in Note 4 - Segment Reporting.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "amd_2024_8_P128_S006",
                     "paragraph_id": "amd_2024_8_P128",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
                     "text": "As of December 28, 2024, $89 million of accrued restructuring charges are recorded within Accrued liabilities of the Company's Consolidated Balance Sheets.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P128_S004",
+                    "paragraph_id": "amd_2024_8_P128",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Significant asset impairment charges are discussed in Note 6 - Acquisition-related Intangible Assets and Goodwill.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -277,6 +282,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D094",
                 "sentences": [
                   {
@@ -302,25 +308,124 @@
       },
       {
         "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that addresses restructuring charges, accrued liabilities, or unallocated corporate expenses. The provided candidates for MU concern lease accounting components and historical goodwill impairment, which are substantively different topics from the target's disclosure of current accrued restructuring charges."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D108",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "2023 Goodwill Impairment Charge and Assessment",
+            "peer_summary": "Due to macroeconomic challenges and reduced customer demand in 2023, the company recognized a $101 million goodwill impairment charge for its SBU reporting unit; quantitative assessments for other reporting units showed fair values substantially exceeding carrying values.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.055697,
+            "relationship": "related_topic",
+            "comparison": "Both AMD and Micron disclose asset impairment charges, though the specific timing and context differ. AMD's Item 8 disclosure highlights that significant asset impairment charges are covered separately in Note 6, distinct from the $89M accrued restructuring charges in Item 14. Micron's Item 8 disclosure details a $101 million goodwill impairment charge recognized in 2023 for its SBU reporting unit due to macroeconomic challenges. Both disclosures address the financial impact of impairments, with AMD separating the accounting for restructuring accruals and impairments, while Micron explicitly discusses the quantitative assessment and recognition of the impairment charge.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D122",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P128_S004",
+                    "paragraph_id": "amd_2024_8_P128",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Significant asset impairment charges are discussed in Note 6 - Acquisition-related Intangible Assets and Goodwill.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D108",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P115_S003",
+                    "paragraph_id": "mu_2024_8_P115",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We recognized a $101 million charge in 2023, included in other operating income (loss) to impair all of the goodwill assigned to our SBU reporting unit based on our best estimates of projected future cash flows at that time.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that addresses restructuring charges, accrued liabilities, or unallocated corporate expenses. The provided candidate for NVDA is a generic statement regarding the location of information in the 10-K filing."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D138",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Segment Expense Allocation and 'All Other' Category",
+            "peer_summary": "Operating results include costs directly attributable to each segment and those allocated across the unified architecture; the 'All Other' category includes expenses not assigned to specific segments such as stock-based compensation, corporate infrastructure, IP costs, and acquisition-related charges deemed enterprise in nature.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.10114,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and NVIDIA disclose that restructuring and acquisition-related costs are allocated to an 'All Other' segment category because they are not assigned to specific operating segments by the Chief Operating Decision Maker (CODM). AMD states that restructuring charges are included in the 'All Other' category presented in Note 4 - Segment Reporting. Similarly, NVIDIA's 'All Other' category includes 'acquisition-related and other costs' and other non-recurring charges that the CODM deems enterprise in nature, implying these costs are not attributed to Compute & Networking or Graphics segments.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D122",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P128_S003",
+                    "paragraph_id": "amd_2024_8_P128",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Restructuring charges are included within the All Other category presented in Note 4 - Segment Reporting.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D138",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P156_S002",
+                    "paragraph_id": "nvda_2024_8_P156",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The expenses include stock-based compensation expense, corporate infrastructure and support costs, acquisition-related and other costs, intellectual property related, or IP-related costs, acquisition termination cost, and other non-recurring charges and benefits that our CODM deems to be enterprise in nature.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for QCOM for this target disclosure."
+        "rationale": "no candidate was retrieved"
       }
     ],
-    "agent_warnings": [
-      "manual_validation_repair: Added QCOM no_match because candidate retrieval supplied no QCOM candidate."
-    ]
+    "cache_provenance": {
+      "job_fingerprint": "6cd19c3ffa306072a09764dee53aaba3888e44768cb2dc59c601789f00b01a40",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "2bdbeb256701b80708006e94e64962ed0d4e6946da4745c27a822d9d79a6b901"
+    }
   }
 }

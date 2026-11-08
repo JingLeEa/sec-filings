@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "70f9f6bb1d83d76e6bfc8b96d21202195517aa8933817ff1eca64ea42a3fd619",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "d2546fd590eceb94a8d623849bf762e7b3db9cf4d359671025d20c92e18e5959",
+  "request_hash": "cef0469d52604a166ce2c43ed49170ee2ff76489c4ca9d3f3fdd635409cab205",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"MU\",\n      \"peer_disclosure_id\": \"mu_2024_8_D011\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both Intel and Micron disclose specific accounting treatments and financial implications related to the acquisition and capitalization of Property, Plant, and Equipment (PP&E), though they focus on different drivers. Intel discloses significant unpaid amounts for PP&E acquisitions resulting from extended vendor payment terms, while Micron discloses how government incentives related to capital expenditures reduce the carrying amount of PP&E and depreciation. Both address the cost basis and financial structuring of PP&E acquisitions.\",\n      \"target_sentence_ids\": [\n        \"intc_2024_8_P108_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"mu_2024_8_P022_S004\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"reason\": \"Candidates discuss short-term fair value approximations and customer payment terms (receivables), which do not substantively compare to the target's disclosure of long-term vendor payment terms and unpaid amounts for PP&E acquisitions (liabilities/financing).\"\n    },\n    {\n      \"peer_ticker\": \"AVGO\",\n      \"reason\": \"Candidates discuss customer payment terms (receivables) and accounts receivable factoring. These are distinct from the target's disclosure regarding extended payment terms with capital vendors for PP&E acquisitions.\"\n    },\n    {\n      \"peer_ticker\": \"NVDA\",\n      \"reason\": \"Candidates discuss fair value of short-term financial instruments and lease definitions. Neither substantively addresses the specific topic of extended payment terms for capital vendor acquisitions or unpaid PP&E liabilities as disclosed by the target.\"\n    },\n    {\n      \"peer_ticker\": \"QCOM\",\n      \"reason\": \"No candidate was retrieved\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D095",
@@ -153,47 +156,58 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "None of the retrieved AMD candidates address extended payment terms with capital vendors or PP&E financing. The closest candidate (amd_2024_8_D097) discusses fair value approximations for short-term obligations generally, while amd_2024_8_D069 concerns acquisition accounting for Pensando, neither of which shares the specific topic of extended capital vendor payment terms."
+        "rationale": "Candidates discuss short-term fair value approximations and customer payment terms (receivables), which do not substantively compare to the target's disclosure of long-term vendor payment terms and unpaid amounts for PP&E acquisitions (liabilities/financing)."
       },
       {
         "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Candidates discuss customer payment terms (receivables) and accounts receivable factoring. These are distinct from the target's disclosure regarding extended payment terms with capital vendors for PP&E acquisitions."
+      },
+      {
+        "peer_ticker": "MU",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_8_D035",
-            "peer_topic": "Payment Terms and Commercial Substance",
-            "peer_summary": "Payment terms vary by contract type but are short-term in duration and structured to provide predictable procurement methods for customers, not to provide or receive financing.",
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D011",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Government Incentive Policy and Recognition",
+            "peer_summary": "The company receives governmental incentives for capital expenditures and activities, which may require meeting specific metrics and are subject to reimbursement if conditions are not met. These incentives are accounted for as reductions of asset costs (via lower depreciation) or operating expenses, with timing distinctions for deferred income or receivables, and are classified as operating or investing cash flows accordingly.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.110277,
+            "retrieval_score": 0.093699,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Broadcom disclose their specific policies and nature of payment terms for capital expenditures. Intel explicitly states it negotiates extended payment terms (>90 days) with capital vendors and treats these unpaid amounts as financing activities when paid. In contrast, Broadcom discloses that its payment terms are short-term in duration and structured to provide predictable procurement methods rather than to provide or receive financing, highlighting a fundamental difference in how each company structures its supply chain financing for capital assets.",
+            "comparison": "Both Intel and Micron disclose specific accounting treatments and financial implications related to the acquisition and capitalization of Property, Plant, and Equipment (PP&E), though they focus on different drivers. Intel discloses significant unpaid amounts for PP&E acquisitions resulting from extended vendor payment terms, while Micron discloses how government incentives related to capital expenditures reduce the carrying amount of PP&E and depreciation. Both address the cost basis and financial structuring of PP&E acquisitions.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D095",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_8_P108_S001",
+                    "sentence_id": "intc_2024_8_P108_S002",
                     "paragraph_id": "intc_2024_8_P108",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We negotiate extended payment terms of greater than 90 days with certain of our capital vendors, which are reported as financing activities in the Consolidated Statements of Cash Flows when paid.",
+                    "text": "Unpaid amounts related to the acquisition of property, plant, and equipment in 2024 under such extended payment terms, included in accounts payable and other accrued liabilities, totaled $3.2 billion.",
                     "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_8_D035",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D011",
                 "sentences": [
                   {
-                    "sentence_id": "avgo_2024_8_P057_S002",
-                    "paragraph_id": "avgo_2024_8_P057",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "The timing of revenue recognition and required payments can differ and payment terms are generally structured to provide the customer with predictable and dependable ways to procure our products, not to provide or receive financing from the customer.",
+                    "sentence_id": "mu_2024_8_P022_S004",
+                    "paragraph_id": "mu_2024_8_P022",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Incentives related to the acquisition or construction of fixed assets are recognized as a reduction in the carrying amounts of the related assets and as a reduction to depreciation expense over the useful lives of the assets.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -204,23 +218,22 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "None of the retrieved MU candidates address extended payment terms with capital vendors. The candidates discuss depreciation/interest capitalization (mu_2024_8_D036) and governmental incentive recognition (mu_2024_8_D011), which are related to PP&E accounting but do not address the specific risk or policy of negotiating extended payment terms with vendors."
-      },
-      {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved NVDA candidate is a boilerplate statement indicating that information is included in the financial statements, containing no substantive disclosure on payment terms."
+        "rationale": "Candidates discuss fair value of short-term financial instruments and lease definitions. Neither substantively addresses the specific topic of extended payment terms for capital vendor acquisitions or unpaid PP&E liabilities as disclosed by the target."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "d2546fd590eceb94a8d623849bf762e7b3db9cf4d359671025d20c92e18e5959",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "cef0469d52604a166ce2c43ed49170ee2ff76489c4ca9d3f3fdd635409cab205"
+    }
   }
 }

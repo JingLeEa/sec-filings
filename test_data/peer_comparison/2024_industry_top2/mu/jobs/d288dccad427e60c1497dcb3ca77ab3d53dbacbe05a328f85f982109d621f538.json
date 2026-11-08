@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "3ac57925f3e6a9dae813cf419ae816cc8ffb356b8859cdc722cd05dde4c70fd5",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "78b9cd7d391a121158134b8a46152a1c607a67883983899234cfca9d917343d6",
+  "request_hash": "d299a6d4cef93b4074e88f9b178f7503d3c3729843413eb272c139e39afad8ef",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D051\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and AMD disclose the amount of future revenue allocated to remaining performance obligations for contracts with an original expected duration of more than one year. MU reported $141 million in future performance obligations beyond one year as of August 29, 2024, which included customer prepayments. AMD reported $85 million in remaining performance obligations for contracts with an original expected duration of more than one year as of December 28, 2024, of which $67 million was expected to be recognized in the next 12 months. While both companies quantify forward-looking contractual revenue, MU's figure specifically highlights customer prepayments as part of the obligation pool, whereas AMD's disclosure focuses on the aggregate transaction price and its near-term recognition schedule.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P109_S004\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P056_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D106\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and NVDA disclose the total revenue allocated to remaining performance obligations for contracts extending beyond one year. MU reported future performance obligations beyond one year of $141 million as of August 29, 2024. NVDA reported revenue allocated to remaining performance obligations of $1.1 billion as of January 28, 2024, explicitly excluding contracts with a length of one year or less. Both disclosures serve to quantify the deferred revenue pipeline for long-term customer commitments, though the magnitudes differ significantly, with NVDA reporting a substantially larger obligation base.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P109_S004\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P117_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The supplied candidates for INTC concern Operating Lease Balances and Derivative Fair Values, which are fundamentally different topics from the target's disclosure on Future Performance Obligations and Customer Contract Liabilities (Revenue). There is no substantive comparable evidence regarding revenue recognition or performance obligations.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"While AVGO discloses Contract Liabilities, the primary comparable evidence focuses on the timing differences between performance and payment and the impact of the VMware acquisition. However, AVGO's disclosure explicitly mentions that $2,440 million of revenue recognized in fiscal 2024 came from prior year contract liabilities, but it does not provide a specific 'remaining performance obligation' balance for contracts >1 year in the same manner as MU, AMD, or NVDA. The AVGO disclosure lacks a specific forward-looking obligation total for >1 year contracts comparable to the $141 million figure disclosed by MU. The AVGO candidate avgo_2024_8_D063 discusses contract liabilities balances generally but does not isolate the >1 year remaining performance obligation metric with the same specificity as the target, making it not sufficiently comparable under the strict same_topic requirement for this specific financial measure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D102",
@@ -188,17 +191,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D051",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Remaining Performance Obligations Balance and Recognition",
             "peer_summary": "As of December 28, 2024, the aggregate transaction price allocated to remaining performance obligations under contracts with an original expected duration of more than one year was $85 million, of which $67 million is expected to be recognized in the next 12 months.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.127894,
+            "retrieval_score": 0.128361,
             "relationship": "same_topic",
-            "comparison": "Both MU and AMD disclose future/remaining performance obligations exceeding one year, indicating backlog or long-term contractual commitments. MU reports $141 million in future performance obligations beyond one year, which explicitly includes $907 million in customer prepayments and other contract liabilities. AMD reports a significantly smaller amount of $85 million in aggregate transaction price allocated to remaining performance obligations under contracts with an original expected duration of more than one year, of which $67 million is expected to be recognized in the next 12 months. Both disclosures relate to revenue allocation for unsatisfied performance obligations, though the magnitude and composition (specifically the inclusion of large prepayments in MU's figure) differ substantially.",
+            "comparison": "Both MU and AMD disclose the amount of future revenue allocated to remaining performance obligations for contracts with an original expected duration of more than one year. MU reported $141 million in future performance obligations beyond one year as of August 29, 2024, which included customer prepayments. AMD reported $85 million in remaining performance obligations for contracts with an original expected duration of more than one year as of December 28, 2024, of which $67 million was expected to be recognized in the next 12 months. While both companies quantify forward-looking contractual revenue, MU's figure specifically highlights customer prepayments as part of the obligation pool, whereas AMD's disclosure focuses on the aggregate transaction price and its near-term recognition schedule.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D102",
                 "sentences": [
                   {
@@ -207,19 +214,13 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "As of August 29, 2024, our future performance obligations beyond one year were $141 million, which included customer prepayments and other contract liabilities.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_8_P109_S005",
-                    "paragraph_id": "mu_2024_8_P109",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Customer prepayments made to secure product supply in future periods and other contract liabilities were $907 million as of August 29, 2024, of which $766 million was reported in other current liabilities and the remainder in other noncurrent liabilities.",
-                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D051",
                 "sentences": [
                   {
@@ -238,57 +239,60 @@
       },
       {
         "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "While AVGO discloses Contract Liabilities, the primary comparable evidence focuses on the timing differences between performance and payment and the impact of the VMware acquisition. However, AVGO's disclosure explicitly mentions that $2,440 million of revenue recognized in fiscal 2024 came from prior year contract liabilities, but it does not provide a specific 'remaining performance obligation' balance for contracts >1 year in the same manner as MU, AMD, or NVDA. The AVGO disclosure lacks a specific forward-looking obligation total for >1 year contracts comparable to the $141 million figure disclosed by MU. The AVGO candidate avgo_2024_8_D063 discusses contract liabilities balances generally but does not isolate the >1 year remaining performance obligation metric with the same specificity as the target, making it not sufficiently comparable under the strict same_topic requirement for this specific financial measure."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates for INTC concern Operating Lease Balances and Derivative Fair Values, which are fundamentally different topics from the target's disclosure on Future Performance Obligations and Customer Contract Liabilities (Revenue). There is no substantive comparable evidence regarding revenue recognition or performance obligations."
+      },
+      {
+        "peer_ticker": "NVDA",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_8_D063",
-            "peer_topic": "Contract Balances and Revenue Recognition Timing",
-            "peer_summary": "Contract assets and liabilities balances reflect timing differences between performance and payment, with contract liabilities of which approximately 55% as of November 3, 2024 related to contracts subject to termination for convenience provisions. Revenue recognized in fiscal year 2024 from prior contract liabilities was $2,440 million, while $2,915 million recognized in fiscal year 2023 came from prior year contract liabilities.",
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D106",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Remaining performance obligations and revenue recognition timeline",
+            "peer_summary": "Revenue allocated to remaining performance obligations was $1.1 billion as of January 28, 2024, consisting of contracted license, development, and hardware/software support arrangements. The company expects to recognize approximately 40% of this revenue over the next twelve months, with the remainder thereafter, excluding contracts with a length of one year or less.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.167343,
+            "retrieval_score": 0.109778,
             "relationship": "same_topic",
-            "comparison": "Both MU and AVGO disclose significant contract liabilities arising from customer prepayments or advanced payments. MU reports $907 million in customer prepayments and other contract liabilities, while AVGO reports revenue recognized in fiscal year 2024 from prior contract liabilities of $2,440 million, reflecting a much larger volume of deferred revenue. AVGO further discloses that approximately 55% of its contract liabilities related to contracts subject to termination for convenience provisions, a detail not present in MU's disclosure. Both companies attribute changes in these balances to timing differences between performance and payment.",
-            "peer_source_status": "needs_review",
+            "comparison": "Both MU and NVDA disclose the total revenue allocated to remaining performance obligations for contracts extending beyond one year. MU reported future performance obligations beyond one year of $141 million as of August 29, 2024. NVDA reported revenue allocated to remaining performance obligations of $1.1 billion as of January 28, 2024, explicitly excluding contracts with a length of one year or less. Both disclosures serve to quantify the deferred revenue pipeline for long-term customer commitments, though the magnitudes differ significantly, with NVDA reporting a substantially larger obligation base.",
+            "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D102",
                 "sentences": [
                   {
-                    "sentence_id": "mu_2024_8_P109_S005",
+                    "sentence_id": "mu_2024_8_P109_S004",
                     "paragraph_id": "mu_2024_8_P109",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Customer prepayments made to secure product supply in future periods and other contract liabilities were $907 million as of August 29, 2024, of which $766 million was reported in other current liabilities and the remainder in other noncurrent liabilities.",
+                    "text": "As of August 29, 2024, our future performance obligations beyond one year were $141 million, which included customer prepayments and other contract liabilities.",
                     "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_8_D063",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D106",
                 "sentences": [
                   {
-                    "sentence_id": "avgo_2024_8_P090_S002",
-                    "paragraph_id": "avgo_2024_8_P090",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Changes in our contract assets and contract liabilities primarily result from the timing difference between our performance and the customer's payment.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P090_S008",
-                    "paragraph_id": "avgo_2024_8_P090",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "As of November 3, 2024, approximately 55% of contract liabilities related to contracts subject to termination for convenience provisions.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P090_S009",
-                    "paragraph_id": "avgo_2024_8_P090",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "The amount of revenue recognized during fiscal year 2024 that was included in the contract liabilities balance as of October 29, 2023 was $2,440 million.",
+                    "sentence_id": "nvda_2024_8_P117_S003",
+                    "paragraph_id": "nvda_2024_8_P117",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Revenue allocated to remaining performance obligations, which includes deferred revenue and amounts that will be invoiced and recognized as revenue in future periods, was $1.1 billion as of January 28, 2024.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -299,23 +303,16 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "INTC",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates (operating lease balances and derivative fair value presentation) concern asset/liability classification and lease obligations rather than revenue-related performance obligations or contract liabilities. No candidate addresses future performance obligations or customer prepayments/contract liabilities."
-      },
-      {
-        "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidate is a generic statement regarding the location of Item 8 information in the financial statements and notes, containing no specific data on performance obligations or contract liabilities."
-      },
-      {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "78b9cd7d391a121158134b8a46152a1c607a67883983899234cfca9d917343d6",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "d299a6d4cef93b4074e88f9b178f7503d3c3729843413eb272c139e39afad8ef"
+    }
   }
 }

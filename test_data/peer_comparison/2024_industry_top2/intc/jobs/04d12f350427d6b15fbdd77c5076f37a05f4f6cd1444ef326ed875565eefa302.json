@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "64ad250245260a2e81b54d0d1cc4d060225f8d73bc2c66cfb1bc7eba21326362",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "daed4445e06bbcc5ae851f8b64c66dc03391f13da8f325bf29725162f69882a9",
+  "request_hash": "94ddae0533b6dc009f89193f37ad88ffd3eff423128756bd4b8a2182f5122935",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D102\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Broadcom disclose specific metrics for non-U.S. pension plan assets and obligations, highlighting that non-U.S. plans hold significant value. Intel reports $1.7 billion in accumulated benefit obligations for non-US plans and 60% of total plan assets located outside the US, with these non-US plans having obligations exceeding assets. Similarly, Broadcom reports $229 million in assets for non-U.S. pension plans, with projected benefit obligations of $260 million and accumulated benefit obligations of $229 million for those same plans. Both disclosures focus on the financial health and geographic distribution of international pension liabilities.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P187_S001\",\n\"intc_2024_8_P185_S001\",\n\"intc_2024_8_P187_S003\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P137_S002\",\n\"avgo_2024_8_P138_S001\",\n\"avgo_2024_8_P138_S002\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D094\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Micron and Intel both disclose projected benefit obligations and plan assets for their pension plans, noting that their plans are located at various foreign sites. Intel reports $763 million in US accumulated benefit obligations and $1.7 billion for non-US plans as of Dec 28, 2024. Micron reports total projected benefit obligations of $191 million and plan assets of $261 million as of Aug 29, 2024, specifically for its foreign sites. Both companies provide specific monetary values for these pension obligations and assets, allowing for a comparison of the scale of their international pension liabilities.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P187_S001\",\n\"intc_2024_8_P185_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P101_S001\",\n\"mu_2024_8_P101_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved candidates (D095 on non-marketable securities fair value and D120 on 401(k) plan structure) do not contain substantive pension plan asset locations or benefit obligation amounts comparable to Intel's Note 17 disclosure. D095 concerns equity investments, and D120 concerns defined contribution matching contributions, neither of which address the funded status or asset location of defined benefit pension plans.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates (D102 on inventory purchase obligation expenses and D097 on inventory provisions) relate to supply chain and inventory accounting, not pension benefit plans. There are no candidates containing pension asset locations or benefit obligation data.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D159",
@@ -217,7 +220,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates discuss non-marketable securities fair value and unrecognized tax benefits, which are not comparable to the target's disclosure on pension plan asset location and benefit obligation amounts."
+        "rationale": "The retrieved candidates (D095 on non-marketable securities fair value and D120 on 401(k) plan structure) do not contain substantive pension plan asset locations or benefit obligation amounts comparable to Intel's Note 17 disclosure. D095 concerns equity investments, and D120 concerns defined contribution matching contributions, neither of which address the funded status or asset location of defined benefit pension plans."
       },
       {
         "peer_ticker": "AVGO",
@@ -226,17 +229,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D102",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Non-U.S. Pension Plan Assets and Obligations",
             "peer_summary": "As of November 3, 2024, non-U.S. pension plan assets totaled $229 million, with projected and accumulated benefit obligations of $260 million and $229 million, respectively.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.321585,
+            "retrieval_score": 0.311262,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Broadcom disclose benefit obligations and plan assets specifically for their non-U.S. pension plans. For Broadcom, non-U.S. plan assets were $229 million with accumulated benefit obligations of $229 million and projected benefit obligations of $260 million, indicating the plan was underfunded on a projected basis. In contrast, Intel's non-U.S. plans had significantly larger accumulated benefit obligations of $1.7 billion. Furthermore, Intel explicitly states that only its non-U.S. plans had obligations in excess of plan assets for both 2024 and 2023, aligning with Broadcom's situation where projected obligations ($260 million) exceeded plan assets ($229 million).",
+            "comparison": "Both Intel and Broadcom disclose specific metrics for non-U.S. pension plan assets and obligations, highlighting that non-U.S. plans hold significant value. Intel reports $1.7 billion in accumulated benefit obligations for non-US plans and 60% of total plan assets located outside the US, with these non-US plans having obligations exceeding assets. Similarly, Broadcom reports $229 million in assets for non-U.S. pension plans, with projected benefit obligations of $260 million and accumulated benefit obligations of $229 million for those same plans. Both disclosures focus on the financial health and geographic distribution of international pension liabilities.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D159",
                 "sentences": [
                   {
@@ -244,6 +251,13 @@
                     "paragraph_id": "intc_2024_8_P187",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "As of December 28, 2024, the accumulated benefit obligations were $763 million and $1.7 billion for the US plan and non-US plans, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P185_S001",
+                    "paragraph_id": "intc_2024_8_P185",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "[footnote 2] The fair value of plan assets was approximately 40% in the US and 60% outside of the US as of December 28, 2024 and December 30, 2023.",
                     "visible_in_prompt": true
                   },
                   {
@@ -258,6 +272,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D102",
                 "sentences": [
                   {
@@ -295,17 +310,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D094",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Pension Plan Obligations and Assets",
             "peer_summary": "As of August 29, 2024, the projected benefit obligations of the company's pension plans were $191 million with plan assets of $261 million, compared to $175 million in obligations and $232 million in assets as of August 31, 2023.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.271594,
+            "retrieval_score": 0.265304,
             "relationship": "same_topic",
-            "comparison": "Micron also discloses pension plan obligations and assets for its foreign sites. As of August 29, 2024, Micron's projected benefit obligations were $191 million against plan assets of $261 million, resulting in an overfunded status. This contrasts with Intel, which reported $1.7 billion in accumulated benefit obligations for non-U.S. plans and explicitly noted that these obligations exceeded plan assets. While both companies have non-U.S. pension obligations, Intel's non-U.S. plans are underfunded relative to obligations, whereas Micron's are overfunded.",
+            "comparison": "Micron and Intel both disclose projected benefit obligations and plan assets for their pension plans, noting that their plans are located at various foreign sites. Intel reports $763 million in US accumulated benefit obligations and $1.7 billion for non-US plans as of Dec 28, 2024. Micron reports total projected benefit obligations of $191 million and plan assets of $261 million as of Aug 29, 2024, specifically for its foreign sites. Both companies provide specific monetary values for these pension obligations and assets, allowing for a comparison of the scale of their international pension liabilities.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D159",
                 "sentences": [
                   {
@@ -316,10 +335,10 @@
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "intc_2024_8_P187_S003",
-                    "paragraph_id": "intc_2024_8_P187",
+                    "sentence_id": "intc_2024_8_P185_S001",
+                    "paragraph_id": "intc_2024_8_P185",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "As of December 28, 2024 and December 30, 2023, only non-US plans had projected benefit obligations and accumulated benefit obligations in excess of plan assets.",
+                    "text": "[footnote 2] The fair value of plan assets was approximately 40% in the US and 60% outside of the US as of December 28, 2024 and December 30, 2023.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -327,8 +346,16 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D094",
                 "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P101_S001",
+                    "paragraph_id": "mu_2024_8_P101",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We have pension plans available to employees at various foreign sites.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "mu_2024_8_P101_S002",
                     "paragraph_id": "mu_2024_8_P101",
@@ -345,16 +372,21 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "The retrieved candidates (D102 on inventory purchase obligation expenses and D097 on inventory provisions) relate to supply chain and inventory accounting, not pension benefit plans. There are no candidates containing pension asset locations or benefit obligation data."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "daed4445e06bbcc5ae851f8b64c66dc03391f13da8f325bf29725162f69882a9",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "94ddae0533b6dc009f89193f37ad88ffd3eff423128756bd4b8a2182f5122935"
+    }
   }
 }

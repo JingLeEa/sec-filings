@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "3ef30080ec4549d0bd4d88354cf044ad5d7ed0f3e1b3601f4527ef6d986c54c6",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "51bd16fd2e25f362a257a47f3bf5f773758577aaaa0e9a65ce8df73a467bffff",
+  "request_hash": "254b80c15e92e94c719e1994fee6727d870280830656b72fd2ca0d82cd9ec5fd",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_7_D051\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and AVGO attribute increases in SG&A expenses primarily to higher employee compensation. However, the magnitude and drivers differ significantly: MU reported a 23% increase driven by general employee compensation, whereas AVGO reported a massive 211% increase ($3,367 million) driven by headcount growth specifically from the VMware Merger and higher grant-date fair values of equity awards.\",\n\"target_sentence_ids\": [\n\"mu_2024_7_P021_S001\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_7_P050_S001\",\n\"avgo_2024_7_P050_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D055\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies identify compensation and benefits as the primary driver for their respective SG&A expense increases. MU notes a 23% increase due to higher employee compensation, while NVDA states that its SG&A (and R&D) increase was primarily driven by compensation and benefits reflecting employee growth and compensation increases. Both point to headcount/compensation trends rather than external factors like M&A as the core driver.\",\n\"target_sentence_ids\": [\n\"mu_2024_7_P021_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P061_S001\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_7_D013\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and QCOM report increases in SG&A expenses driven by compensation-related costs. MU cites an increase in employee compensation as the primary reason for a 23% rise. QCOM breaks down its SG&A increase into specific compensation-related items, including share-based compensation ($39 million) and deferred compensation revaluation ($42 million), alongside sales and marketing expenses. Both highlight compensation dynamics as a key component of their SG&A growth.\",\n\"target_sentence_ids\": [\n\"mu_2024_7_P021_S001\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_7_P011_S001\",\n\"qcom_2024_7_P011_S004\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The submitted candidates for AMD focus on R&D expenses (amd_2024_7_D032) or MG&A driven by go-to-market activities (amd_2024_7_D033). While MG&A is related to SG&A, the topic for D032 is explicitly R&D, and D033 focuses on marketing activities rather than the compensation-driven SG&A trends central to the target. Additionally, AMD's MG&A driver is 'go-to-market activities' which is distinct from the 'employee compensation' focus of the target and other matched peers.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The submitted candidates for INTC discuss CCG Revenue Composition (intc_2024_7_D081) and Operating Cash Flow (intc_2024_7_D109). Neither candidate discusses SG&A expense trends, drivers, or amounts. Therefore, no comparable SG&A topic was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_7_D021",
@@ -214,51 +217,9 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D033",
-            "peer_topic": "MG&A expenses increase in 2024",
-            "peer_summary": "Marketing, general and administrative expenses were $2.8 billion in 2024, an increase of $431 million or 18% from $2.4 billion in 2023, primarily due to increased go-to-market activities supporting revenue growth.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.169332,
-            "relationship": "same_topic",
-            "comparison": "Both MU and AMD reported significant increases in their respective operating expense categories (SG&A and MG&A) in 2024, with both attributing the rise to personnel-related costs. MU's SG&A increased 23% primarily due to higher employee compensation (mu_2024_7_P021_S001), while AMD's MG&A increased 18% primarily due to increased go-to-market activities (amd_2024_7_P046_S001). While both reflect cost growth, the drivers differ: MU cites compensation directly, whereas AMD cites strategic activity expansion.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_7_D021",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_7_P021_S001",
-                    "paragraph_id": "mu_2024_7_P021",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Selling, General, and Administrative: SG&A expenses for 2024 increased 23% as compared to 2023 primarily due to an increase in employee compensation.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D033",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P046_S001",
-                    "paragraph_id": "amd_2024_7_P046",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Marketing, general and administrative expenses of $2.8 billion in 2024 increased by $431 million, or 18%, compared to $2.4 billion in 2023.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The submitted candidates for AMD focus on R&D expenses (amd_2024_7_D032) or MG&A driven by go-to-market activities (amd_2024_7_D033). While MG&A is related to SG&A, the topic for D032 is explicitly R&D, and D033 focuses on marketing activities rather than the compensation-driven SG&A trends central to the target. Additionally, AMD's MG&A driver is 'go-to-market activities' which is distinct from the 'employee compensation' focus of the target and other matched peers."
       },
       {
         "peer_ticker": "AVGO",
@@ -267,17 +228,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_7_D051",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "SG&A Expense Increase Drivers",
             "peer_summary": "Selling, general and administrative expense increased $3,367 million, or 211%, in fiscal year 2024 compared to the prior year, primarily due to higher compensation resulting from increased headcount from the VMware Merger and higher grant-date fair values of annual employee equity awards.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.175257,
+            "retrieval_score": 0.172396,
             "relationship": "same_topic",
-            "comparison": "Both MU and AVGO reported substantial year-over-year increases in SG&A expenses for fiscal 2024, with both explicitly citing higher compensation as a primary driver. MU reported a 23% increase primarily due to an increase in employee compensation (mu_2024_7_P021_S001), while AVGO reported a massive 211% increase primarily due to higher compensation resulting from headcount growth from the VMware Merger (avgo_2024_7_P050_S001). Both companies highlight personnel cost inflation, though AVGO's increase is significantly larger and linked to a specific acquisition event.",
+            "comparison": "Both MU and AVGO attribute increases in SG&A expenses primarily to higher employee compensation. However, the magnitude and drivers differ significantly: MU reported a 23% increase driven by general employee compensation, whereas AVGO reported a massive 211% increase ($3,367 million) driven by headcount growth specifically from the VMware Merger and higher grant-date fair values of equity awards.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "7",
                 "disclosure_id": "mu_2024_7_D021",
                 "sentences": [
                   {
@@ -292,6 +257,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D051",
                 "sentences": [
                   {
@@ -319,7 +285,7 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidate disclosures for INTC (intc_2024_7_D081 and intc_2024_7_D109) focus on CCG revenue composition and operating cash flow/net loss drivers, respectively. Neither candidate addresses SG&A expense trends, costs, or drivers, making them substantively incomparable to the target topic of SG&A expense trends."
+        "rationale": "The submitted candidates for INTC discuss CCG Revenue Composition (intc_2024_7_D081) and Operating Cash Flow (intc_2024_7_D109). Neither candidate discusses SG&A expense trends, drivers, or amounts. Therefore, no comparable SG&A topic was retrieved."
       },
       {
         "peer_ticker": "NVDA",
@@ -327,18 +293,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D058",
+            "peer_disclosure_id": "nvda_2024_7_D055",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "R&D and SG&A Expense Drivers",
-            "peer_summary": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
+            "peer_summary": "Research and development expenses and sales, general, and administrative expenses increased in fiscal year 2024, primarily driven by compensation and benefits, including stock-based compensation, which reflected employee growth and compensation increases.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.171868,
+            "retrieval_score": 0.1966,
             "relationship": "same_topic",
-            "comparison": "Both MU and NVDA identified employee growth and compensation increases as the primary drivers for their respective operating expense increases in 2024. MU stated that SG&A expenses increased 23% primarily due to an increase in employee compensation (mu_2024_7_P021_S001). Similarly, NVDA reported that its SG&A and R&D expenses increased primarily due to compensation and benefits, reflecting employee growth and compensation increases (nvda_2024_7_P061_S001). Both companies demonstrate a shared industry trend of expanding operating costs due to talent acquisition and wage pressures.",
+            "comparison": "Both companies identify compensation and benefits as the primary driver for their respective SG&A expense increases. MU notes a 23% increase due to higher employee compensation, while NVDA states that its SG&A (and R&D) increase was primarily driven by compensation and benefits reflecting employee growth and compensation increases. Both point to headcount/compensation trends rather than external factors like M&A as the core driver.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "7",
                 "disclosure_id": "mu_2024_7_D021",
                 "sentences": [
                   {
@@ -353,7 +323,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D058",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D055",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_7_P061_S001",
@@ -376,17 +347,21 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_7_D013",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "SG&A Expense Drivers",
             "peer_summary": "Fiscal 2024 SG&A expenses increased primarily due to $99 million in higher sales and marketing expenses, $42 million in deferred compensation revaluation, and $39 million in share-based compensation.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.229186,
+            "retrieval_score": 0.228844,
             "relationship": "same_topic",
-            "comparison": "Both MU and QCOM reported increases in SG&A expenses for 2024, with both disclosing specific components related to employee compensation. MU's increase was primarily due to an increase in employee compensation (mu_2024_7_P021_S001). QCOM detailed that its SG&A increase included specific line items for share-based compensation ($39 million) and deferred compensation revaluation ($42 million) in addition to sales and marketing costs (qcom_2024_7_P011_S001-qcom_2024_7_P011_S004). Both disclosures highlight compensation-related costs as a key factor in SG&A growth.",
+            "comparison": "Both MU and QCOM report increases in SG&A expenses driven by compensation-related costs. MU cites an increase in employee compensation as the primary reason for a 23% rise. QCOM breaks down its SG&A increase into specific compensation-related items, including share-based compensation ($39 million) and deferred compensation revaluation ($42 million), alongside sales and marketing expenses. Both highlight compensation dynamics as a key component of their SG&A growth.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "7",
                 "disclosure_id": "mu_2024_7_D021",
                 "sentences": [
                   {
@@ -401,6 +376,7 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D013",
                 "sentences": [
                   {
@@ -424,6 +400,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "51bd16fd2e25f362a257a47f3bf5f773758577aaaa0e9a65ce8df73a467bffff",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "254b80c15e92e94c719e1994fee6727d870280830656b72fd2ca0d82cd9ec5fd"
+    }
   }
 }

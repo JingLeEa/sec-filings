@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "1dfdcbf82e8ad34ee596247ebfb2dcd140f311b5ea3a8b81bd73b51fd9197fd0",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "50c6a40eb8f2fb373784e6ca44717cce3aef03c8c722ba6a7a0928b67e78a0bc",
+  "request_hash": "b47593cbd5ab3293d1921402d91413c4e42a3f68c8d4d8457a4e412f20435721",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_7_D012\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Micron disclose that their respective segment operating income improvements were driven by a combination of volume/shipment increases, favorable pricing, and cost reductions, though AMD attributes its gain primarily to higher revenue while Micron specifies bit shipments and ASPs. Additionally, both companies note that higher operating expenses (specifically R&D for Micron, general operating expenses for AMD) partially offset these improvements.\",\n\"target_sentence_ids\": [\n\"amd_2024_7_P037_S001\",\n\"amd_2024_7_P037_S002\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_7_P017_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D048\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and NVIDIA report year-over-year increases in operating income for their key segments, attributing the primary driver to higher revenue. However, while AMD's Client segment recovery involved a turnaround from a loss to a profit with expenses offsetting some gains, NVIDIA's Compute & Networking and Graphics segments saw operating income increases specifically linked to revenue growth without mentioning expense offsets in this specific summary.\",\n\"target_sentence_ids\": [\n\"amd_2024_7_P037_S001\",\n\"amd_2024_7_P037_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P050_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The provided candidates discuss Infrastructure Software operating income driven by VMware contributions and amortization of intangible assets from the VMware merger. These topics are distinct from AMD's Client segment operating income performance driven by hardware revenue and operating expenses.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The provided candidates discuss total revenue decline drivers due to foundry and other segment decreases, and Intel Products operating expenses. These are different from AMD's specific focus on the recovery and drivers of Client segment operating income.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The provided candidates focus on SG&A expense drivers (sales/marketing, deferred compensation) and QCT segment revenue/EBT margin changes. These do not match AMD's specific disclosure on Client segment operating income performance and its revenue/expense drivers.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_7_D025",
@@ -213,26 +216,36 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for Broadcom relate to the Infrastructure Software segment and amortization of intangible assets, which do not concern the Client segment operating income performance topic of the target."
+        "rationale": "The provided candidates discuss Infrastructure Software operating income driven by VMware contributions and amortization of intangible assets from the VMware merger. These topics are distinct from AMD's Client segment operating income performance driven by hardware revenue and operating expenses."
       },
       {
         "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates discuss total revenue decline drivers due to foundry and other segment decreases, and Intel Products operating expenses. These are different from AMD's specific focus on the recovery and drivers of Client segment operating income."
+      },
+      {
+        "peer_ticker": "MU",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_7_D081",
-            "peer_topic": "CCG Revenue Composition Changes",
-            "peer_summary": "CCG revenue increased 4% from 2023 primarily due to higher notebook volume, which was partially offset by lower desktop revenue due to lower demand and lower other CCG revenue resulting from the exit of legacy businesses.",
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_7_D012",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "CNBU operating income change 2024",
+            "peer_summary": "CNBU operating income improved in 2024 compared to 2023, driven by higher bit shipments, increased average selling prices, and cost reductions, partially offset by higher R&D expenses.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.169255,
+            "retrieval_score": 0.286246,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Intel analyze the performance of their Client/Client Computing segments (CCG) in relation to revenue drivers and operating outcomes. AMD reports that its Client segment operating income improved to a profit, primarily driven by higher revenue. Similarly, Intel analyzes its CCG segment, noting that revenue increased 4% primarily due to higher notebook volume, which was partially offset by lower desktop revenue and the exit of legacy businesses. While AMD highlights the net income flip to positive, Intel details the specific volume and mix shifts within the same product category.",
-            "peer_source_status": "source_validated",
+            "comparison": "Both AMD and Micron disclose that their respective segment operating income improvements were driven by a combination of volume/shipment increases, favorable pricing, and cost reductions, though AMD attributes its gain primarily to higher revenue while Micron specifies bit shipments and ASPs. Additionally, both companies note that higher operating expenses (specifically R&D for Micron, general operating expenses for AMD) partially offset these improvements.",
+            "peer_source_status": "needs_review",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D025",
                 "sentences": [
                   {
@@ -253,14 +266,15 @@
               },
               {
                 "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D081",
+                "ticker": "MU",
+                "item": "7",
+                "disclosure_id": "mu_2024_7_D012",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_7_P076_S005",
-                    "paragraph_id": "intc_2024_7_P076",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "CCG revenue increased 4% from 2023 primarily due to higher notebook volume compared to 2023 and was partially offset by lower other CCG revenue, which decreased from 2023 due to the exit of legacy businesses, and lower desktop revenue, which decreased on lower demand compared to 2023.",
+                    "sentence_id": "mu_2024_7_P017_S002",
+                    "paragraph_id": "mu_2024_7_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "• CNBU operating income (loss) improved primarily due to higher bit shipments, increases in average selling prices, and cost reductions, partially offset by higher R&D expenses.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -271,23 +285,76 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates for Micron relate to CNBU and SBU (memory business) operating income changes, which are not comparable to the Client segment PC/laptop market focus of AMD."
-      },
-      {
         "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates for NVIDIA relate to Compute & Networking/All Other segments, which differ from the Client segment focus of AMD."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_7_D048",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Reportable Segment Operating Income Increase",
+            "peer_summary": "Year-on-year increases in operating income for Compute & Networking and Graphics segments were driven by higher revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.228843,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and NVIDIA report year-over-year increases in operating income for their key segments, attributing the primary driver to higher revenue. However, while AMD's Client segment recovery involved a turnaround from a loss to a profit with expenses offsetting some gains, NVIDIA's Compute & Networking and Graphics segments saw operating income increases specifically linked to revenue growth without mentioning expense offsets in this specific summary.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D025",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P037_S001",
+                    "paragraph_id": "amd_2024_7_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Client operating income was $897 million in 2024, compared to operating loss of $46 million in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P037_S002",
+                    "paragraph_id": "amd_2024_7_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The increase in operating income was primarily due to higher revenue, partially offset by higher operating expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D048",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P050_S001",
+                    "paragraph_id": "nvda_2024_7_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Reportable segment operating income - The year-on-year increase in Compute & Networking and Graphics operating income was driven by higher revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for Qualcomm relate to QCT segment revenues/EBT and SG&A expenses, which are not directly comparable to the Client segment operating income performance of AMD."
+        "rationale": "The provided candidates focus on SG&A expense drivers (sales/marketing, deferred compensation) and QCT segment revenue/EBT margin changes. These do not match AMD's specific disclosure on Client segment operating income performance and its revenue/expense drivers."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "50c6a40eb8f2fb373784e6ca44717cce3aef03c8c722ba6a7a0928b67e78a0bc",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "b47593cbd5ab3293d1921402d91413c4e42a3f68c8d4d8457a4e412f20435721"
+    }
   }
 }

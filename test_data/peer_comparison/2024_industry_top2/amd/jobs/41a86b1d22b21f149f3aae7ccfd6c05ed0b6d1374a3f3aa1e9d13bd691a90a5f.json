@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "c9b0ce3d3bc5d95889da89c5127e13504e253174f959fa3f22b87c166c1fd4ca",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "d57984832b9916e175112a1a3efb9579c1abb558e51fa2172818109041b5d213",
+  "request_hash": "28fd995613a584f28830325fbba8cf692e33d8af7e0cadd34d064803b3a6ead5",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_7_D077\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Intel reported year-over-year revenue declines in their respective fiscal years 2024, driven by specific segment weaknesses. AMD's Gaming segment revenue dropped significantly by 58% to $2.6 billion, primarily due to lower semi-custom product revenue. Similarly, Intel's total revenue decreased by 2% to $53.1 billion, a decline attributed to lower Intel Foundry revenue and 'all other' revenue, partially offset by higher Intel Products revenue. While both companies faced headwinds in specific legacy or cyclical areas (Gaming for AMD, Foundry/Other for Intel), they both experienced overall top-line contraction or stagnation compared to the prior year.\",\n\"target_sentence_ids\": [\n\"amd_2024_7_P038_S001\",\n\"amd_2024_7_P038_S002\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_7_P076_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"AVGO's candidates focus on revenue increases driven by AI networking and gross margin impacts from VMware, which contrasts with AMD's Gaming revenue decline. AVGO's semiconductor solutions segment saw increased revenue due to AI networking demand, whereas AMD's Gaming segment saw a 58% decline due to lower semi-custom product revenue. The topics are related broadly to semiconductor financial performance but differ fundamentally in direction (growth vs. sharp decline) and primary drivers (AI networking expansion vs. Gaming market contraction).\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU's provided candidate (mu_2024_7_D006) discusses 2023 revenue declines relative to 2022, not 2024 results. The other candidate (mu_2024_7_D011) also focuses on 2023 business unit performance. Neither provides comparable 2024 financial results or revenue drivers for the same fiscal year as AMD's 2024 Gaming segment decline.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA's candidates discuss gross margin increases driven by Data Center revenue growth, which is the opposite trend to AMD's Gaming revenue decline. NVDA reported significant margin expansion due to Data Center strength, whereas AMD's highlighted item is a sharp contraction in Gaming revenue. The topics (Gross Margin vs. Segment Revenue Decline) and outcomes (Increase vs. Decrease) are not comparable for the same specific topic of revenue driver analysis in the context of decline.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"QCOM's candidates report revenue and net income increases in fiscal 2024, with one candidate focusing on QTL EBT margin expansion due to lower amortization. This contrasts with AMD's reported Gaming revenue decline. QCOM's overall financial results were positive (9% revenue increase), lacking the substantive comparable topic of segment revenue decline seen in AMD's Gaming segment.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_7_D026",
@@ -201,22 +204,32 @@
     "peer_results": [
       {
         "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "AVGO's candidates focus on revenue increases driven by AI networking and gross margin impacts from VMware, which contrasts with AMD's Gaming revenue decline. AVGO's semiconductor solutions segment saw increased revenue due to AI networking demand, whereas AMD's Gaming segment saw a 58% decline due to lower semi-custom product revenue. The topics are related broadly to semiconductor financial performance but differ fundamentally in direction (growth vs. sharp decline) and primary drivers (AI networking expansion vs. Gaming market contraction)."
+      },
+      {
+        "peer_ticker": "INTC",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_7_D048",
-            "peer_topic": "Segment Revenue Drivers",
-            "peer_summary": "Semiconductor solutions segment net revenue increased due to strong demand for AI networking products, partially offset by lower demand for broadband and server storage. Infrastructure software segment net revenue increased primarily due to contributions from VMware.",
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_7_D077",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Total Revenue Decline Drivers",
+            "peer_summary": "2024 revenue was $53.1 billion, a 2% decrease from 2023, primarily driven by lower 'all other' revenue and Intel Foundry revenue, which was partially offset by higher Intel Products revenue.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.162741,
+            "retrieval_score": 0.197986,
             "relationship": "same_topic",
-            "comparison": "Both companies disclose revenue changes driven by specific product categories within their semiconductor segments, though the direction and drivers differ significantly. AMD reports a substantial 58% decrease in its Gaming segment net revenue ($2.6 billion) specifically attributed to lower semi-custom product revenue. In contrast, Broadcom's Semiconductor Solutions segment net revenue increased, driven by strong demand for AI networking products, although this was partially offset by lower demand in other areas like broadband and server storage. Both disclosures break down revenue performance by distinct product lines (semi-custom vs. AI networking/broadband) to explain the financial results.",
-            "peer_source_status": "needs_review",
+            "comparison": "Both AMD and Intel reported year-over-year revenue declines in their respective fiscal years 2024, driven by specific segment weaknesses. AMD's Gaming segment revenue dropped significantly by 58% to $2.6 billion, primarily due to lower semi-custom product revenue. Similarly, Intel's total revenue decreased by 2% to $53.1 billion, a decline attributed to lower Intel Foundry revenue and 'all other' revenue, partially offset by higher Intel Products revenue. While both companies faced headwinds in specific legacy or cyclical areas (Gaming for AMD, Foundry/Other for Intel), they both experienced overall top-line contraction or stagnation compared to the prior year.",
+            "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D026",
                 "sentences": [
                   {
@@ -226,54 +239,6 @@
                     "text": "Gaming net revenue of $2.6 billion in 2024 decreased by 58%, compared to net revenue of $6.2 billion in 2023.",
                     "visible_in_prompt": true
                   },
-                  {
-                    "sentence_id": "amd_2024_7_P038_S002",
-                    "paragraph_id": "amd_2024_7_P038",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The decrease in net revenue was primarily due to lower semi-custom product revenue.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_7_D048",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P046_S002",
-                    "paragraph_id": "avgo_2024_7_P046",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Net revenue from our semiconductor solutions segment increased due to strong product demand for our networking products, primarily AI networking products, partially offset by lower demand for our broadband and server storage products.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
-      },
-      {
-        "peer_ticker": "INTC",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_7_D037",
-            "peer_topic": "Data Center and AI (DCAI) Revenue and Volume Analysis",
-            "peer_summary": "DCAI revenue decreased $4.2 billion from 2022, driven by lower server demand; server volume decreased 37% due to a softening CPU data center market, while server ASPs increased 20% due to a lower mix of hyperscale customer revenue and a higher mix of high core count products.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.176054,
-            "relationship": "same_topic",
-            "comparison": "Both AMD and Intel attribute significant revenue declines to softer demand in their respective core hardware segments, highlighting a broader market weakness in specific CPU/AI server and gaming markets. AMD's Gaming segment revenue fell 58% due to lower semi-custom product revenue. Similarly, Intel's Data Center and AI (DCAI) segment revenue decreased, driven by lower server demand and a 37% drop in server volume due to a 'softening CPU data center market.' While AMD's decline is specific to the Gaming semi-custom products and Intel's is in the general CPU server volume, both disclosures cite reduced demand/volume in their respective processor-centric segments as a primary negative driver.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D026",
-                "sentences": [
                   {
                     "sentence_id": "amd_2024_7_P038_S002",
                     "paragraph_id": "amd_2024_7_P038",
@@ -286,13 +251,14 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D037",
+                "item": "7",
+                "disclosure_id": "intc_2024_7_D077",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_7_P038_S003",
-                    "paragraph_id": "intc_2024_7_P038",
+                    "sentence_id": "intc_2024_7_P076_S001",
+                    "paragraph_id": "intc_2024_7_P076",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "▪DCAI revenue decreased $4.2 billion from 2022, driven by a decrease in server revenue. Server volume decreased 37% from 2022, due to lower demand in a softening CPU data center market. Server ASPs increased 20% from 2022, primarily due to a lower mix of hyperscale customer-related revenue and a higher mix of high core count products.",
+                    "text": "2024 revenue was $53.1 billion, down $1.1 billion, or 2%, from 2023 due to lower all other revenue and lower Intel Foundry revenue, partially offset by higher Intel Products revenue.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -304,169 +270,27 @@
       },
       {
         "peer_ticker": "MU",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_7_D006",
-            "peer_topic": "2023 Total Revenue Decline Drivers",
-            "peer_summary": "Total revenue for 2023 decreased 49% compared to 2022, primarily due to a 51% drop in DRAM sales (high-40% ASP decline and high-single-digit shipment decline) and a 46% drop in NAND sales (low-50% ASP decline partially offset by high-single-digit shipment increases).",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.111285,
-            "relationship": "related_topic",
-            "comparison": "Both disclosures analyze revenue performance by decomposing it into volume/shipment changes and Average Selling Price (ASP) impacts, a common method for semiconductor memory and logic companies. AMD attributes its Gaming revenue decline to 'lower semi-custom product revenue,' which implies a combination of shipment and/or ASP changes. Micron provides a more explicit decomposition in its total revenue decline analysis, separating the impact of ASP declines (e.g., high-40% range for DRAM) from bit shipment declines (high-single-digit range). While AMD does not explicitly break down the 'lower revenue' into ASP vs. Volume in the provided sentence, the analytical framework of decomposing revenue changes into these two components is present in both, though Micron's data is more granular regarding the specific percentages of ASP vs. Volume contribution.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D026",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P038_S002",
-                    "paragraph_id": "amd_2024_7_P038",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The decrease in net revenue was primarily due to lower semi-custom product revenue.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_7_D006",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_7_P009_S001",
-                    "paragraph_id": "mu_2024_7_P009",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Total revenue for 2023 decreased 49% as compared to 2022 primarily due to decreases in sales of both DRAM and NAND products.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_7_P009_S002",
-                    "paragraph_id": "mu_2024_7_P009",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "• Sales of DRAM products decreased 51% primarily due to a high-40% range decline in average selling prices and decreases in bit shipments in the high-single-digit percent range.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "MU's provided candidate (mu_2024_7_D006) discusses 2023 revenue declines relative to 2022, not 2024 results. The other candidate (mu_2024_7_D011) also focuses on 2023 business unit performance. Neither provides comparable 2024 financial results or revenue drivers for the same fiscal year as AMD's 2024 Gaming segment decline."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D056",
-            "peer_topic": "Fiscal 2024 gross margin performance and drivers",
-            "peer_summary": "Overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023, primarily driven by 217% growth in Data Center revenue and lower net inventory provisions as a percentage of revenue.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.122967,
-            "relationship": "related_topic",
-            "comparison": "Both AMD and NVIDIA discuss the impact of revenue mix and product performance on their financial results, but in opposite directions. AMD's Gaming segment revenue declined 58% due to lower semi-custom product revenue. NVIDIA, conversely, saw its overall gross margin increase driven by a 217% growth in Data Center revenue, which represents a strong shift towards high-growth AI products. While AMD's disclosed segment is contracting, NVIDIA's disclosed segment (Data Center) is expanding rapidly, illustrating the divergent performance between traditional gaming/semi-custom markets and the booming AI infrastructure market in the same fiscal period.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D026",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P038_S001",
-                    "paragraph_id": "amd_2024_7_P038",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Gaming net revenue of $2.6 billion in 2024 decreased by 58%, compared to net revenue of $6.2 billion in 2023.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_7_P038_S002",
-                    "paragraph_id": "amd_2024_7_P038",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The decrease in net revenue was primarily due to lower semi-custom product revenue.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D056",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_7_P059_S001",
-                    "paragraph_id": "nvda_2024_7_P059",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_7_P059_S002",
-                    "paragraph_id": "nvda_2024_7_P059",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "The year over year increase was primarily due to strong Data Center revenue growth of 217% and lower net inventory provisions as a percentage of revenue.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "NVDA's candidates discuss gross margin increases driven by Data Center revenue growth, which is the opposite trend to AMD's Gaming revenue decline. NVDA reported significant margin expansion due to Data Center strength, whereas AMD's highlighted item is a sharp contraction in Gaming revenue. The topics (Gross Margin vs. Segment Revenue Decline) and outcomes (Increase vs. Decrease) are not comparable for the same specific topic of revenue driver analysis in the context of decline."
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_7_D005",
-            "peer_topic": "Fiscal 2024 consolidated financial results",
-            "peer_summary": "In fiscal 2024, revenues increased 9% to $39.0 billion and net income increased 40% to $10.1 billion, compared to fiscal 2023 figures of $35.8 billion and $7.2 billion, respectively.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.138263,
-            "relationship": "related_topic",
-            "comparison": "Both disclosures provide a high-level summary of financial performance for the fiscal year, but with contrasting trends. AMD reports a significant 58% decline in its Gaming segment revenue, indicating specific weakness in that area. Qualcomm, however, reports overall revenue growth of 9% to $39.0 billion for fiscal 2024. While AMD's disclosure focuses on a declining segment, Qualcomm's focuses on overall top-line growth, highlighting different operational outcomes for semiconductor peers in the same year.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D026",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P038_S001",
-                    "paragraph_id": "amd_2024_7_P038",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Gaming net revenue of $2.6 billion in 2024 decreased by 58%, compared to net revenue of $6.2 billion in 2023.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_7_D005",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P007_S001",
-                    "paragraph_id": "qcom_2024_7_P007",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "Revenues were $39.0 billion, an increase of 9% compared to revenues of $35.8 billion in fiscal 2023, with net income of $10.1 billion, an increase of 40% compared to net income of $7.2 billion in fiscal 2023.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "QCOM's candidates report revenue and net income increases in fiscal 2024, with one candidate focusing on QTL EBT margin expansion due to lower amortization. This contrasts with AMD's reported Gaming revenue decline. QCOM's overall financial results were positive (9% revenue increase), lacking the substantive comparable topic of segment revenue decline seen in AMD's Gaming segment."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "d57984832b9916e175112a1a3efb9579c1abb558e51fa2172818109041b5d213",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "28fd995613a584f28830325fbba8cf692e33d8af7e0cadd34d064803b3a6ead5"
+    }
   }
 }

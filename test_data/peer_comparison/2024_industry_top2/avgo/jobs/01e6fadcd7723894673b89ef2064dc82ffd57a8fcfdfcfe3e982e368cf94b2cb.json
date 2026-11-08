@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "b9f612d448101030ba774e5abc93dfa885d679f334156d57c47e08d27db3e26e",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "9fd8a558bec3288d31237164a98676dff5b1bc9f83f8b12e989bbd11f0c4181b",
+  "request_hash": "0f760cb083eed96932737492e4bd21ccb3d17abcdcf8b98d5fd9f07072dde766",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_7_D152\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and INTC explicitly identify tax holidays as a factor influencing their effective tax rates and financial results. AVGO discloses a specific Malaysia tax holiday expiring in 2028, while INTC lists 'tax holidays' generally among the various factors that can impact future effective tax rates and cause significant variability in financial results.\",\n\"target_sentence_ids\": [\n\"avgo_2024_7_P027_S006\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_7_P203_S001\",\n\"intc_2024_7_P203_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"No candidate is sufficiently comparable. AMD's candidates focus on aggregate income tax provisions, effective tax rates, Pillar Two impacts, and intercompany transactions, without mentioning specific geographic tax holidays or incentives similar to AVGO's Malaysia tax holiday.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"No candidate is sufficiently comparable. MU's candidates discuss general tax reform risks and the estimation of tax provisions/defer tax assets across various jurisdictions including Malaysia, but do not disclose or discuss specific tax holidays or incentives like AVGO does.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"No candidate is sufficiently comparable. NVDA's candidates focus on interest income composition and unrecognized tax benefits/liabilities, with no mention of tax holidays or specific regional incentives.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate is sufficiently comparable. QCOM's candidate discusses U.S. taxation and FDII benefits, which is a different mechanism and jurisdiction than AVGO's Malaysia tax holiday.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_7_D029",
@@ -190,32 +193,30 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates discuss AMD's overall income tax provision, effective tax rate fluctuations, and Pillar Two impact. While AMD mentions tax incentives in its broader context, the specific candidates do not disclose a specific named tax holiday with an expiration date similar to AVGO's Malaysia holiday. The Pillar Two disclosure is a global regulatory change assessment, not a specific country-level tax holiday structure."
+        "rationale": "No candidate is sufficiently comparable. AMD's candidates focus on aggregate income tax provisions, effective tax rates, Pillar Two impacts, and intercompany transactions, without mentioning specific geographic tax holidays or incentives similar to AVGO's Malaysia tax holiday."
       },
       {
         "peer_ticker": "INTC",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates discuss R&D tax credits and general factors impacting the effective tax rate (including a general mention of 'tax holidays' in a list of risk factors). However, INTC does not disclose a specific active tax holiday with an expiration date comparable to AVGO's Malaysia holiday. The general list of factors is too generic to constitute a meaningful comparison of a specific tax holiday policy."
-      },
-      {
-        "peer_ticker": "MU",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_7_D024",
-            "peer_topic": "Tax Incentives and Profitability Impact",
-            "peer_summary": "Tax incentive arrangements in jurisdictions like Singapore expire through 2034 and require meeting business and employment thresholds. Due to low profitability and the mix of income, these incentives were not material in 2024 or 2023, but they reduced the tax provision by $1.12 billion in 2022.",
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_7_D152",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Factors impacting effective tax rate and variability",
+            "peer_summary": "Changes in the volume and mix of profits, business operating models, tax audits, deferred tax valuations, non-deductible expenses, tax credits, tax holidays, tax laws (including OECD Pillar Two), accounting standards, and repatriation decisions can impact the effective tax rate and cash payments. These factors may cause significant variability in financial results.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.058455,
+            "retrieval_score": 0.029717,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and MU disclose specific tax incentive arrangements that reduce their tax provision, noting the conditions and expiration timelines associated with these benefits. AVGO explicitly states it has a tax holiday in Malaysia expiring in 2028. MU discloses tax incentive arrangements in Singapore expiring through 2034, but notes that for 2024, the benefit was not material due to low profitability, whereas AVGO presents its Malaysia holiday as an active benefit without immediate qualification of materiality in that specific sentence. MU provides a historical reference to a material reduction in tax provision ($1.12 billion in 2022) from such incentives, contrasting with AVGO's forward-looking expiration date.",
+            "comparison": "Both AVGO and INTC explicitly identify tax holidays as a factor influencing their effective tax rates and financial results. AVGO discloses a specific Malaysia tax holiday expiring in 2028, while INTC lists 'tax holidays' generally among the various factors that can impact future effective tax rates and cause significant variability in financial results.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D029",
                 "sentences": [
                   {
@@ -229,28 +230,22 @@
               },
               {
                 "side": "peer",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_7_D024",
+                "ticker": "INTC",
+                "item": "7",
+                "disclosure_id": "intc_2024_7_D152",
                 "sentences": [
                   {
-                    "sentence_id": "mu_2024_7_P024_S001",
-                    "paragraph_id": "mu_2024_7_P024",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "We operate in a number of jurisdictions outside the United States, including Singapore, where we have tax incentive arrangements.",
+                    "sentence_id": "intc_2024_7_P203_S001",
+                    "paragraph_id": "intc_2024_7_P203",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "A number of factors can impact our future effective tax rate or cash payments, which could cause significant variability in our financial results, including:",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "mu_2024_7_P024_S002",
-                    "paragraph_id": "mu_2024_7_P024",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "These incentives expire, in whole or in part, at various dates through 2034 and are conditional, in part, upon meeting certain business operations and employment thresholds.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_7_P024_S003",
-                    "paragraph_id": "mu_2024_7_P024",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "As a result of the low level of profitability and jurisdictional mix of income, the benefit from tax incentive arrangements was not material for 2024 or 2023.",
+                    "sentence_id": "intc_2024_7_P203_S002",
+                    "paragraph_id": "intc_2024_7_P203",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "▪changes in the volume and mix of profits earned and location of assets across jurisdictions with varying tax rates;",
                     "visible_in_prompt": true
                   }
                 ]
@@ -261,17 +256,28 @@
         "rationale": ""
       },
       {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate is sufficiently comparable. MU's candidates discuss general tax reform risks and the estimation of tax provisions/defer tax assets across various jurisdictions including Malaysia, but do not disclose or discuss specific tax holidays or incentives like AVGO does."
+      },
+      {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates focus on NVDA's overall income tax expense, effective tax rate drivers (FDII, stock-based compensation), and interest income. There is no disclosure of a specific foreign tax holiday with an expiration date."
+        "rationale": "No candidate is sufficiently comparable. NVDA's candidates focus on interest income composition and unrecognized tax benefits/liabilities, with no mention of tax holidays or specific regional incentives."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates discuss QCOM's effective tax rate being lower than the statutory rate due to FDII benefits and R&D capitalization. FDII is a U.S. federal deduction, distinct from a foreign tax holiday. There is no mention of a specific foreign jurisdiction tax holiday."
+        "rationale": "No candidate is sufficiently comparable. QCOM's candidate discusses U.S. taxation and FDII benefits, which is a different mechanism and jurisdiction than AVGO's Malaysia tax holiday."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "9fd8a558bec3288d31237164a98676dff5b1bc9f83f8b12e989bbd11f0c4181b",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "0f760cb083eed96932737492e4bd21ccb3d17abcdcf8b98d5fd9f07072dde766"
+    }
   }
 }

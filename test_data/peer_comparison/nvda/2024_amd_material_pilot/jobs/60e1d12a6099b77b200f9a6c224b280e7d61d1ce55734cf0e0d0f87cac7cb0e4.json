@@ -1,0 +1,235 @@
+{
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "d2443464b61c099a31dce4a704ad5957ff6b517c264f942fceff0d95b8e4530d",
+  "request_hash": "d0529bba66ea09cfec93081944eba999f236f62d60176b06dc22131b4d2bd32c",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D041\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVIDIA and AMD disclose their methodologies for valuing stock-based compensation and recognizing expense for similar award types (RSUs, market-based PSUs, and ESPP). Both companies use the closing trading price (minus dividend discount) for standard RSUs and Black-Scholes for ESPP. NVIDIA uses Monte Carlo simulation for market-based PSUs, while AMD uses it for RSUs with market conditions; both apply straight-line expense recognition for these standard awards. A key difference is the recognition method for performance-based awards: NVIDIA uses an accelerated amortization model for corporate-target PSUs, whereas AMD recognizes expense for RSUs with performance or market conditions (PRSUs) ratably for each vesting tranche from the service inception date, rather than a generic accelerated model described in the summary.\",\n\"target_sentence_ids\": [\n\"nvda_2024_8_P038_S001\",\n\"nvda_2024_8_P038_S002\",\n\"nvda_2024_8_P038_S003\",\n\"nvda_2024_8_P038_S004\",\n\"nvda_2024_8_P038_S005\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P048_S001\",\n\"amd_2024_8_P048_S002\",\n\"amd_2024_8_P048_S003\",\n\"amd_2024_8_P048_S004\",\n\"amd_2024_8_P048_S005\"\n]\n}\n],\n\"no_match\": []\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_8_D028",
+    "item": "8",
+    "target_topic": "Stock-Based Compensation Valuation and Expense Recognition Methodology",
+    "target_summary": "The company uses the closing trading price minus a dividend yield discount for RSUs and corporate-target PSUs, Monte Carlo simulation for market-based PSUs, and the Black-Scholes model for ESPP. Compensation expense for RSUs and market-based PSUs is recognized on a straight-line basis, while expense for PSUs and ESPP is recognized using an accelerated amortization model.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0271",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D028 details the fair value determination methods for RSUs, PSUs, and ESPP (closing price, Monte Carlo, Black-Scholes), which matches the specific methods described in D022.\n\nD028 covers the expense recognition patterns (straight-line vs. accelerated) for RSUs, PSUs, and ESPP, which corresponds to the expense recognition and forfeiture estimation policies detailed in D023.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_8_D022",
+            "item": "8",
+            "section": "Note 1 - Organization and Summary of Significant Accounting Policies > Stock-based Compensation",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company uses the closing trading price minus a dividend yield discount as the fair value of RSUs and performance stock units (PSUs) based on corporate financial targets, and employs Monte Carlo simulations for market-based PSUs. Fair values for Employee Stock Purchase Plan (ESPP) shares are estimated using the Black-Scholes model at the commencement of offering periods.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2023_8_D023",
+            "item": "8",
+            "section": "Note 1 - Organization and Summary of Significant Accounting Policies > Stock-based Compensation",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Compensation expense for RSUs and market-based PSUs is recognized using a straight-line attribution method, while PSU expense uses an accelerated amortization model; ESPP stock-based compensation is also expensed using an accelerated amortization model, with forfeitures estimated annually and revised based on historical experience and actual results.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D028",
+            "item": "8",
+            "section": "Note 1 - Organization and Summary of Significant Accounting Policies > Stock-based Compensation",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company uses the closing trading price minus a dividend yield discount for RSUs and corporate-target PSUs, Monte Carlo simulation for market-based PSUs, and the Black-Scholes model for ESPP. Compensation expense for RSUs and market-based PSUs is recognized on a straight-line basis, while expense for PSUs and ESPP is recognized using an accelerated amortization model.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The 2024 disclosure combines two separate 2023 notes into a single section covering stock-based compensation. The valuation methods (Monte Carlo, Black-Scholes) and expense recognition patterns (straight-line vs. accelerated) remain unchanged. This is a reorganization of existing information.",
+          "key_change": "Reorganization of stock-based compensation policies"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0253",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "nvda_2024_8_D028 covers both valuation methods (RSU, PSU, ESPP) and expense recognition patterns (straight-line vs accelerated). This is split in 2025: nvda_2025_8_D026 covers the valuation methods (RSU, PSU, ESPP, plus forfeiture estimation note) and nvda_2025_8_D027 covers the expense recognition patterns (straight-line for RSUs/market-based PSUs, accelerated for PSUs/ESPP). Both 2025 disclosures are specific sub-topics of the broader 2024 stock-based compensation policy.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D028",
+            "item": "8",
+            "section": "Note 1 - Organization and Summary of Significant Accounting Policies > Stock-based Compensation",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company uses the closing trading price minus a dividend yield discount for RSUs and corporate-target PSUs, Monte Carlo simulation for market-based PSUs, and the Black-Scholes model for ESPP. Compensation expense for RSUs and market-based PSUs is recognized on a straight-line basis, while expense for PSUs and ESPP is recognized using an accelerated amortization model.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_8_D026",
+            "item": "8",
+            "section": "Note 1 - Organization and Summary of Significant Accounting Policies > Stock-based Compensation",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company uses the closing stock price minus a dividend yield discount for RSUs, Monte Carlo simulations for market-based PSUs, and the Black-Scholes model for ESPP. Forfeiture rates for RSUs and PSUs are estimated based on historical data.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_8_D027",
+            "item": "8",
+            "section": "Note 1 - Organization and Summary of Significant Accounting Policies > Stock-based Compensation",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Compensation expense for RSUs and market-based PSUs is recognized using a straight-line method over the service period, while expense for non-market PSUs uses an accelerated amortization model based on probable performance targets. ESPP compensation is also expensed using an accelerated amortization model.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.65,
+          "confidence_score": 0.8,
+          "reason": "The 2025 disclosure introduces a new accounting estimate methodology: 'Forfeiture rates for RSUs and PSUs are estimated based on historical data.' This is absent in the 2024 text provided. Additionally, the 2025 disclosure clarifies that the accelerated amortization for 'PSUs' applies specifically to 'non-market PSUs... based on performance targets probable of achievement,' refining the broader 2024 description. This adds a specific quantification methodology (forfeiture estimation) previously not detailed in this summary/evidence block.",
+          "key_change": "Introduction of forfeiture rate estimation"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D041",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Stock-based compensation valuation models and expense recognition policy",
+            "peer_summary": "The Company uses the Black-Scholes and Monte Carlo simulation models to estimate the fair value of stock options, RSUs, and ESPP shares at the grant date. Compensation expense is generally recognized using the straight-line method over the vesting period, with forfeitures estimated at grant and revised if necessary.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.363023,
+            "relationship": "same_topic",
+            "comparison": "Both NVIDIA and AMD disclose their methodologies for valuing stock-based compensation and recognizing expense for similar award types (RSUs, market-based PSUs, and ESPP). Both companies use the closing trading price (minus dividend discount) for standard RSUs and Black-Scholes for ESPP. NVIDIA uses Monte Carlo simulation for market-based PSUs, while AMD uses it for RSUs with market conditions; both apply straight-line expense recognition for these standard awards. A key difference is the recognition method for performance-based awards: NVIDIA uses an accelerated amortization model for corporate-target PSUs, whereas AMD recognizes expense for RSUs with performance or market conditions (PRSUs) ratably for each vesting tranche from the service inception date, rather than a generic accelerated model described in the summary.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D028",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P038_S001",
+                    "paragraph_id": "nvda_2024_8_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We use the closing trading price of our common stock on the date of grant, minus a dividend yield discount, as the fair value of awards of restricted stock units, or RSUs, and performance stock units that are based on our corporate financial performance targets, or PSUs.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P038_S002",
+                    "paragraph_id": "nvda_2024_8_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We use a Monte Carlo simulation on the date of grant to estimate the fair value of performance stock units that are based on market conditions, or market-based PSUs.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P038_S003",
+                    "paragraph_id": "nvda_2024_8_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The compensation expense for RSUs and market-based PSUs is recognized using a straight-line attribution method over the requisite employee service period while compensation expense for PSUs is recognized using an accelerated amortization model.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P038_S004",
+                    "paragraph_id": "nvda_2024_8_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We estimate the fair value of shares to be issued under our employee stock purchase plan, or ESPP, using the Black-Scholes model at the commencement of an offering period in March and September of each year.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P038_S005",
+                    "paragraph_id": "nvda_2024_8_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Stock-based compensation for our ESPP is expensed using an accelerated amortization model.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D041",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P048_S001",
+                    "paragraph_id": "amd_2024_8_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The Company estimates stock-based compensation cost for stock options at the grant date based on the option's fair value as calculated by the Black-Scholes model.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P048_S002",
+                    "paragraph_id": "amd_2024_8_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "For time-based restricted stock units (RSUs), fair value is based on the closing price of the Company's common stock on the grant date.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P048_S003",
+                    "paragraph_id": "amd_2024_8_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The Company estimates the grant-date fair value of RSUs that involve a market condition using the Monte Carlo simulation model.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P048_S004",
+                    "paragraph_id": "amd_2024_8_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The Company estimates the grant-date fair value of stock to be issued under the Company's Employee Stock Purchase plan (ESPP) using the Black-Scholes model.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P048_S005",
+                    "paragraph_id": "amd_2024_8_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Compensation expense is recognized over the vesting period of the applicable award using the straight-line method, except for the compensation expense related to RSUs with performance or market conditions (PRSUs), which are recognized ratably for each vesting tranche from the service inception date to the end of the requisite service period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      }
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "d2443464b61c099a31dce4a704ad5957ff6b517c264f942fceff0d95b8e4530d",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "d0529bba66ea09cfec93081944eba999f236f62d60176b06dc22131b4d2bd32c"
+    }
+  }
+}

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "156eccb9abcdd73be2fd004e323b2eccd5d44a6cf03aee67c6f67d3cc8599585",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "1de53d6f1f66becd1d31b988aef3fd8ba073a4a2f201e82fa97cdc5cedb97503",
+  "request_hash": "9aa1815aa7188136a285cd9d597bb93f5d91a02e07fb7375fafb8dc3176eb5ea",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D011\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron disclose incentive structures that are contingent on meeting specific operational or spending metrics, with exposure tied to performance outcomes. Intel's agreement with SK hynix imposes penalties or incentives up to $500 million annually based on NAND OpCo costs and output, whereas Micron receives governmental incentives for capital expenditures that require maintaining specific spending levels and are subject to reimbursement if conditions are not met. While the direction of cash flow differs (Intel faces potential outflows/penalties vs. Micron receiving inflows/credits), both represent financial commitments tied to measurable business performance metrics.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P143_S001\",\n\"intc_2024_8_P143_S002\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P022_S001\",\n\"mu_2024_8_P022_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved candidates (D136 on purchase commitments and D063 on ZT Systems acquisition) concern different contractual obligations and M&A events, not performance-contingent incentives or penalty structures similar to Intel's wafer manufacturing agreement.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved candidates (D141 on tax penalties and D163 on legal actions) relate to unrecognized tax benefits and general litigation, which are fundamentally different from the operational incentives and penalties associated with a manufacturing joint venture or divestiture.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates (D130 on tax penalties and D080 on equity plans) relate to unrecognized tax benefits and stock-based compensation, which are not comparable to the operational wafer manufacturing incentives and penalties disclosed by Intel.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D125",
@@ -200,22 +203,38 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (D136 on purchase commitments and D063 on ZT Systems acquisition) concern different contractual obligations and M&A events, not performance-contingent incentives or penalty structures similar to Intel's wafer manufacturing agreement."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates (D141 on tax penalties and D163 on legal actions) relate to unrecognized tax benefits and general litigation, which are fundamentally different from the operational incentives and penalties associated with a manufacturing joint venture or divestiture."
+      },
+      {
+        "peer_ticker": "MU",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_8_D136",
-            "peer_topic": "Definition of Purchase Commitments",
-            "peer_summary": "Purchase commitments are defined as obligations under noncancellable purchase orders and contractual obligations requiring minimum purchases or carrying significant cancellation penalties.",
-            "peer_taxonomy": "Supply Chain & Third Parties",
-            "retrieval_score": 0.04517,
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D011",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Government Incentive Policy and Recognition",
+            "peer_summary": "The company receives governmental incentives for capital expenditures and activities, which may require meeting specific metrics and are subject to reimbursement if conditions are not met. These incentives are accounted for as reductions of asset costs (via lower depreciation) or operating expenses, with timing distinctions for deferred income or receivables, and are classified as operating or investing cash flows accordingly.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.04328,
             "relationship": "same_topic",
-            "comparison": "Both Intel and AMD disclose contractual obligations involving potential penalties, but the nature and source differ significantly. Intel’s penalty is specific to a wafer manufacturing agreement with a single partner (SK hynix), contingent on operational cost and output metrics, with a defined aggregate exposure of $1.5 billion. In contrast, AMD defines purchase commitments broadly as obligations under noncancellable orders or contracts where cancellation leads to 'significant penalties,' without disclosing a specific aggregate penalty amount or a single counterpart-specific cap like Intel.",
+            "comparison": "Both Intel and Micron disclose incentive structures that are contingent on meeting specific operational or spending metrics, with exposure tied to performance outcomes. Intel's agreement with SK hynix imposes penalties or incentives up to $500 million annually based on NAND OpCo costs and output, whereas Micron receives governmental incentives for capital expenditures that require maintaining specific spending levels and are subject to reimbursement if conditions are not met. While the direction of cash flow differs (Intel faces potential outflows/penalties vs. Micron receiving inflows/credits), both represent financial commitments tied to measurable business performance metrics.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D125",
                 "sentences": [
                   {
@@ -236,14 +255,22 @@
               },
               {
                 "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_8_D136",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D011",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_8_P144_S002",
-                    "paragraph_id": "amd_2024_8_P144",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Purchase commitments include obligations made under noncancellable purchase orders and contractual obligations requiring minimum purchases or for which cancellation would lead to significant penalties.",
+                    "sentence_id": "mu_2024_8_P022_S001",
+                    "paragraph_id": "mu_2024_8_P022",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We receive incentives from governmental entities related to capital expenditures, expenses, and other activities.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_8_P022_S002",
+                    "paragraph_id": "mu_2024_8_P022",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Our government incentives may require that we meet or maintain specified spending levels and other operational metrics and may be subject to reimbursement if such conditions are not met or maintained.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -254,29 +281,22 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "AVGO candidates relate to unrecognized tax benefits interest/penalties and lease expenses, which are distinct from Intel's supply chain wafer manufacturing incentives and penalties."
-      },
-      {
-        "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "MU candidates relate to derivative counterparty credit risk mitigation and government incentive commitments, which do not match the specific topic of wafer manufacturing agreement performance incentives and penalties."
-      },
-      {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "The retrieved candidates (D130 on tax penalties and D080 on equity plans) relate to unrecognized tax benefits and stock-based compensation, which are not comparable to the operational wafer manufacturing incentives and penalties disclosed by Intel."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "1de53d6f1f66becd1d31b988aef3fd8ba073a4a2f201e82fa97cdc5cedb97503",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "9aa1815aa7188136a285cd9d597bb93f5d91a02e07fb7375fafb8dc3176eb5ea"
+    }
   }
 }

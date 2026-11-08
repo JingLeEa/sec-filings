@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "d9113cb9b90dc871ebbb4379064a89a685c4467bdaf7c22149cf52cb3c4443c4",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "bdce8081bf811b77b1635766792c9d90cfc8eddd9ff3ace84c5f3cdc818a9c0f",
+  "request_hash": "f1a76770d9c6b0ba8b53daa8aac2b57be6cc895f86a92ef49f4b868b8a7ecca5",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D060\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"While MU explicitly discloses the risk that increased tariffs directly increase product costs to customers, AMD identifies 'total cost of ownership' as a primary determinant of product competitiveness. Both companies recognize cost pressures in their markets, but MU highlights a specific regulatory tax impact on prices, whereas AMD frames cost within a broader competitive landscape including performance and features.\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P084_S004\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P063_S002\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_1_D044\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"MU discloses that tariffs increase product costs for customers. AVGO highlights that its software-defined solutions can help customers reduce total cost of ownership. Both disclosures address cost dynamics impacting customers, but MU focuses on cost inflation due to trade regulations, while AVGO focuses on cost optimization through technology solutions.\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P084_S004\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_1_P024_S004\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1_D052\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"MU identifies tariffs as a factor increasing product costs. NVDA identifies U.S. export control licensing requirements as a regulatory constraint on exports to specific regions. Both companies disclose risks arising from government trade regulations impacting their international sales, though MU cites cost increases while NVDA cites access restrictions.\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P084_S004\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1_P053_S001\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_1_D022\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"MU discloses that tariffs increase the cost of products to customers. QCOM discloses that the adoption of on-device AI capabilities drives improvements in latency, cost, and privacy. Both disclosures reference 'cost' in the context of product value proposition to customers, but MU focuses on external regulatory cost increases, whereas QCOM focuses on technological cost benefits for end-users.\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P084_S004\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_1_P015_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"INTC candidate disclosures focus on manufacturing strategy (third-party foundry capacity) and IP protection difficulties in foreign jurisdictions. While INTC mentions 'cost' in the context of manufacturing decisions and IP mentions 'favorable terms', neither disclosure addresses the specific topic of trade tariffs increasing product costs for customers as stated by MU.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_1_D092",
@@ -141,21 +144,115 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses trade regulations, tariffs, or export controls impacting product costs or sales. AMD's candidates focus on Embedded Segment sales channels and general product competitiveness factors like total cost of ownership and timely introductions, which are distinct from government-imposed trade barriers."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1_D060",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Competitive landscape and determinants of product competitiveness",
+            "peer_summary": "AMD operates in a highly competitive market where timely delivery of latest products is critical for revenue growth. Key factors determining product competitiveness include total cost of ownership, performance, features (including AI accelerations), energy efficiency, and software compatibility.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.054261,
+            "relationship": "related_topic",
+            "comparison": "While MU explicitly discloses the risk that increased tariffs directly increase product costs to customers, AMD identifies 'total cost of ownership' as a primary determinant of product competitiveness. Both companies recognize cost pressures in their markets, but MU highlights a specific regulatory tax impact on prices, whereas AMD frames cost within a broader competitive landscape including performance and features.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "1",
+                "disclosure_id": "mu_2024_1_D092",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P084_S004",
+                    "paragraph_id": "mu_2024_1_P084",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In addition, increased tariffs imposed by the countries in which our products are sold can increase the cost of our product to our customers.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "1",
+                "disclosure_id": "amd_2024_1_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1_P063_S002",
+                    "paragraph_id": "amd_2024_1_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We believe that the main factors that determine our product competitiveness are total cost of ownership, timely product introductions, product quality, product features and capabilities (including accelerations for key workloads such as AI), energy efficiency (including power consumption and battery life, given their impact on total cost of ownership), reliability, performance, size (or form factor), selling price, cost, adherence to industry standards (and the creation of open industry standards), level of integration, software and hardware compatibility, ease of use and functionality of software design tools, completeness of applicable software solutions, security and stability, brand recognition and availability.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses trade regulations, tariffs, or export controls impacting product costs or sales. AVGO's candidates focus on IP infringement liability and indemnification, and environmental regulations regarding hazardous substances in manufacturing, neither of which concerns trade tariffs or export controls."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_1_D044",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Cost Reduction via Software-Defined Solutions",
+            "peer_summary": "Customers can deploy these software-defined solutions at speed and operate them at scale across private cloud applications, potentially reducing total cost of ownership.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.033802,
+            "relationship": "related_topic",
+            "comparison": "MU discloses that tariffs increase product costs for customers. AVGO highlights that its software-defined solutions can help customers reduce total cost of ownership. Both disclosures address cost dynamics impacting customers, but MU focuses on cost inflation due to trade regulations, while AVGO focuses on cost optimization through technology solutions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "1",
+                "disclosure_id": "mu_2024_1_D092",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P084_S004",
+                    "paragraph_id": "mu_2024_1_P084",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In addition, increased tariffs imposed by the countries in which our products are sold can increase the cost of our product to our customers.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "1",
+                "disclosure_id": "avgo_2024_1_D044",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1_P024_S004",
+                    "paragraph_id": "avgo_2024_1_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Customers can deploy our solutions at speed and operate them at scale across all their private cloud applications, which can reduce the total cost of ownership.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses trade regulations, tariffs, or export controls impacting product costs or sales. INTC's candidates focus on IP protection difficulties in foreign countries and patent lifecycle management, which are distinct from trade tariffs and export control licensing."
+        "rationale": "INTC candidate disclosures focus on manufacturing strategy (third-party foundry capacity) and IP protection difficulties in foreign jurisdictions. While INTC mentions 'cost' in the context of manufacturing decisions and IP mentions 'favorable terms', neither disclosure addresses the specific topic of trade tariffs increasing product costs for customers as stated by MU."
       },
       {
         "peer_ticker": "NVDA",
@@ -163,18 +260,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1_D046",
-            "peer_topic": "Export Control Licensing Requirements for Specific Regions and Products",
-            "peer_summary": "The U.S. government has imposed various export licensing requirements on Nvidia's products, initially affecting A100 and H100 chips to China, Russia, and the Middle East in 2023, and later expanding in October 2023 to cover products exceeding certain performance thresholds shipped to China, the Middle East, and other designated Country Groups.",
+            "peer_disclosure_id": "nvda_2024_1_D052",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "US Export Control Licensing Requirements for AI Products",
+            "peer_summary": "Starting in Q3 FY2023, the USG imposed licensing requirements on exports of NVIDIA's A100 and H100 circuits and related systems to China, Russia, and the Middle East. These were expanded in October 2023 to cover products exceeding certain performance thresholds sold to China, Country Groups D1/D4/D5, and parties headquartered in D5, affecting products like A800, H800, L4, and RTX 4090.",
             "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.063009,
-            "relationship": "same_topic",
-            "comparison": "Both MU and NVDA disclose risks related to U.S. government trade regulations and export controls impacting their product sales. MU states that 'increased tariffs imposed by the countries in which our products are sold can increase the cost of our product to our customers,' focusing on the cost impact of tariffs. In contrast, NVDA details specific U.S. government licensing requirements imposed on exports to China, Russia, and specific Middle Eastern countries, noting that these requirements 'impact exports' and restrict sales of high-performance products. While both address government trade regulations, MU focuses on tariff-induced cost increases for customers, whereas NVDA focuses on licensing restrictions limiting market access and sales capability.",
+            "retrieval_score": 0.07042,
+            "relationship": "related_topic",
+            "comparison": "MU identifies tariffs as a factor increasing product costs. NVDA identifies U.S. export control licensing requirements as a regulatory constraint on exports to specific regions. Both companies disclose risks arising from government trade regulations impacting their international sales, though MU cites cost increases while NVDA cites access restrictions.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D092",
                 "sentences": [
                   {
@@ -189,15 +290,9 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1_D046",
+                "item": "1",
+                "disclosure_id": "nvda_2024_1_D052",
                 "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_1_P051_S001",
-                    "paragraph_id": "nvda_2024_1_P051",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "During the third quarter of fiscal year 2023, the U.S. government, or the USG, announced licensing requirements that, with certain exceptions, impact exports to China (including Hong Kong and Macau) and Russia of our A100 and H100 integrated circuits, DGX or any other systems or boards which incorporate A100 or H100 integrated circuits.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "nvda_2024_1_P053_S001",
                     "paragraph_id": "nvda_2024_1_P053",
@@ -214,10 +309,62 @@
       },
       {
         "peer_ticker": "QCOM",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses trade regulations, tariffs, or export controls impacting product costs or sales. QCOM's candidates focus on Consumer IoT trends involving AI PCs and website disclaimers, which are unrelated to government trade regulations."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "QCOM",
+            "peer_disclosure_id": "qcom_2024_1_D022",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Consumer IoT and AI PCs",
+            "peer_summary": "Consumer IoT products are adopting latest mobile connectivity and on-device AI capabilities, with new AI-focused PCs launching in 2024 and analysts expecting 50% of PCs sold to be AI capable by 2027.",
+            "peer_taxonomy": "Technology & AI",
+            "retrieval_score": 0.037518,
+            "relationship": "related_topic",
+            "comparison": "MU discloses that tariffs increase the cost of products to customers. QCOM discloses that the adoption of on-device AI capabilities drives improvements in latency, cost, and privacy. Both disclosures reference 'cost' in the context of product value proposition to customers, but MU focuses on external regulatory cost increases, whereas QCOM focuses on technological cost benefits for end-users.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "1",
+                "disclosure_id": "mu_2024_1_D092",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P084_S004",
+                    "paragraph_id": "mu_2024_1_P084",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In addition, increased tariffs imposed by the countries in which our products are sold can increase the cost of our product to our customers.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "QCOM",
+                "item": "1",
+                "disclosure_id": "qcom_2024_1_D022",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1_P015_S003",
+                    "paragraph_id": "qcom_2024_1_P015",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "This enables new services, applications and experiences that can be run directly on the device, driving improvements in latency, cost and privacy.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "bdce8081bf811b77b1635766792c9d90cfc8eddd9ff3ace84c5f3cdc818a9c0f",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "f1a76770d9c6b0ba8b53daa8aac2b57be6cc895f86a92ef49f4b868b8a7ecca5"
+    }
   }
 }

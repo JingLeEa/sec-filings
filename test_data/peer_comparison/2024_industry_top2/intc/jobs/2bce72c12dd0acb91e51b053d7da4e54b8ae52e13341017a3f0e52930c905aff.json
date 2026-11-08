@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "5ee85605f90becaaf905f3282f82e9b0b03ff3799a8ff666559b9d66eec6fcca",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "c28a9f481c8dd829d44dabc2a1eae4177a32d3fc7658704dba8f0a069aafb00c",
+  "request_hash": "8d898e21c75081dc37ed25e17fb34f092325816f9c229d54af2b589791b864e4",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D059\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and NVIDIA disclose the composition of their non-operating income specifically regarding equity investments. Intel reports net gains on equity investments of $242 million, largely driven by realized gains from the sale of its interest in Astera Labs. Similarly, NVIDIA discloses that its 'Other, net' line item includes realized or unrealized gains and losses from investments in non-affiliated entities, noting that changes in this value were driven by these investments. Both companies identify gains/changes in value of non-affiliated equity investments as a key component of their other income/expense.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P088_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P065_S001\",\n\"nvda_2024_7_P065_S002\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_7_D027\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Intel and Qualcomm both identify net gains on equity investments as a significant driver of income in their respective reporting segments/financials. Intel attributes its $242 million net gain on equity investments primarily to the sale of its interest in Astera Labs. Qualcomm similarly reports that its QSI segment earnings before taxes increased primarily due to net gains on certain of its non-marketable equity investments. Both disclosures highlight specific equity investment gains as a positive financial driver.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P088_S001\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_7_P025_S001\"\n]\n},\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D038\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Intel and AMD both disclose components of their other income/expense that include equity investment valuations, though Intel highlights realized gains from specific sales while AMD highlights the composition. Intel reports $242 million in net gains on equity investments, largely from realized sales. AMD reports that its Other income (expense), net is primarily comprised of changes in valuation of equity investments, along with interest income and foreign currency gains. While both cover equity investment impacts on other income, Intel's specific driver was realized gains from sales, whereas AMD's description focuses on the general composition including valuation changes.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P088_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P051_S001\",\n\"amd_2024_7_P052_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"Broadcom's disclosures focus on 'Other income, net' decreasing due to lower interest income from a lower invested balance. While Broadcom's other income includes gains/losses on investments, the specific disclosure provided does not discuss equity investment gains or losses as a driver or component in a way comparable to Intel's specific reporting on $242 million in net equity investment gains. The primary driver cited is interest income, not equity investment performance.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"Micron's supplied candidates discuss net cash used for investing activities, specifically property, plant, and equipment expenditures and sales of fabs, as well as available-for-sale securities cash flows. This is distinct from Intel's Item 7 discussion of 'Gains (Losses) on Equity Investments, Net' which is an income statement line item (operating/non-operating income) rather than a cash flow statement investing activity detail. The topics are not substantively comparable as one is income gain recognition and the other is capital expenditure and cash flow from asset sales.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D094",
@@ -217,17 +220,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D038",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Other Income (Expense), Net Composition and Results",
             "peer_summary": "Other income (expense), net totaled $181 million in 2024, down from $197 million in 2023, primarily due to decreased interest income from lower short-term investment balances; this line item is primarily comprised of interest income from short-term investments, changes in valuation of equity investments, and foreign currency transaction gains and losses.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.174986,
+            "retrieval_score": 0.178993,
             "relationship": "related_topic",
-            "comparison": "Intel reports a specific line item for 'Gains (Losses) on Equity Investments, Net' with a quantified $242 million gain driven by the Astera Labs sale. AMD groups 'changes in valuation of equity investments' into a broader 'Other income (expense), net' line item, which totaled $181 million. While both recognize gains/valuations from equity investments, Intel isolates the equity gain disclosure and highlights a realized sale event, whereas AMD treats it as a component of a mixed income/expense line dominated by interest income changes.",
+            "comparison": "Intel and AMD both disclose components of their other income/expense that include equity investment valuations, though Intel highlights realized gains from specific sales while AMD highlights the composition. Intel reports $242 million in net gains on equity investments, largely from realized sales. AMD reports that its Other income (expense), net is primarily comprised of changes in valuation of equity investments, along with interest income and foreign currency gains. While both cover equity investment impacts on other income, Intel's specific driver was realized gains from sales, whereas AMD's description focuses on the general composition including valuation changes.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D094",
                 "sentences": [
                   {
@@ -242,6 +249,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D038",
                 "sentences": [
                   {
@@ -267,64 +275,15 @@
       },
       {
         "peer_ticker": "AVGO",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_7_D061",
-            "peer_topic": "Other income net decrease due to lower invested balance",
-            "peer_summary": "Other income, net decreased to $406 million in fiscal year 2024 from $512 million in 2023, primarily due to lower interest income resulting from a lower invested balance.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.132949,
-            "relationship": "related_topic",
-            "comparison": "Intel specifically discloses gains from equity investments as a distinct driver of its 'Gains (Losses) on Equity Investments, Net'. Broadcom includes 'gains and losses on investments' as a component of its 'Other income, net' line, which was $406 million. However, Broadcom’s explanation for the year-over-year change in Other Income focuses on lower interest income from invested balances rather than detailing specific equity investment gains or sales comparable to Intel’s Astera Labs transaction.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D094",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P088_S001",
-                    "paragraph_id": "intc_2024_7_P088",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "In 2024, we recognized net gains on equity investments of $242 million primarily due to $460 million of net gains related to our marketable equity investment portfolio, the majority of which related to the sale of our interest in Astera Labs and is within realized gains (losses) on sales of equity investments, net.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_7_D061",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P059_S002",
-                    "paragraph_id": "avgo_2024_7_P059",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Other income (expense), net includes interest income, gains and losses on investments, foreign currency remeasurement and other miscellaneous items.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_7_P059_S004",
-                    "paragraph_id": "avgo_2024_7_P059",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "The decrease was primarily due to lower interest income as a result of a lower invested balance.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Broadcom's disclosures focus on 'Other income, net' decreasing due to lower interest income from a lower invested balance. While Broadcom's other income includes gains/losses on investments, the specific disclosure provided does not discuss equity investment gains or losses as a driver or component in a way comparable to Intel's specific reporting on $242 million in net equity investment gains. The primary driver cited is interest income, not equity investment performance."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Micron's 2024 Item 7 disclosures focus on investing activities (capital expenditures, government incentives, sales of fabs) and cash flows, not gains on equity investments in the context of 'Other' or 'Gains on Equity Investments' income lines comparable to Intel's disclosure. The available candidates relate to 2022/2023 cash flow items or general PP&E expenditures, lacking comparable specific equity investment gain disclosures for 2024."
+        "rationale": "Micron's supplied candidates discuss net cash used for investing activities, specifically property, plant, and equipment expenditures and sales of fabs, as well as available-for-sale securities cash flows. This is distinct from Intel's Item 7 discussion of 'Gains (Losses) on Equity Investments, Net' which is an income statement line item (operating/non-operating income) rather than a cash flow statement investing activity detail. The topics are not substantively comparable as one is income gain recognition and the other is capital expenditure and cash flow from asset sales."
       },
       {
         "peer_ticker": "NVDA",
@@ -332,18 +291,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D062",
-            "peer_topic": "Other Net Income Components and Drivers",
-            "peer_summary": "Other, net includes realized or unrealized gains/losses from investments in non-affiliated entities and foreign currency impacts, with changes in fiscal year 2024 driven by valuation changes in those investments.",
+            "peer_disclosure_id": "nvda_2024_7_D059",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Other Income/Expense Composition and Drivers",
+            "peer_summary": "Other, net, consists of realized or unrealized gains and losses from investments in non-affiliated entities and the impact of changes in foreign currency rates. The change in Other, net compared to fiscal year 2023 was driven by changes in value from non-affiliated investments.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.103225,
+            "retrieval_score": 0.102914,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Nvidia disclose gains from equity investments as a component of their 'other' income lines, but Nvidia’s disclosure is defined by the composition of the line item (non-affiliated entities and FX) without quantifying specific large sales in this snippet, whereas Intel explicitly quantifies a $242 million net gain driven by a specific major sale (Astera Labs). Intel's gain is realized from a specific portfolio event, while Nvidia attributes its changes generally to valuation shifts in non-affiliated investments.",
+            "comparison": "Both Intel and NVIDIA disclose the composition of their non-operating income specifically regarding equity investments. Intel reports net gains on equity investments of $242 million, largely driven by realized gains from the sale of its interest in Astera Labs. Similarly, NVIDIA discloses that its 'Other, net' line item includes realized or unrealized gains and losses from investments in non-affiliated entities, noting that changes in this value were driven by these investments. Both companies identify gains/changes in value of non-affiliated equity investments as a key component of their other income/expense.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D094",
                 "sentences": [
                   {
@@ -358,7 +321,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D062",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D059",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_7_P065_S001",
@@ -388,17 +352,21 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_7_D027",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "QSI Segment EBT Increase Due to Equity Investment Gains",
             "peer_summary": "QSI earnings before taxes increased in fiscal 2024, primarily driven by net gains on certain non-marketable equity investments.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.301051,
+            "retrieval_score": 0.302645,
             "relationship": "same_topic",
-            "comparison": "Both companies attribute positive financial performance in their investment-related metrics to net gains on equity investments in 2024. Intel recognized $242 million in net gains on equity investments primarily from marketable portfolios (Astera Labs sale). Similarly, Qualcomm’s QSI segment saw an increase in earnings before taxes primarily due to net gains on non-marketable equity investments. Both highlight equity investment gains as a key driver of their respective non-operating financial results for the year.",
+            "comparison": "Intel and Qualcomm both identify net gains on equity investments as a significant driver of income in their respective reporting segments/financials. Intel attributes its $242 million net gain on equity investments primarily to the sale of its interest in Astera Labs. Qualcomm similarly reports that its QSI segment earnings before taxes increased primarily due to net gains on certain of its non-marketable equity investments. Both disclosures highlight specific equity investment gains as a positive financial driver.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D094",
                 "sentences": [
                   {
@@ -413,6 +381,7 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D027",
                 "sentences": [
                   {
@@ -429,6 +398,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "c28a9f481c8dd829d44dabc2a1eae4177a32d3fc7658704dba8f0a069aafb00c",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "8d898e21c75081dc37ed25e17fb34f092325816f9c229d54af2b589791b864e4"
+    }
   }
 }

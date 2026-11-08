@@ -1,0 +1,178 @@
+{
+  "input_fingerprint": "7ac7e51684ec84d3077e2cb91f5a79d3d16b4e1e9214066f2ee5185d5b16eb45",
+  "job_fingerprint": "e9cb63812ef36e2486d7adce2498f00c37034ed1fd97551d40a24743828b8d04",
+  "request_hash": "876787b04decde4b021bb68b3664d9460f27d472c28460fea368b99e9a4d512f",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D029\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose that specific assets related to their business operations (prepaid capacity for NVDA and unbilled receivables for AMD) are classified within the 'Prepaid expenses and other current assets' line item on the balance sheet. NVDA explicitly links this classification to short-term prepaid supply and capacity agreements ($2.5 billion), while AMD explains that unbilled receivables for development services and custom products are recorded in the same current asset category.\",\n\"target_sentence_ids\": [\n\"nvda_2024_8_P110_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P037_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"Retrieved candidates (lease liabilities and cash equivalents composition) discuss lease obligations and money-market funds/time deposits. Neither topic corresponds to NVDA's 'Prepaid Supply and Capacity Agreements' nor does AVGO disclose any prepaid capacity or supply agreements in the provided Item 8 data.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"Retrieved candidates discuss short-term debt balances and the presentation of derivative fair values. Neither topic corresponds to NVDA's prepaid supply and capacity agreements, and INTC does not disclose prepaid capacity agreements in the provided Item 8 data.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"Retrieved candidates discuss consideration payable to customers (liabilities) and debt issuance/prepayment losses. Neither topic corresponds to NVDA's prepaid supply and capacity agreements, and MU does not disclose prepaid capacity agreements in the provided Item 8 data.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/nvda",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_8_D101",
+    "item": "8",
+    "target_topic": "Prepaid Supply and Capacity Agreements",
+    "target_summary": "Short-term prepaid supply and capacity agreements included in Prepaid expenses and other current assets were $2.5 billion as of January 28, 2024, and $458 million as of January 29, 2023.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0332",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "The 2024 disclosure details specific short-term prepaid supply and capacity agreements as a component of Prepaid expenses. The 2023 records discuss long-term supply obligations and purchase commitments (D103, D105) but do not contain a specific disclosure for this prepaid asset line item or its amounts. No direct counterpart found.",
+        "previous_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D101",
+            "item": "8",
+            "section": "Note 10 - Balance Sheet Components",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Short-term prepaid supply and capacity agreements included in Prepaid expenses and other current assets were $2.5 billion as of January 28, 2024, and $458 million as of January 29, 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.9,
+          "reason": "This is a newly introduced disclosure item detailing $2.5 billion in short-term prepaid supply and capacity agreements as of January 2024. The introduction of such a significant balance sheet component represents a new operational dependency and financial position element not previously disclosed in this specific manner.",
+          "key_change": "Introduction of prepaid supply agreements disclosure"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0311",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the specific balance of short-term prepaid supply and capacity agreements included in Prepaid expenses and other current assets for the respective fiscal years, citing the same asset category.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D101",
+            "item": "8",
+            "section": "Note 10 - Balance Sheet Components",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Short-term prepaid supply and capacity agreements included in Prepaid expenses and other current assets were $2.5 billion as of January 28, 2024, and $458 million as of January 29, 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_8_D093",
+            "item": "8",
+            "section": "Note 9 - Balance Sheet Components",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Prepaid supply and capacity agreements included in prepaid expenses and other current assets were $3.3 billion as of January 26, 2025, and $2.5 billion as of January 28, 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.7,
+          "confidence_score": 0.85,
+          "reason": "The prepaid supply and capacity agreements increased from $2.5 billion in 2024 to $3.3 billion in 2025. This significant increase in committed spending on supply chain capacity indicates a material change in the company's operational commitments and supply chain strategy.",
+          "key_change": "Significant increase in prepaid supply commitments"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D029",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Definition and Recognition of Unbilled Receivables",
+            "peer_summary": "Unbilled receivables are recorded within Prepaid expenses and other current assets and primarily represent work completed on development services and custom products under non-cancellable purchase orders with no alternative use, recognized as revenue but not yet invoiced.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.169961,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AMD disclose that specific assets related to their business operations (prepaid capacity for NVDA and unbilled receivables for AMD) are classified within the 'Prepaid expenses and other current assets' line item on the balance sheet. NVDA explicitly links this classification to short-term prepaid supply and capacity agreements ($2.5 billion), while AMD explains that unbilled receivables for development services and custom products are recorded in the same current asset category.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D101",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P110_S001",
+                    "paragraph_id": "nvda_2024_8_P110",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "(1)As of January 28, 2024 and January 29, 2023, there was an additional $2.5 billion and $458 million of short-term prepaid supply and capacity agreements included in Prepaid expenses and other current assets, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P037_S001",
+                    "paragraph_id": "amd_2024_8_P037",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Unbilled receivables are recorded within Prepaid expenses and other current assets on the Company's Consolidated Balance Sheets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates (lease liabilities and cash equivalents composition) discuss lease obligations and money-market funds/time deposits. Neither topic corresponds to NVDA's 'Prepaid Supply and Capacity Agreements' nor does AVGO disclose any prepaid capacity or supply agreements in the provided Item 8 data."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates discuss short-term debt balances and the presentation of derivative fair values. Neither topic corresponds to NVDA's prepaid supply and capacity agreements, and INTC does not disclose prepaid capacity agreements in the provided Item 8 data."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Retrieved candidates discuss consideration payable to customers (liabilities) and debt issuance/prepayment losses. Neither topic corresponds to NVDA's prepaid supply and capacity agreements, and MU does not disclose prepaid capacity agreements in the provided Item 8 data."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved."
+      }
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e9cb63812ef36e2486d7adce2498f00c37034ed1fd97551d40a24743828b8d04",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/nvda",
+      "request_hash": "876787b04decde4b021bb68b3664d9460f27d472c28460fea368b99e9a4d512f"
+    }
+  }
+}

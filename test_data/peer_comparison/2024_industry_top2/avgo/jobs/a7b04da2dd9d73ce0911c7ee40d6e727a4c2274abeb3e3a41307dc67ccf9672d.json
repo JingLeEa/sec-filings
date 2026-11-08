@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "238fa683d1337f6061e1f00cf6953325ec1902685281f7114a0b30894e693cd2",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "4e7dbb18a81e5a746e0f483bcfa104220c9ab4b00d65cd3cbf942c303a106561",
+  "request_hash": "be729ff9f6060e87f41949a354f4f98e9665346ba06b5f0adc2f2b7ae550b332",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D100\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and NVDA disclose specific acquisitions of intangible assets during fiscal year 2024. AVGO reports a $600 million acquisition of SoC operations from Seagate to strengthen its product portfolio, while NVDA reports $170 million in property, equipment, and intangible assets acquired by assuming related liabilities. Both disclosures relate to strategic asset acquisitions impacting the balance sheet, though the specific assets (SoC design/manufacturing vs general property/equipment/intangibles) and transaction structures (cash acquisition vs assuming liabilities) differ.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P111_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P109_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"AMD's candidates describe general product portfolio composition and segment definitions, which are not substantively comparable to AVGO's specific disclosure of a completed acquisition transaction of SoC operations.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"INTC's candidates describe an internal operational model change and a CHIPS Act funding agreement, which are unrelated to AVGO's specific external asset acquisition transaction.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU's candidates describe R&D expense recognition policies and intangible asset amortization history, which are accounting policies rather than disclosures of specific acquisition transactions comparable to AVGO's.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D084",
@@ -143,22 +146,44 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "AMD's candidates describe general product portfolio composition and segment definitions, which are not substantively comparable to AVGO's specific disclosure of a completed acquisition transaction of SoC operations."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "INTC's candidates describe an internal operational model change and a CHIPS Act funding agreement, which are unrelated to AVGO's specific external asset acquisition transaction."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "MU's candidates describe R&D expense recognition policies and intangible asset amortization history, which are accounting policies rather than disclosures of specific acquisition transactions comparable to AVGO's."
+      },
+      {
+        "peer_ticker": "NVDA",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_8_D002",
-            "peer_topic": "Product portfolio description",
-            "peer_summary": "AMD's products include AI Accelerators, CPUs, GPUs, APUs, chipsets, data center and professional GPUs, embedded processors, semi-custom SoCs, DPUs, FPGAs, SOMs, SmartNICs, and Adaptive SoC products.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.105794,
-            "relationship": "related_topic",
-            "comparison": "The target disclosure (AVGO) details a specific strategic acquisition of System-on-Chip (SoC) operations from Seagate to strengthen its product portfolio. In contrast, AMD's disclosure (amd_2024_8_D002) describes its existing product portfolio broadly, listing semi-custom SoCs as one of many product categories without discussing any recent acquisitions of SoC assets. While both companies operate in the SoC space and include SoC in their business descriptions, AVGO focuses on M&A activity to expand capabilities, whereas AMD focuses on the composition of its current product lineup.",
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D100",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Asset Acquisitions via Assumed Liabilities",
+            "peer_summary": "Property, equipment, and intangible assets acquired by assuming related liabilities were $170 million, $374 million, and $258 million in fiscal years 2024, 2023, and 2022, respectively.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.057094,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and NVDA disclose specific acquisitions of intangible assets during fiscal year 2024. AVGO reports a $600 million acquisition of SoC operations from Seagate to strengthen its product portfolio, while NVDA reports $170 million in property, equipment, and intangible assets acquired by assuming related liabilities. Both disclosures relate to strategic asset acquisitions impacting the balance sheet, though the specific assets (SoC design/manufacturing vs general property/equipment/intangibles) and transaction structures (cash acquisition vs assuming liabilities) differ.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D084",
                 "sentences": [
                   {
@@ -172,14 +197,15 @@
               },
               {
                 "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_8_D002",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D100",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_8_P012_S003",
-                    "paragraph_id": "amd_2024_8_P012",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "AMD's products include Artificial Intelligence (AI) Accelerators, x86 microprocessors (CPUs) and graphics processing units (GPUs), as standalone devices or as incorporated into accelerated processing units (APUs), chipsets, data center and professional GPUs, embedded processors, semi-custom System-on-Chip (SoC) products, microprocessor and SoC development services and technology, data processing units (DPUs), Field Programmable Gate Arrays (FPGAs), System on Modules (SOMs), Smart Network Interface Cards (SmartNICs), and Adaptive SoC products.",
+                    "sentence_id": "nvda_2024_8_P109_S001",
+                    "paragraph_id": "nvda_2024_8_P109",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Property, equipment and intangible assets acquired by assuming related liabilities during fiscal years 2024, 2023, and 2022 were $170 million, $374 million, and $258 million, respectively.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -190,29 +216,16 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "INTC",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was substantively comparable. INTC disclosures provided relate to internal foundry operating model implementation and goodwill impairments, which do not match the target's topic of an external acquisition of SoC operations."
-      },
-      {
-        "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was substantively comparable. MU disclosures provided relate to intangible asset amortization estimates and capitalization history, which do not match the target's topic of a specific business acquisition."
-      },
-      {
-        "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved."
-      },
-      {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "4e7dbb18a81e5a746e0f483bcfa104220c9ab4b00d65cd3cbf942c303a106561",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "be729ff9f6060e87f41949a354f4f98e9665346ba06b5f0adc2f2b7ae550b332"
+    }
   }
 }

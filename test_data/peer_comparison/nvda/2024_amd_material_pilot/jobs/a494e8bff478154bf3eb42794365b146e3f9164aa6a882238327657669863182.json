@@ -1,211 +1,92 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "0f4850d62d71e5491f2b5f5828bb79ac542bb24c22f8a8eddd14ad9f5bd930c4",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "d2790c5c1162a149cf36dac431d55646f4c894d6896a8e68885368a69bbe1d6d",
+  "request_hash": "8191f29701001a51af29cd250678e57d034a4625b4d1dc0d3ac4b0f900eceaad",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D094\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both NVDA and AMD identify export controls as a significant regulatory risk within Item 1 that could adversely impact their business operations and competitive position. NVIDIA specifically highlights the risk that export controls may 'limit alternative manufacturing locations' given its concentration in the Asia-Pacific region, whereas AMD discloses that changes to existing or new export regulations 'may have a material adverse impact on our future capital expenditures, results of operations or competitive position.' While both acknowledge export controls as a key regulatory burden, NVDA focuses on the supply chain geographic constraint, while AMD emphasizes the broader financial and operational consequences of compliance changes.\",\n\"target_sentence_ids\": [\n\"nvda_2024_1_P055_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P088_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The other candidates (amd_2024_1_D074, amd_2024_1_D073) describe supply chain execution details (ATMP partners and board-level outsourcing) rather than regulatory risks or export control impacts comparable to the target's specific focus on government regulation limiting manufacturing flexibility. Only amd_2024_1_D094 provides a comparable discussion of regulatory risk.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1_D054",
     "item": "1",
-    "target_topic": "Regulatory impact and financial results",
-    "target_summary": "There has been no material impact to capital expenditures, operations, or competitive position from environmental sustainability regulations or renewable energy costs. Fiscal year 2023 environmental metrics were published in May 2023, with fiscal year 2024 metrics expected in the first half of fiscal year 2025.",
+    "target_topic": "Supply Chain Impact from Export Controls",
+    "target_summary": "Existing export controls or changes to them could limit alternative manufacturing locations for NVIDIA's supply chain, which is currently concentrated in the Asia-Pacific region, negatively impacting the business.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0285",
-        "relationship": "one_to_many",
-        "status": "ai_verified",
+        "match_id": "nvda_2023_2024_M0152",
+        "relationship": "current_only",
+        "status": "unmatched",
         "review_reasons": [],
-        "explanation": "The 2023 disclosure D070 combines two distinct facts: (1) the goal to purchase/generate enough renewable energy to match 100% of global electricity usage by FY2025, and (2) the statement that sustainability regulations/renewable energy costs have had no material impact, along with the publication timeline of environmental metrics. The 2024 filing separates these into two disclosures: D055 focuses specifically on the renewable energy goal (and the 44% progress), while D054 covers the no material impact from regulations/costs and the metrics publication timeline (FY2023 published May 2023, FY2024 expected H1 2025). The specific topics match: D070's renewable energy goal matches D055's goal; D070's regulatory impact/metrics timeline matches D054's regulatory impact/metrics timeline.",
-        "previous_disclosures": [
-          {
-            "disclosure_id": "nvda_2023_1_D070",
-            "item": "1",
-            "section": "Climate Change",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "NVIDIA aims to purchase or generate enough renewable energy to match 100% of its global electricity usage for offices and data centers by the end of fiscal year 2025, with no material impact from sustainability regulations on its capital expenditures or results of operations.",
-            "extraction_status": "source_validated"
-          }
-        ],
+        "explanation": "No counterpart was found. 2024 D054 discusses export controls limiting alternative manufacturing locations for the Asia-Pacific concentrated supply chain. 2023 disclosures (D047/D048) mention supply chain concentration and redundancy but do not discuss export controls or regulatory limits on manufacturing locations as a specific risk factor in this context.",
+        "previous_disclosures": [],
         "current_disclosures": [
           {
             "disclosure_id": "nvda_2024_1_D054",
             "item": "1",
-            "section": "Climate Change",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "There has been no material impact to capital expenditures, operations, or competitive position from environmental sustainability regulations or renewable energy costs. Fiscal year 2023 environmental metrics were published in May 2023, with fiscal year 2024 metrics expected in the first half of fiscal year 2025.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_1_D055",
-            "item": "1",
-            "section": "Climate Change",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "NVIDIA aims to match 100% of global office and data center electricity usage with renewable energy by the end of fiscal year 2025, having increased its matched percentage to 44% in fiscal year 2023.",
+            "section": "Government Regulations",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Existing export controls or changes to them could limit alternative manufacturing locations for NVIDIA's supply chain, which is currently concentrated in the Asia-Pacific region, negatively impacting the business.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Expanded",
-            "cosine_similarity": 0.912118,
-            "sequence_match_ratio": 0.797872,
-            "length_ratio": 1.473684,
-            "word_count_delta": 36,
-            "added_tokens_sample": [
-              "in",
-              "may",
-              "2023",
-              "we",
-              "published",
-              "metrics",
-              "related",
-              "to",
-              "our",
-              "environmental",
-              "impact",
-              "for",
-              "fiscal",
-              "year",
-              "2024",
-              "2025",
-              "environmental",
-              "in",
-              "fiscal",
-              "year"
-            ],
-            "removed_tokens_sample": [
-              "2024"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2023_1_D070",
-            "score": 0.92266,
-            "normalised_score": 0.9227,
-            "rationale": "Split: 1 previous → 2 current. Best pair scored 92.27% of ceiling.",
-            "method": "embedding_cosine"
-          },
-          "llm": "Modified",
-          "final_taxonomy": "Modified"
+          "lexical": null,
+          "semantic": null,
+          "llm": "New",
+          "final_taxonomy": "New"
         },
         "materiality_analysis": {
-          "materiality": "No",
-          "materiality_score": 0.15,
+          "materiality": "Yes",
+          "materiality_score": 0.9,
           "confidence_score": 0.95,
-          "reason": "The change represents a reorganization (split) of two distinct topics (renewable energy goals and regulatory impact statements) that were previously combined. The underlying facts regarding the renewable energy goal and the lack of material impact from regulations remain substantively unchanged between the filing years.",
-          "key_change": "Disclosure restructuring"
+          "reason": "The 2024 disclosure introduces a specific new risk factor: that existing or new export controls could limit alternative manufacturing locations for NVIDIA's Asia-Pacific concentrated supply chain. The 2023 disclosures mentioned concentration and redundancy but did not explicitly link supply chain resiliency efforts to regulatory export control constraints on manufacturing locations. This represents a meaningful escalation in the identified operational and regulatory risks.",
+          "key_change": "Introduction of export control supply chain risk"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0266",
-        "relationship": "many_to_one",
+        "match_id": "nvda_2024_2025_M0138",
+        "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures address the corporate strategy and goal of matching 100% of global electricity usage for offices and data centers with renewable energy. The 2024 disclosure cites a 44% match in FY2023 and the FY2025 target. The 2025 disclosure confirms the commitment starting FY2025 and reports progress to 76% in FY2024. They share the same specific subject of renewable energy matching strategy and targets.\n\nDisclosure D054 asserts that FY2023 metrics were published in May 2023 and FY2024 metrics are expected in H1 FY2025. Disclosure D063 contains the counterpart assertion that FY2024 metrics are published in May 2024 and FY2025 metrics are expected in H1 FY2026. These disclosures share the specific topic of the timeline and status of environmental sustainability metrics publication for consecutive fiscal years. Although the previous alignment attempt failed due to citing unselected audit sentences, D063 contains the relevant selected sentences (S002, S003) that correspond to the 'expected publication' and 'no material impact' aspects of the topic, making it the supported counterpart.",
+        "explanation": "Both disclosures discuss how export controls limit alternative manufacturing locations for NVIDIA's supply chain, which is concentrated in the Asia-Pacific region, negatively impacting the business. D062 adds import restrictions on Chinese technology, but the core supply chain manufacturing risk is the shared specific topic.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_1_D054",
             "item": "1",
-            "section": "Climate Change",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "There has been no material impact to capital expenditures, operations, or competitive position from environmental sustainability regulations or renewable energy costs. Fiscal year 2023 environmental metrics were published in May 2023, with fiscal year 2024 metrics expected in the first half of fiscal year 2025.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_1_D055",
-            "item": "1",
-            "section": "Climate Change",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "NVIDIA aims to match 100% of global office and data center electricity usage with renewable energy by the end of fiscal year 2025, having increased its matched percentage to 44% in fiscal year 2023.",
+            "section": "Government Regulations",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Existing export controls or changes to them could limit alternative manufacturing locations for NVIDIA's supply chain, which is currently concentrated in the Asia-Pacific region, negatively impacting the business.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_1_D063",
+            "disclosure_id": "nvda_2025_1_D062",
             "item": "1",
-            "section": "Climate Change",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "NVIDIA committed to matching 100% of global electricity usage for offices and data centers with renewable energy starting fiscal year 2025, having increased the matched percentage to 76% in fiscal year 2024, with 2025 metrics expected in the first half of fiscal year 2026.",
+            "section": "Government Regulations",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "The U.S. government may impose restrictions on importing products incorporating technology developed or manufactured in China, including potential restrictions on automotive products that could impact NVIDIA's automotive customers. Additionally, new or existing export controls could limit alternative manufacturing locations, negatively impacting the business given the current concentration of the supply chain in the Asia-Pacific region.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.880629,
-            "sequence_match_ratio": 0.747664,
-            "length_ratio": 0.910714,
-            "word_count_delta": -10,
-            "added_tokens_sample": [
-              "2025",
-              "2026",
-              "we",
-              "committed",
-              "under",
-              "our",
-              "operational",
-              "control",
-              "starting",
-              "with",
-              "our",
-              "fiscal",
-              "year",
-              "2025",
-              "2024",
-              "made",
-              "progress",
-              "towards",
-              "this",
-              "goal"
-            ],
-            "removed_tokens_sample": [
-              "in",
-              "may",
-              "2023",
-              "we",
-              "published",
-              "metrics",
-              "related",
-              "to",
-              "our",
-              "environmental",
-              "impact",
-              "for",
-              "2023",
-              "fiscal",
-              "year",
-              "2024",
-              "2025",
-              "by",
-              "the",
-              "end"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2024_1_D055",
-            "score": 0.949281,
-            "normalised_score": 0.9493,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 94.93% of ceiling.",
-            "method": "embedding_cosine"
-          },
-          "llm": "Expanded",
-          "final_taxonomy": "Expanded"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.6,
-          "confidence_score": 0.7,
-          "reason": "The disclosure updates key performance metrics for the renewable energy strategy, showing an increase in matched electricity from 44% (FY2023) to 76% (FY2024) and confirming the 100% match goal starting FY2025. While this is an operational progress report, the significant jump in progress (32 percentage points) and the specific confirmation of the FY2025 start date represent a meaningful update to the company's environmental sustainability performance and trajectory, distinct from the previous year's lagging metrics.",
-          "key_change": "Update to renewable energy matching progress metrics (44% to 76%)"
+          "materiality_score": 0.65,
+          "confidence_score": 0.8,
+          "reason": "The 2025 disclosure adds a specific new risk factor: import restrictions on products incorporating technology from China, including potential restrictions on automotive products impacting NVIDIA's customers. While the general supply chain concentration risk remains, this addition of a specific regulatory threat to a key customer segment (automotive) and product category represents a meaningful expansion of the company's risk exposure.",
+          "key_change": "Addition of specific China import restriction risk for automotive customers"
         }
       }
     ],
@@ -217,24 +98,28 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_1_D094",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Scope of Global Regulatory Compliance and Risks",
             "peer_summary": "AMD's global operations are subject to a wide range of US and foreign laws, including those governing export control, data privacy, and AI. While current compliance has not materially impacted financial results, future regulatory changes or failure to comply could materially adversely affect capital expenditures, operations, competitive position, and expose the company to fines, sales limits, and reputational damage.",
             "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.185603,
-            "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD disclose that current compliance with environmental sustainability regulations and broader global laws has had no material adverse impact on their capital expenditures, results of operations, or competitive position. NVDA specifically attributes this 'no material impact' to global environmental sustainability regulations and renewable energy costs, whereas AMD lists environmental requirements among a wider range of compliance obligations (including export control and data privacy) but reaches the same conclusion regarding current financial impact. However, AMD explicitly warns that future regulatory changes could have a material adverse impact, a forward-looking risk not stated in NVDA's climate-specific sentence.",
+            "retrieval_score": 0.076068,
+            "relationship": "related_topic",
+            "comparison": "Both NVDA and AMD identify export controls as a significant regulatory risk within Item 1 that could adversely impact their business operations and competitive position. NVIDIA specifically highlights the risk that export controls may 'limit alternative manufacturing locations' given its concentration in the Asia-Pacific region, whereas AMD discloses that changes to existing or new export regulations 'may have a material adverse impact on our future capital expenditures, results of operations or competitive position.' While both acknowledge export controls as a key regulatory burden, NVDA focuses on the supply chain geographic constraint, while AMD emphasizes the broader financial and operational consequences of compliance changes.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1",
                 "disclosure_id": "nvda_2024_1_D054",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1_P060_S003",
-                    "paragraph_id": "nvda_2024_1_P060",
+                    "sentence_id": "nvda_2024_1_P055_S001",
+                    "paragraph_id": "nvda_2024_1_P055",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "There has been no material impact to our capital expenditures, results of operations or competitive position associated with global environmental sustainability regulations, compliance, or costs from sourcing renewable energy.",
+                    "text": "While we work to enhance the resiliency and redundancy of our supply chain, which is currently concentrated in the Asia-Pacific region, new and existing export controls or changes to existing export controls could limit alternative manufacturing locations and negatively impact our business.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -242,15 +127,9 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "1",
                 "disclosure_id": "amd_2024_1_D094",
                 "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1_P088_S002",
-                    "paragraph_id": "amd_2024_1_P088",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Compliance with these governmental laws and regulations do not presently have a material adverse impact on our capital expenditures, results of operations or competitive position.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "amd_2024_1_P088_S003",
                     "paragraph_id": "amd_2024_1_P088",
@@ -265,9 +144,14 @@
         ],
         "rationale": "",
         "agent_warnings": [
-          "ignored_no_match_note_for_unrequested_peer:INTC"
+          "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "d2790c5c1162a149cf36dac431d55646f4c894d6896a8e68885368a69bbe1d6d",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "8191f29701001a51af29cd250678e57d034a4625b4d1dc0d3ac4b0f900eceaad"
+    }
   }
 }

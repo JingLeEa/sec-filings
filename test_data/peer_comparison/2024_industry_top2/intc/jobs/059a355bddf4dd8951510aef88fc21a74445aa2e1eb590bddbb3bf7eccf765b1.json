@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "ec76da0b2c18b564a27f11dc0447bec3e9ea6e0a152e465e6b08f462c6500028",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "bb2ab79e0f1e4fdfde1b39d1fbd8f11131f94c2f1a8e5f66d3d759098ca1bd02",
+  "request_hash": "ed6a551eac839b0928d8f27d2b8685c12bd1aa0540bd3b11a004e9b0b0df9234",
+  "response_text": "{\n\"comparisons\":[\n{\n\"peer_ticker\":\"MU\",\n\"peer_disclosure_id\":\"mu_2024_8_D004\",\n\"relationship\":\"related_topic\",\n\"comparison\":\"Both Intel and Micron disclose accounting policies for derivative instruments in Item 8. Intel specifically details a bifurcated embedded derivative liability arising from construction liquidated damages, recognizing a $755 million loss in 'Interest and other, net' due to reassessing payment probability. Micron provides a general policy framework stating that non-designated derivatives (which includes embedded derivatives not qualifying for hedge accounting) have fair value changes recognized in 'other non-operating income (expense)'. While Intel applies this general principle to a specific contractual liability, Micron describes the broader accounting treatment for all such instruments.\",\n\"target_sentence_ids\":[\n\"intc_2024_8_P176_S002\",\n\"intc_2024_8_P176_S003\"\n],\n\"peer_sentence_ids\":[\n\"mu_2024_8_P017_S002\"\n]\n}\n],\n\"no_match\":[\n{\n\"peer_ticker\":\"AMD\",\n\"reason\":\"The provided AMD candidates discuss foreign currency forward contracts designated as cash flow hedges and unrecognized tax benefits. Neither candidate addresses embedded derivatives, construction-related liquidated damages, or the specific accounting treatment for non-designated derivatives that does not involve hedge accounting, making them substantively incomparable to Intel's specific embedded derivative liability disclosure.\"\n},\n{\n\"peer_ticker\":\"AVGO\",\n\"reason\":\"The provided AVGO candidates discuss the balance sheet presentation of retirement plan obligations and the reconciliation of unrecognized tax benefits. These topics are unrelated to derivative instruments, embedded derivatives, or hedging activities, and thus are not comparable to Intel's disclosure on embedded derivative liabilities.\"\n},\n{\n\"peer_ticker\":\"NVDA\",\n\"reason\":\"The provided NVDA candidates describe the general accounting policy for derivative instruments (fair value measurement and hedge accounting designations) and the lack of significant impact on OCI. While they cover derivatives generally, they do not contain specific disclosures about embedded derivatives bifurcated from host contracts (like construction agreements) or specific large-scale losses from such instruments, making them less comparable than Micron's explicit statement on non-designated derivative treatment which aligns with Intel's operational application.\"\n},\n{\n\"peer_ticker\":\"QCOM\",\n\"reason\":\"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D151",
@@ -137,13 +140,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for AMD relate to foreign currency forward contracts designated as accounting hedges (cash flow hedges) and unrecognized tax benefits. These are not substantively comparable to Intel's disclosure of an *un-designated* embedded derivative arising from construction liquidated damages, as the economic drivers, accounting treatment (hedge vs. non-hedge), and subject matter (currency risk vs. operational contract obligation) differ significantly."
+        "rationale": "The provided AMD candidates discuss foreign currency forward contracts designated as cash flow hedges and unrecognized tax benefits. Neither candidate addresses embedded derivatives, construction-related liquidated damages, or the specific accounting treatment for non-designated derivatives that does not involve hedge accounting, making them substantively incomparable to Intel's specific embedded derivative liability disclosure."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for Broadcom relate to the balance sheet presentation of retirement plan obligations and unrecognized tax benefits. These topics are unrelated to Intel's disclosure of derivative financial instruments and embedded derivatives."
+        "rationale": "The provided AVGO candidates discuss the balance sheet presentation of retirement plan obligations and the reconciliation of unrecognized tax benefits. These topics are unrelated to derivative instruments, embedded derivatives, or hedging activities, and thus are not comparable to Intel's disclosure on embedded derivative liabilities."
       },
       {
         "peer_ticker": "MU",
@@ -152,17 +155,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D004",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Accounting Treatment of Derivative Instruments",
             "peer_summary": "Derivative instruments are measured at fair value and recognized as assets or liabilities. The accounting for changes in fair value depends on the designation: non-designated derivatives recognize gains/losses in other non-operating income/expense; cash flow hedges include gains/losses in accumulated other comprehensive income before reclassification to earnings; and fair value hedges recognize changes in both the derivative and hedged items' fair values in earnings. For foreign currency and commodity cash flow or fair value hedges, time value is excluded from effectiveness assessment and recognized in earnings via amortization.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.110318,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose accounting policies for derivative instruments that are not designated as hedging instruments, specifically addressing how fair value changes are recognized in earnings. Intel specifically identifies a construction-related embedded derivative requiring bifurcation, recognizing a $755 million loss in 'Interest and other, net,' while Micron provides a broader policy statement that non-designated derivatives result in gains or losses recognized in 'other non-operating income (expense).' Both highlight the recognition of significant fair value adjustments in non-operating income streams, though Intel's instance is a specific, material realized loss from an embedded derivative, whereas Micron's is a general policy framework.",
+            "retrieval_score": 0.101517,
+            "relationship": "related_topic",
+            "comparison": "Both Intel and Micron disclose accounting policies for derivative instruments in Item 8. Intel specifically details a bifurcated embedded derivative liability arising from construction liquidated damages, recognizing a $755 million loss in 'Interest and other, net' due to reassessing payment probability. Micron provides a general policy framework stating that non-designated derivatives (which includes embedded derivatives not qualifying for hedge accounting) have fair value changes recognized in 'other non-operating income (expense)'. While Intel applies this general principle to a specific contractual liability, Micron describes the broader accounting treatment for all such instruments.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D151",
                 "sentences": [
                   {
@@ -184,15 +191,9 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D004",
                 "sentences": [
-                  {
-                    "sentence_id": "mu_2024_8_P017_S001",
-                    "paragraph_id": "mu_2024_8_P017",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "The accounting for changes in the fair value of derivative instruments is based on the intended use of the derivative and the resulting designation.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "mu_2024_8_P017_S002",
                     "paragraph_id": "mu_2024_8_P017",
@@ -209,16 +210,21 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for NVDA."
+        "rationale": "The provided NVDA candidates describe the general accounting policy for derivative instruments (fair value measurement and hedge accounting designations) and the lack of significant impact on OCI. While they cover derivatives generally, they do not contain specific disclosures about embedded derivatives bifurcated from host contracts (like construction agreements) or specific large-scale losses from such instruments, making them less comparable than Micron's explicit statement on non-designated derivative treatment which aligns with Intel's operational application."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for QCOM."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "bb2ab79e0f1e4fdfde1b39d1fbd8f11131f94c2f1a8e5f66d3d759098ca1bd02",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "ed6a551eac839b0928d8f27d2b8685c12bd1aa0540bd3b11a004e9b0b0df9234"
+    }
   }
 }

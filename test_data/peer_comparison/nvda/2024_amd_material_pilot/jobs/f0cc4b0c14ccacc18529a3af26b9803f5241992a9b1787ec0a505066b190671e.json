@@ -1,182 +1,160 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "5dae5fb635d0fa264f687e395c43736de33a48c3668fc420e0c0c6d592a88c88",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "4b6e0be31305e1ad7553ea2a8f62b3dd302216da9d2c5ed65c8ed84c73e7d145",
+  "request_hash": "e8a8c7393dbe2b076eda4df9906543ccae028ae5a8d8090d99f8e1c0b36ddda5",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_7_D031\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both companies reported an increase in gross margin for fiscal year 2024 compared to the prior year, driven by favorable factors in their Data Center segments, though the specific drivers and magnitude differed. NVDA cited a specific 217% growth in Data Center revenue and lower net inventory provisions as the primary drivers for its margin expansion to 72.7%, whereas AMD attributed its margin increase to a 49% rate (up from 46%) driven by a favorable shift in revenue mix towards higher Data Center revenues, partially offset by lower Gaming revenue. Unlike NVDA, which highlighted inventory provisions as a key margin contributor, AMD's disclosure for this topic focused on product mix shifts without mentioning inventory charges as a positive margin driver in the same sentence.\",\n      \"target_sentence_ids\": [\n        \"nvda_2024_7_P059_S001\",\n        \"nvda_2024_7_P059_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_7_P044_S001\",\n        \"amd_2024_7_P044_S002\"\n      ]\n    }\n  ],\n  \"no_match\": []\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D053",
     "item": "7",
-    "target_topic": "Future demand concentration",
-    "target_summary": "Estimated Compute & Networking demand is expected to remain concentrated.",
+    "target_topic": "Gross Margin Year-over-Year Change and Drivers",
+    "target_summary": "Overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023, primarily driven by 217% Data Center revenue growth and lower net inventory provisions as a percentage of revenue.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0339",
-        "relationship": "one_to_many",
+        "match_id": "nvda_2023_2024_M0196",
+        "relationship": "many_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "2023 D053 discusses Compute & Networking revenue growth drivers (hyperscale, AI). 2024 D045 details the same segment's revenue increase with specific drivers (Hopper GPU, InfiniBand). 2024 D053 states Compute & Networking demand remains concentrated, linking to the hyperscale focus in 2023. Both D045 and D053 belong to the same SEC Item 7 topic of Segment Revenue and Concentration, specifically the Compute & Networking segment dynamics.",
+        "explanation": "Both pairs discuss fiscal year gross margin trends and the impact of inventory provisions/charges. Previous: D018 details $2.17B charges reducing margin; D055 states 56.9% margin due to provisions. Current: D022 attributes margin increase to lower net provisions; D053 states 72.7% margin due to lower net provisions.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D053",
+            "disclosure_id": "nvda_2023_7_D018",
             "item": "7",
-            "section": "Results of Operations > Revenue by Reportable Segments",
+            "section": "Fiscal Year 2023 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Fiscal year 2023 Compute & Networking revenue increased, driven by hyperscale customers, CSP partners supporting multi-year cloud service agreements for new AI offerings, R&D activities, and Automotive segment growth. The Compute, Marketing and Programming (CMP) segment contributed an insignificant amount in fiscal year 2023, down from $550 million in fiscal year 2022.",
+            "summary": "Fiscal year 2023 gross margin declined due to $2.17 billion in inventory charges related to excess supply of NVIDIA Ampere architecture Gaming and Data Center products versus demand expectations, particularly in China. These charges comprised $1.04 billion for inventory on hand and $1.13 billion for inventory purchase obligations.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2023_7_D055",
+            "item": "7",
+            "section": "Results of Operations > Gross Profit and Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margin was 56.9% for fiscal year 2023, a decrease from 64.9% in fiscal year 2022, primarily due to $2.17 billion in inventory provisions.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2024_7_D045",
+            "disclosure_id": "nvda_2024_7_D022",
             "item": "7",
-            "section": "Results of Operations > Operating Income by Reportable Segments",
+            "section": "Fiscal Year 2024 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Compute & Networking revenue increased year-on-year, driven by a 266% growth in Compute due to higher shipments of the NVIDIA Hopper GPU computing platform for LLMs, recommendation engines, and generative AI, and a 133% increase in Networking due to higher InfiniBand shipments.",
+            "summary": "Gross margin increased in fiscal year 2024, primarily driven by Data Center revenue growth and lower net inventory provisions as a percentage of revenue.",
             "extraction_status": "source_validated"
           },
           {
             "disclosure_id": "nvda_2024_7_D053",
             "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
+            "section": "Results of Operations > Gross Profit and Gross Margin",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Estimated Compute & Networking demand is expected to remain concentrated.",
+            "summary": "Overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023, primarily driven by 217% Data Center revenue growth and lower net inventory provisions as a percentage of revenue.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.296012,
-            "sequence_match_ratio": 0.180451,
-            "length_ratio": 0.873239,
-            "word_count_delta": -9,
-            "added_tokens_sample": [
-              "revenue",
-              "due",
-              "to",
-              "higher",
-              "data",
-              "center",
-              "revenue",
-              "compute",
-              "grew",
-              "266",
-              "due",
-              "to",
-              "higher",
-              "shipments",
-              "of",
-              "the",
-              "nvidia",
-              "hopper",
-              "gpu",
-              "computing"
-            ],
-            "removed_tokens_sample": [
-              "led",
-              "by",
-              "growth",
-              "from",
-              "hyperscale",
-              "customers",
-              "also",
-              "reflects",
-              "purchases",
-              "made",
-              "by",
-              "several",
-              "csp",
-              "partners",
-              "support",
-              "multi",
-              "year",
-              "cloud",
-              "service",
-              "agreements"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2023_7_D053",
-            "score": 0.794606,
-            "normalised_score": 0.7946,
-            "rationale": "Split: 1 previous → 2 current. Best pair scored 79.46% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.8,
-          "confidence_score": 0.88,
-          "reason": "The 2024 disclosure quantifies the drivers of revenue growth with specific percentages (266% Compute, 133% Networking) and names specific technological products (Hopper GPU, InfiniBand) and use cases (LLMs, generative AI). This contrasts with the 2023 disclosure which used broader, qualitative terms ('hyperscale', 'AI offerings'). The specific quantification and product naming materially changes the substance of the growth drivers disclosed.",
-          "key_change": "Quantification of specific growth drivers"
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "Gross margin improved drastically from 56.9% to 72.7%, driven by the elimination of the $2.17 billion inventory charge seen in the prior year and massive Data Center growth. This represents a fundamental improvement in profitability and operational efficiency.",
+          "key_change": "Significant increase in gross margin due to removal of inventory provisions"
+        }
+      },
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0222",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report the overall gross margin percentage for the fiscal year and attribute it to Data Center revenue growth and inventory provision levels. Previous D055: 56.9% margin in FY2023. Current D053: 72.7% margin in FY2024. They share the specific topic of annual gross margin performance drivers.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_7_D055",
+            "item": "7",
+            "section": "Results of Operations > Gross Profit and Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margin was 56.9% for fiscal year 2023, a decrease from 64.9% in fiscal year 2022, primarily due to $2.17 billion in inventory provisions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D053",
+            "item": "7",
+            "section": "Results of Operations > Gross Profit and Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023, primarily driven by 217% Data Center revenue growth and lower net inventory provisions as a percentage of revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "Gross margin expanded dramatically from 56.9% to 72.7%, an increase of nearly 16 percentage points. This is a highly material change in financial performance and profitability, driven by substantial growth in Data Center revenue and lower inventory provisions. Such a shift fundamentally alters the company's profitability profile.",
+          "key_change": "Substantial gross margin expansion from 56.9% to 72.7%"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0040",
-        "relationship": "previous_only",
-        "status": "unmatched",
+        "match_id": "nvda_2024_2025_M0202",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "No counterpart was found in the 2025 Item 7. The 2024 disclosure specifically discusses the concentration of 'Compute & Networking demand'. While 2025 disclosures mention Compute & Networking revenue growth (D040, D042) or indirect customer concentration (D047), none explicitly state that 'demand' is expected to remain concentrated in the same specific manner or terminology as the 2024 disclosure.",
+        "explanation": "Both disclosures report the year-over-year change in Overall Gross Margin and attribute the increase primarily to Data Center revenue growth/mix. Evidence: nvda_2024_7_P059_S001/S002 and nvda_2025_7_P056_S001/S002.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_7_D053",
             "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
+            "section": "Results of Operations > Gross Profit and Gross Margin",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Estimated Compute & Networking demand is expected to remain concentrated.",
+            "summary": "Overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023, primarily driven by 217% Data Center revenue growth and lower net inventory provisions as a percentage of revenue.",
             "extraction_status": "source_validated"
           }
         ],
-        "current_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D053",
+            "item": "7",
+            "section": "Results of Operations > Gross Profit and Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Gross margins increased to 75.0% in fiscal year 2025 from 72.7% in fiscal year 2024, a year-over-year increase primarily driven by a higher mix of Data Center revenue.",
+            "extraction_status": "source_validated"
+          }
+        ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Removed",
-            "cosine_similarity": 0.0,
-            "sequence_match_ratio": 0.0,
-            "length_ratio": 0.0,
-            "word_count_delta": -10,
-            "added_tokens_sample": [],
-            "removed_tokens_sample": [
-              "our",
-              "estimated",
-              "compute",
-              "networking",
-              "demand",
-              "is",
-              "expected",
-              "to",
-              "remain",
-              "concentrated"
-            ]
-          },
-          "semantic": {
-            "label": "Removed",
-            "score": null,
-            "normalised_score": null,
-            "matched_id": null,
-            "rationale": "One-sided change established by the finalized alignment.",
-            "method": "alignment_presence"
-          },
-          "llm": "Removed",
-          "final_taxonomy": "Removed"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
-          "materiality": "No",
-          "materiality_score": 0.2,
-          "confidence_score": 0.85,
-          "reason": "The 2024 disclosure states that Compute & Networking demand is expected to remain concentrated. The removal of this forward-looking statement does not materially change the disclosure, as concentration of demand among hyperscalers is a well-known, ongoing structural characteristic of the industry. The substantive risk remains the same even if the specific textual disclosure is removed or condensed.",
-          "key_change": "Removal of forward-looking concentration of demand statement"
+          "materiality": "Yes",
+          "materiality_score": 0.6,
+          "confidence_score": 0.8,
+          "reason": "The driver for gross margin improvement shifts from 'strong Data Center revenue growth... and lower net inventory provisions' in 2024 to primarily 'a higher mix of Data Center revenue' in 2025. The removal of 'lower net inventory provisions' as a primary driver suggests a change in the operational factors sustaining margin expansion, indicating a shift in cost structure dynamics.",
+          "key_change": "Shift in primary drivers of gross margin expansion"
         }
       }
     ],
@@ -187,25 +165,36 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D028",
-            "peer_topic": "Embedded segment net revenue and drivers for fiscal year 2024",
-            "peer_summary": "Embedded net revenue decreased by 33% to $3.6 billion in 2024 from $5.3 billion in 2023, primarily due to lower demand as customers normalized inventory levels.",
+            "peer_disclosure_id": "amd_2024_7_D031",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Gross Margin Performance 2024",
+            "peer_summary": "Gross margin as a percentage of net revenue increased to 49% in 2024 from 46% in 2023. This increase was primarily driven by a favorable shift in revenue mix towards higher Data Center and Client revenues, as well as lower Gaming revenue, which was partially offset by the impact of lower Embedded revenue.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.052363,
+            "retrieval_score": 0.245822,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD disclose specific revenue drivers and volume trends for their respective core business segments in 2024, highlighting the impact of demand cycles and inventory normalization. NVDA emphasizes that its Compute & Networking demand 'is expected to remain concentrated,' indicating sustained strength in a specific high-growth area. In contrast, AMD reports a significant contraction in its Embedded segment, where net revenue 'decreased by 33%, compared to net revenue of $5.3 billion in 2023,' attributing this decline to 'lower demand as customers continued to normalize their inventory levels.' While NVDA highlights concentration and growth in AI infrastructure, AMD highlights a cyclic downturn and inventory correction in its embedded markets.",
+            "comparison": "Both companies reported an increase in gross margin for fiscal year 2024 compared to the prior year, driven by favorable factors in their Data Center segments, though the specific drivers and magnitude differed. NVDA cited a specific 217% growth in Data Center revenue and lower net inventory provisions as the primary drivers for its margin expansion to 72.7%, whereas AMD attributed its margin increase to a 49% rate (up from 46%) driven by a favorable shift in revenue mix towards higher Data Center revenues, partially offset by lower Gaming revenue. Unlike NVDA, which highlighted inventory provisions as a key margin contributor, AMD's disclosure for this topic focused on product mix shifts without mentioning inventory charges as a positive margin driver in the same sentence.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D053",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_7_P056_S001",
-                    "paragraph_id": "nvda_2024_7_P056",
+                    "sentence_id": "nvda_2024_7_P059_S001",
+                    "paragraph_id": "nvda_2024_7_P059",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our estimated Compute & Networking demand is expected to remain concentrated.",
+                    "text": "Our overall gross margin increased to 72.7% in fiscal year 2024 from 56.9% in fiscal year 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P059_S002",
+                    "paragraph_id": "nvda_2024_7_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The year over year increase was primarily due to strong Data Center revenue growth of 217% and lower net inventory provisions as a percentage of revenue.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -213,68 +202,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D028",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D031",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P040_S001",
-                    "paragraph_id": "amd_2024_7_P040",
+                    "sentence_id": "amd_2024_7_P044_S001",
+                    "paragraph_id": "amd_2024_7_P044",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Embedded net revenue of $3.6 billion in 2024 decreased by 33%, compared to net revenue of $5.3 billion in 2023.",
+                    "text": "Gross margin as a percentage of net revenue was 49% in 2024 compared to 46% in 2023.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_7_P040_S002",
-                    "paragraph_id": "amd_2024_7_P040",
+                    "sentence_id": "amd_2024_7_P044_S002",
+                    "paragraph_id": "amd_2024_7_P044",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The decrease in net revenue was primarily due to lower demand as customers continued to normalize their inventory levels.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D042",
-            "peer_topic": "International Sales Revenue and Currency",
-            "peer_summary": "International sales accounted for 66% of net revenue in 2024 (65% in 2023) and are expected to remain significant; substantially all sales transactions are denominated in U.S. dollars.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.051814,
-            "relationship": "related_topic",
-            "comparison": "Both companies disclose the geographic concentration of their revenue as a key business driver. NVDA explicitly states that its estimated Compute & Networking demand 'is expected to remain concentrated,' implying a reliance on a specific subset of customers or sectors. AMD provides a broader geographic perspective, noting that 'International sales as a percentage of net revenue were 66% in 2024' and that 'We expect that international sales will continue to be a significant portion of total sales.' While NVDA's concentration refers to customer/sector density within its demand, AMD's disclosure quantifies the international share of its total sales, both serving as risk and driver disclosures regarding revenue concentration.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D053",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_7_P056_S001",
-                    "paragraph_id": "nvda_2024_7_P056",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our estimated Compute & Networking demand is expected to remain concentrated.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D042",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P055_S001",
-                    "paragraph_id": "amd_2024_7_P055",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "International sales as a percentage of net revenue were 66% in 2024 and 65% in 2023.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_7_P055_S002",
-                    "paragraph_id": "amd_2024_7_P055",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We expect that international sales will continue to be a significant portion of total sales in the foreseeable future.",
+                    "text": "The increase in gross margin was due to a favorable shift in revenue mix of higher Data Center and Client revenues, lower Gaming revenue, partially offset by the impact of lower Embedded revenue.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -284,6 +226,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "4b6e0be31305e1ad7553ea2a8f62b3dd302216da9d2c5ed65c8ed84c73e7d145",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "e8a8c7393dbe2b076eda4df9906543ccae028ae5a8d8090d99f8e1c0b36ddda5"
+    }
   }
 }

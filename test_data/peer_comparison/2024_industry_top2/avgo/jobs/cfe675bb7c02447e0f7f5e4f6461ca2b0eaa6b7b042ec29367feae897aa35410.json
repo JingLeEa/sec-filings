@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "6d68143b3e161a1baee47b8c64a9c9d62aec67b03a02053088a406ce2aec68c1",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "42f4c813e2638d4a536a9e6ad73ce0db8d2373075daf974053d55041835825b0",
+  "request_hash": "f0ce0ea08ba369a2ef72171488a7a610620c105c196a1505a150bac10582d7db",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D102\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and MU disclose specific quantitative details regarding contract liabilities and customer prepayments in Item 8. AVGO reports that its contract assets and liabilities as of November 3, 2024, included the impact of VMware balances acquired on November 22, 2023, highlighting the effect of major M&A on these balance sheet items. Similarly, MU reports specific dollar amounts for customer prepayments and other contract liabilities ($907 million as of August 29, 2024), broken down by current and noncurrent classifications, providing a granular view of deferred revenue and contract obligations.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P090_S003\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P109_S005\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"None of the AMD candidates (Acquisition-Related Costs Definition, Materiality and Segment Reporting of 2023 Acquisitions) substantively compare to AVGO's disclosure on contract assets/liabilities and the specific impact of the VMware acquisition on those balances. AMD's disclosures focus on cost definitions and the non-materiality of acquired businesses' financial results, which is a different topic from contract balance accounting.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"None of the INTC candidates (Goodwill and Intangible Asset Impairments, Definition of Reporting Unit Carrying Value) substantively compare to AVGO's disclosure on contract assets/liabilities. INTC's disclosures focus on impairment charges and the mechanics of carrying value for impairment assessments, which are distinct from the revenue contract balance metrics discussed by AVGO.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"None of the NVDA candidates (Single Performance Obligation Treatment, Allowance for Doubtful Accounts Mechanics) substantively compare to AVGO's disclosure on contract assets/liabilities. NVDA's candidates discuss the allocation of transaction price for single obligations and the mechanics of doubtful account allowances, neither of which addresses the specific contract asset/liability balances or M&A impact reported by AVGO.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D064",
@@ -157,13 +160,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "AMD candidates discuss acquisition-related costs (transaction fees, write-downs) and the materiality of acquired businesses' results, which are distinct from Avago's disclosure regarding the inclusion of acquired contract asset and liability balances in the revenue recognition note."
+        "rationale": "None of the AMD candidates (Acquisition-Related Costs Definition, Materiality and Segment Reporting of 2023 Acquisitions) substantively compare to AVGO's disclosure on contract assets/liabilities and the specific impact of the VMware acquisition on those balances. AMD's disclosures focus on cost definitions and the non-materiality of acquired businesses' financial results, which is a different topic from contract balance accounting."
       },
       {
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Intel candidates discuss reporting unit carrying values for impairment assessments and the presentation of derivative fair values, which are unrelated to Avago's disclosure of contract balances impacted by acquisitions."
+        "rationale": "None of the INTC candidates (Goodwill and Intangible Asset Impairments, Definition of Reporting Unit Carrying Value) substantively compare to AVGO's disclosure on contract assets/liabilities. INTC's disclosures focus on impairment charges and the mechanics of carrying value for impairment assessments, which are distinct from the revenue contract balance metrics discussed by AVGO."
       },
       {
         "peer_ticker": "MU",
@@ -172,17 +175,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D102",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Future Performance Obligations and Contract Liabilities",
             "peer_summary": "As of August 29, 2024, future performance obligations beyond one year totaled $141 million, and customer prepayments and other contract liabilities totaled $907 million, with $766 million classified as other current liabilities.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.156379,
+            "retrieval_score": 0.154348,
             "relationship": "same_topic",
-            "comparison": "Both Avago and Micron disclose the composition and status of contract liabilities (unearned revenue) as part of their revenue recognition disclosures. Avago specifically highlights that its contract liabilities include balances acquired from VMware, whereas Micron provides specific quantitative thresholds, detailing $907 million in customer prepayments and contract liabilities, with a significant portion classified as current. Both entities address the balance sheet impact of revenue contracts, though Avago focuses on the acquisition integration effect while Micron quantifies the magnitude of forward-looking obligations.",
+            "comparison": "Both AVGO and MU disclose specific quantitative details regarding contract liabilities and customer prepayments in Item 8. AVGO reports that its contract assets and liabilities as of November 3, 2024, included the impact of VMware balances acquired on November 22, 2023, highlighting the effect of major M&A on these balance sheet items. Similarly, MU reports specific dollar amounts for customer prepayments and other contract liabilities ($907 million as of August 29, 2024), broken down by current and noncurrent classifications, providing a granular view of deferred revenue and contract obligations.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D064",
                 "sentences": [
                   {
@@ -197,6 +204,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D102",
                 "sentences": [
                   {
@@ -217,14 +225,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "NVIDIA's candidate is a generic cross-reference to the location of financial statement information, not a substantive comparison of contract balances or revenue recognition impacts."
+        "rationale": "None of the NVDA candidates (Single Performance Obligation Treatment, Allowance for Doubtful Accounts Mechanics) substantively compare to AVGO's disclosure on contract assets/liabilities. NVDA's candidates discuss the allocation of transaction price for single obligations and the mechanics of doubtful account allowances, neither of which addresses the specific contract asset/liability balances or M&A impact reported by AVGO."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "42f4c813e2638d4a536a9e6ad73ce0db8d2373075daf974053d55041835825b0",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "f0ce0ea08ba369a2ef72171488a7a610620c105c196a1505a150bac10582d7db"
+    }
   }
 }

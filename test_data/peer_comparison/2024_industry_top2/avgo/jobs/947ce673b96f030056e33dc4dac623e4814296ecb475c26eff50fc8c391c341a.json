@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "9dcaa20dbff5bc647378f79e68faedf4ed823b8129319bc03845669ff2806f8b",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "d848408d1b630ce9e2e07a1d5293dba1b91d63b72b710abb37a5f309f0017790",
+  "request_hash": "fde07c5795aed988f2e4047815a9a93cf2bd689155bfd285d2a724e091cd58ae",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_7_D025\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both AVGO and AMD disclose specific segment operating income performance in 2024, attributing the financial results to operational drivers. AVGO reports an increase in Infrastructure Software operating income primarily driven by VMware contributions, whereas AMD reports an improvement in Client segment operating income from a loss to a profit, primarily driven by higher revenue. Both companies explain the direction of their segment operating income through specific business drivers (acquisitions/volume vs. revenue growth).\",\n      \"target_sentence_ids\": [\n        \"avgo_2024_7_P056_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_7_P037_S001\",\n        \"amd_2024_7_P037_S002\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"NVDA\",\n      \"peer_disclosure_id\": \"nvda_2024_7_D048\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both AVGO and NVDA analyze the drivers behind year-over-year increases in operating income for their respective reportable segments. AVGO identifies VMware as the primary contributor to its Infrastructure Software segment's operating income growth. Similarly, NVDA attributes the year-on-year increase in Compute & Networking and Graphics operating income primarily to higher revenue.\",\n      \"target_sentence_ids\": [\n        \"avgo_2024_7_P056_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"nvda_2024_7_P050_S001\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"INTC\",\n      \"peer_disclosure_id\": \"intc_2024_7_D080\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both AVGO and INTC disclose revenue-driven growth within specific business groups as the primary factor for financial performance improvements. AVGO highlights contributions from VMware driving its Infrastructure Software operating income. INTC highlights higher Client Computing Group (CCG) and Data Center and AI (DCAI) revenue as the primary drivers for the increase in Intel Products revenue. Both disclosures link segment-level financial improvements to specific internal business volume or contribution drivers.\",\n      \"target_sentence_ids\": [\n        \"avgo_2024_7_P056_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"intc_2024_7_P076_S004\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"MU\",\n      \"reason\": \"The supplied candidate disclosures for MU describe operating income deterioration in 2023 (compared to 2022) due to declines in average selling prices. AVGO's disclosure concerns operating income increases in 2024 driven by VMware contributions. The fiscal years of the disclosed comparisons differ (2024 vs 2023) and the financial trends (increase vs deterioration) and drivers (new contribution vs pricing decline) are not comparable in substance for the same fiscal year analysis.\"\n    },\n    {\n      \"peer_ticker\": \"QCOM\",\n      \"reason\": \"The supplied candidate disclosures for QCOM focus on aggregate revenue increases driven by QCT and QTL segments, or investment income drivers. While QCOM discusses revenue drivers, it does not provide segment *operating income* performance explanations with the same granularity as AVGO's specific infrastructure software segment operating income attribution. The AVGO disclosure is specific to operating income drivers for a software segment, whereas QCOM's candidates are either total revenue drivers or investment income, lacking comparable segment operating income detail for the same fiscal year.\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_7_D058",
@@ -182,17 +185,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D025",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Client segment operating income performance",
             "peer_summary": "Client operating income improved to an $897 million profit in 2024 from a $46 million operating loss in 2023, primarily due to higher revenue partially offset by higher operating expenses.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.181309,
+            "retrieval_score": 0.168238,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and AMD explain the drivers behind changes in their respective segment operating incomes. AVGO attributes its infrastructure software segment operating income increase to contributions from VMware, while AMD attributes its Client segment operating income improvement (from a loss to profit) primarily to higher revenue, partially offset by higher operating expenses. Both disclosures focus on revenue as a primary driver of operating performance improvement, though AVGO highlights a specific acquisition contribution (VMware) whereas AMD highlights general revenue growth and expense management.",
+            "comparison": "Both AVGO and AMD disclose specific segment operating income performance in 2024, attributing the financial results to operational drivers. AVGO reports an increase in Infrastructure Software operating income primarily driven by VMware contributions, whereas AMD reports an improvement in Client segment operating income from a loss to a profit, primarily driven by higher revenue. Both companies explain the direction of their segment operating income through specific business drivers (acquisitions/volume vs. revenue growth).",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D058",
                 "sentences": [
                   {
@@ -207,6 +214,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D025",
                 "sentences": [
                   {
@@ -232,15 +240,62 @@
       },
       {
         "peer_ticker": "INTC",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "Retrieved candidates discuss revenue composition and drivers (CCG revenue and Intel Products revenue) rather than segment operating income drivers. While revenue is a component of operating income, INTC's disclosures do not explicitly link revenue changes to operating income outcomes in the same manner as AVGO's specific operating income driver statement."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_7_D080",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Intel Products Revenue Growth Drivers",
+            "peer_summary": "Intel Products revenue increased 3% from 2023, primarily due to higher Client Computing Group (CCG) and Data Center and AI (DCAI) revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.0962,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and INTC disclose revenue-driven growth within specific business groups as the primary factor for financial performance improvements. AVGO highlights contributions from VMware driving its Infrastructure Software operating income. INTC highlights higher Client Computing Group (CCG) and Data Center and AI (DCAI) revenue as the primary drivers for the increase in Intel Products revenue. Both disclosures link segment-level financial improvements to specific internal business volume or contribution drivers.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "7",
+                "disclosure_id": "avgo_2024_7_D058",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P056_S002",
+                    "paragraph_id": "avgo_2024_7_P056",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Operating income from our infrastructure software segment increased primarily due to contributions from VMware.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "item": "7",
+                "disclosure_id": "intc_2024_7_D080",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P076_S004",
+                    "paragraph_id": "intc_2024_7_P076",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Intel Products revenue increased 3% from 2023 due primarily to higher CCG and DCAI revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Retrieved candidates discuss operating income deterioration in 2023 compared to 2022 (declines in average selling prices). This contrasts with AVGO's 2024 operating income increase. The direction of change (deterioration vs. increase) and the specific fiscal year comparison (2022-2023 vs 2023-2024 implied for AVGO's growth) make them less directly comparable as peers discussing similar positive operating income drivers for the current period."
+        "rationale": "The supplied candidate disclosures for MU describe operating income deterioration in 2023 (compared to 2022) due to declines in average selling prices. AVGO's disclosure concerns operating income increases in 2024 driven by VMware contributions. The fiscal years of the disclosed comparisons differ (2024 vs 2023) and the financial trends (increase vs deterioration) and drivers (new contribution vs pricing decline) are not comparable in substance for the same fiscal year analysis."
       },
       {
         "peer_ticker": "NVDA",
@@ -248,18 +303,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D047",
-            "peer_topic": "Segment Operating Income Increase",
-            "peer_summary": "The year-on-year increase in Compute & Networking and Graphics operating income was driven by higher revenue.",
+            "peer_disclosure_id": "nvda_2024_7_D048",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Reportable Segment Operating Income Increase",
+            "peer_summary": "Year-on-year increases in operating income for Compute & Networking and Graphics segments were driven by higher revenue.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.145364,
+            "retrieval_score": 0.147503,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and NVDA discuss the drivers of segment operating income increases. AVGO's infrastructure software segment operating income increased primarily due to contributions from VMware, while NVDA reports that the year-on-year increase in Compute & Networking and Graphics operating income was driven by higher revenue. Both disclosures link operating income growth to underlying business drivers (acquisition vs. revenue), whereas NVDA's Gaming segment was not detailed in the same specific operating income driver sentence but is part of the broader segment context.",
+            "comparison": "Both AVGO and NVDA analyze the drivers behind year-over-year increases in operating income for their respective reportable segments. AVGO identifies VMware as the primary contributor to its Infrastructure Software segment's operating income growth. Similarly, NVDA attributes the year-on-year increase in Compute & Networking and Graphics operating income primarily to higher revenue.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D058",
                 "sentences": [
                   {
@@ -274,7 +333,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D047",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D048",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_7_P050_S001",
@@ -292,52 +352,15 @@
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_7_D023",
-            "peer_topic": "QCT segment revenue drivers and EBT margin change",
-            "peer_summary": "QCT revenues in fiscal 2024 increased primarily due to higher handset revenues driven by $2.8 billion in higher chipset shipments from major OEMs and higher automotive revenues from new vehicle launches with Snapdragon products, partially offset by lower IoT revenues; QCT EBT as a percentage of revenues increased primarily due to these higher revenues.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.096595,
-            "relationship": "same_topic",
-            "comparison": "Both AVGO and QCOM disclose drivers for segment operating performance improvements. AVGO states its infrastructure software segment operating income increased primarily due to contributions from VMware. Similarly, QCOM discloses that its QCT segment EBT (a proxy for operating profitability) as a percentage of revenues increased primarily due to higher revenues. Both highlight that top-line growth or significant business contributions (VMware for AVGO, chipset/automotive revenue for QCOM) were key to the improvement in profitability metrics.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_7_D058",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P056_S002",
-                    "paragraph_id": "avgo_2024_7_P056",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Operating income from our infrastructure software segment increased primarily due to contributions from VMware.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_7_D023",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P022_S005",
-                    "paragraph_id": "qcom_2024_7_P022",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "QCT EBT as a percentage of revenues increased in fiscal 2024 primarily due to higher revenues.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidate disclosures for QCOM focus on aggregate revenue increases driven by QCT and QTL segments, or investment income drivers. While QCOM discusses revenue drivers, it does not provide segment *operating income* performance explanations with the same granularity as AVGO's specific infrastructure software segment operating income attribution. The AVGO disclosure is specific to operating income drivers for a software segment, whereas QCOM's candidates are either total revenue drivers or investment income, lacking comparable segment operating income detail for the same fiscal year."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "d848408d1b630ce9e2e07a1d5293dba1b91d63b72b710abb37a5f309f0017790",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "fde07c5795aed988f2e4047815a9a93cf2bd689155bfd285d2a724e091cd58ae"
+    }
   }
 }

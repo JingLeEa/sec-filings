@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "efc4c544b7a285e41543c6c2d53524ca14cd43c4949a7a94c6d90b1d92d889ac",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "622ff8ae78d70a2435caa5eaf2751dd4f1d3503b49565da1a5c3716dba862184",
+  "request_hash": "090d486618878b22295c6f574a0c1b4ff33e74b0451b73f85e1ed014df155735",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_7_D029\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron disclose that their significant capital project funding is dependent on government incentives, but they frame the associated risks differently. Intel emphasizes regulatory uncertainty regarding the receipt and compliance with existing CHIPS Act awards, warning of potential delay, forfeiture, or repayment. Micron acknowledges that funding for certain projects depends on receiving incentives which are subject to conditions and may not be obtained, but does not detail the specific forfeiture or repayment mechanics for non-compliance as Intel does. Intel's disclosure highlights active risk of losing funds due to government actions, while Micron's is a general condition precedent to funding.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P093_S004\",\n\"intc_2024_7_P093_S006\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_7_P029_S004\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"AMD's candidates discuss general liquidity sufficiency and tax uncertainty, which are distinct topics from Intel's specific disclosure on government incentive compliance risks and CHIPS Act forfeiture/repayment risks.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"AVGO's candidates focus on acquisition financing risks, debt service capabilities, and voluntary debt retirement, which do not share the specific topic of government incentive receipt conditions, compliance risks, or potential forfeiture/repayment associated with CHIPS Act agreements.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA's candidates discuss capital investment funding expectations and the composition of marketable securities. While it mentions capital investments, it does not disclose reliance on government incentives with associated compliance or forfeiture risks, making it not substantially comparable to Intel's specific topic.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"QCOM's candidates focus on future debt issuance expectations and general capital requirements such as purchase obligations and R&D expenditures. These do not address the specific topic of government incentive dependency, compliance conditions, or potential forfeiture/repayment risks found in Intel's disclosure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D102",
@@ -195,13 +198,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidates discuss general liquidity sufficiency and capital market access risks (amd_2024_7_D049) or tax liability uncertainties (amd_2024_7_D022), neither of which address government incentive receipt, CHIPS Act compliance, or specific regulatory funding conditions."
+        "rationale": "AMD's candidates discuss general liquidity sufficiency and tax uncertainty, which are distinct topics from Intel's specific disclosure on government incentive compliance risks and CHIPS Act forfeiture/repayment risks."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidates discuss financing risks related to acquisitions, debt service capabilities (avgo_2024_7_D068), and voluntary debt retirement (avgo_2024_7_D069). These topics concern corporate debt and M&A funding, not government incentives or subsidy compliance risks."
+        "rationale": "AVGO's candidates focus on acquisition financing risks, debt service capabilities, and voluntary debt retirement, which do not share the specific topic of government incentive receipt conditions, compliance risks, or potential forfeiture/repayment associated with CHIPS Act agreements."
       },
       {
         "peer_ticker": "MU",
@@ -210,17 +213,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_7_D029",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Financing strategy and revolving credit facility availability",
             "peer_summary": "The company continuously evaluates funding alternatives, expects to engage in financing transactions including debt issuance, and had $2.50 billion available to draw under its Revolving Credit Facility as of August 29, 2024, while noting that some capital project funding depends on conditional government incentives.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.113422,
+            "retrieval_score": 0.120308,
             "relationship": "same_topic",
-            "comparison": "Micron acknowledges the dependency of capital projects on government incentives, similar to Intel's reliance on CHIPS Act awards, but explicitly highlights the risk that such funding 'may not be obtained' due to conditions, whereas Intel details specific compliance risks (delay, forfeiture, repayment) arising from recent US government actions. Intel's disclosure is more specific about the mechanics of non-compliance, while Micron’s is a general availability warning.",
+            "comparison": "Both Intel and Micron disclose that their significant capital project funding is dependent on government incentives, but they frame the associated risks differently. Intel emphasizes regulatory uncertainty regarding the receipt and compliance with existing CHIPS Act awards, warning of potential delay, forfeiture, or repayment. Micron acknowledges that funding for certain projects depends on receiving incentives which are subject to conditions and may not be obtained, but does not detail the specific forfeiture or repayment mechanics for non-compliance as Intel does. Intel's disclosure highlights active risk of losing funds due to government actions, while Micron's is a general condition precedent to funding.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D102",
                 "sentences": [
                   {
@@ -242,6 +249,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "7",
                 "disclosure_id": "mu_2024_7_D029",
                 "sentences": [
                   {
@@ -262,14 +270,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidate discusses funding expectations for capital investments using existing cash flows (nvda_2024_7_D075) and the composition of marketable securities (nvda_2024_7_D073). It does not mention government incentives, subsidies, or associated regulatory/compliance risks."
+        "rationale": "NVDA's candidates discuss capital investment funding expectations and the composition of marketable securities. While it mentions capital investments, it does not disclose reliance on government incentives with associated compliance or forfeiture risks, making it not substantially comparable to Intel's specific topic."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidates discuss expectations of future debt issuance (qcom_2024_7_D045) and specific capital obligations such as purchase commitments and R&D expenditures (qcom_2024_7_D049). These do not relate to government incentive programs or their associated risks."
+        "rationale": "QCOM's candidates focus on future debt issuance expectations and general capital requirements such as purchase obligations and R&D expenditures. These do not address the specific topic of government incentive dependency, compliance conditions, or potential forfeiture/repayment risks found in Intel's disclosure."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "622ff8ae78d70a2435caa5eaf2751dd4f1d3503b49565da1a5c3716dba862184",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "090d486618878b22295c6f574a0c1b4ff33e74b0451b73f85e1ed014df155735"
+    }
   }
 }

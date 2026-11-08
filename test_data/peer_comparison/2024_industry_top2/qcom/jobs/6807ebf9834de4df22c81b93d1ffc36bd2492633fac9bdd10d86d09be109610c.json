@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
-  "request_hash": "183f991b2afa8a046268bd727e6e3314cc6d748f0e035eedd5e5c39fdaece83b",
+  "input_fingerprint": "e41e6022adb4d847c0289913c33de7b4a26701f19d2828a112ec60fbf96be8dd",
+  "job_fingerprint": "167d5e05237f9d3c1ced90b64d4abb758969435588be46a87b27b26c1de0a3be",
+  "request_hash": "34e0e54d2c20e40ef30298aa2126e25aa8d006450519b1eb6286422d32415d8f",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_1A_D020\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Qualcomm and Intel disclose risks related to the unrecoverability of costs or prepayments made in anticipation of customer purchase commitments that may not materialize. Qualcomm highlights that efforts to incorporate customer feedback may result in 'non-recoverable costs' if purchase commitments do not follow. Similarly, Intel notes that if customer demand falls below expectations for materials secured via long-term commitments and prepayments, those prepayments 'may not be fully utilized, and in some cases may not be fully recoverable.' Both companies frame this as a financial risk where forward-looking investments in supply or development fail to convert into committed revenue.\",\n\"target_sentence_ids\": [\n\"qcom_2024_1A_P006_S002\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_1A_P041_S003\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1A_D031\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Qualcomm and NVIDIA address the risk that customer purchase commitments are not guaranteed and may be reversed. Qualcomm states that its efforts to align with customer specifications 'may not require or result in purchase commitments from such customers.' NVIDIA explicitly states that because sales are made on a purchase order basis, customers can 'cancel, change or delay product purchase commitments with little notice... and without penalty.' Both disclosures highlight the uncertainty inherent in relying on customer feedback or orders to drive revenue, with the risk of lower-than-expected purchases directly impacting financial results.\",\n\"target_sentence_ids\": [\n\"qcom_2024_1A_P006_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1A_P057_S006\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"AMD's candidates focus on R&D delays due to the Arm ecosystem and manufacturing yield failures. These topics concern internal R&D execution and production efficiency rather than the risk that customer feedback or purchase commitments do not materialize, which is the specific focus of the Qualcomm disclosure.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"Broadcom's candidates focus on product defects/bugs and inaccurate demand forecasting leading to capacity mismatches. While Broadcom mentions demand forecasting, its primary emphasis is on operational execution (defects) and supply chain balance (over/under investment in capacity), rather than the specific risk that customer feedback efforts fail to generate purchase commitments or result in non-recoverable development costs.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"Micron's candidates focus on product defect liability/warranty costs and restructuring plan risks. These topics are distinct from the risk that customer feedback or development efforts fail to result in purchase commitments.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
   "result": {
     "target_ticker": "QCOM",
     "target_disclosure_id": "qcom_2024_1A_D008",
@@ -172,127 +175,15 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1A_D038",
-            "peer_topic": "Arm ecosystem and R&D investment risks",
-            "peer_summary": "Increased adoption of Arm-based semiconductor designs could lead to further growth of the Arm ecosystem, while AMD may face delays or disruptions in R&D efforts or be required to invest significantly greater resources in R&D than anticipated.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.045403,
-            "relationship": "same_topic",
-            "comparison": "Both Qualcomm and AMD disclose risks related to the resource intensity and uncertainty of their product development and R&D efforts in response to market or ecosystem changes. Qualcomm states that spending significant engineering and development resources on customer feedback may result in non-recoverable costs or lower purchases than expected. Similarly, AMD warns that increased adoption of Arm-based designs may force it to invest significantly greater resources in R&D than anticipated, or face delays and disruptions in those efforts. Both highlight that the effort to adapt to customer/industry dynamics carries a risk of unrecoverable investment or execution failure.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1A_D008",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1A_P006_S001",
-                    "paragraph_id": "qcom_2024_1A_P006",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "In addition, we spend a significant amount of engineering and development time, funds and resources in understanding our key customers' feedback and/or specifications and attempt to incorporate such input into our product launches and technologies.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "qcom_2024_1A_P006_S002",
-                    "paragraph_id": "qcom_2024_1A_P006",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "These efforts may not require or result in purchase commitments from such customers or we may have lower purchases from such customers than expected, and consequently, we may not achieve the anticipated revenues from these efforts, or these efforts may result in non-recoverable costs.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1A_D038",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1A_P015_S006",
-                    "paragraph_id": "amd_2024_1A_P015",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Increased adoption of Arm-based semiconductor designs could lead to further growth and development of the Arm ecosystem.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_1A_P015_S007",
-                    "paragraph_id": "amd_2024_1A_P015",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We may also face delays or disruptions in research and development efforts, or we may be required to invest significantly greater resources in research and development than anticipated.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "AMD's candidates focus on R&D delays due to the Arm ecosystem and manufacturing yield failures. These topics concern internal R&D execution and production efficiency rather than the risk that customer feedback or purchase commitments do not materialize, which is the specific focus of the Qualcomm disclosure."
       },
       {
         "peer_ticker": "AVGO",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_1A_D072",
-            "peer_topic": "Product complexity and defects",
-            "peer_summary": "Complex products may contain defects, bugs, or reliability issues upon introduction, leading to delays, additional development costs, or recalls. System-wide failures or breaches in customer environments may damage reputation, increase investment costs, and adversely affect financial results if the company is held liable.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.059713,
-            "relationship": "same_topic",
-            "comparison": "Qualcomm and Broadcom both identify product complexity and the resulting difficulty in predicting customer adoption as a source of financial risk. Qualcomm notes that efforts to incorporate customer feedback may not result in purchase commitments, leading to non-recoverable costs. Broadcom explicitly links product complexity to unforeseen delays, expenses, or defects that can adversely affect market acceptance and damage reputation. Both companies warn that the investment in developing products to meet specific customer requirements carries the risk that the resulting product will not achieve the anticipated commercial success or recover the development costs.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1A_D008",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1A_P006_S001",
-                    "paragraph_id": "qcom_2024_1A_P006",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "In addition, we spend a significant amount of engineering and development time, funds and resources in understanding our key customers' feedback and/or specifications and attempt to incorporate such input into our product launches and technologies.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "qcom_2024_1A_P006_S002",
-                    "paragraph_id": "qcom_2024_1A_P006",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "These efforts may not require or result in purchase commitments from such customers or we may have lower purchases from such customers than expected, and consequently, we may not achieve the anticipated revenues from these efforts, or these efforts may result in non-recoverable costs.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_1A_D072",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_1A_P101_S001",
-                    "paragraph_id": "avgo_2024_1A_P101",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "The complexity of our products could result in unforeseen delays or expense or undetected defects or bugs, which could adversely affect the market acceptance of new products, damage our reputation with current or prospective customers, and materially and adversely affect our operating costs.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_1A_P102_S002",
-                    "paragraph_id": "avgo_2024_1A_P102",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "If any of our products or third-party components used in our products, contain defects or bugs, or have reliability, quality or compatibility problems, we may not be able to successfully design workarounds.",
-                    "visible_in_prompt": false
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Broadcom's candidates focus on product defects/bugs and inaccurate demand forecasting leading to capacity mismatches. While Broadcom mentions demand forecasting, its primary emphasis is on operational execution (defects) and supply chain balance (over/under investment in capacity), rather than the specific risk that customer feedback efforts fail to generate purchase commitments or result in non-recoverable development costs."
       },
       {
         "peer_ticker": "INTC",
@@ -300,18 +191,22 @@
         "comparisons": [
           {
             "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_1A_D005",
-            "peer_topic": "Next-Generation Process Node Risks",
-            "peer_summary": "Risks in developing next-generation nodes include timing delays, lower yields, and higher costs due to advanced equipment. Delays can cause missed customer design windows, larger die sizes, and supply constraints, while new nodes typically have higher depreciation and lower yields than mature nodes.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.054031,
+            "peer_disclosure_id": "intc_2024_1A_D020",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Long-term supply commitments and inventory risk",
+            "peer_summary": "Long-term purchase commitments and prepayments for substrates and foundry capacity may not be adequate, and falling customer demand could lead to excess inventory, unneeded capacity, and unrecoverable prepayments.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.052292,
             "relationship": "same_topic",
-            "comparison": "Qualcomm and Intel both disclose risks stemming from the uncertainty of customer demand and the potential for unrecoverable costs or revenue shortfalls associated with product development and timing. Qualcomm highlights that efforts to incorporate customer feedback may not result in purchase commitments, leading to lower-than-expected purchases. Intel similarly warns that production timing delays in next-generation nodes can cause the company to miss customer product design windows, resulting in lost revenue opportunities. Both companies emphasize that their investments in technology and product development are contingent on aligning with customer timelines and specifications, with failure leading to financial loss.",
+            "comparison": "Both Qualcomm and Intel disclose risks related to the unrecoverability of costs or prepayments made in anticipation of customer purchase commitments that may not materialize. Qualcomm highlights that efforts to incorporate customer feedback may result in 'non-recoverable costs' if purchase commitments do not follow. Similarly, Intel notes that if customer demand falls below expectations for materials secured via long-term commitments and prepayments, those prepayments 'may not be fully utilized, and in some cases may not be fully recoverable.' Both companies frame this as a financial risk where forward-looking investments in supply or development fail to convert into committed revenue.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D008",
                 "sentences": [
                   {
@@ -326,20 +221,14 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
-                "disclosure_id": "intc_2024_1A_D005",
+                "item": "1A",
+                "disclosure_id": "intc_2024_1A_D020",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_1A_P015_S001",
-                    "paragraph_id": "intc_2024_1A_P015",
+                    "sentence_id": "intc_2024_1A_P041_S003",
+                    "paragraph_id": "intc_2024_1A_P041",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Risks inherent in the development of next-generation process technologies include production timing delays, lower-than-anticipated manufacturing yields, longer manufacturing throughput times, failure to achieve expected performance, power, and area improvements, and product defects and errata (deviations from published specifications).",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_1A_P015_S002",
-                    "paragraph_id": "intc_2024_1A_P015",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Production timing delays have at times caused us to miss customer product design windows, which can result in lost revenue opportunities and damage to our customer relationships.",
+                    "text": "If future customer demand over the horizon of such arrangements falls below our expectations, we could have excess or obsolete inventory, unneeded capacity, and increased costs, and our prepayments may not be fully utilized, and in some cases may not be fully recoverable.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -351,58 +240,9 @@
       },
       {
         "peer_ticker": "MU",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_1A_D023",
-            "peer_topic": "New product launch timing and component lead-time risks",
-            "peer_summary": "Successful product launches require timely delivery and meeting customer design schedules to secure design wins; long lead-times for some components require ordering up to a year in advance, increasing the risk of excess inventory or lost sales if forecasts vary from actual demand.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.047313,
-            "relationship": "same_topic",
-            "comparison": "Qualcomm and Micron both highlight the risk that their product development and launch timelines may fail to align with customer needs, leading to lost business opportunities. Qualcomm states that efforts to incorporate customer feedback may not result in purchase commitments. Micron explicitly warns that if it does not meet customer product design schedules or demonstrate functionality well in advance, customers may exclude it from consideration as a supplier. Both disclosures center on the risk that the timing and execution of product development efforts determine whether they secure customer orders or lose them to competitors.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1A_D008",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1A_P006_S002",
-                    "paragraph_id": "qcom_2024_1A_P006",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "These efforts may not require or result in purchase commitments from such customers or we may have lower purchases from such customers than expected, and consequently, we may not achieve the anticipated revenues from these efforts, or these efforts may result in non-recoverable costs.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_1A_D023",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_1A_P029_S001",
-                    "paragraph_id": "mu_2024_1A_P029",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "It is important that we deliver products in a timely manner with increasingly advanced performance characteristics at the time our customers are designing and evaluating samples for their products.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_1A_P029_S002",
-                    "paragraph_id": "mu_2024_1A_P029",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "If we do not meet their product design schedules, our customers may exclude us from further consideration as a supplier for those products.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Micron's candidates focus on product defect liability/warranty costs and restructuring plan risks. These topics are distinct from the risk that customer feedback or development efforts fail to result in purchase commitments."
       },
       {
         "peer_ticker": "NVDA",
@@ -410,18 +250,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1A_D027",
-            "peer_topic": "Product defects and warranty liabilities",
-            "peer_summary": "Complex hardware and software products may contain defects or security vulnerabilities, leading to significant remediation expenses, warranty costs, reputational damage, and loss of market share; this risk is heightened when relying on partners for components. In fiscal year 2023, a defect was identified in a third-party component embedded in certain Data Center products, resulting in a recorded net warranty liability; while estimates were made, additional amounts may be needed, and such defects adversely affect component and finished goods supply and costs.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.054359,
+            "peer_disclosure_id": "nvda_2024_1A_D031",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Customer and Channel Partner Concentration Risk",
+            "peer_summary": "The company relies heavily on a limited number of customers and channel partners, with specific large customers representing significant portions of revenue. This reliance exposes the business to risks such as customer cancellation of purchase commitments, shifts in partner purchasing patterns, and the potential loss of key customers, all of which could harm financial results.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.055392,
             "relationship": "same_topic",
-            "comparison": "Qualcomm and NVIDIA both disclose risks where the costs of product development and defect remediation can become unrecoverable or damage financial performance if products do not meet market expectations. Qualcomm warns that efforts to incorporate customer feedback may result in non-recoverable costs if purchases are lower than expected. NVIDIA warns that defects in products can cause significant expenses to remediate, damage reputation, and cause loss of market share. Both companies highlight that the upfront investment in engineering and development carries the risk that the final product may fail to generate the anticipated revenue due to quality issues or lack of customer adoption.",
+            "comparison": "Both Qualcomm and NVIDIA address the risk that customer purchase commitments are not guaranteed and may be reversed. Qualcomm states that its efforts to align with customer specifications 'may not require or result in purchase commitments from such customers.' NVIDIA explicitly states that because sales are made on a purchase order basis, customers can 'cancel, change or delay product purchase commitments with little notice... and without penalty.' Both disclosures highlight the uncertainty inherent in relying on customer feedback or orders to drive revenue, with the risk of lower-than-expected purchases directly impacting financial results.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D008",
                 "sentences": [
                   {
@@ -436,20 +280,14 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1A_D027",
+                "item": "1A",
+                "disclosure_id": "nvda_2024_1A_D031",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1A_P028_S001",
-                    "paragraph_id": "nvda_2024_1A_P028",
+                    "sentence_id": "nvda_2024_1A_P057_S006",
+                    "paragraph_id": "nvda_2024_1A_P057",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Defects in our products have caused and could cause us to incur significant expenses to remediate, which can damage our reputation and cause us to lose market share.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_1A_P029_S010",
-                    "paragraph_id": "nvda_2024_1A_P029",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Any such defect may cause us to incur significant warranty, support and repair or replacement costs as part of a product recall or otherwise, write-off the value of related inventory, and divert the attention of our engineering and management personnel from our product development efforts to find and correct the issue.",
+                    "text": "Because most of our sales are made on a purchase order basis, our customers can generally cancel, change or delay product purchase commitments with little notice to us and without penalty.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -459,6 +297,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "167d5e05237f9d3c1ced90b64d4abb758969435588be46a87b27b26c1de0a3be",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
+      "request_hash": "34e0e54d2c20e40ef30298aa2126e25aa8d006450519b1eb6286422d32415d8f"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "c5d52efa481ba267066ae7e7c1529a43439128d1b0a975d94349a723f69930ed",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "94a304016f8f081e03e6d72a7bb340643224a5c4f33daae412b270c63c8bf98b",
+  "request_hash": "6e8f1aa105a78d3d62707832921da43b356c9e27648b99c546489a737f116b60",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D068\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both disclosures detail significant capital structure adjustments in their financial notes, but they involve different financial instruments and transaction directions. Intel sold a 49% stake in a VIE (Ireland SCIP) to Apollo, raising $11.0 billion in net proceeds and increasing capital in excess of par value, while retaining ownership of the underlying asset (Fab 34). In contrast, AMD details the allocation of purchase consideration for an acquisition (Pensando), which resulted in recording goodwill and intangible assets rather than generating immediate capital proceeds from an equity sale. Intel's transaction increases equity capital, whereas AMD's allocation reflects the assignment of acquisition cost.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P092_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P071_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved candidates discuss a ten-for-one forward stock split (increasing authorized shares) or retroactive adjustments. While both involve equity changes, a stock split (which adjusts share counts and potentially authorized capital without changing par value or raising proceeds) is substantively different from Intel's transaction, which involved the sale of a 49% equity interest in a VIE for $11.0 billion in net proceeds, directly increasing capital in excess of par value.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates discuss treasury stock accounting methods (retirement of treasury stock) and reductions in property, plant, and equipment due to government incentives. These topics are not comparable to Intel's specific transaction of selling a 49% stake in a semiconductor joint venture/VIE for $11.0 billion in proceeds.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates discuss the retirement of existing treasury shares in fiscal 2022 and the valuation of inventory provisions. These are distinct from Intel's current period transaction involving the sale of a controlling stake in a VIE for significant cash proceeds.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D078",
@@ -185,34 +188,26 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was substantively comparable. AMD's candidate D068 concerns the acquisition of Pensando (a business combination) and D142 concerns the auditor's opinion. Neither involves the sale of a non-controlling interest in a semiconductor co-investment program or the specific recognition of proceeds in capital in excess of par value related to a VIE stake sale as disclosed by Intel."
-      },
-      {
-        "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was substantively comparable. Broadcom's candidates D120 and D016 both concern a ten-for-one forward stock split. A stock split adjusts share counts and authorized capital but does not involve the sale of an interest in a specific entity (like Ireland SCIP) to a third party (like Apollo) for net proceeds, nor does it involve the same VIE consolidation and operating rights dynamics."
-      },
-      {
-        "peer_ticker": "MU",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_8_D026",
-            "peer_topic": "Treasury Stock Accounting Method",
-            "peer_summary": "Treasury stock is carried at cost. When treasury stock is retired, any excess of the repurchase price over par value is allocated between additional capital and retained earnings.",
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D068",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Pensando Acquisition Transaction Details and Purchase Price Allocation",
+            "peer_summary": "AMD completed the acquisition of Pensando for approximately $1.9 billion on May 26, 2022, with a recorded purchase consideration of $1.7 billion net of adjustments. The consideration was allocated to $349 million in intangible assets, $208 million in identifiable net assets, and $1.1 billion in goodwill.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.063958,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose accounting treatments involving 'capital in excess of par value' or 'additional capital' derived from capital transactions, though the drivers differ. Intel recognizes $11.0 billion in proceeds from the sale of a non-controlling interest as an increase to capital in excess of par value. Micron discloses its general policy for treasury stock retirement, where the excess of the repurchase price over par value is allocated to additional capital. Both highlight the mechanical flow of capital adjustments relative to par value, but Intel's represents a significant external equity event while Micron's describes standard share repurchase accounting.",
+            "retrieval_score": 0.048418,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures detail significant capital structure adjustments in their financial notes, but they involve different financial instruments and transaction directions. Intel sold a 49% stake in a VIE (Ireland SCIP) to Apollo, raising $11.0 billion in net proceeds and increasing capital in excess of par value, while retaining ownership of the underlying asset (Fab 34). In contrast, AMD details the allocation of purchase consideration for an acquisition (Pensando), which resulted in recording goodwill and intangible assets rather than generating immediate capital proceeds from an equity sale. Intel's transaction increases equity capital, whereas AMD's allocation reflects the assignment of acquisition cost.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D078",
                 "sentences": [
                   {
@@ -226,14 +221,15 @@
               },
               {
                 "side": "peer",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_8_D026",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D068",
                 "sentences": [
                   {
-                    "sentence_id": "mu_2024_8_P032_S002",
-                    "paragraph_id": "mu_2024_8_P032",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "When we retire our treasury stock, any excess of the repurchase price paid over par value is allocated between additional capital and retained earnings.",
+                    "sentence_id": "amd_2024_8_P071_S003",
+                    "paragraph_id": "amd_2024_8_P071",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The purchase consideration was allocated to $349 million of intangible assets, $208 million of identifiable net assets, and $1.1 billion of goodwill.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -244,17 +240,34 @@
         "rationale": ""
       },
       {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates discuss a ten-for-one forward stock split (increasing authorized shares) or retroactive adjustments. While both involve equity changes, a stock split (which adjusts share counts and potentially authorized capital without changing par value or raising proceeds) is substantively different from Intel's transaction, which involved the sale of a 49% equity interest in a VIE for $11.0 billion in net proceeds, directly increasing capital in excess of par value."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates discuss treasury stock accounting methods (retirement of treasury stock) and reductions in property, plant, and equipment due to government incentives. These topics are not comparable to Intel's specific transaction of selling a 49% stake in a semiconductor joint venture/VIE for $11.0 billion in proceeds."
+      },
+      {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was substantively comparable. The only candidate (D001) is a standard disclosure regarding the location of information within the report. It contains no financial substance comparable to Intel's specific transaction details regarding Ireland SCIP."
+        "rationale": "The retrieved candidates discuss the retirement of existing treasury shares in fiscal 2022 and the valuation of inventory provisions. These are distinct from Intel's current period transaction involving the sale of a controlling stake in a VIE for significant cash proceeds."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "94a304016f8f081e03e6d72a7bb340643224a5c4f33daae412b270c63c8bf98b",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "6e8f1aa105a78d3d62707832921da43b356c9e27648b99c546489a737f116b60"
+    }
   }
 }

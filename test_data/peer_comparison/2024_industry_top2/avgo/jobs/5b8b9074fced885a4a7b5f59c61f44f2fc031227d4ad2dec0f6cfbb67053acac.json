@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "9fc7ee8e4354119cb6e2a954eb749e6930f15007df79fb9152a8a87161571156",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "f245dbf921b1d815b8ae60474f5ebf56884194b03754ee07990898c52c447523",
+  "request_hash": "c5ab3b49e65d319eac693a3408ef5fd8e1c0831441be86d9e062e9f3af4edc37",
+  "response_text": "{\n\"comparisons\":[\n{\n\"peer_ticker\":\"AMD\",\n\"peer_disclosure_id\":\"amd_2024_8_D038\",\n\"relationship\":\"same_topic\",\n\"comparison\":\"Both disclosures address the financial impact of foreign currency fluctuations on non-operating income/expense. AVGO explicitly lists 'foreign exchange gains and losses' as a component of Other Income (Expense). Similarly, AMD discloses that its functional currency is the U.S. dollar and that 'gains or losses from foreign currency remeasurement are included in earnings,' directly contributing to the same financial statement line item.\",\n\"target_sentence_ids\":[\"avgo_2024_8_P123_S001\"],\n\"peer_sentence_ids\":[\"amd_2024_8_P046_S004\"]\n},\n{\n\"peer_ticker\":\"INTC\",\n\"peer_disclosure_id\":\"intc_2024_8_D149\",\n\"relationship\":\"same_topic\",\n\"comparison\":\"Both disclosures identify foreign currency-related items as a source of gains or losses included in other income/expense. AVGO's Other Income (Expense) includes 'foreign exchange gains and losses.' INTC highlights 'cash flow hedges' for 'foreign currency contracts' which result in significant net losses recognized in other comprehensive income, a direct mechanism for managing the same foreign exchange risk factor cited by AVGO.\",\n\"target_sentence_ids\":[\"avgo_2024_8_P123_S001\"],\n\"peer_sentence_ids\":[\"intc_2024_8_P172_S002\"]\n},\n{\n\"peer_ticker\":\"MU\",\n\"peer_disclosure_id\":\"mu_2024_8_D081\",\n\"relationship\":\"same_topic\",\n\"comparison\":\"Both disclosures describe the inclusion of foreign exchange-related gains and losses in non-operating income/expense. AVGO includes 'foreign exchange gains and losses' in Other Income (Expense). MU similarly states that 'Realized and unrealized gains and losses on derivative instruments... as well as the changes in the underlying monetary assets and liabilities from changes in currency exchange rates are included in other non-operating income (expense), net.'\",\n\"target_sentence_ids\":[\"avgo_2024_8_P123_S001\"],\n\"peer_sentence_ids\":[\"mu_2024_8_P091_S003\"]\n},\n{\n\"peer_ticker\":\"NVDA\",\n\"peer_disclosure_id\":\"nvda_2024_8_D066\",\n\"relationship\":\"same_topic\",\n\"comparison\":\"Both disclosures specify that certain types of gains and losses are aggregated into the 'Other Income (Expense), Net' line item. AVGO defines this line to include 'foreign exchange gains and losses' and 'other miscellaneous items.' NVDA states that 'All gains and losses on these investments, realized and unrealized, are recognized in other income (expense), net.' While the specific asset class differs (FX vs. Investments), the structural treatment of non-operating gains/losses in that specific financial line is comparable.\",\n\"target_sentence_ids\":[\"avgo_2024_8_P123_S001\"],\n\"peer_sentence_ids\":[\"nvda_2024_8_P063_S006\"]\n}\n],\n\"no_match\":[\n{\n\"peer_ticker\":\"QCOM\",\n\"reason\":\"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D091",
@@ -118,15 +121,109 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The supplied candidates for AMD discuss foreign currency remeasurement *policies* (how gains/losses are calculated and measured) or available-for-sale debt securities, but do not explicitly list 'foreign exchange gains and losses' as a line-item component of 'Other Income (Expense), Net' in the same direct manner as AVGO's disclosure. AMD's disclosure focuses on the functional currency and remeasurement methodology rather than the composition of the income statement line item itself."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D038",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Foreign Currency Remeasurement Policy",
+            "peer_summary": "The Company uses the U.S. dollar as the functional currency for foreign subsidiaries and remeasures non-dollar assets, liabilities, and transactions into U.S. dollars using current, historical, or average exchange rates as appropriate, with gains or losses included in earnings.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.094479,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures address the financial impact of foreign currency fluctuations on non-operating income/expense. AVGO explicitly lists 'foreign exchange gains and losses' as a component of Other Income (Expense). Similarly, AMD discloses that its functional currency is the U.S. dollar and that 'gains or losses from foreign currency remeasurement are included in earnings,' directly contributing to the same financial statement line item.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D091",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P123_S001",
+                    "paragraph_id": "avgo_2024_8_P123",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Other income and other expense include foreign exchange gains and losses, factoring fees for the sales of receivables, and other miscellaneous items.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D038",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P046_S004",
+                    "paragraph_id": "amd_2024_8_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The gains or losses from foreign currency remeasurement are included in earnings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "INTC",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The supplied candidates for INTC discuss the non-allocation of non-operating items to segments or the specific gains/losses from cash flow hedges in other comprehensive income. They do not provide a comparable disclosure listing 'foreign exchange gains and losses' as a component of the 'Other Income (Expense), Net' line item in the income statement."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D149",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Cash Flow Hedge Gains/Losses and Composition",
+            "peer_summary": "In 2024, the before-tax net gains or losses from the effective portion of cash flow hedges recognized in other comprehensive income were $652 million net losses, compared to $3 million net gains in 2023 and $910 million net losses in 2022. Substantially all of these cash flow hedges are foreign currency contracts.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.104372,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures identify foreign currency-related items as a source of gains or losses included in other income/expense. AVGO's Other Income (Expense) includes 'foreign exchange gains and losses.' INTC highlights 'cash flow hedges' for 'foreign currency contracts' which result in significant net losses recognized in other comprehensive income, a direct mechanism for managing the same foreign exchange risk factor cited by AVGO.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D091",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P123_S001",
+                    "paragraph_id": "avgo_2024_8_P123",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Other income and other expense include foreign exchange gains and losses, factoring fees for the sales of receivables, and other miscellaneous items.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D149",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P172_S002",
+                    "paragraph_id": "intc_2024_8_P172",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Substantially all of our cash flow hedges are foreign currency contracts for all periods presented.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
@@ -135,17 +232,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D081",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Accounting Treatment of Derivative Gains and Losses",
             "peer_summary": "Realized and unrealized gains and losses on these non-hedge accounting derivatives, along with changes in underlying monetary items due to exchange rates, are recorded in other non-operating income (expense), and recognized amounts were not significant for the reported periods.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.106225,
+            "retrieval_score": 0.101382,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and MU disclose the accounting treatment for foreign currency-related items within 'Other Income (Expense)' or 'other non-operating income (expense)'. AVGO explicitly lists 'foreign exchange gains and losses' as a component of other income and expense. MU similarly reports that gains and losses from changes in currency exchange rates on underlying monetary assets and liabilities, as well as on non-designated derivatives, are included in 'other non-operating income (expense), net.' However, MU discloses that these recognized amounts were not significant for the periods presented, whereas AVGO does not qualify the significance of its foreign exchange gains and losses in this specific summary sentence.",
+            "comparison": "Both disclosures describe the inclusion of foreign exchange-related gains and losses in non-operating income/expense. AVGO includes 'foreign exchange gains and losses' in Other Income (Expense). MU similarly states that 'Realized and unrealized gains and losses on derivative instruments... as well as the changes in the underlying monetary assets and liabilities from changes in currency exchange rates are included in other non-operating income (expense), net.'",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D091",
                 "sentences": [
                   {
@@ -160,6 +261,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D081",
                 "sentences": [
                   {
@@ -178,16 +280,68 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D066",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Recognition of gains and losses on investments",
+            "peer_summary": "All realized and unrealized gains and losses on non-affiliated investments are recognized in other income (expense), net on the Consolidated Statements of Income.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.165834,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures specify that certain types of gains and losses are aggregated into the 'Other Income (Expense), Net' line item. AVGO defines this line to include 'foreign exchange gains and losses' and 'other miscellaneous items.' NVDA states that 'All gains and losses on these investments, realized and unrealized, are recognized in other income (expense), net.' While the specific asset class differs (FX vs. Investments), the structural treatment of non-operating gains/losses in that specific financial line is comparable.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D091",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P123_S001",
+                    "paragraph_id": "avgo_2024_8_P123",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Other income and other expense include foreign exchange gains and losses, factoring fees for the sales of receivables, and other miscellaneous items.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D066",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P063_S006",
+                    "paragraph_id": "nvda_2024_8_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "All gains and losses on these investments, realized and unrealized, are recognized in other income (expense), net on our Consolidated Statements of Income.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "f245dbf921b1d815b8ae60474f5ebf56884194b03754ee07990898c52c447523",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "c5ab3b49e65d319eac693a3408ef5fd8e1c0831441be86d9e062e9f3af4edc37"
+    }
   }
 }

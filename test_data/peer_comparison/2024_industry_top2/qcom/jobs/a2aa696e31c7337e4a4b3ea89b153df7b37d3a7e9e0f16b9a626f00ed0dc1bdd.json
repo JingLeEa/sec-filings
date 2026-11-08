@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
-  "request_hash": "730e23ee288f7711c7f9bdba002e1eea1ef09a44ae8365a3c157861eba756190",
+  "input_fingerprint": "e41e6022adb4d847c0289913c33de7b4a26701f19d2828a112ec60fbf96be8dd",
+  "job_fingerprint": "c979e65ab2cc01d6ddbca794ed637fbdc54f654be1493f1a838d8c6a31ee640c",
+  "request_hash": "bb449234653d349847dfd7b9230a0da2e0cbc571fa14757b3a9939189458a61a",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D033\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both QCOM and AMD attribute their SG&A (or MG&A) expense increases to higher sales and marketing activities. QCOM reports a $99 million increase specifically in sales and marketing expenses, while AMD reports that its $431 million increase in MG&A was primarily due to increased go-to-market activities to support revenue growth.\",\n\"target_sentence_ids\": [\n\"qcom_2024_7_P011_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P046_S002\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_7_D021\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both QCOM and MU report SG&A increases driven by compensation costs, though QCOM further specifies the nature of the cost drivers. QCOM cites a $99 million rise in sales and marketing expenses and $39 million in share-based compensation. MU attributes its 23% SG&A increase primarily to higher employee compensation, aligning with the personnel-centric drivers at QCOM but lacking the specific sales/marketing breakdown found in QCOM's disclosure.\",\n\"target_sentence_ids\": [\n\"qcom_2024_7_P011_S002\",\n\"qcom_2024_7_P011_S004\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_7_P021_S001\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D055\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both QCOM and NVDA identify compensation and benefits, including stock-based compensation, as primary drivers for their SG&A expense increases. QCOM explicitly lists a $39 million increase in share-based compensation expense alongside sales and marketing rises. NVDA states that its SG&A increase was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases, mirroring QCOM's focus on personnel and equity costs.\",\n\"target_sentence_ids\": [\n\"qcom_2024_7_P011_S003\",\n\"qcom_2024_7_P011_S004\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P061_S001\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_7_D051\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both QCOM and AVGO report significant SG&A increases driven by compensation costs, including stock-based compensation. QCOM cites a $39 million increase in share-based compensation. AVGO reports a massive $3,367 million SG&A increase primarily due to higher compensation and stock-based compensation resulting from headcount increases from the VMware Merger. While the scale differs, the specific driver of compensation and equity awards is shared.\",\n\"target_sentence_ids\": [\n\"qcom_2024_7_P011_S004\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_7_P050_S002\",\n\"avgo_2024_7_P050_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"No candidate sufficiently comparable to the target topic of SG&A expense drivers. INTC candidates discuss Operating Cash Flow changes (intc_2024_7_D109) and general Operating Expenses driven by process technology investments (intc_2024_7_D063). These do not address the specific composition or drivers of SG&A expenses (such as sales/marketing, deferred compensation, or share-based compensation) as presented in QCOM's disclosure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
   "result": {
     "target_ticker": "QCOM",
     "target_disclosure_id": "qcom_2024_7_D013",
@@ -208,17 +211,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D033",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "MG&A expenses increase in 2024",
             "peer_summary": "Marketing, general and administrative expenses were $2.8 billion in 2024, an increase of $431 million or 18% from $2.4 billion in 2023, primarily due to increased go-to-market activities supporting revenue growth.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.189852,
+            "retrieval_score": 0.197042,
             "relationship": "same_topic",
-            "comparison": "QCOM and AMD both report SG&A/MG&A increases in 2024 driven by go-to-market activities. QCOM cites a $99 million increase in sales and marketing expenses as the primary driver. AMD reports an $18% increase in MG&A expenses, primarily due to increased go-to-market activities to support revenue growth. Both companies link their operating expense growth directly to strategic investments in sales and marketing efforts to drive revenue, differing mainly in the magnitude and specific disclosure granularity.",
+            "comparison": "Both QCOM and AMD attribute their SG&A (or MG&A) expense increases to higher sales and marketing activities. QCOM reports a $99 million increase specifically in sales and marketing expenses, while AMD reports that its $431 million increase in MG&A was primarily due to increased go-to-market activities to support revenue growth.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D013",
                 "sentences": [
                   {
@@ -227,28 +234,15 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
                     "text": "+ $99 million increase in sales and marketing expenses",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "qcom_2024_7_P011_S001",
-                    "paragraph_id": "qcom_2024_7_P011",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "The increase in selling, general and administrative expenses in fiscal 2024 was primarily due to:",
-                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D033",
                 "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P046_S001",
-                    "paragraph_id": "amd_2024_7_P046",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Marketing, general and administrative expenses of $2.8 billion in 2024 increased by $431 million, or 18%, compared to $2.4 billion in 2023.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "amd_2024_7_P046_S002",
                     "paragraph_id": "amd_2024_7_P046",
@@ -270,26 +264,23 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_7_D051",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "SG&A Expense Increase Drivers",
             "peer_summary": "Selling, general and administrative expense increased $3,367 million, or 211%, in fiscal year 2024 compared to the prior year, primarily due to higher compensation resulting from increased headcount from the VMware Merger and higher grant-date fair values of annual employee equity awards.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.201868,
+            "retrieval_score": 0.201535,
             "relationship": "same_topic",
-            "comparison": "Both QCOM and AVGO report significant increases in SG&A expenses for fiscal 2024, but the primary drivers differ. QCOM attributes its increase primarily to sales and marketing costs ($99 million) and specific non-cash or revaluation items like deferred compensation ($42 million) and share-based compensation ($39 million). In contrast, AVGO's massive 211% increase ($3,367 million) is driven by higher compensation resulting from headcount growth due to the VMware Merger and higher grant-date fair values of equity awards. While both cite share-based compensation or general compensation as factors, QCOM breaks out specific dollar drivers for marketing and revaluation, whereas AVGO links its surge directly to merger-related integration and headcount.",
+            "comparison": "Both QCOM and AVGO report significant SG&A increases driven by compensation costs, including stock-based compensation. QCOM cites a $39 million increase in share-based compensation. AVGO reports a massive $3,367 million SG&A increase primarily due to higher compensation and stock-based compensation resulting from headcount increases from the VMware Merger. While the scale differs, the specific driver of compensation and equity awards is shared.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D013",
                 "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P011_S002",
-                    "paragraph_id": "qcom_2024_7_P011",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "+ $99 million increase in sales and marketing expenses",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "qcom_2024_7_P011_S004",
                     "paragraph_id": "qcom_2024_7_P011",
@@ -302,15 +293,9 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D051",
                 "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P050_S001",
-                    "paragraph_id": "avgo_2024_7_P050",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Selling, general and administrative expense increased $3,367 million, or 211%, in fiscal year 2024, compared to the prior fiscal year.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "avgo_2024_7_P050_S002",
                     "paragraph_id": "avgo_2024_7_P050",
@@ -336,7 +321,7 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses SG&A or MG&A expense drivers. The available INTC candidate (intc_2024_7_D063) focuses on general operating expenses driven by process technology investments, which is a different expense category (likely R&D/Capex related) and topic compared to QCOM's SG&A drivers."
+        "rationale": "No candidate sufficiently comparable to the target topic of SG&A expense drivers. INTC candidates discuss Operating Cash Flow changes (intc_2024_7_D109) and general Operating Expenses driven by process technology investments (intc_2024_7_D063). These do not address the specific composition or drivers of SG&A expenses (such as sales/marketing, deferred compensation, or share-based compensation) as presented in QCOM's disclosure."
       },
       {
         "peer_ticker": "MU",
@@ -345,31 +330,35 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_7_D021",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "SG&A Expense Trends",
             "peer_summary": "SG&A expenses increased 23% in 2024 compared to 2023 primarily due to higher employee compensation, whereas 2023 expenses were 14% lower than 2022 due to decreases in compensation, legal fees, advertising, and professional services.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.226747,
+            "retrieval_score": 0.224294,
             "relationship": "same_topic",
-            "comparison": "Both QCOM and MU attribute their 2024 SG&A increases to compensation-related costs, though QCOM provides more granular driver breakdowns. QCOM cites a $39 million increase in share-based compensation and a $99 million increase in sales and marketing expenses. MU states its 23% SG&A increase was primarily due to an increase in employee compensation. Both companies reflect a broader industry trend of rising personnel costs contributing to SG&A, but QCOM distinguishes between marketing spend and compensation/revaluation impacts, while MU aggregates the compensation impact.",
+            "comparison": "Both QCOM and MU report SG&A increases driven by compensation costs, though QCOM further specifies the nature of the cost drivers. QCOM cites a $99 million rise in sales and marketing expenses and $39 million in share-based compensation. MU attributes its 23% SG&A increase primarily to higher employee compensation, aligning with the personnel-centric drivers at QCOM but lacking the specific sales/marketing breakdown found in QCOM's disclosure.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D013",
                 "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P011_S004",
-                    "paragraph_id": "qcom_2024_7_P011",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "+ $39 million increase in share-based compensation expense",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "qcom_2024_7_P011_S002",
                     "paragraph_id": "qcom_2024_7_P011",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
                     "text": "+ $99 million increase in sales and marketing expenses",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_7_P011_S004",
+                    "paragraph_id": "qcom_2024_7_P011",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "+ $39 million increase in share-based compensation expense",
                     "visible_in_prompt": true
                   }
                 ]
@@ -377,6 +366,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "7",
                 "disclosure_id": "mu_2024_7_D021",
                 "sentences": [
                   {
@@ -399,32 +389,36 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D058",
+            "peer_disclosure_id": "nvda_2024_7_D055",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "R&D and SG&A Expense Drivers",
-            "peer_summary": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
+            "peer_summary": "Research and development expenses and sales, general, and administrative expenses increased in fiscal year 2024, primarily driven by compensation and benefits, including stock-based compensation, which reflected employee growth and compensation increases.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.23755,
+            "retrieval_score": 0.258434,
             "relationship": "same_topic",
-            "comparison": "QCOM and NVDA both identify compensation and stock-based compensation as key drivers of their 2024 SG&A increases. QCOM specifically notes a $39 million increase in share-based compensation. NVDA broadly attributes the increase in both R&D and SG&A to compensation and benefits, including stock-based compensation, reflecting employee growth. While NVDA combines R&D and SG&A drivers in its summary, QCOM isolates SG&A components, including marketing and deferred compensation. Both highlight the role of equity awards and headcount growth in driving operating expenses.",
+            "comparison": "Both QCOM and NVDA identify compensation and benefits, including stock-based compensation, as primary drivers for their SG&A expense increases. QCOM explicitly lists a $39 million increase in share-based compensation expense alongside sales and marketing rises. NVDA states that its SG&A increase was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases, mirroring QCOM's focus on personnel and equity costs.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D013",
                 "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P011_S003",
+                    "paragraph_id": "qcom_2024_7_P011",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "+ $42 million increase in expenses driven by revaluation of our deferred compensation obligation",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "qcom_2024_7_P011_S004",
                     "paragraph_id": "qcom_2024_7_P011",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
                     "text": "+ $39 million increase in share-based compensation expense",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "qcom_2024_7_P011_S001",
-                    "paragraph_id": "qcom_2024_7_P011",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "The increase in selling, general and administrative expenses in fiscal 2024 was primarily due to:",
                     "visible_in_prompt": true
                   }
                 ]
@@ -432,7 +426,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D058",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D055",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_7_P061_S001",
@@ -448,6 +443,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "c979e65ab2cc01d6ddbca794ed637fbdc54f654be1493f1a838d8c6a31ee640c",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
+      "request_hash": "bb449234653d349847dfd7b9230a0da2e0cbc571fa14757b3a9939189458a61a"
+    }
   }
 }

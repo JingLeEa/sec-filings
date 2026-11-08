@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "afcb91d165ad592285b5dee62272a790e177bf9bad2f6479ae52964e1a2b8e27",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "d025f35742ac747483b1563c34fecfb2c112afa7951150c17e37d6fea6fa0be3",
+  "request_hash": "244abef5bbf259be6f81fddf1ffbef3abda6298e540f018f9c66823aa738ebc9",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D044\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and MU disclose future amortization schedules for intangible assets, providing specific monetary amounts expected to be released or amortized in upcoming fiscal years. AVGO details IPR&D assets from the VMware merger, stating that $1,380 million of the $2,900 million balance is expected to be released in the second half of fiscal year 2025, with additional amounts expected in the first half of fiscal year 2026. Similarly, MU projects specific amortization expense amounts for its intangible assets, listing $67 million for 2025 and $56 million for 2026. While AVGO's disclosure is tied to specific released balances from a merger transaction, both companies use this section to outline the financial impact of intangible assets over the next two years.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P106_S002\",\n\"avgo_2024_8_P107_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P051_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"AMD's candidate disclosures either concern fiscal year structure (duration/dates) or general acquisition-related intangible amortization expense totals ($2.4B in 2024). AVGO's disclosure specifically details the release schedule and timing of IPR&D assets from the VMware merger. AMD does not provide a comparable year-by-year release schedule for specific IPR&D asset balances in the supplied text.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"INTC's candidate disclosures concern fiscal year structure or licensed technology arrangement costs. Neither provides a comparable disclosure of future amortization or release schedules for IPR&D assets similar to AVGO's VMware-specific release schedule.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA's candidate disclosures concern deferred revenue changes or fiscal year definition. These topics are not comparable to AVGO's disclosure of IPR&D asset release schedules and amortization timing.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D080",
@@ -131,57 +134,15 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_8_D075",
-            "peer_topic": "Acquisition-related intangible amortization expense",
-            "peer_summary": "Acquisition-related intangible amortization expense was $2.4 billion and $2.8 billion in fiscal years 2024 and 2023, respectively.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.08601,
-            "relationship": "related_topic",
-            "comparison": "Both AVGO and AMD disclose significant financial impacts related to in-process research and development (IPR&D) and intangible assets arising from acquisitions, specifically regarding the amortization and release of these values. AVGO provides a granular breakdown of IPR&D asset releases, noting that $1,380 million of a $2,900 million total was released in fiscal year 2024, with specific future release schedules for 2025 and 2026 tied to the VMware merger. In contrast, AMD aggregates its acquisition-related intangible amortization expense at a higher level, reporting a total of $2.4 billion in fiscal year 2024, without disclosing the specific IPR&D release mechanics or the underlying asset categories detailed by AVGO.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_8_D080",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_8_P106_S001",
-                    "paragraph_id": "avgo_2024_8_P106",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "(b) $1,380 million of the $2,900 million was released during fiscal year 2024.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_8_D075",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_8_P078_S002",
-                    "paragraph_id": "amd_2024_8_P078",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Acquisition-related intangible amortization expense was $2.4 billion and $2.8 billion in fiscal year 2024 and 2023, respectively.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "AMD's candidate disclosures either concern fiscal year structure (duration/dates) or general acquisition-related intangible amortization expense totals ($2.4B in 2024). AVGO's disclosure specifically details the release schedule and timing of IPR&D assets from the VMware merger. AMD does not provide a comparable year-by-year release schedule for specific IPR&D asset balances in the supplied text."
       },
       {
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was substantively comparable to the topic of IPR&D asset release schedules. INTC's candidates focused on general fiscal year structure (D012) and licensed technology arrangement costs/amortization (D129). While D129 involves amortization of licensed technology, it describes the costs of entering into arrangements rather than the release schedule of acquired IPR&D assets, which is the specific focus of AVGO's disclosure regarding the VMware merger."
+        "rationale": "INTC's candidate disclosures concern fiscal year structure or licensed technology arrangement costs. Neither provides a comparable disclosure of future amortization or release schedules for IPR&D assets similar to AVGO's VMware-specific release schedule."
       },
       {
         "peer_ticker": "MU",
@@ -190,17 +151,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D044",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Future intangible asset amortization estimates",
             "peer_summary": "Expected amortization expense for intangible assets is projected to be $67 million in 2025, $56 million in 2026, $52 million in 2027, $49 million in 2028, and $42 million in 2029.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.096575,
-            "relationship": "related_topic",
-            "comparison": "Both AVGO and MU disclose future amortization or release schedules for intangible assets, though the nature and scale differ significantly due to AVGO's specific context with the VMware acquisition. AVGO details that a remaining IPR&D balance is expected to be released during the second half of fiscal year 2025, with additional amounts expected in fiscal year 2026. Similarly, MU provides forward-looking estimates for intangible asset amortization expenses, projecting specific dollar amounts for fiscal years 2025 through 2029. While both companies provide temporal guidance on intangible value realization, AVGO's disclosure is tied to specific released/restructuring events from a major merger, whereas MU's figures represent standard amortization of capitalized product and process technology.",
+            "retrieval_score": 0.089843,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and MU disclose future amortization schedules for intangible assets, providing specific monetary amounts expected to be released or amortized in upcoming fiscal years. AVGO details IPR&D assets from the VMware merger, stating that $1,380 million of the $2,900 million balance is expected to be released in the second half of fiscal year 2025, with additional amounts expected in the first half of fiscal year 2026. Similarly, MU projects specific amortization expense amounts for its intangible assets, listing $67 million for 2025 and $56 million for 2026. While AVGO's disclosure is tied to specific released balances from a merger transaction, both companies use this section to outline the financial impact of intangible assets over the next two years.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D080",
                 "sentences": [
                   {
@@ -222,6 +187,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D044",
                 "sentences": [
                   {
@@ -240,16 +206,21 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "NVDA's candidate disclosures concern deferred revenue changes or fiscal year definition. These topics are not comparable to AVGO's disclosure of IPR&D asset release schedules and amortization timing."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "d025f35742ac747483b1563c34fecfb2c112afa7951150c17e37d6fea6fa0be3",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "244abef5bbf259be6f81fddf1ffbef3abda6298e540f018f9c66823aa738ebc9"
+    }
   }
 }

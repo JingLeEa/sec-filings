@@ -1,0 +1,171 @@
+{
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "2a5a611230966b004697462413be16ed8a9054fe048b104492c8522c2258d362",
+  "request_hash": "b4a0f4c1b3bcef1f94d26d4b232ae1a1dee63a33b92f5f9eb32d49eba58c842f",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D036\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both disclosures address accounting policies for property, plant, and equipment, but they differ significantly in specificity and timing of estimates. NVDA discloses a specific, recent change in estimated useful lives (increasing equipment life from 3 to 4-5 years) that had a quantified positive impact of $135 million on operating income for fiscal 2024. In contrast, AMD’s disclosure is a static statement of policy describing straight-line depreciation over ranges (2-15 years for equipment) without mentioning any changes to those estimates or their financial impact during the period.\",\n\"target_sentence_ids\": [\n\"nvda_2024_8_P026_S002\",\n\"nvda_2024_8_P026_S003\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P044_S001\",\n\"amd_2024_8_P044_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The remaining candidate amd_2024_8_D123 concerns Income Tax Provision, which is not comparable to NVDA's Item 8 disclosure on Property, Plant, and Equipment estimates. The candidate amd_2024_8_D058 concerns Segment Revenue and Income Data, which is not comparable to the specific accounting policy discussion in NVDA's filing.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_8_D015",
+    "item": "8",
+    "target_topic": "Change in Useful Lives of Property, Plant, and Equipment",
+    "target_summary": "In February 2023, the company increased the estimated useful life of most server, storage, and network equipment from three to four or five years and assembly and test equipment from five to seven years, resulting in a $135 million increase in operating income and $114 million increase in net income for the fiscal year ended January 28, 2024.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0261",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report on the same specific change in accounting estimate: increasing the estimated useful lives of server, storage, network, and assembly/test equipment in February 2023, effective for fiscal year 2024.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_8_D012",
+            "item": "8",
+            "section": "Note 1 - Organization and Summary of Significant Accounting Policies > Use of Estimates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In February 2023, the company increased the estimated useful lives of server, storage, network, and assembly/test equipment, a change effective at the start of fiscal year 2024, which is estimated to increase fiscal year 2024 operating income by $133 million due to reduced depreciation expense.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D015",
+            "item": "8",
+            "section": "Note 1 - Organization and Summary of Significant Accounting Policies > Use of Estimates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In February 2023, the company increased the estimated useful life of most server, storage, and network equipment from three to four or five years and assembly and test equipment from five to seven years, resulting in a $135 million increase in operating income and $114 million increase in net income for the fiscal year ended January 28, 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The 2023 disclosure was a forward-looking estimate ('estimated to increase... by $133 million'). The 2024 disclosure reports the actual realized financial impact ($135 million operating income increase, $114 million net income increase, $0.05 EPS impact). This converts an estimate into a confirmed material financial result, allowing investors to verify the economic substance of the accounting change.",
+          "key_change": "Transition from estimated to actual financial impact of accounting change"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0027",
+        "relationship": "previous_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "No counterpart found in the 2025 Item 8 filing for the specific 2023 change in estimated useful lives for server/network equipment and its financial impact. The 2025 filing contains general depreciation policy statements (D049, D090) and expense figures, but no disclosure of a recent change in these estimates or the associated one-time benefit.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D015",
+            "item": "8",
+            "section": "Note 1 - Organization and Summary of Significant Accounting Policies > Use of Estimates",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "In February 2023, the company increased the estimated useful life of most server, storage, and network equipment from three to four or five years and assembly and test equipment from five to seven years, resulting in a $135 million increase in operating income and $114 million increase in net income for the fiscal year ended January 28, 2024.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The disclosure describes a change in accounting estimate (useful life of equipment) made in Feb 2023 with impacts on fiscal 2024. This is a historical event and specific accounting impact disclosure that does not represent a current business change, new risk, or ongoing strategic shift in the 2025 filing. The removal of this specific historical footnote detail is not material to the current financial position or future operations.",
+          "key_change": "Removal of historical accounting estimate change impact footnote"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D036",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Accounting Policy for Property and Equipment",
+            "peer_summary": "Property and equipment are stated at cost, with depreciation and amortization calculated on a straight-line basis over estimated useful lives of 2 to 15 years for equipment, 34 to 44 years for buildings, and based on the shorter of lease terms or useful lives for leasehold improvements.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.144374,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures address accounting policies for property, plant, and equipment, but they differ significantly in specificity and timing of estimates. NVDA discloses a specific, recent change in estimated useful lives (increasing equipment life from 3 to 4-5 years) that had a quantified positive impact of $135 million on operating income for fiscal 2024. In contrast, AMD’s disclosure is a static statement of policy describing straight-line depreciation over ranges (2-15 years for equipment) without mentioning any changes to those estimates or their financial impact during the period.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D015",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P026_S002",
+                    "paragraph_id": "nvda_2024_8_P026",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Based on advances in technology and usage rate, we increased the estimated useful life of most of our server, storage, and network equipment from three to four or five years, and our assembly and test equipment from five to seven years.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P026_S003",
+                    "paragraph_id": "nvda_2024_8_P026",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The effect of this change for the fiscal year ended January 28, 2024 was a benefit of $33 million and $102 million for cost of revenue and operating expenses, respectively, which resulted in an increase in operating income of $135 million and net income of $114 million after tax, or $0.05 per both basic and diluted share.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D036",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P044_S001",
+                    "paragraph_id": "amd_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Property and equipment are stated at cost.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P044_S002",
+                    "paragraph_id": "amd_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Depreciation and amortization are provided on a straight-line basis over the estimated useful lives of two to 15 years for equipment, 34 to 44 years for buildings, and leasehold improvements are measured by the shorter of the remaining terms of the leases or the estimated useful economic lives of the improvements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      }
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "2a5a611230966b004697462413be16ed8a9054fe048b104492c8522c2258d362",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "b4a0f4c1b3bcef1f94d26d4b232ae1a1dee63a33b92f5f9eb32d49eba58c842f"
+    }
+  }
+}

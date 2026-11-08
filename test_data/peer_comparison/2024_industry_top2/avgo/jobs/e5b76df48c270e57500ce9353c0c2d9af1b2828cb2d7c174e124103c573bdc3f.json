@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "bd31fd70ec8b32161b82506e938d2c9724b9992ec9a8b2a22b6e5f616f7bbde1",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "f0afe7b721e7d710ac7558a39d66336a7087ad70c3e7c0af61644c24ea756194",
+  "request_hash": "38ca45ac31f30e859f30760ef5ebac4a23b8b3c5e1b6c33d45cad9eb1d5479be",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D065\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both disclosures address strategic portfolio adjustments through business divestiture or disposal planning. AVGO completed the sale of its end-user computing (EUC) business to KKR in July 2024, deeming it misaligned with strategic objectives, whereas AMD disclosed an intention to seek a strategic partner to acquire ZT Systems' manufacturing business. While AVGO executed a divestiture to exit a non-aligned business, AMD is seeking to offload or restructure a manufacturing component of an acquired entity.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P098_S001\",\n\"avgo_2024_8_P098_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P068_S006\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"No candidate was substantively comparable; Intel's disclosures describe segment organization, reportable units, and the composition of 'All Other' results, which do not match the topic of business divestiture or acquisition consideration.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"No candidate was substantively comparable; Micron's disclosures cover routine legal actions and segment definitions, which are unrelated to the target's topic of business divestiture.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"No candidate was substantively comparable; NVIDIA's disclosures on assets held for sale describe general accounting treatment for disposal rather than a specific completed divestiture event like the target's EUC business sale.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D073",
@@ -147,18 +150,22 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_8_D026",
-            "peer_topic": "Impairment measurement for assets held for sale",
-            "peer_summary": "For assets removed from operations and held for sale, impairment losses are estimated as the excess of carrying value over fair value, influenced by market conditions, with changes in factors potentially necessitating future recognition.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.058988,
-            "relationship": "same_topic",
-            "comparison": "AVGO reported a completed divestiture of its End-User Computing (EUC) business held for sale, while AMD disclosed the accounting policy for estimating impairment losses on assets removed from operations and held for sale. AVGO's disclosure reflects the execution of a sale, whereas AMD's disclosure outlines the measurement methodology for potential impairments on such assets, specifically noting that market conditions affect these estimates. Both disclosures concern the financial treatment of assets held for sale, but one is a specific event completion and the other is a general policy statement without referencing a specific divestiture.",
+            "peer_disclosure_id": "amd_2024_8_D065",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Acquisition of ZT Systems: Manufacturing Business Strategy",
+            "peer_summary": "AMD intends to seek a strategic partner to acquire ZT Systems' manufacturing business as part of the acquisition.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.064696,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures address strategic portfolio adjustments through business divestiture or disposal planning. AVGO completed the sale of its end-user computing (EUC) business to KKR in July 2024, deeming it misaligned with strategic objectives, whereas AMD disclosed an intention to seek a strategic partner to acquire ZT Systems' manufacturing business. While AVGO executed a divestiture to exit a non-aligned business, AMD is seeking to offload or restructure a manufacturing component of an acquired entity.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D073",
                 "sentences": [
                   {
@@ -180,20 +187,14 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_8_D026",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D065",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_8_P034_S001",
-                    "paragraph_id": "amd_2024_8_P034",
+                    "sentence_id": "amd_2024_8_P068_S006",
+                    "paragraph_id": "amd_2024_8_P068",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "When assets are removed from operations and held for sale, the Company estimates impairment losses as the excess of the carrying value of the assets over their fair value.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_8_P034_S002",
-                    "paragraph_id": "amd_2024_8_P034",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Market conditions are among the factors affecting impairment of assets held for sale.",
+                    "text": "The Company intends to seek a strategic partner to acquire ZT Systems' manufacturing business.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -207,26 +208,31 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The candidate disclosures relate to the definition of reporting unit carrying value for impairment and the consolidation elimination of Ireland SCIP assets, which do not match the specific topic of the divestiture of a business line held for sale and presented in discontinued operations."
+        "rationale": "No candidate was substantively comparable; Intel's disclosures describe segment organization, reportable units, and the composition of 'All Other' results, which do not match the topic of business divestiture or acquisition consideration."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The candidate disclosures define reportable business units (Mobile and Compute/Networking) but do not mention divestitures, assets held for sale, or discontinued operations related to a specific sale."
+        "rationale": "No candidate was substantively comparable; Micron's disclosures cover routine legal actions and segment definitions, which are unrelated to the target's topic of business divestiture."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The candidate disclosure is a generic reference to where Item 8 information is located and does not contain substantive disclosures comparable to the specific divestiture event."
+        "rationale": "No candidate was substantively comparable; NVIDIA's disclosures on assets held for sale describe general accounting treatment for disposal rather than a specific completed divestiture event like the target's EUC business sale."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "f0afe7b721e7d710ac7558a39d66336a7087ad70c3e7c0af61644c24ea756194",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "38ca45ac31f30e859f30760ef5ebac4a23b8b3c5e1b6c33d45cad9eb1d5479be"
+    }
   }
 }

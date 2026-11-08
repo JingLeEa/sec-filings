@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
-  "request_hash": "6b99de353f4b3cef5ad52412815e6d9df89d9fa97f6e26bff7c5ca57e2dfeaf8",
+  "input_fingerprint": "e41e6022adb4d847c0289913c33de7b4a26701f19d2828a112ec60fbf96be8dd",
+  "job_fingerprint": "40f73d5b3d3311d3d3f224ec61bc12a8986deeaaa19abe78ac9b8ec1e64ec843",
+  "request_hash": "46955b59510ae607ce862dbbc54eeb383c038998e9bdf6a300d69daa9bd90af1",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1A_D009\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both QCOM and AMD explicitly disclose that security vulnerabilities in their products could have a material adverse effect on their business. QCOM broadens this to include product defects and errors, noting an adverse impact on customers and end users, while AMD specifically isolates product security vulnerabilities as a distinct risk factor leading to material adverse effects.\",\n\"target_sentence_ids\": [\n\"qcom_2024_1A_P100_S001\",\n\"qcom_2024_1A_P100_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1A_P004_S005\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_1A_D025\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies identify security vulnerabilities in their products as a material risk. QCOM states generally that defects, errors, or security vulnerabilities could have a material adverse effect. INTC provides a more granular comparison by specifying that these vulnerabilities occur in processors, third-party components, and associated operating systems/workloads, and can lead to performance issues, data loss, or reputational damage, ultimately adversely affecting results of operations and financial condition.\",\n\"target_sentence_ids\": [\n\"qcom_2024_1A_P100_S001\",\n\"qcom_2024_1A_P100_S002\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_1A_P049_S001\",\n\"intc_2024_1A_P050_S001\",\n\"intc_2024_1A_P052_S001\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1A_D024\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both QCOM and NVDA group product defects and security vulnerabilities as sources of potential material adverse effects. QCOM broadly states that defects, errors, or security vulnerabilities in products or technologies could have an adverse impact. NVDA elaborates that defects, security vulnerabilities, or failures in complex hardware/software (including AI products) can lead to loss of market acceptance, withdrawal from products, and negative impacts on financial results and reputation.\",\n\"target_sentence_ids\": [\n\"qcom_2024_1A_P100_S001\",\n\"qcom_2024_1A_P100_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1A_P029_S002\",\n\"nvda_2024_1A_P029_S012\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"AVGO candidates focus on cybersecurity threats to IT systems and software infrastructure management (avgo_2024_1A_D006, avgo_2024_1A_D017). While related to security, these disclosures concern the integrity of internal IT infrastructure and vendor systems rather than defects, errors, or security vulnerabilities within the company's actual products sold to customers, which is the specific focus of the QCOM disclosure.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU candidates focus on the risk of unsuccessful technology development (mu_2024_1A_D025) and intellectual property protection failure (mu_2024_1A_D045). These are distinct from the risk of product defects, errors, or security vulnerabilities in existing products that could have a material adverse effect, as described by QCOM.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
   "result": {
     "target_ticker": "QCOM",
     "target_disclosure_id": "qcom_2024_1A_D082",
@@ -186,17 +189,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_1A_D009",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Product security vulnerabilities",
             "peer_summary": "Products may be subject to security vulnerabilities that could have a material adverse effect on the business.",
             "peer_taxonomy": "Cybersecurity & Data",
-            "retrieval_score": 0.271852,
+            "retrieval_score": 0.249854,
             "relationship": "same_topic",
-            "comparison": "Both QCOM and AMD disclose that security vulnerabilities in their products could have a material adverse effect on their businesses. QCOM broadens this to include 'defects, errors or security vulnerabilities' and notes the impact extends to customers and end-users, while AMD specifically cites 'security vulnerabilities' as the primary risk factor for material adverse effects.",
+            "comparison": "Both QCOM and AMD explicitly disclose that security vulnerabilities in their products could have a material adverse effect on their business. QCOM broadens this to include product defects and errors, noting an adverse impact on customers and end users, while AMD specifically isolates product security vulnerabilities as a distinct risk factor leading to material adverse effects.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D082",
                 "sentences": [
                   {
@@ -218,6 +225,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "1A",
                 "disclosure_id": "amd_2024_1A_D009",
                 "sentences": [
                   {
@@ -238,7 +246,7 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The available candidates (avgo_2024_1A_D017 and avgo_2024_1A_D006) focus on internal IT infrastructure security, software management failures, and cyber breaches affecting system confidentiality and integrity. These differ from QCOM's disclosure, which centers on defects and vulnerabilities within its *products* or *technologies* that impact customers and end-users, rather than internal operational IT systems."
+        "rationale": "AVGO candidates focus on cybersecurity threats to IT systems and software infrastructure management (avgo_2024_1A_D006, avgo_2024_1A_D017). While related to security, these disclosures concern the integrity of internal IT infrastructure and vendor systems rather than defects, errors, or security vulnerabilities within the company's actual products sold to customers, which is the specific focus of the QCOM disclosure."
       },
       {
         "peer_ticker": "INTC",
@@ -247,19 +255,30 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_1A_D025",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Product Security Vulnerabilities and Operational Impact",
             "peer_summary": "Intel faces risks from security vulnerabilities in its processors and third-party components, including side-channel variants like Spectre and Meltdown. Mitigations may be untimely or ineffective, and export restrictions can hinder patch deployment. These vulnerabilities can lead to significant costs for updates, litigation, and regulatory responses, damage reputation, and reduce product demand, especially if competitors' products are more secure. Premature public disclosure of vulnerabilities can exacerbate these risks.",
             "peer_taxonomy": "Cybersecurity & Data",
-            "retrieval_score": 0.106126,
+            "retrieval_score": 0.098205,
             "relationship": "same_topic",
-            "comparison": "Both companies identify security vulnerabilities in their products as a risk that can materially adversely affect operations, financial condition, and reputation. QCOM provides a high-level statement on the potential adverse impact from defects or vulnerabilities, whereas INTC details specific consequences such as adverse performance, system instability, data loss, and reduced demand due to public disclosure or mitigation limitations.",
+            "comparison": "Both companies identify security vulnerabilities in their products as a material risk. QCOM states generally that defects, errors, or security vulnerabilities could have a material adverse effect. INTC provides a more granular comparison by specifying that these vulnerabilities occur in processors, third-party components, and associated operating systems/workloads, and can lead to performance issues, data loss, or reputational damage, ultimately adversely affecting results of operations and financial condition.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D082",
                 "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P100_S001",
+                    "paragraph_id": "qcom_2024_1A_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Accordingly, defects, errors or security vulnerabilities in our products or the technologies we use could have an adverse impact on us, on our customers and the end users of our customers' products.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "qcom_2024_1A_P100_S002",
                     "paragraph_id": "qcom_2024_1A_P100",
@@ -272,20 +291,28 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D025",
                 "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1A_P049_S001",
+                    "paragraph_id": "intc_2024_1A_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We face risks related to security vulnerabilities in our products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_1A_P050_S001",
+                    "paragraph_id": "intc_2024_1A_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We or third parties regularly identify security vulnerabilities with respect to our processors and other products, as well as the operating systems and workloads that run on them and the components that interact with them.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "intc_2024_1A_P052_S001",
                     "paragraph_id": "intc_2024_1A_P052",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "Security vulnerabilities and any limitations or adverse effects of mitigation techniques can adversely affect our results of operations, financial condition, customer relationships, prospects, and reputation in a number of ways, any of which may be material.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_1A_P052_S003",
-                    "paragraph_id": "intc_2024_1A_P052",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Adverse publicity about security vulnerabilities or mitigations could damage our reputation with customers or users and reduce demand for our products and services.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -299,7 +326,7 @@
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The available candidates (mu_2024_1A_D025 and mu_2024_1A_D046) relate to unsuccessful technology development and general legal proceedings, respectively. Neither candidate addresses product defects, security vulnerabilities, or the specific operational and financial risks arising from such product issues as described in QCOM's disclosure."
+        "rationale": "MU candidates focus on the risk of unsuccessful technology development (mu_2024_1A_D025) and intellectual property protection failure (mu_2024_1A_D045). These are distinct from the risk of product defects, errors, or security vulnerabilities in existing products that could have a material adverse effect, as described by QCOM."
       },
       {
         "peer_ticker": "NVDA",
@@ -307,20 +334,31 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1A_D027",
-            "peer_topic": "Product defects and warranty liabilities",
-            "peer_summary": "Complex hardware and software products may contain defects or security vulnerabilities, leading to significant remediation expenses, warranty costs, reputational damage, and loss of market share; this risk is heightened when relying on partners for components. In fiscal year 2023, a defect was identified in a third-party component embedded in certain Data Center products, resulting in a recorded net warranty liability; while estimates were made, additional amounts may be needed, and such defects adversely affect component and finished goods supply and costs.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.088932,
+            "peer_disclosure_id": "nvda_2024_1A_D024",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Product defect and warranty liabilities",
+            "peer_summary": "Complex hardware and software offerings, including AI products using third-party training data, contain risks of defects, security vulnerabilities, and failures that may lead to significant warranty expenses, remediation costs, and legal liabilities, as evidenced by a 2023 Data Center component defect.",
+            "peer_taxonomy": "Other / Unclassified",
+            "retrieval_score": 0.082514,
             "relationship": "same_topic",
-            "comparison": "Both QCOM and NVDA highlight that product defects and security vulnerabilities can lead to significant remediation expenses and reputational damage, negatively impacting business operations. QCOM focuses on the potential material adverse effect on business results and financial condition, while NVDA explicitly links defects to costs, market share loss, and warranty liabilities, noting a specific past incident involving a third-party component in fiscal 2023.",
+            "comparison": "Both QCOM and NVDA group product defects and security vulnerabilities as sources of potential material adverse effects. QCOM broadly states that defects, errors, or security vulnerabilities in products or technologies could have an adverse impact. NVDA elaborates that defects, security vulnerabilities, or failures in complex hardware/software (including AI products) can lead to loss of market acceptance, withdrawal from products, and negative impacts on financial results and reputation.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D082",
                 "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P100_S001",
+                    "paragraph_id": "qcom_2024_1A_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Accordingly, defects, errors or security vulnerabilities in our products or the technologies we use could have an adverse impact on us, on our customers and the end users of our customers' products.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "qcom_2024_1A_P100_S002",
                     "paragraph_id": "qcom_2024_1A_P100",
@@ -333,13 +371,14 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1A_D027",
+                "item": "1A",
+                "disclosure_id": "nvda_2024_1A_D024",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1A_P028_S001",
-                    "paragraph_id": "nvda_2024_1A_P028",
+                    "sentence_id": "nvda_2024_1A_P029_S002",
+                    "paragraph_id": "nvda_2024_1A_P029",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Defects in our products have caused and could cause us to incur significant expenses to remediate, which can damage our reputation and cause us to lose market share.",
+                    "text": "They have in the past and may in the future contain defects or security vulnerabilities or experience failures or unsatisfactory performance due to any number of issues in design, fabrication, packaging, materials, bugs and/or use within a system.",
                     "visible_in_prompt": true
                   },
                   {
@@ -356,6 +395,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "40f73d5b3d3311d3d3f224ec61bc12a8986deeaaa19abe78ac9b8ec1e64ec843",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
+      "request_hash": "46955b59510ae607ce862dbbc54eeb383c038998e9bdf6a300d69daa9bd90af1"
+    }
   }
 }

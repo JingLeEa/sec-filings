@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "6fd1bbb020ebab9a8c93af7cfd94e5db8fd59bf32dd0e7f3764c84e740f6515f",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "32ed268c5d77a04b6c285e159a1ed9641d660e16b9853609321f7032f6324fe6",
+  "request_hash": "5fc5fd2d23655c49f6f6cc1b58baa74168fdafa93980e3dd5cfb9be096fc6797",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D108\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and AMD disclose the specific terms governing the exercise price of stock options under their respective primary equity plans. AVGO’s 2007 Plan requires that stock options and SARs have an exercise price no less than the fair market value on the date of grant. Similarly, AMD’s 2023 Plan mandates that the exercise price for nonstatutory and incentive stock options cannot be less than 100% of the fair market value on the date of the grant, reflecting a consistent industry standard for option pricing floors.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P168_S003\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P114_S003\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D080\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"AVGO and NVDA both detail the authorization and scope of awards under their 2007 Equity Incentive Plans. AVGO’s 2007 Plan authorizes grants of stock options, SARs, restricted stock, and RSUs to employees, noting consistency with the 2012 Plan terms post-merger. NVDA’s 2007 Plan also authorizes a similar array of awards including incentive and non-statutory stock options, restricted stock, RSUs, and PSUs for employees, directors, and consultants, highlighting the use of identical plan nomenclature and award types across both entities.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P168_S003\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P080_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"No candidate was sufficiently comparable. While INTC discusses RSUs and options, its primary matching candidate (intc_2024_8_D170) focuses on vesting schedules (3 years vs 4 years) and PSU definitions rather than the specific grant authority and exercise price terms central to the AVGO 2007 Plan disclosure. The second INTC candidate (intc_2024_8_D173) concerns fair value estimation methods, which is a different topic than plan grant authority.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"No candidate was sufficiently comparable. MU’s disclosures focus on the status of outstanding stock options (not material, last granted in 2018) and RSU vesting/dividend equivalents. This lacks the substantive comparison of active grant authority terms, exercise price floors, or plan authorizations found in AVGO's 2007 Plan description.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D127",
@@ -308,17 +311,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D108",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Stock Option Terms and Pricing",
             "peer_summary": "The 2023 Plan permits nonstatutory and incentive stock options with exercise prices not less than 100% of fair market value at grant, payable in full at exercise. Generally, these options vest over four years and expire within seven years.",
             "peer_taxonomy": "Human Capital & Organization",
-            "retrieval_score": 0.235798,
+            "retrieval_score": 0.224731,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and AMD define the minimum exercise price for stock options granted under their respective equity plans as being no less than the fair market value of the common stock on the date of grant. AVGO's 2007 Plan mandates an exercise price 'no less than the fair market value,' while AMD's 2023 Plan specifies that the exercise price 'cannot be less than 100% of the fair market value.' Both disclosures confirm the grant of both nonstatutory and incentive stock options (AMD explicitly names them; AVGO names stock options generally within the 2007 Plan context which it aligns with the 2012 Plan terms).",
+            "comparison": "Both AVGO and AMD disclose the specific terms governing the exercise price of stock options under their respective primary equity plans. AVGO’s 2007 Plan requires that stock options and SARs have an exercise price no less than the fair market value on the date of grant. Similarly, AMD’s 2023 Plan mandates that the exercise price for nonstatutory and incentive stock options cannot be less than 100% of the fair market value on the date of the grant, reflecting a consistent industry standard for option pricing floors.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D127",
                 "sentences": [
                   {
@@ -333,6 +340,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D108",
                 "sentences": [
                   {
@@ -351,22 +359,38 @@
       },
       {
         "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was sufficiently comparable. While INTC discusses RSUs and options, its primary matching candidate (intc_2024_8_D170) focuses on vesting schedules (3 years vs 4 years) and PSU definitions rather than the specific grant authority and exercise price terms central to the AVGO 2007 Plan disclosure. The second INTC candidate (intc_2024_8_D173) concerns fair value estimation methods, which is a different topic than plan grant authority."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was sufficiently comparable. MU’s disclosures focus on the status of outstanding stock options (not material, last granted in 2018) and RSU vesting/dividend equivalents. This lacks the substantive comparison of active grant authority terms, exercise price floors, or plan authorizations found in AVGO's 2007 Plan description."
+      },
+      {
+        "peer_ticker": "NVDA",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_8_D170",
-            "peer_topic": "RSU and PSU Grant Terms and Vesting",
-            "peer_summary": "The 2006 Plan authorizes RSUs and stock options, with PSUs granted to senior officers and employees vesting after three years and one month. Other RSU and option awards generally vest over four years, with 10 million PSUs outstanding as of December 28, 2024.",
-            "peer_taxonomy": "Human Capital & Organization",
-            "retrieval_score": 0.13875,
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D080",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "2007 Plan Authorization and Share Availability",
+            "peer_summary": "The 2007 Equity Incentive Plan authorizes the issuance of various stock-based awards including options, RSUs, and PSUs to employees, directors, and consultants, with up to 37 million shares authorized for issuance and 147 million shares available for future grants as of January 28, 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.273899,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and INTC disclose the authority to grant Restricted Stock Units (RSUs) and stock options under their respective equity plans. AVGO's 2007 Plan explicitly lists RSUs and stock options among the grantable awards. Similarly, INTC's 2006 Plan authorizes the grant of RSUs and stock options, further detailing that PSUs are a subset of RSUs granted to senior officers. Both companies utilize RSUs as a key component of their equity compensation programs.",
+            "comparison": "AVGO and NVDA both detail the authorization and scope of awards under their 2007 Equity Incentive Plans. AVGO’s 2007 Plan authorizes grants of stock options, SARs, restricted stock, and RSUs to employees, noting consistency with the 2012 Plan terms post-merger. NVDA’s 2007 Plan also authorizes a similar array of awards including incentive and non-statutory stock options, restricted stock, RSUs, and PSUs for employees, directors, and consultants, highlighting the use of identical plan nomenclature and award types across both entities.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D127",
                 "sentences": [
                   {
@@ -380,14 +404,15 @@
               },
               {
                 "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D170",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D080",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_8_P197_S001",
-                    "paragraph_id": "intc_2024_8_P197",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Under the 2006 Plan, we may grant RSUs and stock options.",
+                    "sentence_id": "nvda_2024_8_P080_S001",
+                    "paragraph_id": "nvda_2024_8_P080",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The 2007 Plan authorizes the issuance of incentive stock options, non-statutory stock options, restricted stock, RSUs, stock appreciation rights, performance stock awards, performance cash awards, and other stock-based awards to employees, directors and consultants.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -398,23 +423,16 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses current grant authority terms similar to AVGO's 2007 Plan. The provided MU candidates focus on historical stock option activity (which are not material and last granted in 2018) and Restricted Stock Award vesting terms/dividends, which does not directly compare to the grant authority and exercise price terms of the 2007 Plan described in AVGO's disclosure."
-      },
-      {
-        "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved."
-      },
-      {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
         "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "32ed268c5d77a04b6c285e159a1ed9641d660e16b9853609321f7032f6324fe6",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "5fc5fd2d23655c49f6f6cc1b58baa74168fdafa93980e3dd5cfb9be096fc6797"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "477519d848ddec2adb4adf7ac1d21ecf61f54235d9d9e724fb27e412a91ad39f",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "a009f103fb56e126e004be39de84fcb896bbf70709c4818263f3eabf857fbafa",
+  "request_hash": "c882ddaf746c0620aab8574ee724deb1d49aed8235b8dd4e3c0ca8f4b34fd2a1",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D012\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Broadcom define their corporate identity as a global semiconductor company. AMD specifically defines 'AMD or the Company' as the parent and consolidated subsidiaries. Similarly, Broadcom defines itself as a global technology leader designing semiconductor solutions and specifies that 'Broadcom' refers to the Delaware corporation. While AMD's definition focuses on the naming convention and consolidation scope, Broadcom's focuses on the business scope and legal structure, but both serve as the foundational company identity statement in Item 8.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P012_S001\",\n\"amd_2024_8_P012_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P028_S001\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D013\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose the scope of their consolidated financial statements in Item 8. AMD states that references to 'AMD or the Company' include the parent and its consolidated subsidiaries. NVIDIA explicitly states that its consolidated financial statements include NVIDIA Corporation and its wholly-owned subsidiaries, with intercompany balances eliminated. Both disclosures address the consolidation of the entity, though NVIDIA provides more specific detail on intercompany eliminations.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P012_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P024_S001\",\n\"nvda_2024_8_P024_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The retrieved candidates (intc_2024_8_D096 on government incentives and intc_2024_8_D092 on capacity management) discuss government grants and manufacturing capacity decisions. These are not comparable to the target's company definition and consolidation scope topic.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates (mu_2024_8_D009 on functional currency and mu_2024_8_D001 on consolidation/GAAP preparation) focus on accounting policy details (currency and GAAP compliance). While mu_2024_8_D001 mentions subsidiaries, it is framed as a financial statement preparation note rather than the company's business identity definition found in the target. The target's primary topic is corporate identity/definition, for which no MU candidate is substantively comparable.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved for QCOM.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_8_D001",
@@ -208,17 +211,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D012",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Company Business Description and Reportable Segments",
             "peer_summary": "Broadcom is a global technology leader designing semiconductor and infrastructure software solutions across two reportable segments: semiconductor solutions and infrastructure software, serving markets including AI networking, data centers, and enterprise IT.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.048755,
+            "retrieval_score": 0.067735,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Broadcom define their corporate identity as a global semiconductor company in their Note 1 disclosures. AMD explicitly states that 'References herein to AMD or the Company mean Advanced Micro Devices, Inc. and its consolidated subsidiaries,' establishing the scope of the entity. Similarly, Broadcom defines itself as 'a global technology leader that designs, develops and supplies a broad range of semiconductor and infrastructure software solutions' and identifies as 'a Delaware corporation.' While both identify as global semiconductor entities, Broadcom's definition expands beyond pure semiconductors to include infrastructure software solutions and is structured around two reportable segments, whereas AMD's definition focuses on the parent and consolidated subsidiaries without segmenting the business description in this specific note.",
+            "comparison": "Both AMD and Broadcom define their corporate identity as a global semiconductor company. AMD specifically defines 'AMD or the Company' as the parent and consolidated subsidiaries. Similarly, Broadcom defines itself as a global technology leader designing semiconductor solutions and specifies that 'Broadcom' refers to the Delaware corporation. While AMD's definition focuses on the naming convention and consolidation scope, Broadcom's focuses on the business scope and legal structure, but both serve as the foundational company identity statement in Item 8.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D001",
                 "sentences": [
                   {
@@ -240,6 +247,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D012",
                 "sentences": [
                   {
@@ -247,13 +255,6 @@
                     "paragraph_id": "avgo_2024_8_P028",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "Broadcom Inc. (\"Broadcom\"), a Delaware corporation, is a global technology leader that designs, develops and supplies a broad range of semiconductor and infrastructure software solutions.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P028_S008",
-                    "paragraph_id": "avgo_2024_8_P028",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We have two reportable segments: semiconductor solutions and infrastructure software.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -267,19 +268,73 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for Intel (intc_2024_8_D049 and intc_2024_8_D013) focus on accounting policies for non-controlling interests and consolidation bases/intercompany eliminations. These disclosures concern financial reporting mechanics and subsidiary inclusion criteria rather than the company's business definition, naming conventions, or strategic identity, which is the topic of the target disclosure."
+        "rationale": "The retrieved candidates (intc_2024_8_D096 on government incentives and intc_2024_8_D092 on capacity management) discuss government grants and manufacturing capacity decisions. These are not comparable to the target's company definition and consolidation scope topic."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for Micron (mu_2024_8_D009 and mu_2024_8_D001) focus on functional currency determination and general consolidated financial statement preparation in accordance with GAAP. These are accounting policy disclosures unrelated to the company's business definition or naming conventions."
+        "rationale": "The retrieved candidates (mu_2024_8_D009 on functional currency and mu_2024_8_D001 on consolidation/GAAP preparation) focus on accounting policy details (currency and GAAP compliance). While mu_2024_8_D001 mentions subsidiaries, it is framed as a financial statement preparation note rather than the company's business identity definition found in the target. The target's primary topic is corporate identity/definition, for which no MU candidate is substantively comparable."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidate for NVIDIA (nvda_2024_8_D001) is a navigational statement indicating that information for Item 8 is located in the Consolidated Financial Statements and Notes. It does not contain a business description or company definition comparable to the target."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D013",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Scope of Consolidated Financial Statements",
+            "peer_summary": "The consolidated financial statements include NVIDIA Corporation and its wholly-owned subsidiaries, with all intercompany balances and transactions eliminated.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.029434,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose the scope of their consolidated financial statements in Item 8. AMD states that references to 'AMD or the Company' include the parent and its consolidated subsidiaries. NVIDIA explicitly states that its consolidated financial statements include NVIDIA Corporation and its wholly-owned subsidiaries, with intercompany balances eliminated. Both disclosures address the consolidation of the entity, though NVIDIA provides more specific detail on intercompany eliminations.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D001",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P012_S002",
+                    "paragraph_id": "amd_2024_8_P012",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "References herein to AMD or the Company mean Advanced Micro Devices, Inc. and its consolidated subsidiaries.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D013",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P024_S001",
+                    "paragraph_id": "nvda_2024_8_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our consolidated financial statements include the accounts of NVIDIA Corporation and our wholly-owned subsidiaries.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P024_S002",
+                    "paragraph_id": "nvda_2024_8_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "All intercompany balances and transactions have been eliminated in consolidation.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
@@ -287,6 +342,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved for QCOM."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "a009f103fb56e126e004be39de84fcb896bbf70709c4818263f3eabf857fbafa",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "c882ddaf746c0620aab8574ee724deb1d49aed8235b8dd4e3c0ca8f4b34fd2a1"
+    }
   }
 }

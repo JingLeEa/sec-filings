@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "0c0e754d9522da96723e65f65a2749cf779822a5ae0556b2b90fd0fc7ed0472f",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "e4806dc38e0030de7d8d512f67b7acaf33e699ec213813d4beb2a9a0fe3ee405",
+  "request_hash": "5d6979921c9555ef95004adfe78ec159c684d20bd0985a9dc44816747fbf8fdb",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_1_D039\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose their adoption of Extreme Ultraviolet (EUV) lithography for leading-edge process nodes in 2024, but differ in specific node nomenclature and manufacturing scope. Micron (MU) identifies its '1γ' node as the first to employ EUV lithography for DRAM volume shipments expected in 2025, having transitioned production in 2024 to 1α and 1β nodes. In contrast, Intel (INTC) identifies 'Intel 4' and 'Intel 3' as its first EUV lithography nodes, which moved to high-volume manufacturing in 2024 for processor production, specifically noting Intel 4 is expected to represent an increasing portion of production in 2025. While both leverage EUV for advanced nodes in the same timeframe, MU focuses on DRAM memory nodes (1γ) while INTC focuses on CPU logic nodes (Intel 4/3).\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P006_S003\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_1_P037_S003\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_1_D049\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both disclosures highlight the operational ramp-up of advanced process nodes in 2024, though they address different product categories. Micron states that the majority of its DRAM bit production in 2024 was on leading-edge 1α and 1β nodes. Similarly, Intel reports that as of the end of 2024, a significant majority of its products were manufactured using the Intel 7 node, while it successfully ramped its first EUV nodes (Intel 4 and Intel 3) to high-volume production in Ireland. Both companies illustrate a 2024 strategic shift toward higher-density, next-generation process technologies for their respective silicon products.\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P006_S002\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_1_P044_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The supplied AMD candidates (amd_2024_1_D029 on mobile CPUs and amd_2024_1_D039 on FPGAs/Adaptive SoCs) discuss processor architectures (Zen 5, Zen 4) and hardware-customizable logic devices, which are distinct from Micron's disclosure of DRAM production nodes and lithography technology.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The supplied AVGO candidates (avgo_2024_1_D059 on AIOps and avgo_2024_1_D051 on Application Development) focus on software solutions, monitoring, and DevOps tools. These do not overlap with Micron's hardware-focused disclosure of DRAM manufacturing nodes and lithography processes.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The supplied NVDA candidates (nvda_2024_1_D025 on RTX gaming graphics and nvda_2024_1_D018 on networking/infiniband) discuss graphics rendering, ray tracing, and data center interconnects. These topics are unrelated to Micron's DRAM process node manufacturing and lithography technology.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The supplied QCOM candidates (qcom_2024_1_D013 on generative AI adoption forecasts and qcom_2024_1_D050 on AI R&D for edge devices) focus on software capabilities, AI models, and market adoption trends for edge computing. These do not match Micron's disclosure of physical DRAM process nodes and lithography techniques.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_1_D007",
@@ -265,13 +268,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The provided AMD candidates (amd_2024_1_D029 and amd_2024_1_D039) focus on CPU architectures (Zen 5), NPUs, and FPGAs. While the target concerns DRAM production nodes and EUV lithography, AMD's disclosures do not discuss semiconductor lithography processes, memory production nodes, or the specific manufacturing technology transitions (like EUV adoption for memory) that are central to the target topic. The taxonomies differ in focus (Processor vs Memory/Fab)."
+        "rationale": "The supplied AMD candidates (amd_2024_1_D029 on mobile CPUs and amd_2024_1_D039 on FPGAs/Adaptive SoCs) discuss processor architectures (Zen 5, Zen 4) and hardware-customizable logic devices, which are distinct from Micron's disclosure of DRAM production nodes and lithography technology."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The provided AVGO candidates (avgo_2024_1_D059 and avgo_2024_1_D051) focus on software solutions (AIOps) and application development tools for mainframes. These topics are unrelated to semiconductor manufacturing, DRAM production nodes, or lithography technologies."
+        "rationale": "The supplied AVGO candidates (avgo_2024_1_D059 on AIOps and avgo_2024_1_D051 on Application Development) focus on software solutions, monitoring, and DevOps tools. These do not overlap with Micron's hardware-focused disclosure of DRAM manufacturing nodes and lithography processes."
       },
       {
         "peer_ticker": "INTC",
@@ -280,17 +283,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_1_D039",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Intel 4 process node production status and capabilities",
             "peer_summary": "Intel 4, the first EUV lithography node, delivered significant density scaling and approximately 20% performance-per-watt improvement over Intel 7; it moved to high-volume manufacturing in Ireland in 2024 for the Intel Core Ultra processor and is expected to represent an increasing portion of production in 2025.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.147375,
+            "retrieval_score": 0.156331,
             "relationship": "same_topic",
-            "comparison": "Both companies disclose the adoption of Extreme Ultraviolet (EUV) lithography for their latest manufacturing nodes. Micron expects volume shipments of its 1γ DRAM node using EUV lithography in 2025, while Intel's Intel 4, its first EUV lithography node, moved to high-volume manufacturing in 2024 for the Intel Core Ultra processor. Both highlight EUV as a key technological step for their respective next-generation products.",
+            "comparison": "Both companies disclose their adoption of Extreme Ultraviolet (EUV) lithography for leading-edge process nodes in 2024, but differ in specific node nomenclature and manufacturing scope. Micron (MU) identifies its '1γ' node as the first to employ EUV lithography for DRAM volume shipments expected in 2025, having transitioned production in 2024 to 1α and 1β nodes. In contrast, Intel (INTC) identifies 'Intel 4' and 'Intel 3' as its first EUV lithography nodes, which moved to high-volume manufacturing in 2024 for processor production, specifically noting Intel 4 is expected to represent an increasing portion of production in 2025. While both leverage EUV for advanced nodes in the same timeframe, MU focuses on DRAM memory nodes (1γ) while INTC focuses on CPU logic nodes (Intel 4/3).",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D007",
                 "sentences": [
                   {
@@ -305,6 +312,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D039",
                 "sentences": [
                   {
@@ -320,18 +328,22 @@
           },
           {
             "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_1_D048",
-            "peer_topic": "Process Technology Development Strategy and Investment",
-            "peer_summary": "Intel's technology development group designs and develops new process nodes to improve performance, power efficiency, cost, and size, requiring significant ongoing capital investment in technologies like EUV lithography, gate-all-around transistors, and backside power. The company pursues incremental improvements to existing designs while developing new manufacturing technologies for upcoming nodes.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.120235,
+            "peer_disclosure_id": "intc_2024_1_D049",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "2024 Process Node Manufacturing Status and Roadmap Changes",
+            "peer_summary": "As of the end of 2024, most products were manufactured using the Intel 7 node, while high-volume production of the Intel 4 and Intel 3 nodes was shifted to Ireland. The company canceled the productization of Intel 20A to focus on the improved Intel 18A node, which is expected to enter high-volume production in 2025.",
+            "peer_taxonomy": "Operations & Capacity",
+            "retrieval_score": 0.130746,
             "relationship": "same_topic",
-            "comparison": "Both companies describe the strategic investment and development required to advance process technologies. Micron details its progression through 1α, 1β, and toward 1γ nodes, while Intel outlines its strategy of significant ongoing capital investment in technologies like EUV lithography, gate-all-around transistors, and backside power to maintain competitiveness with foundry offerings. Both emphasize that maintaining leadership requires substantial R&D and manufacturing infrastructure investment.",
+            "comparison": "Both disclosures highlight the operational ramp-up of advanced process nodes in 2024, though they address different product categories. Micron states that the majority of its DRAM bit production in 2024 was on leading-edge 1α and 1β nodes. Similarly, Intel reports that as of the end of 2024, a significant majority of its products were manufactured using the Intel 7 node, while it successfully ramped its first EUV nodes (Intel 4 and Intel 3) to high-volume production in Ireland. Both companies illustrate a 2024 strategic shift toward higher-density, next-generation process technologies for their respective silicon products.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D007",
                 "sentences": [
                   {
@@ -346,13 +358,14 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D048",
+                "item": "1",
+                "disclosure_id": "intc_2024_1_D049",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_1_P043_S003",
-                    "paragraph_id": "intc_2024_1_P043",
+                    "sentence_id": "intc_2024_1_P044_S001",
+                    "paragraph_id": "intc_2024_1_P044",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "The continued development of leading-edge nodes that are competitive with the offerings of other foundries requires significant ongoing capital investment as we pursue incremental improvements and refinements of existing transistor and layout designs and manufacturing technologies, such as EUV lithography, while also pursuing new transistor and layout designs, such as gate-all-around and backside power in our upcoming Intel 18A process node, and new manufacturing technologies, such as high-NA EUV lithography for use in our upcoming Intel 14A process node.",
+                    "text": "As of the end of 2024, a significant majority of our products were manufactured using our Intel 7 process node in Arizona and Israel, we successfully ramped our Intel 4 and Intel 3 process nodes as our first EUV lithography nodes and shifted high-volume production of those nodes to Ireland, and we canceled the productization of our Intel 20A process node to focus efforts on the improved version of the node, Intel 18A, that we expect to put into high-volume production in 2025 with our new client family of products code-named Panther Lake.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -366,14 +379,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The provided NVDA candidates (nvda_2024_1_D023 and nvda_2024_1_D057) focus on RTX graphics technology, AI software features (DLSS), and energy efficiency rankings (Green500). They do not discuss semiconductor process nodes, lithography techniques (like EUV), or memory production capabilities."
+        "rationale": "The supplied NVDA candidates (nvda_2024_1_D025 on RTX gaming graphics and nvda_2024_1_D018 on networking/infiniband) discuss graphics rendering, ray tracing, and data center interconnects. These topics are unrelated to Micron's DRAM process node manufacturing and lithography technology."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The provided QCOM candidates (qcom_2024_1_D050 and qcom_2024_1_D013) focus on AI research for on-device computing and forecasts for generative AI adoption in smartphones. They do not contain information regarding semiconductor fabrication, DRAM/Flash process nodes, or lithography standards."
+        "rationale": "The supplied QCOM candidates (qcom_2024_1_D013 on generative AI adoption forecasts and qcom_2024_1_D050 on AI R&D for edge devices) focus on software capabilities, AI models, and market adoption trends for edge computing. These do not match Micron's disclosure of physical DRAM process nodes and lithography techniques."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e4806dc38e0030de7d8d512f67b7acaf33e699ec213813d4beb2a9a0fe3ee405",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "5d6979921c9555ef95004adfe78ec159c684d20bd0985a9dc44816747fbf8fdb"
+    }
   }
 }

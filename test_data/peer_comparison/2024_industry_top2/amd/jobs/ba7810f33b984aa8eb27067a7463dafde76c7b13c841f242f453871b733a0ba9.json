@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "6247e0557459c77f6fadd5007411ce409b7247f461eb86da52eaee360097dee7",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "9ab392652edd3844c399396bb496e40d3eb97dbb3d91f4d1f18edae1f02f12b9",
+  "request_hash": "8774e6a748fd3d9de883d65d5a34388fb4cf42b06e083520c20a9c78b2b2fddc",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_1_D027\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Micron (MU) explicitly discuss the integration of AI capabilities into next-generation PC devices and the resulting impact on hardware requirements. AMD highlights its role in powering these PCs with CPUs and APUs, while Micron focuses on the resulting demand for higher DRAM content in these AI-enabled devices. Both identify the 'next generation PC' as a key driver where AI convergence alters traditional component specifications.\",\n\"target_sentence_ids\": [\n\"amd_2024_1_P022_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_1_P027_S002\",\n\"mu_2024_1_P027_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The provided candidates for Broadcom (AVGO) discuss ValueOps software solutions and long-term customer relationships derived from collaborative development. These topics concern software lifecycle management and supplier-customer dynamics, which do not share the same specific topic of AMD's Client Market role in powering PCs with CPUs/APUs.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The provided candidates for Intel (INTC) discuss strategic supply chain positioning to meet processing demand and a hybrid work policy. Neither candidate addresses the specific topic of the client PC market composition, the role of CPUs/APUs in powering consumer/professional activities, or the specific business drivers of the client segment as AMD does.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The provided candidates for NVIDIA (NVDA) discuss paid software licenses (AI Enterprise) and networking architectures for data centers. These topics focus on software monetization and data center-scale computing infrastructure, which are distinct from AMD's disclosure regarding the Client Market's reliance on CPUs and APUs for general PC usage.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The provided candidates for Qualcomm (QCOM) discuss global technology leadership in wireless connectivity (5G) and expansion into automotive/IoT markets. While IoT is mentioned, the specific focus on the Client PC market role and the integral nature of computing components in consumer PCs, as described by AMD, is not the primary topic in the supplied Qualcomm disclosures.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_1_D027",
@@ -168,69 +171,13 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "AVGO candidates focus on ValueOps software solutions and patent prosecution uncertainty. These topics do not overlap with AMD's hardware-based PC component role or market positioning. No candidate addresses semiconductor hardware, PC market dynamics, or similar business drivers."
+        "rationale": "The provided candidates for Broadcom (AVGO) discuss ValueOps software solutions and long-term customer relationships derived from collaborative development. These topics concern software lifecycle management and supplier-customer dynamics, which do not share the same specific topic of AMD's Client Market role in powering PCs with CPUs/APUs."
       },
       {
         "peer_ticker": "INTC",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_1_D004",
-            "peer_topic": "Strategic positioning in semiconductor supply chain",
-            "peer_summary": "Intel is strategically positioning itself to create a resilient global semiconductor supply chain by investing in geographically balanced manufacturing capacity to meet continued demand for processing power accelerated by five digital 'superpowers'.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.030767,
-            "relationship": "related_topic",
-            "comparison": "Both companies describe their strategic positioning within the broader semiconductor demand landscape driven by computing power. AMD's disclosure focuses on its specific role in powering PCs (client market) that are integral to customer activities. Intel’s disclosure positions itself more broadly within the global semiconductor supply chain, citing 'ubiquitous compute' and other 'superpowers' as drivers for demand, of which the PC market is a subset. While AMD specifies the end-use application (PCs), Intel specifies the macro-driver (compute demand/supply chain resilience) that encompasses such applications.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D027",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1_P022_S001",
-                    "paragraph_id": "amd_2024_1_P022",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our CPUs and APUs power PCs that have become an integral part of how customers work, learn and play.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D004",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1_P002_S002",
-                    "paragraph_id": "intc_2024_1_P002",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "As we look ahead to the next decade, we expect to see continued demand for processing power.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_1_P002_S003",
-                    "paragraph_id": "intc_2024_1_P002",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Semiconductors are the underlying technology powering this digital expansion, and we are strategically positioning ourselves to create a resilient global semiconductor supply chain by investing in geographically balanced manufacturing capacity.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_1_P002_S004",
-                    "paragraph_id": "intc_2024_1_P002",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "The demand for compute is being accelerated by five superpowers: ubiquitous compute, pervasive connectivity, cloud-to-edge infrastructure, AI, and sensing.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for Intel (INTC) discuss strategic supply chain positioning to meet processing demand and a hybrid work policy. Neither candidate addresses the specific topic of the client PC market composition, the role of CPUs/APUs in powering consumer/professional activities, or the specific business drivers of the client segment as AMD does."
       },
       {
         "peer_ticker": "MU",
@@ -239,17 +186,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1_D027",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "PC market and AI-driven DRAM demand",
             "peer_summary": "Next-generation PCs feature AI capabilities and high-performance neural processing chipsets, leading to significantly higher DRAM content, with the company announcing low-power compression-attached memory modules to support AI workloads on PCs.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.061979,
+            "retrieval_score": 0.057761,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Micron explicitly identify the PC market as a key growth driver fueled by the integration of AI capabilities. AMD's disclosure highlights that its CPUs and APUs are integral to the PC experience for work, learning, and play. Micron provides the underlying memory component perspective, stating that next-generation PCs feature AI capabilities and neural processing chipsets which lead to significantly higher DRAM content, directly supporting the hardware platform AMD describes.",
+            "comparison": "Both AMD and Micron (MU) explicitly discuss the integration of AI capabilities into next-generation PC devices and the resulting impact on hardware requirements. AMD highlights its role in powering these PCs with CPUs and APUs, while Micron focuses on the resulting demand for higher DRAM content in these AI-enabled devices. Both identify the 'next generation PC' as a key driver where AI convergence alters traditional component specifications.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "1",
                 "disclosure_id": "amd_2024_1_D027",
                 "sentences": [
                   {
@@ -264,15 +215,9 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D027",
                 "sentences": [
-                  {
-                    "sentence_id": "mu_2024_1_P027_S001",
-                    "paragraph_id": "mu_2024_1_P027",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "PC: Our products sold to the client PC market support both commercial and consumer PC unit growth.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "mu_2024_1_P027_S002",
                     "paragraph_id": "mu_2024_1_P027",
@@ -296,100 +241,21 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1_D016",
-            "peer_topic": "Networking Offerings and Shift to Data Center Computing",
-            "peer_summary": "Networking offerings provide end-to-end InfiniBand and Ethernet platforms including adapters, cables, DPUs, switches, and software, enabling data center-scale computing where the data center, not just the server, has become the new unit of computing for large AI and HPC workloads.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.062709,
-            "relationship": "related_topic",
-            "comparison": "The comparison concerns the scope of computing platforms. AMD's disclosure focuses on the PC as the unit of value, stating its components power PCs integral to user activities. NVIDIA's disclosure highlights a shift in scale where the 'data center' has become the new unit of computing for large AI and HPC workloads, contrasting with the server-centric or individual device-centric view. While AMD emphasizes the client/PC environment, NVIDIA emphasizes the infrastructure/data center environment for AI workloads, representing different ends of the computing spectrum.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D027",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1_P022_S001",
-                    "paragraph_id": "amd_2024_1_P022",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our CPUs and APUs power PCs that have become an integral part of how customers work, learn and play.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1_D016",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_1_P019_S003",
-                    "paragraph_id": "nvda_2024_1_P019",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "While historically the server was the unit of computing, as AI and HPC workloads have become extremely large spanning thousands of compute nodes, the data center has become the new unit of computing, with networking as an integral part.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for NVIDIA (NVDA) discuss paid software licenses (AI Enterprise) and networking architectures for data centers. These topics focus on software monetization and data center-scale computing infrastructure, which are distinct from AMD's disclosure regarding the Client Market's reliance on CPUs and APUs for general PC usage."
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_1_D003",
-            "peer_topic": "Automotive and IoT market expansion",
-            "peer_summary": "The company is driving digital transformation in automotive via Snapdragon Digital Chassis platforms for connectivity and ADAS/AD, and in IoT across consumer, edge networking, and industrial applications such as PCs, tablets, and logistics.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.037838,
-            "relationship": "same_topic",
-            "comparison": "Both AMD and Qualcomm discuss the expansion of their technologies into the PC sector as part of their broader market strategy. AMD explicitly states that its CPUs and APUs power PCs integral to customer activities. Qualcomm similarly identifies personal computers (PCs) as a key IoT application area where its inventions power growth, alongside tablets and other consumer devices. Both disclosures highlight PCs as a significant vertical for their respective processing solutions.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D027",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1_P022_S001",
-                    "paragraph_id": "amd_2024_1_P022",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our CPUs and APUs power PCs that have become an integral part of how customers work, learn and play.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1_D003",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1_P002_S005",
-                    "paragraph_id": "qcom_2024_1_P002",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "In IoT, our inventions have helped power growth in industries and applications such as consumer (including personal computers (PCs), tablets, voice and music and extended reality (XR)), edge networking (including mobile broadband and wireless access points) and industrial (including handhelds, retail, tracking and logistics and utilities).",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The provided candidates for Qualcomm (QCOM) discuss global technology leadership in wireless connectivity (5G) and expansion into automotive/IoT markets. While IoT is mentioned, the specific focus on the Client PC market role and the integral nature of computing components in consumer PCs, as described by AMD, is not the primary topic in the supplied Qualcomm disclosures."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "9ab392652edd3844c399396bb496e40d3eb97dbb3d91f4d1f18edae1f02f12b9",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "8774e6a748fd3d9de883d65d5a34388fb4cf42b06e083520c20a9c78b2b2fddc"
+    }
   }
 }

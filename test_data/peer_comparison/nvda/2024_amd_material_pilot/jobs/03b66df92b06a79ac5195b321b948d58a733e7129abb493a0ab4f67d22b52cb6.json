@@ -1,37 +1,83 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "b01cb7fd8b2b5fda9aca43fecde60304665e7e666bd50282ccb731265408378f",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "dd45a491d753ea00d1e5ca079c95d2e6c617c26e8676a4b6685b0643ab0825c5",
+  "request_hash": "0e66d6c168efeae52d24764d4ecff20a60ab16daf0ba19c313b70abf3ee2361a",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D005\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose their 2024 share repurchase activities, including the amount spent, shares repurchased, and remaining authorization. However, the scale and structure differ significantly. AMD repurchased 5.9 million shares for $862 million, leaving $4.7 billion available. In contrast, NVDA repurchased 21 million shares for $9.7 billion, leaving $22.5 billion available. Additionally, NVDA explicitly stated the program aims to offset dilution, while AMD noted its program has no termination date and may be suspended. AMD did not mention post-year-end repurchases in this specific disclosure summary, whereas NVDA detailed repurchases of 2.8 million shares for $1.9 billion in early 2024 under a 10b5-1 plan.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P082_S002\",\n\"nvda_2024_7_P082_S004\",\n\"nvda_2024_7_P082_S005\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P011_S001\",\n\"amd_2024_7_P011_S002\",\n\"amd_2024_7_P011_S003\"\n]\n}\n],\n\"no_match\": []\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D072",
     "item": "7",
-    "target_topic": "Liquidity Position and Future Requirements",
-    "target_summary": "As of the end of fiscal year 2024, the company held $26.0 billion in cash, cash equivalents, and marketable securities, asserting sufficient liquidity to meet operating requirements, including a $1.3 billion debt repayment in fiscal 2025 and share purchases, for at least the next twelve months.",
+    "target_topic": "Fiscal 2024 Share Repurchase Activity and Authorization",
+    "target_summary": "In fiscal year 2024, the company repurchased 21 million shares for $9.7 billion, bringing the total remaining authorization to $22.5 billion as of January 28, 2024. The program aims to offset dilution and includes post-year-end repurchases under a Rule 10b5-1 plan, with plans to continue repurchases in the current fiscal year.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0365",
-        "relationship": "many_to_one",
+        "match_id": "nvda_2023_2024_M0241",
+        "relationship": "one_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures report the total amount of cash, cash equivalents, and marketable securities held at fiscal year-end. 2023 reports $13.30 billion (D028); 2024 reports $26.0 billion (D072). This is a direct match on the specific liquidity metric.\n\nBoth disclosures provide the high-level Liquidity statement. They each define primary sources of liquidity (cash, equivalents, marketable securities, operations), state the total amount held at fiscal year-end ($13.3B in 2023 vs $26.0B in 2024), and assert sufficient liquidity to meet operating requirements for at least the next twelve months, including specific upcoming debt repayments and supply obligations.",
+        "explanation": "The 2023 disclosure covers total shareholder returns (repurchases and dividends). The 2024 filing splits this into specific components: D071 focuses on dividends, and D072 focuses on share repurchases. Both are valid counterparts under the 'Capital Return to Shareholders' topic.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D028",
+            "disclosure_id": "nvda_2023_7_D080",
             "item": "7",
-            "section": "Fiscal Year 2023 Summary",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "The company held $13.30 billion in cash, cash equivalents, and marketable securities as of fiscal year end.",
+            "summary": "During fiscal year 2023, the company returned $10.04 billion in share repurchases and $398 million in quarterly cash dividends to shareholders.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D071",
+            "item": "7",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "During fiscal year 2024, the company paid $395 million in quarterly cash dividends, which remain subject to the Board's continuing determination that such payments are in shareholders' best interests.",
             "extraction_status": "source_validated"
           },
           {
-            "disclosure_id": "nvda_2023_7_D077",
+            "disclosure_id": "nvda_2024_7_D072",
             "item": "7",
-            "section": "Liquidity and Capital Resources > Liquidity",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "NVIDIA's primary liquidity sources are cash, marketable securities, and operational cash flow. As of the end of fiscal year 2023, the company held $13.30 billion in these assets and believes it has sufficient liquidity to meet operating requirements for at least the next twelve months, including supply obligations and a $1.25 billion debt repayment due in fiscal year 2024.",
+            "summary": "In fiscal year 2024, the company repurchased 21 million shares for $9.7 billion, bringing the total remaining authorization to $22.5 billion as of January 28, 2024. The program aims to offset dilution and includes post-year-end repurchases under a Rule 10b5-1 plan, with plans to continue repurchases in the current fiscal year.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.25,
+          "confidence_score": 0.85,
+          "reason": "This row aligns the aggregate shareholder return discussion from 2023 with the split dividend/repurchase details in 2024. While the amounts changed (reflecting normal business cycles), the disclosure does not introduce a new risk or strategic shift. The repurchase authorization was increased (see M0243), but this specific alignment focuses on the reporting structure and the fact of repurchases/dividends, which are routine capital management activities. The change in *amount* is financial, but the *disclosure substance* (reporting capital return) is unchanged in nature.",
+          "key_change": "Reformatting of capital return disclosures"
+        }
+      },
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0243",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures relate to share repurchase authorizations. nvda_2023_7_D082 cites the remaining authorization balance of $7.23 billion (S001). nvda_2024_7_D072 cites the remaining authorization balance of $22.5 billion (S003) and details repurchases.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_7_D082",
+            "item": "7",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "As of January 29, 2023, the company was authorized to repurchase up to $7.23 billion of additional common stock through December 2023.",
             "extraction_status": "source_validated"
           }
         ],
@@ -39,272 +85,76 @@
           {
             "disclosure_id": "nvda_2024_7_D072",
             "item": "7",
-            "section": "Liquidity and Capital Resources > Liquidity",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "As of the end of fiscal year 2024, the company held $26.0 billion in cash, cash equivalents, and marketable securities, asserting sufficient liquidity to meet operating requirements, including a $1.3 billion debt repayment in fiscal 2025 and share purchases, for at least the next twelve months.",
+            "summary": "In fiscal year 2024, the company repurchased 21 million shares for $9.7 billion, bringing the total remaining authorization to $22.5 billion as of January 28, 2024. The program aims to offset dilution and includes post-year-end repurchases under a Rule 10b5-1 plan, with plans to continue repurchases in the current fiscal year.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.913823,
-            "sequence_match_ratio": 0.843931,
-            "length_ratio": 0.922222,
-            "word_count_delta": -7,
-            "added_tokens_sample": [
-              "and",
-              "the",
-              "2024",
-              "26",
-              "0",
-              "3",
-              "2025",
-              "and",
-              "share",
-              "purchases"
-            ],
-            "removed_tokens_sample": [
-              "cash",
-              "cash",
-              "equivalents",
-              "and",
-              "marketable",
-              "securities",
-              "were",
-              "13",
-              "30",
-              "billion",
-              "and",
-              "our",
-              "2023",
-              "13",
-              "30",
-              "25",
-              "2024"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2023_7_D077",
-            "score": 0.957881,
-            "normalised_score": 0.9579,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 95.79% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
           "materiality_score": 0.75,
-          "confidence_score": 0.88,
-          "reason": "The disclosure introduces a significant escalation in total liquidity resources ($13.3 billion to $26.0 billion) and updates the specific debt repayment obligation referenced in the sufficiency assessment ($1.25 billion in FY2024 to $1.3 billion in FY2025). The doubling of liquid assets and the update to specific near-term obligations meaningfully changes the company's disclosed financial position and resource availability.",
-          "key_change": "Significant increase in liquidity and updated debt obligation"
+          "confidence_score": 0.9,
+          "reason": "The disclosure reveals a significant change in the company's capital return authorization. The remaining authorization increased from $7.23 billion to $22.5 billion. This near-tripling of the available capital for share repurchases indicates a strengthened financial position and a strategic priority to return significant capital to shareholders, representing a meaningful change in the company's financial commitments and capital allocation strategy.",
+          "key_change": "Significant increase in share repurchase authorization"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0347",
-        "relationship": "one_to_one",
+        "match_id": "nvda_2024_2025_M0219",
+        "relationship": "one_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "D072 reports the total balance of cash, cash equivalents, and marketable securities ($26.0B) and identifies them as primary sources of liquidity. D064 reports the total balance ($43.2B) and identifies them as primary sources of liquidity. This is a direct match on the liquidity balance topic.",
+        "explanation": "Both disclosures report the approval of a new, larger share repurchase authorization, the total amount spent repurchasing shares during the fiscal year, and the remaining authorized amount available for future repurchases.\n\nBoth disclosures describe the specific post-year-end share repurchase activity under the same dilution-offsetting program. The 2024 disclosure (nvda_2024_7_D072) details repurchases from Jan 29, 2024 through Feb 16, 2024 (2.8M shares, $1.9B), while the 2025 disclosure (nvda_2025_7_D072) details repurchases from Jan 27, 2025 through Feb 21, 2025 (29M shares, $3.7B). Both cite the Rule 10b5-1/pre-established plan context and the dilution offset purpose.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_7_D072",
             "item": "7",
-            "section": "Liquidity and Capital Resources > Liquidity",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "As of the end of fiscal year 2024, the company held $26.0 billion in cash, cash equivalents, and marketable securities, asserting sufficient liquidity to meet operating requirements, including a $1.3 billion debt repayment in fiscal 2025 and share purchases, for at least the next twelve months.",
+            "summary": "In fiscal year 2024, the company repurchased 21 million shares for $9.7 billion, bringing the total remaining authorization to $22.5 billion as of January 28, 2024. The program aims to offset dilution and includes post-year-end repurchases under a Rule 10b5-1 plan, with plans to continue repurchases in the current fiscal year.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D064",
+            "disclosure_id": "nvda_2025_7_D071",
             "item": "7",
-            "section": "Liquidity and Capital Resources > Liquidity",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "As of January 26, 2025, the company held $43.2 billion in cash, cash equivalents, and marketable securities, which constitute its primary sources of liquidity alongside operating cash flow.",
+            "summary": "The Board approved an additional $50 billion in share repurchase authorization in August 2024, with $34.0 billion spent in fiscal 2025 and $38.7 billion remaining authorized as of January 2025.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_7_D072",
+            "item": "7",
+            "section": "Liquidity and Capital Resources > Capital Return to Shareholders",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "From late January to late February 2025, the company repurchased 29 million shares for $3.7 billion under a pre-established plan to offset dilution while maintaining liquidity, with future purchases subject to market factors.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.512294,
-            "sequence_match_ratio": 0.390533,
-            "length_ratio": 1.036145,
-            "word_count_delta": 3,
-            "added_tokens_sample": [
-              "include",
-              "as",
-              "january",
-              "26",
-              "2025",
-              "43",
-              "2",
-              "marketable",
-              "securities",
-              "consist",
-              "of",
-              "publicly",
-              "held",
-              "equity",
-              "securities",
-              "debt",
-              "securities",
-              "issued",
-              "by",
-              "u"
-            ],
-            "removed_tokens_sample": [
-              "are",
-              "our",
-              "and",
-              "the",
-              "at",
-              "the",
-              "end",
-              "fiscal",
-              "year",
-              "2024",
-              "26",
-              "0",
-              "we",
-              "believe",
-              "that",
-              "we",
-              "have",
-              "sufficient",
-              "liquidity",
-              "to"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2024_7_D072",
-            "score": 0.928389,
-            "normalised_score": 0.9284,
-            "label": "Modified",
-            "rationale": "Score 92.84% of ceiling with 26% word overlap — same disclosure, wording changed.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.7,
-          "confidence_score": 0.9,
-          "reason": "The company's liquid financial position changed materially, with total cash, equivalents, and marketable securities increasing from $26.0 billion to $43.2 billion. This nearly 70% increase significantly alters the company's liquidity profile and exposure to market risks, as well as its capacity for future investments or returns.",
-          "key_change": "Significant increase in liquid assets balance"
-        }
-      },
-      {
-        "window": "2024-2025",
-        "side": "previous",
-        "match_id": "nvda_2024_2025_M0349",
-        "relationship": "one_to_one",
-        "status": "ai_verified",
-        "review_reasons": [],
-        "explanation": "Both disclosures assert that the company has sufficient liquidity to meet operating requirements for at least the next twelve months. D072 specifies this includes future supply obligations and $1.3B debt repayment. D065 specifies it includes future supply obligations and share purchases. The core topic is the sufficiency of liquidity for near-term operating obligations.",
-        "previous_disclosures": [
-          {
-            "disclosure_id": "nvda_2024_7_D072",
-            "item": "7",
-            "section": "Liquidity and Capital Resources > Liquidity",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "As of the end of fiscal year 2024, the company held $26.0 billion in cash, cash equivalents, and marketable securities, asserting sufficient liquidity to meet operating requirements, including a $1.3 billion debt repayment in fiscal 2025 and share purchases, for at least the next twelve months.",
-            "extraction_status": "source_validated"
-          }
-        ],
-        "current_disclosures": [
-          {
-            "disclosure_id": "nvda_2025_7_D065",
-            "item": "7",
-            "section": "Liquidity and Capital Resources > Liquidity",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "The company believes it has sufficient liquidity to meet operating requirements for at least the next twelve months and thereafter, including future supply obligations and share purchases, while continuously evaluating access to external capital.",
-            "extraction_status": "source_validated"
-          }
-        ],
-        "change_analysis": {
-          "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reduced",
-            "cosine_similarity": 0.505683,
-            "sequence_match_ratio": 0.463768,
-            "length_ratio": 0.662651,
-            "word_count_delta": -28,
-            "added_tokens_sample": [
-              "thereafter",
-              "we",
-              "continuously",
-              "evaluate",
-              "our",
-              "liquidity",
-              "and",
-              "capital",
-              "resources",
-              "including",
-              "our",
-              "access",
-              "to",
-              "external",
-              "capital",
-              "to",
-              "ensure",
-              "we",
-              "can",
-              "finance"
-            ],
-            "removed_tokens_sample": [
-              "our",
-              "primary",
-              "sources",
-              "of",
-              "liquidity",
-              "are",
-              "our",
-              "cash",
-              "cash",
-              "equivalents",
-              "and",
-              "marketable",
-              "securities",
-              "and",
-              "the",
-              "cash",
-              "generated",
-              "by",
-              "our",
-              "operations"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2024_7_D072",
-            "score": 0.825459,
-            "normalised_score": 0.8255,
-            "label": "Reduced",
-            "rationale": "Score 82.55% of ceiling — content shrank from ~81 to ~55 words (0.7×).",
-            "method": "embedding_cosine"
-          },
-          "llm": "Modified",
-          "final_taxonomy": "Modified"
-        },
-        "materiality_analysis": {
-          "materiality": "No",
-          "materiality_score": 0.15,
-          "confidence_score": 0.85,
-          "reason": "The disclosure retains the core assertion of sufficient liquidity for the next twelve months. The removal of the specific mention of '$1.3 billion debt repayment' is a minor detail update in light of the financing changes in M0346, but the overall conclusion on liquidity sufficiency and inclusion of supply obligations remains consistent.",
-          "key_change": "Minor detail update on liquidity obligations"
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "The disclosure reflects a significant escalation in capital return strategy, specifically the approval of a new $50 billion share repurchase authorization (up from the previous cycle's incremental authorizations) and a substantial increase in actual repurchase activity ($9.7 billion to $34.0 billion). This materially changes the company's commitment to returning capital to shareholders and impacts its capital resource allocation priorities.",
+          "key_change": "Significant increase in share repurchase authorization and spending"
         }
       }
     ],
@@ -315,32 +165,43 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D049",
-            "peer_topic": "Liquidity Assessment and Capital Markets Access",
-            "peer_summary": "AMD believes its current liquidity sources will be sufficient for the next 12 months and beyond, but warns that access to capital markets on favorable terms is not assured.",
+            "peer_disclosure_id": "amd_2024_7_D005",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Shareholder Returns and Stock Repurchase Program",
+            "peer_summary": "AMD returned $862 million to shareholders in 2024 through stock repurchases, with $4.7 billion remaining available under a program that has no termination date and may be suspended or discontinued at any time.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.140456,
+            "retrieval_score": 0.187531,
             "relationship": "same_topic",
-            "comparison": "Both NVIDIA and AMD assert that their current liquidity sources are sufficient to meet operating requirements for the next twelve months. However, AMD explicitly highlights reliance on additional financing tools such as revolving credit facilities and commercial paper programs, and includes a caution that capital market access on favorable terms is not assured. In contrast, NVIDIA’s disclosure focuses on its substantial cash and marketable securities balance ($26.0 billion) and operational cash flow to cover obligations like debt repayment and share purchases, without explicitly listing credit facilities or market access risks in the same sentence.",
+            "comparison": "Both NVDA and AMD disclose their 2024 share repurchase activities, including the amount spent, shares repurchased, and remaining authorization. However, the scale and structure differ significantly. AMD repurchased 5.9 million shares for $862 million, leaving $4.7 billion available. In contrast, NVDA repurchased 21 million shares for $9.7 billion, leaving $22.5 billion available. Additionally, NVDA explicitly stated the program aims to offset dilution, while AMD noted its program has no termination date and may be suspended. AMD did not mention post-year-end repurchases in this specific disclosure summary, whereas NVDA detailed repurchases of 2.8 million shares for $1.9 billion in early 2024 under a 10b5-1 plan.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D072",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_7_P076_S001",
-                    "paragraph_id": "nvda_2024_7_P076",
+                    "sentence_id": "nvda_2024_7_P082_S002",
+                    "paragraph_id": "nvda_2024_7_P082",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our primary sources of liquidity are our cash, cash equivalents, and marketable securities, and the cash generated by our operations.",
+                    "text": "During fiscal year 2024, we repurchased 21 million shares of our common stock for $9.7 billion.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "nvda_2024_7_P076_S003",
-                    "paragraph_id": "nvda_2024_7_P076",
+                    "sentence_id": "nvda_2024_7_P082_S004",
+                    "paragraph_id": "nvda_2024_7_P082",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "We believe that we have sufficient liquidity to meet our operating requirements for at least the next twelve months, and for the foreseeable future, including our future supply obligations and $1.3 billion of debt repayment due in fiscal year 2025 and share purchases.",
+                    "text": "From January 29, 2024 through February 16, 2024, we repurchased 2.8 million shares for $1.9 billion pursuant to a Rule 10b5-1 trading plan.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P082_S005",
+                    "paragraph_id": "nvda_2024_7_P082",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our share repurchase program aims to offset dilution from shares issued to employees.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -348,20 +209,28 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D049",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D005",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P062_S001",
-                    "paragraph_id": "amd_2024_7_P062",
+                    "sentence_id": "amd_2024_7_P011_S001",
+                    "paragraph_id": "amd_2024_7_P011",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We believe our cash, cash equivalents, short-term investments and cash flows from operations along with our revolving credit facility and commercial paper program will be sufficient to fund operations, including capital expenditures, purchase commitments, and acquisitions over the next 12 months and beyond.",
+                    "text": "During the twelve months ended December 28, 2024, we returned a total of $862 million to shareholders through the repurchase of 5.9 million shares of common stock under our stock repurchase program.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_7_P062_S003",
-                    "paragraph_id": "amd_2024_7_P062",
+                    "sentence_id": "amd_2024_7_P011_S002",
+                    "paragraph_id": "amd_2024_7_P011",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "However, we cannot assure that such funds will be available on favorable terms, or at all.",
+                    "text": "As of December 28, 2024, $4.7 billion remained available for future stock repurchases under this program.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P011_S003",
+                    "paragraph_id": "amd_2024_7_P011",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The stock repurchase program does not obligate us to acquire any common stock, has no termination date and may be suspended or discontinued at any time.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -369,11 +238,13 @@
             ]
           }
         ],
-        "rationale": "",
-        "agent_warnings": [
-          "ignored_no_match_note_for_peer_with_comparisons"
-        ]
+        "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "dd45a491d753ea00d1e5ca079c95d2e6c617c26e8676a4b6685b0643ab0825c5",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "0e66d6c168efeae52d24764d4ecff20a60ab16daf0ba19c313b70abf3ee2361a"
+    }
   }
 }

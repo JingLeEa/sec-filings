@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "0e59f18df67880a6d45cd02d0ef32be320b91a79576194d578e8fceb67252d8e",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "c46bcc6de71c23e0e47972615fbb56ea12d1d00ad50a2300c9ef9bdd51d0f3eb",
+  "request_hash": "cc22ed4d07990ef7dfff7a9eaea2d10c4bfff6333748ffb9d9575bf88f7a1bd4",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D007\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and AMD disclose the introduction or offering of AI accelerators for data center workloads in 2024. Intel specifically launched the Gaudi 3 AI accelerators, highlighting price-performance advantages for AI inference. Similarly, AMD describes its deep portfolio of data center computing solutions which explicitly includes AI accelerators alongside CPUs and GPUs to meet the computing performance requirements of AI and ML data center environments.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P031_S009\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P005_S002\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_1_D028\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies address the AI inference market in 2024, though through different hardware components. Intel focuses on its Gaudi 3 AI accelerators for inference applications. Micron focuses on its GDDR7 graphics memory, stating that the addition of GDDR7 completes its product portfolio for AI inference applications on CPUs, NPUs, and GPUs, thereby supporting the broader ecosystem of inference hardware.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P031_S009\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_1_P030_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"Broadcom's disclosures focus on VeloRAIN (AI for distributed workload performance/security) and SD-WAN/SASE platforms for distributing AI systems. These topics concern network infrastructure and software-defined networking applications of AI, which is distinct from Intel's specific disclosure of launching hardware AI accelerators (Gaudi 3) for compute workloads.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVIDIA's disclosed Item 1 topics focus on the RTX ecosystem for AI PCs (consumer/client) and general compute offerings (servers/GPUs) without mentioning a specific 2024 launch of a new AI accelerator brand comparable to Intel's Gaudi 3 inference-focused launch. The RTX focus is on AI PCs and applications, whereas Intel's is on data center inference accelerators.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"Qualcomm's disclosures focus on the Qualcomm AI Engine, Hexagon NPU, and AI Stack for on-device inference and general generative AI model types. This is distinct from Intel's disclosure of launching a specific data center AI accelerator product (Gaudi 3) for inference applications.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1_D036",
@@ -342,17 +345,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_1_D007",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Data center and cloud computing solutions",
             "peer_summary": "The company offers a deep portfolio of data center solutions including AI accelerators, CPUs, GPUs, DPUs, SmartNICs, and FPGAs to meet performance requirements for data centers, supercomputers, and cloud environments.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.098314,
+            "retrieval_score": 0.09949,
             "relationship": "same_topic",
-            "comparison": "Both Intel and AMD identify AI accelerators as a core component of their data center computing portfolios in 2024. Intel highlights the specific launch of the Gaudi 3 AI accelerator for inference applications, while AMD describes a broader portfolio that includes AI accelerators alongside CPUs, GPUs, and other data center solutions to meet performance requirements.",
+            "comparison": "Both Intel and AMD disclose the introduction or offering of AI accelerators for data center workloads in 2024. Intel specifically launched the Gaudi 3 AI accelerators, highlighting price-performance advantages for AI inference. Similarly, AMD describes its deep portfolio of data center computing solutions which explicitly includes AI accelerators alongside CPUs and GPUs to meet the computing performance requirements of AI and ML data center environments.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D036",
                 "sentences": [
                   {
@@ -367,6 +374,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "1",
                 "disclosure_id": "amd_2024_1_D007",
                 "sentences": [
                   {
@@ -374,54 +382,6 @@
                     "paragraph_id": "amd_2024_1_P005",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
                     "text": "We offer a deep portfolio of data center computing solutions including AI accelerators, microprocessors (CPUs), graphic processing units (GPUs), data processing units (DPUs), Smart Network Interface Cards (SmartNICs), and field programmable gate arrays (FPGAs), to meet the vast computing performance requirements of today's data centers, supercomputers, AI and Machine Learning (ML) data center environments and cloud environments.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1_D020",
-            "peer_topic": "Data Center Segment Product Portfolio and Strategy",
-            "peer_summary": "The Data Center segment includes server-class CPUs, GPUs, AI accelerators, DPUs, FPGAs, SmartNICs, and Adaptive SoC products. The company leverages these technologies to address computational, visual data processing, and AI workload acceleration needs by enabling optimization of performance and power for diverse workloads.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.090905,
-            "relationship": "same_topic",
-            "comparison": "Intel and AMD both explicitly list 'AI accelerators' as part of their data center product segments. Intel notes the launch of the Gaudi 3 accelerator in 2024, whereas AMD defines its Data Center segment as including server-class CPUs, GPUs, and AI accelerators, leveraging these technologies to address AI workload acceleration needs.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D036",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1_P031_S009",
-                    "paragraph_id": "intc_2024_1_P031",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "▪Datacenter AI accelerators and GPUs. In 2024, we launched the Intel® Gaudi® 3 AI accelerators offering significant price-performance advantages for AI inference applications.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D020",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1_P016_S001",
-                    "paragraph_id": "amd_2024_1_P016",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The Data Center segment primarily includes server-class CPUs, GPUs, AI accelerators, DPUs, FPGAs, SmartNICs, and Adaptive SoC products.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_1_P016_S002",
-                    "paragraph_id": "amd_2024_1_P016",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We leverage our technology to address the computational, visual data processing and AI workload acceleration needs in the data center market.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -435,7 +395,7 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Broadcom's candidates focus on Private AI services and VeloRAIN machine learning for network security, which differ substantively from Intel's specific disclosure of launching Gaudi 3 AI accelerator hardware for data center inference."
+        "rationale": "Broadcom's disclosures focus on VeloRAIN (AI for distributed workload performance/security) and SD-WAN/SASE platforms for distributing AI systems. These topics concern network infrastructure and software-defined networking applications of AI, which is distinct from Intel's specific disclosure of launching hardware AI accelerators (Gaudi 3) for compute workloads."
       },
       {
         "peer_ticker": "MU",
@@ -444,17 +404,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1_D028",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Graphics market and GDDR7 launch",
             "peer_summary": "The graphics market is driven by AI, VR/AR, and high-resolution gaming needs; the company announced GDDR7 in 2024, completing its industry-leading portfolio for AI inference on CPUs, NPUs, and GPUs.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.096015,
+            "retrieval_score": 0.089693,
             "relationship": "same_topic",
-            "comparison": "Both companies address the market for AI inference workloads in 2024, but focus on different layers of the hardware stack. Intel emphasizes its purpose-built Gaudi 3 AI accelerator hardware for inference, while Micron highlights how its GDDR7 memory product completes the portfolio for AI inference applications on CPUs, NPUs, and GPUs, acting as a critical enabler for those accelerators.",
+            "comparison": "Both companies address the AI inference market in 2024, though through different hardware components. Intel focuses on its Gaudi 3 AI accelerators for inference applications. Micron focuses on its GDDR7 graphics memory, stating that the addition of GDDR7 completes its product portfolio for AI inference applications on CPUs, NPUs, and GPUs, thereby supporting the broader ecosystem of inference hardware.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D036",
                 "sentences": [
                   {
@@ -469,6 +433,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D028",
                 "sentences": [
                   {
@@ -489,14 +454,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "NVIDIA's candidates focus on RTX technology for gaming/AI PCs and its definition as a full-stack data center infrastructure company. While NVIDIA competes in AI, these specific disclosures do not detail a new AI accelerator product launch for data center inference comparable to Intel's Gaudi 3 launch event, nor do they list AI accelerators as a distinct segment product in the same manner as the selected AMD disclosures."
+        "rationale": "NVIDIA's disclosed Item 1 topics focus on the RTX ecosystem for AI PCs (consumer/client) and general compute offerings (servers/GPUs) without mentioning a specific 2024 launch of a new AI accelerator brand comparable to Intel's Gaudi 3 inference-focused launch. The RTX focus is on AI PCs and applications, whereas Intel's is on data center inference accelerators."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Qualcomm's candidates focus on on-device AI inference capabilities (Hexagon NPU) for mobile/Snapdragon platforms and generative AI model types. This differs from Intel's data center-focused AI accelerator hardware launch."
+        "rationale": "Qualcomm's disclosures focus on the Qualcomm AI Engine, Hexagon NPU, and AI Stack for on-device inference and general generative AI model types. This is distinct from Intel's disclosure of launching a specific data center AI accelerator product (Gaudi 3) for inference applications."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "c46bcc6de71c23e0e47972615fbb56ea12d1d00ad50a2300c9ef9bdd51d0f3eb",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "cc22ed4d07990ef7dfff7a9eaea2d10c4bfff6333748ffb9d9575bf88f7a1bd4"
+    }
   }
 }

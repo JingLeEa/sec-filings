@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "58b6f21f2f4101fd2f8d21bf0077dc0f1b7f7ed1d5cfc67239f242a420e1eb1d",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "b5296751960f4df6463a4ee86b1f6d3f08f5b2902ed90b30ac910d6dee1eedb8",
+  "request_hash": "a4ce3d3b1cf0f197f69a7f15cf90971c5289f2028573580a413d99e876299e6f",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_8_D051\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both AVGO and AMD disclose the aggregate transaction price allocated to remaining performance obligations under multi-year contracts and the timing of expected revenue recognition. AVGO reports a significantly larger volume of remaining obligations ($20.5 billion) compared to AMD ($85 million). However, both companies indicate that a substantial majority of these obligations are expected to be recognized in the next 12 months, with AVGO estimating 43% and AMD estimating approximately 79% ($67 million of $85 million).\",\n      \"target_sentence_ids\": [\n        \"avgo_2024_8_P092_S001\",\n        \"avgo_2024_8_P092_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_8_P056_S002\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"NVDA\",\n      \"peer_disclosure_id\": \"nvda_2024_8_D106\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"AVGO and NVDA both disclose remaining performance obligations and the expected timeline for revenue recognition. Similar to AVGO's 43% expectation for the next 12 months, NVDA expects to recognize approximately 40% of its remaining performance obligations revenue over the next twelve months. The absolute magnitude differs significantly, with AVGO reporting $20.5 billion in obligations versus NVDA's $1.1 billion.\",\n      \"target_sentence_ids\": [\n        \"avgo_2024_8_P092_S001\",\n        \"avgo_2024_8_P092_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"nvda_2024_8_P117_S003\",\n        \"nvda_2024_8_P117_S004\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"INTC\",\n      \"reason\": \"The provided disclosures for INTC discuss capital expenditures commitments and unrecognized compensation costs, which are not comparable to the target's topic of remaining performance obligations under revenue contracts.\"\n    },\n    {\n      \"peer_ticker\": \"MU\",\n      \"reason\": \"The provided disclosures for MU discuss general revenue recognition policies and contract terms (point-in-time recognition, short-term duration), but do not disclose a specific balance or timing for remaining performance obligations comparable to the target's disclosure.\"\n    },\n    {\n      \"peer_ticker\": \"QCOM\",\n      \"reason\": \"No candidate was retrieved\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D067",
@@ -211,17 +214,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D051",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Remaining Performance Obligations Balance and Recognition",
             "peer_summary": "As of December 28, 2024, the aggregate transaction price allocated to remaining performance obligations under contracts with an original expected duration of more than one year was $85 million, of which $67 million is expected to be recognized in the next 12 months.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.215266,
+            "retrieval_score": 0.213082,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and AMD disclose specific dollar amounts for remaining performance obligations under multi-year contracts (>1 year) and the timing of revenue recognition. However, AVGO's obligations are significantly larger ($20.5 billion vs $85 million) and more heavily weighted toward the near term (43% in next 12 months for AVGO vs 79% for AMD, calculated as $67m/$85m). AVGO explicitly states customers generally do not exercise termination for convenience rights, whereas AMD's disclosure focuses on the composition of the balance (development services, IP licensing) without mentioning termination rights.",
+            "comparison": "Both AVGO and AMD disclose the aggregate transaction price allocated to remaining performance obligations under multi-year contracts and the timing of expected revenue recognition. AVGO reports a significantly larger volume of remaining obligations ($20.5 billion) compared to AMD ($85 million). However, both companies indicate that a substantial majority of these obligations are expected to be recognized in the next 12 months, with AVGO estimating 43% and AMD estimating approximately 79% ($67 million of $85 million).",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D067",
                 "sentences": [
                   {
@@ -237,19 +244,13 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "We expect approximately 43% of this amount to be recognized as revenue over the next 12 months.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P092_S003",
-                    "paragraph_id": "avgo_2024_8_P092",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "For contracts with termination for convenience rights, our customers generally do not exercise those rights.",
-                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D051",
                 "sentences": [
                   {
@@ -257,13 +258,6 @@
                     "paragraph_id": "amd_2024_8_P056",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
                     "text": "As of December 28, 2024, the aggregate transaction price allocated to remaining performance obligations under contracts with an original expected duration of more than one year was $85 million, of which $67 million is expected to be recognized in the next 12 months.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_8_P056_S001",
-                    "paragraph_id": "amd_2024_8_P056",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Revenue allocated to remaining performance obligations that are unsatisfied (or partially unsatisfied) include amounts received from customers and amounts that will be invoiced and recognized as revenue in future periods for development services, IP licensing and product revenue.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -277,26 +271,92 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidate disclosures for INTC concern capital expenditure commitments and unrecognized compensation costs, which are unrelated to the target topic of revenue remaining performance obligations."
+        "rationale": "The provided disclosures for INTC discuss capital expenditures commitments and unrecognized compensation costs, which are not comparable to the target's topic of remaining performance obligations under revenue contracts."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidate disclosures for MU describe general revenue recognition policies and contract durations (short-term vs multi-year) but do not provide a quantitative disclosure of remaining performance obligations balances or specific recognition timing comparable to the target's $20.5 billion figure."
+        "rationale": "The provided disclosures for MU discuss general revenue recognition policies and contract terms (point-in-time recognition, short-term duration), but do not disclose a specific balance or timing for remaining performance obligations comparable to the target's disclosure."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D106",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Remaining performance obligations and revenue recognition timeline",
+            "peer_summary": "Revenue allocated to remaining performance obligations was $1.1 billion as of January 28, 2024, consisting of contracted license, development, and hardware/software support arrangements. The company expects to recognize approximately 40% of this revenue over the next twelve months, with the remainder thereafter, excluding contracts with a length of one year or less.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.199963,
+            "relationship": "same_topic",
+            "comparison": "AVGO and NVDA both disclose remaining performance obligations and the expected timeline for revenue recognition. Similar to AVGO's 43% expectation for the next 12 months, NVDA expects to recognize approximately 40% of its remaining performance obligations revenue over the next twelve months. The absolute magnitude differs significantly, with AVGO reporting $20.5 billion in obligations versus NVDA's $1.1 billion.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D067",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P092_S001",
+                    "paragraph_id": "avgo_2024_8_P092",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Certain multi-year customer contracts in our semiconductor solutions and infrastructure software segments contain firmly committed amounts and the remaining performance obligations under these contracts as of November 3, 2024 were approximately $20.5 billion.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P092_S002",
+                    "paragraph_id": "avgo_2024_8_P092",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We expect approximately 43% of this amount to be recognized as revenue over the next 12 months.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D106",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P117_S003",
+                    "paragraph_id": "nvda_2024_8_P117",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Revenue allocated to remaining performance obligations, which includes deferred revenue and amounts that will be invoiced and recognized as revenue in future periods, was $1.1 billion as of January 28, 2024.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P117_S004",
+                    "paragraph_id": "nvda_2024_8_P117",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We expect to recognize approximately 40% of this revenue over the next twelve months and the remainder thereafter.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "b5296751960f4df6463a4ee86b1f6d3f08f5b2902ed90b30ac910d6dee1eedb8",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "a4ce3d3b1cf0f197f69a7f15cf90971c5289f2028573580a413d99e876299e6f"
+    }
   }
 }

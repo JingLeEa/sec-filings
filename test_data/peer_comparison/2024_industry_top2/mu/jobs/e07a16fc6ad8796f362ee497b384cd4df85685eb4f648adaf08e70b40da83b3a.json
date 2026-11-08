@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "5628c387cad152eb4937d92592285cb4f6d44d44ab49eba9daae76e13f0b5af9",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "4687bf1e340416a53fdbbc533cc9c5d6d41c26751d0fe514b14baea26eba8055",
+  "request_hash": "ed0ca4ed506811a0248957cc79c42021b7e64207901336c09dc5e3105a6832b8",
+  "response_text": "{\n\"comparisons\":[\n{\n\"peer_ticker\":\"AMD\",\n\"peer_disclosure_id\":\"amd_2024_8_D053\",\n\"relationship\":\"related_topic\",\n\"comparison\":\"MU discloses specific financial benefits from government incentives reducing operating income, while AMD discloses the general management methodology for assessing segment operating performance which includes consolidated operating income. Both disclosures relate to the definition and assessment of operating income, but AMD does not mention government incentives or their specific impact on that metric.\",\n\"target_sentence_ids\":[\"mu_2024_8_P107_S001\"],\n\"peer_sentence_ids\":[\"amd_2024_8_P058_S001\",\"amd_2024_8_P058_S003\"]\n},\n{\n\"peer_ticker\":\"AVGO\",\n\"peer_disclosure_id\":\"avgo_2024_8_D100\",\n\"relationship\":\"related_topic\",\n\"comparison\":\"MU reports the quantified benefit of government incentives on operating income, whereas AVGO reports the accounting policy for classifying components of net periodic benefit costs. Both items fall under Item 8 (Financial Statements) and relate to income statement components/expenses, but the specific topics (government incentives vs. pension/benefit cost classification) are different.\",\n\"target_sentence_ids\":[\"mu_2024_8_P107_S001\"],\n\"peer_sentence_ids\":[\"avgo_2024_8_P135_S001\",\"avgo_2024_8_P135_S002\"]\n},\n{\n\"peer_ticker\":\"INTC\",\n\"peer_disclosure_id\":\"intc_2024_8_D099\",\n\"relationship\":\"same_topic\",\n\"comparison\":\"Both MU and INTC disclose the benefit of operating-related government incentives on their operating income for fiscal 2024. MU reports a $588 million benefit (85% in COGS, 15% in R&D), while INTC reports a $442 million benefit with the substantial majority in cost of sales. Both companies attribute these benefits to government incentives/CHIPS Act and recognize them as reductions to expenses.\",\n\"target_sentence_ids\":[\"mu_2024_8_P107_S001\"],\n\"peer_sentence_ids\":[\"intc_2024_8_P112_S001\"]\n},\n{\n\"peer_ticker\":\"INTC\",\n\"peer_disclosure_id\":\"intc_2024_8_D030\",\n\"relationship\":\"related_topic\",\n\"comparison\":\"INTC provides the specific accounting policy for recognizing government incentives (as reductions to expense) and classifying them (capital vs. operating). This policy explains how the $442 million benefit reported in INTC_D099 is derived, similar to how MU reports the $588 million benefit. While MU does not explicitly state its accounting policy in this sentence, the topic of government incentive recognition and classification is directly comparable in substance.\",\n\"target_sentence_ids\":[\"mu_2024_8_P107_S001\"],\n\"peer_sentence_ids\":[\"intc_2024_8_P044_S001\",\"intc_2024_8_P044_S003\"]\n},\n{\n\"peer_ticker\":\"NVDA\",\n\"peer_disclosure_id\":\"nvda_2024_8_D015\",\n\"relationship\":\"related_topic\",\n\"comparison\":\"NVDA discloses a change in accounting estimate (useful lives of PP&E) that resulted in a $135 million benefit to operating income, while MU discloses a $588 million benefit to operating income from government incentives. Both are non-operational or special items impacting operating income in 2024, but the drivers (asset life changes vs. government grants) are distinct.\",\n\"target_sentence_ids\":[\"mu_2024_8_P107_S001\"],\n\"peer_sentence_ids\":[\"nvda_2024_8_P026_S003\"]\n}\n],\n\"no_match\":[\n{\n\"peer_ticker\":\"QCOM\",\n\"reason\":\"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D100",
@@ -179,15 +182,123 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "Candidates disclose segment revenue and operating income tables (amd_2024_8_D058) and management performance review metrics (amd_2024_8_D053), but do not contain specific disclosures regarding government incentives reducing expenses or benefiting operating income by a quantified amount comparable to the target topic."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D053",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "CODM Performance Review Metrics",
+            "peer_summary": "The Chief Operating Decision Maker, who is the Company's CEO, assesses segment operating performance using segment net revenue, consolidated cost of sales and operating expenses, and operating income (loss), with expenses allocated based on management's judgment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.108288,
+            "relationship": "related_topic",
+            "comparison": "MU discloses specific financial benefits from government incentives reducing operating income, while AMD discloses the general management methodology for assessing segment operating performance which includes consolidated operating income. Both disclosures relate to the definition and assessment of operating income, but AMD does not mention government incentives or their specific impact on that metric.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D100",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P107_S001",
+                    "paragraph_id": "mu_2024_8_P107",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2024, operating income (loss) benefited by $588 million (approximately 85% in COGS and 15% in R&D) from government incentives recognized as a reduction of expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D053",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P058_S001",
+                    "paragraph_id": "amd_2024_8_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Management, including the Chief Operating Decision Maker (CODM), who is the Company's Chief Executive Officer, reviews and assesses operating performance using segment net revenue, consolidated cost of sales and operating expenses and operating income (loss).",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P058_S003",
+                    "paragraph_id": "amd_2024_8_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The CODM is regularly provided segment operating income to assess relative segment performance.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "Candidates disclose lease expense trends (avgo_2024_8_D093) and depreciation expense amounts (avgo_2024_8_D090), but do not contain specific disclosures regarding government incentives reducing expenses or benefiting operating income by a quantified amount comparable to the target topic."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D100",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Classification of Net Periodic Benefit Cost Components",
+            "peer_summary": "Components of net periodic benefit cost, excluding service cost, are included in other income (expense), net, while service cost is recognized in operating expenses.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.064076,
+            "relationship": "related_topic",
+            "comparison": "MU reports the quantified benefit of government incentives on operating income, whereas AVGO reports the accounting policy for classifying components of net periodic benefit costs. Both items fall under Item 8 (Financial Statements) and relate to income statement components/expenses, but the specific topics (government incentives vs. pension/benefit cost classification) are different.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D100",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P107_S001",
+                    "paragraph_id": "mu_2024_8_P107",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2024, operating income (loss) benefited by $588 million (approximately 85% in COGS and 15% in R&D) from government incentives recognized as a reduction of expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D100",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P135_S001",
+                    "paragraph_id": "avgo_2024_8_P135",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The components of net periodic benefit cost other than the service cost are included in other income (expense), net.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P135_S002",
+                    "paragraph_id": "avgo_2024_8_P135",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Service cost is recognized in operating expenses.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "INTC",
@@ -196,17 +307,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_8_D099",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Impact of operating-related incentives on income",
             "peer_summary": "Operating-related incentives, including those under the CHIPS Act, benefited operating income by $442 million in 2024, with the substantial majority recorded in cost of sales.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.173802,
+            "retrieval_score": 0.178952,
             "relationship": "same_topic",
-            "comparison": "Both MU and INTC disclose specific benefits to operating income from government incentives recognized as a reduction of expense in 2024. MU reports a total benefit of $588 million, with the majority (85%) allocated to COGS and 15% to R&D. INTC reports a total benefit of $442 million from operating-related incentives (including CHIPS Act), noting that the 'substantial majority' was recorded in cost of sales. While both companies show a primary impact on COGS, INTC also discloses a separate $594 million reduction in depreciation expense from capital-related incentives (intc_2024_8_D098), a component not explicitly quantified in the same manner in MU's summary for operating income benefits.",
+            "comparison": "Both MU and INTC disclose the benefit of operating-related government incentives on their operating income for fiscal 2024. MU reports a $588 million benefit (85% in COGS, 15% in R&D), while INTC reports a $442 million benefit with the substantial majority in cost of sales. Both companies attribute these benefits to government incentives/CHIPS Act and recognize them as reductions to expenses.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D100",
                 "sentences": [
                   {
@@ -221,6 +336,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D099",
                 "sentences": [
                   {
@@ -233,22 +349,127 @@
                 ]
               }
             ]
+          },
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D030",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Accounting policy for government incentives recognition and classification",
+            "peer_summary": "Government incentives are recognized upon reasonable assurance of receipt and compliance, with capital-related incentives recorded as a reduction to property, plant, and equipment and operating-related incentives recorded as a reduction to the corresponding expense line item.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.178203,
+            "relationship": "related_topic",
+            "comparison": "INTC provides the specific accounting policy for recognizing government incentives (as reductions to expense) and classifying them (capital vs. operating). This policy explains how the $442 million benefit reported in INTC_D099 is derived, similar to how MU reports the $588 million benefit. While MU does not explicitly state its accounting policy in this sentence, the topic of government incentive recognition and classification is directly comparable in substance.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D100",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P107_S001",
+                    "paragraph_id": "mu_2024_8_P107",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2024, operating income (loss) benefited by $588 million (approximately 85% in COGS and 15% in R&D) from government incentives recognized as a reduction of expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P044_S001",
+                    "paragraph_id": "intc_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Government incentives, including cash grants and refundable tax credits, are recognized when there is reasonable assurance that the incentive will be received and we will comply with the conditions specified in the agreement or statutory requirements.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P044_S003",
+                    "paragraph_id": "intc_2024_8_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We record operating-related incentives as a reduction to expense in the same line item on the Consolidated Statements of Operations as the expenditure for which the incentive is intended to compensate.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
           }
         ],
         "rationale": ""
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D015",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Change in Useful Lives of Property, Plant, and Equipment",
+            "peer_summary": "In February 2023, the company increased the estimated useful life of most server, storage, and network equipment from three to four or five years and assembly and test equipment from five to seven years, resulting in a $135 million increase in operating income and $114 million increase in net income for the fiscal year ended January 28, 2024.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.078172,
+            "relationship": "related_topic",
+            "comparison": "NVDA discloses a change in accounting estimate (useful lives of PP&E) that resulted in a $135 million benefit to operating income, while MU discloses a $588 million benefit to operating income from government incentives. Both are non-operational or special items impacting operating income in 2024, but the drivers (asset life changes vs. government grants) are distinct.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D100",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P107_S001",
+                    "paragraph_id": "mu_2024_8_P107",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2024, operating income (loss) benefited by $588 million (approximately 85% in COGS and 15% in R&D) from government incentives recognized as a reduction of expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D015",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P026_S003",
+                    "paragraph_id": "nvda_2024_8_P026",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The effect of this change for the fiscal year ended January 28, 2024 was a benefit of $33 million and $102 million for cost of revenue and operating expenses, respectively, which resulted in an increase in operating income of $135 million and net income of $114 million after tax, or $0.05 per both basic and diluted share.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "4687bf1e340416a53fdbbc533cc9c5d6d41c26751d0fe514b14baea26eba8055",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "ed0ca4ed506811a0248957cc79c42021b7e64207901336c09dc5e3105a6832b8"
+    }
   }
 }

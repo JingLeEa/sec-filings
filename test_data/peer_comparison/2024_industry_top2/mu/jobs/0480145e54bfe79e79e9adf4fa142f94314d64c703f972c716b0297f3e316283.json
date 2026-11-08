@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "679ae77e5171a3929dde81f3efad1831d6659d5759f12e5bebc035489bdbfe4b",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "a714d0dc87d701eb733337a80450d77ff163bf50caefa1457b02800ffd487384",
+  "request_hash": "e2465ab5a0bb28abae64b0c7ac6db4488250904182fc4d98f3b33637c5be55b7",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D036\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and AMD disclose specific business segments focused on embedded markets, but they differ significantly in product composition and revenue reporting. MU's Embedded Business Unit (EBU) generates reported revenue ($4.61 billion) from memory and storage products like LPDDR DRAM and managed NAND for automotive, industrial, and consumer sectors. In contrast, AMD's Embedded segment focuses on processing and adaptive logic products (CPUs, GPUs, APUs, FPGAs, Adaptive SoCs) for similar end-markets (automotive, industrial, aerospace/defense) but does not report a separate embedded revenue line item in the provided text, emphasizing the hardware types rather than memory-specific financials.\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P040_S001\",\n\"mu_2024_1_P040_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P031_S001\",\n\"amd_2024_1_P031_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The supplied candidates for Broadcom (avgo_2024_1_D005, avgo_2024_1_D091) concern the VMware acquisition financing and general corporate revenue seasonality drivers (wireless/mobile launches). Neither candidate addresses an embedded business unit, specific embedded product portfolios, or embedded segment financial results comparable to MU's EBU disclosure.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The supplied candidates for Intel (intc_2024_1_D087, intc_2024_1_D089) concern sensitivity analysis of marketable and non-marketable equity securities investments. These are financial risk disclosures unrelated to the operational description or financial results of an embedded business unit or product portfolio.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The supplied candidates for NVIDIA (nvda_2024_1_D042, nvda_2024_1_D039) address the seasonality of desktop gaming revenue and general worldwide sales/marketing strategy. While NVIDIA mentions automotive in passing, these disclosures do not provide comparable specific financial results or product composition details for an embedded segment akin to MU's EBU.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The supplied candidates for Qualcomm (qcom_2024_1_D004, qcom_2024_1_D007) describe principal revenue sources (integrated circuits/licensing) and the three-segment corporate structure (QCT, QTL, QSI). While QCT includes automotive, the disclosures focus on general revenue derivation and segment definition rather than the specific embedded product composition (memory/storage vs. logic/soC) and specific embedded unit financial results found in MU's Item 1.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_1_D038",
@@ -163,17 +166,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_1_D036",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Embedded product portfolio and application scope",
             "peer_summary": "The Embedded segment includes CPUs, GPUs, APUs, FPGAs, and Adaptive SoC products addressing aerospace, defense, automotive, industrial, healthcare, communications, and other infrastructure markets.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.050485,
+            "retrieval_score": 0.050044,
             "relationship": "same_topic",
-            "comparison": "Both MU and AMD disclose business segments targeting embedded markets, but they differ significantly in product composition and financial disclosure. MU’s Embedded Business Unit (EBU) focuses on memory and storage products (DRAM, NAND) and explicitly reports segment revenue ($4.61 billion in 2024). In contrast, AMD’s Embedded segment focuses on processing components (CPUs, GPUs, APUs, FPGAs) and does not provide specific revenue figures in this disclosure, focusing instead on the application scope (automotive, industrial, etc.).",
+            "comparison": "Both MU and AMD disclose specific business segments focused on embedded markets, but they differ significantly in product composition and revenue reporting. MU's Embedded Business Unit (EBU) generates reported revenue ($4.61 billion) from memory and storage products like LPDDR DRAM and managed NAND for automotive, industrial, and consumer sectors. In contrast, AMD's Embedded segment focuses on processing and adaptive logic products (CPUs, GPUs, APUs, FPGAs, Adaptive SoCs) for similar end-markets (automotive, industrial, aerospace/defense) but does not report a separate embedded revenue line item in the provided text, emphasizing the hardware types rather than memory-specific financials.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D038",
                 "sentences": [
                   {
@@ -195,6 +202,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "1",
                 "disclosure_id": "amd_2024_1_D036",
                 "sentences": [
                   {
@@ -222,26 +230,31 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate concerns embedded business units, revenue composition, or product portfolios comparable to MU's EBU disclosure; AVGO candidates focus on VMware acquisition and general revenue seasonality."
+        "rationale": "The supplied candidates for Broadcom (avgo_2024_1_D005, avgo_2024_1_D091) concern the VMware acquisition financing and general corporate revenue seasonality drivers (wireless/mobile launches). Neither candidate addresses an embedded business unit, specific embedded product portfolios, or embedded segment financial results comparable to MU's EBU disclosure."
       },
       {
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate concerns embedded business units, revenue composition, or product portfolios comparable to MU's EBU disclosure; INTC candidates focus on equity investment risks."
+        "rationale": "The supplied candidates for Intel (intc_2024_1_D087, intc_2024_1_D089) concern sensitivity analysis of marketable and non-marketable equity securities investments. These are financial risk disclosures unrelated to the operational description or financial results of an embedded business unit or product portfolio."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate concerns embedded business units, revenue composition, or product portfolios comparable to MU's EBU disclosure; NVDA candidates focus on general sales strategy and gaming seasonality."
+        "rationale": "The supplied candidates for NVIDIA (nvda_2024_1_D042, nvda_2024_1_D039) address the seasonality of desktop gaming revenue and general worldwide sales/marketing strategy. While NVIDIA mentions automotive in passing, these disclosures do not provide comparable specific financial results or product composition details for an embedded segment akin to MU's EBU."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate concerns embedded business units, revenue composition, or product portfolios comparable to MU's EBU disclosure; QCOM candidates focus on corporate segment structure (QCT/QTL/QSI) and principal revenue sources which are distinct from the specific embedded memory/storage focus and financials of MU's EBU."
+        "rationale": "The supplied candidates for Qualcomm (qcom_2024_1_D004, qcom_2024_1_D007) describe principal revenue sources (integrated circuits/licensing) and the three-segment corporate structure (QCT, QTL, QSI). While QCT includes automotive, the disclosures focus on general revenue derivation and segment definition rather than the specific embedded product composition (memory/storage vs. logic/soC) and specific embedded unit financial results found in MU's Item 1."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "a714d0dc87d701eb733337a80450d77ff163bf50caefa1457b02800ffd487384",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "e2465ab5a0bb28abae64b0c7ac6db4488250904182fc4d98f3b33637c5be55b7"
+    }
   }
 }

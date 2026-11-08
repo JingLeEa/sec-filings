@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "e23c7ebd85c5860a5f026cf2de19150a8b9b6d38465a7cb57756c4c24df82935",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "ea2507dfac611b235313ef14b6d942cfa122c642d9fd37cb4073222c62987543",
+  "request_hash": "fa76eab88aac120423931b183f5de6dc56ae298961da5dcbe580e41cce2bd569",
+  "response_text": "{\"comparisons\": [{\"peer_ticker\": \"NVDA\", \"peer_disclosure_id\": \"nvda_2024_7_D002\", \"relationship\": \"same_topic\", \"comparison\": \"Both Intel and NVIDIA disclose their operating segment structure in Item 7 and explicitly refer readers to the Notes to the Consolidated Financial Statements for detailed reconciliation or additional information regarding those segments. Intel states that operating segment results include intersegment activity and refers to Note 3 for reconciliation, while NVIDIA identifies its two operating segments (Compute & Networking and Graphics) and refers to Note 17 for additional information.\", \"target_sentence_ids\": [\"intc_2024_7_P035_S001\"], \"peer_sentence_ids\": [\"nvda_2024_7_P003_S001\"]}, {\"peer_ticker\": \"AVGO\", \"peer_disclosure_id\": \"avgo_2024_7_D048\", \"relationship\": \"related_topic\", \"comparison\": \"While Intel discusses the inclusion of intersegment financial activity in operating segment results and refers to Note 3 for reconciliation, Broadcom provides the net revenue drivers for its specific segments (Semiconductor solutions and Infrastructure software). Both disclosures relate to the explanation of segment financial performance and structure within the MD&A, though Intel focuses on the accounting reconciliation mechanism while Broadcom focuses on revenue demand drivers.\", \"target_sentence_ids\": [\"intc_2024_7_P035_S001\"], \"peer_sentence_ids\": [\"avgo_2024_7_P046_S002\"]}, {\"peer_ticker\": \"QCOM\", \"peer_disclosure_id\": \"qcom_2024_7_D021\", \"relationship\": \"same_topic\", \"comparison\": \"Similar to Intel, Qualcomm instructs readers to read the segment results presented in Item 7 in conjunction with the detailed segment information found in the Notes to Consolidated Financial Statements (Note 8 for Qualcomm vs. Note 3 for Intel). Both companies use Item 7 to introduce segment reporting while deferring detailed reconciliation or granular data to the Notes.\", \"target_sentence_ids\": [\"intc_2024_7_P035_S001\"], \"peer_sentence_ids\": [\"qcom_2024_7_P018_S001\"]}], \"no_match\": [{\"peer_ticker\": \"AMD\", \"reason\": \"The retrieved candidates discuss goodwill definitions/reporting units and specific Client segment operating income performance, which are not comparable to Intel's general disclosure regarding the scope of operating segment reporting and the referral for intersegment reconciliation to Note 3.\"}, {\"peer_ticker\": \"MU\", \"reason\": \"The retrieved candidates are generic references to Item 8 Notes for accounting standards and other operating expenses (equity, restructuring, etc.), which do not substantively match Intel's disclosure on operating segment intersegment activity reconciliation.\"}]}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D033",
@@ -199,19 +202,66 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved AMD disclosures focus on specific segment performance metrics (Client operating income) and Goodwill definitions/reporting units, rather than the general operating segment reporting scope, intersegment activity inclusion, or reconciliation references to Note 3 that characterize the target Intel disclosure."
+        "rationale": "The retrieved candidates discuss goodwill definitions/reporting units and specific Client segment operating income performance, which are not comparable to Intel's general disclosure regarding the scope of operating segment reporting and the referral for intersegment reconciliation to Note 3."
       },
       {
         "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved AVGO disclosures focus on drivers of net revenue and operating income for specific segments (Infrastructure Software, Semiconductor Solutions) rather than the structural definition of operating segment reporting, intersegment financial activity, or the reconciliation reference found in the Intel disclosure."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_7_D048",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Segment Revenue Drivers",
+            "peer_summary": "Semiconductor solutions segment net revenue increased due to strong demand for AI networking products, partially offset by lower demand for broadband and server storage. Infrastructure software segment net revenue increased primarily due to contributions from VMware.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.095918,
+            "relationship": "related_topic",
+            "comparison": "While Intel discusses the inclusion of intersegment financial activity in operating segment results and refers to Note 3 for reconciliation, Broadcom provides the net revenue drivers for its specific segments (Semiconductor solutions and Infrastructure software). Both disclosures relate to the explanation of segment financial performance and structure within the MD&A, though Intel focuses on the accounting reconciliation mechanism while Broadcom focuses on revenue demand drivers.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "7",
+                "disclosure_id": "intc_2024_7_D033",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P035_S001",
+                    "paragraph_id": "intc_2024_7_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "[footnote 1: Operating segment results include intersegment financial activity; refer to \"Note 3: Operating Segments\" for a reconciliation between our operating segment and consolidated financial results for the periods presented.] Operating segment results include intersegment financial activity; refer to \"Note 3: Operating Segments\" for a reconciliation between our operating segment and consolidated financial results for the periods presented.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "7",
+                "disclosure_id": "avgo_2024_7_D048",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P046_S002",
+                    "paragraph_id": "avgo_2024_7_P046",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Net revenue from our semiconductor solutions segment increased due to strong product demand for our networking products, primarily AI networking products, partially offset by lower demand for our broadband and server storage products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved Micron disclosures are generic references to 'Recently Issued Accounting Standards' or 'Other Operating Expenses' in Item 8 notes. They do not address the specific topic of operating segment reporting scope, intersegment financial activity, or the reconciliation between segment and consolidated results central to the Intel disclosure."
+        "rationale": "The retrieved candidates are generic references to Item 8 Notes for accounting standards and other operating expenses (equity, restructuring, etc.), which do not substantively match Intel's disclosure on operating segment intersegment activity reconciliation."
       },
       {
         "peer_ticker": "NVDA",
@@ -219,18 +269,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D003",
-            "peer_topic": "Operating Segments",
-            "peer_summary": "NVIDIA operates in two segments: Compute & Networking and Graphics, with further details available in Note 17.",
+            "peer_disclosure_id": "nvda_2024_7_D002",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Operating Segments and Reporting Structure",
+            "peer_summary": "NVIDIA operates through two segments: Compute & Networking and Graphics, with additional details provided in Note 17 of the Notes to the Consolidated Financial Statements.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.128675,
+            "retrieval_score": 0.169902,
             "relationship": "same_topic",
-            "comparison": "Both Intel and NVIDIA explicitly define their operating segments and reference the specific Note in the financial statements for detailed reconciliation and further information. Intel states that operating segment results include intersegment activity and directs readers to Note 3 for reconciliation with consolidated results. Similarly, NVIDIA identifies its two operating segments (Compute & Networking and Graphics) and refers readers to Note 17 for additional information on these segments.",
+            "comparison": "Both Intel and NVIDIA disclose their operating segment structure in Item 7 and explicitly refer readers to the Notes to the Consolidated Financial Statements for detailed reconciliation or additional information regarding those segments. Intel states that operating segment results include intersegment activity and refers to Note 3 for reconciliation, while NVIDIA identifies its two operating segments (Compute & Networking and Graphics) and refers to Note 17 for additional information.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D033",
                 "sentences": [
                   {
@@ -245,7 +299,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D003",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D002",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_7_P003_S001",
@@ -268,17 +323,21 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_7_D021",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Segment Reporting Reference",
             "peer_summary": "The segment results presented should be read in conjunction with the detailed fiscal 2024 and 2023 results found in Note 8, Segment Information, of the Notes to Consolidated Financial Statements.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.149024,
+            "retrieval_score": 0.172564,
             "relationship": "same_topic",
-            "comparison": "Qualcomm, like Intel, provides a cross-reference to the specific note containing segment information. While Intel directs users to Note 3 for the reconciliation of operating segment and consolidated results, Qualcomm instructs readers to consult Note 8, 'Segment Information,' in the Notes to Consolidated Financial Statements to understand the detailed fiscal 2024 and 2023 results for each reportable segment.",
+            "comparison": "Similar to Intel, Qualcomm instructs readers to read the segment results presented in Item 7 in conjunction with the detailed segment information found in the Notes to Consolidated Financial Statements (Note 8 for Qualcomm vs. Note 3 for Intel). Both companies use Item 7 to introduce segment reporting while deferring detailed reconciliation or granular data to the Notes.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D033",
                 "sentences": [
                   {
@@ -293,6 +352,7 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D021",
                 "sentences": [
                   {
@@ -309,6 +369,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "ea2507dfac611b235313ef14b6d942cfa122c642d9fd37cb4073222c62987543",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "fa76eab88aac120423931b183f5de6dc56ae298961da5dcbe580e41cce2bd569"
+    }
   }
 }

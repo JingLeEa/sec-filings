@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "6158a9b68744cb37495cc2c1db510e3a82f6e2b733712d34d5b6a56d2427a3f7",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "46ead38571916f70f3e0be26847d0391818f8c615aefdf3052b53b3cbd129ed5",
+  "request_hash": "3e671fc3bb2ce0c125b8079d2406add139318b51148e63f89a231af0b457898d",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_1_D007\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron disclose specific details on their leading-edge manufacturing node evolution and expected volume production timelines for next-generation technologies. Intel describes Intel 18A incorporating gate-all-around transistors and backside power delivery, with high-volume manufacturing for Panther Lake expected in 2025. Micron discloses that the majority of its 2024 DRAM production was on leading-edge nodes (1α and 1β) and expects volume shipments of its next-generation 1γ node in 2025 using EUV lithography. Both use Item 1 to signal process technology leadership and near-term production milestones.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P037_S005\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_1_P006_S001\",\n\"mu_2024_1_P006_S002\",\n\"mu_2024_1_P006_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved AMD candidates describe product families (EPYC CPUs, Radeon GPUs) and their architectures/use cases, but do not disclose specific semiconductor process node technology details, manufacturing timelines, or node-level innovations comparable to Intel's description of the 18A process node, RibbonFET, and PowerVia.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved Broadcom candidates describe broad semiconductor material usage (silicon CMOS, III-V) and networking product functions, but do not disclose specific advanced process node development, transistor architecture innovations, or manufacturing timelines comparable to Intel's detailed 18A node disclosure.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved NVIDIA candidates focus on software-defined vehicle capabilities and energy efficiency metrics (Green500 list). They do not contain comparable disclosures regarding specific semiconductor process node development, transistor structures, or manufacturing schedules.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The retrieved Qualcomm candidates describe System-on-Chip architecture, CPU/GPU/NPU components, and AI engine capabilities. They do not disclose specific leading-edge process node technology details, manufacturing timelines, or node-level physical innovations comparable to Intel's 18A disclosure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1_D041",
@@ -152,57 +155,15 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1_D021",
-            "peer_topic": "AMD EPYC Server Processors",
-            "peer_summary": "AMD's server CPU portfolio includes the EPYC Series, based on x86 architecture for high-performance computing and large data centers, with the recent announcement of the 5th generation AMD EPYC family.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.052444,
-            "relationship": "related_topic",
-            "comparison": "Both Intel and AMD disclose details about their high-performance processor portfolios and recent product announcements as part of their business description, but they focus on different product lines and architectural bases. Intel's disclosure centers on the specific transistor-level innovations of the Intel 18A process node (RibbonFET and PowerVia) aimed at leading-edge performance per watt, with high-volume manufacturing for Panther Lake expected in 2025. In contrast, AMD's disclosure focuses on the EPYC server processor family based on x86 architecture, highlighting the announcement of the 5th generation EPYC family to expand its high-performance server CPU portfolio for enterprise and data center markets, without detailing the underlying process node transistor innovations.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D041",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1_P037_S005",
-                    "paragraph_id": "intc_2024_1_P037",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "▪Intel 18A is our next generation leading-edge process technology and has been designed to incorporate the first high volume commercial implementation of two breakthrough technologies: gate-all-around transistors and backside power. RibbonFET, our implementation of a gate-all-around transistor, is designed to deliver faster transistor switching speeds while achieving the same drive current as multiple fins, but in a smaller footprint. PowerVia is our unique industry-first implementation of backside power delivery that is designed to optimize signal transmission by eliminating the need for power routing on the front side of the wafer. Intel 18A is offered to external foundry customers and is designed to deliver improvements in performance per watt and density scaling over Intel 3. We expect to commence high-volume manufacturing of Panther Lake, our new client family of products and our first processors on Intel 18A, in 2025.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D021",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1_P017_S004",
-                    "paragraph_id": "amd_2024_1_P017",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We recently announced our 5th generation AMD EPYC family of server processors, further expanding our high-performance server CPU portfolio.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved AMD candidates describe product families (EPYC CPUs, Radeon GPUs) and their architectures/use cases, but do not disclose specific semiconductor process node technology details, manufacturing timelines, or node-level innovations comparable to Intel's description of the 18A process node, RibbonFET, and PowerVia."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was substantively comparable to Intel's disclosure on Intel 18A process node development and expected production. Broadcom's candidates focus on general semiconductor materials (CMOS/III-V) and data center networking solutions, which do not address specific next-generation transistor process nodes, commercialization timelines for logic chips, or performance per watt improvements via specific transistor architectures comparable to Intel 18A."
+        "rationale": "The retrieved Broadcom candidates describe broad semiconductor material usage (silicon CMOS, III-V) and networking product functions, but do not disclose specific advanced process node development, transistor architecture innovations, or manufacturing timelines comparable to Intel's detailed 18A node disclosure."
       },
       {
         "peer_ticker": "MU",
@@ -211,17 +172,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1_D007",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "DRAM production nodes and future expectations",
             "peer_summary": "The company shipped its industry's first 1β production node in 2023, produced majority 2024 bits on 1α and 1β nodes, and expects volume shipments of the 1γ node using EUV lithography in 2025.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.088445,
+            "retrieval_score": 0.093304,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose specific timelines and technical characteristics of their next-generation manufacturing nodes expected to reach volume production in 2025. Intel describes Intel 18A as its next-generation leading-edge technology incorporating gate-all-around transistors and backside power delivery, with high-volume manufacturing for Panther Lake expected to commence in 2025. Similarly, Micron expects volume shipments in 2025 of its next-generation DRAM, the 1γ node, which will employ EUV lithography. While both highlight 2025 as a key year for launching advanced nodes, Intel focuses on general logic process innovations (transistors/power delivery) for client processors, whereas Micron focuses on lithography techniques (EUV) for memory bit density improvements.",
+            "comparison": "Both Intel and Micron disclose specific details on their leading-edge manufacturing node evolution and expected volume production timelines for next-generation technologies. Intel describes Intel 18A incorporating gate-all-around transistors and backside power delivery, with high-volume manufacturing for Panther Lake expected in 2025. Micron discloses that the majority of its 2024 DRAM production was on leading-edge nodes (1α and 1β) and expects volume shipments of its next-generation 1γ node in 2025 using EUV lithography. Both use Item 1 to signal process technology leadership and near-term production milestones.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D041",
                 "sentences": [
                   {
@@ -236,8 +201,23 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D007",
                 "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P006_S001",
+                    "paragraph_id": "mu_2024_1_P006",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2023, we began shipping the industry's first 1β (1-beta) production node, which offers further improvements in power efficiency and bit density.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1_P006_S002",
+                    "paragraph_id": "mu_2024_1_P006",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "The majority of our DRAM bit production in 2024 was on leading-edge 1α (1-alpha) and 1ß nodes.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "mu_2024_1_P006_S003",
                     "paragraph_id": "mu_2024_1_P006",
@@ -254,100 +234,21 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1_D057",
-            "peer_topic": "Product energy efficiency and Green500 performance",
-            "peer_summary": "NVIDIA's GPU-accelerated computing is optimized for energy efficiency and performance per watt. The company powered 24 of the top 30 most energy-efficient systems on the Green500 list, including the top supercomputer.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.063053,
-            "relationship": "related_topic",
-            "comparison": "Both Intel and NVIDIA emphasize energy efficiency and performance per watt as critical design attributes of their computing technologies. Intel states that its Intel 18A process node is designed to deliver improvements in performance per watt over Intel 3, utilizing specific transistor and power delivery innovations. NVIDIA highlights that its GPU-accelerated computing is inherently more energy efficient than traditional computing, optimized for performance per watt and throughput, evidenced by its dominance on the Green500 list. The comparison highlights a shared industry focus on efficiency metrics, but Intel attributes this to specific semiconductor process node features, while NVIDIA attributes it to architectural optimization for specific workloads.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D041",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1_P037_S005",
-                    "paragraph_id": "intc_2024_1_P037",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "▪Intel 18A is our next generation leading-edge process technology and has been designed to incorporate the first high volume commercial implementation of two breakthrough technologies: gate-all-around transistors and backside power. RibbonFET, our implementation of a gate-all-around transistor, is designed to deliver faster transistor switching speeds while achieving the same drive current as multiple fins, but in a smaller footprint. PowerVia is our unique industry-first implementation of backside power delivery that is designed to optimize signal transmission by eliminating the need for power routing on the front side of the wafer. Intel 18A is offered to external foundry customers and is designed to deliver improvements in performance per watt and density scaling over Intel 3. We expect to commence high-volume manufacturing of Panther Lake, our new client family of products and our first processors on Intel 18A, in 2025.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1_D057",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_1_P061_S002",
-                    "paragraph_id": "nvda_2024_1_P061",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "GPU-accelerated computing is inherently more energy efficient than traditional computing for many workloads because it is optimized for throughput, performance per watt, and certain AI workloads.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved NVIDIA candidates focus on software-defined vehicle capabilities and energy efficiency metrics (Green500 list). They do not contain comparable disclosures regarding specific semiconductor process node development, transistor structures, or manufacturing schedules."
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_1_D029",
-            "peer_topic": "Processor architecture and AI Engine capabilities",
-            "peer_summary": "Qualcomm utilizes System-on-Chip architecture with heterogeneous computing, including Oryon and Kryo CPUs and Adreno GPUs, to enable high-performance, low-power computing. The Qualcomm AI Engine features dedicated hardware and the Hexagon NPU for high-performance on-device AI inference, supported by the AI Stack and AI Hub to simplify developer integration.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.064432,
-            "relationship": "related_topic",
-            "comparison": "Both Intel and Qualcomm describe their processor technologies in terms of enabling high performance and low-power computing through specific architectural components. Intel details how its Intel 18A process, with RibbonFET transistors and PowerVia, is designed to deliver faster switching speeds and improved performance per watt. Qualcomm describes its System-on-Chip architecture using CPUs, GPUs, and NPUs to enable high-performance and low-power computing for devices like those using Oryon and Kryo CPUs. While both focus on the synergy of hardware design for efficiency, Intel's disclosure is specific to a foundry process technology node's physical transistor innovations, whereas Qualcomm's is focused on the integration of heterogeneous computing engines within a platform architecture.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D041",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1_P037_S005",
-                    "paragraph_id": "intc_2024_1_P037",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "▪Intel 18A is our next generation leading-edge process technology and has been designed to incorporate the first high volume commercial implementation of two breakthrough technologies: gate-all-around transistors and backside power. RibbonFET, our implementation of a gate-all-around transistor, is designed to deliver faster transistor switching speeds while achieving the same drive current as multiple fins, but in a smaller footprint. PowerVia is our unique industry-first implementation of backside power delivery that is designed to optimize signal transmission by eliminating the need for power routing on the front side of the wafer. Intel 18A is offered to external foundry customers and is designed to deliver improvements in performance per watt and density scaling over Intel 3. We expect to commence high-volume manufacturing of Panther Lake, our new client family of products and our first processors on Intel 18A, in 2025.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1_D029",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1_P025_S003",
-                    "paragraph_id": "qcom_2024_1_P025",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "We have developed System-on-Chip (SoC) architecture with heterogeneous computing features, which uses our central processing unit (CPU) and different types of specialized engines (graphics processing unit (GPU) and neural processing unit (NPU)) to enable high-performance and low-power computing and other optimization techniques.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved Qualcomm candidates describe System-on-Chip architecture, CPU/GPU/NPU components, and AI engine capabilities. They do not disclose specific leading-edge process node technology details, manufacturing timelines, or node-level physical innovations comparable to Intel's 18A disclosure."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "46ead38571916f70f3e0be26847d0391818f8c615aefdf3052b53b3cbd129ed5",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "3e671fc3bb2ce0c125b8079d2406add139318b51148e63f89a231af0b457898d"
+    }
   }
 }

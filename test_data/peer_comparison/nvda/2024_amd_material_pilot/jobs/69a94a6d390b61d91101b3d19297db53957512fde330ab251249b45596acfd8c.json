@@ -1,204 +1,109 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "bd9b8305b7b9dedfd47ecaee7f7e431cebc43bf4d318849bbbfcfcae214d13d3",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "743b971a7f3d851956422d18b8a21b2245dd6fa8d543ffd385aaff262329059c",
+  "request_hash": "456a0449dd95d0b26ae225b8ef48df31eed5ea92bc1acd172e71432e94297462",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_7_D023\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both disclosures report specific segment revenue performance and its primary drivers for fiscal year 2024. NVDA reports Automotive segment revenue growth of 21% driven by self-driving platforms, while AMD reports Data Center segment revenue growth of 94% driven by Instinct GPUs and EPYC CPUs. Both illustrate strong sequential revenue expansion in key strategic segments, though the magnitude and specific product drivers differ.\",\n      \"target_sentence_ids\": [\n        \"nvda_2024_7_P022_S001\",\n        \"nvda_2024_7_P022_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_7_P034_S001\",\n        \"amd_2024_7_P034_S002\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"reason\": \"The other retrieved candidates (amd_2024_7_D033 and amd_2024_7_D032) concern operating expense categories (MG&A and R&D) rather than segment-specific revenue performance and its business drivers, making them not directly comparable to NVDA's Automotive revenue disclosure.\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D021",
     "item": "7",
-    "target_topic": "Automotive Segment Performance",
+    "target_topic": "Automotive Segment Financial Performance and Drivers",
     "target_summary": "Automotive revenue for fiscal year 2024 increased 21%, primarily reflecting growth in self-driving platforms.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0320",
-        "relationship": "one_to_one",
+        "match_id": "nvda_2023_2024_M0195",
+        "relationship": "one_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures focus on Automotive revenue performance in the Fiscal Year Summary. 2023_D024 reports 60% increase driven by self-driving/EV solutions. 2024_D021 reports 21% increase driven by self-driving platforms. They share the same specific topic: Year-over-year Automotive revenue change.",
+        "explanation": "Both 2024 disclosures report Automotive revenue metrics and drivers, corresponding to the 2023 disclosure. D021 states the 21% increase and self-driving platform growth. D031 states the $1.1 billion revenue amount and partnerships. D027 reports the prior year's 60% growth and DRIVE Orin/Thor production. They share the specific subject of Automotive revenue performance and key platform updates.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D024",
-            "item": "7",
-            "section": "Fiscal Year 2023 Summary",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Automotive revenue increased 60% year-over-year, driven by growth in self-driving solutions, electric vehicle computing solutions, AI cockpit solutions, and automotive development arrangements.",
-            "extraction_status": "source_validated"
-          }
-        ],
-        "current_disclosures": [
-          {
-            "disclosure_id": "nvda_2024_7_D021",
-            "item": "7",
-            "section": "Fiscal Year 2024 Summary",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Automotive revenue for fiscal year 2024 increased 21%, primarily reflecting growth in self-driving platforms.",
-            "extraction_status": "source_validated"
-          }
-        ],
-        "change_analysis": {
-          "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reduced",
-            "cosine_similarity": 0.339894,
-            "sequence_match_ratio": 0.271186,
-            "length_ratio": 0.475,
-            "word_count_delta": -21,
-            "added_tokens_sample": [
-              "for",
-              "the",
-              "fiscal",
-              "year",
-              "2024",
-              "21",
-              "the",
-              "increase",
-              "primarily",
-              "reflected",
-              "platforms"
-            ],
-            "removed_tokens_sample": [
-              "60",
-              "from",
-              "a",
-              "year",
-              "ago",
-              "reflecting",
-              "sales",
-              "of",
-              "solutions",
-              "computing",
-              "solutions",
-              "for",
-              "electric",
-              "vehicle",
-              "makers",
-              "and",
-              "strength",
-              "in",
-              "sales",
-              "of"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2023_7_D024",
-            "score": 0.833126,
-            "normalised_score": 0.8331,
-            "label": "Relocated",
-            "rationale": "Score 83.31% of ceiling — content is similar but section changed from 'Fiscal Year 2023 Summary' to 'Fiscal Year 2024 Summary'.",
-            "method": "embedding_cosine"
-          },
-          "llm": "Modified",
-          "final_taxonomy": "Modified"
-        },
-        "materiality_analysis": {
-          "materiality": "Yes",
-          "materiality_score": 0.75,
-          "confidence_score": 0.9,
-          "reason": "While both years show growth, the driver changes significantly. 2023 cited broad growth across self-driving, EV computing, and AI cockpit solutions (60% increase). 2024 narrows the primary driver to 'self-driving platforms' specifically with a slower 21% growth rate. This suggests a deceleration in the broader automotive suite and a potential shift in strategic focus or execution within the segment, which is material for understanding the segment's future trajectory.",
-          "key_change": "Narrowing of growth drivers and deceleration in automotive revenue growth"
-        }
-      },
-      {
-        "window": "2024-2025",
-        "side": "previous",
-        "match_id": "nvda_2024_2025_M0306",
-        "relationship": "many_to_one",
-        "status": "ai_verified",
-        "review_reasons": [],
-        "explanation": "Both disclosures report Fiscal Year Automotive revenue performance and growth drivers. 2024 reports a 21% increase driven by self-driving platforms; 2025 reports a 55% increase driven by sales of self-driving platforms. Specific subject: Automotive segment revenue trend.\n\nBoth disclosures concern NVIDIA's Automotive segment revenue performance in their respective fiscal years. nvda_2024_7_D028 details the $1.1 billion revenue and specific partnerships (MediaTek, Foxconn) for FY2024, while nvda_2025_7_D022 reports the FY2025 Automotive revenue increase of 55% driven by self-driving platforms. Despite differences in specific partner details reported (likely due to section constraints or specific FY focus), they represent the same specific topic: the financial and operational highlights of the Automotive segment.",
-        "previous_disclosures": [
-          {
-            "disclosure_id": "nvda_2024_7_D021",
-            "item": "7",
-            "section": "Fiscal Year 2024 Summary",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Automotive revenue for fiscal year 2024 increased 21%, primarily reflecting growth in self-driving platforms.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_7_D028",
+            "disclosure_id": "nvda_2023_7_D027",
             "item": "7",
             "section": "Market Platform Highlights",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Automotive revenue for fiscal year 2024 was $1.1 billion, up 21% from fiscal year 2023. The company partnered with MediaTek for automotive SoCs, collaborated with Foxconn on next-generation EVs, and expanded the adoption of the NVIDIA DRIVE platform with several global OEMs.",
+            "summary": "Automotive revenue for fiscal year 2023 grew 60% to $903 million compared to fiscal year 2022, and the company started production of the NVIDIA DRIVE Orin autonomous vehicle SOC and introduced next-generation NVIDIA DRIVE Thor.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D022",
+            "disclosure_id": "nvda_2024_7_D021",
             "item": "7",
-            "section": "Fiscal Year 2025 Summary",
+            "section": "Fiscal Year 2024 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Automotive revenue increased 55% driven by sales of self-driving platforms.",
+            "summary": "Automotive revenue for fiscal year 2024 increased 21%, primarily reflecting growth in self-driving platforms.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_7_D031",
+            "item": "7",
+            "section": "Market Platform Highlights",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Automotive revenue for fiscal year 2024 was $1.1 billion, up 21% from fiscal year 2023. The company partnered with MediaTek for automotive SoCs, collaborated with Foxconn on electric vehicles, and expanded NVIDIA DRIVE platform adoption with multiple OEMs.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reduced",
-            "cosine_similarity": 0.356803,
-            "sequence_match_ratio": 0.173913,
-            "length_ratio": 0.223404,
-            "word_count_delta": -73,
-            "added_tokens_sample": [
-              "2025",
-              "55",
-              "a",
-              "ago",
-              "driven",
-              "by",
-              "sales",
-              "of",
-              "self",
-              "driving",
-              "platforms"
-            ],
-            "removed_tokens_sample": [
-              "automotive",
-              "revenue",
-              "for",
-              "the",
-              "fiscal",
-              "year",
-              "2024",
-              "was",
-              "up",
-              "21",
-              "the",
-              "increase",
-              "primarily",
-              "reflected",
-              "growth",
-              "in",
-              "self",
-              "driving",
-              "platforms",
-              "2024"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2024_7_D021",
-            "score": 0.889238,
-            "normalised_score": 0.8892,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 88.92% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
           "materiality_score": 0.8,
+          "confidence_score": 0.85,
+          "reason": "Automotive revenue growth slowed significantly from 60% to 21%, and the disclosure introduces specific new partnerships (MediaTek, Foxconn) and expanded OEM adoption (BYD, XPENG, etc.), indicating a material change in growth trajectory and strategic alliances.",
+          "key_change": "Deceleration of automotive revenue growth and new strategic partnerships"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0179",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures specifically report Automotive revenue performance and drivers. 2024 cites 21% increase primarily from self-driving platforms (S001, S002); 2025 cites 55% increase driven by self-driving platform sales (S001).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D021",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Automotive revenue for fiscal year 2024 increased 21%, primarily reflecting growth in self-driving platforms.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D021",
+            "item": "7",
+            "section": "Fiscal Year 2025 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Automotive revenue rose 55% year-over-year, driven by sales of self-driving platforms.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.15,
           "confidence_score": 0.9,
-          "reason": "Automotive revenue growth accelerated significantly from 21% in FY24 to 55% in FY25. While both cite self-driving platforms, the magnitude of the acceleration and the change from a summary of growth to a specific attribution of 'sales of self-driving platforms' indicates a meaningful escalation in the importance and velocity of this business line.",
-          "key_change": "Significant acceleration in Automotive revenue growth to 55% driven by self-driving platforms"
+          "reason": "This row updates Automotive revenue growth from 21% to 55%, driven by self-driving platforms. This indicates acceleration in an existing business line, which is positive performance news. It does not represent a material change in the nature of the business, new regulatory exposures, or operational dependencies that alter the risk profile meaningfully compared to the prior year's disclosure of the same segment.",
+          "key_change": "Routine fiscal year automotive revenue update"
         }
       }
     ],
@@ -210,17 +115,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D023",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Data Center Segment Financial Performance",
             "peer_summary": "Data Center net revenue increased 94% to $12.6 billion in 2024 from $6.5 billion in 2023, primarily driven by higher sales of AMD Instinct GPUs and AMD EPYC CPUs. Operating income rose to $3.5 billion in 2024 from $1.3 billion in 2023, mainly due to higher revenue partially offset by increased R&D investment.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.087823,
+            "retrieval_score": 0.075656,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD disclose significant year-over-year revenue growth in their respective high-growth technology segments for fiscal year 2024, driven by artificial intelligence and data center demand. NVDA's automotive segment grew by 21% to $1.1 billion, primarily due to self-driving platforms. Similarly, AMD's Data Center segment, a key growth engine, surged by 94% to $12.6 billion, driven by AMD Instinct GPUs and EPYC CPUs. While both companies benefited from AI-related hardware sales, NVDA's disclosure focuses on the automotive application of these technologies, whereas AMD's disclosure highlights the broader data center infrastructure expansion.",
+            "comparison": "Both disclosures report specific segment revenue performance and its primary drivers for fiscal year 2024. NVDA reports Automotive segment revenue growth of 21% driven by self-driving platforms, while AMD reports Data Center segment revenue growth of 94% driven by Instinct GPUs and EPYC CPUs. Both illustrate strong sequential revenue expansion in key strategic segments, though the magnitude and specific product drivers differ.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D021",
                 "sentences": [
                   {
@@ -242,6 +151,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D023",
                 "sentences": [
                   {
@@ -268,6 +178,11 @@
           "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "743b971a7f3d851956422d18b8a21b2245dd6fa8d543ffd385aaff262329059c",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "456a0449dd95d0b26ae225b8ef48df31eed5ea92bc1acd172e71432e94297462"
+    }
   }
 }

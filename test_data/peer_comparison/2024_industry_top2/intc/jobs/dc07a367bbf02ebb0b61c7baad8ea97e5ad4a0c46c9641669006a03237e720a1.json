@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "262a0c04333b8d96e39e58eb4d7962d036ebd002bbf2f2751854cd35daec287a",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "a9244f9a01fb3fb9f8c49335063826fcb37d028ad5d66accdddf51460cd36448",
+  "request_hash": "ec7a15fab77f665fe44ac2be17c56c1dcdd6dc9ebb5cc3a8189a13856e036697",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D029\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"The target reports total operating expenses increasing due to process technology investments. AMD discloses that its Embedded segment operating income declined significantly, primarily driven by lower revenue, which serves as a contrasting outcome in the same financial reporting period where revenue drivers impacted operating results differently than Intel's cost-led expense increase.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P058_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P041_S001\",\n\"amd_2024_7_P041_S002\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_7_D052\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"The target attributes its operating expense increase to investments in process technology. Broadcom explicitly identifies the increase in amortization of acquisition-related intangible assets in operating expenses as a key driver, citing the VMware Merger as the primary cause, similar to how Intel cites specific strategic drivers (process tech) for its expense growth.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P058_S001\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_7_P051_S001\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_7_D021\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"The target reports an overall increase in operating expenses driven by process technology investments. Micron provides a specific breakdown where SG&A expenses increased 23% primarily due to higher employee compensation. While the driver is different (compensation vs. technology), both disclosures explain the specific line-item drivers behind the year-over-year increase in operating expenses.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P058_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_7_P021_S001\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D023\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"The target reports operating expenses increased by $961 million, driven by process technology investments. NVIDIA similarly reports operating expenses increased, explicitly attributing the rise to growth in employees and compensation increases. Both disclosures focus on the primary internal cost drivers (investments vs. headcount/compensation) responsible for the increase in operating expenses for the fiscal year.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P058_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P024_S001\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_7_D013\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"The target explains the increase in total operating expenses. Qualcomm breaks down the increase in its SG&A portion of operating expenses, citing specific quantitative drivers like sales/marketing increases, deferred compensation revaluation, and share-based compensation. Both disclosures provide a driver-based analysis for the increase in operating expenses for fiscal 2024.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P058_S001\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_7_P011_S001\",\n\"qcom_2024_7_P011_S002\",\n\"qcom_2024_7_P011_S003\",\n\"qcom_2024_7_P011_S004\"\n]\n}\n],\n\"no_match\": []\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D063",
@@ -175,9 +178,63 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "AMD candidates (amd_2024_7_D027, amd_2024_7_D029) focus on specific segment operating income declines (Gaming and Embedded) driven by lower revenue. This contrasts with Intel's disclosure of a total operating expense increase driven by process technology investments, and AMD's disclosures do not address the drivers of total operating expense growth or investment levels."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D029",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Embedded segment operating income decline for fiscal year 2024",
+            "peer_summary": "Embedded operating income decreased to $1.4 billion in 2024 from $2.6 billion in 2023, primarily driven by lower revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.149281,
+            "relationship": "related_topic",
+            "comparison": "The target reports total operating expenses increasing due to process technology investments. AMD discloses that its Embedded segment operating income declined significantly, primarily driven by lower revenue, which serves as a contrasting outcome in the same financial reporting period where revenue drivers impacted operating results differently than Intel's cost-led expense increase.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "7",
+                "disclosure_id": "intc_2024_7_D063",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P058_S001",
+                    "paragraph_id": "intc_2024_7_P058",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Operating expenses were $5.4 billion, up $961 million from 2023, primarily driven by increased investments in process technology.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P041_S001",
+                    "paragraph_id": "amd_2024_7_P041",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Embedded operating income was $1.4 billion in 2024, compared to operating income of $2.6 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P041_S002",
+                    "paragraph_id": "amd_2024_7_P041",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The decrease in operating income was primarily driven by lower revenue.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
@@ -186,17 +243,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_7_D052",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Amortization of Acquisition-Related Intangible Assets Increase",
             "peer_summary": "Amortization of acquisition-related intangible assets recognized in operating expenses increased by $1,850 million, or 133%, in fiscal year 2024 compared to the prior fiscal year. This increase was primarily due to higher amortization of customer-related intangible assets resulting from the VMware Merger.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.11609,
+            "retrieval_score": 0.112946,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Broadcom report significant increases in operating expenses driven by specific corporate actions rather than organic growth. Intel attributes its $961 million increase primarily to 'increased investments in process technology.' Similarly, Broadcom reports a $1,850 million (133%) increase in operating expenses specifically due to 'higher amortization of customer-related intangible assets from the VMware Merger.' While both drivers relate to strategic investments (foundry capability vs. acquisition integration), the nature of the expense recognition differs, with Intel focusing on R&D/process spend and Broadcom on amortization of acquired assets.",
+            "comparison": "The target attributes its operating expense increase to investments in process technology. Broadcom explicitly identifies the increase in amortization of acquisition-related intangible assets in operating expenses as a key driver, citing the VMware Merger as the primary cause, similar to how Intel cites specific strategic drivers (process tech) for its expense growth.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D063",
                 "sentences": [
                   {
@@ -211,6 +272,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D052",
                 "sentences": [
                   {
@@ -218,54 +280,6 @@
                     "paragraph_id": "avgo_2024_7_P051",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "Amortization of acquisition-related intangible assets recognized in operating expenses increased $1,850 million, or 133%, in fiscal year 2024, compared to the prior fiscal year primarily due to higher amortization of customer-related intangible assets from the VMware Merger.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_7_D053",
-            "peer_topic": "Restructuring and Other Charges Recognition",
-            "peer_summary": "Restructuring and other charges recognized in operating expenses were $1,533 million in fiscal year 2024 and $244 million in fiscal year 2023. The 2024 charges primarily consisted of employee termination costs related to cost reduction activities associated with the VMware Merger, while the 2023 charges were primarily non-recurring charges related to IP litigation.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.099011,
-            "relationship": "same_topic",
-            "comparison": "Both disclosures address non-recurring or strategic restructuring costs impacting operating expenses. Intel's operating expense increase is linked to process technology investments, which often involve workforce adjustments. Broadcom explicitly details '$1,533 million' in restructuring charges in 2024, primarily for 'employee termination costs from cost reduction activities related to the VMware Merger.' This provides a parallel for the composition of Intel's increased spending, although Intel does not break out specific restructuring costs in this sentence.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D063",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P058_S001",
-                    "paragraph_id": "intc_2024_7_P058",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Operating expenses were $5.4 billion, up $961 million from 2023, primarily driven by increased investments in process technology.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_7_D053",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P052_S001",
-                    "paragraph_id": "avgo_2024_7_P052",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Restructuring and other charges recognized in operating expenses were $1,533 million and $244 million in fiscal years 2024 and 2023, respectively.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_7_P052_S002",
-                    "paragraph_id": "avgo_2024_7_P052",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "The fiscal year 2024 charges primarily included employee termination costs from cost reduction activities related to the VMware Merger.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -282,17 +296,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_7_D021",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "SG&A Expense Trends",
             "peer_summary": "SG&A expenses increased 23% in 2024 compared to 2023 primarily due to higher employee compensation, whereas 2023 expenses were 14% lower than 2022 due to decreases in compensation, legal fees, advertising, and professional services.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.086039,
+            "retrieval_score": 0.082151,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron report year-over-year increases in operating expenses, but the primary drivers differ. Intel states the $961 million increase is 'primarily driven by increased investments in process technology.' In contrast, Micron attributes its 23% increase in SG&A expenses primarily to 'an increase in employee compensation.' While both involve increased spending, Intel's driver is capital-intensive process development, whereas Micron's is personnel cost growth.",
+            "comparison": "The target reports an overall increase in operating expenses driven by process technology investments. Micron provides a specific breakdown where SG&A expenses increased 23% primarily due to higher employee compensation. While the driver is different (compensation vs. technology), both disclosures explain the specific line-item drivers behind the year-over-year increase in operating expenses.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D063",
                 "sentences": [
                   {
@@ -307,6 +325,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "7",
                 "disclosure_id": "mu_2024_7_D021",
                 "sentences": [
                   {
@@ -329,59 +348,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D058",
-            "peer_topic": "R&D and SG&A Expense Drivers",
-            "peer_summary": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.126978,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and NVIDIA disclose increases in operating expenses, but the underlying causes are distinct. Intel reports a $961 million increase driven by 'increased investments in process technology.' NVIDIA reports an increase driven by 'compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.' While both companies have increased spending, Intel's is focused on technology infrastructure/development, whereas NVIDIA's is focused on human capital costs.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D063",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P058_S001",
-                    "paragraph_id": "intc_2024_7_P058",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Operating expenses were $5.4 billion, up $961 million from 2023, primarily driven by increased investments in process technology.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D058",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_7_P061_S001",
-                    "paragraph_id": "nvda_2024_7_P061",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "The increase in research and development expenses and sales, general and administrative expenses for fiscal year 2024 was primarily driven by compensation and benefits, including stock-based compensation, reflecting employee growth and compensation increases.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "NVDA",
             "peer_disclosure_id": "nvda_2024_7_D023",
-            "peer_topic": "Operating Expenses and Acquisition Charge",
-            "peer_summary": "Operating expenses increased in fiscal year 2024 due to employee growth and compensation increases; fiscal year 2023 included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Operating Expense Drivers and Prior Year Comparison",
+            "peer_summary": "Operating expenses increased for fiscal year 2024 due to growth in employees and compensation increases, while the prior year included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.123571,
+            "retrieval_score": 0.117683,
             "relationship": "same_topic",
-            "comparison": "Both companies report rising operating expenses, but NVIDIA's disclosure includes a contrasting baseline factor (a prior year one-time charge) that Intel does not mention. Intel's increase is 'primarily driven by increased investments in process technology.' NVIDIA states its increase was 'driven by growth in employees and compensation increases' and notes that 2023 included a '$1.4 billion acquisition termination charge,' implying NVIDIA's 2024 increase is purely organic growth in headcount and pay, whereas Intel's is tied to specific tech investments.",
+            "comparison": "The target reports operating expenses increased by $961 million, driven by process technology investments. NVIDIA similarly reports operating expenses increased, explicitly attributing the rise to growth in employees and compensation increases. Both disclosures focus on the primary internal cost drivers (investments vs. headcount/compensation) responsible for the increase in operating expenses for the fiscal year.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D063",
                 "sentences": [
                   {
@@ -396,6 +378,7 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D023",
                 "sentences": [
                   {
@@ -403,13 +386,6 @@
                     "paragraph_id": "nvda_2024_7_P024",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
                     "text": "Operating expenses increased for fiscal year 2024, driven by growth in employees and compensation increases.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_7_P024_S002",
-                    "paragraph_id": "nvda_2024_7_P024",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Fiscal year 2023 also included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -426,17 +402,21 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_7_D013",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "SG&A Expense Drivers",
             "peer_summary": "Fiscal 2024 SG&A expenses increased primarily due to $99 million in higher sales and marketing expenses, $42 million in deferred compensation revaluation, and $39 million in share-based compensation.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.106211,
+            "retrieval_score": 0.099108,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Qualcomm disclose increases in operating expenses, with Qualcomm providing a specific breakdown of SG&A drivers that contrasts with Intel's high-level driver. Intel attributes its increase to 'increased investments in process technology.' Qualcomm attributes its SG&A increase to '$99 million in higher sales and marketing expenses, $42 million in deferred compensation revaluation, and $39 million in share-based compensation expense.' This highlights a difference in where the spending pressure is applied: Intel on technology/development and Qualcomm on sales/marketing and compensation adjustments.",
+            "comparison": "The target explains the increase in total operating expenses. Qualcomm breaks down the increase in its SG&A portion of operating expenses, citing specific quantitative drivers like sales/marketing increases, deferred compensation revaluation, and share-based compensation. Both disclosures provide a driver-based analysis for the increase in operating expenses for fiscal 2024.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D063",
                 "sentences": [
                   {
@@ -451,6 +431,7 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D013",
                 "sentences": [
                   {
@@ -488,6 +469,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "a9244f9a01fb3fb9f8c49335063826fcb37d028ad5d66accdddf51460cd36448",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "ec7a15fab77f665fe44ac2be17c56c1dcdd6dc9ebb5cc3a8189a13856e036697"
+    }
   }
 }

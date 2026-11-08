@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "45acbe9ccdc39d3ad23f31a0112728d64678dc30d653af996d95c454ea8bf621",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "dbd60041ce75ab1c4083f822f779bcd636cc5a72f002c94a4e8f0a54ec3b83e9",
+  "request_hash": "ded0721320e0d1611b2384fcb8e4900a7fd7bdc84178acb045ce16dd6d1bd2a5",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D054\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies define their reportable business segments, which serves as the basis for their segment reporting. Microsoft defines its Mobile Business Unit (MBU) specifically by the end-market application (smartphone and other mobile-device markets) and the product type (memory and storage). AMD defines its reportable segments broadly by product category and application, including Data Center, Client, Gaming, and Embedded. While Microsoft's MBU is focused on mobile connectivity and storage, AMD's segments cover a wider array of computing and graphics products, with its 'Client' segment specifically targeting desktop and notebook CPUs/APUs, which overlaps with the broader mobile PC market, but neither defines a 'Mobile' segment analogous to Microsoft's MBU in the same consumer-centric mobile device manner.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P123_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P059_S001\",\n\"amd_2024_8_P059_S002\",\n\"amd_2024_8_P059_S003\",\n\"amd_2024_8_P059_S004\",\n\"amd_2024_8_P059_S005\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D144\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose segment definitions that include 'mobile' as a market or application area. Microsoft's Mobile Business Unit (MBU) provides memory and storage for smartphone and mobile-device markets. Broadcom's Semiconductor Solutions segment also explicitly serves the mobile market, providing radio frequency devices, wireless connectivity solutions, and touch controllers for mobile applications, as well as products for storage systems. Both disclosures highlight the integration of mobile connectivity or storage within their broader semiconductor or segment offerings, though Microsoft's MBU is distinctively focused on memory/storage for mobile devices while Broadcom's coverage is broader across RF and connectivity.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P123_S001\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P187_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The retrieved candidates for Intel focus on financial items (Components of Other, Net Income and NAND Memory Business Divestiture Receivable) rather than segment or business unit definitions comparable to Microsoft's Mobile Business Unit description.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates for NVIDIA focus on revenue recognition policies for warranties and the definition of its Compute & Networking segment, which does not directly compare to Microsoft's specific definition of its Mobile Business Unit (MBU) focused on memory and storage for smartphones.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D116",
@@ -200,9 +203,84 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was substantively comparable regarding a mobile segment definition. AMD's reportable segments (Data Center, Client, Gaming, Embedded) do not include a distinct 'Mobile' segment or disclose memory/storage products for smartphone markets in the provided text, whereas MU's disclosure specifically defines a Mobile Business Unit for such products."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D054",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Reportable Segment Definitions",
+            "peer_summary": "The Company has four reportable segments: Data Center (including AI accelerators, CPUs, GPUs, etc.), Client (CPUs, APUs, chipsets for desktops/notebooks), Gaming (discrete GPUs, semi-custom SoCs), and Embedded (embedded CPUs, GPUs, APUs, FPGAs, SOMs).",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.038809,
+            "relationship": "same_topic",
+            "comparison": "Both companies define their reportable business segments, which serves as the basis for their segment reporting. Microsoft defines its Mobile Business Unit (MBU) specifically by the end-market application (smartphone and other mobile-device markets) and the product type (memory and storage). AMD defines its reportable segments broadly by product category and application, including Data Center, Client, Gaming, and Embedded. While Microsoft's MBU is focused on mobile connectivity and storage, AMD's segments cover a wider array of computing and graphics products, with its 'Client' segment specifically targeting desktop and notebook CPUs/APUs, which overlaps with the broader mobile PC market, but neither defines a 'Mobile' segment analogous to Microsoft's MBU in the same consumer-centric mobile device manner.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D116",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P123_S001",
+                    "paragraph_id": "mu_2024_8_P123",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Mobile Business Unit (\"MBU\"): Includes memory and storage products sold into the smartphone and other mobile-device markets.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D054",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P059_S001",
+                    "paragraph_id": "amd_2024_8_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The Company's four reportable segments are:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P059_S002",
+                    "paragraph_id": "amd_2024_8_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "• the Data Center segment, which primarily includes Artificial Intelligence (AI) accelerators, server microprocessors (CPUs), graphics processing units (GPUs), accelerated processing units (APUs), data processing units (DPUs), Field Programmable Gate Arrays (FPGAs), Smart Network Interface Cards (SmartNICs) and Adaptive System-on-Chip (SoC) products for data centers;",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P059_S003",
+                    "paragraph_id": "amd_2024_8_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "• the Client segment, which primarily includes CPUs, APUs, and chipsets for desktops and notebooks;",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P059_S004",
+                    "paragraph_id": "amd_2024_8_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "• the Gaming segment, which primarily includes discrete GPUs, and semi-custom SoC products and development services; and",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P059_S005",
+                    "paragraph_id": "amd_2024_8_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "• the Embedded segment, which primarily includes embedded CPUs, GPUs, APUs, FPGAs, System on Modules (SOMs), and Adaptive SoC products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
@@ -211,17 +289,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D144",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Semiconductor Solutions Segment Business",
             "peer_summary": "The semiconductor solutions segment provides devices for data center, service provider, and enterprise networking applications, including AI networking, as well as products for mobile, set-top box, broadband access, storage, industrial, and automotive markets. The segment also includes IP licensing.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.080855,
+            "retrieval_score": 0.103655,
             "relationship": "same_topic",
-            "comparison": "Both MU and AVGO disclose segments or business units that include specific offerings for mobile markets. MU's Mobile Business Unit (MBU) is defined as including memory and storage products sold into the smartphone and other mobile-device markets. Similarly, AVGO's Semiconductor Solutions segment explicitly provides products for mobile applications, including radio frequency devices, wireless connectivity, and touch controllers, while also covering data center and networking. Both disclose the inclusion of mobile-specific product lines within their broader segment definitions.",
+            "comparison": "Both companies disclose segment definitions that include 'mobile' as a market or application area. Microsoft's Mobile Business Unit (MBU) provides memory and storage for smartphone and mobile-device markets. Broadcom's Semiconductor Solutions segment also explicitly serves the mobile market, providing radio frequency devices, wireless connectivity solutions, and touch controllers for mobile applications, as well as products for storage systems. Both disclosures highlight the integration of mobile connectivity or storage within their broader semiconductor or segment offerings, though Microsoft's MBU is distinctively focused on memory/storage for mobile devices while Broadcom's coverage is broader across RF and connectivity.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D116",
                 "sentences": [
                   {
@@ -236,6 +318,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D144",
                 "sentences": [
                   {
@@ -254,57 +337,15 @@
       },
       {
         "peer_ticker": "INTC",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_8_D069",
-            "peer_topic": "Definition of 'All Other' segment components",
-            "peer_summary": "The 'all other' category includes results from non-reportable segments such as Altera and Mobileye, start-up businesses supporting Intel initiatives, and historical results from divested businesses.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.041486,
-            "relationship": "related_topic",
-            "comparison": "Both companies address the composition of their reporting segments in the context of mobile-related businesses. MU explicitly defines a Mobile Business Unit (MBU) for smartphone markets. INTC includes the Mobileye business within its 'all other' non-reportable segment category. While MU treats mobile as a primary reportable unit, INTC aggregates mobile (via Mobileye) and other non-core/divested entities into a catch-all category, highlighting a difference in how mobile exposure is structured and reported.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_8_D116",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_8_P123_S001",
-                    "paragraph_id": "mu_2024_8_P123",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Mobile Business Unit (\"MBU\"): Includes memory and storage products sold into the smartphone and other mobile-device markets.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D069",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_8_P081_S001",
-                    "paragraph_id": "intc_2024_8_P081",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Our \"all other\" category includes the results of operations from other non-reportable segments not otherwise presented, including our Altera and Mobileye businesses, start-up businesses that support our initiatives, and historical results of operations from divested businesses.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for Intel focus on financial items (Components of Other, Net Income and NAND Memory Business Divestiture Receivable) rather than segment or business unit definitions comparable to Microsoft's Mobile Business Unit description."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "The retrieved candidates for NVIDIA focus on revenue recognition policies for warranties and the definition of its Compute & Networking segment, which does not directly compare to Microsoft's specific definition of its Mobile Business Unit (MBU) focused on memory and storage for smartphones."
       },
       {
         "peer_ticker": "QCOM",
@@ -312,6 +353,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "dbd60041ce75ab1c4083f822f779bcd636cc5a72f002c94a4e8f0a54ec3b83e9",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "ded0721320e0d1611b2384fcb8e4900a7fd7bdc84178acb045ce16dd6d1bd2a5"
+    }
   }
 }

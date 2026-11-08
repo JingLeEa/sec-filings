@@ -1,138 +1,92 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "bc7e2394d21c263f9a0e7df428552fb006dfc3ff92ff4ed9617a754cf324c692",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "2828f48253f90b09b754650fc84f8fef5883a0689075e523416bdc9ada708c73",
+  "request_hash": "1c3d9bcaa68981401b51edcc97092e98255cd4d87b046e5033ffc9e6f6afc589",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1A_D052\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose that they depend on a small number of customers for a substantial portion of their revenue, creating significant risk if those key customers reduce purchases or cease operations. NVIDIA highlights reliance on a limited number of customers within its distribution and partner network, warning that the loss of any large customer or significant reduction in their purchases could harm financial condition. AMD similarly states it depends on a small number of customers for a substantial portion of its business and expects this concentration to continue, noting that the loss of a significant customer or a material reduction in demand would have a materially adverse effect.\",\n\"target_sentence_ids\": [\n\"nvda_2024_1A_P057_S001\",\n\"nvda_2024_1A_P057_S012\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1A_P027_S001\",\n\"amd_2024_1A_P027_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"Disclosures regarding seasonal sales variability (amd_2024_1A_D054) and general macroeconomic/counterparty risks (amd_2024_1A_D053) do not directly address the specific customer/channel partner concentration risk and reliance on a limited number of large partners that is the focus of the target disclosure (nvda_2024_1A_D031). While related to customer risk, the specific topic of dependence on a limited number of key partners for substantial revenue is distinct from seasonal patterns or broad economic uncertainty.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1A_D031",
     "item": "1A",
-    "target_topic": "International Operations and China Sales Exposure",
-    "target_summary": "International sales represent 56% of fiscal 2024 revenue, exposing the company to geopolitical and regulatory risks; sales to China decreased from 19% to 14% of Data Center revenue due to USG licensing requirements.",
-    "target_source_status": "needs_review",
+    "target_topic": "Customer and Channel Partner Concentration Risk",
+    "target_summary": "The company relies heavily on a limited number of customers and channel partners, with specific large customers representing significant portions of revenue. This reliance exposes the business to risks such as customer cancellation of purchase commitments, shifts in partner purchasing patterns, and the potential loss of key customers, all of which could harm financial results.",
+    "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0220",
-        "relationship": "one_to_many",
-        "status": "needs_review",
-        "review_reasons": [
-          "input_extraction_needs_review"
-        ],
-        "explanation": "Both disclosures focus on the risk of sophisticated cyber-attacks, including ransomware and nation-state actors. D027 (2023) details threats from criminal actors and nation-states, and limitations on recovery from ransomware. D032 (2024) similarly details cyber-attacks by nation-states and ransomware, noting the increased sophistication and impact on operations. While D027 and D032 cover broader cybersecurity contexts, this alignment captures the specific shared topic of external nation-state/ransomware threats and operational disruption.\n\nD033 (2024) focuses on insider threats and third-party supplier security vulnerabilities (supply-chain attacks). D027 (2023) covers general cyber-security risks, including explicit risks from third-party suppliers and supply-chain attacks. D033 expands on the supplier risk aspect of D027 with specific details on insider misconduct and AI data supply chain risks. This represents a sub-topic continuation within the broader cybersecurity risk theme.\n\nBoth disclosures address risks related to the global nature of NVIDIA's operating business, specifically highlighting vulnerability to geopolitical conflicts, nation-state actors, and broader internatio",
-        "previous_disclosures": [
-          {
-            "disclosure_id": "nvda_2023_1A_D027",
-            "item": "1A",
-            "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Cybersecurity & Data",
-            "summary": "NVIDIA is exposed to cyber-attacks, including ransomware and nation-state actors, which can disrupt operations and compromise critical infrastructure and supply chain partners. Breaches of security measures, particularly involving proprietary data such as game source code from GFN partners, could result in litigation, regulatory action, reputational damage, and liability for both NVIDIA and its partners.",
-            "extraction_status": "source_validated"
-          }
-        ],
+        "match_id": "nvda_2023_2024_M0088",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "2024 D031 discusses customer concentration and reliance on a limited number of customers/partners. No corresponding 2023 disclosure in the required list or existing groups focuses on this specific customer concentration topic.",
+        "previous_disclosures": [],
         "current_disclosures": [
           {
             "disclosure_id": "nvda_2024_1A_D031",
             "item": "1A",
             "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "International sales represent 56% of fiscal 2024 revenue, exposing the company to geopolitical and regulatory risks; sales to China decreased from 19% to 14% of Data Center revenue due to USG licensing requirements.",
-            "extraction_status": "needs_review"
-          },
-          {
-            "disclosure_id": "nvda_2024_1A_D032",
-            "item": "1A",
-            "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Cybersecurity & Data",
-            "summary": "Sophisticated cyber-attacks, including ransomware and AI-enabled attacks by nation-states, pose risks to operations and may be exacerbated by geopolitical conflicts, with potential limitations on recovery due to backup issues.",
-            "extraction_status": "needs_review"
-          },
-          {
-            "disclosure_id": "nvda_2024_1A_D033",
-            "item": "1A",
-            "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Cybersecurity & Data",
-            "summary": "The company faces risks from insider misconduct and third-party supplier vulnerabilities, including supply-chain attacks and insufficient security practices by partners providing critical infrastructure and AI training data.",
-            "extraction_status": "needs_review"
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company relies heavily on a limited number of customers and channel partners, with specific large customers representing significant portions of revenue. This reliance exposes the business to risks such as customer cancellation of purchase commitments, shifts in partner purchasing patterns, and the potential loss of key customers, all of which could harm financial results.",
+            "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
-          "status": "not_started",
+          "status": "completed",
           "lexical": null,
           "semantic": null,
-          "llm": null,
-          "final_taxonomy": null
+          "llm": "New",
+          "final_taxonomy": "New"
         },
-        "materiality_analysis": null
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.9,
+          "confidence_score": 0.95,
+          "reason": "This is a newly introduced disclosure regarding customer concentration. Reliance on a limited number of customers is a standard but material financial risk. The introduction of this specific risk factor, absent in the previous year's comparable disclosures, materially alters the understanding of the company's revenue stability and dependency profile.",
+          "key_change": "Introduction of customer concentration risk"
+        }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0021",
-        "relationship": "previous_only",
-        "status": "unmatched",
+        "match_id": "nvda_2024_2025_M0067",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "D031 discusses 'International sales' (56% of revenue) and 'China sales' risks due to export controls. The search returned D037 (Export Controls/Regulation) and D028 (Customer Concentration). D037 is in 'Regulatory, Legal' and focuses on compliance/shipments. D028 is in 'Global Operating Business' but focuses on customer concentration. D031 is in 'Global Operating Business'. However, D031's specific topic is 'International Sales/Geopolitical exposure via sales mix'. D037 is 'Export Controls'. While related, the 2025 text for D037 is in a different section/taxonomy and focuses on legal compliance. The audit hits for D031 showed P035_AUDIT discussing international sales, but it was excluded. There is no clear *disclosure* match in 2025 for D031's specific topic of international revenue concentration and China export restrictions. D037 is a potential candidate but the taxonomy and section differ significantly, and the specific focus on 'sales percentage' vs 'licensing requirements' is different. I will mark as unmatched to be safe, or flag for review. Given the strict 'same specific topic' rule, D031 (International Sales Strategy) and D037 (Legal Compliance) are different. D031 is unma",
+        "explanation": "The 2024 disclosure (D031) details revenue concentration risk from a limited number of customers and channel partners, including specific percentages for Customer A and indirect customers. The 2025 disclosure (D053) covers the same specific topic of customer/partner concentration, citing Customers A, B, and C and similar partner risks, confirming a direct topic match.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_1A_D031",
             "item": "1A",
             "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "International sales represent 56% of fiscal 2024 revenue, exposing the company to geopolitical and regulatory risks; sales to China decreased from 19% to 14% of Data Center revenue due to USG licensing requirements.",
-            "extraction_status": "needs_review"
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The company relies heavily on a limited number of customers and channel partners, with specific large customers representing significant portions of revenue. This reliance exposes the business to risks such as customer cancellation of purchase commitments, shifts in partner purchasing patterns, and the potential loss of key customers, all of which could harm financial results.",
+            "extraction_status": "source_validated"
           }
         ],
-        "current_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_1A_D053",
+            "item": "1A",
+            "section": "Risks Related to Our Global Operating Business",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "NVIDIA receives a significant portion of its revenue from a limited number of direct customers (A, B, C) and indirect partners, and its operating results depend heavily on its partner network; adverse changes in partner capabilities, business models, or customer purchasing patterns could harm financial results.",
+            "extraction_status": "source_validated"
+          }
+        ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Removed",
-            "cosine_similarity": 0.0,
-            "sequence_match_ratio": 0.0,
-            "length_ratio": 0.0,
-            "word_count_delta": -265,
-            "added_tokens_sample": [],
-            "removed_tokens_sample": [
-              "we",
-              "sell",
-              "our",
-              "products",
-              "internationally",
-              "and",
-              "we",
-              "also",
-              "have",
-              "operations",
-              "and",
-              "conduct",
-              "business",
-              "internationally",
-              "our",
-              "semiconductor",
-              "wafers",
-              "are",
-              "manufactured",
-              "assembled"
-            ]
-          },
-          "semantic": {
-            "label": "Removed",
-            "score": null,
-            "normalised_score": null,
-            "matched_id": null,
-            "rationale": "One-sided change established by the finalized alignment.",
-            "method": "alignment_presence"
-          },
-          "llm": "Removed",
-          "final_taxonomy": "Removed"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.8,
-          "confidence_score": 0.85,
-          "reason": "The removed disclosure provides specific quantitative data on international sales concentration (56% of revenue) and China sales decline (19% to 14%) due to USG licensing. It explicitly links these sales figures to geopolitical and regulatory risks. The removal of this specific disclosure regarding geographic revenue concentration and the direct impact of export controls on sales volumes is a material change, as it obscures the magnitude of geopolitical exposure and its financial impact.",
-          "key_change": "Removal of specific geopolitical exposure and China sales concentration data"
+          "materiality_score": 0.65,
+          "confidence_score": 0.95,
+          "reason": "The disclosure changes from citing a single named customer (Customer A, 13%) to three named customers (A, B, and C, at 12%, 11%, and 11% respectively). This alters the quantitative profile of customer concentration risk and identifies new specific high-reliance entities, meaningfully updating the exposure profile.",
+          "key_change": "Update in specific customer revenue concentration percentages and identification"
         }
       }
     ],
@@ -143,32 +97,36 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1A_D099",
-            "peer_topic": "Global operations and supply chain reliance",
-            "peer_summary": "AMD maintains worldwide operations relying on third-party wafer foundries in the US, Europe, and Asia, with product assembly and testing performed in China, Malaysia, and Taiwan, while international sales accounted for 66% of net revenue in 2024.",
-            "peer_taxonomy": "Supply Chain & Third Parties",
-            "retrieval_score": 0.073124,
+            "peer_disclosure_id": "amd_2024_1A_D052",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Dependence on Key Customers",
+            "peer_summary": "AMD depends on a small number of customers for a substantial portion of its business, making it vulnerable to material adverse effects if any key customer stops buying, reduces operations, or fails to pay liabilities.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.081965,
             "relationship": "same_topic",
-            "comparison": "Both NVIDIA and AMD disclose significant exposure to international markets, with non-U.S. sales comprising a majority of revenue (NVIDIA 56%, AMD 66%). Both companies also explicitly acknowledge that a portion of their supply chain operations, specifically assembly and testing, occurs in China, creating shared operational reliance on the region despite differing risk narratives regarding sales restrictions.",
+            "comparison": "Both NVDA and AMD disclose that they depend on a small number of customers for a substantial portion of their revenue, creating significant risk if those key customers reduce purchases or cease operations. NVIDIA highlights reliance on a limited number of customers within its distribution and partner network, warning that the loss of any large customer or significant reduction in their purchases could harm financial condition. AMD similarly states it depends on a small number of customers for a substantial portion of its business and expects this concentration to continue, noting that the loss of a significant customer or a material reduction in demand would have a materially adverse effect.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1A",
                 "disclosure_id": "nvda_2024_1A_D031",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1A_P036_S002",
-                    "paragraph_id": "nvda_2024_1A_P036",
+                    "sentence_id": "nvda_2024_1A_P057_S001",
+                    "paragraph_id": "nvda_2024_1A_P057",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our semiconductor wafers are manufactured, assembled, tested and packaged by third parties located outside of the United States, and we generated 56% of our revenue in fiscal year 2024 from sales outside of the United States.",
+                    "text": "We receive a significant amount of our revenue from a limited number of customers within our distribution and partner network.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "nvda_2024_1A_P036_S003",
-                    "paragraph_id": "nvda_2024_1A_P036",
+                    "sentence_id": "nvda_2024_1A_P057_S012",
+                    "paragraph_id": "nvda_2024_1A_P057",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our sales to China decreased as a percentage of total Data Center revenue from 19% in fiscal year 2023 to 14% in fiscal year 2024.",
+                    "text": "The loss of any of our large customers, a significant reduction in purchases by them, our inability to sell to a customer due to U.S. or other countries' trade restrictions or any difficulties in collecting accounts receivable would likely harm our financial condition and results of operations.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -176,61 +134,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1A_D099",
+                "item": "1A",
+                "disclosure_id": "amd_2024_1A_D052",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1A_P133_S003",
-                    "paragraph_id": "amd_2024_1A_P133",
+                    "sentence_id": "amd_2024_1A_P027_S001",
+                    "paragraph_id": "amd_2024_1A_P027",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Nearly all product assembly and final testing of our products is performed at third-party operated manufacturing facilities, in China, Malaysia and Taiwan.",
+                    "text": "We depend on a small number of customers for a substantial portion of our business, and we expect that a small number of customers will continue to account for a significant part of our revenue and receivables in the future.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_1A_P133_S006",
-                    "paragraph_id": "amd_2024_1A_P133",
+                    "sentence_id": "amd_2024_1A_P027_S002",
+                    "paragraph_id": "amd_2024_1A_P027",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "International sales, as a percent of net revenue, were 66% for the year ended December 28, 2024.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1A_D078",
-            "peer_topic": "General Trade and Export Regulatory Risks",
-            "peer_summary": "Export regulations, tariffs, and trade protection measures limit the ability to export products and may result in lost sales or material adverse effects. Compliance with ITAR and EAR is required, and failures or inability to obtain licenses could lead to penalties, loss of privileges, or difficulties in forecasting shipments.",
-            "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.072429,
-            "relationship": "related_topic",
-            "comparison": "While NVIDIA cites specific U.S. government (USG) licensing requirements as the direct cause for reduced Data Center sales to China, AMD highlights the broader regulatory environment of U.S.-China trade relations and Entity List designations as a source of uncertainty for its exports. Both disclosures identify U.S. government regulations and trade policies concerning China as key risks to their international business operations.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1A_D031",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_1A_P036_S004",
-                    "paragraph_id": "nvda_2024_1A_P036",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Although we have not received licenses from the USG to ship restricted products to China, we have started to ship alternatives to the China market in small volumes.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1A_D078",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1A_P090_S004",
-                    "paragraph_id": "amd_2024_1A_P090",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Specifically, United States-China trade relations remain uncertain as the United States continues to add more Chinese companies to the Entity List and more regulations targeted to advanced computing, semiconductor manufacturing, and emerging technologies such as AI.",
+                    "text": "If one of our key customers decides to stop buying our products, materially reduces its operations or its demand for our products, or has operations that are materially impaired for a significant period of time such that it is unable to receive or utilize our products, or pay its liabilities, our business would be materially adversely affected.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -238,8 +156,16 @@
             ]
           }
         ],
-        "rationale": ""
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "2828f48253f90b09b754650fc84f8fef5883a0689075e523416bdc9ada708c73",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "1c3d9bcaa68981401b51edcc97092e98255cd4d87b046e5033ffc9e6f6afc589"
+    }
   }
 }

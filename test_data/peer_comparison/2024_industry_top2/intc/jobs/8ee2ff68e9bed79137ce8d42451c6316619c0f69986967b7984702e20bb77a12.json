@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "7f121f142e05bee92522567c5520cebfd4c93fc463e69dd300b4b1b46eeeda5e",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "c5e981f8d7d2d48391d170b8d5a57c8031266fdb05760db2bf03f2a39344957e",
+  "request_hash": "5abc2352c7a98ff6c7036ab061e50f8c3bd84c27500b4b002fa5079be30d5ab1",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"MU\",\n      \"peer_disclosure_id\": \"mu_2024_1A_D026\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both Intel and Micron disclose specific risks related to delays and cost increases in their manufacturing facility construction projects driven by supply chain and labor constraints. Intel cites that increasing demand for labor, materials, and equipment from other foundries, along with supply constraints and labor shortages, can result in significant delays and increased costs. Similarly, Micron highlights that difficulties in obtaining labor, skilled subcontractors, and specialized equipment, exacerbated by concurrent industry expansion projects competing for limited talent, could result in delays and cost increases for their construction projects.\",\n      \"target_sentence_ids\": [\n        \"intc_2024_1A_P007_S010\",\n        \"intc_2024_1A_P007_S011\"\n      ],\n      \"peer_sentence_ids\": [\n        \"mu_2024_1A_P034_S001\",\n        \"mu_2024_1A_P034_S003\",\n        \"mu_2024_1A_P035_S002\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_1A_D101\",\n      \"relationship\": \"related_topic\",\n      \"comparison\": \"While Intel's primary risk concerns internal delays in constructing its own fabs due to financial constraints and demand reassessment, AMD highlights a similar dependency on manufacturing execution but focuses on external geopolitical disruptions to its Taiwan-based third-party foundries. Both companies are exposed to risks in semiconductor manufacturing facility operations that could disrupt delivery and business results, but Intel's risk is centered on its own 'shell ahead' expansion projects while AMD's is on its outsourced manufacturing base in Taiwan.\",\n      \"target_sentence_ids\": [\n        \"intc_2024_1A_P007_S005\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_1A_P133_S010\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"AVGO\",\n      \"reason\": \"The retrieved candidates discuss cyclical industry risks and general manufacturing capacity/yield maintenance risks, but do not specifically address the risk of delays in constructing new manufacturing facilities or the specific supply chain/labor constraints associated with construction projects as described by Intel.\"\n    },\n    {\n      \"peer_ticker\": \"NVDA\",\n      \"reason\": \"The retrieved candidates focus on demand estimation mismatches and geopolitical risks to international sales/manufacturing locations, rather than the specific risk of delays in constructing new manufacturing facilities due to capital constraints or supply chain issues.\"\n    },\n    {\n      \"peer_ticker\": \"QCOM\",\n      \"reason\": \"The retrieved candidates discuss the cyclical nature of the industry, economic sensitivity, and broad geopolitical/pandemic risks to global operations. None of the specific sentences address the risk of delays in manufacturing facility construction or the associated capital/labor constraints relevant to Intel's disclosure.\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1A_D001",
@@ -193,28 +196,26 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates (amd_2024_1A_D101, amd_2024_1A_D075) focus on geopolitical disruptions and climate change physical impacts, respectively. Neither addresses manufacturing facility construction delays or capacity expansion execution risks, which is the specific topic of Intel's disclosure."
-      },
-      {
-        "peer_ticker": "AVGO",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_1A_D058",
-            "peer_topic": "Manufacturing Capacity, Yields, and Demand Forecasting Risks",
-            "peer_summary": "The company faces risks from inaccurate customer demand estimates and the inability to maintain appropriate manufacturing capacity and yields, which could result from insufficient expansion investments, overestimation of demand leading to excess capacity, or reduced yields from design or manufacturing issues.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.056593,
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1A_D101",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Geopolitical conflict impacts on operations",
+            "peer_summary": "Geopolitical changes between China and Taiwan could disrupt Taiwan-based wafer foundries and manufacturing facilities, while Ukraine-Russia and Israel-Hamas conflicts could negatively impact the global economy and financial markets.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.055487,
             "relationship": "related_topic",
-            "comparison": "While Intel discloses specific delays in facility construction due to demand reassessment, Broadcom discloses the broader risk of being unable to maintain appropriate manufacturing capacity or yields to meet anticipated customer demand. Both disclosures relate to the execution of manufacturing capacity, but Intel's is characterized by actual project delays due to capital/demand factors, whereas Broadcom's focuses on the operational risk of failing to match capacity/yields to demand estimates.",
+            "comparison": "While Intel's primary risk concerns internal delays in constructing its own fabs due to financial constraints and demand reassessment, AMD highlights a similar dependency on manufacturing execution but focuses on external geopolitical disruptions to its Taiwan-based third-party foundries. Both companies are exposed to risks in semiconductor manufacturing facility operations that could disrupt delivery and business results, but Intel's risk is centered on its own 'shell ahead' expansion projects while AMD's is on its outsourced manufacturing base in Taiwan.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D001",
                 "sentences": [
                   {
@@ -228,21 +229,15 @@
               },
               {
                 "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_1A_D058",
+                "ticker": "AMD",
+                "item": "1A",
+                "disclosure_id": "amd_2024_1A_D101",
                 "sentences": [
                   {
-                    "sentence_id": "avgo_2024_1A_P060_S001",
-                    "paragraph_id": "avgo_2024_1A_P060",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We may be unable to maintain appropriate manufacturing capacity or product yields at our own manufacturing facilities, which could adversely affect our relationships with our customers, and our business, financial condition and results of operations.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_1A_P061_S001",
-                    "paragraph_id": "avgo_2024_1A_P061",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We must maintain appropriate capacity and product yields at our own manufacturing facilities to meet anticipated customer demand.",
+                    "sentence_id": "amd_2024_1A_P133_S010",
+                    "paragraph_id": "amd_2024_1A_P133",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Also, geopolitical changes between China and Taiwan could disrupt the operations of our Taiwan-based third-party wafer foundries, manufacturing facilities and subcontractors, and materially adversely affect delivery of products and our business, financial condition and/or operating results.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -253,30 +248,40 @@
         "rationale": ""
       },
       {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates discuss cyclical industry risks and general manufacturing capacity/yield maintenance risks, but do not specifically address the risk of delays in constructing new manufacturing facilities or the specific supply chain/labor constraints associated with construction projects as described by Intel."
+      },
+      {
         "peer_ticker": "MU",
         "status": "compared",
         "comparisons": [
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1A_D026",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Capacity expansion execution and funding risks",
             "peer_summary": "The company is expanding production capacity in the US and other regions, but faces risks including inability to meet capital expenditure requirements, unavailability of funding, delays in construction, failure to attract talent, and inability to ramp production cost-effectively or realize expected returns.",
             "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.082865,
+            "retrieval_score": 0.082483,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron face risks related to delays in manufacturing facility construction projects. Intel specifically cites delays in Ohio, Germany, Poland, Malaysia, and Israel due to reassessed demand and financial constraints. Micron highlights that difficulties in obtaining resources, including labor, skilled subcontractors, and specialized equipment, can result in delays in completion of construction projects and cost increases. Both companies identify labor and resource availability as key drivers for construction delays.",
+            "comparison": "Both Intel and Micron disclose specific risks related to delays and cost increases in their manufacturing facility construction projects driven by supply chain and labor constraints. Intel cites that increasing demand for labor, materials, and equipment from other foundries, along with supply constraints and labor shortages, can result in significant delays and increased costs. Similarly, Micron highlights that difficulties in obtaining labor, skilled subcontractors, and specialized equipment, exacerbated by concurrent industry expansion projects competing for limited talent, could result in delays and cost increases for their construction projects.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D001",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_1A_P007_S005",
+                    "sentence_id": "intc_2024_1A_P007_S010",
                     "paragraph_id": "intc_2024_1A_P007",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "As we have reassessed demand and our \"shell ahead\" status and our financial results in the last few years have constrained our ability to make capital investments, we have delayed manufacturing facility construction or expansion projects in Ohio, Germany, Poland, Malaysia, and Israel, and we may have additional project delays or project cancellations in the future.",
+                    "text": "Our construction projects to expand capacity require available sources of labor, materials, and equipment.",
                     "visible_in_prompt": true
                   },
                   {
@@ -291,6 +296,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1A",
                 "disclosure_id": "mu_2024_1A_D026",
                 "sentences": [
                   {
@@ -306,6 +312,13 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "Additionally, difficulties in obtaining labor, skilled sub-contractors and other service providers or other resources could result in delays in completion of our construction projects and cost increases, including costs to operate these facilities.",
                     "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1A_P035_S002",
+                    "paragraph_id": "mu_2024_1A_P035",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Concurrent semiconductor expansion projects across the industry introduce significant competition for the limited pool of construction talent with requisite expertise and experience in these regions.",
+                    "visible_in_prompt": true
                   }
                 ]
               }
@@ -318,14 +331,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates (nvda_2024_1A_D029, nvda_2024_1A_D039) focus on general economic/industry uncertainty and acquisition/integration risks. They do not discuss specific manufacturing facility construction delays or capacity expansion execution issues comparable to Intel's disclosure."
+        "rationale": "The retrieved candidates focus on demand estimation mismatches and geopolitical risks to international sales/manufacturing locations, rather than the specific risk of delays in constructing new manufacturing facilities due to capital constraints or supply chain issues."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates (qcom_2024_1A_D092, qcom_2024_1A_D093) focus on cyclical industry/economic sensitivity and geopolitical/natural disaster risks to global operations. They do not address manufacturing facility construction delays or capacity expansion execution issues comparable to Intel's disclosure."
+        "rationale": "The retrieved candidates discuss the cyclical nature of the industry, economic sensitivity, and broad geopolitical/pandemic risks to global operations. None of the specific sentences address the risk of delays in manufacturing facility construction or the associated capital/labor constraints relevant to Intel's disclosure."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "c5e981f8d7d2d48391d170b8d5a57c8031266fdb05760db2bf03f2a39344957e",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "5abc2352c7a98ff6c7036ab061e50f8c3bd84c27500b4b002fa5079be30d5ab1"
+    }
   }
 }

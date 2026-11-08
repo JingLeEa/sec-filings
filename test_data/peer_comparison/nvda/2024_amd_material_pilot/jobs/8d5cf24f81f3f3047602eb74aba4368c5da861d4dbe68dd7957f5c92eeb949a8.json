@@ -1,62 +1,32 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "3ff3858ddb4df74ae6aec7b8761c960a11eb9200c07f176dca47cac697fb6105",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "386dfbf133ae7a5604f49ff12711f1a331448ea44628a26719d10dcb115d306f",
+  "request_hash": "59665a12a33064e88fea9055d5c74d73f3b045d8f5d33d408aa4cc062566a065",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D012\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose the specific impact of inventory write-downs and releases on gross margin. NVDA provides quantitative specifics, stating that provisions totaled $2.2 billion and resulted in unfavorable gross margin impacts of 2.7% in 2024 and 7.5% in 2023. AMD discloses the qualitative mechanism and risk, noting that additional inventory write-downs would negatively impact gross margin, while selling previously written-down inventory above its written-down value results in a net benefit to gross margin. Both firms address the same financial driver (inventory valuation adjustments) and its direct effect on gross margin metrics.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P060_S001\",\n\"nvda_2024_7_P060_S003\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P022_S006\",\n\"amd_2024_7_P022_S007\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The candidate amd_2024_7_D031 discusses overall gross margin percentage changes driven by revenue mix and product segments, but does not address inventory provisions or write-downs which is the specific topic of the target disclosure. The candidate amd_2024_7_D039 concerns income tax provisions, which is a different financial topic entirely.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D054",
     "item": "7",
-    "target_topic": "Historical customer concentration",
-    "target_summary": "There were no customers with 10% or more of total revenue in fiscal years 2023 and 2022.",
+    "target_topic": "Inventory Provision Impacts on Gross Margin",
+    "target_summary": "Inventory provisions totaled $2.2 billion for both fiscal years 2024 and 2023, with provision releases of $540 million and $137 million respectively, resulting in unfavorable gross margin impacts of 2.7% and 7.5% for those years.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0348",
-        "relationship": "current_only",
-        "status": "needs_review",
-        "review_reasons": [
-          "absence_not_proven_by_retrieval",
-          "conflicting_alignment_assignment"
-        ],
-        "explanation": "nvda_2024_7_D054 states no customers had >=10% revenue in 2022/2023. This is a historical reference statement in the 2024 filing, not a new 2024 concentration finding. It corresponds to the 2023 historical data, not the 2023 filing's contemporaneous disclosure D056 (which was for 2023/2022). Since it's a static historical note in 2024 vs a contemporaneous note in 2023, and the required 2024 IDs are about 2024 concentrations or this specific historical note, we treat D054 as having no *new* 2023 counterpart in the same structural sense (D056 was the 2023 contemporaneous statement). However, strictly, D054 is the 2024 filing's statement about 2023/2022. D056 is the 2023 filing's statement about 2023/2022. They are topically identical (absence of concentration in prior years). But D056 is already matched as unmatched to 2024 current year disclosures. Can D054 match D056? The prompt asks to cover required 2024 IDs. D054 is a required 2024 ID. Does it match D056? D056: 'No customer... 2023 and 2022'. D054: 'No customers... 2023 and 2022'. They are identical in subject. I should match D056 to D054? But D056 was 'unmatched' in preserved. The preserved proposal had D056->[]. I must respect",
-        "previous_disclosures": [],
-        "current_disclosures": [
-          {
-            "disclosure_id": "nvda_2024_7_D054",
-            "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "There were no customers with 10% or more of total revenue in fiscal years 2023 and 2022.",
-            "extraction_status": "source_validated"
-          }
-        ],
-        "change_analysis": {
-          "status": "not_started",
-          "lexical": null,
-          "semantic": null,
-          "llm": null,
-          "final_taxonomy": null
-        },
-        "materiality_analysis": null
-      },
-      {
-        "window": "2023-2024",
-        "side": "current",
-        "match_id": "nvda_2023_2024_M0349",
+        "match_id": "nvda_2023_2024_M0223",
         "relationship": "one_to_one",
-        "status": "needs_review",
-        "review_reasons": [
-          "conflicting_alignment_assignment"
-        ],
-        "explanation": "nvda_2023_7_D056 states no customers had >=10% revenue in 2023/2022. nvda_2024_7_D054 states no customers had >=10% revenue in 2023/2022. These disclosures share the exact same subject: the absence of customer concentration in the prior two fiscal years.",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail inventory provisions, sales of previously written-off inventory, and the net impact on gross margin. Previous D056: $2.17B provisions, $137M sales, 7.5% impact. Current D054: $2.2B provisions, $540M sales, 2.7% impact. They cover the same specific accounting topic of inventory provision net effect.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2023_7_D056",
             "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
+            "section": "Results of Operations > Gross Profit and Gross Margin",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "No customer represented 10% or more of total revenue for fiscal years 2023 and 2022.",
+            "summary": "Inventory provisions totaled $2.17 billion in fiscal year 2023, comprising $1.04 billion for inventory on hand and $1.13 billion for purchase obligations. Sales of previously written-off inventory totaled $137 million, resulting in a net unfavorable impact on gross margin of 7.5% for fiscal year 2023.",
             "extraction_status": "source_validated"
           }
         ],
@@ -64,115 +34,68 @@
           {
             "disclosure_id": "nvda_2024_7_D054",
             "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
+            "section": "Results of Operations > Gross Profit and Gross Margin",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "There were no customers with 10% or more of total revenue in fiscal years 2023 and 2022.",
-            "extraction_status": "source_validated"
-          }
-        ],
-        "change_analysis": {
-          "status": "not_started",
-          "lexical": null,
-          "semantic": null,
-          "llm": null,
-          "final_taxonomy": null
-        },
-        "materiality_analysis": null
-      },
-      {
-        "window": "2024-2025",
-        "side": "previous",
-        "match_id": "nvda_2024_2025_M0331",
-        "relationship": "one_to_one",
-        "status": "ai_verified",
-        "review_reasons": [],
-        "explanation": "Both disclosures address customer revenue concentration. The 2024 disclosure states there were no customers with 10% or more of total revenue in fiscal years 2023 and 2022. The 2025 disclosure states that NVIDIA has experienced periods of significant revenue concentration from a limited number of customers and this trend may continue. They share the specific topic of analyzing the extent of customer revenue concentration.",
-        "previous_disclosures": [
-          {
-            "disclosure_id": "nvda_2024_7_D054",
-            "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "There were no customers with 10% or more of total revenue in fiscal years 2023 and 2022.",
-            "extraction_status": "source_validated"
-          }
-        ],
-        "current_disclosures": [
-          {
-            "disclosure_id": "nvda_2025_7_D048",
-            "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "NVIDIA has experienced periods of significant revenue concentration from a limited number of customers, a trend that may continue.",
+            "summary": "Inventory provisions totaled $2.2 billion for both fiscal years 2024 and 2023, with provision releases of $540 million and $137 million respectively, resulting in unfavorable gross margin impacts of 2.7% and 7.5% for those years.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Expanded",
-            "cosine_similarity": 0.126748,
-            "sequence_match_ratio": 0.097561,
-            "length_ratio": 1.411765,
-            "word_count_delta": 7,
-            "added_tokens_sample": [
-              "we",
-              "have",
-              "experienced",
-              "periods",
-              "where",
-              "we",
-              "receive",
-              "a",
-              "significant",
-              "amount",
-              "of",
-              "our",
-              "revenue",
-              "from",
-              "a",
-              "limited",
-              "number",
-              "of",
-              "this",
-              "trend"
-            ],
-            "removed_tokens_sample": [
-              "there",
-              "were",
-              "no",
-              "with",
-              "10",
-              "or",
-              "more",
-              "of",
-              "total",
-              "revenue",
-              "for",
-              "fiscal",
-              "years",
-              "2023",
-              "2022"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2024_7_D054",
-            "score": 0.570333,
-            "normalised_score": 0.5703,
-            "label": "Modified",
-            "rationale": "Score 57.03% of ceiling — weak match, possibly a substantial rewrite. Manual review recommended.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.8,
+          "materiality_score": 0.65,
           "confidence_score": 0.85,
-          "reason": "The disclosure changes from a factual statement that no customers exceeded 10% of revenue to a forward-looking qualitative assertion that NVIDIA has experienced periods of significant concentration and this trend may continue. This introduces a new risk narrative regarding customer concentration volatility, moving beyond simple historical reporting.",
-          "key_change": "Introduction of concentration risk narrative"
+          "reason": "While the absolute amount of inventory provisions remained similar ($2.17B vs $2.2B), the net impact on gross margin improved significantly from 7.5% to 2.7% due to higher provision releases from sales of previously written-off inventory. The reduction in the unfavorable margin impact by more than half represents a meaningful improvement in operational efficiency and inventory management.",
+          "key_change": "Reduction in unfavorable inventory provision impact on gross margin from 7.5% to 2.7%"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0203",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail inventory provisions, provision releases, and the resulting unfavorable gross margin impact for the respective fiscal years. Evidence: nvda_2024_7_P060_S001/S002/S003 and nvda_2025_7_P057_S001/S002/S003.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D054",
+            "item": "7",
+            "section": "Results of Operations > Gross Profit and Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Inventory provisions totaled $2.2 billion for both fiscal years 2024 and 2023, with provision releases of $540 million and $137 million respectively, resulting in unfavorable gross margin impacts of 2.7% and 7.5% for those years.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D054",
+            "item": "7",
+            "section": "Results of Operations > Gross Profit and Gross Margin",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Provisions for inventory and excess inventory purchase obligations were $3.7 billion and $2.2 billion for fiscal years 2025 and 2024, respectively, while provision releases from sales of reserved inventory and settlements were $689 million and $540 million, resulting in an unfavorable gross margin impact of 2.3% and 2.7% for those respective years.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.55,
+          "confidence_score": 0.8,
+          "reason": "Inventory provisions increased significantly from $2.2 billion in 2024 to $3.7 billion in 2025, although the unfavorable gross margin impact decreased slightly (2.7% to 2.3%). The absolute increase in provisions represents a meaningful escalation in inventory risk and capital tied up in obsolete or excess stock, altering the financial risk profile.",
+          "key_change": "Significant increase in inventory provision amounts"
         }
       }
     ],
@@ -183,25 +106,36 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D028",
-            "peer_topic": "Embedded segment net revenue and drivers for fiscal year 2024",
-            "peer_summary": "Embedded net revenue decreased by 33% to $3.6 billion in 2024 from $5.3 billion in 2023, primarily due to lower demand as customers normalized inventory levels.",
+            "peer_disclosure_id": "amd_2024_7_D012",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Inventory write-down impact on gross margin",
+            "peer_summary": "If assumptions regarding future demand or market conditions become less favorable, additional inventory write-downs may be required, negatively impacting gross margin; conversely, selling previously written-down inventory above its written-down value may result in a net benefit to gross margin.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.071462,
-            "relationship": "related_topic",
-            "comparison": "While NVDA discloses an absence of major customer concentration (none with 10%+ revenue), AMD discloses significant revenue declines in specific segments driven by customer inventory normalization. NVDA's data indicates a lack of reliance on any single large customer for 2023/2022, whereas AMD attributes its 33% drop in Embedded net revenue specifically to 'lower demand as customers continued to normalize their inventory levels,' suggesting that while not necessarily single-customer concentration risk, the company faces demand-side risks from key customers adjusting stock levels.",
+            "retrieval_score": 0.091024,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AMD disclose the specific impact of inventory write-downs and releases on gross margin. NVDA provides quantitative specifics, stating that provisions totaled $2.2 billion and resulted in unfavorable gross margin impacts of 2.7% in 2024 and 7.5% in 2023. AMD discloses the qualitative mechanism and risk, noting that additional inventory write-downs would negatively impact gross margin, while selling previously written-down inventory above its written-down value results in a net benefit to gross margin. Both firms address the same financial driver (inventory valuation adjustments) and its direct effect on gross margin metrics.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D054",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_7_P057_S001",
-                    "paragraph_id": "nvda_2024_7_P057",
+                    "sentence_id": "nvda_2024_7_P060_S001",
+                    "paragraph_id": "nvda_2024_7_P060",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "There were no customers with 10% or more of total revenue for fiscal years 2023 and 2022.",
+                    "text": "Provisions for inventory and excess inventory purchase obligations totaled $2.2 billion for both fiscal years 2024 and 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P060_S003",
+                    "paragraph_id": "nvda_2024_7_P060",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The net effect on our gross margin was an unfavorable impact of 2.7% and 7.5% in fiscal years 2024 and 2023, respectively.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -209,13 +143,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D028",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D012",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P040_S002",
-                    "paragraph_id": "amd_2024_7_P040",
+                    "sentence_id": "amd_2024_7_P022_S006",
+                    "paragraph_id": "amd_2024_7_P022",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The decrease in net revenue was primarily due to lower demand as customers continued to normalize their inventory levels.",
+                    "text": "If in any period we anticipate a change in assumptions such as future demand or market conditions to be less favorable than our previous estimates, additional inventory write-downs may be required and would be reflected in cost of sales, resulting in a negative impact to our gross margin in that period.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P022_S007",
+                    "paragraph_id": "amd_2024_7_P022",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "If in any period we are able to sell inventories that had been written down to a level below the ultimate realized selling price in a previous period, related revenue would be recorded with a lower or no offsetting charge to cost of sales resulting in a net benefit to our gross margin in that period.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -228,6 +170,11 @@
           "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "386dfbf133ae7a5604f49ff12711f1a331448ea44628a26719d10dcb115d306f",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "59665a12a33064e88fea9055d5c74d73f3b045d8f5d33d408aa4cc062566a065"
+    }
   }
 }

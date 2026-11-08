@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "28e17d7c608b96a05e1da5235031e219d7de346145472a6795339a659547a265",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "df8ab12e0997227b3717db6e4249289e744bf8e3805f09e7aed91b518d2acd78",
+  "request_hash": "8cd85224f59ce1f3ca0df1eb81cb4f95255d2e1e8de92e7e4c685f4016935213",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_1A_D062\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Broadcom disclose risks associated with customers cancelling or changing purchase commitments with little notice and without significant penalty. Intel states customers 'can typically cancel, change, or delay product purchase commitments with little or no notice to us and without penalty,' while Broadcom notes its software customers 'often have termination for convenience clauses without payment of a substantive penalty' and do not have an obligation to purchase additional solutions.\",\n\"target_sentence_ids\": [\n\"intc_2024_1A_P103_S003\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_1A_P077_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1A_D031\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and NVIDIA highlight the risk that their customers can cancel, change, or delay purchase commitments with little notice and without penalty because sales are made on a purchase order basis. Intel explicitly states: 'Because our customers generally order from us on a purchase order basis, they can typically cancel, change, or delay product purchase commitments with little or no notice to us and without penalty.' NVIDIA similarly states: 'Because most of our sales are made on a purchase order basis, our customers can generally cancel, change or delay product purchase commitments with little notice to us and without penalty.'\",\n\"target_sentence_ids\": [\n\"intc_2024_1A_P103_S003\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1A_P057_S006\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"AMD's candidate disclosures focus on risks of strategic investments in private companies and dependency on semi-custom SoC revenue success, which are substantively different from Intel's topic of customer cancellation rights and non-standard purchase order agreements.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"Micron's candidate disclosures focus on counterparty default risks from financial institutions and system-level solution development costs, which are substantively different from Intel's topic of customer cancellation rights and non-standard purchase order agreements.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"Qualcomm's candidate disclosures focus on patent portfolio evolution, license agreement expiration, and product defect consequences, which are substantively different from Intel's topic of customer cancellation rights and non-standard purchase order agreements.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1A_D052",
@@ -116,19 +119,66 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidate disclosures focus on ZT Systems divestiture risks and Nvidia's competitive dominance, which do not address customer cancellation rights or order-based sales flexibility."
+        "rationale": "AMD's candidate disclosures focus on risks of strategic investments in private companies and dependency on semi-custom SoC revenue success, which are substantively different from Intel's topic of customer cancellation rights and non-standard purchase order agreements."
       },
       {
         "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "While Broadcom discusses termination for convenience in software licenses, this concerns license renewals rather than the cancellation of physical product purchase commitments described by Intel."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_1A_D062",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Software license renewal and termination risks",
+            "peer_summary": "Many software customers have multi-year agreements with termination for convenience clauses and no obligation to purchase additional solutions; failure to renew these agreements on commercially attractive terms could materially adversely affect business, financial condition, and operating results.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.085486,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Broadcom disclose risks associated with customers cancelling or changing purchase commitments with little notice and without significant penalty. Intel states customers 'can typically cancel, change, or delay product purchase commitments with little or no notice to us and without penalty,' while Broadcom notes its software customers 'often have termination for convenience clauses without payment of a substantive penalty' and do not have an obligation to purchase additional solutions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "1A",
+                "disclosure_id": "intc_2024_1A_D052",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1A_P103_S003",
+                    "paragraph_id": "intc_2024_1A_P103",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Because our customers generally order from us on a purchase order basis, they can typically cancel, change, or delay product purchase commitments with little or no notice to us and without penalty.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "1A",
+                "disclosure_id": "avgo_2024_1A_D062",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1A_P077_S002",
+                    "paragraph_id": "avgo_2024_1A_P077",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "These customers often do not have a contractual obligation to purchase additional solutions and often have termination for convenience clauses without payment of a substantive penalty.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidate disclosures focus on counterparty default risks and third-party IP infringement, which are unrelated to customer order cancellation rights."
+        "rationale": "Micron's candidate disclosures focus on counterparty default risks from financial institutions and system-level solution development costs, which are substantively different from Intel's topic of customer cancellation rights and non-standard purchase order agreements."
       },
       {
         "peer_ticker": "NVDA",
@@ -136,18 +186,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1A_D040",
-            "peer_topic": "Customer and Channel Concentration Risk",
-            "peer_summary": "The company receives significant revenue from a limited number of customers, with Customer A representing 13% and an indirect customer approximately 19% of total revenue in fiscal year 2024, both attributable to the Compute & Networking segment. Operating results depend on partner network sales, but customers can cancel or delay commitments with little notice, and partner purchasing patterns may change due to competition or internal developments.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.164323,
+            "peer_disclosure_id": "nvda_2024_1A_D031",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Customer and Channel Partner Concentration Risk",
+            "peer_summary": "The company relies heavily on a limited number of customers and channel partners, with specific large customers representing significant portions of revenue. This reliance exposes the business to risks such as customer cancellation of purchase commitments, shifts in partner purchasing patterns, and the potential loss of key customers, all of which could harm financial results.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.115707,
             "relationship": "same_topic",
-            "comparison": "Both Intel and NVIDIA disclose that their customers can typically cancel, change, or delay purchase commitments with little notice and without penalty, reflecting a similar order-based sales model. However, NVIDIA further emphasizes that this flexibility exists within the context of significant customer and channel concentration, noting that operating results depend on a limited number of customers and partners, whereas Intel's disclosure focuses on the general nature of purchase order cancellations and the occasional use of additional non-standard agreements.",
-            "peer_source_status": "needs_review",
+            "comparison": "Both Intel and NVIDIA highlight the risk that their customers can cancel, change, or delay purchase commitments with little notice and without penalty because sales are made on a purchase order basis. Intel explicitly states: 'Because our customers generally order from us on a purchase order basis, they can typically cancel, change, or delay product purchase commitments with little or no notice to us and without penalty.' NVIDIA similarly states: 'Because most of our sales are made on a purchase order basis, our customers can generally cancel, change or delay product purchase commitments with little notice to us and without penalty.'",
+            "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D052",
                 "sentences": [
                   {
@@ -162,7 +216,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1A_D040",
+                "item": "1A",
+                "disclosure_id": "nvda_2024_1A_D031",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_1A_P057_S006",
@@ -182,8 +237,13 @@
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidate disclosures focus on patent license expiration/renegotiation risks and product defect consequences, which do not address the cancellation of product purchase commitments."
+        "rationale": "Qualcomm's candidate disclosures focus on patent portfolio evolution, license agreement expiration, and product defect consequences, which are substantively different from Intel's topic of customer cancellation rights and non-standard purchase order agreements."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "df8ab12e0997227b3717db6e4249289e744bf8e3805f09e7aed91b518d2acd78",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "8cd85224f59ce1f3ca0df1eb81cb4f95255d2e1e8de92e7e4c685f4016935213"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "907d98196541eaf4a1614f13126dd7608c07731adc5c712aad0773c9e2d7d25b",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "0c972c435a536ce6684646bde1e8574c18b6b4a014247f09e1a8bf057e345cc2",
+  "request_hash": "b9af6e73fa40df977ba57a2e35c94c752fee63a9b2f43e3886310cf4da5bea27",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D135\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Broadcom disclose the primary drivers behind the changes in their income tax provisions for fiscal year 2024. AMD attributes its increase in tax provision to higher pre-tax income and a specific $373 million tax effect from an intercompany integration transaction. Similarly, Broadcom attributes its increase in tax provision to a non-recurring intra-group transfer of IP rights to the U.S. (an intercompany transaction) and higher pre-tax income. Both companies cite structural intercompany transactions and profitability levels as key factors driving their respective tax provision fluctuations.\",\n\"target_sentence_ids\": [\n\"amd_2024_8_P131_S001\",\n\"amd_2024_8_P131_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P179_S004\",\n\"avgo_2024_8_P179_S005\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"No candidate was substantively comparable to the target's disclosure of income tax provision drivers and effective rates. Intel's available candidates focus on unrecognized tax benefits liabilities and R&D tax credit impacts, which are distinct topics from the specific provision drivers (pre-tax income and intercompany integration) highlighted by AMD.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"No candidate was substantively comparable to the target's disclosure. Micron's candidates focus on share-based award tax benefits and the materiality of tax incentive arrangements, which do not address the specific drivers of the income tax provision or effective rate changes cited by AMD.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"No candidate was substantively comparable to the target's disclosure. Nvidia's available candidates discuss the classification of interest/penalties and recognition of tax contingency liabilities, rather than the drivers of the income tax provision such as pre-tax income or intercompany transaction effects.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_8_D123",
@@ -219,19 +222,30 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D135",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Income Tax Provision Drivers",
             "peer_summary": "The provision for income taxes increased in fiscal years 2024 and 2023, primarily due to a non-recurring intra-group transfer of IP rights to the U.S. in 2024 and higher pre-tax income in 2023.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.178138,
+            "retrieval_score": 0.199584,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Broadcom attribute increases in their 2024 income tax provisions to specific structural transactions and intercompany activities rather than just operating performance. AMD cites a '$373 million tax effect from an intercompany integration transaction' as a primary driver alongside higher pre-tax income. Similarly, Broadcom attributes its increase to a 'non-recurring intra-group transfer of certain IP rights to the United States' and the resulting shift in jurisdictional mix. Both disclosures highlight that corporate restructuring and integration activities significantly impacted their effective tax rates and provision amounts in 2024.",
+            "comparison": "Both AMD and Broadcom disclose the primary drivers behind the changes in their income tax provisions for fiscal year 2024. AMD attributes its increase in tax provision to higher pre-tax income and a specific $373 million tax effect from an intercompany integration transaction. Similarly, Broadcom attributes its increase in tax provision to a non-recurring intra-group transfer of IP rights to the U.S. (an intercompany transaction) and higher pre-tax income. Both companies cite structural intercompany transactions and profitability levels as key factors driving their respective tax provision fluctuations.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D123",
                 "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P131_S001",
+                    "paragraph_id": "amd_2024_8_P131",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The Company recorded an income tax provision of $381 million and an income tax benefit of $346 million in 2024 and 2023, respectively, representing effective tax rates of 19% and (68)%, respectively.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "amd_2024_8_P131_S002",
                     "paragraph_id": "amd_2024_8_P131",
@@ -244,6 +258,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D135",
                 "sentences": [
                   {
@@ -251,6 +266,13 @@
                     "paragraph_id": "avgo_2024_8_P179",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "The increase in provision for income taxes in fiscal year 2024 compared to fiscal year 2023 was primarily due to the impact of a non-recurring intra-group transfer of certain IP rights to the United States as a result of supply chain realignment and the resulting shift in jurisdictional mix of income, partially offset by an increase in excess tax benefits from stock-based awards.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P179_S005",
+                    "paragraph_id": "avgo_2024_8_P179",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The increase in provision for income taxes in fiscal year 2023 compared to fiscal year 2022 was primarily due to higher income before income taxes, partially offset by an increase in the recognition of uncertain tax benefits as a result of lapses of statutes of limitations.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -264,26 +286,31 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for Intel focus on the magnitude of unrecognized tax benefits and the impact of R&D tax credits on the effective rate, which are distinct from AMD's disclosure of specific provision drivers (intercompany integration) and recorded provision amounts."
+        "rationale": "No candidate was substantively comparable to the target's disclosure of income tax provision drivers and effective rates. Intel's available candidates focus on unrecognized tax benefits liabilities and R&D tax credit impacts, which are distinct topics from the specific provision drivers (pre-tax income and intercompany integration) highlighted by AMD."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for Micron discuss the recognition timing of tax benefits from share-based awards and the materiality of tax incentive arrangements, which do not align with AMD's discussion of the total provision amount and intercompany integration drivers."
+        "rationale": "No candidate was substantively comparable to the target's disclosure. Micron's candidates focus on share-based award tax benefits and the materiality of tax incentive arrangements, which do not address the specific drivers of the income tax provision or effective rate changes cited by AMD."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "No candidate was substantively comparable to the target's disclosure. Nvidia's available candidates discuss the classification of interest/penalties and recognition of tax contingency liabilities, rather than the drivers of the income tax provision such as pre-tax income or intercompany transaction effects."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "0c972c435a536ce6684646bde1e8574c18b6b4a014247f09e1a8bf057e345cc2",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "b9af6e73fa40df977ba57a2e35c94c752fee63a9b2f43e3886310cf4da5bea27"
+    }
   }
 }

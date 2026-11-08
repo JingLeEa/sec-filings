@@ -1,29 +1,32 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "dd565247637e7dd39addfbfc20fbb97f820b877b51f3d982daee736a1010538a",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "833bbb460976f9d93ed1365a1fa3a4e7213069c6b75a41b93f259a5c34c857b6",
+  "request_hash": "3e6828422a6486f4d29b2ed8835a654cc7e422e998492fec4c5c1c188f3aa40a",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D072\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose reliance on specific foundries for wafer production, with significant overlap in their key partners. NVDA utilizes TSMC and Samsung for wafer production, while AMD utilizes TSMC, GLOBALFOUNDRIES, UMC, and Samsung for HPC, FPGA, and Adaptive SoC products. Both companies explicitly identify TSMC and Samsung as critical wafer suppliers. NVDA additionally lists its memory suppliers (Micron, SK Hynix, Samsung) and packaging technology (CoWoS), whereas AMD details the specific technology nodes for GLOBALFOUNDRIES (12 nm and 14 nm) and the use of UMC for programmable logic devices.\",\n\"target_sentence_ids\": [\n\"nvda_2024_1_P044_S002\",\n\"nvda_2024_1_P044_S003\",\n\"nvda_2024_1_P044_S004\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P070_S001\",\n\"amd_2024_1_P070_S002\"\n]\n},\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D074\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose a concentrated geographic supply chain for assembly, testing, and packaging (ATMP) services in the Asia-Pacific region. NVDA engages independent subcontractors like Hon Hai, Wistron, and Fabrinet for assembly and packaging, noting the use of CoWoS technology. AMD states that wafers are delivered to ATMP partners or subcontractors located in the Asia-Pacific region for packaging and testing, and further discloses joint ventures with Tongfu Microelectronics (SPIL and KYEC) to provide these services.\",\n\"target_sentence_ids\": [\n\"nvda_2024_1_P044_S005\",\n\"nvda_2024_1_P044_S006\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P072_S001\",\n\"amd_2024_1_P072_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The candidate amd_2024_1_D077 discusses cross-licensing and intellectual property agreements, which is a legal/commercial arrangement topic distinct from the specific geographic supply chain concentration, foundry relationships, and ATMP vendors disclosed by NVDA in Item 1.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1_D045",
     "item": "1",
-    "target_topic": "General Subject to Government Regulations",
-    "target_summary": "Nvidia's worldwide business activities are subject to various laws, rules, and regulations of the United States and foreign governments.",
+    "target_topic": "Concentrated geographic supply chain and key vendors",
+    "target_summary": "The supply chain is concentrated in the Asia-Pacific region, utilizing TSMC and Samsung for wafer production, Micron, SK Hynix, and Samsung for memory, and independent subcontractors like Hon Hai and Wistron for assembly, testing, and packaging using CoWoS technology.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0280",
-        "relationship": "one_to_many",
+        "match_id": "nvda_2023_2024_M0143",
+        "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "The complete selected original text is identical within the same SEC Item after removing line-leading bullet formatting and normalizing whitespace. Neither LLM agent was used for this link.\n\nBoth disclosures belong to Item 1 (Government Regulations). nvda_2023_1_D065 details compliance with laws and regulations, while nvda_2024_1_D045 states the business is subject to these laws. The specific subject matter aligns as general regulatory compliance obligations.",
+        "explanation": "Both disclosures list specific key suppliers for wafer production (TSMC, Samsung), memory (Micron, SK Hynix, Samsung), and assembly/testing/packaging (Hon Hai, Wistron, etc.), describing the specific supply chain structure.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_1_D065",
+            "disclosure_id": "nvda_2023_1_D048",
             "item": "1",
-            "section": "Government Regulations",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "General compliance has not materially affected capital expenditures or competitive position, but future regulations (including IP, antitrust, data privacy, AI, environment, etc.) could increase costs and adversely impact business.",
+            "section": "Manufacturing",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Nvidia utilizes specific suppliers for wafer production (TSMC, Samsung), subcontractors for assembly/testing (Amkor, BYD Auto, Hon Hai, etc.), contract manufacturers for adapter cards and switches (Flex, Jabil, Fabrinet), and suppliers for substrates and memory (Ibiden, Micron, SK Hynix), often consigning key components like GPUs and memory to these manufacturers.",
             "extraction_status": "source_validated"
           }
         ],
@@ -31,165 +34,68 @@
           {
             "disclosure_id": "nvda_2024_1_D045",
             "item": "1",
-            "section": "Government Regulations",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "Nvidia's worldwide business activities are subject to various laws, rules, and regulations of the United States and foreign governments.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_1_D050",
-            "item": "1",
-            "section": "Government Regulations",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "Compliance with various governmental regulations, including those regarding IP, taxes, data privacy, AI, and environmental standards, could increase costs and have a material adverse impact on Nvidia's business and financial condition, though such compliance has not had a material effect on capital expenditures or operations to date.",
+            "section": "Manufacturing",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "The supply chain is concentrated in the Asia-Pacific region, utilizing TSMC and Samsung for wafer production, Micron, SK Hynix, and Samsung for memory, and independent subcontractors like Hon Hai and Wistron for assembly, testing, and packaging using CoWoS technology.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reworded",
-            "cosine_similarity": 0.956843,
-            "sequence_match_ratio": 0.920863,
-            "length_ratio": 1.171875,
-            "word_count_delta": 22,
-            "added_tokens_sample": [
-              "our",
-              "worldwide",
-              "business",
-              "activities",
-              "are",
-              "subject",
-              "to",
-              "various",
-              "laws",
-              "rules",
-              "and",
-              "regulations",
-              "of",
-              "the",
-              "united",
-              "states",
-              "as",
-              "well",
-              "as",
-              "of"
-            ],
-            "removed_tokens_sample": []
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2023_1_D065",
-            "score": 0.973329,
-            "normalised_score": 0.9733,
-            "rationale": "Split: 1 previous → 2 current. Best pair scored 97.33% of ceiling.",
-            "method": "embedding_cosine"
-          },
-          "llm": "Modified",
-          "final_taxonomy": "Modified"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
         },
         "materiality_analysis": {
           "materiality": "No",
           "materiality_score": 0.1,
           "confidence_score": 0.9,
-          "reason": "The 2024 disclosure splits the 2023 text into a general statement of subjectivity to laws and a specific compliance risk statement. The substance of the compliance risks (IP, antitrust, data privacy, AI, etc.) and the statement that compliance has not materially affected operations remain identical. This is a structural reorganization.",
-          "key_change": "Structural reorganization of general regulatory compliance disclosure"
+          "reason": "The disclosure updates specific supplier names (e.g., adding Fabrinet, removing some subcontractors) and mentions CoWoS technology. While supplier lists change, the underlying strategy of using specific foundries and subcontractors is unchanged. The mention of CoWoS is a technical detail of the packaging process, not a strategic shift in the supply chain model itself. These are routine updates to vendor lists.",
+          "key_change": "Update to specific supplier and vendor list"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0257",
-        "relationship": "many_to_one",
+        "match_id": "nvda_2024_2025_M0130",
+        "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures serve as the opening statement for the Government Regulations section, stating that business activities are subject to U.S. and foreign laws. Evidence: nvda_2024_1_P050_S001 'Our worldwide business activities are subject to various laws, rules, and regulations of the United States as well as of foreign governments.' matches nvda_2025_1_P053_S001 'Our worldwide business activities are subject to various laws, rules, and regulations of the United States as well as of foreign governments.'\n\nBoth disclosures detail specific U.S. export control regulations and licensing requirements affecting shipments of high-performance AI chips (like A100, H100) to China, Russia, and the Middle East. Evidence: nvda_2024_1_P051_S001, P052_S001, P053_S001-S003 detail the 2023 licensing requirements for A100/H100. nvda_2025_1_P055_S001, P056_S001, P057_S001-S003 repeat these details. Note: D054 is a larger composite in 2025 covering both the general statement and these specifics.",
+        "explanation": "Both disclosures describe the specific supply chain partners, including TSMC and Samsung for wafers, Micron/SK Hynix/Samsung for memory, and Hon Hai/Wistron/Fabrinet for assembly using CoWoS technology. 2024 cites P044_S002-S006; 2025 cites P047_S003-S006.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_1_D045",
             "item": "1",
-            "section": "Government Regulations",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "Nvidia's worldwide business activities are subject to various laws, rules, and regulations of the United States and foreign governments.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_1_D046",
-            "item": "1",
-            "section": "Government Regulations",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "The U.S. government has imposed various export licensing requirements on Nvidia's products, initially affecting A100 and H100 chips to China, Russia, and the Middle East in 2023, and later expanding in October 2023 to cover products exceeding certain performance thresholds shipped to China, the Middle East, and other designated Country Groups.",
+            "section": "Manufacturing",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "The supply chain is concentrated in the Asia-Pacific region, utilizing TSMC and Samsung for wafer production, Micron, SK Hynix, and Samsung for memory, and independent subcontractors like Hon Hai and Wistron for assembly, testing, and packaging using CoWoS technology.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_1_D054",
+            "disclosure_id": "nvda_2025_1_D052",
             "item": "1",
-            "section": "Government Regulations",
-            "taxonomy": "Regulation, Legal & Compliance",
-            "summary": "U.S. export controls require licenses for shipments of NVIDIA's A100, H100, Blackwell, and other high-performance products to China, Russia, and specific countries in the Middle East and Asia, but the company has not received licenses to ship these restricted products to China.",
+            "section": "Manufacturing",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Nvidia utilizes TSMC and Samsung for wafer production, SK Hynix, Micron, and Samsung for memory, and independent subcontractors like Hon Hai, Wistron, and Fabrinet for assembly, testing, and packaging using CoWoS technology.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Expanded",
-            "cosine_similarity": 0.906004,
-            "sequence_match_ratio": 0.782759,
-            "length_ratio": 1.48927,
-            "word_count_delta": 114,
-            "added_tokens_sample": [
-              "over",
-              "past",
-              "three",
-              "years",
-              "we",
-              "have",
-              "been",
-              "subject",
-              "to",
-              "a",
-              "series",
-              "shifting",
-              "and",
-              "expanding",
-              "export",
-              "control",
-              "restrictions",
-              "impacting",
-              "our",
-              "ability"
-            ],
-            "removed_tokens_sample": [
-              "during",
-              "third",
-              "quarter",
-              "fiscal",
-              "year",
-              "2023"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2024_1_D046",
-            "score": 0.920718,
-            "normalised_score": 0.9207,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 92.07% of ceiling.",
-            "method": "embedding_cosine"
-          },
-          "llm": "Expanded",
-          "final_taxonomy": "Expanded"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.9,
-          "confidence_score": 0.95,
-          "reason": "The 2025 disclosure expands the list of restricted products to include 'Blackwell' systems (GB200, B200) and explicitly states that licenses have not been received to ship restricted products to China, nor have partners/customers. It also notes the removal of the grace period for A100/H100 shipments. This escalates the compliance risk and clarifies the operational impact of export controls, representing a meaningful change in the company's regulatory exposure.",
-          "key_change": "Expansion of export control restrictions and license status"
+          "materiality_score": 0.55,
+          "confidence_score": 0.85,
+          "reason": "The 2025 disclosure introduces Fabrinet as a specific partner for assembly, testing, and packaging, whereas the 2024 disclosure listed only Hon Hai and Wistron. This change in disclosed supplier identity could be material if it indicates a shift in supplier concentration or capacity allocation, although the risk of dependency remains high in both years.",
+          "key_change": "Addition of Fabrinet as assembly partner"
         }
       }
     ],
@@ -200,25 +106,43 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1_D094",
-            "peer_topic": "Scope of Global Regulatory Compliance and Risks",
-            "peer_summary": "AMD's global operations are subject to a wide range of US and foreign laws, including those governing export control, data privacy, and AI. While current compliance has not materially impacted financial results, future regulatory changes or failure to comply could materially adversely affect capital expenditures, operations, competitive position, and expose the company to fines, sales limits, and reputational damage.",
-            "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.140627,
+            "peer_disclosure_id": "amd_2024_1_D072",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Third-Party Wafer Foundry Relationships",
+            "peer_summary": "AMD utilizes TSMC, GLOBALFOUNDRIES, UMC, and Samsung for wafer production and IC manufacturing for its HPC, FPGA, and Adaptive SoC products, specifically noting GF's role for 12 nm and 14 nm nodes and multiple foundries for programmable logic devices.",
+            "peer_taxonomy": "Supply Chain & Third Parties",
+            "retrieval_score": 0.23615,
             "relationship": "same_topic",
-            "comparison": "Both NVIDIA and AMD disclose that their global business operations are subject to a wide range of U.S. and foreign laws and regulations. Both companies explicitly state that, as of the time of their respective 2024 filings, compliance with these regulations has not yet had a material adverse impact on their capital expenditures, results of operations, or competitive position. However, AMD provides significantly more granular detail on the specific types of regulations involved, listing export control, data privacy, AI, environmental, and anti-corruption laws, whereas NVIDIA's disclosure is a general statement of subjectivity to various laws without listing specific regulatory categories in this sentence.",
+            "comparison": "Both NVDA and AMD disclose reliance on specific foundries for wafer production, with significant overlap in their key partners. NVDA utilizes TSMC and Samsung for wafer production, while AMD utilizes TSMC, GLOBALFOUNDRIES, UMC, and Samsung for HPC, FPGA, and Adaptive SoC products. Both companies explicitly identify TSMC and Samsung as critical wafer suppliers. NVDA additionally lists its memory suppliers (Micron, SK Hynix, Samsung) and packaging technology (CoWoS), whereas AMD details the specific technology nodes for GLOBALFOUNDRIES (12 nm and 14 nm) and the use of UMC for programmable logic devices.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1",
                 "disclosure_id": "nvda_2024_1_D045",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1_P050_S001",
-                    "paragraph_id": "nvda_2024_1_P050",
+                    "sentence_id": "nvda_2024_1_P044_S002",
+                    "paragraph_id": "nvda_2024_1_P044",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our worldwide business activities are subject to various laws, rules, and regulations of the United States as well as of foreign governments.",
+                    "text": "Our supply chain is concentrated in the Asia-Pacific region.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_1_P044_S003",
+                    "paragraph_id": "nvda_2024_1_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We utilize foundries, such as Taiwan Semiconductor Manufacturing Company Limited, or TSMC, and Samsung Electronics Co., Ltd., or Samsung, to produce our semiconductor wafers.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_1_P044_S004",
+                    "paragraph_id": "nvda_2024_1_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We purchase memory from Micron Technology, Inc., SK Hynix Inc., and Samsung.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -226,20 +150,81 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D094",
+                "item": "1",
+                "disclosure_id": "amd_2024_1_D072",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1_P088_S001",
-                    "paragraph_id": "amd_2024_1_P088",
+                    "sentence_id": "amd_2024_1_P070_S001",
+                    "paragraph_id": "amd_2024_1_P070",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our global operations are subject to various United States and foreign laws and regulations, including, but not limited to, those relating to export control, customs, intellectual property, data privacy and security, climate, environmental, health and safety requirements, cybersecurity, tax, employment, competition and anti-trust, anti-corruption, anti-bribery, conflict minerals, corporate governance, financial and other disclosures, and AI.",
+                    "text": "We utilize Taiwan Semiconductor Manufacturing Company Limited (TSMC) for the production of wafers for our HPC, FPGA and Adaptive SoC products and GLOBALFOUNDRIES Inc. (GF), with respect to wafer purchases for our HPC products at the 12 nm and 14 nm technology nodes.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_1_P088_S002",
-                    "paragraph_id": "amd_2024_1_P088",
+                    "sentence_id": "amd_2024_1_P070_S002",
+                    "paragraph_id": "amd_2024_1_P070",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Compliance with these governmental laws and regulations do not presently have a material adverse impact on our capital expenditures, results of operations or competitive position.",
+                    "text": "Additionally, we utilize TSMC, United Microelectronics Corporation (UMC) and Samsung Electronics Co., Ltd. for the production of our ICs in the form of programmable logic devices.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1_D074",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "ATMP Partners and Joint Ventures",
+            "peer_summary": "AMD's wafer sorting is handled by foundries which deliver wafers to ATMP partners in the Asia-Pacific region for packaging and testing. The company maintains two ATMP joint ventures with Tongfu Microelectronics Co., Ltd.: Siliconware Precision Industries Ltd. (SPIL) and King Yuan Electronics Company (KYEC), which provide these services.",
+            "peer_taxonomy": "Supply Chain & Third Parties",
+            "retrieval_score": 0.165817,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose a concentrated geographic supply chain for assembly, testing, and packaging (ATMP) services in the Asia-Pacific region. NVDA engages independent subcontractors like Hon Hai, Wistron, and Fabrinet for assembly and packaging, noting the use of CoWoS technology. AMD states that wafers are delivered to ATMP partners or subcontractors located in the Asia-Pacific region for packaging and testing, and further discloses joint ventures with Tongfu Microelectronics (SPIL and KYEC) to provide these services.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "1",
+                "disclosure_id": "nvda_2024_1_D045",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1_P044_S005",
+                    "paragraph_id": "nvda_2024_1_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We utilize CoWoS technology for semiconductor packaging.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_1_P044_S006",
+                    "paragraph_id": "nvda_2024_1_P044",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We engage with independent subcontractors and contract manufacturers such as Hon Hai Precision Industry Co., Ltd., Wistron Corporation, and Fabrinet to perform assembly, testing and packaging of our final products.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "1",
+                "disclosure_id": "amd_2024_1_D074",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1_P072_S001",
+                    "paragraph_id": "amd_2024_1_P072",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Wafers for our products are either sorted by the foundry or delivered by the foundry to our assembly, test, mark and packaging (ATMP) partners or subcontractors located in the Asia-Pacific region who package and test our final semiconductor products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1_P072_S002",
+                    "paragraph_id": "amd_2024_1_P072",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We are party to two ATMP joint ventures (collectively, the ATMP JVs) with Tongfu Microelectronics Co., Ltd. The ATMP JVs, Siliconware Precision Industries Ltd. (SPIL) and King Yuan Electronics Company (KYEC) provide ATMP services for our products.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -249,9 +234,14 @@
         ],
         "rationale": "",
         "agent_warnings": [
-          "ignored_no_match_note_for_unrequested_peer:INTC"
+          "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "833bbb460976f9d93ed1365a1fa3a4e7213069c6b75a41b93f259a5c34c857b6",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "3e6828422a6486f4d29b2ed8835a654cc7e422e998492fec4c5c1c188f3aa40a"
+    }
   }
 }

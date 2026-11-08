@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "9328e438855d8298578178adee187a972bec6810d04731f403def54371642684",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "8b8499416fe36c914738f6e31d3d158b837ccd75b1f415537fe07e5579ae2fc7",
+  "request_hash": "90e8df1983deb15cd975eb8cb79a647267083760098baf24240fb7b134bdcbc2",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_1_D018\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Micron and Broadcom describe integrated storage solutions that combine memory/flash with controllers to handle data management tasks internally. Micron describes 'Managed NAND' which integrates NAND flash with a controller and firmware to handle wear leveling, bad block management, and error correction. Similarly, Broadcom describes 'custom flash controllers' for SSDs that manage underlying flash memory by performing error correction, wear leveling, and bad block management. While Micron packages these elements into a single 'Managed NAND' product (eMMC/UFS) often used in mobile and industrial markets, Broadcom focuses on providing the controller SoC to SSD OEMs for data storage and access.\",\n\"target_sentence_ids\": [\n\"mu_2024_1_P017_S001\",\n\"mu_2024_1_P017_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_1_P016_S001\",\n\"avgo_2024_1_P016_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The candidate disclosures describe AMD's embedded computing portfolio (CPUs, FPGAs, APUs) and general market applications. These topics do not specifically address the integration of flash memory with controllers for internal data management (wear leveling, error correction) as defined in Micron's Managed NAND disclosure.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The candidate disclosures focus on Intel's AI strategy, software frameworks, and open-source contributions. These do not describe hardware storage solutions or memory controllers managing flash wear leveling or error correction.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The candidate disclosures describe NVIDIA's accelerated computing platform, Omniverse simulation tools, and AI infrastructure. They do not discuss storage memory controllers or NAND flash management technologies.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The candidate disclosures describe Qualcomm's wireless technologies, Snapdragon platforms, and AI processing capabilities. While one candidate mentions 'eMMC' memory in the context of other technologies, the primary topic is mobile/automotive connectivity and processing, not the specific Managed NAND integration and controller firmware management detailed by Micron.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_1_D018",
@@ -150,7 +153,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Although AMD discusses embedded computing in automotive and industrial markets, its disclosures focus on high-performance CPUs, GPUs, and SoCs for compute and AI workloads, not on the specific flash memory management, wear leveling, or eMMC/UFS product technologies central to MU's disclosure."
+        "rationale": "The candidate disclosures describe AMD's embedded computing portfolio (CPUs, FPGAs, APUs) and general market applications. These topics do not specifically address the integration of flash memory with controllers for internal data management (wear leveling, error correction) as defined in Micron's Managed NAND disclosure."
       },
       {
         "peer_ticker": "AVGO",
@@ -159,19 +162,30 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_1_D018",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "HDD and SSD solutions",
             "peer_summary": "The company provides read channel SoCs, preamplifiers, and custom flash controllers for HDD and SSD OEMs to manage data storage and access.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.136013,
+            "retrieval_score": 0.133011,
             "relationship": "same_topic",
-            "comparison": "Both MU and Broadcom disclose the management of flash memory integrity and endurance as a core product function. MU describes 'Managed NAND' where integrated controllers handle 'wear leveling, bad block management, and error correction internally' for eMMC and UFS products. Broadcom similarly describes its 'custom flash controllers' for SSDs that perform 'error correction, wear leveling and bad block management.' Both companies address the same technical challenge of maintaining flash memory health through integrated controller firmware, although MU applies this to embedded/mobile form factors (eMMC/UFS) while Broadcom specifies SSD OEM applications.",
+            "comparison": "Both Micron and Broadcom describe integrated storage solutions that combine memory/flash with controllers to handle data management tasks internally. Micron describes 'Managed NAND' which integrates NAND flash with a controller and firmware to handle wear leveling, bad block management, and error correction. Similarly, Broadcom describes 'custom flash controllers' for SSDs that manage underlying flash memory by performing error correction, wear leveling, and bad block management. While Micron packages these elements into a single 'Managed NAND' product (eMMC/UFS) often used in mobile and industrial markets, Broadcom focuses on providing the controller SoC to SSD OEMs for data storage and access.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D018",
                 "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P017_S001",
+                    "paragraph_id": "mu_2024_1_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Managed NAND: Managed NAND combines NAND flash with a sophisticated controller and firmware in a single package.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "mu_2024_1_P017_S002",
                     "paragraph_id": "mu_2024_1_P017",
@@ -184,8 +198,16 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "1",
                 "disclosure_id": "avgo_2024_1_D018",
                 "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1_P016_S001",
+                    "paragraph_id": "avgo_2024_1_P016",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We also provide custom flash controllers to SSD OEMs. An SSD stores data in flash memory instead of on a hard disk, providing high speed access to the data.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "avgo_2024_1_P016_S002",
                     "paragraph_id": "avgo_2024_1_P016",
@@ -204,62 +226,25 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Intel's disclosures focus on AI strategy, xPU product portfolios (GPUs, FPGAs, accelerators), and general computing architecture. There is no mention of managed NAND, flash controllers, eMMC, UFS, or flash memory endurance management features in the provided text."
+        "rationale": "The candidate disclosures focus on Intel's AI strategy, software frameworks, and open-source contributions. These do not describe hardware storage solutions or memory controllers managing flash wear leveling or error correction."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "NVIDIA's disclosures focus on AI applications for autonomous driving (pilot/co-pilot modes) and Omniverse digital twin simulations. While it mentions automotive ecosystems, it does not disclose specific flash memory management technologies, controllers, or eMMC/UFS products comparable to MU's managed NAND technology."
+        "rationale": "The candidate disclosures describe NVIDIA's accelerated computing platform, Omniverse simulation tools, and AI infrastructure. They do not discuss storage memory controllers or NAND flash management technologies."
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_1_D030",
-            "peer_topic": "Additional technologies for mobile, XR, and automotive industries",
-            "peer_summary": "Qualcomm develops technologies for WLAN, Bluetooth, location, multimedia, and security. It also provides XR platform features (e.g., 6DoF tracking), automotive platform features (digital cockpit, ADAS), memory/controllers, fast charging, Smart Transmit technology, and power management systems.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.060021,
-            "relationship": "same_topic",
-            "comparison": "Both MU and Qualcomm disclose the inclusion of non-volatile memory types like eMMC in their respective technology portfolios. MU identifies 'embedded MultiMediaCards (\"eMMC\")' as a primary managed NAND product used in mobile and industrial markets. Qualcomm lists 'non-volatile (eMMC) memory and related controllers' as significant technologies developed for mobile and other industries. While MU focuses on the integrated managed NAND package itself as a distinct product category, Qualcomm includes eMMC memory within a broader list of component technologies it develops or acquires for its platforms.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_1_D018",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_1_P017_S003",
-                    "paragraph_id": "mu_2024_1_P017",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Products such as embedded MultiMediaCards (\"eMMC\") and universal flash storage (\"UFS\") offer solutions that are compact and reliable making them widely used across the mobile, automotive, and industrial markets.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1_D030",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1_P027_S011",
-                    "paragraph_id": "qcom_2024_1_P027",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "• volatile (LPDDR4, 5) and non-volatile (eMMC) memory and related controllers;",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The candidate disclosures describe Qualcomm's wireless technologies, Snapdragon platforms, and AI processing capabilities. While one candidate mentions 'eMMC' memory in the context of other technologies, the primary topic is mobile/automotive connectivity and processing, not the specific Managed NAND integration and controller firmware management detailed by Micron."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "8b8499416fe36c914738f6e31d3d158b837ccd75b1f415537fe07e5579ae2fc7",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "90e8df1983deb15cd975eb8cb79a647267083760098baf24240fb7b134bdcbc2"
+    }
   }
 }

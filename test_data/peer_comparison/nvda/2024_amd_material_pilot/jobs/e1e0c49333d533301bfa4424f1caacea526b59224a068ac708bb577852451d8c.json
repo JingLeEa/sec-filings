@@ -1,208 +1,117 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "4e4eba66e8f58df11979c72985c9de05e8ac82e177bfe1e1c4d67ca9e0ee98ad",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "3529629b45fd75abc37fc4e4e8c67522d46972706035f20f46d680787d21121e",
+  "request_hash": "235bc22f23d1f1a40cc2f02ee866e47f7b4d1eea2b22c95e03af6dd8caff6cce",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D035\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVIDIA and AMD disclose their strategies regarding professional graphics workstations. NVIDIA highlights that generative AI is expanding the market for workstation-class GPUs as enterprises deploy AI applications on-premises, citing professional artists and designers using their products for creative and design use cases. Similarly, AMD describes its Radeon PRO family as professional graphics products optimized for demanding use cases such as 3D rendering, CAD, and media/entertainment pipelines. While both focus on the professional workstation segment involving creative and design applications, NVIDIA explicitly links this growth to the expansion of generative AI workloads on-premises, whereas AMD emphasizes optimization for specific industrial and entertainment pipelines like CAD and broadcast.\",\n\"target_sentence_ids\": [\n\"nvda_2024_1_P011_S001\",\n\"nvda_2024_1_P011_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P030_S001\",\n\"amd_2024_1_P030_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The other retrieved candidates (amd_2024_1_D062, amd_2024_1_D057) focus on competitive landscape in data centers and hyperscale customer bases for server CPUs/GPUs, which do not match the specific topic of professional workstation graphics and creative/design use cases found in the target disclosure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1_D011",
     "item": "1",
-    "target_topic": "Compute & Networking Segment Composition",
-    "target_summary": "The Compute & Networking segment includes Data Center platforms (accelerated computing, Quantum InfiniBand, Spectrum Ethernet), NVIDIA DRIVE automated-driving platform, Jetson robotics, NVIDIA AI Enterprise software, and DGX Cloud services.",
+    "target_topic": "Professional Graphics and Workstations",
+    "target_summary": "Professional artists and designers use NVIDIA partner products for creative use cases, while generative AI expands the market for workstation-class GPUs as enterprises deploy AI applications on-premises.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0248",
-        "relationship": "one_to_one",
+        "match_id": "nvda_2023_2024_M0108",
+        "relationship": "one_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures describe the composition of the 'Compute & Networking' segment. D013 (2023) lists Data Center, Networking, Automotive, Jetson, Software, and CMP. D011 (2024) lists Data Center, Networking, Automotive, Jetson, Software, and DGX Cloud. While CMP is replaced by DGX Cloud, the core segment definition (compute and networking platforms) remains the same specific topic within Item 1.",
+        "explanation": "Both disclosures focus on cloud service providers (CSPs) and consumer internet companies using NVIDIA's accelerated computing platforms to deliver end-user services like search, AI assistants, and social networking.\n\nBoth disclosures detail how enterprises and startups across industries (transportation, healthcare, financial services) use NVIDIA platforms for automation, AI assistants, autonomous driving, drug discovery, and fraud detection.\n\nBoth disclosures describe the use of NVIDIA GPUs and software by professional artists, architects, and designers for creative work such as visual effects, movie production, and product/building design.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_1_D013",
+            "disclosure_id": "nvda_2023_1_D006",
             "item": "1",
-            "section": "Our Businesses",
+            "section": "Our Company",
             "taxonomy": "Strategy & Business Model",
-            "summary": "The Compute & Networking segment encompasses a broad portfolio including the Data Center accelerated computing platform, networking solutions, automotive AI and autonomous vehicle platforms, Jetson robotics platforms, NVIDIA AI Enterprise software, and cryptocurrency mining processors.",
+            "summary": "Cloud service providers and enterprises use NVIDIA's accelerated computing platforms to deliver services like search, AI assistants, and automation for industries including transportation, healthcare, and financial services.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
+            "disclosure_id": "nvda_2024_1_D007",
+            "item": "1",
+            "section": "Our Company",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Leading cloud service providers and consumer internet companies utilize NVIDIA's data-center-scale accelerated computing platforms to enable and enrich services for billions of end users, including AI assistants and search.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_1_D008",
+            "item": "1",
+            "section": "Our Company",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Enterprises and startups across industries use NVIDIA platforms to build generative AI products or reduce costs, applying these solutions to AI assistants, autonomous driving, drug discovery, and fraud detection.",
+            "extraction_status": "source_validated"
+          },
+          {
             "disclosure_id": "nvda_2024_1_D011",
             "item": "1",
-            "section": "Our Businesses",
+            "section": "Our Company",
             "taxonomy": "Strategy & Business Model",
-            "summary": "The Compute & Networking segment includes Data Center platforms (accelerated computing, Quantum InfiniBand, Spectrum Ethernet), NVIDIA DRIVE automated-driving platform, Jetson robotics, NVIDIA AI Enterprise software, and DGX Cloud services.",
+            "summary": "Professional artists and designers use NVIDIA partner products for creative use cases, while generative AI expands the market for workstation-class GPUs as enterprises deploy AI applications on-premises.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.632016,
-            "sequence_match_ratio": 0.514851,
-            "length_ratio": 1.195652,
-            "word_count_delta": 9,
-            "added_tokens_sample": [
-              "is",
-              "comprised",
-              "of",
-              "platforms",
-              "and",
-              "end",
-              "to",
-              "end",
-              "networking",
-              "platforms",
-              "including",
-              "quantum",
-              "for",
-              "infiniband",
-              "and",
-              "spectrum",
-              "for",
-              "ethernet",
-              "our",
-              "nvidia"
-            ],
-            "removed_tokens_sample": [
-              "includes",
-              "networking",
-              "ai",
-              "cockpit",
-              "autonomous",
-              "driving",
-              "and",
-              "autonomous",
-              "vehicle",
-              "solutions",
-              "electric",
-              "vehicle",
-              "computing",
-              "platforms",
-              "for",
-              "cryptocurrency",
-              "mining",
-              "processors",
-              "or",
-              "cmp"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2023_1_D013",
-            "score": 0.911941,
-            "normalised_score": 0.9119,
-            "label": "Modified",
-            "rationale": "Score 91.19% of ceiling with 40% word overlap — same disclosure, wording changed.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.8,
+          "materiality_score": 0.85,
           "confidence_score": 0.9,
-          "reason": "The segment definition undergoes a material substitution: the removal of 'cryptocurrency mining processors (CMP)' and its replacement with 'DGX Cloud services' (and more detailed networking specifications). CMP was a significant revenue stream in 2023; its removal signals a strategic pivot away from crypto mining reliance, while DGX Cloud represents a new service-oriented business model, fundamentally altering the composition of the segment.",
-          "key_change": "Replacement of crypto mining products with DGX Cloud services"
+          "reason": "The 2024 disclosure explicitly introduces 'generative AI' as a primary driver for enterprise and startup adoption, noting the building of 'new generative AI-enabled products' and specific use cases like AI assistants/chatbots. The 2023 disclosure referred generally to 'automation' and 'acceleration'. This shift from general acceleration to specific generative AI adoption reflects a fundamental change in the nature of customer demand and business activity.",
+          "key_change": "Introduction of generative AI as a primary business driver and customer use case"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0222",
+        "match_id": "nvda_2024_2025_M0094",
         "relationship": "one_to_one",
-        "status": "ai_verified",
+        "status": "auto_matched",
         "review_reasons": [],
-        "explanation": "Both disclosures define the components of NVIDIA's 'Compute & Networking' business segment. The 2024 disclosure (nvda_2024_1_D011) lists Data Center platforms, networking (Quantum InfiniBand, Spectrum Ethernet), DRIVE, Jetson, AI Enterprise software, and DGX Cloud. The 2025 disclosure (nvda_2025_1_D008) lists Data Center platforms, AI solutions/software, networking, automotive, Jetson, and DGX Cloud. They cover the same specific business segment composition.",
+        "explanation": "The complete selected original text is identical within the same SEC Item after removing line-leading bullet formatting and normalizing whitespace. Neither LLM agent was used for this link.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_1_D011",
             "item": "1",
-            "section": "Our Businesses",
+            "section": "Our Company",
             "taxonomy": "Strategy & Business Model",
-            "summary": "The Compute & Networking segment includes Data Center platforms (accelerated computing, Quantum InfiniBand, Spectrum Ethernet), NVIDIA DRIVE automated-driving platform, Jetson robotics, NVIDIA AI Enterprise software, and DGX Cloud services.",
+            "summary": "Professional artists and designers use NVIDIA partner products for creative use cases, while generative AI expands the market for workstation-class GPUs as enterprises deploy AI applications on-premises.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_1_D008",
+            "disclosure_id": "nvda_2025_1_D010",
             "item": "1",
-            "section": "Our Businesses",
+            "section": "Our Company",
             "taxonomy": "Strategy & Business Model",
-            "summary": "The Compute & Networking segment includes Data Center accelerated computing platforms, AI solutions, networking, automotive platforms, Jetson robotics platforms, and DGX Cloud services.",
+            "summary": "Professional artists and designers use NVIDIA partner products for creative and design use cases, while generative AI is expanding the workstation GPU market as enterprises develop and deploy on-premises AI applications.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reduced",
-            "cosine_similarity": 0.715591,
-            "sequence_match_ratio": 0.5,
-            "length_ratio": 0.672727,
-            "word_count_delta": -18,
-            "added_tokens_sample": [
-              "includes",
-              "ai",
-              "solutions",
-              "and",
-              "software",
-              "automotive",
-              "and",
-              "autonomous",
-              "and",
-              "electric",
-              "vehicle",
-              "solutions",
-              "jetson",
-              "computing"
-            ],
-            "removed_tokens_sample": [
-              "is",
-              "comprised",
-              "of",
-              "end",
-              "to",
-              "end",
-              "including",
-              "quantum",
-              "infiniband",
-              "and",
-              "spectrum",
-              "for",
-              "ethernet",
-              "our",
-              "nvidia",
-              "drive",
-              "automated",
-              "driving",
-              "platform",
-              "and"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2024_1_D011",
-            "score": 0.951181,
-            "normalised_score": 0.9512,
-            "label": "Modified",
-            "rationale": "Score 95.12% of ceiling with 49% word overlap — same disclosure, wording changed.",
-            "method": "embedding_cosine"
-          },
-          "llm": "Modified",
-          "final_taxonomy": "Modified"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Unchanged",
+          "final_taxonomy": "Unchanged"
         },
         "materiality_analysis": {
           "materiality": "No",
-          "materiality_score": 0.3,
-          "confidence_score": 0.6,
-          "reason": "The description of the Compute & Networking segment has been streamlined and rephrased (e.g., dropping specific names like 'Quantum' and 'Spectrum' in favor of broader terms like 'AI solutions'). However, the core business components (Data Center, Networking, Automotive, Jetson, Cloud) remain the same. The change reflects a summary refinement rather than a shift in business strategy or composition.",
-          "key_change": "Streamlined segment description with same core components"
+          "materiality_score": 0.0,
+          "confidence_score": 1.0,
+          "reason": "The aligned disclosures are exact-text matches under the automatic matching policy, so no meaningful disclosure change is identified.",
+          "key_change": "No substantive change"
         }
       }
     ],
@@ -213,25 +122,36 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1_D057",
-            "peer_topic": "Hyperscale Customer Base and Product Applications",
-            "peer_summary": "AMD's data center products, including server CPUs, GPU accelerators, and adaptive SOCs, are purchased by large public cloud providers and hyperscale private data centers. These customers incorporate the products into servers for web applications, public cloud services, and AI workloads such as generative AI models.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.072326,
+            "peer_disclosure_id": "amd_2024_1_D035",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Professional GPU product family",
+            "peer_summary": "The AMD Radeon PRO family provides professional graphics products optimized for demanding use cases such as 3D rendering, CAD, and media/entertainment pipelines on high-resolution displays.",
+            "peer_taxonomy": "Technology & AI",
+            "retrieval_score": 0.094983,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD explicitly identify hyperscale data centers and large public cloud providers as key customers for their data center platforms and products. NVDA discloses that its Compute & Networking segment includes Data Center accelerated computing and networking platforms, which drive the AI infrastructure these customers use. AMD similarly states that hyperscale customers purchase substantial portions of AMD's server CPUs and GPU accelerators to support public cloud services and AI workloads, including generative AI models. The comparison highlights a shared dependency on the same customer segment for high-performance computing hardware, although NVDA focuses on its specific accelerated computing and networking ecosystem while AMD details the broader mix of server CPUs and GPUs supplied to these entities.",
+            "comparison": "Both NVIDIA and AMD disclose their strategies regarding professional graphics workstations. NVIDIA highlights that generative AI is expanding the market for workstation-class GPUs as enterprises deploy AI applications on-premises, citing professional artists and designers using their products for creative and design use cases. Similarly, AMD describes its Radeon PRO family as professional graphics products optimized for demanding use cases such as 3D rendering, CAD, and media/entertainment pipelines. While both focus on the professional workstation segment involving creative and design applications, NVIDIA explicitly links this growth to the expansion of generative AI workloads on-premises, whereas AMD emphasizes optimization for specific industrial and entertainment pipelines like CAD and broadcast.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1",
                 "disclosure_id": "nvda_2024_1_D011",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1_P014_S001",
-                    "paragraph_id": "nvda_2024_1_P014",
+                    "sentence_id": "nvda_2024_1_P011_S001",
+                    "paragraph_id": "nvda_2024_1_P011",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "The Compute & Networking segment is comprised of our Data Center accelerated computing platforms and end-to-end networking platforms including Quantum for InfiniBand and Spectrum for Ethernet; our NVIDIA DRIVE automated-driving platform and automotive development agreements; Jetson robotics and other embedded platforms; NVIDIA AI Enterprise and other software; and DGX Cloud software and services.",
+                    "text": "Professional artists, architects and designers use NVIDIA partner products accelerated with our GPUs and software platform for a range of creative and design use cases, such as creating visual effects in movies or designing buildings and products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_1_P011_S002",
+                    "paragraph_id": "nvda_2024_1_P011",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "In addition, generative AI is expanding the market for our workstation-class GPUs, as more enterprise customers develop and deploy AI applications with their data on-premises.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -239,20 +159,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D057",
+                "item": "1",
+                "disclosure_id": "amd_2024_1_D035",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1_P060_S001",
-                    "paragraph_id": "amd_2024_1_P060",
+                    "sentence_id": "amd_2024_1_P030_S001",
+                    "paragraph_id": "amd_2024_1_P030",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Large multi-national public cloud service providers and hyperscale private data centers directly and indirectly purchase a substantial portion of our data center-focused products, including server CPUs, GPU accelerators, DPUs, FPGAs and Adaptive SOCs.",
+                    "text": "Professional GPUs.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_1_P060_S003",
-                    "paragraph_id": "amd_2024_1_P060",
+                    "sentence_id": "amd_2024_1_P030_S002",
+                    "paragraph_id": "amd_2024_1_P030",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Hyperscale data centers use these products to operate web-based applications or to support public cloud computing and storage service offerings, including but not limited to AI workloads such as generative AI models.",
+                    "text": "Our AMD Radeon PRO family of professional graphics products are designed for integration in desktop workstations, optimized through hardware and software for demanding use cases such as 3D rendering, design and manufacturing for Computer-Aided Design (CAD), and media and entertainment for broadcast and animation pipelines on high resolution displays.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -265,6 +186,11 @@
           "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "3529629b45fd75abc37fc4e4e8c67522d46972706035f20f46d680787d21121e",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "235bc22f23d1f1a40cc2f02ee866e47f7b4d1eea2b22c95e03af6dd8caff6cce"
+    }
   }
 }

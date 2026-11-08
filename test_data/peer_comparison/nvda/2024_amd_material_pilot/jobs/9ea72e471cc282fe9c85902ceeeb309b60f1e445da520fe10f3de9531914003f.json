@@ -1,0 +1,181 @@
+{
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "f9f020616e32cb7da2f504a5c3e91418ceb9d24d03f442631966097739485e24",
+  "request_hash": "5a8ea2bf2f61e8592e637ec9a7864f7938dc291f1a5c6da33f9ec990673887f2",
+  "response_text": "{\"comparisons\":[{\"peer_ticker\":\"AMD\",\"peer_disclosure_id\":\"amd_2024_8_D101\",\"relationship\":\"same_topic\",\"comparison\":\"Both NVDA and AMD disclose significant customer concentration, though NVDA reports concentration by revenue while AMD reports it by trade receivables. NVDA discloses that a single customer represented 13% of total revenue in fiscal year 2024, whereas AMD discloses that a single customer accounted for 24% of the total consolidated accounts receivable balance as of December 28, 2024. Both companies acknowledge the concentration but manage the risk; NVDA attributes the revenue to the Compute & Networking segment, while AMD states it does not believe the receivable balance represents significant credit risk based on past collection experience.\",\"target_sentence_ids\":[\"nvda_2024_8_P159_S001\"],\"peer_sentence_ids\":[\"amd_2024_8_P106_S002\",\"amd_2024_8_P106_S003\"]}], \"no_match\":[{\"peer_ticker\":\"AMD\",\"reason\":\"No other AMD candidates retrieved that share the specific topic of customer concentration risk or revenue/receivable concentration metrics.\"}]}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_8_D141",
+    "item": "8",
+    "target_topic": "Customer Concentration",
+    "target_summary": "Sales to one customer represented 13% of total revenue for fiscal year 2024 (attributable to Compute & Networking), while no customer represented 10% or more of total revenue in fiscal years 2023 and 2022.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0371",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "D134 (2023) covers geographic revenue allocation methodology (billing vs end customer) and states no customer was >10%. D140 (2024) covers geographic revenue allocation methodology (billing location) and specific percentage breakdowns. The core subject of geographic revenue presentation and allocation logic matches. The 'no customer >10%' fact from D134 is superseded by different data in D141, but the general geographic revenue topic aligns with D140's primary focus.\n\nD134 (2023) mentions that no customer represented 10% or more of total revenue. D141 (2024) details that one customer represented 13% in 2024 and no customer was >10% in prior years. Both disclosures address customer concentration and the significance of top customers, making them topically linked despite the change in specific figures.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_8_D134",
+            "item": "8",
+            "section": "Note 17 - Segment Information",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Revenue by geographic region is allocated based on customer billing location, which may differ from end customer location, and no customer represented 10% or more of total revenue in fiscal years 2023, 2022, and 2021.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D140",
+            "item": "8",
+            "section": "Note 17 - Segment Information",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Revenue from sales outside the United States accounted for 56%, 69%, and 84% of total revenue in fiscal years 2024, 2023, and 2022 respectively, with the increase in U.S. revenue in 2024 driven by higher demand in the Compute & Networking segment.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_8_D141",
+            "item": "8",
+            "section": "Note 17 - Segment Information",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Sales to one customer represented 13% of total revenue for fiscal year 2024 (attributable to Compute & Networking), while no customer represented 10% or more of total revenue in fiscal years 2023 and 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.85,
+          "confidence_score": 0.92,
+          "reason": "The 2024 filing introduces a significant change in customer concentration. While the 2023 disclosure stated no customer represented 10% or more, the 2024 disclosure explicitly identifies a single customer representing 13% of total revenue attributable to the Compute & Networking segment. This is a meaningful change in supply chain/third-party dependency and financial exposure.",
+          "key_change": "Introduction of single significant customer concentration"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0350",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures report customer concentration, specifically noting no customer represented 10% or more of total revenue in fiscal 2023, and identifying attribution to the Compute & Networking segment for current year major customers. Evidence: nvda_2024_8_P159_S001/S002; nvda_2025_8_P160_S001/S002; nvda_2025_8_P161_S001.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D141",
+            "item": "8",
+            "section": "Note 17 - Segment Information",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Sales to one customer represented 13% of total revenue for fiscal year 2024 (attributable to Compute & Networking), while no customer represented 10% or more of total revenue in fiscal years 2023 and 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_8_D138",
+            "item": "8",
+            "section": "Note 16 - Segment Information",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Sales to direct customers representing 10% or more of total revenue, primarily attributable to the Compute & Networking segment, are disclosed, with no customer representing 10% or more of revenue in fiscal year 2023.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.85,
+          "reason": "The previous year identified one customer at 13%. The current year discloses that no customer represented 10% or more. This indicates a decrease in customer concentration risk. However, the disclosure remains a standard customer concentration note, and the removal of a single-digit percentage customer (13% is not dominant for a large cap tech co with high revenue) does not materially alter the company's risk profile or dependency structure in a way that changes the substance of the disclosure category. It is a quantification change, not a structural one.",
+          "key_change": "Change in customer concentration from 13% to below 10%"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D101",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Concentration of Trade Receivables",
+            "peer_summary": "As of December 28, 2024 and December 30, 2023, one customer accounted for approximately 24% and another for 16% of total consolidated accounts receivable, though the Company does not believe these balances represent significant credit risk due to past collection experience.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.086917,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AMD disclose significant customer concentration, though NVDA reports concentration by revenue while AMD reports it by trade receivables. NVDA discloses that a single customer represented 13% of total revenue in fiscal year 2024, whereas AMD discloses that a single customer accounted for 24% of the total consolidated accounts receivable balance as of December 28, 2024. Both companies acknowledge the concentration but manage the risk; NVDA attributes the revenue to the Compute & Networking segment, while AMD states it does not believe the receivable balance represents significant credit risk based on past collection experience.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D141",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P159_S001",
+                    "paragraph_id": "nvda_2024_8_P159",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Sales to one customer represented 13% of total revenue for fiscal year 2024, which was attributable to the Compute & Networking segment.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D101",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P106_S002",
+                    "paragraph_id": "amd_2024_8_P106",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "One customer accounted for approximately 24% and another customer accounted for 16% of the total consolidated accounts receivable balance as of December 28, 2024 and December 30, 2023, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P106_S003",
+                    "paragraph_id": "amd_2024_8_P106",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "However, the Company does not believe the receivable balance from these customers represents a significant credit risk based on past collection experience and review of their current credit quality.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
+      }
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "f9f020616e32cb7da2f504a5c3e91418ceb9d24d03f442631966097739485e24",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "5a8ea2bf2f61e8592e637ec9a7864f7938dc291f1a5c6da33f9ec990673887f2"
+    }
+  }
+}

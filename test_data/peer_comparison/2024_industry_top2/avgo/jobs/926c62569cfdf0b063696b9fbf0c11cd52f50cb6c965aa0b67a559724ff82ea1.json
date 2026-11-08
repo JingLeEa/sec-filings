@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "fe38653a5df3dfd5d33502986ca3f388bd73ced20461bb7586ab19e2eeab047f",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "ee5b4deed75355c15571caf77a2e7180e4a61fedb35f13c320f9dc7fafb90bbe",
+  "request_hash": "4671191e1932c4bb7d529f5519c252da6907ec6bdf1498dd02c4e70f38a88011",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D017\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and INTC disclose accounting treatments for rebates and marketing development funds provided to customers. AVGO treats the 'off-market component' of these programs as part of customer contract valuation, valued at remaining unamortized balances approximating fair value. INTC treats sales rebates as variable consideration reducing revenue, offsetting them against receivables or recording them as accrued liabilities. While AVGO focuses on the valuation of the contract component's remaining life, INTC focuses on the recognition and offsetting mechanism of the rebate liability.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P103_S001\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P030_S004\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"AMD's candidates discuss property and equipment depreciation (amd_2024_8_D036) and short-term obligation fair value approximations (amd_2024_8_D097). Neither candidate addresses the valuation of customer contract rebates or marketing development funds, which is the specific topic of the AVGO disclosure.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU's candidates discuss the measurement of forward and swap derivative contracts (mu_2024_8_D076) and derivative counterparty credit risk (mu_2024_8_D082). These topics involve financial derivatives and hedge accounting, which is distinct from the AVGO disclosure regarding the valuation of off-market customer contract components related to rebates and MDFs.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA has a candidate (nvda_2024_8_D020) discussing customer programs including rebates and MDFs accounted for as a reduction to revenue. However, AVGO's disclosure specifically addresses the 'Valuation of Off-Market Component of Customer Contracts' and how those contracts are valued based on remaining unamortized balances. NVDA's disclosure focuses on the revenue recognition impact (reduction to revenue) and accrual for expected claims, not the valuation methodology of the off-market contract component itself. While related to the broader subject of rebates, the specific accounting topic (valuation of off-market component vs. revenue reduction accrual) is sufficiently distinct to preclude a direct 'same_topic' comparison in this context, or more accurately, the prompt requires substantive related MD&A or financial content. NVDA's content is about revenue recognition policy, while AVGO's is about intangible asset/contract valuation methodology. Given the strict requirement for the *same specific topic*, and the fact that NVDA's other candidate is about PP&E, NVDA's rebate disclosure is a 'related_topic' but the instructions say 'Do not use it as a generic contrast' and 'A comparison means the candidate is substantively comparable'. Let's re-evaluate NVDA. AVGO: Valuation of off-market component. NVDA: Customer programs (rebates/MDFs) as reduction to revenue. These are different aspects of the same program. One is valuation of the asset/contract, one is revenue recognition. Is it 'same_topic'? Probably 'related_topic'. But wait, if I include it as related_topic, is it 'substantively comparable'? Yes. But looking at the INTC comparison, I compared AVGO's contract valuation to INTC's rebate offsetting. That was 'same_topic' because both deal with the handling of the rebate amount in the context of the contract/customer relationship. NVDA deals with the same. However, the previous model failures suggest I need to be careful. Let's look at the schema constraints. If I can find a 'same_topic' or 'related_topic', I should. But if I decide it's not comparable enough, I must use no_match. Actually, looking closely at AVGO: 'Off-market component... valued based on remaining unamortized balances'. This is an accounting policy for an acquired intangible/contract. NVDA: 'Customer programs... accounted for as a reduction to revenue'. This is revenue recognition. These are different accounting standards (ASC 805/350 vs ASC 606). Therefore, they are not the same topic. AVGO is about valuing an acquired contract benefit. NVDA is about ongoing sales incentives. Thus, NVDA is also a no_match for 'same_topic' if we define topic strictly by the accounting mechanism (valuation of acquired contract vs revenue reduction). I will classify NVDA as no_match for this specific valuation topic.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D078",
@@ -145,7 +148,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was sufficiently comparable. AMD's disclosed topics relate to the fair value approximation of short-term operational obligations (accounts receivable/payable) and the depreciation useful lives of property and equipment. Neither topic addresses the valuation of acquired intangible assets or off-market contract components as seen in AVGO's disclosure."
+        "rationale": "AMD's candidates discuss property and equipment depreciation (amd_2024_8_D036) and short-term obligation fair value approximations (amd_2024_8_D097). Neither candidate addresses the valuation of customer contract rebates or marketing development funds, which is the specific topic of the AVGO disclosure."
       },
       {
         "peer_ticker": "INTC",
@@ -153,25 +156,29 @@
         "comparisons": [
           {
             "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_8_D143",
-            "peer_topic": "Grants Receivable Carrying Value and Fair Value",
-            "peer_summary": "The aggregate carrying value of grants receivable was $1.7 billion as of December 28, 2024, compared to $559 million in the prior year, with fair value estimated to approximate carrying value and classified as Level 2.",
+            "peer_disclosure_id": "intc_2024_8_D017",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Measurement of Revenue and Variable Consideration",
+            "peer_summary": "Revenue is measured based on expected consideration, with variable consideration such as sales price concessions estimated using historical purchase volume data. Sales rebates are offset against receivables or recorded as other accrued liabilities if no receivable exists.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.069173,
-            "relationship": "related_topic",
-            "comparison": "Both AVGO and INTC disclose that the fair value of specific financial assets or contract components approximates their carrying values, but they apply this principle to fundamentally different asset classes. AVGO applies this valuation approach to the 'off-market component of customer contracts' (rebates and marketing development funds) resulting from the VMware Merger, stating that the remaining unamortized balances approximate fair value. In contrast, INTC applies this approximation to 'grants receivable,' asserting that the estimated fair value of these financial assets approximates their carrying value. While both disclosures utilize the concept of carrying value approximating fair value, the underlying subject matter differs: AVGO's relates to acquired customer contract economics, whereas INTC's relates to government grant receivables.",
+            "retrieval_score": 0.069272,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and INTC disclose accounting treatments for rebates and marketing development funds provided to customers. AVGO treats the 'off-market component' of these programs as part of customer contract valuation, valued at remaining unamortized balances approximating fair value. INTC treats sales rebates as variable consideration reducing revenue, offsetting them against receivables or recording them as accrued liabilities. While AVGO focuses on the valuation of the contract component's remaining life, INTC focuses on the recognition and offsetting mechanism of the rebate liability.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D078",
                 "sentences": [
                   {
-                    "sentence_id": "avgo_2024_8_P103_S002",
+                    "sentence_id": "avgo_2024_8_P103_S001",
                     "paragraph_id": "avgo_2024_8_P103",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We valued these contracts based on their remaining unamortized balances, which approximate their fair value.",
+                    "text": "Off-market component of customer contracts relate to rebates and marketing development funds provided to customers prior to the VMware Merger.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -179,13 +186,14 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D143",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D017",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_8_P164_S002",
-                    "paragraph_id": "intc_2024_8_P164",
+                    "sentence_id": "intc_2024_8_P030_S004",
+                    "paragraph_id": "intc_2024_8_P030",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "The estimated fair value of these financial assets approximates their carrying value.",
+                    "text": "Sales rebates earned by customers are offset against their receivable balances.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -193,22 +201,19 @@
             ]
           }
         ],
-        "rationale": "",
-        "agent_warnings": [
-          "ignored_no_match_note_for_peer_with_comparisons"
-        ]
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was sufficiently comparable. MU's disclosures concern the measurement of derivative contracts using market-based Level 2 inputs and the mitigation of derivative counterparty credit risk. These topics are distinct from AVGO's valuation of off-market customer contract components based on unamortized balances."
+        "rationale": "MU's candidates discuss the measurement of forward and swap derivative contracts (mu_2024_8_D076) and derivative counterparty credit risk (mu_2024_8_D082). These topics involve financial derivatives and hedge accounting, which is distinct from the AVGO disclosure regarding the valuation of off-market customer contract components related to rebates and MDFs."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "NVDA has a candidate (nvda_2024_8_D020) discussing customer programs including rebates and MDFs accounted for as a reduction to revenue. However, AVGO's disclosure specifically addresses the 'Valuation of Off-Market Component of Customer Contracts' and how those contracts are valued based on remaining unamortized balances. NVDA's disclosure focuses on the revenue recognition impact (reduction to revenue) and accrual for expected claims, not the valuation methodology of the off-market contract component itself. While related to the broader subject of rebates, the specific accounting topic (valuation of off-market component vs. revenue reduction accrual) is sufficiently distinct to preclude a direct 'same_topic' comparison in this context, or more accurately, the prompt requires substantive related MD&A or financial content. NVDA's content is about revenue recognition policy, while AVGO's is about intangible asset/contract valuation methodology. Given the strict requirement for the *same specific topic*, and the fact that NVDA's other candidate is about PP&E, NVDA's rebate disclosure is a 'related_topic' but the instructions say 'Do not use it as a generic contrast' and 'A comparison means the candidate is substantively comparable'. Let's re-evaluate NVDA. AVGO: Valuation of off-market component. NVDA: Customer programs (rebates/MDFs) as reduction to revenue. These are different aspects of the same program. One is valuation of the asset/contract, one is revenue recognition. Is it 'same_topic'? Probably 'related_topic'. But wait, if I include it as related_topic, is it 'substantively comparable'? Yes. But looking at the INTC comparison, I compared AVGO's contract valuation to INTC's rebate offsetting. That was 'same_topic' because both deal with the handling of the rebate amount in the context of the contract/customer relationship. NVDA deals with the same. However, the previous model failures suggest I need to be careful. Let's look at the schema constraints. If I can find a 'same_topic' or 'related_topic', I should. But if I decide it's not comparable enough, I must use no_match. Actually, looking closely at AVGO: 'Off-market component... valued based on remaining unamortized balances'. This is an accounting policy for an acquired intangible/contract. NVDA: 'Customer programs... accounted for as a reduction to revenue'. This is revenue recognition. These are different accounting standards (ASC 805/350 vs ASC 606). Therefore, they are not the same topic. AVGO is about valuing an acquired contract benefit. NVDA is about ongoing sales incentives. Thus, NVDA is also a no_match for 'same_topic' if we define topic strictly by the accounting mechanism (valuation of acquired contract vs revenue reduction). I will classify NVDA as no_match for this specific valuation topic."
       },
       {
         "peer_ticker": "QCOM",
@@ -216,6 +221,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "ee5b4deed75355c15571caf77a2e7180e4a61fedb35f13c320f9dc7fafb90bbe",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "4671191e1932c4bb7d529f5519c252da6907ec6bdf1498dd02c4e70f38a88011"
+    }
   }
 }

@@ -1,29 +1,32 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "d6fcd4660554aa817ab9f2d128986bc0bb3a442656f67f878974b313d43f1a76",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "bda6afd48568ca7b9bd2b1971d3e7326febc3e4e9f6c322745343dabee021d66",
+  "request_hash": "8ca17e95e2f0b02bab642cc7e2755f10783e132505bc52188bf3ff9769188f08",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D032\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"While both companies disclose investments in AI, NVDA highlights a specific product announcement for its AI networking platform, whereas AMD discloses financial metrics related to the cost of supporting its AI strategy. NVDA announces 'NVIDIA Spectrum-X, an accelerated networking platform for AI,' indicating a product-level focus on data center infrastructure. In contrast, AMD reports that 'Research and development expenses of $6.5 billion in 2024 increased by $584 million, or 10%, compared to $5.9 billion in 2023,' with the increase attributed to 'higher employee-related costs due to an increase in headcount in support of our AI strategy.' NVDA's disclosure focuses on a specific technological solution (Spectrum-X), while AMD's focuses on the broader financial implication (R&D spending) of building out its AI capabilities.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P025_S007\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P045_S001\",\n\"amd_2024_7_P045_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The other candidates (amd_2024_7_D002, amd_2024_7_D001) focus on AMD's AI software ecosystem (ROCm, Silo AI acquisition) and adaptive computing portfolio (Versal Series), which are distinct from NVDA's specific announcement of the NVIDIA Spectrum-X accelerated networking platform for data centers. The topic of 'AI Networking Platform' does not substantially overlap with 'AI Software Ecosystem' or 'Adaptive Computing/Embedded Systems' in the context of the specific product or risk disclosed.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D027",
     "item": "7",
-    "target_topic": "Professional Visualization revenue and Omniverse Cloud",
-    "target_summary": "Professional Visualization revenue for fiscal year 2024 was $1.6 billion, up 1% from fiscal year 2023. The company announced new GPUs based on the NVIDIA RTX Ada Lovelace architecture and NVIDIA Omniverse Cloud for industrial metaverse applications.",
+    "target_topic": "AI Networking Platform for Data Center",
+    "target_summary": "The company announced NVIDIA Spectrum-X, an accelerated networking platform for AI.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0325",
+        "match_id": "nvda_2023_2024_M0200",
         "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures are the detailed Market Platform Highlights for Professional Visualization revenue. 2023_D033 provides $1.54B figure, 27% decline, inventory context, and product highlights (Ampere, Omniverse). 2024_D027 provides $1.6B figure, 1% increase, and product highlights (Ada Lovelace, Omniverse Cloud). They share the same specific topic: Professional Visualization Market Platform Highlights.",
+        "explanation": "Both disclosures report specific networking platform announcements in the Market Platform Highlights. 2023 D022 cites the 'NVIDIA Spectrum-4' and 'Quantum-2 switch', while 2024 D027 cites 'NVIDIA Spectrum-X'. They share the specific topic of networking hardware introductions.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D033",
+            "disclosure_id": "nvda_2023_7_D022",
             "item": "7",
             "section": "Market Platform Highlights",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Professional Visualization revenue for fiscal year 2023 was $1.54 billion, down 27% from fiscal year 2022, influenced by excess inventory with OEM partners due to rapid changes in economic conditions. In this segment, NVIDIA added new Ampere architecture RTX GPUs for workstations, announced Omniverse Avatar Cloud Engine and Omniverse Cloud, and released a major update to NVIDIA Omniverse Enterprise.",
+            "taxonomy": "Technology & AI",
+            "summary": "The company announced the NVIDIA Hopper GPU architecture and began ramping NVIDIA H100 Tensor Core GPU products, launched the NVIDIA OVX server reference design, completed new LLMs (NVIDIA NeMo and BioNeMo), and announced the Spectrum-4 networking platform and Quantum-2 switch.",
             "extraction_status": "source_validated"
           }
         ],
@@ -32,182 +35,66 @@
             "disclosure_id": "nvda_2024_7_D027",
             "item": "7",
             "section": "Market Platform Highlights",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Professional Visualization revenue for fiscal year 2024 was $1.6 billion, up 1% from fiscal year 2023. The company announced new GPUs based on the NVIDIA RTX Ada Lovelace architecture and NVIDIA Omniverse Cloud for industrial metaverse applications.",
+            "taxonomy": "Technology & AI",
+            "summary": "The company announced NVIDIA Spectrum-X, an accelerated networking platform for AI.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.529661,
-            "sequence_match_ratio": 0.377049,
-            "length_ratio": 0.794118,
-            "word_count_delta": -14,
-            "added_tokens_sample": [
-              "2024",
-              "6",
-              "up",
-              "1",
-              "2023",
-              "announced",
-              "gpus",
-              "based",
-              "on",
-              "the",
-              "rtx",
-              "ada",
-              "lovelace",
-              "and",
-              "nvidia",
-              "a",
-              "fully",
-              "managed",
-              "service",
-              "running"
-            ],
-            "removed_tokens_sample": [
-              "2023",
-              "54",
-              "down",
-              "27",
-              "2022",
-              "professional",
-              "visualization",
-              "results",
-              "were",
-              "influenced",
-              "by",
-              "the",
-              "rapid",
-              "change",
-              "in",
-              "economic",
-              "conditions",
-              "causing",
-              "excess",
-              "inventory"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2023_7_D033",
-            "score": 0.934254,
-            "normalised_score": 0.9343,
-            "label": "Modified",
-            "rationale": "Score 93.43% of ceiling with 28% word overlap — same disclosure, wording changed.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.7,
+          "materiality_score": 0.75,
           "confidence_score": 0.9,
-          "reason": "The disclosure moves from a 27% decline driven by OEM channel inventory excess to a 1% increase driven by new GPU architecture (Ada Lovelace) and Omniverse Cloud. This indicates the successful resolution of the channel inventory issue and a pivot toward cloud-based industrial metaverse services, changing the strategic focus and operational status of the Professional Visualization segment.",
-          "key_change": "Resolution of channel inventory issues and introduction of Omniverse Cloud"
+          "reason": "The disclosure updates the networking hardware portfolio from Spectrum-4/Quantum-2 to Spectrum-X, specifically positioning it as an 'accelerated networking platform for AI,' which reflects a strategic pivot and technological advancement aligned with the company's core AI business.",
+          "key_change": "Update of networking platform portfolio to AI-focused Spectrum-X"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0305",
+        "match_id": "nvda_2024_2025_M0195",
         "relationship": "many_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures report Fiscal Year Professional Visualization revenue performance. 2024 reports a 1% increase; 2025 reports a 21% increase driven by Ada RTX GPU workstations. Specific subject: Professional Visualization segment revenue trend.\n\nBoth disclosures report Professional Visualization segment revenue and its year-over-year change. nvda_2024_7_D027 cites $1.6B (up 1%) and product announcements (RTX Ada, Omniverse). nvda_2025_7_D021 cites up 21% driven by Ada RTX GPU workstations. The core subject of Professional Visualization revenue performance matches.",
+        "explanation": "Matched. D027 announces NVIDIA Spectrum-X, an accelerated networking platform for AI. D043 (2025) identifies Spectrum-X as a key driver for Data Center networking revenue growth, confirming the continued presence and commercial impact of this specific platform introduced in 2024. The subject is the specific networking technology and its financial impact.\n\nBoth disclosures report on the year-over-year increase in Compute & Networking segment revenue. The 2024 disclosure attributes growth to Data Center revenue, specifically the Hopper GPU platform, while the 2025 disclosure also cites strong demand for accelerated computing/AI and the Hopper platform for LLMs.",
         "previous_disclosures": [
-          {
-            "disclosure_id": "nvda_2024_7_D020",
-            "item": "7",
-            "section": "Fiscal Year 2024 Summary",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Professional Visualization revenue for fiscal year 2024 increased 1%.",
-            "extraction_status": "source_validated"
-          },
           {
             "disclosure_id": "nvda_2024_7_D027",
             "item": "7",
             "section": "Market Platform Highlights",
+            "taxonomy": "Technology & AI",
+            "summary": "The company announced NVIDIA Spectrum-X, an accelerated networking platform for AI.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_7_D046",
+            "item": "7",
+            "section": "Results of Operations > Operating Income by Reportable Segments",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Professional Visualization revenue for fiscal year 2024 was $1.6 billion, up 1% from fiscal year 2023. The company announced new GPUs based on the NVIDIA RTX Ada Lovelace architecture and NVIDIA Omniverse Cloud for industrial metaverse applications.",
+            "summary": "Compute & Networking revenue increased year-on-year, driven by a 266% growth in Compute due to higher shipments of the NVIDIA Hopper GPU computing platform for LLMs, recommendation engines, and generative AI applications, as well as a 133% increase in Networking due to higher InfiniBand shipments.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D021",
+            "disclosure_id": "nvda_2025_7_D043",
             "item": "7",
-            "section": "Fiscal Year 2025 Summary",
+            "section": "Results of Operations > Operating Income by Reportable Segments",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Professional Visualization revenue increased 21% driven by the ramp of Ada RTX GPU workstations for generative AI-powered design, simulation, and engineering.",
+            "summary": "Compute & Networking revenue increased year-over-year due to strong demand for accelerated computing and AI solutions. Data Center computing revenue grew 162% driven by the Hopper computing platform for large language models and generative AI, while Data Center networking revenue grew 51% driven by Ethernet for AI and the Spectrum-X end-to-end ethernet platform.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reduced",
-            "cosine_similarity": 0.366529,
-            "sequence_match_ratio": 0.2,
-            "length_ratio": 0.5625,
-            "word_count_delta": -28,
-            "added_tokens_sample": [
-              "2025",
-              "21",
-              "from",
-              "a",
-              "year",
-              "ago",
-              "driven",
-              "by",
-              "the",
-              "continued",
-              "ramp",
-              "of",
-              "ada",
-              "rtx",
-              "gpu",
-              "workstations",
-              "use",
-              "cases",
-              "such",
-              "as"
-            ],
-            "removed_tokens_sample": [
-              "2024",
-              "1",
-              "professional",
-              "visualization",
-              "revenue",
-              "fiscal",
-              "year",
-              "2024",
-              "was",
-              "1",
-              "6",
-              "billion",
-              "up",
-              "1",
-              "from",
-              "fiscal",
-              "year",
-              "2023",
-              "in",
-              "professional"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2024_7_D020",
-            "score": 0.822362,
-            "normalised_score": 0.8224,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 82.24% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
@@ -215,8 +102,8 @@
           "materiality": "Yes",
           "materiality_score": 0.85,
           "confidence_score": 0.9,
-          "reason": "The professional visualization revenue growth rate more than doubled from 1% in FY24 to 21% in FY25. Furthermore, the disclosed driver changed from general product announcements (RTX Ada) to a specific 'continued ramp' of Ada RTX GPU workstations for generative AI applications. This quantitative acceleration and qualitative shift toward AI-enabled workstations represents a significant change in the segment's performance profile.",
-          "key_change": "Quantitative and qualitative shift in Prof. Viz revenue growth driven by AI workstations"
+          "reason": "The 2025 disclosure explicitly identifies Spectrum-X as a specific driver of the 51% growth in Data Center networking revenue, whereas the 2024 disclosure only announced its introduction. This represents a material update to the company's business performance, confirming the commercial adoption and financial impact of this specific strategic product platform.",
+          "key_change": "Commercial validation of Spectrum-X platform"
         }
       }
     ],
@@ -227,32 +114,29 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D023",
-            "peer_topic": "Data Center Segment Financial Performance",
-            "peer_summary": "Data Center net revenue increased 94% to $12.6 billion in 2024 from $6.5 billion in 2023, primarily driven by higher sales of AMD Instinct GPUs and AMD EPYC CPUs. Operating income rose to $3.5 billion in 2024 from $1.3 billion in 2023, mainly due to higher revenue partially offset by increased R&D investment.",
+            "peer_disclosure_id": "amd_2024_7_D032",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "R&D Expense Increase and AI Headcount",
+            "peer_summary": "AMD's research and development expenses increased by 10% to $6.5 billion in 2024, primarily driven by higher employee-related costs resulting from an increase in headcount to support the company's AI strategy.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.049527,
-            "relationship": "same_topic",
-            "comparison": "Both companies report segment-level revenue performance for 2024, but they focus on different business units. NVDA reports Professional Visualization revenue of $1.6 billion with modest 1% growth, highlighting new product launches like the RTX Ada Lovelace architecture. In contrast, AMD reports Data Center revenue of $12.6 billion, showing significant 94% growth driven by demand for Instinct GPUs and EPYC CPUs.",
+            "retrieval_score": 0.026746,
+            "relationship": "related_topic",
+            "comparison": "While both companies disclose investments in AI, NVDA highlights a specific product announcement for its AI networking platform, whereas AMD discloses financial metrics related to the cost of supporting its AI strategy. NVDA announces 'NVIDIA Spectrum-X, an accelerated networking platform for AI,' indicating a product-level focus on data center infrastructure. In contrast, AMD reports that 'Research and development expenses of $6.5 billion in 2024 increased by $584 million, or 10%, compared to $5.9 billion in 2023,' with the increase attributed to 'higher employee-related costs due to an increase in headcount in support of our AI strategy.' NVDA's disclosure focuses on a specific technological solution (Spectrum-X), while AMD's focuses on the broader financial implication (R&D spending) of building out its AI capabilities.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D027",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_7_P027_S001",
-                    "paragraph_id": "nvda_2024_7_P027",
+                    "sentence_id": "nvda_2024_7_P025_S007",
+                    "paragraph_id": "nvda_2024_7_P025",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Professional Visualization revenue for fiscal year 2024 was $1.6 billion, up 1% from fiscal year 2023.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_7_P027_S002",
-                    "paragraph_id": "nvda_2024_7_P027",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "In Professional Visualization, we announced new GPUs based on the NVIDIA RTX Ada Lovelace architecture, and announced NVIDIA Omniverse Cloud, a fully managed service running in Microsoft Azure, for the development and deployment of industrial metaverse applications.",
+                    "text": "We announced NVIDIA Spectrum-X, an accelerated networking platform for AI.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -260,20 +144,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D023",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D032",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P034_S001",
-                    "paragraph_id": "amd_2024_7_P034",
+                    "sentence_id": "amd_2024_7_P045_S001",
+                    "paragraph_id": "amd_2024_7_P045",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Data Center net revenue of $12.6 billion in 2024 increased by 94%, compared to net revenue of $6.5 billion in 2023.",
+                    "text": "Research and development expenses of $6.5 billion in 2024 increased by $584 million, or 10%, compared to $5.9 billion in 2023.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_7_P034_S002",
-                    "paragraph_id": "amd_2024_7_P034",
+                    "sentence_id": "amd_2024_7_P045_S002",
+                    "paragraph_id": "amd_2024_7_P045",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The increase was primarily driven by higher sales of AMD Instinct GPUs and AMD EPYC CPUs.",
+                    "text": "The increase was primarily due to higher employee-related costs due to an increase in headcount in support of our AI strategy.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -286,6 +171,11 @@
           "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "bda6afd48568ca7b9bd2b1971d3e7326febc3e4e9f6c322745343dabee021d66",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "8ca17e95e2f0b02bab642cc7e2755f10783e132505bc52188bf3ff9769188f08"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "7c196e98facf5b5981fce2032ed7471e61213ce4c33bcf60337ced67ff7c9c8e",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "731c2982ad08b89bb196e325c936a59352212e1a092e151ce90966f604245644",
+  "request_hash": "4f74ac604f301009a297faff3109e4b9d313dc90324ecc20cf08b13434bf3fea",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D055\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both AVGO and AMD disclose policies regarding the licensing or selling of intellectual property, but they apply to different scopes of their business. AVGO's disclosure focuses on its Infrastructure Software segment, offering software solutions and mission-critical FC SAN products to simplify IT environments. AMD's disclosure is a general statement about selling or licensing portions of its IP portfolio without specifying a particular product line or segment. While both involve IP monetization, AVGO details specific software capabilities (mainframe, cloud, edge) while AMD provides only a generic strategic option.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P188_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P060_S001\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D060\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both disclosures describe fundamental structural changes to how the companies organize and report their business segments in 2024. AVGO defines its Infrastructure Software segment, which includes software for hybrid clouds and mission-critical SAN products. INTC describes the implementation of an internal foundry operating model that creates a specific relationship between its Intel Products (CCG, DCAI, NEX) and Intel Foundry businesses. While AVGO defines a software-centric segment, INTC defines a hardware/manufacturing operational model, but both are segment reporting definitions within Item 8.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P188_S003\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P075_S001\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D116\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both disclosures define specific business units or segments within the company's reporting structure. AVGO identifies an Infrastructure Software Segment focused on software solutions for mainframe, distributed, edge, and cloud platforms. MU identifies a Mobile Business Unit (MBU) focused on memory and storage products for smartphones and mobile devices. The similarity lies in the definitional nature of segment reporting, but the topics differ significantly: AVGO focuses on software and cloud infrastructure, while MU focuses on hardware memory/storage for mobile devices.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P188_S002\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P123_S001\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D136\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both disclosures define major operating segments that include software and cloud-related components. AVGO's Infrastructure Software segment provides software solutions to manage applications across private and hybrid cloud platforms. NVDA's Compute & Networking segment includes NVIDIA AI Enterprise software and DGX Cloud, alongside hardware accelerators. Both companies highlight the integration of software solutions with their core hardware or infrastructure offerings in their segment definitions.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P188_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P153_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D145",
@@ -196,15 +199,109 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates for AMD (amd_2024_8_D055, amd_2024_8_D003) concern intellectual property licensing strategies, which is a general corporate policy topic and not comparable to AVGO's specific Infrastructure Software Segment business definition, product portfolio, and target IT environments."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D055",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "IP Portfolio Licensing",
+            "peer_summary": "From time to time, the Company may sell or license portions of its intellectual property portfolio.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.05306,
+            "relationship": "related_topic",
+            "comparison": "Both AVGO and AMD disclose policies regarding the licensing or selling of intellectual property, but they apply to different scopes of their business. AVGO's disclosure focuses on its Infrastructure Software segment, offering software solutions and mission-critical FC SAN products to simplify IT environments. AMD's disclosure is a general statement about selling or licensing portions of its IP portfolio without specifying a particular product line or segment. While both involve IP monetization, AVGO details specific software capabilities (mainframe, cloud, edge) while AMD provides only a generic strategic option.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D145",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P188_S002",
+                    "paragraph_id": "avgo_2024_8_P188",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We provide a portfolio of software solutions that help enterprises simplify their IT environments so they can increase business velocity and flexibility, and enable customers to plan, develop, deliver, automate, manage and secure applications across mainframe, distributed, edge, mobile, and private and hybrid cloud platforms.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D055",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P060_S001",
+                    "paragraph_id": "amd_2024_8_P060",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "From time to time, the Company may also sell or license portions of its IP portfolio.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "INTC",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates for INTC (intc_2024_8_D060, intc_2024_8_D062) discuss internal foundry operating models and segment restructuring related to Altera. These are operational and reporting structure changes, not comparable to AVGO's description of its Infrastructure Software segment's product offerings and market focus."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D060",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Implementation of Internal Foundry Operating Model",
+            "peer_summary": "Intel implemented an internal foundry operating model in Q1 2024, creating a foundry relationship between Intel Products (CCG, DCAI, NEX) and Intel Foundry, which involves CPU design/development and manufacturing/services respectively.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.044375,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures describe fundamental structural changes to how the companies organize and report their business segments in 2024. AVGO defines its Infrastructure Software segment, which includes software for hybrid clouds and mission-critical SAN products. INTC describes the implementation of an internal foundry operating model that creates a specific relationship between its Intel Products (CCG, DCAI, NEX) and Intel Foundry businesses. While AVGO defines a software-centric segment, INTC defines a hardware/manufacturing operational model, but both are segment reporting definitions within Item 8.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D145",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P188_S003",
+                    "paragraph_id": "avgo_2024_8_P188",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Our portfolio of infrastructure and security software is designed to modernize, optimize, and secure the most complex private and hybrid cloud environments, enabling scalability, agility, automation, insights, resiliency and security making it easy for customers to run their mission-critical workloads.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D060",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P075_S001",
+                    "paragraph_id": "intc_2024_8_P075",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We previously announced the implementation of our internal foundry operating model, which took effect in the first quarter of 2024, and creates a foundry relationship between our Intel Products business (collectively CCG, DCAI, and NEX) and our Intel Foundry business.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
@@ -213,17 +310,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D116",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Definition of Mobile Business Unit (MBU)",
             "peer_summary": "The Mobile Business Unit includes memory and storage products sold into the smartphone and other mobile-device markets.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.053617,
-            "relationship": "same_topic",
-            "comparison": "Both AVGO and MU disclose the specific definition and scope of their Mobile or Infrastructure Software segments, identifying the target markets for their core products. AVGO's Infrastructure Software segment focuses on software solutions for enterprise IT environments across various platforms, including mobile, whereas MU's Mobile Business Unit (MBU) is defined by the sale of memory and storage products specifically into smartphone and mobile-device markets. This highlights a difference in product type (software vs. hardware components) and application scope (enterprise IT vs. consumer/mobile devices), though both define their respective segments by market end-use.",
+            "retrieval_score": 0.072095,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures define specific business units or segments within the company's reporting structure. AVGO identifies an Infrastructure Software Segment focused on software solutions for mainframe, distributed, edge, and cloud platforms. MU identifies a Mobile Business Unit (MBU) focused on memory and storage products for smartphones and mobile devices. The similarity lies in the definitional nature of segment reporting, but the topics differ significantly: AVGO focuses on software and cloud infrastructure, while MU focuses on hardware memory/storage for mobile devices.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D145",
                 "sentences": [
                   {
@@ -238,6 +339,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D116",
                 "sentences": [
                   {
@@ -256,16 +358,68 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D136",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Operating Segment Definition - Compute & Networking",
+            "peer_summary": "The Compute & Networking segment includes the Data Center accelerated computing platform, networking, automotive AI cockpit and autonomous driving solutions, electric vehicle computing platforms, Jetson for robotics, NVIDIA AI Enterprise software, and DGX Cloud.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.087055,
+            "relationship": "related_topic",
+            "comparison": "Both disclosures define major operating segments that include software and cloud-related components. AVGO's Infrastructure Software segment provides software solutions to manage applications across private and hybrid cloud platforms. NVDA's Compute & Networking segment includes NVIDIA AI Enterprise software and DGX Cloud, alongside hardware accelerators. Both companies highlight the integration of software solutions with their core hardware or infrastructure offerings in their segment definitions.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D145",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P188_S002",
+                    "paragraph_id": "avgo_2024_8_P188",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We provide a portfolio of software solutions that help enterprises simplify their IT environments so they can increase business velocity and flexibility, and enable customers to plan, develop, deliver, automate, manage and secure applications across mainframe, distributed, edge, mobile, and private and hybrid cloud platforms.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D136",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P153_S001",
+                    "paragraph_id": "nvda_2024_8_P153",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The Compute & Networking segment includes our Data Center accelerated computing platform; networking; automotive artificial intelligence, or AI, Cockpit, autonomous driving development agreements, and autonomous vehicle solutions; electric vehicle computing platforms; Jetson for robotics and other embedded platforms; NVIDIA AI Enterprise and other software; and DGX Cloud.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "731c2982ad08b89bb196e325c936a59352212e1a092e151ce90966f604245644",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "4f74ac604f301009a297faff3109e4b9d313dc90324ecc20cf08b13434bf3fea"
+    }
   }
 }

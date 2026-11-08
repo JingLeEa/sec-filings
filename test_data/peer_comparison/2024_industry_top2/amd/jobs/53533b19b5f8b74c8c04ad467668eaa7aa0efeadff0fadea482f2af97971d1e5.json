@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "6cbbe036015cb30e1754e718c283ee6e1c27f25f8e42b19a53ece424fc7800e0",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "1cdf47195b5c2aac069699df8e474d2bae770d7f8645c1ace175dd7071f0c57c",
+  "request_hash": "8434b851055add94ca43ceb355c32fcb8706265a481681fdb2bf26cf713dc15e",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_1A_D011\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Micron disclose risks related to customers drawing down inventory levels due to market imbalances. AMD specifically notes that Embedded segment revenue decreased in 2024 as customers normalized inventory levels, mirroring Micron's disclosure that market dynamics and customer demand imbalances create periods of imbalance leading to elevated inventory levels and potential write-downs.\",\n\"target_sentence_ids\": [\n\"amd_2024_1A_P022_S005\",\n\"amd_2024_1A_P022_S006\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_1A_P011_S003\",\n\"mu_2024_1A_P011_S005\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1A_D020\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies highlight the risk of demand estimation errors leading to inventory mismatches. AMD identifies the risk that embedded customers with higher inventory levels may order less, causing revenue decreases. Similarly, NVIDIA states that failing to accurately estimate customer demand can cause supply-demand mismatches and that overestimating demand or cancellations may prevent inventory utilization, leading to write-downs.\",\n\"target_sentence_ids\": [\n\"amd_2024_1A_P022_S005\",\n\"amd_2024_1A_P022_S006\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1A_P016_S001\",\n\"nvda_2024_1A_P017_S010\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_1A_D009\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Qualcomm identify elevated customer inventory levels as a direct cause for reduced purchasing orders. AMD states that if embedded customers have higher inventory, they may draw it down and order less, leading to revenue decreases. Qualcomm explicitly lists 'elevated inventory levels at our customers' as a factor that would reduce revenues and could harm results of operations.\",\n\"target_sentence_ids\": [\n\"amd_2024_1A_P022_S005\",\n\"amd_2024_1A_P022_S006\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_1A_P007_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"While AVGO discusses cyclical industry dynamics and potential future excess inventory, its 2024 disclosure focuses on the sustainability of AI-driven upturns and historical down-cycles generally. It does not cite current 2024 customer inventory drawdowns as a driver of reduced revenue in the same specific, realized manner as AMD's Embedded segment report.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"Intel's disclosures focus on the risk that demand *fails to materialize* or shifts to competitors (e.g., GPUs for AI), rather than existing customers actively drawing down excess inventory that was already ordered. The risk mechanism described by Intel is insufficient demand/shift in spend, whereas AMD and peers describe a correction of existing overstocked customer balances.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_1A_D050",
@@ -279,26 +282,36 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Broad cyclical industry risk disclosure does not specifically address the customer inventory drawdown dynamic or specific segment revenue decline due to inventory normalization as detailed in the AMD disclosure."
+        "rationale": "While AVGO discusses cyclical industry dynamics and potential future excess inventory, its 2024 disclosure focuses on the sustainability of AI-driven upturns and historical down-cycles generally. It does not cite current 2024 customer inventory drawdowns as a driver of reduced revenue in the same specific, realized manner as AMD's Embedded segment report."
       },
       {
         "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Intel's disclosures focus on the risk that demand *fails to materialize* or shifts to competitors (e.g., GPUs for AI), rather than existing customers actively drawing down excess inventory that was already ordered. The risk mechanism described by Intel is insufficient demand/shift in spend, whereas AMD and peers describe a correction of existing overstocked customer balances."
+      },
+      {
+        "peer_ticker": "MU",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_1A_D011",
-            "peer_topic": "Product demand and margin variability risks",
-            "peer_summary": "Changes in product demand, macroeconomic conditions, and competitive pressures can adversely affect Intel's revenue and margins, with shifts from higher-margin to lower-margin products (e.g., Intel Core Ultra 200V) causing margin decreases.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.060732,
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_1A_D011",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Inventory Obsolescence and Write-downs",
+            "peer_summary": "Market dynamics and customer demand imbalances can lead to elevated inventory levels, resulting in charges for obsolete or excess inventories, such as the $1.83 billion recorded in 2023, as well as risks related to customized products that cannot be easily resold or repurposed.",
+            "peer_taxonomy": "Operations & Capacity",
+            "retrieval_score": 0.043018,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Intel disclose risks related to customer inventory drawdowns and demand variability affecting revenue. AMD specifically cites its Embedded segment revenue decreasing in 2024 as customers normalized inventory levels, noting that customers with higher inventory may choose to order less. Similarly, Intel identifies 'customer order patterns' and 'business conditions' as factors that can reduce revenue and margins, explicitly listing 'changes in the levels and nature of customer and end-user computing workloads' and general economic downturns as drivers for these risks.",
+            "comparison": "Both AMD and Micron disclose risks related to customers drawing down inventory levels due to market imbalances. AMD specifically notes that Embedded segment revenue decreased in 2024 as customers normalized inventory levels, mirroring Micron's disclosure that market dynamics and customer demand imbalances create periods of imbalance leading to elevated inventory levels and potential write-downs.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "1A",
                 "disclosure_id": "amd_2024_1A_D050",
                 "sentences": [
                   {
@@ -319,62 +332,8 @@
               },
               {
                 "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1A_D011",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1A_P025_S004",
-                    "paragraph_id": "intc_2024_1A_P025",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Changes in the demand for our products have in the past and may in the future reduce our revenue, lower our gross margin, or require us to write down the value of our assets.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_1A_P026_S004",
-                    "paragraph_id": "intc_2024_1A_P026",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "▪customer product needs and emerging technology trends, including changes in the levels and nature of customer and end-user computing workloads, such as the shift in data center spend to GPUs to support AI workloads;",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
-      },
-      {
-        "peer_ticker": "MU",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_1A_D011",
-            "peer_topic": "Inventory Obsolescence and Write-downs",
-            "peer_summary": "Market dynamics and customer demand imbalances can lead to elevated inventory levels, resulting in charges for obsolete or excess inventories, such as the $1.83 billion recorded in 2023, as well as risks related to customized products that cannot be easily resold or repurposed.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.045621,
-            "relationship": "same_topic",
-            "comparison": "Both AMD and Micron discuss the risk of inventory imbalances and the resulting need for inventory normalization or write-downs due to market dynamics. AMD highlights that its Embedded segment revenue decreased as customers 'continued to normalize their inventory levels.' Micron similarly explains that market dynamics and customer demand imbalances can create periods of imbalance leading to 'elevated inventory levels,' which resulted in $1.83 billion in inventory write-down charges in 2023.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1A_D050",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1A_P022_S006",
-                    "paragraph_id": "amd_2024_1A_P022",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "For example, our Embedded segment revenue decreased in 2024 as customers continued to normalize their inventory levels.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
                 "ticker": "MU",
+                "item": "1A",
                 "disclosure_id": "mu_2024_1A_D011",
                 "sentences": [
                   {
@@ -400,28 +359,26 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "Focuses on customer concentration and channel risks (cancellation/delay of commitments) rather than the specific mechanism of customer inventory drawdowns impacting revenue, which is the core of the AMD disclosure."
-      },
-      {
-        "peer_ticker": "QCOM",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_1A_D009",
-            "peer_topic": "Risks from Customer Loss or Reduction",
-            "peer_summary": "Loss of significant customers, reduction in purchases, or cancellation of purchases due to vertical integration, government restrictions, economic conditions, consumer demand shifts, or inventory levels would reduce revenues and harm results of operations.",
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_1A_D020",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Demand estimation risks and mismatches",
+            "peer_summary": "The company faces risks from inaccurate demand estimation, which has historically caused significant supply-demand mismatches, product shortages, and excess inventory that harmed financial results. These mismatches stem from various factors including changing product cycles, economic conditions, new use cases like generative AI and cryptocurrency mining, and the introduction of new products. Underestimating demand leads to fulfillment failures and lost revenue, while overestimating leads to inventory write-downs and penalties. The complexity is amplified by rapid product transitions, indirect sales channels, and the uncertainty of emerging technologies like AI and the Grace CPU.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.070306,
+            "retrieval_score": 0.049433,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Qualcomm identify elevated inventory levels at the customer level as a specific driver for reduced purchases and revenue declines. AMD states that embedded customers faced with higher inventory levels may draw down existing stock and order less. Qualcomm explicitly lists 'elevated inventory levels at our customers' alongside economic conditions and consumer demand shifts as causes for the cancellation or reduction of significant purchases.",
-            "peer_source_status": "needs_review",
+            "comparison": "Both companies highlight the risk of demand estimation errors leading to inventory mismatches. AMD identifies the risk that embedded customers with higher inventory levels may order less, causing revenue decreases. Similarly, NVIDIA states that failing to accurately estimate customer demand can cause supply-demand mismatches and that overestimating demand or cancellations may prevent inventory utilization, leading to write-downs.",
+            "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "1A",
                 "disclosure_id": "amd_2024_1A_D050",
                 "sentences": [
                   {
@@ -430,12 +387,87 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
                     "text": "To the extent our embedded customers are faced with higher inventory levels, they may choose to draw down their existing inventory and order less of our products.",
                     "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1A_P022_S006",
+                    "paragraph_id": "amd_2024_1A_P022",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "For example, our Embedded segment revenue decreased in 2024 as customers continued to normalize their inventory levels.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "1A",
+                "disclosure_id": "nvda_2024_1A_D020",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1A_P016_S001",
+                    "paragraph_id": "nvda_2024_1A_P016",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Many additional factors have caused and/or could in the future cause us to either underestimate or overestimate our customers' future demand for our products, or otherwise cause a mismatch between supply and demand for our products and impact the timing and volume of our revenue, including:",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_1A_P017_S010",
+                    "paragraph_id": "nvda_2024_1A_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We may incur inventory provisions or impairments if our inventory or supply or capacity commitments exceed demand for our products or demand declines.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "QCOM",
+            "peer_disclosure_id": "qcom_2024_1A_D009",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Risks from Customer Loss or Reduction",
+            "peer_summary": "Loss of significant customers, reduction in purchases, or cancellation of purchases due to vertical integration, government restrictions, economic conditions, consumer demand shifts, or inventory levels would reduce revenues and harm results of operations.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.068737,
+            "relationship": "same_topic",
+            "comparison": "Both AMD and Qualcomm identify elevated customer inventory levels as a direct cause for reduced purchasing orders. AMD states that if embedded customers have higher inventory, they may draw it down and order less, leading to revenue decreases. Qualcomm explicitly lists 'elevated inventory levels at our customers' as a factor that would reduce revenues and could harm results of operations.",
+            "peer_source_status": "needs_review",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AMD",
+                "item": "1A",
+                "disclosure_id": "amd_2024_1A_D050",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1A_P022_S005",
+                    "paragraph_id": "amd_2024_1A_P022",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "To the extent our embedded customers are faced with higher inventory levels, they may choose to draw down their existing inventory and order less of our products.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1A_P022_S006",
+                    "paragraph_id": "amd_2024_1A_P022",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "For example, our Embedded segment revenue decreased in 2024 as customers continued to normalize their inventory levels.",
+                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D009",
                 "sentences": [
                   {
@@ -452,6 +484,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "1cdf47195b5c2aac069699df8e474d2bae770d7f8645c1ace175dd7071f0c57c",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "8434b851055add94ca43ceb355c32fcb8706265a481681fdb2bf26cf713dc15e"
+    }
   }
 }

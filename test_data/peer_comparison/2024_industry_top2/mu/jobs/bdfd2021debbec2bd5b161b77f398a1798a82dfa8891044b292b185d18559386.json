@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "6244ddd4f2562115990332e7759bc75084532735ef53612383e726fad3814d37",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "984ff9e81c4065e045e31a76874834c53ebcf94204fb6e05be27e7efb12d390b",
+  "request_hash": "7d325448d9e0688c8872053290ebff439c657bb155b1247e68c53345b5efff9d",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D042\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Micron and AMD disclose specific patent infringement litigation as a material contingency under Item 8. Micron faces a jury verdict finding liability and awarding $445 million in damages in the Netlist case, which it intends to appeal, whereas AMD discloses general involvement in legal actions but does not cite a specific pending patent verdict with similar monetary exposure in this section, highlighting a difference in immediate litigation status.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P069_S003\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P049_S001\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D160\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Micron and Broadcom discuss the risks associated with third-party IP infringement claims. Micron details a specific adverse verdict against it in the Netlist case, while Broadcom describes the general nature of such claims, noting they involve complex technical issues and inherently uncertain outcomes, often demanding cessation of activities or payment of damages.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P069_S003\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P198_S003\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D199\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Micron and Intel are defendants in significant patent infringement litigation involving memory or processor technologies. Micron was found liable by a jury in the Netlist case, while Intel prevailed on all eight patents in the VLSI Northern District of California case, though VLSI appealed one finding, illustrating different outcomes in comparable patent dispute contexts.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P069_S003\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P224_S003\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D122\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both Micron and NVIDIA disclose specific, high-profile litigation matters in their Item 8 contingencies. Micron's disclosure centers on a patent infringement verdict with substantial damages, whereas NVIDIA's disclosure focuses on derivative and securities actions that remain stayed, reflecting different types of legal exposures (IP vs. corporate governance/securities) within the same disclosure category.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P069_S003\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P135_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D063",
@@ -210,9 +213,56 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates for AMD (depreciation expense and general legal overview) do not substantively compare to Micron's specific disclosed patent infringement litigation verdict and damages. AMD's disclosures are either financial accounting metrics or generic boilerplate about normal course legal actions, lacking the specific patent infringement facts, verdicts, or significant monetary exposures present in Micron's disclosure."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D042",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Overview of Legal, Tax, and Environmental Contingencies",
+            "peer_summary": "The Company is involved in various legal actions, tax claims, and environmental matters in the normal course of business, including government clean-up activities at current or past locations.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.043536,
+            "relationship": "same_topic",
+            "comparison": "Both Micron and AMD disclose specific patent infringement litigation as a material contingency under Item 8. Micron faces a jury verdict finding liability and awarding $445 million in damages in the Netlist case, which it intends to appeal, whereas AMD discloses general involvement in legal actions but does not cite a specific pending patent verdict with similar monetary exposure in this section, highlighting a difference in immediate litigation status.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D063",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P069_S003",
+                    "paragraph_id": "mu_2024_8_P069",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "On May 23, 2024, following a four-day trial regarding the second complaint filed by Netlist in the E.D. Tex., a jury rendered a verdict that Micron's memory modules infringe two asserted patents - U.S. Patent No. 7,619,912 (\"the '912 patent\") and U.S. Patent No. 11,093,417 (\"the '417 patent\") - and found that Micron should pay $425 million for infringement of the '912 patent and $20 million for infringement of the '417 patent.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D042",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P049_S001",
+                    "paragraph_id": "amd_2024_8_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "From time to time the Company is a defendant or plaintiff in various legal actions that arise in the normal course of business.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
@@ -221,17 +271,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D160",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Third-Party IP Infringement Claims",
             "peer_summary": "Third-party IP claims may demand the cessation of infringing activities and payment of damages or royalties, involving complex technical issues with inherently uncertain outcomes.",
             "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.054827,
+            "retrieval_score": 0.058227,
             "relationship": "same_topic",
-            "comparison": "Both disclosures address the topic of third-party intellectual property infringement claims and the inherent uncertainty of litigation outcomes. Micron discloses a specific patent litigation outcome where a jury found infringement with significant damages ($445 million total), while Broadcom discloses a general risk assessment regarding third-party IP claims, noting they involve 'complex, technical issues' with 'inherently uncertain' outcomes. Both relate to the legal exposure from intellectual property assertions by third parties.",
+            "comparison": "Both Micron and Broadcom discuss the risks associated with third-party IP infringement claims. Micron details a specific adverse verdict against it in the Netlist case, while Broadcom describes the general nature of such claims, noting they involve complex technical issues and inherently uncertain outcomes, often demanding cessation of activities or payment of damages.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D063",
                 "sentences": [
                   {
@@ -246,13 +300,14 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D160",
                 "sentences": [
                   {
-                    "sentence_id": "avgo_2024_8_P198_S004",
+                    "sentence_id": "avgo_2024_8_P198_S003",
                     "paragraph_id": "avgo_2024_8_P198",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Claims that our products or processes infringe or misappropriate any third-party IP rights (including claims arising through our contractual indemnification of our customers) often involve highly complex, technical issues, the outcome of which is inherently uncertain.",
+                    "text": "IP property claims generally involve the demand by a third-party that we cease the manufacture, use or sale of the allegedly infringing products, processes or technologies and/or pay substantial damages or royalties for past, present and future use of the allegedly infringing IP.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -269,17 +324,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_8_D199",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Litigation Outcome for California and First Texas Case Patents",
             "peer_summary": "Intel prevailed on eight patents in the Northern District of California case with final judgment entered in April 2024, though VLSI appealed one finding; in the first Texas case, the Federal Circuit reversed a $675 million award and sent the $1.5 billion award back for remand, while affirming infringement on that patent.",
             "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.162454,
+            "retrieval_score": 0.16707,
             "relationship": "same_topic",
-            "comparison": "Both disclosures concern specific patent litigation outcomes regarding infringement findings and damages. Micron faced a jury verdict finding infringement on two patents with $445 million in damages, which it intends to appeal. Intel prevailed on eight patents in a similar patent infringement case, with the court entering final judgment, although one finding was appealed. Both cases illustrate the risk and finality stages of patent litigation in the semiconductor sector.",
+            "comparison": "Both Micron and Intel are defendants in significant patent infringement litigation involving memory or processor technologies. Micron was found liable by a jury in the Netlist case, while Intel prevailed on all eight patents in the VLSI Northern District of California case, though VLSI appealed one finding, illustrating different outcomes in comparable patent dispute contexts.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D063",
                 "sentences": [
                   {
@@ -288,19 +347,13 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "On May 23, 2024, following a four-day trial regarding the second complaint filed by Netlist in the E.D. Tex., a jury rendered a verdict that Micron's memory modules infringe two asserted patents - U.S. Patent No. 7,619,912 (\"the '912 patent\") and U.S. Patent No. 11,093,417 (\"the '417 patent\") - and found that Micron should pay $425 million for infringement of the '912 patent and $20 million for infringement of the '417 patent.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_8_P069_S005",
-                    "paragraph_id": "mu_2024_8_P069",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "On April 17, 2024, the Patent Trial and Appeal Board (\"PTAB\") of the United States Patent and Trademark Office (\"USPTO\") issued a final written decision (\"FWD\") finding unpatentable the sole asserted claim of the '912 patent.",
-                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D199",
                 "sentences": [
                   {
@@ -308,13 +361,6 @@
                     "paragraph_id": "intc_2024_8_P224",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "Intel prevailed on all eight patents and the court entered final judgment in April 2024.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_8_P224_S004",
-                    "paragraph_id": "intc_2024_8_P224",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "VLSI appealed the Court's judgment of non-infringement as to one of the eight patents.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -326,16 +372,68 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D122",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Lipchitz v. Huang and Nelson v. Huang Derivative Actions Status",
+            "peer_summary": "Two derivative actions filed in Delaware in 2019 asserting claims for breach of fiduciary duty and insider trading related to channel inventory and cryptocurrency mining remain stayed pending the resolution of the securities litigation appeal.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.085683,
+            "relationship": "related_topic",
+            "comparison": "Both Micron and NVIDIA disclose specific, high-profile litigation matters in their Item 8 contingencies. Micron's disclosure centers on a patent infringement verdict with substantial damages, whereas NVIDIA's disclosure focuses on derivative and securities actions that remain stayed, reflecting different types of legal exposures (IP vs. corporate governance/securities) within the same disclosure category.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D063",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P069_S003",
+                    "paragraph_id": "mu_2024_8_P069",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "On May 23, 2024, following a four-day trial regarding the second complaint filed by Netlist in the E.D. Tex., a jury rendered a verdict that Micron's memory modules infringe two asserted patents - U.S. Patent No. 7,619,912 (\"the '912 patent\") and U.S. Patent No. 11,093,417 (\"the '417 patent\") - and found that Micron should pay $425 million for infringement of the '912 patent and $20 million for infringement of the '417 patent.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D122",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P135_S001",
+                    "paragraph_id": "nvda_2024_8_P135",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The putative derivative actions initially filed September 24, 2019 and pending in the United States District Court for the District of Delaware, Lipchitz v. Huang, et al.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "984ff9e81c4065e045e31a76874834c53ebcf94204fb6e05be27e7efb12d390b",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "7d325448d9e0688c8872053290ebff439c657bb155b1247e68c53345b5efff9d"
+    }
   }
 }

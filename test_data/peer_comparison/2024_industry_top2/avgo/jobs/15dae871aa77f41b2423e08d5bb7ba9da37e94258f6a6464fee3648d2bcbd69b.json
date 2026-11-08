@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "7e70a6b10bae2260b118c36a53e5b6fd0ef51a58906369a9338cca63a0d4fb0a",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "32f1604c48aef49668d28b6a2eb99e0ebdfa97a048bb09c8f49885054663a67e",
+  "request_hash": "6a86891d7801d9fbb76422cd43fdb62e857881dc5ac780671d5f408afb33b00f",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D104\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"AVGO discloses a specific capital structure event (10-for-1 stock split) that fundamentally altered its authorized share count and equity base. AMD discloses the standard accounting methodology for calculating diluted EPS, which inherently depends on the weighted-average shares outstanding resulting from such capital events. Both disclosures address the mechanics of equity share counts and dilution, but AVGO focuses on the corporate action executing the split while AMD focuses on the resulting calculation methodology for earnings per share.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P160_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P109_S001\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D088\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"AVGO reports on the execution of a stock split which adjusts the denominator for per-share metrics. INTC reports on the methodology for computing basic and diluted earnings per share, a metric directly impacted by share count adjustments like splits. Both disclosures are relevant to the measurement of shareholder equity value per unit, with AVGO describing a significant change to the share base itself and INTC describing the algorithmic treatment of that share base for financial reporting.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P160_S001\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P100_S001\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D088\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"AVGO discloses a stock split increasing authorized shares from 2.9 billion to 29 billion. MU discloses the number of shares purchased under its Employee Stock Purchase Plan (ESPP). Both disclosures provide specific data points on the volume of common stock transactions and changes in the outstanding share count, albeit driven by different mechanisms (corporate action vs. employee compensation plans).\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P160_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P096_S005\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D132\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"AVGO reports on a stock split that increased its authorized common stock to 29 billion shares. NVDA reports on its share repurchase program, buying back shares to offset dilution. Both disclosures concern major changes to the company's outstanding common stock volume and authorized capital capacity, representing two distinct but related mechanisms (splitting shares vs. retiring shares) for managing the equity base.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P160_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P148_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D120",
@@ -155,34 +158,227 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates (amd_2024_8_D104, amd_2024_8_D103) concern the methodology for calculating Basic and Diluted Earnings Per Share (EPS). The target disclosure (avgo_2024_8_D120) concerns the execution of a ten-for-one forward stock split and the adjustment of authorized share counts. While both topics relate to share structure, AMD's disclosures do not address stock splits, share count adjustments due to splits, or authorized capital changes, making them substantively incomparable to the specific event in the target."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D104",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Diluted EPS Calculation Methodology",
+            "peer_summary": "Diluted earnings per share includes potentially dilutive shares, determined using the treasury stock method for stock options, RSUs, ESPP common stock, and warrants.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.154074,
+            "relationship": "related_topic",
+            "comparison": "AVGO discloses a specific capital structure event (10-for-1 stock split) that fundamentally altered its authorized share count and equity base. AMD discloses the standard accounting methodology for calculating diluted EPS, which inherently depends on the weighted-average shares outstanding resulting from such capital events. Both disclosures address the mechanics of equity share counts and dilution, but AVGO focuses on the corporate action executing the split while AMD focuses on the resulting calculation methodology for earnings per share.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D120",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P160_S001",
+                    "paragraph_id": "avgo_2024_8_P160",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "On July 12, 2024, we completed a ten-for-one forward stock split of our common stock, proportionately increasing the number of shares of our authorized common stock from 2.9 billion to 29 billion without changing the par value of $0.001 per share.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D104",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P109_S001",
+                    "paragraph_id": "amd_2024_8_P109",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Diluted earnings per share is computed based on the weighted-average number of shares outstanding plus potentially dilutive shares outstanding during the period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "INTC",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates (intc_2024_8_D176, intc_2024_8_D088) concern the Employee Stock Purchase Plan (ESPP) authorization/availability and the methodology for calculating Basic and Diluted EPS. The target disclosure (avgo_2024_8_D120) concerns the execution of a ten-for-one forward stock split. INTC's disclosures do not mention any stock split events or changes in authorized share capital resulting from splits, rendering the candidates incomparable to the specific topic of the target."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D088",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "EPS Calculation Methodology",
+            "peer_summary": "Intel computes basic earnings per share based on the weighted average number of shares of common stock outstanding. Diluted earnings per share includes potentially dilutive shares, with the treasury stock method applied to employee equity and the if-converted method for contractual conversion features.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.160091,
+            "relationship": "related_topic",
+            "comparison": "AVGO reports on the execution of a stock split which adjusts the denominator for per-share metrics. INTC reports on the methodology for computing basic and diluted earnings per share, a metric directly impacted by share count adjustments like splits. Both disclosures are relevant to the measurement of shareholder equity value per unit, with AVGO describing a significant change to the share base itself and INTC describing the algorithmic treatment of that share base for financial reporting.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D120",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P160_S001",
+                    "paragraph_id": "avgo_2024_8_P160",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "On July 12, 2024, we completed a ten-for-one forward stock split of our common stock, proportionately increasing the number of shares of our authorized common stock from 2.9 billion to 29 billion without changing the par value of $0.001 per share.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D088",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P100_S001",
+                    "paragraph_id": "intc_2024_8_P100",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We computed basic earnings (loss) per share of common stock based on the weighted average number of shares of common stock outstanding during the period.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidates (mu_2024_8_D088, mu_2024_8_D073) concern shares purchased under the ESPP and share repurchase activity. The target disclosure (avgo_2024_8_D120) concerns a ten-for-one forward stock split. While all involve common stock mechanics, MU's disclosures describe equity compensation purchases and buybacks, not a structural stock split event. Therefore, no substantively comparable disclosure candidate was retrieved."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D088",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "ESPP Shares Purchased and Weighted Average Price",
+            "peer_summary": "Employees purchased 4 million, 5 million, and 4 million shares of common stock under the ESPP in 2024, 2023, and 2022, respectively, at weighted average prices of $65.72, $51.93, and $58.52.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.141417,
+            "relationship": "related_topic",
+            "comparison": "AVGO discloses a stock split increasing authorized shares from 2.9 billion to 29 billion. MU discloses the number of shares purchased under its Employee Stock Purchase Plan (ESPP). Both disclosures provide specific data points on the volume of common stock transactions and changes in the outstanding share count, albeit driven by different mechanisms (corporate action vs. employee compensation plans).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D120",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P160_S001",
+                    "paragraph_id": "avgo_2024_8_P160",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "On July 12, 2024, we completed a ten-for-one forward stock split of our common stock, proportionately increasing the number of shares of our authorized common stock from 2.9 billion to 29 billion without changing the par value of $0.001 per share.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D088",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P096_S005",
+                    "paragraph_id": "mu_2024_8_P096",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Under the ESPP, employees purchased 4 million, 5 million, and 4 million shares of common stock in 2024, 2023, and 2022, respectively, at a per share weighted average price of $65.72, $51.93, and $58.52, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D132",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Share Repurchase Program Authorization and Activity",
+            "peer_summary": "In August 2023, the Board authorized an additional $25.0 billion for share repurchases without expiration, with $9.7 billion spent in fiscal 2024 and $1.9 billion in early 2024. As of January 28, 2024, $22.5 billion remained authorized, and the program aims to offset employee dilution while remaining subject to market conditions.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.140182,
+            "relationship": "related_topic",
+            "comparison": "AVGO reports on a stock split that increased its authorized common stock to 29 billion shares. NVDA reports on its share repurchase program, buying back shares to offset dilution. Both disclosures concern major changes to the company's outstanding common stock volume and authorized capital capacity, representing two distinct but related mechanisms (splitting shares vs. retiring shares) for managing the equity base.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D120",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P160_S001",
+                    "paragraph_id": "avgo_2024_8_P160",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "On July 12, 2024, we completed a ten-for-one forward stock split of our common stock, proportionately increasing the number of shares of our authorized common stock from 2.9 billion to 29 billion without changing the par value of $0.001 per share.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D132",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P148_S001",
+                    "paragraph_id": "nvda_2024_8_P148",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "In August 2023, our Board of Directors approved an increase to our share repurchase program of an additional $25.0 billion, without expiration.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "32f1604c48aef49668d28b6a2eb99e0ebdfa97a048bb09c8f49885054663a67e",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "6a86891d7801d9fbb76422cd43fdb62e857881dc5ac780671d5f408afb33b00f"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "c87b588c0715e9fab741a04e73a02d724ee74c670cb2eaf0fc1bb8bbba46798d",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "b47564017fdc27a9d2bc54bbcac90a158e9c39a081c8e8c61643f167e918ea94",
+  "request_hash": "f83a6a2db27d462e08b73ef5cc4ed19a0f96922dde9406b7044b2a794716c41c",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D020\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and AMD describe a broad, multi-architecture portfolio strategy to address diverse computing workloads beyond traditional CPUs. Intel explicitly labels its approach as 'xPU,' encompassing CPUs, GPUs, IPUs, FPGAs, and accelerators, stating that different workloads benefit from different architectures. AMD mirrors this with its Data Center segment description, listing server-class CPUs, GPUs, AI accelerators, DPUs, FPGAs, and SmartNICs, and noting that different combinations of these products enable optimization for a diverse set of workloads.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P006_S001\",\n\"intc_2024_1_P006_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P016_S001\",\n\"amd_2024_1_P016_S004\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1_D020\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Intel and NVIDIA both disclose a strategy of expanding their computing platforms beyond GPUs to include CPUs and specialized data processing units to address diverse data center needs. Intel mentions delivering 'client and data center GPUs, IPUs, FPGAs, and other accelerators' alongside its core CPU business. NVIDIA states that while its platform is founded on GPUs for parallel workloads, it has expanded to include DPUs (since FY2022) and CPUs (since FY2024) to optimize across the entire computing stack.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P006_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1_P021_S001\",\n\"nvda_2024_1_P021_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved candidates focus on infrastructure software solutions (e.g., managing hybrid cloud environments) and networking solutions (VeloCloud), which do not share the same specific topic of hardware accelerator/xPU product portfolio strategy as Intel's Item 1 disclosure.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates discuss graphics market drivers and specific memory product launches (GDDR7, G9 TLC NAND SSDs). While related to hardware, these focus on specific memory components and storage rather than the broad xPU architecture strategy and multi-processor product portfolio (CPUs, GPUs, accelerators) that defines Intel's disclosure.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The retrieved candidates focus on System-on-Chip (SoC) architecture for client devices (phones, PCs) and on-device AI inference capabilities using NPUs. This contrasts with Intel's disclosed strategy, which emphasizes data center and client xPU products (including IPUs and FPGAs) for diverse computing needs, rather than the integrated mobile/PC SoC focus.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1_D007",
@@ -531,17 +534,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_1_D020",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Data Center Segment Product Portfolio and Strategy",
             "peer_summary": "The Data Center segment includes server-class CPUs, GPUs, AI accelerators, DPUs, FPGAs, SmartNICs, and Adaptive SoC products. The company leverages these technologies to address computational, visual data processing, and AI workload acceleration needs by enabling optimization of performance and power for diverse workloads.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.113381,
+            "retrieval_score": 0.112575,
             "relationship": "same_topic",
-            "comparison": "Both Intel and AMD describe a diversified hardware portfolio targeting diverse workloads through multiple architectures. Intel refers to its offerings collectively as 'xPU products' encompassing CPUs, GPUs, IPUs, FPGAs, and accelerators, stating that 'different workloads benefit from different computing architectures.' Similarly, AMD’s Data Center segment includes 'server-class CPUs, GPUs, AI accelerators, DPUs, FPGAs, SmartNICs, and Adaptive SoC products,' noting that 'different combinations' of these components 'enable the optimization of performance and power for a diverse set of workloads.' While Intel emphasizes the strategic 'xPU approach' to meet diverse needs, AMD details the specific component mix available to optimize for those workloads.",
+            "comparison": "Both Intel and AMD describe a broad, multi-architecture portfolio strategy to address diverse computing workloads beyond traditional CPUs. Intel explicitly labels its approach as 'xPU,' encompassing CPUs, GPUs, IPUs, FPGAs, and accelerators, stating that different workloads benefit from different architectures. AMD mirrors this with its Data Center segment description, listing server-class CPUs, GPUs, AI accelerators, DPUs, FPGAs, and SmartNICs, and noting that different combinations of these products enable optimization for a diverse set of workloads.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D007",
                 "sentences": [
                   {
@@ -563,6 +570,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "1",
                 "disclosure_id": "amd_2024_1_D020",
                 "sentences": [
                   {
@@ -590,13 +598,13 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The candidate disclosures focus on networking solutions (VeloCloud) and infrastructure software rather than the design and delivery of a broad xPU/hardware processor portfolio (CPUs, GPUs, accelerators) comparable to Intel's xPU strategy."
+        "rationale": "The retrieved candidates focus on infrastructure software solutions (e.g., managing hybrid cloud environments) and networking solutions (VeloCloud), which do not share the same specific topic of hardware accelerator/xPU product portfolio strategy as Intel's Item 1 disclosure."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The candidate disclosures focus on memory products (DRAM/GDDR, NAND SSDs) used in data centers and graphics, which are components supporting compute, rather than the processor architectures (CPUs, GPUs, IPUs) themselves that form Intel's xPU product portfolio."
+        "rationale": "The retrieved candidates discuss graphics market drivers and specific memory product launches (GDDR7, G9 TLC NAND SSDs). While related to hardware, these focus on specific memory components and storage rather than the broad xPU architecture strategy and multi-processor product portfolio (CPUs, GPUs, accelerators) that defines Intel's disclosure."
       },
       {
         "peer_ticker": "NVDA",
@@ -604,18 +612,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1_D018",
-            "peer_topic": "Hardware Foundation: GPUs, DPUs, and CPUs",
-            "peer_summary": "The platform is founded on GPUs for parallel workloads, expanded in fiscal year 2022 to include DPUs and in fiscal year 2024 to include CPUs, allowing optimization across the computing, networking, and storage stack.",
+            "peer_disclosure_id": "nvda_2024_1_D020",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Core Platform Hardware Foundation",
+            "peer_summary": "The accelerated computing platform is founded on GPUs optimized for parallel workloads like neural network training and inference, available in the NVIDIA platform and industry-standard servers from major cloud providers and server makers, with the platform expanding to include DPUs (since FY2022) and CPUs (since FY2024).",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.080393,
+            "retrieval_score": 0.068028,
             "relationship": "same_topic",
-            "comparison": "Both companies disclose an expanded portfolio of specialized processor types within their data center platforms. Intel states it delivers 'xPU products encompassing client and data center GPUs, IPUs, FPGAs, and other accelerators' to address diverse needs. NVIDIA describes a similar expansion, noting that its 'data center platform expanded to include DPUs in fiscal year 2022 and CPUs in fiscal year 2024' alongside GPUs, allowing it to 'optimize across the entire computing, networking and storage stack.' Both highlight a shift from single-architecture reliance (CPUs alone) to a multi-architecture approach (including GPUs and specialized accelerators like IPUs/DPUs) to handle complex workloads.",
+            "comparison": "Intel and NVIDIA both disclose a strategy of expanding their computing platforms beyond GPUs to include CPUs and specialized data processing units to address diverse data center needs. Intel mentions delivering 'client and data center GPUs, IPUs, FPGAs, and other accelerators' alongside its core CPU business. NVIDIA states that while its platform is founded on GPUs for parallel workloads, it has expanded to include DPUs (since FY2022) and CPUs (since FY2024) to optimize across the entire computing stack.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D007",
                 "sentences": [
                   {
@@ -630,8 +642,16 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1_D018",
+                "item": "1",
+                "disclosure_id": "nvda_2024_1_D020",
                 "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1_P021_S001",
+                    "paragraph_id": "nvda_2024_1_P021",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "At the foundation of the NVIDIA accelerated computing platform are our GPUs, which excel at parallel workloads such as the training and inferencing of neural networks.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "nvda_2024_1_P021_S003",
                     "paragraph_id": "nvda_2024_1_P021",
@@ -648,59 +668,15 @@
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_1_D029",
-            "peer_topic": "Processor architecture and AI Engine capabilities",
-            "peer_summary": "Qualcomm utilizes System-on-Chip architecture with heterogeneous computing, including Oryon and Kryo CPUs and Adreno GPUs, to enable high-performance, low-power computing. The Qualcomm AI Engine features dedicated hardware and the Hexagon NPU for high-performance on-device AI inference, supported by the AI Stack and AI Hub to simplify developer integration.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.056354,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and Qualcomm describe leveraging heterogeneous computing architectures comprising CPUs, GPUs, and specialized AI accelerators to optimize performance for specific workload types. Intel mentions delivering 'xPU products' including 'GPUs' and 'accelerators' to meet 'diverse computing needs.' Qualcomm describes using a 'System-on-Chip (SoC) architecture with heterogeneous computing features' that combines 'central processing unit (CPU)' and 'graphics processing unit (GPU)' with a 'neural processing unit (NPU)' to enable 'high-performance and low-power computing.' Both frameworks recognize that different computational demands require distinct hardware engines working in concert.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D007",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1_P006_S001",
-                    "paragraph_id": "intc_2024_1_P006",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Beyond the CPU, we deliver a family of xPU products encompassing client and data center GPUs, IPUs, FPGAs, and other accelerators.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_1_P006_S002",
-                    "paragraph_id": "intc_2024_1_P006",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "The xPU approach recognizes that different workloads benefit from different computing architectures, and our broad portfolio helps meet our customers' increasingly diverse computing needs.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1_D029",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1_P025_S003",
-                    "paragraph_id": "qcom_2024_1_P025",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "We have developed System-on-Chip (SoC) architecture with heterogeneous computing features, which uses our central processing unit (CPU) and different types of specialized engines (graphics processing unit (GPU) and neural processing unit (NPU)) to enable high-performance and low-power computing and other optimization techniques.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates focus on System-on-Chip (SoC) architecture for client devices (phones, PCs) and on-device AI inference capabilities using NPUs. This contrasts with Intel's disclosed strategy, which emphasizes data center and client xPU products (including IPUs and FPGAs) for diverse computing needs, rather than the integrated mobile/PC SoC focus."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "b47564017fdc27a9d2bc54bbcac90a158e9c39a081c8e8c61643f167e918ea94",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "f83a6a2db27d462e08b73ef5cc4ed19a0f96922dde9406b7044b2a794716c41c"
+    }
   }
 }

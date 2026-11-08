@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "f59946534a4ef8be578922cd243cd3e65e560a13cd1f80dff230137480589135",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "d6080c26e15ee36a97be0ca1ae592c78b950f08902154948649ffb2c9b205b38",
+  "request_hash": "4ba4918f60f7b6f6fc19169ae332033427fb31091e18f5477c833172853fb4e6",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D095\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and AMD disclose specific balances for non-marketable equity investments in privately held companies measured using Level 3 inputs. MU held $190 million as of August 29, 2024, while AMD held $468 million as of December 28, 2024. AMD experienced a significant year-over-year increase in these holdings ($155 million to $468 million), whereas MU saw a slight decrease from the prior year period ($218 million to $190 million). Both companies classify these investments as Level 3 in the fair value hierarchy.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P042_S001\",\n\"mu_2024_8_P042_S003\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P098_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"No comparable candidate retrieved. AVGO candidates relate to cash equivalents (time deposits, money-market funds) and IP litigation charges, which do not concern non-marketable equity investments or their valuation methods.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"No comparable candidate retrieved. INTC candidates discuss the income statement line item for impairment recording and cumulative impairment amounts ($1.4 billion), but do not provide comparable balance sheet disclosure of current non-marketable equity investment holdings or fair value methodology for those specific holdings similar to MU's disclosure.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"No comparable candidate retrieved. NVDA candidates describe the general accounting policy for non-marketable equity securities (cost minus impairment, observable price adjustments) but do not provide specific balance figures for these investments comparable to MU's reported $190 million balance.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D034",
@@ -190,17 +193,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D095",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Non-marketable securities fair value",
             "peer_summary": "As of December 28, 2024, the Company held non-marketable securities in privately-held companies with an estimated fair value of $468 million, recorded using Level 3 inputs, compared to $155 million in the prior year.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.211896,
+            "retrieval_score": 0.200794,
             "relationship": "same_topic",
-            "comparison": "Both MU and AMD disclose significant non-marketable equity investments recorded at fair value using Level 3 inputs. MU held $190 million as of August 29, 2024, while AMD held a substantially larger balance of $468 million as of December 28, 2024. AMD reported a significant year-over-year increase in this balance (from $155 million), whereas MU reported a slight decrease from its prior year balance of $218 million.",
+            "comparison": "Both MU and AMD disclose specific balances for non-marketable equity investments in privately held companies measured using Level 3 inputs. MU held $190 million as of August 29, 2024, while AMD held $468 million as of December 28, 2024. AMD experienced a significant year-over-year increase in these holdings ($155 million to $468 million), whereas MU saw a slight decrease from the prior year period ($218 million to $190 million). Both companies classify these investments as Level 3 in the fair value hierarchy.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D034",
                 "sentences": [
                   {
@@ -222,6 +229,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D095",
                 "sentences": [
                   {
@@ -242,61 +250,19 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "AVGO candidates disclose cash equivalents composition (time deposits, money-market funds) and unrelated legal charges, which are not comparable to non-marketable equity investments."
+        "rationale": "No comparable candidate retrieved. AVGO candidates relate to cash equivalents (time deposits, money-market funds) and IP litigation charges, which do not concern non-marketable equity investments or their valuation methods."
       },
       {
         "peer_ticker": "INTC",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_8_D122",
-            "peer_topic": "Gains on equity investments and impairment adjustments",
-            "peer_summary": "Gains and losses on equity investments include unrealized adjustments on non-marketable investments and share of investee earnings. As of December 28, 2024, cumulative impairments for equity investments without readily determinable fair value were $1.4 billion, with upward observable price adjustments also totaling $1.4 billion.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.282838,
-            "relationship": "same_topic",
-            "comparison": "MU and INTC both disclose accounting for non-marketable equity investments without readily determinable fair values. While MU reports a balance of $190 million as of August 29, 2024, INTC reports a much larger cumulative impairment balance of $1.4 billion for such investments as of December 28, 2024. Both companies explicitly link these instruments to the measurement alternative or Level 3 inputs, though INTC provides granular detail on offsetting upward observable price adjustments of $1.4 billion.",
-            "peer_source_status": "needs_review",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_8_D034",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_8_P042_S001",
-                    "paragraph_id": "mu_2024_8_P042",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "In addition to the amounts included in the table above, we had $190 million and $218 million of non-marketable equity investments without a readily determinable fair value that were included in other noncurrent assets as of August 29, 2024 and August 31, 2023, respectively.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D122",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_8_P139_S001",
-                    "paragraph_id": "intc_2024_8_P139",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "As of December 28, 2024, the cumulative amount of impairments for equity investments without readily determinable fair value was $1.4 billion ($1.1 billion as of December 30, 2023) and upward observable price adjustments were $1.4 billion ($1.4 billion as of December 30, 2023).",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No comparable candidate retrieved. INTC candidates discuss the income statement line item for impairment recording and cumulative impairment amounts ($1.4 billion), but do not provide comparable balance sheet disclosure of current non-marketable equity investment holdings or fair value methodology for those specific holdings similar to MU's disclosure."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "AVGO candidates disclose only a general reference to financial statements location, not specific equity investment balances."
+        "rationale": "No comparable candidate retrieved. NVDA candidates describe the general accounting policy for non-marketable equity securities (cost minus impairment, observable price adjustments) but do not provide specific balance figures for these investments comparable to MU's reported $190 million balance."
       },
       {
         "peer_ticker": "QCOM",
@@ -304,6 +270,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "d6080c26e15ee36a97be0ca1ae592c78b950f08902154948649ffb2c9b205b38",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "4ba4918f60f7b6f6fc19169ae332033427fb31091e18f5477c833172853fb4e6"
+    }
   }
 }

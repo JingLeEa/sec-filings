@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "68a824a078a763167463d7dceaea1c2f050012144d054315632c4b00b06365e8",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "83dcefaf5fc533e137006534fe208c145a94aae6e233f0b55915700ea518f2aa",
+  "request_hash": "580bb61b13ebe39ea8019af1a57b57d387b7e5ac2f957613fd9af8d4f43b3a06",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D025\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and AMD disclose economic hedging programs for their investment portfolios, but Intel specifically reports the fair value of economically hedged marketable debt investments and the resulting net losses from these hedges, whereas AMD's comparable candidate discusses accounting policies for available-for-sale debt securities rather than specific hedging performance or fair values of hedged portfolios. AVGO also discusses derivative instruments used for hedging (FX and treasury rate locks) and their accounting treatment in OCI, aligning with the hedging aspect of Intel's disclosure, though AVGO does not link these derivatives to a specific portfolio of marketable debt investments in the same way Intel does.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P135_S001\",\n\"intc_2024_8_P135_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P043_S001\",\n\"avgo_2024_8_P043_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D040\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and NVIDIA disclose accounting policies for marketable debt securities classified as available-for-sale, including recognition at fair value and the treatment of unrealized gains/losses in other comprehensive income. Intel's disclosure adds the specific context of economically hedged investments and quantifies the hedging performance (net losses of $464 million), whereas NVIDIA's candidate focuses on the general classification and measurement methodology (available-for-sale) and the specific-identification method for realized gains/losses without quantifying hedging impacts on the debt portfolio.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P135_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P047_S001\",\n\"nvda_2024_8_P047_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved candidates for AMD either discuss non-marketable securities (level 3 inputs) or general available-for-sale debt accounting policies without addressing the specific topic of economically hedged marketable debt investments and their associated fair value changes or hedging performance losses that characterize Intel's disclosure.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates for MU discuss non-marketable equity investments and historical debt issuance/prepayment losses, which are not comparable to Intel's disclosure on the fair value and hedging performance of current short-term marketable debt investments.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D119",
@@ -204,65 +207,9 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_8_D030",
-            "peer_topic": "Accounting for Available-for-Sale Debt Securities",
-            "peer_summary": "Available-for-sale debt securities are classified in current assets, recorded at fair value with unrealized gains/losses reported in other comprehensive income until realized, and any excess of amortized cost over fair value is assessed for expected credit losses recognized in net income.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.12928,
-            "relationship": "related_topic",
-            "comparison": "Both Intel and AMD disclose the accounting treatment and classification of marketable debt securities. Intel explicitly states the fair value of economically hedged marketable debt investments ($13.5 billion) and the resulting net losses from hedging activity. AMD similarly describes its available-for-sale debt securities, which are classified in current assets and recorded at fair value, but focuses on the policy of reporting unrealized gains/losses in other comprehensive income rather than specific hedging performance figures for held investments. While Intel discloses a specific $464 million net loss from hedging held investments, AMD's disclosure is a general accounting policy statement without a corresponding specific realized or unrealized gain/loss amount for the period in the same context.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D119",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_8_P135_S001",
-                    "paragraph_id": "intc_2024_8_P135",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "The fair value of our economically hedged marketable debt investments was $13.5 billion as of December 28, 2024 ($17.1 billion as of December 30, 2023).",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_8_P135_S002",
-                    "paragraph_id": "intc_2024_8_P135",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "For hedged investments still held at the reporting date, we recorded net losses of $464 million in 2024 (net gains of $534 million in 2023 and net losses of $748 million in 2022).",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_8_D030",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_8_P038_S002",
-                    "paragraph_id": "amd_2024_8_P038",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Investments in marketable debt securities are available for use in current operations, including those with maturity dates beyond one year, and are classified within current assets on the Consolidated Balance Sheets.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_8_P038_S003",
-                    "paragraph_id": "amd_2024_8_P038",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Available-for-sale debt securities are recorded at fair value, with the change in unrealized gains and losses, net of tax, reported as a separate component on the Consolidated Statements of Comprehensive Income until realized.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for AMD either discuss non-marketable securities (level 3 inputs) or general available-for-sale debt accounting policies without addressing the specific topic of economically hedged marketable debt investments and their associated fair value changes or hedging performance losses that characterize Intel's disclosure."
       },
       {
         "peer_ticker": "AVGO",
@@ -271,17 +218,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D025",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Derivative instruments hedging policy and status",
             "peer_summary": "The company uses derivative financial instruments, specifically foreign exchange forward contracts and treasury rate locks, to manage exposure to foreign exchange and interest rate risks for hedging purposes, not for speculation. Outstanding derivatives are recognized at fair value based on Level 2 inputs. As of November 3, 2024, and October 29, 2023, the company had no material foreign exchange forward contracts outstanding. In August 2023, the company settled $5.5 billion in treasury rate lock contracts for a $371 million cumulative gain, with $75 million to be amortized to interest expense through October 2034 upon the issuance of $1.75 billion senior notes, and the remainder amortized for future debt.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.091249,
-            "relationship": "related_topic",
-            "comparison": "Both Intel and Broadcom disclose the use of derivative instruments for economic hedging purposes. Intel discloses the fair value and P&L impact of economically hedged marketable debt investments, noting net losses of $464 million in 2024. Broadcom discloses its policy of using foreign exchange forward contracts and treasury rate locks for hedging, noting that treasury rate locks settled in August 2023 resulted in a cumulative gain of $371 million recorded in accumulated other comprehensive income. Unlike Intel, which reports ongoing hedging losses on held investments, Broadcom's disclosure highlights a completed hedging transaction (settlement) with a significant gain, and notes that non-designated forward contracts had immaterial gains/losses.",
+            "retrieval_score": 0.085146,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and AMD disclose economic hedging programs for their investment portfolios, but Intel specifically reports the fair value of economically hedged marketable debt investments and the resulting net losses from these hedges, whereas AMD's comparable candidate discusses accounting policies for available-for-sale debt securities rather than specific hedging performance or fair values of hedged portfolios. AVGO also discusses derivative instruments used for hedging (FX and treasury rate locks) and their accounting treatment in OCI, aligning with the hedging aspect of Intel's disclosure, though AVGO does not link these derivatives to a specific portfolio of marketable debt investments in the same way Intel does.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D119",
                 "sentences": [
                   {
@@ -303,6 +254,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D025",
                 "sentences": [
                   {
@@ -318,13 +270,6 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "For derivative instruments designated as cash flow hedges, the changes in fair value are initially recognized in other comprehensive income, net of tax in the period of change, and are subsequently reclassified and recognized in the same line item as the hedged item when either the hedged transactions affect earnings or it becomes probable that the hedged transactions will not occur.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P045_S004",
-                    "paragraph_id": "avgo_2024_8_P045",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "The cumulative gain was recorded net of tax of $44 million as a component of accumulated other comprehensive income as of October 29, 2023.",
-                    "visible_in_prompt": true
                   }
                 ]
               }
@@ -335,22 +280,32 @@
       },
       {
         "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for MU discuss non-marketable equity investments and historical debt issuance/prepayment losses, which are not comparable to Intel's disclosure on the fair value and hedging performance of current short-term marketable debt investments."
+      },
+      {
+        "peer_ticker": "NVDA",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_8_D034",
-            "peer_topic": "Non-marketable equity investment balances and valuation",
-            "peer_summary": "The company held non-marketable equity investments without readily determinable fair values of $190 million as of August 29, 2024, and $218 million as of August 31, 2023. These investments are classified as Level 3 and recorded at fair value on a non-recurring basis.",
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D040",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Classification and Valuation of Debt Securities",
+            "peer_summary": "Debt securities are classified as available-for-sale at acquisition, reported at fair value with unrealized gains and losses included in accumulated other comprehensive income net of tax. Realized gains and losses on sales are determined using the specific-identification method and recorded in other income (expense), net.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.133171,
-            "relationship": "related_topic",
-            "comparison": "Both Intel and Micron disclose holdings of non-marketable investments valued using Level 3 inputs. Intel reports marketable debt investments but also implicitly manages a portfolio, though its disclosed figure ($13.5 billion) refers to economically hedged marketable debt. Micron explicitly discloses $190 million in non-marketable equity investments without readily determinable fair values classified as Level 3. The comparison is limited to the existence of fair value measurements; Intel's disclosure focuses on the performance and fair value of hedged marketable debt, whereas Micron's focuses on the balance of non-marketable equity investments, which are subject to different valuation and liquidity characteristics.",
+            "retrieval_score": 0.117024,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and NVIDIA disclose accounting policies for marketable debt securities classified as available-for-sale, including recognition at fair value and the treatment of unrealized gains/losses in other comprehensive income. Intel's disclosure adds the specific context of economically hedged investments and quantifies the hedging performance (net losses of $464 million), whereas NVIDIA's candidate focuses on the general classification and measurement methodology (available-for-sale) and the specific-identification method for realized gains/losses without quantifying hedging impacts on the debt portfolio.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D119",
                 "sentences": [
                   {
@@ -364,21 +319,22 @@
               },
               {
                 "side": "peer",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_8_D034",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D040",
                 "sentences": [
                   {
-                    "sentence_id": "mu_2024_8_P042_S001",
-                    "paragraph_id": "mu_2024_8_P042",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "In addition to the amounts included in the table above, we had $190 million and $218 million of non-marketable equity investments without a readily determinable fair value that were included in other noncurrent assets as of August 29, 2024 and August 31, 2023, respectively.",
+                    "sentence_id": "nvda_2024_8_P047_S001",
+                    "paragraph_id": "nvda_2024_8_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We classify our cash equivalents and marketable securities related to debt securities at the date of acquisition as available-for-sale.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "mu_2024_8_P042_S003",
-                    "paragraph_id": "mu_2024_8_P042",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Our non-marketable equity investments are recorded at fair value on a non-recurring basis and classified as Level 3.",
+                    "sentence_id": "nvda_2024_8_P047_S002",
+                    "paragraph_id": "nvda_2024_8_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "These available-for-sale debt securities are reported at fair value with the related unrealized gains and losses included in accumulated other comprehensive income or loss, a component of shareholders' equity, net of tax.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -389,17 +345,16 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved"
-      },
-      {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "83dcefaf5fc533e137006534fe208c145a94aae6e233f0b55915700ea518f2aa",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "580bb61b13ebe39ea8019af1a57b57d387b7e5ac2f957613fd9af8d4f43b3a06"
+    }
   }
 }

@@ -1,134 +1,65 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "5d0f85736190e5633f76d8c9c0b1c09f1d4400df5f60a4db2531afcc970cf158",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "c7e96aa63f7b7b7822111fa5ce325770c5ba29ad818c8e10ed152384523a04ed",
+  "request_hash": "ed0922a902cc992050658b03bdb577d114225ffad5ec563c58316ee8c876d191",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_7_D030\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both NVDA and AMD discuss the composition and drivers of their 'Other' operating expenses or losses. NVDA highlights that operating expenses increased in 2024 due to employee growth and compensation, contrasting with a significant one-time charge in the prior year. Similarly, AMD breaks down its 'All Other operating loss,' noting it primarily consisted of amortization of acquisition-related intangibles and stock-based compensation expense. While NVDA focuses on the year-over-year increase in personnel costs, AMD provides a static breakdown of the major components of its non-GAAP operating loss adjustment, identifying stock-based compensation as a parallel driver to NVDA's compensation increases.\",\n      \"target_sentence_ids\": [\n        \"nvda_2024_7_P024_S001\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_7_P042_S001\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"reason\": \"The other AMD candidate (amd_2024_7_D034) discusses amortization of acquisition-related intangibles, and the remaining candidate (amd_2024_7_D025) discusses Client segment operating income performance. Neither of these topics is substantively comparable to NVDA's discussion of operating expense drivers related to employee growth and compensation.\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D023",
     "item": "7",
-    "target_topic": "Operating Expenses and Acquisition Charge",
-    "target_summary": "Operating expenses increased in fiscal year 2024 due to employee growth and compensation increases; fiscal year 2023 included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+    "target_topic": "Operating Expense Drivers and Prior Year Comparison",
+    "target_summary": "Operating expenses increased for fiscal year 2024 due to growth in employees and compensation increases, while the prior year included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0322",
-        "relationship": "current_only",
-        "status": "needs_review",
-        "review_reasons": [
-          "invalid_or_omitted_verifier_proposal"
-        ],
-        "explanation": "Automatic repair turn limit reached; remaining disclosures need review.",
-        "previous_disclosures": [],
-        "current_disclosures": [
-          {
-            "disclosure_id": "nvda_2024_7_D023",
-            "item": "7",
-            "section": "Fiscal Year 2024 Summary",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Operating expenses increased in fiscal year 2024 due to employee growth and compensation increases; fiscal year 2023 included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
-            "extraction_status": "source_validated"
-          }
-        ],
-        "change_analysis": {
-          "status": "not_started",
-          "lexical": null,
-          "semantic": null,
-          "llm": null,
-          "final_taxonomy": null
-        },
-        "materiality_analysis": null
-      },
-      {
-        "window": "2024-2025",
-        "side": "previous",
-        "match_id": "nvda_2024_2025_M0308",
-        "relationship": "one_to_one",
+        "match_id": "nvda_2023_2024_M0197",
+        "relationship": "many_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures discuss the increase in operating expenses for the fiscal year, driven by employee growth and compensation increases. nvda_2024_7_D023 cites FY24 OpEx growth due to employee/compensation and mentions the Arm charge (unique historical context). nvda_2025_7_D024 cites FY25 OpEx growth of 45% primarily due to higher compensation/benefits from employee growth, matching the primary driver identified in the 2024 summary.",
+        "explanation": "Both pairs discuss operating expenses and specifically highlight the $1.35B/$1.4B Arm acquisition termination charge. Previous: D019 cites the charge in OpEx increase; D061 details the charge. Current: D023 cites the charge as a prior year factor in OpEx comparison; D049 cites the charge in 'All Other' operating loss explanation.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2024_7_D023",
+            "disclosure_id": "nvda_2023_7_D019",
             "item": "7",
-            "section": "Fiscal Year 2024 Summary",
+            "section": "Fiscal Year 2023 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Operating expenses increased in fiscal year 2024 due to employee growth and compensation increases; fiscal year 2023 included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+            "summary": "Operating expenses for fiscal year 2023 increased 50% year-over-year to include a $1.35 billion acquisition termination charge related to the Arm transaction, as well as increases in compensation, data center infrastructure, and engineering development costs.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2023_7_D061",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "The company recorded a $1.35 billion acquisition termination cost in fiscal year 2023 related to the Arm transaction, reflecting the write-off of the prepayment provided at signing.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D024",
+            "disclosure_id": "nvda_2024_7_D023",
             "item": "7",
-            "section": "Fiscal Year 2025 Summary",
+            "section": "Fiscal Year 2024 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Operating expenses increased 45% primarily due to higher compensation and benefits from employee growth and increases, as well as engineering development, compute, and infrastructure costs for new product introductions.",
+            "summary": "Operating expenses increased for fiscal year 2024 due to growth in employees and compensation increases, while the prior year included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_7_D049",
+            "item": "7",
+            "section": "Results of Operations > Operating Income by Reportable Segments",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "The year-on-year decrease in All Other operating loss was attributed to the absence of the $1.4 billion Arm acquisition termination cost incurred in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.358238,
-            "sequence_match_ratio": 0.309859,
-            "length_ratio": 1.151515,
-            "word_count_delta": 5,
-            "added_tokens_sample": [
-              "2025",
-              "were",
-              "up",
-              "45",
-              "from",
-              "a",
-              "year",
-              "ago",
-              "higher",
-              "compensation",
-              "and",
-              "benefits",
-              "expenses",
-              "due",
-              "to",
-              "employee",
-              "and",
-              "engineering",
-              "development",
-              "compute"
-            ],
-            "removed_tokens_sample": [
-              "increased",
-              "2024",
-              "in",
-              "employees",
-              "fiscal",
-              "year",
-              "2023",
-              "also",
-              "included",
-              "a",
-              "1",
-              "4",
-              "billion",
-              "acquisition",
-              "termination",
-              "charge",
-              "related",
-              "to",
-              "the",
-              "proposed"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2024_7_D023",
-            "score": 0.766787,
-            "normalised_score": 0.7668,
-            "label": "Relocated",
-            "rationale": "Score 76.68% of ceiling — content is similar but section changed from 'Fiscal Year 2024 Summary' to 'Fiscal Year 2025 Summary'.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
@@ -136,8 +67,51 @@
           "materiality": "Yes",
           "materiality_score": 0.7,
           "confidence_score": 0.9,
-          "reason": "Operating expenses surged 45% in FY25, a specific quantitative escalation not present in the FY24 summary (which noted growth but no specific rate). The FY25 disclosure explicitly adds 'engineering development, compute, and infrastructure costs for new product introductions' to the drivers (compensation/employee growth) seen in FY24. This quantifies a significant increase in investment intensity for future products.",
-          "key_change": "Quantified 45% OpEx increase with added infrastructure/compute cost drivers"
+          "reason": "The prior year's operating expenses were heavily distorted by a $1.35–$1.4 billion one-time Arm acquisition termination charge. The current year reports 'organic' expense growth driven by employees and compensation, providing a clearer picture of ongoing operational spending and profitability.",
+          "key_change": "Exclusion of one-time acquisition termination charge from operating expense baseline"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0181",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures analyze the year-over-year increase in operating expenses, specifically citing higher compensation and benefits costs due to employee growth as a key driver.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_7_D023",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased for fiscal year 2024 due to growth in employees and compensation increases, while the prior year included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_7_D023",
+            "item": "7",
+            "section": "Fiscal Year 2025 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased 45% year-over-year, driven by higher compensation and benefits costs from employee growth and increases, as well as higher engineering development, compute, and infrastructure costs for new product introductions.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.75,
+          "confidence_score": 0.9,
+          "reason": "The disclosure introduces specific drivers for operating expense growth, explicitly adding 'engineering development, compute, and infrastructure costs for new product introductions' as a key factor alongside compensation. This signals a shift in cost structure towards R&D and compute infrastructure, which is a meaningful operational change compared to the previous year's focus on general employee growth and compensation.",
+          "key_change": "Addition of compute and infrastructure cost drivers for OpEx growth"
         }
       }
     ],
@@ -148,18 +122,22 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D032",
-            "peer_topic": "R&D Expense Increase and AI Headcount",
-            "peer_summary": "AMD's research and development expenses increased by 10% to $6.5 billion in 2024, primarily driven by higher employee-related costs resulting from an increase in headcount to support the company's AI strategy.",
+            "peer_disclosure_id": "amd_2024_7_D030",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "All Other operating loss breakdown for 2024 and 2023",
+            "peer_summary": "All Other operating loss was $4.2 billion in 2024 and $4.4 billion in 2023, primarily consisting of amortization of acquisition-related intangibles and stock-based compensation expense.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.091189,
+            "retrieval_score": 0.106104,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD reported increases in operating expenses for fiscal year 2024 driven by employee growth and compensation. NVDA explicitly stated that operating expenses increased due to 'growth in employees and compensation increases' (nvda_2024_7_P024_S001). Similarly, AMD reported that its Research and Development expenses increased by 10% to $6.5 billion, attributing the rise primarily to 'higher employee-related costs due to an increase in headcount in support of our AI strategy' (amd_2024_7_P045_S001 and amd_2024_7_P045_S002). While NVDA presents a broader operating expense trend, AMD's specific R&D expense disclosure mirrors the underlying driver of personnel cost expansion cited by NVDA.",
+            "comparison": "Both NVDA and AMD discuss the composition and drivers of their 'Other' operating expenses or losses. NVDA highlights that operating expenses increased in 2024 due to employee growth and compensation, contrasting with a significant one-time charge in the prior year. Similarly, AMD breaks down its 'All Other operating loss,' noting it primarily consisted of amortization of acquisition-related intangibles and stock-based compensation expense. While NVDA focuses on the year-over-year increase in personnel costs, AMD provides a static breakdown of the major components of its non-GAAP operating loss adjustment, identifying stock-based compensation as a parallel driver to NVDA's compensation increases.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D023",
                 "sentences": [
                   {
@@ -174,20 +152,14 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D032",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D030",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P045_S001",
-                    "paragraph_id": "amd_2024_7_P045",
+                    "sentence_id": "amd_2024_7_P042_S001",
+                    "paragraph_id": "amd_2024_7_P042",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Research and development expenses of $6.5 billion in 2024 increased by $584 million, or 10%, compared to $5.9 billion in 2023.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_7_P045_S002",
-                    "paragraph_id": "amd_2024_7_P045",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The increase was primarily due to higher employee-related costs due to an increase in headcount in support of our AI strategy.",
+                    "text": "All Other operating loss of $4.2 billion in 2024 primarily consisted of $2.4 billion of amortization of acquisition-related intangibles and $1.4 billion of stock-based compensation expense.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -200,6 +172,11 @@
           "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "c7e96aa63f7b7b7822111fa5ce325770c5ba29ad818c8e10ed152384523a04ed",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "ed0922a902cc992050658b03bdb577d114225ffad5ec563c58316ee8c876d191"
+    }
   }
 }

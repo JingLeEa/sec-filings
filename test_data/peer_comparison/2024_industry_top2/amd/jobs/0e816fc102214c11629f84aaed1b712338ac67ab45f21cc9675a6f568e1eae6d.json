@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "7466620fd156d190e47510c7e8cd92c6dacf2d39abcae3fa97297d8f740b55c7",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "b6124c74451f919f9214b8eec9b12c17acc9b0c47ea5c5d913efe49b3c7f2538",
+  "request_hash": "030727c8036408687860d62be14b736988bfb90f610fdf9398cebe3557bba11c",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_1_D032\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Qualcomm disclose their reportable segment structure in Item 1. AMD reports three segments (Data Center, Client and Gaming, and Embedded) following a planned consolidation for fiscal year 2025. Similarly, Qualcomm operates through three reportable segments (QCT, QTL, and QSI). While both companies use a three-segment structure for reporting, the specific operational focus differs significantly: AMD’s segments are defined by end-market product lines (data center, client/gaming, embedded), whereas Qualcomm’s are defined by business function (semiconductors, IP licensing, strategic investments).\",\n\"target_sentence_ids\": [\n\"amd_2024_1_P015_S002\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_1_P029_S001\",\n\"qcom_2024_1_P029_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"AVGO candidates discuss general strategy (acquisitions/R&D) and specific software solutions (ValueOps), which do not match the specific topic of AMD's reportable segment consolidation plan.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"INTC candidates discuss asset monetization, divestitures, and manufacturing capabilities, which are distinct from the specific topic of AMD's reportable segment structure change.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU candidates discuss storage product portfolios and networking market trends, which are not comparable to the specific topic of reportable segment structure consolidation.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA candidates discuss sustainability reporting timelines and renewable energy goals, which are unrelated to the specific topic of reportable segment structure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_1_D019",
@@ -222,67 +225,25 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "None of the retrieved candidates (avgo_2024_1_D006 on Core Strategy, avgo_2024_1_D057 on ValueOps) describe Avago's reportable segment structure or business division in a way comparable to AMD's segment consolidation plan. Avago's disclosures focus on strategic acquisition and R&D approaches rather than defining internal reportable segments."
+        "rationale": "AVGO candidates discuss general strategy (acquisitions/R&D) and specific software solutions (ValueOps), which do not match the specific topic of AMD's reportable segment consolidation plan."
       },
       {
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "None of the retrieved candidates (intc_2024_1_D026 on Asset Monetization, intc_2024_1_D006 on x86 Ecosystem) describe Intel's reportable segment structure. The candidates focus on divestitures and ecosystem strategy rather than the internal financial reporting segments comparable to AMD's disclosure."
+        "rationale": "INTC candidates discuss asset monetization, divestitures, and manufacturing capabilities, which are distinct from the specific topic of AMD's reportable segment structure change."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "None of the retrieved candidates (mu_2024_1_D039 on SBU Portfolio, mu_2024_1_D026 on Networking Trends) describe Micron's overall reportable segment structure. The SBU disclosure details product offerings within a specific unit rather than the company's top-level reportable segments."
+        "rationale": "MU candidates discuss storage product portfolios and networking market trends, which are not comparable to the specific topic of reportable segment structure consolidation."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1_D010",
-            "peer_topic": "Business Segment Structure",
-            "peer_summary": "The company reports its business results in two segments: Compute & Networking and Graphics.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.067191,
-            "relationship": "same_topic",
-            "comparison": "Both AMD and NVIDIA disclose their business segment structures in Item 1, but they differ in the number and composition of segments. AMD reports four reportable segments (Data Center, Client, Gaming, and Embedded) in fiscal year 2024, as stated in its current year context, while NVIDIA reports its results in only two segments: Compute & Networking and Graphics. Specifically, AMD separates Client and Gaming, whereas NVIDIA combines graphics-related activities into a single segment that likely encompasses both desktop and potentially other graphics workloads, distinct from its Compute & Networking segment which serves data centers and other markets.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D019",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1_P015_S002",
-                    "paragraph_id": "amd_2024_1_P015",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "As a result, we will have three reportable segments: Data Center, Client and Gaming, and Embedded.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1_D010",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_1_P013_S001",
-                    "paragraph_id": "nvda_2024_1_P013",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "We report our business results in two segments.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "NVDA candidates discuss sustainability reporting timelines and renewable energy goals, which are unrelated to the specific topic of reportable segment structure."
       },
       {
         "peer_ticker": "QCOM",
@@ -291,17 +252,21 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_1_D032",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Reportable Segments Structure",
             "peer_summary": "Qualcomm operates through three reportable segments: QCT, which develops and supplies integrated circuit products and system software; QTL, which licenses intellectual property; and QSI, which makes strategic investments.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.132089,
+            "retrieval_score": 0.149623,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Qualcomm disclose their reportable segment structures in Item 1, but they differ in organizational basis and count. AMD operates four reportable segments (Data Center, Client, Gaming, and Embedded) in fiscal year 2024, organized by product lines and markets. In contrast, Qualcomm operates through three reportable segments (QCT, QTL, and QSI) organized by business function (semiconductors, licensing, and strategic investments) rather than pure product markets like AMD's Gaming or Client distinctions.",
+            "comparison": "Both AMD and Qualcomm disclose their reportable segment structure in Item 1. AMD reports three segments (Data Center, Client and Gaming, and Embedded) following a planned consolidation for fiscal year 2025. Similarly, Qualcomm operates through three reportable segments (QCT, QTL, and QSI). While both companies use a three-segment structure for reporting, the specific operational focus differs significantly: AMD’s segments are defined by end-market product lines (data center, client/gaming, embedded), whereas Qualcomm’s are defined by business function (semiconductors, IP licensing, strategic investments).",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "1",
                 "disclosure_id": "amd_2024_1_D019",
                 "sentences": [
                   {
@@ -316,6 +281,7 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "1",
                 "disclosure_id": "qcom_2024_1_D032",
                 "sentences": [
                   {
@@ -323,6 +289,13 @@
                     "paragraph_id": "qcom_2024_1_P029",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
                     "text": "We have three reportable segments.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_1_P029_S002",
+                    "paragraph_id": "qcom_2024_1_P029",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "We conduct business primarily through QCT and QTL, while QSI makes strategic investments.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -332,6 +305,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "b6124c74451f919f9214b8eec9b12c17acc9b0c47ea5c5d913efe49b3c7f2538",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "030727c8036408687860d62be14b736988bfb90f610fdf9398cebe3557bba11c"
+    }
   }
 }

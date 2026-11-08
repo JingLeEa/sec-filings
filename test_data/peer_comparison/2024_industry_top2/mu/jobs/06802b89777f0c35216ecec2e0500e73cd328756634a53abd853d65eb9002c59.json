@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "d1b3721723fa454f095fb3cdb4658dd6a74c4684ac55ad8a848565840a17d27a",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "18baa33b110fc0a585bed372e2529ec8fb97f413984a104e4131caa7864b2cba",
+  "request_hash": "3e79f589169dce87480ebccc1caa7e283404193776053325943d1f8cb8bef856",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D090\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and AMD disclose that their respective Revolving Credit Facilities had no outstanding borrowings as of their 2024 fiscal year-end (MU as of August 29, 2024; AMD as of December 28, 2024). Additionally, both companies use SOFR as a benchmark for interest rates on borrowings under these facilities, though AMD also offers a Base Rate option and specifies different margin structures (0.575% to 1.20% for SOFR vs MU's 1.00% to 1.75% plus credit spread adjustment).\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P061_S002\",\n\"mu_2024_8_P061_S003\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P093_S001\",\n\"amd_2024_8_P093_S002\",\n\"amd_2024_8_P093_S004\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D116\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Similar to MU, Broadcom (AVGO) had no borrowings outstanding under its revolving credit facility at the end of fiscal 2024 (November 3, 2024). Both MU and AVGO utilize unsecured revolving credit facilities to manage liquidity. However, the disclosures differ in that AVGO's summary focuses on the facility size ($7.5 billion) and letter of credit availability, while MU's detailed item 8 text provided focuses on the specific interest rate mechanics (SOFR margins and credit spread adjustments).\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P061_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P156_S001\",\n\"avgo_2024_8_P156_S004\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D138\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Like MU and AMD, Intel (INTC) reported no borrowings outstanding under its revolving credit facilities as of the end of fiscal 2024 (December 28, 2024). A key similarity is the unsecured nature of the debt. A significant difference is that INTC's disclosure highlights a recent expansion of facility limits (from $5.0B to $7.0B/$8.0B) and maturity extensions in 2024, whereas MU's provided text focuses on the interest rate calculation methodology rather than facility term changes.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P061_S002\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P158_S001\",\n\"intc_2024_8_P158_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"No comparable candidate retrieved; the provided NVDA candidates (D045, D046) discuss allowance for credit losses, customer credit risk, and investment policies for cash/securities, which is a different topic than the Revolving Credit Facility terms and interest rates disclosed by MU.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D056",
@@ -186,17 +189,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D090",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Revolving Credit Facility Terms and Status",
             "peer_summary": "The Company has $3 billion available under a revolving credit agreement expiring on April 29, 2027, with no outstanding borrowings as of December 28, 2024, and interest rates tied to SOFR or Base Rate plus margins.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.289735,
+            "retrieval_score": 0.288627,
             "relationship": "same_topic",
-            "comparison": "Both MU and AMD disclose the specific interest rate margins applied to SOFR on their respective revolving credit facilities, though the specific margins and base rate structures differ. MU applies a margin of 1.00% to 1.75% to adjusted term SOFR (which includes a credit spread adjustment of 0.11% to 0.43%), while AMD applies a margin of 0.575% to 1.20% to SOFR. Both companies reported no outstanding borrowings under these facilities as of their respective fiscal year-end dates.",
+            "comparison": "Both MU and AMD disclose that their respective Revolving Credit Facilities had no outstanding borrowings as of their 2024 fiscal year-end (MU as of August 29, 2024; AMD as of December 28, 2024). Additionally, both companies use SOFR as a benchmark for interest rates on borrowings under these facilities, though AMD also offers a Base Rate option and specifies different margin structures (0.575% to 1.20% for SOFR vs MU's 1.00% to 1.75% plus credit spread adjustment).",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D056",
                 "sentences": [
                   {
@@ -218,8 +225,16 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D090",
                 "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P093_S001",
+                    "paragraph_id": "amd_2024_8_P093",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The Company has $3 billion available under a revolving credit agreement, as amended, that expires on April 29, 2027 (Revolving Credit Agreement).",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "amd_2024_8_P093_S002",
                     "paragraph_id": "amd_2024_8_P093",
@@ -243,21 +258,129 @@
       },
       {
         "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that details the interest rate structure or margin formulas for AVGO's revolving credit facility; the available disclosure (avgo_2024_8_D116) only covers facility size, maturity, and borrowing status, lacking the specific interest rate comparison data present in the target."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D116",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "2021 Credit Agreement Terms and Status",
+            "peer_summary": "Broadcom entered into a five-year, $7.5 billion unsecured revolving credit agreement in January 2021, which includes a $500 million letter of credit facility and allows borrowing and repayment until January 19, 2026. The company had no outstanding borrowings under this facility at the end of both 2024 and 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.206326,
+            "relationship": "same_topic",
+            "comparison": "Similar to MU, Broadcom (AVGO) had no borrowings outstanding under its revolving credit facility at the end of fiscal 2024 (November 3, 2024). Both MU and AVGO utilize unsecured revolving credit facilities to manage liquidity. However, the disclosures differ in that AVGO's summary focuses on the facility size ($7.5 billion) and letter of credit availability, while MU's detailed item 8 text provided focuses on the specific interest rate mechanics (SOFR margins and credit spread adjustments).",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D056",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P061_S002",
+                    "paragraph_id": "mu_2024_8_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Under the Revolving Credit Facility, borrowings would generally bear interest at a rate equal to adjusted term SOFR plus 1.00% to 1.75%, depending on our corporate credit ratings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D116",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P156_S001",
+                    "paragraph_id": "avgo_2024_8_P156",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "In January 2021, we entered into a credit agreement (the \"2021 Credit Agreement\"), which provides for a five-year $7.5 billion unsecured revolving credit facility, of which $500 million is available for the issuance of multi-currency letters of credit.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P156_S004",
+                    "paragraph_id": "avgo_2024_8_P156",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We had no borrowings outstanding under the revolving credit facility at either November 3, 2024 or October 29, 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "INTC",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that details the interest rate structure or margin formulas for INTC's revolving credit facilities; the available disclosures (intc_2024_8_D138, intc_2024_8_D139) only cover facility limits, maturity dates, and borrowing status, lacking the specific interest rate comparison data present in the target."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D138",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Revolving Credit Facility Limits and Maturities",
+            "peer_summary": "In 2024, the company expanded its 5-year $5.0 billion and 364-day $5.0 billion revolving credit facilities to $7.0 billion and $8.0 billion respectively, with maturity dates extended to February 2029 and January 2025. These facilities are unsecured general obligations and had no borrowings outstanding as of December 28, 2024 and December 30, 2023.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.197477,
+            "relationship": "same_topic",
+            "comparison": "Like MU and AMD, Intel (INTC) reported no borrowings outstanding under its revolving credit facilities as of the end of fiscal 2024 (December 28, 2024). A key similarity is the unsecured nature of the debt. A significant difference is that INTC's disclosure highlights a recent expansion of facility limits (from $5.0B to $7.0B/$8.0B) and maturity extensions in 2024, whereas MU's provided text focuses on the interest rate calculation methodology rather than facility term changes.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D056",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P061_S002",
+                    "paragraph_id": "mu_2024_8_P061",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Under the Revolving Credit Facility, borrowings would generally bear interest at a rate equal to adjusted term SOFR plus 1.00% to 1.75%, depending on our corporate credit ratings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D138",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P158_S001",
+                    "paragraph_id": "intc_2024_8_P158",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "In 2024, we expanded both our 5-year $5.0 billion revolving credit facility agreement and our 364-day $5.0 billion credit facility agreement, to $7.0 billion and $8.0 billion, respectively, and the maturity dates were extended by one year to February 2029 and January 2025, respectively.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P158_S003",
+                    "paragraph_id": "intc_2024_8_P158",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "The revolving credit facilities had no borrowings outstanding as of December 28, 2024 and December 30, 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "No comparable candidate retrieved; the provided NVDA candidates (D045, D046) discuss allowance for credit losses, customer credit risk, and investment policies for cash/securities, which is a different topic than the Revolving Credit Facility terms and interest rates disclosed by MU."
       },
       {
         "peer_ticker": "QCOM",
@@ -265,6 +388,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "18baa33b110fc0a585bed372e2529ec8fb97f413984a104e4131caa7864b2cba",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "3e79f589169dce87480ebccc1caa7e283404193776053325943d1f8cb8bef856"
+    }
   }
 }

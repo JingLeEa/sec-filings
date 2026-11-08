@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "d3a3c15e641f8ec273a18737449d4784253f87d26a92aedf275733c2df88b1a8",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "4749419d9329083b43846a9fe6fee25638d9fa0378d1b20993648e3b3cfc7e8c",
+  "request_hash": "eb6315eb256ec489af471e68a10ea5ff9c8138ea1b7daf26f8ef68a6289684ad",
+  "response_text": "{\n\"comparisons\":[\n{\n\"peer_ticker\":\"AMD\",\n\"peer_disclosure_id\":\"amd_2024_7_D003\",\n\"relationship\":\"same_topic\",\n\"comparison\":\"Both companies disclosed significant corporate restructuring activities via acquisitions/divestitures in fiscal 2024 to adjust their business portfolios. Broadcom completed the divestiture of VMware's end-user computing business to KKR for $3.5 billion, whereas AMD entered into an agreement to acquire ZT Systems to extend data center infrastructure capabilities, with the acquisition expected to close in fiscal 2025.\",\n\"target_sentence_ids\":[\n\"avgo_2024_7_P011_S001\"\n],\n\"peer_sentence_ids\":[\n\"amd_2024_7_P008_S001\",\n\"amd_2024_7_P008_S003\"\n]\n}\n],\n\"no_match\":[\n{\n\"peer_ticker\":\"INTC\",\n\"reason\":\"Candidate disclosures focus on general funding requirements structure and competitive landscape intensity, which do not concern the specific topic of divestitures or acquisitions.\"\n},\n{\n\"peer_ticker\":\"MU\",\n\"reason\":\"Candidate disclosures address industry demand conditions and revenue recognition policies, not M&A or divestiture activities.\"\n},\n{\n\"peer_ticker\":\"NVDA\",\n\"reason\":\"Candidate disclosures describe business evolution and capital investment funding expectations, lacking substantive content on divestitures or acquisitions comparable to the target.\"\n},\n{\n\"peer_ticker\":\"QCOM\",\n\"reason\":\"Candidate disclosures cover liquidity sources and 5G technology leadership beliefs, which are unrelated to the target's topic of divestitures.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_7_D012",
@@ -147,18 +150,22 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D050",
-            "peer_topic": "Working capital components",
-            "peer_summary": "Working capital cash inflows and outflows from operations consist primarily of cash collections from customers, payments for inventory purchases, and payments for employee-related expenditures.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.070004,
-            "relationship": "related_topic",
-            "comparison": "Both Broadcom and AMD discuss cash flows related to working capital, but the context differs significantly. Broadcom’s disclosure focuses on a specific, one-time divestiture transaction where the consideration was explicitly stated as '$3.5 billion, after working capital adjustments.' In contrast, AMD’s disclosure describes the recurring, operational nature of working capital cash flows, consisting primarily of collections from customers, inventory payments, and employee expenditures. Broadcom's mention is tied to a strategic exit (sale of EUC business), whereas AMD's is tied to ongoing operations.",
+            "peer_disclosure_id": "amd_2024_7_D003",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "ZT Systems Acquisition Strategy",
+            "peer_summary": "AMD agreed to acquire ZT Group Int'l, Inc. (ZT Systems) in August 2024 to extend data center infrastructure capabilities and accelerate time to market for AI solutions, with expected closure in the first half of fiscal 2025 subject to regulatory approvals and intent to seek a strategic partner for ZT's manufacturing business.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.047822,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclosed significant corporate restructuring activities via acquisitions/divestitures in fiscal 2024 to adjust their business portfolios. Broadcom completed the divestiture of VMware's end-user computing business to KKR for $3.5 billion, whereas AMD entered into an agreement to acquire ZT Systems to extend data center infrastructure capabilities, with the acquisition expected to close in fiscal 2025.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D012",
                 "sentences": [
                   {
@@ -173,13 +180,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D050",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D003",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P063_S001",
-                    "paragraph_id": "amd_2024_7_P063",
+                    "sentence_id": "amd_2024_7_P008_S001",
+                    "paragraph_id": "amd_2024_7_P008",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our working capital cash inflows and outflows from operations consist primarily of cash collections from our customers, payments for inventory purchases and payments for employee-related expenditures.",
+                    "text": "We also focused on extending our data center infrastructure capabilities by entering into an agreement in August 2024 to acquire ZT Group Int'l, Inc. (ZT Systems), a provider of AI and general purpose compute infrastructure for hyperscale computing companies.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P008_S003",
+                    "paragraph_id": "amd_2024_7_P008",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The acquisition is expected to close in the first half of fiscal year 2025, subject to certain regulatory approvals and other customary closing conditions.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -193,26 +208,31 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Intel's candidate disclosures concern capital expenditure trends and funding requirements structure, which do not share the same specific topic (divestiture of a business segment and associated cash consideration) as Broadcom's VMware EUC sale."
+        "rationale": "Candidate disclosures focus on general funding requirements structure and competitive landscape intensity, which do not concern the specific topic of divestitures or acquisitions."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Micron's candidate disclosures concern industry demand weakness in 2023 and revenue recognition policies, which are unrelated to Broadcom's specific event of selling a business unit."
+        "rationale": "Candidate disclosures address industry demand conditions and revenue recognition policies, not M&A or divestiture activities."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "NVIDIA's candidate disclosures concern future capital investment funding expectations and general business scope, which do not match Broadcom's report of a completed divestiture transaction."
+        "rationale": "Candidate disclosures describe business evolution and capital investment funding expectations, lacking substantive content on divestitures or acquisitions comparable to the target."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Qualcomm's candidate disclosures concern liquidity sources and 5G technology leadership beliefs, which are not comparable to Broadcom's specific divestiture event and cash consideration."
+        "rationale": "Candidate disclosures cover liquidity sources and 5G technology leadership beliefs, which are unrelated to the target's topic of divestitures."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "4749419d9329083b43846a9fe6fee25638d9fa0378d1b20993648e3b3cfc7e8c",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "eb6315eb256ec489af471e68a10ea5ff9c8138ea1b7daf26f8ef68a6289684ad"
+    }
   }
 }

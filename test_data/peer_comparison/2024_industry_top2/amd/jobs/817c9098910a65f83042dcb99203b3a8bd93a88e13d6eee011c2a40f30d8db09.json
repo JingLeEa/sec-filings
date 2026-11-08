@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "00bb2f95941dfd40fa00246ff5be7f9fce50404a923df8cc955f275b278b9779",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "e3e5921284067849db15e22742bdf43d2331720ec916a7d32a66356f9314da0b",
+  "request_hash": "1d1f238bc976b363c567fac0da6cea3a6c8ba4c0a35f8136ea491aa6c3efcfcb",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_7_D052\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Broadcom disclose amortization of acquisition-related intangible assets in Item 7. AMD reported a decrease of 15% ($417 million) to $2.4 billion in 2024, driven by certain intangibles being fully amortized. In contrast, Broadcom reported a significant increase of 133% ($1,850 million) in 2024, driven by higher amortization of customer-related intangibles resulting from the VMware Merger.\",\n\"target_sentence_ids\": [\n\"amd_2024_7_P047_S001\",\n\"amd_2024_7_P047_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_7_P051_S001\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_7_D026\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Qualcomm disclose the impact of amortization expense on their financial results in Item 7. AMD specifically quantifies the amortization of acquisition-related intangibles at $2.4 billion. Qualcomm cites a decrease in amortization expense related to acquired patents as a key driver for lower cost of sales and expanded QTL EBT margins in fiscal 2024.\",\n\"target_sentence_ids\": [\n\"amd_2024_7_P047_S001\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_7_P024_S005\",\n\"qcom_2024_7_P024_S006\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The retrieved candidates (intc_2024_7_D048, intc_2024_7_D035) discuss Intel Products operating expenses and revenue declines due to cost-reduction measures and macroeconomic factors, but do not contain specific disclosures regarding the amortization of acquisition-related intangible assets comparable to the target.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates (mu_2024_7_D037, mu_2024_7_D018) discuss operating cash flow drivers and EBU operating income changes related to ASPs and shipments, but do not contain specific disclosures regarding the amortization of acquisition-related intangible assets comparable to the target.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates (nvda_2024_7_D049, nvda_2024_7_D023) discuss operating expense drivers such as stock-based compensation and acquisition termination charges, but do not contain specific disclosures regarding the amortization of acquisition-related intangible assets comparable to the target.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_7_D034",
@@ -202,17 +205,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_7_D052",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Amortization of Acquisition-Related Intangible Assets Increase",
             "peer_summary": "Amortization of acquisition-related intangible assets recognized in operating expenses increased by $1,850 million, or 133%, in fiscal year 2024 compared to the prior fiscal year. This increase was primarily due to higher amortization of customer-related intangible assets resulting from the VMware Merger.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.295101,
+            "retrieval_score": 0.289555,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Broadcom (AVGO) report significant amortization expenses related to acquisition-related intangible assets in 2024, but they move in opposite directions and stem from different drivers. AMD reported a decrease in amortization to $2.4 billion (down 15% from 2023), primarily because certain intangibles were fully amortized in the prior year. In contrast, AVGO reported a substantial increase in amortization recognized in operating expenses, rising $1.85 billion (133%) in fiscal 2024, which was driven by higher amortization of customer-related intangible assets resulting from the VMware Merger.",
+            "comparison": "Both AMD and Broadcom disclose amortization of acquisition-related intangible assets in Item 7. AMD reported a decrease of 15% ($417 million) to $2.4 billion in 2024, driven by certain intangibles being fully amortized. In contrast, Broadcom reported a significant increase of 133% ($1,850 million) in 2024, driven by higher amortization of customer-related intangibles resulting from the VMware Merger.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D034",
                 "sentences": [
                   {
@@ -234,6 +241,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D052",
                 "sentences": [
                   {
@@ -241,47 +249,6 @@
                     "paragraph_id": "avgo_2024_7_P051",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "Amortization of acquisition-related intangible assets recognized in operating expenses increased $1,850 million, or 133%, in fiscal year 2024, compared to the prior fiscal year primarily due to higher amortization of customer-related intangible assets from the VMware Merger.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_7_D049",
-            "peer_topic": "Gross margin financial results and VMware impact",
-            "peer_summary": "Gross margin increased to $32,509 million in fiscal year 2024 from $24,690 million in fiscal year 2023, primarily due to VMware contributions offset by higher amortization of acquisition-related intangible assets. As a percentage of net revenue, gross margin decreased to 63% from 69%, driven by the same amortization factors, less favorable semiconductor product mix, and offsets from infrastructure software margins.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.207572,
-            "relationship": "related_topic",
-            "comparison": "While the target disclosure focuses specifically on the amortization expense line item, AVGO's comparison highlights how amortization of acquisition-related intangibles directly impacted gross margin metrics. AVGO noted that higher amortization from the VMware Merger was a primary factor contributing to a decrease in gross margin as a percentage of net revenue (from 69% to 63%), illustrating the specific financial pressure this expense exerts on profitability ratios, a nuance not detailed in AMD's aggregate amortization summary.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D034",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P047_S001",
-                    "paragraph_id": "amd_2024_7_P047",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Amortization of acquisition-related intangibles of $2.4 billion for 2024 decreased by $417 million, or 15%, compared to $2.8 billion in 2023.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_7_D049",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P048_S002",
-                    "paragraph_id": "avgo_2024_7_P048",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "The decrease was primarily due to higher amortization of acquisition-related intangible assets from the VMware Merger.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -295,19 +262,19 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for INTC that discusses amortization of acquisition-related intangibles; available candidates relate to operating expense declines due to cost-reduction and revenue declines."
+        "rationale": "The retrieved candidates (intc_2024_7_D048, intc_2024_7_D035) discuss Intel Products operating expenses and revenue declines due to cost-reduction measures and macroeconomic factors, but do not contain specific disclosures regarding the amortization of acquisition-related intangible assets comparable to the target."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for MU that discusses amortization of acquisition-related intangibles; available candidates relate to EBU operating income drivers and operating cash flow."
+        "rationale": "The retrieved candidates (mu_2024_7_D037, mu_2024_7_D018) discuss operating cash flow drivers and EBU operating income changes related to ASPs and shipments, but do not contain specific disclosures regarding the amortization of acquisition-related intangible assets comparable to the target."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for NVDA that discusses amortization of acquisition-related intangibles; available candidates discuss acquisition termination costs (Arm) and total revenue growth."
+        "rationale": "The retrieved candidates (nvda_2024_7_D049, nvda_2024_7_D023) discuss operating expense drivers such as stock-based compensation and acquisition termination charges, but do not contain specific disclosures regarding the amortization of acquisition-related intangible assets comparable to the target."
       },
       {
         "peer_ticker": "QCOM",
@@ -316,17 +283,21 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_7_D026",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "QTL EBT Margin Expansion Drivers",
             "peer_summary": "QTL EBT as a percentage of revenues increased in fiscal 2024 primarily due to lower cost of sales driven by a decrease in amortization expense related to acquired patents and higher revenues.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.104938,
+            "retrieval_score": 0.101027,
             "relationship": "same_topic",
-            "comparison": "Both AMD and QCOM disclose amortization expenses specifically tied to acquired intangible assets (acquired patents for QCOM, various acquisitions for AMD). However, the trends differ: QCOM reported a *decrease* in amortization expense related to acquired patents in fiscal 2024 as a driver for lower cost of sales and expanded margins. Conversely, AMD reported a *decrease* in total amortization of acquisition-related intangibles ($2.4B), but attributed this to intangibles being fully amortized rather than a reduction in active amortization burdens from new acquisitions, highlighting different stages or compositions of their intangible asset bases.",
+            "comparison": "Both AMD and Qualcomm disclose the impact of amortization expense on their financial results in Item 7. AMD specifically quantifies the amortization of acquisition-related intangibles at $2.4 billion. Qualcomm cites a decrease in amortization expense related to acquired patents as a key driver for lower cost of sales and expanded QTL EBT margins in fiscal 2024.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D034",
                 "sentences": [
                   {
@@ -341,8 +312,16 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D026",
                 "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P024_S005",
+                    "paragraph_id": "qcom_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "QTL EBT as a percentage of revenues increased in fiscal 2024 primarily due to:",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "qcom_2024_7_P024_S006",
                     "paragraph_id": "qcom_2024_7_P024",
@@ -357,6 +336,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e3e5921284067849db15e22742bdf43d2331720ec916a7d32a66356f9314da0b",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "1d1f238bc976b363c567fac0da6cea3a6c8ba4c0a35f8136ea491aa6c3efcfcb"
+    }
   }
 }

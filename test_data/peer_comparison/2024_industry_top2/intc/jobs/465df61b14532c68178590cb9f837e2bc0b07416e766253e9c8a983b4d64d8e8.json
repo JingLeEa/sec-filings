@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "7ab2f53fccf71c9d0226e99d963b6169a2b86a76aea5efd29c7d789c1d33c7b3",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "e6d6a560c8cd0f9c6cf34ec66619430596652f84d4045939559cd272be7abd1f",
+  "request_hash": "7c01aa571bc7fdbdca7089733551b547e9b367a4d5a418a20352d2a87af680dc",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D049\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and NVIDIA disclose the composition and drivers of their 'All Other' segment results. Intel defines 'All Other' to include non-reportable segments like Altera and Mobileye, as well as start-ups and divested business results. NVIDIA reports an 'All Other' operating loss, attributing its year-on-year change primarily to the absence of a $1.4 billion acquisition termination cost in the prior year, while also noting increases in stock-based compensation. While Intel focuses on the structural composition of the segment (entities included), NVIDIA focuses on the variance drivers (costs incurred) within that same reporting category.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P062_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P051_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"Although AMD also reports an 'All Other' segment, its disclosure focuses on the specific financial composition of the operating loss (amortization and stock-based compensation) rather than the structural definition of the segment's constituent businesses or entities as provided by Intel. The topics are related but distinct: one is structural composition, the other is expense driver analysis.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"AVGO's disclosures focus on reportable segment definitions (Semiconductor Solutions, Infrastructure Software) and cash flow impacts from VMware. There is no disclosure of a specific 'All Other' segment category comparable to Intel's definition of non-reportable segments like Altera and Mobileye.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU's Item 7 candidates discuss critical accounting estimates and dividend policies. There is no disclosure of an 'All Other' segment or comparable non-reportable segment results.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"QCOM's Item 7 candidates reference note disclosures for segment information or describe its reportable segments (QCT, QTL, QSI) and nonreportable segments generally (QGOV, cloud computing). However, it does not provide a specific 'All Other' bucket breakdown comparable to Intel's detailed list of non-reportable entities (Altera, Mobileye, start-ups) and their inclusion in a residual category.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D066",
@@ -158,63 +161,21 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D030",
-            "peer_topic": "All Other operating loss breakdown for 2024 and 2023",
-            "peer_summary": "All Other operating loss was $4.2 billion in 2024 and $4.4 billion in 2023, primarily consisting of amortization of acquisition-related intangibles and stock-based compensation expense.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.077144,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and AMD define an 'All Other' segment category to capture results from businesses that are not separately reportable. Intel explicitly lists Altera and Mobileye as components of this 'All Other' category, whereas AMD's 'All Other' operating loss is driven by amortization of acquisition-related intangibles and stock-based compensation, without naming specific subsidiaries like Intel's Altera/Mobileye in this summary. Both disclosures treat these non-reportable elements as a consolidated catch-all for specific corporate-level or non-core operational results.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D066",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P062_S001",
-                    "paragraph_id": "intc_2024_7_P062",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Our \"all other\" category includes the results of operations from other non-reportable segments not otherwise presented, including our Altera and Mobileye businesses, start-up businesses that support our initiatives, and historical results of operations from divested businesses.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D030",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P042_S001",
-                    "paragraph_id": "amd_2024_7_P042",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "All Other operating loss of $4.2 billion in 2024 primarily consisted of $2.4 billion of amortization of acquisition-related intangibles and $1.4 billion of stock-based compensation expense.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Although AMD also reports an 'All Other' segment, its disclosure focuses on the specific financial composition of the operating loss (amortization and stock-based compensation) rather than the structural definition of the segment's constituent businesses or entities as provided by Intel. The topics are related but distinct: one is structural composition, the other is expense driver analysis."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was substantively comparable. Broadcom (AVGO) discloses only two reportable segments (Semiconductor Solutions and Infrastructure Software) and does not mention an 'All Other' category or 'non-reportable segments' in the provided candidates. Its 'All Other' financials are subsumed into these two segments or not broken out as a residual category for non-reportable units like Intel does."
+        "rationale": "AVGO's disclosures focus on reportable segment definitions (Semiconductor Solutions, Infrastructure Software) and cash flow impacts from VMware. There is no disclosure of a specific 'All Other' segment category comparable to Intel's definition of non-reportable segments like Altera and Mobileye."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was substantively comparable. Micron (MU) does not discuss segment reporting composition or 'All Other' categories in the provided candidates. Its disclosures focus on critical accounting estimates and dividend policy, which do not address the specific topic of segment composition and non-reportable units found in Intel's disclosure."
+        "rationale": "MU's Item 7 candidates discuss critical accounting estimates and dividend policies. There is no disclosure of an 'All Other' segment or comparable non-reportable segment results."
       },
       {
         "peer_ticker": "NVDA",
@@ -222,18 +183,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D048",
-            "peer_topic": "All Other Operating Loss Variance",
-            "peer_summary": "The year-on-year decrease in All Other operating loss was due to a $1.4 billion Arm acquisition termination cost in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
+            "peer_disclosure_id": "nvda_2024_7_D049",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "All Other Operating Loss Reduction",
+            "peer_summary": "The year-on-year decrease in All Other operating loss was attributed to the absence of the $1.4 billion Arm acquisition termination cost incurred in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.056848,
+            "retrieval_score": 0.063656,
             "relationship": "same_topic",
-            "comparison": "Both Intel and NVIDIA utilize an 'All Other' category to aggregate results from non-segmented items. Intel defines the composition of this category by listing specific businesses like Altera and Mobileye. NVIDIA also reports an 'All Other operating loss' line item, explaining that variances in this loss are driven by specific items like acquisition termination costs and stock-based compensation, similar to how Intel's 'All Other' captures distinct non-core financial impacts (though Intel specifies the business units while NVIDIA specifies the expense drivers).",
+            "comparison": "Both Intel and NVIDIA disclose the composition and drivers of their 'All Other' segment results. Intel defines 'All Other' to include non-reportable segments like Altera and Mobileye, as well as start-ups and divested business results. NVIDIA reports an 'All Other' operating loss, attributing its year-on-year change primarily to the absence of a $1.4 billion acquisition termination cost in the prior year, while also noting increases in stock-based compensation. While Intel focuses on the structural composition of the segment (entities included), NVIDIA focuses on the variance drivers (costs incurred) within that same reporting category.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D066",
                 "sentences": [
                   {
@@ -248,7 +213,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D048",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D049",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_7_P051_S001",
@@ -266,52 +232,15 @@
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_7_D003",
-            "peer_topic": "Company Organization and Reportable Segments",
-            "peer_summary": "Qualcomm operates through three reportable segments: QCT (semiconductor), QTL (licensing), and QSI (strategic investments), along with nonreportable segments like QGOV.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.067715,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and Qualcomm explicitly disclose the existence of 'nonreportable segments' within their segment reporting structures. Intel groups results from businesses like Altera and Mobileye into its 'All Other' category which includes 'non-reportable segments'. Similarly, Qualcomm identifies specific nonreportable segments like QGOV and its cloud computing initiative alongside its reportable segments (QCT, QTL, QSI). Both companies use this classification to separate core reportable performance from smaller or strategic initiatives not given separate segment status.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D066",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P062_S001",
-                    "paragraph_id": "intc_2024_7_P062",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Our \"all other\" category includes the results of operations from other non-reportable segments not otherwise presented, including our Altera and Mobileye businesses, start-up businesses that support our initiatives, and historical results of operations from divested businesses.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_7_D003",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P004_S004",
-                    "paragraph_id": "qcom_2024_7_P004",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "We also have nonreportable segments, including QGOV (Qualcomm Government Technologies) and our cloud computing processing initiative.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "QCOM's Item 7 candidates reference note disclosures for segment information or describe its reportable segments (QCT, QTL, QSI) and nonreportable segments generally (QGOV, cloud computing). However, it does not provide a specific 'All Other' bucket breakdown comparable to Intel's detailed list of non-reportable entities (Altera, Mobileye, start-ups) and their inclusion in a residual category."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e6d6a560c8cd0f9c6cf34ec66619430596652f84d4045939559cd272be7abd1f",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "7c01aa571bc7fdbdca7089733551b547e9b367a4d5a418a20352d2a87af680dc"
+    }
   }
 }

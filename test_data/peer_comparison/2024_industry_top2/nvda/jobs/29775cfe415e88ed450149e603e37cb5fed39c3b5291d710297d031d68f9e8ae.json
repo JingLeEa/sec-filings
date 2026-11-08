@@ -1,0 +1,202 @@
+{
+  "input_fingerprint": "7ac7e51684ec84d3077e2cb91f5a79d3d16b4e1e9214066f2ee5185d5b16eb45",
+  "job_fingerprint": "2fc206e10c33e96a6dbd1571c0bba773d9d4b47fe6e6d3de381f39981525c5b3",
+  "request_hash": "58d4d6c0e36f00fc89c86adb3dcfef143bf8b4161815643b6ba41c8dd9440c80",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D038\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AVGO disclose revenue recognition policies for support services. NVDA identifies deferred revenue primarily including deferrals related to support for hardware and software, while AVGO explicitly states that support services (consisting of telephone support and updates) represent stand-ready obligations for which revenue is recognized ratably over the term.\",\n\"target_sentence_ids\": [\n\"nvda_2024_8_P114_S001\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P063_S001\",\n\"avgo_2024_8_P063_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The supplied candidates discuss depreciation expense and acquisition-related intangible amortization expense, which are distinct from the target's topic of deferred revenue composition and support/license deferrals.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The supplied candidates discuss Intel Foundry segment revenue composition (wafer fabrication/service sales) and short-term debt balances, which do not address deferred revenue or support/service deferrals comparable to the target.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The supplied candidates discuss customer concentration risk and future intangible asset amortization estimates, which are unrelated to the target's deferred revenue composition.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/nvda",
+  "result": {
+    "target_ticker": "NVDA",
+    "target_disclosure_id": "nvda_2024_8_D103",
+    "item": "8",
+    "target_topic": "Deferred Revenue Composition",
+    "target_summary": "Deferred revenue primarily includes customer advances and deferrals for support, licenses, and cloud services, with $233 million and $35 million of the balance related to customer advances in fiscal years 2024 and 2023, respectively, though a subsequent note limits the scope to support for hardware and software.",
+    "target_source_status": "source_validated",
+    "target_year_over_year_context": [
+      {
+        "window": "2023-2024",
+        "side": "current",
+        "match_id": "nvda_2023_2024_M0334",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures define the composition of Deferred Revenue, specifically citing customer advances and deferrals related to support, licenses, and cloud services. D091 cites 'license and development arrangements, support... and cloud services' (P114_S001), while D103 cites 'support... license and development arrangements, and cloud services' (P112_S001).",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_8_D091",
+            "item": "8",
+            "section": "Note 10 - Balance Sheet Components",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Deferred revenue primarily includes customer advances and deferrals related to license, development, support, and cloud service arrangements.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D103",
+            "item": "8",
+            "section": "Note 10 - Balance Sheet Components",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Deferred revenue primarily includes customer advances and deferrals for support, licenses, and cloud services, with $233 million and $35 million of the balance related to customer advances in fiscal years 2024 and 2023, respectively, though a subsequent note limits the scope to support for hardware and software.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.55,
+          "confidence_score": 0.8,
+          "reason": "The disclosure adds specific quantification of customer advances related to deferred revenue, distinguishing $233 million in 2024 versus $35 million in 2023. While the qualitative definition of deferred revenue is consistent, the material change in the composition of the balance (specifically customer advances) and the large year-over-year increase in that component is meaningful.",
+          "key_change": "Quantification of customer advances in deferred revenue"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0313",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures detail the composition of deferred revenue, specifically highlighting the portion related to customer advances ($233M in 2024, $233M in 2024 ref in 2025 note). The 2025 D095 provides the total deferred revenue context including the customer advance balance.\n\nThis row links 2024 D103 (which describes deferred revenue components including hardware/software support) to 2025 D097 (which describes unearned revenue for hardware/software support). They share the specific topic of 'components of deferred/unearned revenue related to support'. Note: 2024 D103 covers this broadly; 2025 D097 is a subset/component description. Both are supported by selected sentences describing these components.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_8_D103",
+            "item": "8",
+            "section": "Note 10 - Balance Sheet Components",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Deferred revenue primarily includes customer advances and deferrals for support, licenses, and cloud services, with $233 million and $35 million of the balance related to customer advances in fiscal years 2024 and 2023, respectively, though a subsequent note limits the scope to support for hardware and software.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_8_D095",
+            "item": "8",
+            "section": "Note 9 - Balance Sheet Components",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Deferred revenue includes customer advances and unearned revenue for hardware, software, cloud services, and licenses; customer advances were $81 million in 2025 and $233 million in 2024.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_8_D097",
+            "item": "8",
+            "section": "Note 9 - Balance Sheet Components",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Deferred revenue includes unearned revenue related to hardware support, software support, and cloud services.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
+        },
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.3,
+          "confidence_score": 0.85,
+          "reason": "The disclosure describes the composition of deferred revenue. While the total balance of customer advances decreased from $233 million to $81 million, the fundamental nature of the revenue recognition model (advances, support, licenses) remains unchanged. The change is a routine fluctuation in working capital balances rather than a strategic or structural change in business operations or risk exposure.",
+          "key_change": "Routine fluctuation in deferred revenue balances"
+        }
+      }
+    ],
+    "peer_results": [
+      {
+        "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates discuss depreciation expense and acquisition-related intangible amortization expense, which are distinct from the target's topic of deferred revenue composition and support/license deferrals."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D038",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Revenue recognition for support and professional services",
+            "peer_summary": "Support services revenue is recognized ratably over the term as they represent stand-ready obligations. Professional services revenue is recognized over time as the customer simultaneously receives and consumes the benefits.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.090806,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AVGO disclose revenue recognition policies for support services. NVDA identifies deferred revenue primarily including deferrals related to support for hardware and software, while AVGO explicitly states that support services (consisting of telephone support and updates) represent stand-ready obligations for which revenue is recognized ratably over the term.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D103",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P114_S001",
+                    "paragraph_id": "nvda_2024_8_P114",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "(2)Deferred revenue primarily includes deferrals related to support for hardware and software.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D038",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P063_S001",
+                    "paragraph_id": "avgo_2024_8_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Support services consist primarily of telephone support and the provision of unspecified updates and upgrades on a when-and-if-available basis.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P063_S002",
+                    "paragraph_id": "avgo_2024_8_P063",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Support services represent stand-ready obligations for which revenue is recognized ratably over the term of the arrangement.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates discuss Intel Foundry segment revenue composition (wafer fabrication/service sales) and short-term debt balances, which do not address deferred revenue or support/service deferrals comparable to the target."
+      },
+      {
+        "peer_ticker": "MU",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates discuss customer concentration risk and future intangible asset amortization estimates, which are unrelated to the target's deferred revenue composition."
+      },
+      {
+        "peer_ticker": "QCOM",
+        "status": "no_candidate_retrieved",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved"
+      }
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "2fc206e10c33e96a6dbd1571c0bba773d9d4b47fe6e6d3de381f39981525c5b3",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/nvda",
+      "request_hash": "58d4d6c0e36f00fc89c86adb3dcfef143bf8b4161815643b6ba41c8dd9440c80"
+    }
+  }
+}

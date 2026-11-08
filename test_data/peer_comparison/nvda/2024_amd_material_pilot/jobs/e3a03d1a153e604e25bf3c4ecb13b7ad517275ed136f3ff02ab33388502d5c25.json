@@ -1,199 +1,186 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "6d112d7d4fe3fd37492ab7d62d509fbf1fe0c76e36a983b80432d21eaaeaaa77",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "f74c2721338b5dc2882fe9609ba8c4379ca0210a021a26c8cdc446a78a32d92c",
+  "request_hash": "ebe0257ef3f461a3a46bec41d6cd01dd97997759c1d22da59413a85715ac682a",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D030\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose the composition of their 'All Other' operating loss and explicitly cite stock-based compensation expense as a primary driver. NVDA attributes the year-on-year decrease in its All Other operating loss to the absence of a $1.4 billion acquisition termination cost, partially offset by an $839 million increase in stock-based compensation. Similarly, AMD breaks down its All Other operating loss for both 2024 ($4.2 billion) and 2023 ($4.4 billion), identifying stock-based compensation expense of $1.4 billion as a consistent major component in both years, alongside amortization of acquisition-related intangibles.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P051_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P042_S001\",\n\"amd_2024_7_P042_S002\"\n]\n}\n],\n\"no_match\": []\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D049",
     "item": "7",
-    "target_topic": "Geographic revenue concentration",
-    "target_summary": "Revenue from customers outside the United States accounted for 56% of total revenue in fiscal year 2024 and 69% in fiscal year 2023, with geographic designation based on billing location.",
+    "target_topic": "All Other Operating Loss Reduction",
+    "target_summary": "The year-on-year decrease in All Other operating loss was attributed to the absence of the $1.4 billion Arm acquisition termination cost incurred in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0344",
-        "relationship": "one_to_one",
+        "match_id": "nvda_2023_2024_M0197",
+        "relationship": "many_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "2023 D055 discloses revenue concentration by geography (outside US % and decline drivers). 2024 D049 discloses the same metric (outside US %) and allocation methodology. They share the specific topic of Geographic Revenue Concentration in Item 7.",
+        "explanation": "Both pairs discuss operating expenses and specifically highlight the $1.35B/$1.4B Arm acquisition termination charge. Previous: D019 cites the charge in OpEx increase; D061 details the charge. Current: D023 cites the charge as a prior year factor in OpEx comparison; D049 cites the charge in 'All Other' operating loss explanation.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D055",
+            "disclosure_id": "nvda_2023_7_D019",
             "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
+            "section": "Fiscal Year 2023 Summary",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Revenue from sales to customers outside the United States accounted for 69% and 84% of total revenue for fiscal years 2023 and 2022, respectively, with the decline in outside U.S. revenue primarily driven by China and Taiwan related to Data Center and Gaming segments.",
+            "summary": "Operating expenses for fiscal year 2023 increased 50% year-over-year to include a $1.35 billion acquisition termination charge related to the Arm transaction, as well as increases in compensation, data center infrastructure, and engineering development costs.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2023_7_D061",
+            "item": "7",
+            "section": "Results of Operations > Operating Expenses",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "The company recorded a $1.35 billion acquisition termination cost in fiscal year 2023 related to the Arm transaction, reflecting the write-off of the prepayment provided at signing.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
+            "disclosure_id": "nvda_2024_7_D023",
+            "item": "7",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Operating expenses increased for fiscal year 2024 due to growth in employees and compensation increases, while the prior year included a $1.4 billion acquisition termination charge related to the proposed Arm transaction.",
+            "extraction_status": "source_validated"
+          },
+          {
             "disclosure_id": "nvda_2024_7_D049",
             "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
+            "section": "Results of Operations > Operating Income by Reportable Segments",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Revenue from customers outside the United States accounted for 56% of total revenue in fiscal year 2024 and 69% in fiscal year 2023, with geographic designation based on billing location.",
+            "summary": "The year-on-year decrease in All Other operating loss was attributed to the absence of the $1.4 billion Arm acquisition termination cost incurred in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.792987,
-            "sequence_match_ratio": 0.328125,
-            "length_ratio": 0.753425,
-            "word_count_delta": -18,
-            "added_tokens_sample": [
-              "revenue",
-              "by",
-              "geographic",
-              "region",
-              "is",
-              "designated",
-              "based",
-              "on",
-              "the",
-              "billing",
-              "location",
-              "even",
-              "if",
-              "the",
-              "revenue",
-              "may",
-              "be",
-              "attributable",
-              "to",
-              "end"
-            ],
-            "removed_tokens_sample": [
-              "and",
-              "84",
-              "and",
-              "2022",
-              "the",
-              "decline",
-              "in",
-              "revenue",
-              "outside",
-              "the",
-              "u",
-              "s",
-              "was",
-              "primarily",
-              "driven",
-              "by",
-              "china",
-              "and",
-              "taiwan",
-              "related"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2023_7_D055",
-            "score": 0.90922,
-            "normalised_score": 0.9092,
-            "label": "Modified",
-            "rationale": "Score 90.92% of ceiling with 56% word overlap — same disclosure, wording changed.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.65,
-          "confidence_score": 0.82,
-          "reason": "The disclosure presents a significant change in geographic revenue composition, with non-U.S. revenue dropping from 84% to 69% and then to 56%. This shift materially alters the company's exposure to specific regional markets (China, Taiwan) and implies a strategic or demand shift in international markets, specifically impacting the Data Center and Gaming segments.",
-          "key_change": "Significant decline in non-U.S. revenue concentration"
+          "materiality_score": 0.7,
+          "confidence_score": 0.9,
+          "reason": "The prior year's operating expenses were heavily distorted by a $1.35–$1.4 billion one-time Arm acquisition termination charge. The current year reports 'organic' expense growth driven by employees and compensation, providing a clearer picture of ongoing operational spending and profitability.",
+          "key_change": "Exclusion of one-time acquisition termination charge from operating expense baseline"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0332",
+        "match_id": "nvda_2024_2025_M0198",
         "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures report international revenue percentages (56% in 2024, 53%/56% in 2025) and specify that geographic revenue designation is based on billing location. The specific subject of geographic revenue concentration and definition is identical.",
+        "explanation": "Both disclosures discuss the components driving the 'All Other' operating income/loss, specifically highlighting stock-based compensation expense. D049 attributes the decrease to the absence of the Arm termination cost offset by SBC increases, while D046 attributes the increase to SBC increases. Shared subject: Drivers of All Other operating income/loss (SBC).",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_7_D049",
             "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
+            "section": "Results of Operations > Operating Income by Reportable Segments",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Revenue from customers outside the United States accounted for 56% of total revenue in fiscal year 2024 and 69% in fiscal year 2023, with geographic designation based on billing location.",
+            "summary": "The year-on-year decrease in All Other operating loss was attributed to the absence of the $1.4 billion Arm acquisition termination cost incurred in fiscal year 2023, partially offset by an $839 million increase in stock-based compensation expense in fiscal year 2024.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D049",
+            "disclosure_id": "nvda_2025_7_D046",
             "item": "7",
-            "section": "Results of Operations > Concentration of Revenue",
+            "section": "Results of Operations > Operating Income by Reportable Segments",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Revenue from customers outside the United States accounted for 53% and 56% of total revenue for fiscal years 2025 and 2024, respectively, with revenue designated by billing location.",
+            "summary": "All Other operating loss increased year-over-year due to higher stock-based compensation expense reflecting employee growth and compensation increases.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reworded",
-            "cosine_similarity": 0.886211,
-            "sequence_match_ratio": 0.857143,
-            "length_ratio": 0.909091,
-            "word_count_delta": -5,
-            "added_tokens_sample": [
-              "indirect",
-              "53",
-              "and",
-              "2025",
-              "and"
-            ],
-            "removed_tokens_sample": [
-              "end",
-              "such",
-              "as",
-              "enterprises",
-              "and",
-              "gamers",
-              "and",
-              "69",
-              "and",
-              "2023"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2024_7_D049",
-            "score": 0.992872,
-            "normalised_score": 0.9929,
-            "label": "Unchanged",
-            "rationale": "Score 99.29% of ceiling — semantically identical despite surface differences (word overlap 74%).",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "No",
-          "materiality_score": 0.15,
-          "confidence_score": 0.95,
-          "reason": "The change reflects routine annual updates to the specific percentage values for international revenue (56% vs 53%) and the comparison years. The underlying policy (billing location) and business activity (international sales) remain unchanged. This is a routine data update.",
-          "key_change": "Routine update of international revenue percentages"
+          "materiality_score": 0.3,
+          "confidence_score": 0.85,
+          "reason": "While the magnitude of stock-based compensation expense increased, the disclosure attributes this to 'employee growth and compensation increases,' which is a routine operational update. The removal of the specific Arm termination cost reference is a non-recurring item normalization. The core driver (SBC expense) remains consistent in nature, and the change does not indicate a new risk or structural shift in capital resources.",
+          "key_change": "Routine expense fluctuation explanation"
         }
       }
     ],
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate retrieved discussing geographic revenue concentration or international sales percentage. All provided AMD candidates (amd_2024_7_D028, amd_2024_7_D026, amd_2024_7_D023) focus on segment-level financial performance (Embedded, Gaming, Data Center) and inventory normalization, not on geographic revenue breakdowns."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D030",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "All Other operating loss breakdown for 2024 and 2023",
+            "peer_summary": "All Other operating loss was $4.2 billion in 2024 and $4.4 billion in 2023, primarily consisting of amortization of acquisition-related intangibles and stock-based compensation expense.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.386527,
+            "relationship": "same_topic",
+            "comparison": "Both NVDA and AMD disclose the composition of their 'All Other' operating loss and explicitly cite stock-based compensation expense as a primary driver. NVDA attributes the year-on-year decrease in its All Other operating loss to the absence of a $1.4 billion acquisition termination cost, partially offset by an $839 million increase in stock-based compensation. Similarly, AMD breaks down its All Other operating loss for both 2024 ($4.2 billion) and 2023 ($4.4 billion), identifying stock-based compensation expense of $1.4 billion as a consistent major component in both years, alongside amortization of acquisition-related intangibles.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D049",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P051_S001",
+                    "paragraph_id": "nvda_2024_7_P051",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "All Other operating loss - The year-on-year decrease was due to the $1.4 billion Arm acquisition termination cost in fiscal year 2023, partially offset by a $839 million increase in stock-based compensation expense in fiscal year 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P042_S001",
+                    "paragraph_id": "amd_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "All Other operating loss of $4.2 billion in 2024 primarily consisted of $2.4 billion of amortization of acquisition-related intangibles and $1.4 billion of stock-based compensation expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P042_S002",
+                    "paragraph_id": "amd_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "All Other operating loss of $4.4 billion in 2023 primarily consisted of $2.8 billion of amortization of acquisition-related intangibles and $1.4 billion of stock-based compensation expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "f74c2721338b5dc2882fe9609ba8c4379ca0210a021a26c8cdc446a78a32d92c",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "ebe0257ef3f461a3a46bec41d6cd01dd97997759c1d22da59413a85715ac682a"
+    }
   }
 }

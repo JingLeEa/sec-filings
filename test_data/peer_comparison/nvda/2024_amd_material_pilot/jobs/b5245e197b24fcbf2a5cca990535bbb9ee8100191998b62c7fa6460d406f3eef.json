@@ -1,124 +1,134 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "cba888e35e156bd6e41df0c4c4352a7afe680bd5fa812f9fe34fb50bf372c7ed",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "e19ed85b5d3f34f9c5e597cbdf2c469d7f858d5d86c0f187d6fc7de7b7136f99",
+  "request_hash": "340c74f9d88fed75172c6238db7a62055c2f8b18ed71fd603a55f20539d9eed0",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1A_D063\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD explicitly disclose the risk of supply-demand mismatches leading to excess inventory and financial harm, citing reliance on demand estimates as a primary driver. NVDA notes that 'many additional factors' cause it to 'underestimate or overestimate' demand, resulting in 'product shortages and excess inventory' that 'significantly harmed our financial results'. Similarly, AMD states it bases inventory on 'customers' estimates of demand, which 'may not accurately predict' purchases, and warns that failure to forecast accurately could result in 'mismatch between supply and demand' leading to 'excess or obsolete inventory' and 'write-downs'. Both companies highlight the volatility caused by new product transitions and the difficulty of accurate forecasting.\",\n\"target_sentence_ids\": [\n\"nvda_2024_1A_P014_S004\",\n\"nvda_2024_1A_P016_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1A_P059_S004\",\n\"amd_2024_1A_P059_S006\",\n\"amd_2024_1A_P059_S010\"\n]\n}\n],\n\"no_match\": []\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1A_D020",
     "item": "1A",
-    "target_topic": "Supply commitments and capacity risks",
-    "target_summary": "The company builds finished products and maintains inventory in advance of anticipated demand, entering into long-term supply and capacity commitments which may not be sufficient if revenue declines. Demand for data center products surged in fiscal 2024, and next-generation products are expected to be supply-constrained; the company has increased supply purchases and added vendors, which increases complexity and execution risk.",
+    "target_topic": "Demand estimation risks and mismatches",
+    "target_summary": "The company faces risks from inaccurate demand estimation, which has historically caused significant supply-demand mismatches, product shortages, and excess inventory that harmed financial results. These mismatches stem from various factors including changing product cycles, economic conditions, new use cases like generative AI and cryptocurrency mining, and the introduction of new products. Underestimating demand leads to fulfillment failures and lost revenue, while overestimating leads to inventory write-downs and penalties. The complexity is amplified by rapid product transitions, indirect sales channels, and the uncertainty of emerging technologies like AI and the Grace CPU.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0212",
-        "relationship": "current_only",
-        "status": "unmatched",
+        "match_id": "nvda_2023_2024_M0078",
+        "relationship": "many_to_one",
+        "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "2024 D020 focuses on the risk that long-term supply and capacity commitments may not be sufficient if demand expectations change, or that supply commitments cannot be reduced if revenue declines. While 2023 D021 discusses general factors complicating demand estimation, it does not contain a specific disclosure on the risk of *irreducible long-term supply commitments* due to capacity pre-buying in the same specific manner as D020. The closest 2023 disclosure with similar supply commitment risk is D022 or D020 (which covers general mismatch risks). However, D020 in 2024 is distinct in its focus on the *commitment* side (supply side rigidity) rather than just the *estimation* side. Given 2023 D021 is primarily about the *factors* of estimation error and D024/D022/D023/D026 cover those specific factors, D020 (Supply Capacity Commitment Risk) lacks a direct counterpart in the 2023 *D021* specific subset. 2023 D020 covers general mismatch, but D024 is the specific 2024 'Supply Capacity' disclosure. Wait, 2023 D020 is 'Failure to estimate customer demand properly...'. 2024 D020 is 'We build finished products... long-term supply commitments'. They are actually quite similar in theme 'Deman",
-        "previous_disclosures": [],
+        "explanation": "Shared topic: Risks of inaccurate demand estimation leading to supply-demand mismatches, shortages, excess inventory, and financial harm. 2023 D012 details the historical harm from mismatches and specific factors (e.g., channel partners, new use cases like crypto/AI). 2023 D013 expands on factors influencing estimates and the risk of new/unknown use cases. 2024 D020 mirrors this by citing failure to estimate accurately, resulting in mismatches/harm, and listing similar factors (product cycles, AI/cloud demand, crypto mining, gray market). The core subject of 'demand forecasting risk and its operational/financial impact' is consistent.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_1A_D012",
+            "item": "1A",
+            "section": "Risks Related to Demand, Supply and Manufacturing",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Failure to accurately estimate customer demand has led to significant mismatches between supply and demand, resulting in product shortages, excess inventory, and harmed financial results. Supply has grown significantly due to supply chain conditions and product complexity, with purchase obligations and prepaid agreements representing more than half of total supply at the end of fiscal year 2023. If estimates are inaccurate or customers cancel orders, the company may not be able to reduce inventory or contractual purchase commitments, potentially incurring inventory provisions and negatively impacting gross margins.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2023_1A_D013",
+            "item": "1A",
+            "section": "Risks Related to Demand, Supply and Manufacturing",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Demand for NVIDIA's products is influenced by various external factors including competitor actions, economic conditions, and channel partner decisions, which impact forecasting accuracy. Additionally, the company builds technology for new or emerging use cases, such as the Omniverse platform and third-party generative models, where demand estimates can be incorrect, creating volatility in revenue or supply levels, and the company may not be able to generate any revenue from these specific use cases.",
+            "extraction_status": "source_validated"
+          }
+        ],
         "current_disclosures": [
           {
             "disclosure_id": "nvda_2024_1A_D020",
             "item": "1A",
             "section": "Risks Related to Demand, Supply and Manufacturing",
-            "taxonomy": "Operations & Capacity",
-            "summary": "The company builds finished products and maintains inventory in advance of anticipated demand, entering into long-term supply and capacity commitments which may not be sufficient if revenue declines. Demand for data center products surged in fiscal 2024, and next-generation products are expected to be supply-constrained; the company has increased supply purchases and added vendors, which increases complexity and execution risk.",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "The company faces risks from inaccurate demand estimation, which has historically caused significant supply-demand mismatches, product shortages, and excess inventory that harmed financial results. These mismatches stem from various factors including changing product cycles, economic conditions, new use cases like generative AI and cryptocurrency mining, and the introduction of new products. Underestimating demand leads to fulfillment failures and lost revenue, while overestimating leads to inventory write-downs and penalties. The complexity is amplified by rapid product transitions, indirect sales channels, and the uncertainty of emerging technologies like AI and the Grace CPU.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "New",
-            "cosine_similarity": 0.0,
-            "sequence_match_ratio": 0.0,
-            "length_ratio": 0.0,
-            "word_count_delta": 418,
-            "added_tokens_sample": [
-              "we",
-              "build",
-              "finished",
-              "products",
-              "and",
-              "maintain",
-              "inventory",
-              "in",
-              "advance",
-              "of",
-              "anticipated",
-              "demand",
-              "while",
-              "we",
-              "have",
-              "in",
-              "the",
-              "past",
-              "entered",
-              "and"
-            ],
-            "removed_tokens_sample": []
-          },
-          "semantic": {
-            "label": "New",
-            "score": null,
-            "normalised_score": null,
-            "matched_id": null,
-            "rationale": "One-sided change established by the finalized alignment.",
-            "method": "alignment_presence"
-          },
-          "llm": "New",
-          "final_taxonomy": "New"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.85,
-          "confidence_score": 0.9,
-          "reason": "This is a newly introduced disclosure in 2024 specifically addressing the risk that long-term supply and capacity commitments may be insufficient or irreducible if demand declines. This represents a specific escalation in the granularity of supply chain risk disclosure, highlighting the rigidity of capacity pre-buying strategies and execution risks associated with securing sufficient commitments, which was not explicitly detailed in the previous year's aggregated supply risk disclosures.",
-          "key_change": "Introduction of supply capacity commitment risk"
+          "materiality_score": 0.65,
+          "confidence_score": 0.85,
+          "reason": "The 2024 disclosure expands the list of factors influencing demand estimates to include 'NVIDIA DGX Cloud services' and 'NVIDIA AI Foundations,' explicitly linking the forecasting risk to new, high-growth business lines. This materially changes the substance by highlighting where the company's demand visibility is most vulnerable.",
+          "key_change": "Linkage to specific high-growth products"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0188",
-        "relationship": "one_to_one",
-        "status": "needs_review",
-        "review_reasons": [
-          "verifier_requested_review",
-          "missing_review_metadata"
-        ],
-        "explanation": "Both disclosures focus on the strategy and risks of securing supply and capacity through long-term agreements, premiums, deposits, and prepaid manufacturing, noting the resulting increase in product costs and supply chain complexity. The 2024 disclosure details the historical context of surging demand and adding vendors, while the 2025 disclosure confirms the continuation of these prepaid agreements and the resulting logistical complexity.",
+        "match_id": "nvda_2024_2025_M0055",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures address the core risk that inaccurate demand estimation leads to supply-demand mismatches, product shortages, and excess inventory, causing financial harm.\n\nBoth disclosures cover the risks associated with overestimating demand or customer cancellations, leading to inventory write-downs, price reductions, and penalties due to non-cancellable purchase commitments.\n\nBoth disclosures describe the complexity and revenue volatility caused by frequent product transitions, including the simultaneous shipment of new and prior architectures.\n\nBoth disclosures relate to the impact of new product introductions on engineering resources and supply chain cost management, noting that delayed customer adoption or roadmap changes can impact revenue timing.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_1A_D020",
             "item": "1A",
             "section": "Risks Related to Demand, Supply and Manufacturing",
-            "taxonomy": "Operations & Capacity",
-            "summary": "The company builds finished products and maintains inventory in advance of anticipated demand, entering into long-term supply and capacity commitments which may not be sufficient if revenue declines. Demand for data center products surged in fiscal 2024, and next-generation products are expected to be supply-constrained; the company has increased supply purchases and added vendors, which increases complexity and execution risk.",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "The company faces risks from inaccurate demand estimation, which has historically caused significant supply-demand mismatches, product shortages, and excess inventory that harmed financial results. These mismatches stem from various factors including changing product cycles, economic conditions, new use cases like generative AI and cryptocurrency mining, and the introduction of new products. Underestimating demand leads to fulfillment failures and lost revenue, while overestimating leads to inventory write-downs and penalties. The complexity is amplified by rapid product transitions, indirect sales channels, and the uncertainty of emerging technologies like AI and the Grace CPU.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_1A_D020",
+            "disclosure_id": "nvda_2025_1A_D026",
             "item": "1A",
             "section": "Risks Related to Demand, Supply, and Manufacturing",
-            "taxonomy": "Operations & Capacity",
-            "summary": "To secure future supply and capacity, NVIDIA has paid premiums, provided deposits, and entered into long-term supply agreements and prepaid manufacturing capacity agreements. This strategy has increased product costs and creates significant complexity in managing multiple suppliers with varying production planning and execution. Despite these efforts, NVIDIA may still be unable to secure sufficient capacity commitments, and the integration of new suppliers adds logistical complexity and risk.",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "NVIDIA faces significant risks of supply-demand mismatches due to the difficulty of accurately estimating customer demand, which is influenced by complex factors including generative AI adoption, cryptocurrency mining volatility, product development cycles, and channel inventory behavior. Inaccurate estimation can lead to product shortages, excess inventory, financial harm, and reputational damage.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_1A_D028",
+            "item": "1A",
+            "section": "Risks Related to Demand, Supply, and Manufacturing",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Overestimating demand or customer cancellations may prevent the utilization of inventory or reduction of purchase commitments, leading to price reductions, inventory write-downs, penalties, and impaired gross margins, exacerbated by non-cancellable orders and growing prepayments.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_1A_D030",
+            "item": "1A",
+            "section": "Risks Related to Demand, Supply, and Manufacturing",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Frequent and complex architectural transitions, including simultaneous shipping of new and prior architectures, create volatility in revenue due to qualification times, channel inventory reductions, and potential inability to sell multiple architectures effectively.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_1A_D032",
+            "item": "1A",
+            "section": "Risks Related to Demand, Supply, and Manufacturing",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Significant engineering resources are required for new products, and changes to the product roadmap or delayed customer adoption of new products can impact supply chain cost management and revenue timing.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
-          "status": "not_started",
+          "status": "completed",
           "lexical": null,
           "semantic": null,
-          "llm": null,
-          "final_taxonomy": null
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
-        "materiality_analysis": null
+        "materiality_analysis": {
+          "materiality": "No",
+          "materiality_score": 0.1,
+          "confidence_score": 0.9,
+          "reason": "The 2025 disclosures split the broad 2024 summary into more specific categories but retain the same core risks: supply-demand mismatches, inventory write-downs, product transition complexity, and engineering resource allocation. No new operational conditions or financial exposures are introduced.",
+          "key_change": "Restructuring of existing operational risks"
+        }
       }
     ],
     "peer_results": [
@@ -129,45 +139,35 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_1A_D063",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Demand Forecasting and Inventory Risks",
             "peer_summary": "Uncertainties in customer ordering, short product lifecycles, and reliance on estimates for demand forecasting can lead to mismatches between supply and demand, resulting in excess or obsolete inventory write-downs and adverse effects on gross margins, as seen in the Embedded segment's 2024 revenue decrease.",
             "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.09827,
+            "retrieval_score": 0.132221,
             "relationship": "same_topic",
-            "comparison": "Both companies disclose risks related to mismatches between supply commitments/inventory and actual demand, noting that inaccurate forecasts or changing demand expectations can lead to excess inventory or impairment. AMD explicitly states that its inventory levels are based on customer estimates which may not be accurate, leading to write-downs, while NVIDIA highlights the risk that long-term supply commitments may not be sufficient or reducible if revenue declines or demand expectations change. NVIDIA specifically notes the surge in data center demand and the risk of supply constraints for next-generation products, whereas AMD focuses on the general uncertainty of customer ordering and short product lifecycles leading to obsolete inventory.",
+            "comparison": "Both NVDA and AMD explicitly disclose the risk of supply-demand mismatches leading to excess inventory and financial harm, citing reliance on demand estimates as a primary driver. NVDA notes that 'many additional factors' cause it to 'underestimate or overestimate' demand, resulting in 'product shortages and excess inventory' that 'significantly harmed our financial results'. Similarly, AMD states it bases inventory on 'customers' estimates of demand, which 'may not accurately predict' purchases, and warns that failure to forecast accurately could result in 'mismatch between supply and demand' leading to 'excess or obsolete inventory' and 'write-downs'. Both companies highlight the volatility caused by new product transitions and the difficulty of accurate forecasting.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1A",
                 "disclosure_id": "nvda_2024_1A_D020",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1A_P015_S001",
-                    "paragraph_id": "nvda_2024_1A_P015",
+                    "sentence_id": "nvda_2024_1A_P014_S004",
+                    "paragraph_id": "nvda_2024_1A_P014",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "We build finished products and maintain inventory in advance of anticipated demand.",
+                    "text": "This mismatch has resulted in both product shortages and excess inventory, has varied across our market platforms, and has significantly harmed our financial results.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "nvda_2024_1A_P015_S002",
-                    "paragraph_id": "nvda_2024_1A_P015",
+                    "sentence_id": "nvda_2024_1A_P016_S001",
+                    "paragraph_id": "nvda_2024_1A_P016",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "While we have in the past entered and may in the future enter into long-term supply and capacity commitments, we may not be able to secure sufficient commitments for capacity to address our business needs, or our long-term demand expectations may change.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_1A_P015_S010",
-                    "paragraph_id": "nvda_2024_1A_P015",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "We may not have the ability to reduce our supply commitments at the same rate or at all if our revenue declines.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_1A_P017_S010",
-                    "paragraph_id": "nvda_2024_1A_P017",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "We may incur inventory provisions or impairments if our inventory or supply or capacity commitments exceed demand for our products or demand declines.",
+                    "text": "Many additional factors have caused and/or could in the future cause us to either underestimate or overestimate our customers' future demand for our products, or otherwise cause a mismatch between supply and demand for our products and impact the timing and volume of our revenue, including:",
                     "visible_in_prompt": true
                   }
                 ]
@@ -175,6 +175,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "1A",
                 "disclosure_id": "amd_2024_1A_D063",
                 "sentences": [
                   {
@@ -190,17 +191,26 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
                     "text": "To the extent we fail to forecast demand and product mix accurately or are unable to increase production or secure sufficient capacity and there is a mismatch between supply and demand for our products, it could limit our ability to meet customer demand and have a material adverse effect on our business.",
                     "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1A_P059_S010",
+                    "paragraph_id": "amd_2024_1A_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We may build inventories during periods of anticipated growth, and the cancellation or deferral of product orders or overproduction due to failure of anticipated orders to materialize could result in excess or obsolete inventory, which could result in write-downs of inventory and an adverse effect on gross margins.",
+                    "visible_in_prompt": true
                   }
                 ]
               }
             ]
           }
         ],
-        "rationale": "",
-        "agent_warnings": [
-          "ignored_no_match_note_for_peer_with_comparisons"
-        ]
+        "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e19ed85b5d3f34f9c5e597cbdf2c469d7f858d5d86c0f187d6fc7de7b7136f99",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "340c74f9d88fed75172c6238db7a62055c2f8b18ed71fd603a55f20539d9eed0"
+    }
   }
 }

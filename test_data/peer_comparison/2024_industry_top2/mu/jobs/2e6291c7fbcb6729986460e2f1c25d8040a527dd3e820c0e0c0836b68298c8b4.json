@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "0410ffce31c30ce2e626e8b89ea120bcc1afa0dec9b3301353ee7bbb8adf2f4a",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "b998f9b44c2b65a0ad33a5c54203bd7abde9a7d06e26b7b631704e4d746bb42c",
+  "request_hash": "d7c888d67218929fa6b6a25506108b2d8a385a662f7f2bcc67bb6410ab429ddf",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D054\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and AMD define their reportable business segments in Item 8. MU's Storage Business Unit (SBU) focuses on SSDs and component-level storage for data center, PC, and consumer markets, whereas AMD's segments are differentiated by application area: Data Center (AI accelerators, CPUs, GPUs), Client (CPUs, APUs for desktops/notebooks), Gaming (discrete GPUs, semi-custom SoCs), and Embedded. While both disclose four units, MU's SBU is product-focused (storage), while AMD's segments are market/application-focused with distinct hardware types.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P125_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P059_S001\",\n\"amd_2024_8_P059_S002\",\n\"amd_2024_8_P059_S003\",\n\"amd_2024_8_P059_S004\",\n\"amd_2024_8_P059_S005\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D144\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose segment information covering the storage market within their broader semiconductor operations. AVGO's Semiconductor Solutions segment explicitly includes products for storage systems and secure data movement to storage devices like SSDs and HDDs. In contrast, MU has a dedicated Storage Business Unit (SBU) that specifically includes SSDs and component-level storage solutions. Both highlight storage as a key application area, but AVGO embeds it within a general semiconductor solution segment while MU isolates it as a distinct business unit.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P125_S001\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P187_S001\",\n\"avgo_2024_8_P187_S002\",\n\"avgo_2024_8_P187_S004\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The primary candidate (intc_2024_8_D063) discusses segment designation (CCG, DCAI, Intel Foundry) but does not contain specific product definitions for storage business units comparable to MU's SBU definition. The other candidate (intc_2024_8_D123) concerns a historical divestiture gain, which is not comparable to segment business definitions.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The primary candidate (nvda_2024_8_D136) defines the Compute & Networking segment, which includes Data Center and AI solutions but does not explicitly define a storage business unit or storage products in the same manner as MU's SBU. The other candidate (nvda_2024_8_D071) concerns lease obligations, which is not comparable to segment business definitions.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D118",
@@ -207,17 +210,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D054",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Reportable Segment Definitions",
             "peer_summary": "The Company has four reportable segments: Data Center (including AI accelerators, CPUs, GPUs, etc.), Client (CPUs, APUs, chipsets for desktops/notebooks), Gaming (discrete GPUs, semi-custom SoCs), and Embedded (embedded CPUs, GPUs, APUs, FPGAs, SOMs).",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.055243,
+            "retrieval_score": 0.067851,
             "relationship": "same_topic",
-            "comparison": "Both companies disclose the definition of their reportable business units or segments. Micron's Storage Business Unit (SBU) specifically includes SSDs and component-level storage solutions for data center, PC, and consumer markets. In contrast, AMD's segment definitions are broader and distinct: it has separate Data Center and Client segments for server and PC processors/GPUs, and while it mentions AI accelerators in Data Center, it does not group storage components (SSDs) into a primary reportable segment in the same manner as Micron's SBU definition, nor does it list storage as a core product line in its segment summaries.",
+            "comparison": "Both MU and AMD define their reportable business segments in Item 8. MU's Storage Business Unit (SBU) focuses on SSDs and component-level storage for data center, PC, and consumer markets, whereas AMD's segments are differentiated by application area: Data Center (AI accelerators, CPUs, GPUs), Client (CPUs, APUs for desktops/notebooks), Gaming (discrete GPUs, semi-custom SoCs), and Embedded. While both disclose four units, MU's SBU is product-focused (storage), while AMD's segments are market/application-focused with distinct hardware types.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D118",
                 "sentences": [
                   {
@@ -232,8 +239,16 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D054",
                 "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P059_S001",
+                    "paragraph_id": "amd_2024_8_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The Company's four reportable segments are:",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "amd_2024_8_P059_S002",
                     "paragraph_id": "amd_2024_8_P059",
@@ -276,17 +291,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D144",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Semiconductor Solutions Segment Business",
             "peer_summary": "The semiconductor solutions segment provides devices for data center, service provider, and enterprise networking applications, including AI networking, as well as products for mobile, set-top box, broadband access, storage, industrial, and automotive markets. The segment also includes IP licensing.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.102097,
-            "relationship": "related_topic",
-            "comparison": "Both companies describe their semiconductor solutions in relation to storage applications, but the nature of the involvement differs. Micron's Storage Business Unit is defined by its inclusion of SSDs and component-level storage solutions, indicating it is a primary manufacturer of storage devices. Broadcom's Semiconductor Solutions segment includes products for enabling 'secure movement of digital data to and from... storage systems... to underlying storage devices, such as hard disk drives and solid state drives,' and also includes IP licensing, suggesting Broadcom provides connectivity and interface solutions for storage rather than the storage media itself.",
+            "retrieval_score": 0.135086,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose segment information covering the storage market within their broader semiconductor operations. AVGO's Semiconductor Solutions segment explicitly includes products for storage systems and secure data movement to storage devices like SSDs and HDDs. In contrast, MU has a dedicated Storage Business Unit (SBU) that specifically includes SSDs and component-level storage solutions. Both highlight storage as a key application area, but AVGO embeds it within a general semiconductor solution segment while MU isolates it as a distinct business unit.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D118",
                 "sentences": [
                   {
@@ -301,8 +320,23 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D144",
                 "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P187_S001",
+                    "paragraph_id": "avgo_2024_8_P187",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Semiconductor solutions.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P187_S002",
+                    "paragraph_id": "avgo_2024_8_P187",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We provide semiconductor solutions for managing the movement of data in data center, service provider, and enterprise networking applications, including AI networking and connectivity.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "avgo_2024_8_P187_S004",
                     "paragraph_id": "avgo_2024_8_P187",
@@ -321,20 +355,25 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for Intel focus on the internal foundry model and organizational structure of operating segments (CCG, DCAI, Intel Foundry) but do not provide a definition of a reportable segment or business unit specifically dedicated to storage products or SSDs comparable to Micron's SBU definition."
+        "rationale": "The primary candidate (intc_2024_8_D063) discusses segment designation (CCG, DCAI, Intel Foundry) but does not contain specific product definitions for storage business units comparable to MU's SBU definition. The other candidate (intc_2024_8_D123) concerns a historical divestiture gain, which is not comparable to segment business definitions."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "The primary candidate (nvda_2024_8_D136) defines the Compute & Networking segment, which includes Data Center and AI solutions but does not explicitly define a storage business unit or storage products in the same manner as MU's SBU. The other candidate (nvda_2024_8_D071) concerns lease obligations, which is not comparable to segment business definitions."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "b998f9b44c2b65a0ad33a5c54203bd7abde9a7d06e26b7b631704e4d746bb42c",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "d7c888d67218929fa6b6a25506108b2d8a385a662f7f2bcc67bb6410ab429ddf"
+    }
   }
 }

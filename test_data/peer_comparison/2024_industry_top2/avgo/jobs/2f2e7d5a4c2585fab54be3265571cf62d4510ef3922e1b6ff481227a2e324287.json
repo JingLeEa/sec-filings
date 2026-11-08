@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "a18b38043b659ae156ee7b2685495ca826164a7821f681ec8cf001920f26a69a",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "1c5c8abf1ea746c9ea2d2d06100c5e7043149cec2b5f64893af831e8f56e27a9",
+  "request_hash": "924f7c7491fb585bd6c2e765a3f8f42230e34bacdbeced47f6affa64856a5603",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D038\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and AMD report a decrease in other income, net for fiscal year 2024, driven primarily by lower interest income resulting from reduced balances in short-term investments. AVGO states other income fell to $406 million from $512 million due to a lower invested balance, while AMD reports other income dropped to $181 million from $197 million due to lower balances held in short-term investments.\",\n\"target_sentence_ids\": [\n\"avgo_2024_7_P059_S003\",\n\"avgo_2024_7_P059_S004\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P052_S001\",\n\"amd_2024_7_P052_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"No candidate is substantively comparable; INTC candidates focus on specific equity investment gains (Astera Labs) or interest expense/derivative losses (Apollo, EC matter), rather than the aggregate other income decline driven by lower invested balances/interest income seen in the target.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"No candidate is substantively comparable; MU focuses on the deterioration of net interest income due to higher interest expense from debt rates, whereas the target focuses on a decrease in other income due to lower invested balances (interest income side).\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"No candidate is substantively comparable; NVDA reports an increase in interest income driven by higher yields and cash balances, and separates other income drivers (unrealized gains/foreign currency), which contrasts with the target's decrease in other income due to lower invested balances.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate is substantively comparable; QCOM reports an increase in investment and other income driven by higher interest rates and balances, which is the opposite direction of the target's decrease.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_7_D061",
@@ -220,17 +223,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D038",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Other Income (Expense), Net Composition and Results",
             "peer_summary": "Other income (expense), net totaled $181 million in 2024, down from $197 million in 2023, primarily due to decreased interest income from lower short-term investment balances; this line item is primarily comprised of interest income from short-term investments, changes in valuation of equity investments, and foreign currency transaction gains and losses.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.37914,
+            "retrieval_score": 0.381241,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and AMD reported a decrease in Other income, net driven primarily by lower interest income resulting from reduced investment balances. AVGO’s other income decreased from $512 million to $406 million due to a lower invested balance, while AMD’s other income decreased from $197 million to $181 million due to lower short-term investment balances.",
+            "comparison": "Both AVGO and AMD report a decrease in other income, net for fiscal year 2024, driven primarily by lower interest income resulting from reduced balances in short-term investments. AVGO states other income fell to $406 million from $512 million due to a lower invested balance, while AMD reports other income dropped to $181 million from $197 million due to lower balances held in short-term investments.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D061",
                 "sentences": [
                   {
@@ -252,6 +259,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D038",
                 "sentences": [
                   {
@@ -279,26 +287,31 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The only candidate with a relevant financial metric topic (D094 on gains on equity investments) describes a specific realized gain event related to Astera Labs, which is not comparable to AVGO's general decrease in interest income due to lower invested balances. Other candidates discuss Cost of Sales or unrelated topics."
+        "rationale": "No candidate is substantively comparable; INTC candidates focus on specific equity investment gains (Astera Labs) or interest expense/derivative losses (Apollo, EC matter), rather than the aggregate other income decline driven by lower invested balances/interest income seen in the target."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The candidate D022 discusses Net interest income (expense), which includes significant interest expense components from debt. AVGO's disclosure focuses on Other income, net driven by interest income and invested balances, without mention of debt-related interest expense offsets. The drivers (debt rates vs. invested balance) and composition differ substantively."
+        "rationale": "No candidate is substantively comparable; MU focuses on the deterioration of net interest income due to higher interest expense from debt rates, whereas the target focuses on a decrease in other income due to lower invested balances (interest income side)."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The candidate D060 describes an *increase* in interest income driven by higher yields on *increased* cash balances. This is the opposite trend and driver compared to AVGO, which reported a *decrease* in other income driven by a *lower* invested balance."
+        "rationale": "No candidate is substantively comparable; NVDA reports an increase in interest income driven by higher yields and cash balances, and separates other income drivers (unrealized gains/foreign currency), which contrasts with the target's decrease in other income due to lower invested balances."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The candidate D009 describes an *increase* in investment and other income due to higher interest rates on *higher* balances. This contrasts with AVGO's reported *decrease* in other income due to a *lower* invested balance."
+        "rationale": "No candidate is substantively comparable; QCOM reports an increase in investment and other income driven by higher interest rates and balances, which is the opposite direction of the target's decrease."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "1c5c8abf1ea746c9ea2d2d06100c5e7043149cec2b5f64893af831e8f56e27a9",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "924f7c7491fb585bd6c2e765a3f8f42230e34bacdbeced47f6affa64856a5603"
+    }
   }
 }

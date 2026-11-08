@@ -1,37 +1,32 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "14d585911e02194616da33bbac0643692882b5bd51b3cb05e431c816177fe2ea",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "71ab2e86c97de16a37dedcd69f93ea7094686e4fef0a83355333cfd08f4d428a",
+  "request_hash": "bc3a6436bc89d5964cb4e78b53e942af2826e7ad183458f33880393e00e70e90",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D053\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies report specific drivers of their investing cash flows in fiscal year 2024, highlighting significant activity in short-term marketable securities. NVDA states that cash provided by investing activities decreased due to 'lower marketable securities maturities and higher purchases of marketable securities.' AMD reports net cash used in investing activities of $1.1 billion, which consisted primarily of '$1.5 billion in short-term investment purchases' partially offset by '$1.4 billion in short-term investment maturities.' While both companies cite purchases and maturities of marketable securities as key components, AMD provides granular dollar amounts for these flows and also identifies acquisitions ($548 million) and property/equipment purchases ($636 million) as major drivers of cash usage, whereas NVDA's summary focuses broadly on the net change direction and the two opposing securities activities without listing other material investing outflows in the provided sentence.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P074_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P066_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"Disclosure amd_2024_7_D054 concerns 2023 investing activities, which is not the same fiscal year as the target (2024). Disclosure amd_2024_7_D029 concerns segment operating income, which is a performance metric unrelated to investing cash flow drivers.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D065",
     "item": "7",
-    "target_topic": "Offsetting Impact of IRS Audit Resolution on Tax Rate",
-    "target_summary": "The increase in the effective tax rate due to decreased benefits from FDII, stock-based compensation, and research credits was partially offset by the benefit from the IRS audit resolution, contributing to the 2024 effective tax rate being lower than the statutory rate.",
+    "target_topic": "Investing Cash Flow Drivers",
+    "target_summary": "Cash used in investing activities decreased in fiscal year 2024 compared to 2023, primarily driven by lower marketable securities maturities and higher purchases of marketable securities.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0358",
-        "relationship": "many_to_one",
+        "match_id": "nvda_2023_2024_M0235",
+        "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both groups analyze the components causing the effective tax rate to differ from the statutory rate. nvda_2023_7_D069 and D070 describe the 2023 rate being lower due to FDII, SBC, R&D credits, offset by domestication benefits/higher U.S. earnings. nvda_2024_7_D065 describes the 2024 rate increase due to decreased benefits from FDII, SBC, R&D credits, partially offset by IRS audit resolution. While the specific offsetting factors differ (Domestication vs IRS Audit), the core subject is the reconciliation of the effective tax rate to the statutory rate via specific tax benefits. This is a valid many-to-one or one-to-many match within the same topic of 'Effective Tax Rate Drivers'.",
+        "explanation": "Both disclosures explain the year-over-year change in cash provided by investing activities, citing movements in marketable securities as the primary driver.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D069",
+            "disclosure_id": "nvda_2023_7_D073",
             "item": "7",
-            "section": "Results of Operations > Income Taxes",
+            "section": "Liquidity and Capital Resources",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "The decrease in the effective tax rate in fiscal year 2023 compared to 2022 was primarily due to increased benefits from the FDII deduction, stock-based compensation, and U.S. federal research tax credit, partially offset by higher U.S. taxable earnings and lower one-time benefits from the 2022 subsidiary domestication.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2023_7_D070",
-            "item": "7",
-            "section": "Results of Operations > Income Taxes",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "The fiscal year 2023 effective tax rate was lower than the U.S. federal statutory rate of 21% due to tax benefits from the FDII deduction, stock-based compensation, and the U.S. federal research tax credit.",
+            "summary": "Cash provided by investing activities increased in fiscal year 2023 compared to 2022, driven by lower purchases and higher sales and maturities of marketable securities, which was partially offset by higher capital expenditures.",
             "extraction_status": "source_validated"
           }
         ],
@@ -39,192 +34,68 @@
           {
             "disclosure_id": "nvda_2024_7_D065",
             "item": "7",
-            "section": "Results of Operations > Income Taxes",
+            "section": "Liquidity and Capital Resources",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "The increase in the effective tax rate due to decreased benefits from FDII, stock-based compensation, and research credits was partially offset by the benefit from the IRS audit resolution, contributing to the 2024 effective tax rate being lower than the statutory rate.",
+            "summary": "Cash used in investing activities decreased in fiscal year 2024 compared to 2023, primarily driven by lower marketable securities maturities and higher purchases of marketable securities.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reduced",
-            "cosine_similarity": 0.442845,
-            "sequence_match_ratio": 0.181818,
-            "length_ratio": 0.406977,
-            "word_count_delta": -51,
-            "added_tokens_sample": [
-              "increase",
-              "the",
-              "effective",
-              "tax",
-              "rate",
-              "was",
-              "partially",
-              "offset",
-              "by",
-              "a",
-              "benefit",
-              "due",
-              "to",
-              "the",
-              "irs",
-              "audit",
-              "resolution",
-              "for",
-              "2024",
-              "additionally"
-            ],
-            "removed_tokens_sample": [
-              "decrease",
-              "in",
-              "2023",
-              "as",
-              "compared",
-              "to",
-              "fiscal",
-              "year",
-              "2022",
-              "primarily",
-              "due",
-              "to",
-              "increased",
-              "tax",
-              "benefits",
-              "of",
-              "the",
-              "fdii",
-              "deduction",
-              "stock"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2023_7_D069",
-            "score": 0.824918,
-            "normalised_score": 0.8249,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 82.49% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
-          "materiality": "Yes",
-          "materiality_score": 0.7,
-          "confidence_score": 0.85,
-          "reason": "The drivers of the effective tax rate have shifted materially. The 2023 rate was lowered by one-time benefits from subsidiary domestication. In 2024, the rate drivers shifted to decreased benefits from FDII/SBC/R&D credits, partially offset by the IRS audit resolution (M0357). The change in the composition of tax rate drivers, particularly the move from one-time domestication benefits to structural credit reductions and audit settlements, meaningfully changes the understanding of the company's tax position and future trends.",
-          "key_change": "Shift in primary drivers of effective tax rate"
+          "materiality": "No",
+          "materiality_score": 0.2,
+          "confidence_score": 0.9,
+          "reason": "The disclosure describes the period-over-period change in cash flows from investing activities. While the direction reverses (from increase to decrease), this is a routine reporting of periodic financial results driven by changes in marketable securities transactions. It does not indicate a strategic shift in capital allocation or a new risk exposure.",
+          "key_change": "Periodic change in marketable securities cash flow"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0341",
-        "relationship": "many_to_one",
+        "match_id": "nvda_2024_2025_M0214",
+        "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Previous disclosures nvda_2024_7_D064 and nvda_2024_7_D065 both concern the resolution of the IRS audit and its benefit to the effective tax rate. Current disclosure nvda_2025_7_D058 explicitly references the 'prior year discrete benefit due to an audit resolution' as a driver for the effective tax rate increase (due to absence of the benefit in 2025). They share the same specific subject: the IRS audit resolution impact on the effective tax rate.",
+        "explanation": "Both disclosures discuss the change in cash flows from investing activities. D065 notes a decrease in cash provided by investing activities driven by lower marketable securities maturities and higher purchases. D066 notes an increase in cash used in investing activities driven by net purchases of marketable securities. Both focus on the net impact of marketable securities trading on investing cash flows.",
         "previous_disclosures": [
-          {
-            "disclosure_id": "nvda_2024_7_D064",
-            "item": "7",
-            "section": "Results of Operations > Income Taxes",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "The IRS audit of federal income tax returns for fiscal years 2018 and 2019 was resolved in the third quarter of fiscal 2024, resulting in a $145 million non-cash net benefit from effectively settled positions.",
-            "extraction_status": "source_validated"
-          },
           {
             "disclosure_id": "nvda_2024_7_D065",
             "item": "7",
-            "section": "Results of Operations > Income Taxes",
+            "section": "Liquidity and Capital Resources",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "The increase in the effective tax rate due to decreased benefits from FDII, stock-based compensation, and research credits was partially offset by the benefit from the IRS audit resolution, contributing to the 2024 effective tax rate being lower than the statutory rate.",
+            "summary": "Cash used in investing activities decreased in fiscal year 2024 compared to 2023, primarily driven by lower marketable securities maturities and higher purchases of marketable securities.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D058",
+            "disclosure_id": "nvda_2025_7_D066",
             "item": "7",
-            "section": "Results of Operations > Income Taxes",
+            "section": "Liquidity and Capital Resources",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "The effective tax rate increase was driven by higher pre-tax income and the absence of a prior year discrete benefit from an audit resolution. Rates remained below the 21% U.S. federal statutory rate due to FDII deductions, stock-based compensation, federal research credits, and lower-taxed jurisdictions, with 2024 also benefiting from the audit resolution.",
+            "summary": "Cash used in investing activities increased in fiscal year 2025 compared to fiscal year 2024, primarily due to net purchases of marketable securities and purchases of land, property, and equipment.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.493293,
-            "sequence_match_ratio": 0.224215,
-            "length_ratio": 0.798387,
-            "word_count_delta": -25,
-            "added_tokens_sample": [
-              "increased",
-              "primarily",
-              "due",
-              "to",
-              "higher",
-              "pre",
-              "tax",
-              "income",
-              "and",
-              "prior",
-              "year",
-              "discrete",
-              "an",
-              "our",
-              "effective",
-              "tax",
-              "rates",
-              "for",
-              "fiscal",
-              "years"
-            ],
-            "removed_tokens_sample": [
-              "during",
-              "the",
-              "third",
-              "quarter",
-              "of",
-              "fiscal",
-              "year",
-              "2024",
-              "the",
-              "internal",
-              "revenue",
-              "service",
-              "or",
-              "irs",
-              "audit",
-              "of",
-              "our",
-              "federal",
-              "income",
-              "tax"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2024_7_D065",
-            "score": 0.902072,
-            "normalised_score": 0.9021,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 90.21% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.7,
+          "materiality_score": 0.65,
           "confidence_score": 0.85,
-          "reason": "The disclosure explains the effective tax rate increase by noting the 'absence of a prior year discrete benefit' from an audit resolution. This clarifies a significant structural difference in the tax rate drivers between years, impacting the comparability and forward-looking nature of the tax burden.",
-          "key_change": "Explanation of tax rate variance via prior year benefit absence"
+          "reason": "The disclosure highlights a change in the direction of cash flows from investing activities (from a decrease to an increase in cash used) and introduces 'purchase of land, property and equipment' as a new driver alongside marketable securities. This indicates a shift in capital allocation and investing behavior.",
+          "key_change": "Change in investing cash flow drivers and direction"
         }
       }
     ],
@@ -235,32 +106,29 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D039",
-            "peer_topic": "Income Tax Provision and Effective Rate",
-            "peer_summary": "AMD recorded an income tax provision of $381 million in 2024 with a 19% effective tax rate, compared to a $346 million benefit and (68%) rate in 2023. The 2024 provision increase was driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+            "peer_disclosure_id": "amd_2024_7_D053",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "2024 Net Cash Used in Investing Activities",
+            "peer_summary": "Net cash used in investing activities was $1.1 billion in 2024, primarily driven by $1.5 billion in short-term investment purchases, $636 million in property and equipment purchases, and $548 million in acquisitions, partially offset by $1.4 billion in short-term investment maturities and $616 million in sales.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.160946,
+            "retrieval_score": 0.1697,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD disclose specific drivers for their 2024 effective tax rates under Item 7. NVDA attributes its rate to a $145 million benefit from an IRS audit resolution which partially offset decreases in benefits from FDII, stock-based compensation, and research credits. In contrast, AMD's 2024 provision of $381 million (19% effective rate) was driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction. While both companies report 2024 effective tax rates influenced by specific discrete or structural items (audit resolution for NVDA, integration transaction for AMD), the nature and magnitude of these impacts differ significantly: NVDA's audit resolution provided a net benefit helping to keep its rate below the statutory rate, whereas AMD's integration transaction increased its provision significantly compared to the prior year's benefit.",
+            "comparison": "Both companies report specific drivers of their investing cash flows in fiscal year 2024, highlighting significant activity in short-term marketable securities. NVDA states that cash provided by investing activities decreased due to 'lower marketable securities maturities and higher purchases of marketable securities.' AMD reports net cash used in investing activities of $1.1 billion, which consisted primarily of '$1.5 billion in short-term investment purchases' partially offset by '$1.4 billion in short-term investment maturities.' While both companies cite purchases and maturities of marketable securities as key components, AMD provides granular dollar amounts for these flows and also identifies acquisitions ($548 million) and property/equipment purchases ($636 million) as major drivers of cash usage, whereas NVDA's summary focuses broadly on the net change direction and the two opposing securities activities without listing other material investing outflows in the provided sentence.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D065",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_7_P068_S002",
-                    "paragraph_id": "nvda_2024_7_P068",
+                    "sentence_id": "nvda_2024_7_P074_S001",
+                    "paragraph_id": "nvda_2024_7_P074",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "The increase in the effective tax rate was partially offset by a benefit due to the IRS audit resolution.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_7_P069_S002",
-                    "paragraph_id": "nvda_2024_7_P069",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our effective tax rate for fiscal year 2024 was additionally benefited by the IRS audit resolution.",
+                    "text": "Cash provided by investing activities decreased in fiscal year 2024 compared to fiscal year 2023, primarily driven by lower marketable securities maturities and higher purchases of marketable securities.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -268,20 +136,14 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D039",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D053",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P053_S001",
-                    "paragraph_id": "amd_2024_7_P053",
+                    "sentence_id": "amd_2024_7_P066_S001",
+                    "paragraph_id": "amd_2024_7_P066",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "We recorded an income tax provision of $381 million in 2024 and an income tax benefit of $346 million in 2023, representing effective tax rates of 19% and (68%), respectively.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_7_P053_S002",
-                    "paragraph_id": "amd_2024_7_P053",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The increase in income tax provision in 2024 was primarily due to higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
+                    "text": "Net cash used in investing activities was $1.1 billion in 2024, which primarily consisted of cash used for purchases of short-term investments of $1.5 billion, $636 million for purchases of property and equipment, and cash used in acquisitions, net of cash acquired of $548 million, partially offset by proceeds from maturities of short-term investments of $1.4 billion and sale of short-term investments of $616 million.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -289,8 +151,16 @@
             ]
           }
         ],
-        "rationale": ""
+        "rationale": "",
+        "agent_warnings": [
+          "ignored_no_match_note_for_peer_with_comparisons"
+        ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "71ab2e86c97de16a37dedcd69f93ea7094686e4fef0a83355333cfd08f4d428a",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "bc3a6436bc89d5964cb4e78b53e942af2826e7ad183458f33880393e00e70e90"
+    }
   }
 }

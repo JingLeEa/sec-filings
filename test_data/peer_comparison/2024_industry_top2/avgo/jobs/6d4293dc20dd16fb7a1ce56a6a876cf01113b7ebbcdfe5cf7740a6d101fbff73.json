@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "a47a16173e1104eba472dcfe9403ad6d798756e249942c4c2f5a87ef83d3d1e6",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "8babff724cc6a57ed8d197118d7eaec4d7d98e831463789a5d631c838189baa3",
+  "request_hash": "6c97ce48ea6ae273e458ee4af3b5154a337ad162cecc20039b28c8cee6bc6577",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D034\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and AMD disclose the year-over-year change in amortization of acquisition-related intangible assets included in operating expenses. AVGO reported a significant increase of $1.85 billion (133%) driven by the VMware Merger, whereas AMD reported a decrease of $417 million (15%) as certain intangibles were fully amortized. While both companies highlight the impact of acquisition-related intangibles, the direction and magnitude of the expense change differ materially due to different M&A timelines and amortization schedules.\",\n\"target_sentence_ids\": [\n\"avgo_2024_7_P051_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P047_S001\",\n\"amd_2024_7_P047_S002\"\n]\n},\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D030\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"AMD provides a breakdown of the components of 'All Other' operating losses, explicitly identifying the $2.4 billion amortization of acquisition-related intangibles as the primary driver, alongside stock-based compensation. This context aligns with AVGO's focus on amortization as a key operating expense item, but AMD's disclosure is broader, grouping amortization within a net loss category that includes other non-cash charges, whereas AVGO isolates the amortization figure.\",\n\"target_sentence_ids\": [\n\"avgo_2024_7_P051_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P042_S001\",\n\"amd_2024_7_P042_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"INTC candidates discuss segment-level operating expense variances (Intel Products, DCAI, CCG) and process technology investments, but do not contain substantive disclosures regarding the amortization of acquisition-related intangible assets comparable to AVGO's specific topic.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU candidates discuss SG&A expense trends and CNBU operating income drivers, which do not cover the specific topic of amortization of acquisition-related intangible assets found in AVGO's disclosure.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA candidates discuss operating expense drivers (employees, compensation) and financing cash flows, but do not disclose the amortization of acquisition-related intangible assets as a distinct operating expense line item comparable to AVGO.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"QCOM candidates discuss investment and other income drivers and QTL revenue drivers, which are unrelated to the amortization of acquisition-related intangible assets.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_7_D052",
@@ -167,17 +170,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D034",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Amortization of Acquisition-Related Intangibles",
             "peer_summary": "Amortization of acquisition-related intangibles was $2.4 billion for 2024, a decrease of 15% from $2.8 billion in 2023, primarily due to certain intangibles being fully amortized in the prior fiscal year.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.295012,
+            "retrieval_score": 0.29518,
             "relationship": "same_topic",
-            "comparison": "Both companies disclose the financial impact of amortization of acquisition-related intangible assets on operating expenses in fiscal year 2024. However, their trends diverged significantly: Broadcom reported a $1,850 million (133%) increase in amortization driven by the VMware Merger, whereas AMD reported a $2.4 billion expense that represented a 15% decrease from the prior year, primarily because certain intangibles were fully amortized.",
+            "comparison": "Both AVGO and AMD disclose the year-over-year change in amortization of acquisition-related intangible assets included in operating expenses. AVGO reported a significant increase of $1.85 billion (133%) driven by the VMware Merger, whereas AMD reported a decrease of $417 million (15%) as certain intangibles were fully amortized. While both companies highlight the impact of acquisition-related intangibles, the direction and magnitude of the expense change differ materially due to different M&A timelines and amortization schedules.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D052",
                 "sentences": [
                   {
@@ -192,6 +199,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D034",
                 "sentences": [
                   {
@@ -199,6 +207,66 @@
                     "paragraph_id": "amd_2024_7_P047",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
                     "text": "Amortization of acquisition-related intangibles of $2.4 billion for 2024 decreased by $417 million, or 15%, compared to $2.8 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P047_S002",
+                    "paragraph_id": "amd_2024_7_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The decrease was primarily due to certain acquisition-related intangibles being fully amortized in the prior fiscal year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D030",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "All Other operating loss breakdown for 2024 and 2023",
+            "peer_summary": "All Other operating loss was $4.2 billion in 2024 and $4.4 billion in 2023, primarily consisting of amortization of acquisition-related intangibles and stock-based compensation expense.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.1802,
+            "relationship": "related_topic",
+            "comparison": "AMD provides a breakdown of the components of 'All Other' operating losses, explicitly identifying the $2.4 billion amortization of acquisition-related intangibles as the primary driver, alongside stock-based compensation. This context aligns with AVGO's focus on amortization as a key operating expense item, but AMD's disclosure is broader, grouping amortization within a net loss category that includes other non-cash charges, whereas AVGO isolates the amortization figure.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "7",
+                "disclosure_id": "avgo_2024_7_D052",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P051_S001",
+                    "paragraph_id": "avgo_2024_7_P051",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Amortization of acquisition-related intangible assets recognized in operating expenses increased $1,850 million, or 133%, in fiscal year 2024, compared to the prior fiscal year primarily due to higher amortization of customer-related intangible assets from the VMware Merger.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P042_S001",
+                    "paragraph_id": "amd_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "All Other operating loss of $4.2 billion in 2024 primarily consisted of $2.4 billion of amortization of acquisition-related intangibles and $1.4 billion of stock-based compensation expense.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P042_S002",
+                    "paragraph_id": "amd_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "All Other operating loss of $4.4 billion in 2023 primarily consisted of $2.8 billion of amortization of acquisition-related intangibles and $1.4 billion of stock-based compensation expense.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -212,26 +280,31 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for INTC discuss Intel Products operating expenses and process technology investments, which do not specifically address amortization of acquisition-related intangible assets compared to the target."
+        "rationale": "INTC candidates discuss segment-level operating expense variances (Intel Products, DCAI, CCG) and process technology investments, but do not contain substantive disclosures regarding the amortization of acquisition-related intangible assets comparable to AVGO's specific topic."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for MU discuss SG&A expense trends and interest income/expense, which are not comparable to the target's disclosure on amortization of acquisition-related intangible assets."
+        "rationale": "MU candidates discuss SG&A expense trends and CNBU operating income drivers, which do not cover the specific topic of amortization of acquisition-related intangible assets found in AVGO's disclosure."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for NVDA discuss cash flow from operating activities and general operating expenses/acquisition termination charges, but do not specifically detail the amortization of acquisition-related intangible assets as the target does."
+        "rationale": "NVDA candidates discuss operating expense drivers (employees, compensation) and financing cash flows, but do not disclose the amortization of acquisition-related intangible assets as a distinct operating expense line item comparable to AVGO."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for QCOM discuss investment income drivers and QTL revenue drivers, which are unrelated to the target's disclosure on amortization of acquisition-related intangible assets."
+        "rationale": "QCOM candidates discuss investment and other income drivers and QTL revenue drivers, which are unrelated to the amortization of acquisition-related intangible assets."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "8babff724cc6a57ed8d197118d7eaec4d7d98e831463789a5d631c838189baa3",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "6c97ce48ea6ae273e458ee4af3b5154a337ad162cecc20039b28c8cee6bc6577"
+    }
   }
 }

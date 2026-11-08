@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "cd05cf6c098eadb7e3d517b83c53d079e4ac6cb971c9f5c3b9e51afdd7601680",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "3e7d7e75b7016924abca975d86f826ad613c63561e14ceb3b5a5723e95314ffe",
+  "request_hash": "bbacc62651ca47ff799e9f42b79939f420f66e9bed54ffd23d5435de2a363574",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D037\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and AMD disclose accounting policies for lease financing. MU utilizes third-party Lease SPEs for equipment lease financing, classifying them as VIEs but not consolidating them because MU lacks significant risks and power to direct activities. AMD recognizes operating and finance leases as right-of-use assets and liabilities on its balance sheet, using an incremental borrowing rate for measurement. While MU focuses on the VIE consolidation conclusion for specific third-party structures, AMD provides the broader policy for recording lease obligations, including the specific methodology (incremental borrowing rate) and classification of operating vs. finance leases.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P036_S001\",\n\"mu_2024_8_P036_S005\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P045_S001\",\n\"amd_2024_8_P045_S005\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"No supplied candidate discusses Variable Interest Entities, Special Purpose Entities, or lease SPE structures comparable to MU's disclosure. AVGO candidates focus on accounts receivable factoring and retirement plan investment policies.\"\n},\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"Although INTC has a VIE consolidation policy disclosure, it does not discuss Lease SPEs, equipment lease financing, or the specific non-consolidation rationale for third-party lease structures that defines MU's topic. INTC's candidate focuses on the general primary beneficiary determination for VIEs, while the other INTC candidate focuses on accounts receivable factoring. Neither is substantively comparable to MU's specific Lease SPE VIE structure.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"No supplied candidate discusses Variable Interest Entities, Special Purpose Entities, or lease SPE structures comparable to MU's disclosure. NVDA candidates focus on historical lease expenses and the combination of lease/non-lease components, which are distinct from the VIE consolidation analysis of third-party lease financing.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D029",
@@ -205,36 +208,35 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "Retrieved candidates discuss standard operating/finance lease terms and expenses (D132) or payment terms/financing components in customer contracts (D009). Neither candidate addresses the specific topic of Variable Interest Entity consolidation policy, primary beneficiary analysis, or the use of special purpose entities for lease financing as disclosed by the target."
-      },
-      {
-        "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "Retrieved candidates discuss general lease accounting policies (recognizing ROU assets/liabilities) and operating/finance lease expense trends. These do not address the specific topic of VIE consolidation structures, primary beneficiary determination, or the risk exposure associated with special purpose entities for equipment lease financing as described in the target disclosure."
-      },
-      {
-        "peer_ticker": "INTC",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_8_D048",
-            "peer_topic": "Variable Interest Entity Consolidation Policy",
-            "peer_summary": "The company consolidates Variable Interest Entities (VIEs) when it is determined to be the primary beneficiary, defined as having the power to direct activities significantly impacting economic performance and the obligation to absorb losses or right to receive benefits.",
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D037",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Lease Accounting Policy and Recognition",
+            "peer_summary": "AMD recognizes operating and finance leases as right-of-use (ROU) assets and lease liabilities on its Consolidated Balance Sheets, calculated based on the present value of lease payments using the implicit rate or, if unavailable, the consolidated group incremental borrowing rate. Operating lease expense is recognized on a straight-line basis, while short-term leases (12 months or less) are not recognized. The Company's finance leases are considered immaterial.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.158412,
+            "retrieval_score": 0.061558,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose their accounting policies for consolidating Variable Interest Entities (VIEs). The texts share a specific focus on the 'primary beneficiary' determination criteria, explicitly stating that consolidation occurs if the company has the power to direct the activities that most significantly impact the VIE's economic performance. However, the disclosures differ in application: Intel provides the general policy statement without listing specific consolidated or unconsolidated VIE examples in this segment, whereas Micron specifically applies this framework to 'Lease SPEs' created by a third party, explicitly concluding that while they are VIEs, Micron is not the primary beneficiary and thus does not consolidate them.",
+            "comparison": "Both MU and AMD disclose accounting policies for lease financing. MU utilizes third-party Lease SPEs for equipment lease financing, classifying them as VIEs but not consolidating them because MU lacks significant risks and power to direct activities. AMD recognizes operating and finance leases as right-of-use assets and liabilities on its balance sheet, using an incremental borrowing rate for measurement. While MU focuses on the VIE consolidation conclusion for specific third-party structures, AMD provides the broader policy for recording lease obligations, including the specific methodology (incremental borrowing rate) and classification of operating vs. finance leases.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D029",
                 "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P036_S001",
+                    "paragraph_id": "mu_2024_8_P036",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "A number of special purpose entities (the \"Lease SPEs\") were created by a third-party to facilitate equipment lease financing transactions between us and financial institutions that fund the lease financing transactions (\"Financing Entities\").",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "mu_2024_8_P036_S005",
                     "paragraph_id": "mu_2024_8_P036",
@@ -246,14 +248,22 @@
               },
               {
                 "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D048",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D037",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_8_P063_S003",
-                    "paragraph_id": "intc_2024_8_P063",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "To determine if we are the primary beneficiary, we evaluate whether we have the power to direct the activities that most significantly impact the VIE's economic performance and the obligation to absorb losses or the right to receive benefits of the VIE that could potentially be significant to the VIE.",
+                    "sentence_id": "amd_2024_8_P045_S001",
+                    "paragraph_id": "amd_2024_8_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Operating and finance leases are recorded as right-of-use (ROU) assets and lease liabilities on the Company's Consolidated Balance Sheets.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P045_S005",
+                    "paragraph_id": "amd_2024_8_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "When the implicit interest rate is not readily determinable, the Company uses its incremental borrowing rate, which is based on its collateralized borrowing capabilities over a similar term of the lease payments.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -264,10 +274,22 @@
         "rationale": ""
       },
       {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No supplied candidate discusses Variable Interest Entities, Special Purpose Entities, or lease SPE structures comparable to MU's disclosure. AVGO candidates focus on accounts receivable factoring and retirement plan investment policies."
+      },
+      {
+        "peer_ticker": "INTC",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Although INTC has a VIE consolidation policy disclosure, it does not discuss Lease SPEs, equipment lease financing, or the specific non-consolidation rationale for third-party lease structures that defines MU's topic. INTC's candidate focuses on the general primary beneficiary determination for VIEs, while the other INTC candidate focuses on accounts receivable factoring. Neither is substantively comparable to MU's specific Lease SPE VIE structure."
+      },
+      {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The only retrieved candidate is a boilerplate reference to the location of financial statements and contains no substantive disclosure on VIEs or lease financing structures."
+        "rationale": "No supplied candidate discusses Variable Interest Entities, Special Purpose Entities, or lease SPE structures comparable to MU's disclosure. NVDA candidates focus on historical lease expenses and the combination of lease/non-lease components, which are distinct from the VIE consolidation analysis of third-party lease financing."
       },
       {
         "peer_ticker": "QCOM",
@@ -275,6 +297,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "3e7d7e75b7016924abca975d86f826ad613c63561e14ceb3b5a5723e95314ffe",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "bbacc62651ca47ff799e9f42b79939f420f66e9bed54ffd23d5435de2a363574"
+    }
   }
 }

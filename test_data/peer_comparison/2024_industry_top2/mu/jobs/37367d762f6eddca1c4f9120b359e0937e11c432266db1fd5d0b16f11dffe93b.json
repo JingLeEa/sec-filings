@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "c61ab349f48300321d67b74a806215ce9f4b35ae59400c1c45b2a59f0f7fec2e",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "c4ae96cb5947bc33385bc00af33c90c7a54c481d91ad90c5a8cf5d4f4e5e984a",
+  "request_hash": "cf661fd1b77f353ff971d597415f9ccda8d67926db0d33be73587dbc98f266eb",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"AVGO\",\n      \"peer_disclosure_id\": \"avgo_2024_1A_D084\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both MU and AVGO disclose nearly identical boilerplate language regarding their dividend policies. Both state that they currently pay quarterly cash dividends, that such payments are subject to Board approval and may be discontinued or reduced at any time, and that a reduction could negatively impact stock price. However, AVGO uniquely discloses an additional structural constraint: as a holding company, its ability to pay dividends is limited by restrictions on obtaining funds from subsidiaries, a risk factor not present in MU's disclosure.\",\n      \"target_sentence_ids\": [\n        \"mu_2024_1A_P135_S001\",\n        \"mu_2024_1A_P135_S002\",\n        \"mu_2024_1A_P136_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"avgo_2024_1A_P127_S001\",\n        \"avgo_2024_1A_P127_S002\",\n        \"avgo_2024_1A_P127_S003\",\n        \"avgo_2024_1A_P127_S005\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"INTC\",\n      \"peer_disclosure_id\": \"intc_2024_1A_D042\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both disclosures address the uncertainty of future dividend payments, but they describe opposite operational stances. MU warns that dividends 'may be discontinued or reduced at any time' based on general financial conditions, implying an ongoing policy with potential cuts. In contrast, INTC discloses that it has already 'reduced, and then suspended in the fourth quarter of 2024, our quarterly dividend,' and faces restrictions on future payments due to CHIPS Act agreement restrictions, representing a definitive cessation rather than a forward-looking risk of reduction.\",\n      \"target_sentence_ids\": [\n        \"mu_2024_1A_P135_S002\",\n        \"mu_2024_1A_P136_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"intc_2024_1A_P085_S001\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"reason\": \"The retrieved candidates for AMD (D109 and D108) focus on stock repurchase programs and stock price volatility. These are distinct capital allocation mechanisms and risk categories from the target's specific disclosure regarding the policy, discretion, and cessation risks of cash dividends.\"\n    },\n    {\n      \"peer_ticker\": \"NVDA\",\n      \"reason\": \"The retrieved candidates for NVDA focus on operating result fluctuations driven by payment terms and indebtedness covenants. These topics do not address the specific subject of dividend policy, Board discretion over cash distributions, or the risks of dividend discontinuation found in the target disclosure.\"\n    },\n    {\n      \"peer_ticker\": \"QCOM\",\n      \"reason\": \"The retrieved candidate for QCOM (D094) focuses on the risks of outstanding debt and its impact on financial flexibility. While it mentions that inability to service debt might lead to reducing dividends, the primary topic is debt risk management rather than the dividend policy and discretion risks that constitute the target's disclosure.\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_1A_D067",
@@ -154,7 +157,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "AMD's candidate disclosures focus on stock repurchase programs and stock price volatility risks, which are distinct from the specific topic of dividend policy and the risks of discontinuation or reduction discussed in the target disclosure."
+        "rationale": "The retrieved candidates for AMD (D109 and D108) focus on stock repurchase programs and stock price volatility. These are distinct capital allocation mechanisms and risk categories from the target's specific disclosure regarding the policy, discretion, and cessation risks of cash dividends."
       },
       {
         "peer_ticker": "AVGO",
@@ -163,19 +166,30 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_1A_D084",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Dividend Policy and Uncertainty",
             "peer_summary": "While Broadcom currently pays quarterly cash dividends, the Board can reduce or discontinue them at any time. As a holding company, its ability to pay dividends is further limited by restrictions on obtaining funds from subsidiaries, and there is no assurance future dividends will be declared or maintained at current levels.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.481866,
+            "retrieval_score": 0.496735,
             "relationship": "same_topic",
-            "comparison": "Both Micron and Broadcom disclose a similar dividend policy where payments are subject to Board approval and may be discontinued or reduced at any time, with potential negative effects on stock price if reduced. However, Broadcom specifically adds the risk that its status as a holding company limits its ability to pay dividends by restricting its ability to obtain funds from subsidiaries, a structural constraint not mentioned in Micron’s disclosure.",
+            "comparison": "Both MU and AVGO disclose nearly identical boilerplate language regarding their dividend policies. Both state that they currently pay quarterly cash dividends, that such payments are subject to Board approval and may be discontinued or reduced at any time, and that a reduction could negatively impact stock price. However, AVGO uniquely discloses an additional structural constraint: as a holding company, its ability to pay dividends is limited by restrictions on obtaining funds from subsidiaries, a risk factor not present in MU's disclosure.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1A",
                 "disclosure_id": "mu_2024_1A_D067",
                 "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1A_P135_S001",
+                    "paragraph_id": "mu_2024_1A_P135",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Our Board of Directors has adopted a dividend policy pursuant to which we currently pay a cash dividend on our common shares on a quarterly basis.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "mu_2024_1A_P135_S002",
                     "paragraph_id": "mu_2024_1A_P135",
@@ -195,8 +209,16 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "1A",
                 "disclosure_id": "avgo_2024_1A_D084",
                 "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1A_P127_S001",
+                    "paragraph_id": "avgo_2024_1A_P127",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Our Board of Directors has adopted a dividend policy pursuant to which we currently pay a cash dividend on our common stock on a quarterly basis.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "avgo_2024_1A_P127_S002",
                     "paragraph_id": "avgo_2024_1A_P127",
@@ -232,17 +254,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_1A_D042",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Debt Obligations and Capital Return Restrictions",
             "peer_summary": "Intel faces risks related to its significant debt obligations ($51.0 billion in senior unsecured notes as of Dec 28, 2024) and cyclical industry nature, which pose risks to its financial condition, including potential credit rating downgrades that have already occurred in 2024. Additionally, Intel has ceased stock repurchases and suspended its quarterly dividend in Q4 2024, with additional restrictions under the CHIPS Act agreement creating uncertainty regarding future dividend payments or share repurchases.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.123481,
+            "retrieval_score": 0.122008,
             "relationship": "same_topic",
-            "comparison": "While Micron describes dividend policy as a risk subject to Board approval and financial conditions, Intel discloses a more severe and specific outcome: it has ceased stock repurchases and suspended its quarterly dividend in Q4 2024. Intel’s disclosure highlights that its significant debt obligations and cyclical nature create restrictions and uncertainty regarding future capital returns, contrasting with Micron’s general statement of uncertainty without indicating an active suspension.",
+            "comparison": "Both disclosures address the uncertainty of future dividend payments, but they describe opposite operational stances. MU warns that dividends 'may be discontinued or reduced at any time' based on general financial conditions, implying an ongoing policy with potential cuts. In contrast, INTC discloses that it has already 'reduced, and then suspended in the fourth quarter of 2024, our quarterly dividend,' and faces restrictions on future payments due to CHIPS Act agreement restrictions, representing a definitive cessation rather than a forward-looking risk of reduction.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1A",
                 "disclosure_id": "mu_2024_1A_D067",
                 "sentences": [
                   {
@@ -253,10 +279,10 @@
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "mu_2024_1A_P136_S001",
+                    "sentence_id": "mu_2024_1A_P136_S002",
                     "paragraph_id": "mu_2024_1A_P136",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Future dividends, if any, and their timing and amount, may be affected by, among other factors: our financial condition, results of operations, capital requirements, business conditions, debt service obligations, contractual restrictions, industry practice, legal requirements, regulatory constraints, and other factors that our Board of Directors may deem relevant.",
+                    "text": "A reduction in or elimination of our dividend payments could have a negative effect on the trading price of our stock.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -264,6 +290,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D042",
                 "sentences": [
                   {
@@ -271,13 +298,6 @@
                     "paragraph_id": "intc_2024_1A_P085",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "In recent years, we have not made repurchases of our stock and reduced, and then suspended in the fourth quarter of 2024, our quarterly dividend.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_1A_P083_S005",
-                    "paragraph_id": "intc_2024_1A_P083",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "The semiconductor industry is a cyclical business and our revenue, cash flows, and outlook often fluctuate in accordance with this cycle, as well as prevailing macroeconomic conditions, our business strategy, and other risks described in these risk factors.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -291,14 +311,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "NVDA's candidate disclosures focus on indebtedness, refinancing risks, and operating result fluctuations impacting cash flow, but do not discuss dividend policy or the risk of dividend reduction/discontinuation."
+        "rationale": "The retrieved candidates for NVDA focus on operating result fluctuations driven by payment terms and indebtedness covenants. These topics do not address the specific subject of dividend policy, Board discretion over cash distributions, or the risks of dividend discontinuation found in the target disclosure."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "QCOM's candidate disclosures focus on risks associated with outstanding debt and revenue reduction impacts on cash for R&D, but do not contain specific disclosures regarding dividend policy, board approval for dividends, or the risk of dividend suspension."
+        "rationale": "The retrieved candidate for QCOM (D094) focuses on the risks of outstanding debt and its impact on financial flexibility. While it mentions that inability to service debt might lead to reducing dividends, the primary topic is debt risk management rather than the dividend policy and discretion risks that constitute the target's disclosure."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "c4ae96cb5947bc33385bc00af33c90c7a54c481d91ad90c5a8cf5d4f4e5e984a",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "cf661fd1b77f353ff971d597415f9ccda8d67926db0d33be73587dbc98f266eb"
+    }
   }
 }

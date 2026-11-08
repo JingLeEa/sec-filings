@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "786bd02c3e982333b6ff8aa1a7b438d2c7275a14223451b1ecc3f9db5044ae7c",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "316f29de287cfd361482ddc551eff2bf68448f9120487a8ae7c9c468d6978f8b",
+  "request_hash": "f9fe417ebb0baee2e0efa851ca41de819b828a946725e5ffe49c9b571f0ffb57",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D123\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and AMD disclose specific non-recurring or structural drivers for their income tax provision changes. AVGO attributes its 2024 provision increase to a non-recurring intra-group transfer of IP rights to the U.S., whereas AMD attributes its increase to a $373 million tax effect from an intercompany integration transaction alongside higher pre-tax income. While both cite structural transactions impacting the tax provision, the specific nature differs (IP transfer vs. integration transaction), and AMD also highlights a significant effective tax rate swing compared to AVGO's focus on provision magnitude.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P179_S004\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P131_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"INTC candidates focus on balance sheet line items (receivables/payables) and R&D credit methodology rather than the drivers of the income tax provision or effective rate changes comparable to AVGO's disclosure of non-recurring IP transfers and pre-tax income impacts.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU candidates focus on share-based award tax benefits and the materiality of tax incentive arrangements, which are distinct from AVGO's disclosure of the primary drivers of the aggregate income tax provision (IP transfer and pre-tax income).\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA candidates provided are either unrelated geographic revenue data or accounting policies for interest/penalties, lacking substantive comparison to AVGO's disclosure of the drivers for the income tax provision amount.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D135",
@@ -166,17 +169,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D123",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Income Tax Provision and Effective Rates",
             "peer_summary": "The Company recorded an income tax provision of $381 million and an income tax benefit of $346 million in 2024 and 2023, with effective tax rates of 19% and (68%) respectively, driven by higher pre-tax income and a $373 million tax effect from an intercompany integration transaction.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.176759,
+            "retrieval_score": 0.196616,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and AMD attribute changes in their income tax provisions to specific non-recurring or structural intercompany events in fiscal 2024. AVGO cites a 'non-recurring intra-group transfer of certain IP rights' resulting from supply chain realignment, while AMD cites a '$373 million tax effect from an intercompany integration transaction.' Additionally, both companies note that higher pre-tax income was a driver for the increase in tax provision, though AVGO's increase was further impacted by jurisdictional shifts, whereas AMD's effective tax rate was heavily influenced by prior year benefits (2023 benefit vs 2024 provision).",
+            "comparison": "Both AVGO and AMD disclose specific non-recurring or structural drivers for their income tax provision changes. AVGO attributes its 2024 provision increase to a non-recurring intra-group transfer of IP rights to the U.S., whereas AMD attributes its increase to a $373 million tax effect from an intercompany integration transaction alongside higher pre-tax income. While both cite structural transactions impacting the tax provision, the specific nature differs (IP transfer vs. integration transaction), and AMD also highlights a significant effective tax rate swing compared to AVGO's focus on provision magnitude.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D135",
                 "sentences": [
                   {
@@ -191,15 +198,9 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D123",
                 "sentences": [
-                  {
-                    "sentence_id": "amd_2024_8_P131_S001",
-                    "paragraph_id": "amd_2024_8_P131",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The Company recorded an income tax provision of $381 million and an income tax benefit of $346 million in 2024 and 2023, respectively, representing effective tax rates of 19% and (68)%, respectively.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "amd_2024_8_P131_S002",
                     "paragraph_id": "amd_2024_8_P131",
@@ -218,61 +219,19 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "While INTC discloses tax provisions, its provided candidates (intc_2024_8_D114, intc_2024_8_D109) focus on balance sheet items (receivables/payables) and R&D tax credits. None of the cited sentences specifically discuss the drivers of the change in the income tax provision amount for fiscal 2024 (e.g., comparable intercompany transactions or stock-based award impacts) in a way that allows for a direct factual comparison with AVGO's explanation of the 2024 provision increase."
+        "rationale": "INTC candidates focus on balance sheet line items (receivables/payables) and R&D credit methodology rather than the drivers of the income tax provision or effective rate changes comparable to AVGO's disclosure of non-recurring IP transfers and pre-tax income impacts."
       },
       {
         "peer_ticker": "MU",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_8_D090",
-            "peer_topic": "Recognition and amounts of income tax benefits for share-based awards",
-            "peer_summary": "Income tax benefits related to tax deductions for share-based awards are recognized upon settlement of the awards, amounting to $140 million, $68 million, and $77 million for the fiscal years 2024, 2023, and 2022, respectively.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.135145,
-            "relationship": "same_topic",
-            "comparison": "Both AVGO and MU disclose the impact of stock-based awards on their income tax provisions. AVGO notes that its increase in tax provision was 'partially offset by an increase in excess tax benefits from stock-based awards,' indicating a reduction in the effective tax rate due to these awards. MU provides specific quantitative data on this same line item, stating that 'Income tax benefits for share-based awards were $140 million' in fiscal 2024, which represents a cash tax benefit recognized upon settlement. Both disclosures highlight this specific driver within the broader income tax provision discussion.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_8_D135",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_8_P179_S004",
-                    "paragraph_id": "avgo_2024_8_P179",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "The increase in provision for income taxes in fiscal year 2024 compared to fiscal year 2023 was primarily due to the impact of a non-recurring intra-group transfer of certain IP rights to the United States as a result of supply chain realignment and the resulting shift in jurisdictional mix of income, partially offset by an increase in excess tax benefits from stock-based awards.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_8_D090",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_8_P098_S002",
-                    "paragraph_id": "mu_2024_8_P098",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Income tax benefits for share-based awards were $140 million, $68 million, and $77 million for 2024, 2023, and 2022, respectively.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "MU candidates focus on share-based award tax benefits and the materiality of tax incentive arrangements, which are distinct from AVGO's disclosure of the primary drivers of the aggregate income tax provision (IP transfer and pre-tax income)."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "NVDA candidates provided are either unrelated geographic revenue data or accounting policies for interest/penalties, lacking substantive comparison to AVGO's disclosure of the drivers for the income tax provision amount."
       },
       {
         "peer_ticker": "QCOM",
@@ -280,6 +239,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "316f29de287cfd361482ddc551eff2bf68448f9120487a8ae7c9c468d6978f8b",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "f9fe417ebb0baee2e0efa851ca41de819b828a946725e5ffe49c9b571f0ffb57"
+    }
   }
 }

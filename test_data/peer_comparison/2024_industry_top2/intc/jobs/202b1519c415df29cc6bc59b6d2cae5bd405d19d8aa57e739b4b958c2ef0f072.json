@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "d1da358de823c5e182d124f2f276b3092bc9dc9a0a5f6bcc70405f4d8a15dc7f",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "e845e78bc1ad1ba0bef120d892b490f859b5206efe8aa43e01099b5651bc7241",
+  "request_hash": "59be2269b108c5885660b01737cb84fbd8beee686907b3360b1aef5150f70da8",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"MU\",\n      \"peer_disclosure_id\": \"mu_2024_1_D055\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both Intel and Micron disclose significant capital expansion of manufacturing facilities in the United States as part of their strategic growth, specifically referencing the context of the CHIPS Act and domestic supply chain resilience. However, they differ in their primary focus: Intel explicitly quantifies the financial support received, citing up to $7.9 billion in direct funding under the CHIPS Act commercial program, whereas Micron focuses on the operational risks associated with this expansion, specifically labor shortages, competition for construction talent, and cost increases due to supply constraints.\",\n      \"target_sentence_ids\": [\n        \"intc_2024_1_P049_S003\",\n        \"intc_2024_1_P049_S004\"\n      ],\n      \"peer_sentence_ids\": [\n        \"mu_2024_1_P057_S001\",\n        \"mu_2024_1_P057_S005\",\n        \"mu_2024_1_P057_S007\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"AVGO\",\n      \"peer_disclosure_id\": \"avgo_2024_1_D090\",\n      \"relationship\": \"related_topic\",\n      \"comparison\": \"While Intel discusses government incentives and the CHIPS Act as a strategic enabler for its manufacturing capital, Avago discloses the regulatory environment governing its manufacturing operations, specifically regarding hazardous substances. Both disclosures relate to the regulatory framework impacting semiconductor manufacturing, but Intel’s focus is on proactive financial incentives and supply chain balance, whereas Avago’s focus is on compliance with environmental laws such as pollutant discharge limits and chemical content restrictions like lead.\",\n      \"target_sentence_ids\": [\n        \"intc_2024_1_P049_S001\",\n        \"intc_2024_1_P049_S002\"\n      ],\n      \"peer_sentence_ids\": [\n        \"avgo_2024_1_P053_S001\",\n        \"avgo_2024_1_P053_S003\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"reason\": \"Candidate amd_2024_1_D096 concerns Superfund liability for specific historical sites rather than general manufacturing incentives or CHIPS Act funding. Candidate amd_2024_1_D003 concerns forward-looking statement disclaimers. Neither addresses the specific topic of government incentives, CHIPS Act agreements, or manufacturing capital expansion funding strategies comparable to Intel's disclosure.\"\n    },\n    {\n      \"peer_ticker\": \"NVDA\",\n      \"reason\": \"Candidate nvda_2024_1_D051 is a general statement on applicability of laws without specific reference to manufacturing incentives. Candidate nvda_2024_1_D045 concerns supply chain concentration and vendors in the Asia-Pacific region, which is distinct from Intel's topic of domestic US manufacturing incentives and CHIPS Act funding.\"\n    },\n    {\n      \"peer_ticker\": \"QCOM\",\n      \"reason\": \"Candidate qcom_2024_1_D043 concerns legal challenges to patent licensing practices. Candidate qcom_2024_1_D013 concerns generative AI adoption forecasts. Neither disclosure relates to semiconductor manufacturing government incentives, CHIPS Act funding, or manufacturing facility construction risks.\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1_D054",
@@ -225,13 +228,74 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses government incentives, CHIPS Act funding, or strategic manufacturing cost offsets. The available candidates focus on Superfund liability (environmental remediation) and forward-looking statements, which are distinct from the topic of securing government financial support for manufacturing operations."
+        "rationale": "Candidate amd_2024_1_D096 concerns Superfund liability for specific historical sites rather than general manufacturing incentives or CHIPS Act funding. Candidate amd_2024_1_D003 concerns forward-looking statement disclaimers. Neither addresses the specific topic of government incentives, CHIPS Act agreements, or manufacturing capital expansion funding strategies comparable to Intel's disclosure."
       },
       {
         "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses government incentives, CHIPS Act funding, or strategic manufacturing cost offsets. The available candidates focus on general environmental regulations regarding hazardous substances and general supply chain disruption mitigation techniques, which do not address the specific topic of government funding agreements or cost-offsetting incentives for domestic manufacturing."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_1_D090",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Hazardous substance and environmental regulations in manufacturing",
+            "peer_summary": "Semiconductor manufacturing and R&D operations are regulated under laws governing health, safety, and the environment, including pollutant discharge limits, chemical content restrictions (e.g., lead), and waste management, with specific legislative impacts from the U.S., EU, and China.",
+            "peer_taxonomy": "Regulation, Legal & Compliance",
+            "retrieval_score": 0.061311,
+            "relationship": "related_topic",
+            "comparison": "While Intel discusses government incentives and the CHIPS Act as a strategic enabler for its manufacturing capital, Avago discloses the regulatory environment governing its manufacturing operations, specifically regarding hazardous substances. Both disclosures relate to the regulatory framework impacting semiconductor manufacturing, but Intel’s focus is on proactive financial incentives and supply chain balance, whereas Avago’s focus is on compliance with environmental laws such as pollutant discharge limits and chemical content restrictions like lead.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "1",
+                "disclosure_id": "intc_2024_1_D054",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1_P049_S001",
+                    "paragraph_id": "intc_2024_1_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We work closely with governments in the regions where we operate to obtain government incentives to support leading-edge semiconductor R&D and manufacturing in those regions.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_1_P049_S002",
+                    "paragraph_id": "intc_2024_1_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Such incentives are often needed to offset the higher costs of operations in such regions, and support a more geographically balanced and risk-tolerant semiconductor supply chain.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "1",
+                "disclosure_id": "avgo_2024_1_D090",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1_P053_S001",
+                    "paragraph_id": "avgo_2024_1_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Our semiconductor manufacturing operations and research and development involve the use of hazardous substances and are regulated under international, federal, state and local laws governing health, safety and the environment.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_1_P053_S003",
+                    "paragraph_id": "avgo_2024_1_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We are also regulated under a number of international, federal, state and local laws regarding recycling, product packaging and product content requirements, including legislation enacted in the U.S., European Union and China, among a growing number of jurisdictions, which have placed greater restrictions on the use of lead, among other restricted substances, in electronic products, which affects materials composition and semiconductor packaging.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
@@ -240,24 +304,28 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1_D055",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "US capacity expansion and supply chain construction risks",
             "peer_summary": "Expanding US production faces challenges due to labor shortages, skilled subcontractor availability, and intense competition for construction talent, potentially causing delays and cost increases.",
             "peer_taxonomy": "Supply Chain & Third Parties",
-            "retrieval_score": 0.055317,
-            "relationship": "related_topic",
-            "comparison": "Both Intel and Micron disclose significant risks and complexities associated with expanding semiconductor manufacturing capacity in the United States. Intel highlights the strategic driver of obtaining government incentives (CHIPS Act) to offset higher operational costs and support domestic production, implying a heavy reliance on public policy to make US manufacturing viable. In contrast, Micron focuses on the operational execution risks of such expansion, specifically citing labor shortages, intense competition for construction talent, and the capital-intensive nature of fabs as primary barriers that could cause delays and cost increases. While Intel frames the US expansion as an opportunity supported by federal funding, Micron frames it as a challenging operational hurdle requiring skilled resources.",
+            "retrieval_score": 0.062415,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Micron disclose significant capital expansion of manufacturing facilities in the United States as part of their strategic growth, specifically referencing the context of the CHIPS Act and domestic supply chain resilience. However, they differ in their primary focus: Intel explicitly quantifies the financial support received, citing up to $7.9 billion in direct funding under the CHIPS Act commercial program, whereas Micron focuses on the operational risks associated with this expansion, specifically labor shortages, competition for construction talent, and cost increases due to supply constraints.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D054",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_1_P049_S002",
+                    "sentence_id": "intc_2024_1_P049_S003",
                     "paragraph_id": "intc_2024_1_P049",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Such incentives are often needed to offset the higher costs of operations in such regions, and support a more geographically balanced and risk-tolerant semiconductor supply chain.",
+                    "text": "We worked closely with the US federal government on the implementation of the CHIPS Act in support of the semiconductor industry and American technological leadership and innovation.",
                     "visible_in_prompt": true
                   },
                   {
@@ -272,13 +340,14 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D055",
                 "sentences": [
                   {
-                    "sentence_id": "mu_2024_1_P057_S002",
+                    "sentence_id": "mu_2024_1_P057_S001",
                     "paragraph_id": "mu_2024_1_P057",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Semiconductor fabs are complex, capital-intensive projects and require specialized knowledge, expertise, experience, and skill sets to construct and operate.",
+                    "text": "We have commenced expansion of our production capacity in the United States and in other regions where we operate.",
                     "visible_in_prompt": true
                   },
                   {
@@ -306,14 +375,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses government incentives, CHIPS Act funding, or strategic manufacturing cost offsets. The available candidates focus on general subject-to-regulations disclosures, supply chain geographic concentration (Asia-Pacific), and export controls, which are unrelated to the receipt of domestic manufacturing incentives."
+        "rationale": "Candidate nvda_2024_1_D051 is a general statement on applicability of laws without specific reference to manufacturing incentives. Candidate nvda_2024_1_D045 concerns supply chain concentration and vendors in the Asia-Pacific region, which is distinct from Intel's topic of domestic US manufacturing incentives and CHIPS Act funding."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that discusses government incentives, CHIPS Act funding, or strategic manufacturing cost offsets. The available candidates focus on acquisitions, technology investments for chipsets, and legal challenges to patent licensing, which are unrelated to the topic of government subsidies for manufacturing."
+        "rationale": "Candidate qcom_2024_1_D043 concerns legal challenges to patent licensing practices. Candidate qcom_2024_1_D013 concerns generative AI adoption forecasts. Neither disclosure relates to semiconductor manufacturing government incentives, CHIPS Act funding, or manufacturing facility construction risks."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e845e78bc1ad1ba0bef120d892b490f859b5206efe8aa43e01099b5651bc7241",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "59be2269b108c5885660b01737cb84fbd8beee686907b3360b1aef5150f70da8"
+    }
   }
 }

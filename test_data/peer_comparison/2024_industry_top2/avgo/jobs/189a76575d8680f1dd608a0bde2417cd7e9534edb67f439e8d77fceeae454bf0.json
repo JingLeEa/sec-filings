@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "804feb2f55d3f1434354e0340b5cc93084c06b19a64d404e34cde862e12a72d7",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "a0391f4b4af494e189d8562176f5bfa2ea3f230a9fcdbaeb578749130ddc1576",
+  "request_hash": "cff8f2e7ef5b0dfc4fc00683e17c84e6241dd371dda9ac3d66a877db91e96f7e",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"INTC\",\n      \"peer_disclosure_id\": \"intc_2024_8_D134\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both AVGO and INTC disclose significant issuance of senior unsecured notes in fiscal year 2024. AVGO issued $10 billion in aggregate ($5 billion in July and $5 billion in October), whereas INTC issued $2.6 billion in aggregate principal amount of senior notes in 2024. Both disclosures focus on the capital raising activity through senior debt instruments.\",\n      \"target_sentence_ids\": [\n        \"avgo_2024_8_P150_S001\"\n      ],\n      \"peer_sentence_ids\": [\n        \"intc_2024_8_P153_S001\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"MU\",\n      \"peer_disclosure_id\": \"mu_2024_8_D048\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both AVGO and MU disclose the issuance of senior unsecured notes. AVGO issued $10 billion in 2024. MU discloses the issuance of $6.70 billion of senior unsecured notes and term loan agreements in 2023, providing a comparable topic of senior debt issuance, although the specific year (2024 for AVGO vs 2023 for MU) differs. The topic of raising capital via senior notes is the common thread.\",\n      \"target_sentence_ids\": [\n        \"avgo_2024_8_P150_S001\"\n      ],\n      \"peer_sentence_ids\": [\n        \"mu_2024_8_P054_S002\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_8_D088\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both AVGO and AMD disclose details regarding their senior notes. AVGO reports the issuance of $10 billion in senior unsecured notes in 2024. AMD discloses the terms of its senior notes issued in 2022 ($1.0 billion), noting they are general unsecured senior obligations. While the amounts and years differ, both companies describe the issuance and nature of their general unsecured senior debt obligations.\",\n      \"target_sentence_ids\": [\n        \"avgo_2024_8_P150_S001\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_8_P090_S002\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"NVDA\",\n      \"reason\": \"NVDA's 2024 Item 8 disclosures (D113, D112) focus on the structural terms of existing notes (unsecured senior status, semi-annual interest, redemption rights) and the repayment of maturing notes (0.309% Notes Due 2023). Unlike AVGO, NVDA did not issue new senior notes in fiscal 2024. Therefore, there is no comparable 2024 issuance event to match against AVGO's $10 billion issuance.\"\n    },\n    {\n      \"peer_ticker\": \"QCOM\",\n      \"reason\": \"No candidate was retrieved.\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D110",
@@ -173,9 +176,56 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The available candidates for AMD do not concern the issuance of senior notes in fiscal year 2024. One candidate (amd_2024_8_D087) describes the repayment of notes, and the other (amd_2024_8_D088) describes the terms of notes issued in 2022, neither of which matches the target's topic of 2024 issuance."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D088",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Issuance and Terms of Senior Notes",
+            "peer_summary": "On June 9, 2022, the Company issued $1.0 billion in aggregate principal amount of 3.924% Senior Notes Due 2032 and 4.393% Senior Notes Due 2052, which are general unsecured senior obligations governed by a June 9, 2022 indenture. Interest is payable semi-annually on June 1 and December 1, commencing December 1, 2022.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.188584,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and AMD disclose details regarding their senior notes. AVGO reports the issuance of $10 billion in senior unsecured notes in 2024. AMD discloses the terms of its senior notes issued in 2022 ($1.0 billion), noting they are general unsecured senior obligations. While the amounts and years differ, both companies describe the issuance and nature of their general unsecured senior debt obligations.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D110",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P150_S001",
+                    "paragraph_id": "avgo_2024_8_P150",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We issued senior unsecured notes for an aggregate principal amount of $5,000 million in October 2024 and $5,000 million in July 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D088",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P090_S002",
+                    "paragraph_id": "amd_2024_8_P090",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The 3.924% Notes and 4.393% Notes are general unsecured senior obligations of the Company.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "INTC",
@@ -184,17 +234,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_8_D134",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "2024 Senior Notes Issuance and Redemption",
             "peer_summary": "In 2024, the company issued $2.6 billion in senior notes and settled $1.9 billion in maturing senior notes via cash. The company also issued $11.0 billion in senior notes in 2023.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.292498,
+            "retrieval_score": 0.298134,
             "relationship": "same_topic",
-            "comparison": "Both companies disclose active issuance of senior unsecured notes in fiscal year 2024. AVGO issued $10 billion in senior unsecured notes, split between $5 billion in July and $5 billion in October. INTC issued $2.6 billion in senior notes during 2024, while also settling $1.9 billion in maturing notes. Both entities utilized senior unsecured debt instruments to manage capital structure, though AVGO's issuance volume ($10 billion) significantly exceeded INTC's ($2.6 billion).",
+            "comparison": "Both AVGO and INTC disclose significant issuance of senior unsecured notes in fiscal year 2024. AVGO issued $10 billion in aggregate ($5 billion in July and $5 billion in October), whereas INTC issued $2.6 billion in aggregate principal amount of senior notes in 2024. Both disclosures focus on the capital raising activity through senior debt instruments.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D110",
                 "sentences": [
                   {
@@ -209,6 +263,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D134",
                 "sentences": [
                   {
@@ -227,22 +282,74 @@
       },
       {
         "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The available candidates for MU describe debt activities from prior years (2022 and 2023), not fiscal year 2024 issuances. One candidate (mu_2024_8_D049) details 2022 issuances and prepayments, while the other (mu_2024_8_D048) details 2023 issuances."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D048",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "2023 Debt Issuance and Prepayment Losses",
+            "peer_summary": "In 2023, the company issued $6.70 billion of senior unsecured notes and term loans, receiving $6.69 billion in cash, and prepaid $600 million of the 2024 Term Loan A principal.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.268784,
+            "relationship": "same_topic",
+            "comparison": "Both AVGO and MU disclose the issuance of senior unsecured notes. AVGO issued $10 billion in 2024. MU discloses the issuance of $6.70 billion of senior unsecured notes and term loan agreements in 2023, providing a comparable topic of senior debt issuance, although the specific year (2024 for AVGO vs 2023 for MU) differs. The topic of raising capital via senior notes is the common thread.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D110",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P150_S001",
+                    "paragraph_id": "avgo_2024_8_P150",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "We issued senior unsecured notes for an aggregate principal amount of $5,000 million in October 2024 and $5,000 million in July 2024.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D048",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P054_S002",
+                    "paragraph_id": "mu_2024_8_P054",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "In 2023, we issued $6.70 billion of senior unsecured notes and term loan agreements and received cash of $6.69 billion.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The single candidate for NVDA (nvda_2024_8_D001) is a navigation statement regarding the location of Item 8 information and contains no facts regarding note issuances or capital resources."
+        "rationale": "NVDA's 2024 Item 8 disclosures (D113, D112) focus on the structural terms of existing notes (unsecured senior status, semi-annual interest, redemption rights) and the repayment of maturing notes (0.309% Notes Due 2023). Unlike AVGO, NVDA did not issue new senior notes in fiscal 2024. Therefore, there is no comparable 2024 issuance event to match against AVGO's $10 billion issuance."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "No candidate was retrieved."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "a0391f4b4af494e189d8562176f5bfa2ea3f230a9fcdbaeb578749130ddc1576",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "cff8f2e7ef5b0dfc4fc00683e17c84e6241dd371dda9ac3d66a877db91e96f7e"
+    }
   }
 }

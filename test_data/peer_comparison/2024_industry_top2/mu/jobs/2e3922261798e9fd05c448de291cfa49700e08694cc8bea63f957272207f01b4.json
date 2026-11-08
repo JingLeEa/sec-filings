@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "384dfbb2d967871ba3c85d978483b136860960073243c3c9b5fa6a7d7ccd16d6",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "cf5014deb247b8eba4e983a392562057348a649593eb2b99338d57e73baf9a57",
+  "request_hash": "8547bc89833e83db644d5806e4264d6a783fa1d545926ae788008871161ee688",
+  "response_text": "{\n\"comparisons\":[\n{\n\"peer_ticker\":\"AVGO\",\n\"peer_disclosure_id\":\"avgo_2024_1_D018\",\n\"relationship\":\"same_topic\",\n\"comparison\":\"Both Mu and Broadcom disclose specific semiconductor products for storage systems. Micron focuses on the memory media itself (TLC/QLC NAND) for SSDs, while Broadcom focuses on the controller chips and interface components (SoCs, preamplifiers, flash controllers) that manage data access and error correction within HDDs and SSDs.\",\n\"target_sentence_ids\":[\n\"mu_2024_1_P014_S001\",\n\"mu_2024_1_P014_S002\"\n],\n\"peer_sentence_ids\":[\n\"avgo_2024_1_P014_S005\",\n\"avgo_2024_1_P016_S001\"\n]\n}\n],\n\"no_match\":[\n{\n\"peer_ticker\":\"AMD\",\n\"reason\":\"None of the retrieved candidates (Embedded Processor/GPU, Legacy FPGA/CPLD) address NAND flash memory technologies or storage media products comparable to Micron's NAND flash disclosure.\"\n},\n{\n\"peer_ticker\":\"INTC\",\n\"reason\":\"None of the retrieved candidates (Intel 14A process node, Intel 4 process node) address NAND flash memory products; they focus on logic manufacturing process nodes.\"\n},\n{\n\"peer_ticker\":\"NVDA\",\n\"reason\":\"None of the retrieved candidates (Accelerated Computing Platform, Core Platform Hardware) address NAND flash memory products; they focus on GPUs, CPUs, and DPUs for computing.\"\n},\n{\n\"peer_ticker\":\"QCOM\",\n\"reason\":\"None of the retrieved candidates (Autonomous Driving, RF Products/5G Modem) address NAND flash memory products; they focus on automotive computing and wireless connectivity.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_1_D015",
@@ -224,7 +227,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for AMD focus on legacy FPGA families and embedded processors/GPUs. These topics do not substantively overlap with the specific topic of NAND Flash cell types (TLC/QLC) and QLC development announcements found in Micron's disclosure. There is no evidence of AMD discussing NAND storage technologies or flash memory density developments comparable to Micron's specific product announcement."
+        "rationale": "None of the retrieved candidates (Embedded Processor/GPU, Legacy FPGA/CPLD) address NAND flash memory technologies or storage media products comparable to Micron's NAND flash disclosure."
       },
       {
         "peer_ticker": "AVGO",
@@ -233,19 +236,30 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_1_D018",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "HDD and SSD solutions",
             "peer_summary": "The company provides read channel SoCs, preamplifiers, and custom flash controllers for HDD and SSD OEMs to manage data storage and access.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.060144,
+            "retrieval_score": 0.058987,
             "relationship": "same_topic",
-            "comparison": "Both companies disclose specific storage technologies and their role in OEM SSD solutions. Micron (MU) focuses on the memory cell technology itself, specifically announcing shipments of its densest OEM production QLC NAND with improved density and access times in 2024. In contrast, Broadcom (AVGO) describes its role as a provider of custom flash controllers to SSD OEMs, which manage the underlying flash memory (such as NAND) to perform critical functions like error correction and wear leveling. While MU produces the storage media (NAND), AVGO provides the controller silicon that manages it, indicating a complementary relationship within the same SSD supply chain segment.",
+            "comparison": "Both Mu and Broadcom disclose specific semiconductor products for storage systems. Micron focuses on the memory media itself (TLC/QLC NAND) for SSDs, while Broadcom focuses on the controller chips and interface components (SoCs, preamplifiers, flash controllers) that manage data access and error correction within HDDs and SSDs.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D015",
                 "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P014_S001",
+                    "paragraph_id": "mu_2024_1_P014",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Our NAND Flash includes triple-level cell (\"TLC\") and quad-level cell (\"QLC\"), each with varying levels of storage density, performance, and endurance.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "mu_2024_1_P014_S002",
                     "paragraph_id": "mu_2024_1_P014",
@@ -258,20 +272,21 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "1",
                 "disclosure_id": "avgo_2024_1_D018",
                 "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1_P014_S005",
+                    "paragraph_id": "avgo_2024_1_P014",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "• HDD & SSD Solutions: We provide read channel-based system-on-chip (\"SoC\") and preamplifiers to HDD OEMs. These are the critical chips required to read, write and protect data. An HDD SoC is an integrated circuit (\"IC\") that combines the functionality of a read channel, serial interface, memory and a hard disk controller in a small, high-performance, low-power and cost-effective package. Read channels convert analog signals that are generated by reading the stored data on the physical media into digital signals.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "avgo_2024_1_P016_S001",
                     "paragraph_id": "avgo_2024_1_P016",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "We also provide custom flash controllers to SSD OEMs. An SSD stores data in flash memory instead of on a hard disk, providing high speed access to the data.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_1_P016_S002",
-                    "paragraph_id": "avgo_2024_1_P016",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Flash controllers manage the underlying flash memory in SSDs, performing critical functions such as reading and writing data to and from the flash memory and performing error correction, wear leveling and bad block management.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -283,64 +298,27 @@
       },
       {
         "peer_ticker": "INTC",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "INTC",
-            "peer_disclosure_id": "intc_2024_1_D039",
-            "peer_topic": "Intel 4 process node production status and capabilities",
-            "peer_summary": "Intel 4, the first EUV lithography node, delivered significant density scaling and approximately 20% performance-per-watt improvement over Intel 7; it moved to high-volume manufacturing in Ireland in 2024 for the Intel Core Ultra processor and is expected to represent an increasing portion of production in 2025.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.047141,
-            "relationship": "related_topic",
-            "comparison": "Both disclosures address physical density improvements in advanced technologies, but focus on different hardware layers. Micron (MU) highlights 'improved storage density' achieved through its new OEM production QLC NAND technology, which is a memory storage product. Intel (INTC) discusses 'density scaling' as a key benefit of its Intel 4 process node, which is a semiconductor manufacturing logic technology for processors (specifically the Intel Core Ultra). While both cite density scaling as a technical achievement, MU's density refers to bit storage capacity per cell in NAND flash, whereas INTC's density refers to transistor packing on a logic chip.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_1_D015",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_1_P014_S002",
-                    "paragraph_id": "mu_2024_1_P014",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "In 2024, we announced shipments of our densest OEM production QLC NAND, built on this technology, with improved storage density and access times.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_1_D039",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1_P037_S003",
-                    "paragraph_id": "intc_2024_1_P037",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "▪Intel 4, our first EUV lithography node, delivers significant density scaling and approximately 20% performance-per-watt improvement over Intel 7. The Intel Core Ultra processor is our first high-volume client product on Intel 4 and began shipping to customers in 2023. Intel 4 moved to high-volume manufacturing in Ireland in 2024, and is expected to represent an increasing portion of our processor production and products in 2025.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "None of the retrieved candidates (Intel 14A process node, Intel 4 process node) address NAND flash memory products; they focus on logic manufacturing process nodes."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for NVIDIA focus on the accelerated computing platform foundation (GPUs, DPUs, CPUs) and R&D investment history. While one candidate mentions optimizing across the storage stack, it does not discuss specific storage media technologies like NAND or QLC developments. The disclosures are not sufficiently comparable to Micron's specific product technology announcement regarding NAND cell types."
+        "rationale": "None of the retrieved candidates (Accelerated Computing Platform, Core Platform Hardware) address NAND flash memory products; they focus on GPUs, CPUs, and DPUs for computing."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for Qualcomm focus on autonomous driving technology growth and RF products/5G modem integration. Neither topic relates to NAND Flash cell types, storage density technologies, or QLC developments. There is no substantive overlap in the specific product technologies discussed."
+        "rationale": "None of the retrieved candidates (Autonomous Driving, RF Products/5G Modem) address NAND flash memory products; they focus on automotive computing and wireless connectivity."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "cf5014deb247b8eba4e983a392562057348a649593eb2b99338d57e73baf9a57",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "8547bc89833e83db644d5806e4264d6a783fa1d545926ae788008871161ee688"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "41ea0adf9255f2fd70d5be4a0d2aeeb7eb05bc553eb2ea6d76f183dc077d9fcc",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "04cef8eaf39d9d0e08a35435ee04ccd1e216b7241606bf0ace50ae3a03060899",
+  "request_hash": "fadfb55f981259a3d049c7111bce52759773023da231c5cddda13b52d61b85ca",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1A_D108\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and AMD explicitly warn that stock price volatility could lead to substantial losses for investors and negatively impact the company's business operations. AVGO broadly states that 'your investment could lose value,' while AMD details that 'Stock price fluctuations could impact the value of our equity compensation' and 'adversely affect our business and financing opportunities.'\",\n\"target_sentence_ids\": [\n\"avgo_2024_1A_P006_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1A_P142_S001\",\n\"amd_2024_1A_P142_S004\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_1A_D065\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"AVGO and MU both disclose the risk of stock price volatility and the potential for investors to lose their entire investment. While AVGO succinctly warns that 'your investment could lose value,' MU provides more detail, stating that 'Investors in our common stock may not realize any return on their investment in us and may lose some or all of their investment' and noting that such volatility 'could result in the filing of securities class action litigation.'\",\n\"target_sentence_ids\": [\n\"avgo_2024_1A_P006_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_1A_P128_S001\",\n\"mu_2024_1A_P130_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1A_D034\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both AVGO and NVDA address risks where stock price declines lead to negative consequences for the company or investors, though the triggers differ. AVGO presents general market volatility as the cause for investment loss. NVDA specifically links a stock price decline to a loss of investor confidence in financial statements and restrictions on capital markets access due to internal control weaknesses. NVDA also notes in a different section (D049) that a 'decline in our stock price' can adversely affect financial results via tax rates, aligning with AVGO's general risk of value loss.\",\n\"target_sentence_ids\": [\n\"avgo_2024_1A_P006_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1A_P062_S001\",\n\"nvda_2024_1A_P062_S002\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_1A_D092\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"AVGO and QCOM both identify stock price volatility as a material risk to investors. AVGO states simply that 'your investment could lose value.' QCOM elaborates that its 'stock price and financial results are subject to substantial quarterly and annual fluctuations' due to the cyclical nature of the semiconductor industry, which directly supports the risk of investment loss highlighted by AVGO.\",\n\"target_sentence_ids\": [\n\"avgo_2024_1A_P006_S001\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_1A_P115_S003\",\n\"qcom_2024_1A_P118_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The supplied candidate disclosures (D033 and D042) focus on Human Capital Challenges/Workforce Turnover and Debt Obligations/Capital Return Restrictions, respectively. While D033 mentions that reduced stock price impacts compensation competitiveness, and D042 mentions debt impacts, neither candidate substantively addresses the primary topic of direct stock price volatility risk to investors' investment value as the main driver of loss, which is the core of AVGO's Item 1A disclosure. D042 mentions stock repurchases affecting price but focuses on debt and dividend cessation risks. D033 focuses on talent retention. Thus, no candidate is sufficiently comparable to the specific 'Stock Price Volatility' risk factor.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_1A_D037",
@@ -166,17 +169,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_1A_D108",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Stock price volatility",
             "peer_summary": "AMD's stock price has experienced and may continue to experience wide fluctuations due to factors including financial performance, analyst estimates, capital structure changes, interest rates, and market fluctuations, which could impact equity compensation and financing opportunities.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.10647,
+            "retrieval_score": 0.10932,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and AMD disclose that their stock prices are subject to volatility and that investors' holdings could lose value. AMD provides a more detailed enumeration of specific drivers for this volatility, including financial performance, analyst estimates, changes in capital structure, interest rates, and broad market fluctuations. In contrast, AVGO’s disclosure is broader, simply stating that the stock price may be volatile without listing the specific underlying factors.",
+            "comparison": "Both AVGO and AMD explicitly warn that stock price volatility could lead to substantial losses for investors and negatively impact the company's business operations. AVGO broadly states that 'your investment could lose value,' while AMD details that 'Stock price fluctuations could impact the value of our equity compensation' and 'adversely affect our business and financing opportunities.'",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "1A",
                 "disclosure_id": "avgo_2024_1A_D037",
                 "sentences": [
                   {
@@ -191,6 +198,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "1A",
                 "disclosure_id": "amd_2024_1A_D108",
                 "sentences": [
                   {
@@ -201,10 +209,10 @@
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_1A_P142_S002",
+                    "sentence_id": "amd_2024_1A_P142_S004",
                     "paragraph_id": "amd_2024_1A_P142",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The trading price of our stock may fluctuate widely due to various factors including actual or anticipated fluctuations in our financial conditions and operating results, changes in financial estimates by us or financial estimates and ratings by securities analysts, changes in our capital structure, including issuance of additional debt or equity to the public, interest rate changes, inflation, news regarding our products or products of our competitors, and broad market and industry fluctuations.",
+                    "text": "In addition, volatility in our stock price could adversely affect our business and financing opportunities.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -218,7 +226,7 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Intel's peer candidates focus on human capital challenges and debt obligations. While Intc mentions stock price declines affecting the retention value of share-based awards (intc_2024_1A_D033), this is framed as a talent retention risk rather than a direct risk of stock price volatility to investors. The other candidate (intc_2024_1A_D042) focuses on debt and capital return restrictions. None of the Intc candidates directly address the general risk of stock price volatility and potential loss of investment value in the same manner as AVGO's disclosure."
+        "rationale": "The supplied candidate disclosures (D033 and D042) focus on Human Capital Challenges/Workforce Turnover and Debt Obligations/Capital Return Restrictions, respectively. While D033 mentions that reduced stock price impacts compensation competitiveness, and D042 mentions debt impacts, neither candidate substantively addresses the primary topic of direct stock price volatility risk to investors' investment value as the main driver of loss, which is the core of AVGO's Item 1A disclosure. D042 mentions stock repurchases affecting price but focuses on debt and dividend cessation risks. D033 focuses on talent retention. Thus, no candidate is sufficiently comparable to the specific 'Stock Price Volatility' risk factor."
       },
       {
         "peer_ticker": "MU",
@@ -227,17 +235,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1A_D065",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Common stock price volatility",
             "peer_summary": "The trading price of the company's common stock has been and may continue to be volatile due to various factors, including market fluctuations and operating performance, potentially leading to securities litigation.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.115364,
+            "retrieval_score": 0.123941,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and Micron disclose the risk of stock price volatility and the potential for investors to lose value. Micron’s disclosure is more expansive, noting that the volatility may be unrelated to specific operating performance due to extreme market-wide fluctuations and explicitly warning that such volatility could result in securities class action litigation. AVGO’s disclosure is concise, focusing primarily on the potential loss of investment value without mentioning litigation risks or market-wide drivers.",
+            "comparison": "AVGO and MU both disclose the risk of stock price volatility and the potential for investors to lose their entire investment. While AVGO succinctly warns that 'your investment could lose value,' MU provides more detail, stating that 'Investors in our common stock may not realize any return on their investment in us and may lose some or all of their investment' and noting that such volatility 'could result in the filing of securities class action litigation.'",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "1A",
                 "disclosure_id": "avgo_2024_1A_D037",
                 "sentences": [
                   {
@@ -252,6 +264,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1A",
                 "disclosure_id": "mu_2024_1A_D065",
                 "sentences": [
                   {
@@ -262,24 +275,10 @@
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "mu_2024_1A_P129_S001",
-                    "paragraph_id": "mu_2024_1A_P129",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Our common stock has experienced substantial price volatility in the past and may continue to do so in the future.",
-                    "visible_in_prompt": true
-                  },
-                  {
                     "sentence_id": "mu_2024_1A_P130_S002",
                     "paragraph_id": "mu_2024_1A_P130",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "Investors in our common stock may not realize any return on their investment in us and may lose some or all of their investment.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_1A_P130_S003",
-                    "paragraph_id": "mu_2024_1A_P130",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Volatility in the trading price of our common stock could also result in the filing of securities class action litigation matters, which could result in substantial costs and the diversion of management time and resources.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -295,18 +294,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1A_D043",
-            "peer_topic": "Operating Results Fluctuation and Payment Terms",
-            "peer_summary": "Operating results have fluctuated and may continue to fluctuate due to factors such as product development cycles, vendor payment requirements, and extended customer payment terms. These arrangements, particularly during economic downturns, can impact cash flow availability and collection risk, potentially leading to stock price volatility if results miss expectations.",
+            "peer_disclosure_id": "nvda_2024_1A_D034",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Internal Control Weakness Consequences",
+            "peer_summary": "Identification of material weaknesses in internal controls may cause investors to lose confidence and stock price to decline, while remediation could require significant expenses; failure to remediate could result in inaccurate financial statements, restatements, restricted access to capital markets, and regulatory sanctions.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.067335,
-            "relationship": "same_topic",
-            "comparison": "Both AVGO and NVIDIA highlight the risk that stock price declines may occur if operating results fall below expectations. NVIDIA’s disclosure is specific about the causal mechanism: fluctuations in operating results due to product development cycles or payment terms can lead to missed expectations, causing stock price declines or volatility. AVGO’s disclosure is general, stating only that the stock price may be volatile and investments could lose value, without linking it explicitly to operating result misses.",
-            "peer_source_status": "needs_review",
+            "retrieval_score": 0.119281,
+            "relationship": "related_topic",
+            "comparison": "Both AVGO and NVDA address risks where stock price declines lead to negative consequences for the company or investors, though the triggers differ. AVGO presents general market volatility as the cause for investment loss. NVDA specifically links a stock price decline to a loss of investor confidence in financial statements and restrictions on capital markets access due to internal control weaknesses. NVDA also notes in a different section (D049) that a 'decline in our stock price' can adversely affect financial results via tax rates, aligning with AVGO's general risk of value loss.",
+            "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "1A",
                 "disclosure_id": "avgo_2024_1A_D037",
                 "sentences": [
                   {
@@ -321,20 +324,21 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1A_D043",
+                "item": "1A",
+                "disclosure_id": "nvda_2024_1A_D034",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1A_P063_S001",
-                    "paragraph_id": "nvda_2024_1A_P063",
+                    "sentence_id": "nvda_2024_1A_P062_S001",
+                    "paragraph_id": "nvda_2024_1A_P062",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our operating results have in the past fluctuated and may in the future fluctuate, and if our operating results are below the expectations of securities analysts or investors, our stock price could decline.",
+                    "text": "Identification of material weaknesses in our internal controls, even if quickly remediated once disclosed, may cause investors to lose confidence in our financial statements and our stock price may decline.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "nvda_2024_1A_P065_S006",
-                    "paragraph_id": "nvda_2024_1A_P065",
+                    "sentence_id": "nvda_2024_1A_P062_S002",
+                    "paragraph_id": "nvda_2024_1A_P062",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Failure to meet our expectations or the expectations of our investors or security analysts is likely to cause our stock price to decline, as it has in the past, or experience substantial price volatility.",
+                    "text": "Remediation of any material weakness could require us to incur significant expenses, and if we fail to remediate any material weakness, our financial statements may be inaccurate, we may be required to restate our financial statements, our ability to report our financial results on a timely and accurate basis may be adversely affected, our access to the capital markets may be restricted, our stock price may decline, and we may be subject to sanctions or investigation by regulatory authorities.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -351,17 +355,21 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_1A_D092",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Cyclical nature of semiconductor industry and economic sensitivity",
             "peer_summary": "Qualcomm operates in the highly cyclical semiconductor industry, subject to significant downturns, and is susceptible to declines in global, regional, and local economic conditions, which can lead to fluctuations in stock price and financial results, including reduced demand, inventory issues, and erosion of average selling prices.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.057956,
+            "retrieval_score": 0.060203,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and Qualcomm disclose that their stock prices are subject to substantial fluctuations. Qualcomm provides specific context for this volatility, attributing it to the highly cyclical nature of the semiconductor industry, economic conditions, and rapid technological change. AVGO’s disclosure is generic, simply stating the possibility of volatility and loss of value without specifying the cyclical or industry-specific drivers.",
+            "comparison": "AVGO and QCOM both identify stock price volatility as a material risk to investors. AVGO states simply that 'your investment could lose value.' QCOM elaborates that its 'stock price and financial results are subject to substantial quarterly and annual fluctuations' due to the cyclical nature of the semiconductor industry, which directly supports the risk of investment loss highlighted by AVGO.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "1A",
                 "disclosure_id": "avgo_2024_1A_D037",
                 "sentences": [
                   {
@@ -376,6 +384,7 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D092",
                 "sentences": [
                   {
@@ -391,13 +400,6 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
                     "text": "Our stock price and financial results have fluctuated in the past and are likely to fluctuate in the future.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "qcom_2024_1A_P118_S002",
-                    "paragraph_id": "qcom_2024_1A_P118",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "Factors that may have a significant impact on the market price of our stock and our financial results include those identified above and throughout this Risk Factors section, as well as: volatility of the stock market in general and technology and semiconductor companies in particular; announcements concerning us, our suppliers, our competitors or our customers or licensees, including any announcement concerning the initiation of, or any developments in, any lawsuit or governmental investigation or proceeding against us; and variations between our actual financial results or guidance and expectations of securities analysts or investors, among others.",
-                    "visible_in_prompt": true
                   }
                 ]
               }
@@ -406,6 +408,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "04cef8eaf39d9d0e08a35435ee04ccd1e216b7241606bf0ace50ae3a03060899",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "fadfb55f981259a3d049c7111bce52759773023da231c5cddda13b52d61b85ca"
+    }
   }
 }

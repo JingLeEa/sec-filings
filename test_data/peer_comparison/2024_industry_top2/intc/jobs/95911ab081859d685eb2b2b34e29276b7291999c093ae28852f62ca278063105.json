@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "1ea01da962dd9ec9cfc7d1b53838c9e05b9a30eb5134b333b0a8242a69b95428",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "645e8f674fd064f37070ecd765bd6613e8eac747657ee3676aabb1164bf07426",
+  "request_hash": "9e4832655a7b31c0676302573967b0f8750464c66c0adb713a12bcd826e49d53",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D023\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"While Intel reports a modest aggregate increase in its 'All Other' segment revenue (+$78 million), AMD reports a massive surge in its primary Data Center segment revenue (+94% to $12.6 billion). Both disclose specific product drivers for their respective growth: Intel cites improved supply enabling backlog fulfillment for Altera and higher demand for Mobileye EyeQ products, whereas AMD cites higher sales of Instinct GPUs and EPYC CPUs. Intel's growth is fragmented across smaller non-reportable segments with offsetting decreases, contrasting with AMD's concentrated, high-growth narrative in its core reporting segment.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P066_S001\",\n\"intc_2024_7_P066_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P034_S001\",\n\"amd_2024_7_P034_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D017\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Intel reports a relatively small absolute revenue increase of $78 million in its 'All Other' segment, reflecting stable but slow growth in niche areas. In contrast, NVIDIA reports a total revenue increase of 126% ($60.9 billion), driven by explosive demand in the AI infrastructure market. While both companies operate in the broader semiconductor space, Intel's disclosed segment shows incremental, supply-constrained recovery, whereas NVIDIA's disclosure highlights a fundamental structural shift in revenue magnitude driven by AI accelerators, illustrating vastly different scales of market expansion.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P066_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P018_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"Broadcom's disclosed topics focus on Operating Income drivers and Segment Revenue drivers (Semiconductor Solutions and Infrastructure Software), which do not directly match Intel's specific 'All Other Revenue Performance' disclosure detailing Altera and Mobileye financial results.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"Micron's disclosed topics focus on Interest Income/Expense trends and SBU operating income changes, which are not comparable to Intel's revenue performance disclosure.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"Qualcomm's disclosed topics focus on QCT segment revenue drivers (handsets, automotive) and overall revenue increases, which are structurally different from Intel's 'All Other' segment comprising non-reportable entities like Altera and Mobileye.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D071",
@@ -159,31 +162,35 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_7_D023",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Data Center Segment Financial Performance",
             "peer_summary": "Data Center net revenue increased 94% to $12.6 billion in 2024 from $6.5 billion in 2023, primarily driven by higher sales of AMD Instinct GPUs and AMD EPYC CPUs. Operating income rose to $3.5 billion in 2024 from $1.3 billion in 2023, mainly due to higher revenue partially offset by increased R&D investment.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.141571,
+            "retrieval_score": 0.12482,
             "relationship": "related_topic",
-            "comparison": "Both Intel and AMD report significant revenue growth in their respective strategic growth areas: Intel's 'All Other' segment grew due to Altera and Mobileye, whereas AMD's Data Center segment grew 94% driven by Instinct GPUs and EPYC CPUs. Both disclosures highlight that these growth areas are key drivers for their respective portfolios, though AMD's growth rate (94%) vastly outpaced Intel's 'All Other' segment growth ($78 million increase on a $5.6 billion base).",
+            "comparison": "While Intel reports a modest aggregate increase in its 'All Other' segment revenue (+$78 million), AMD reports a massive surge in its primary Data Center segment revenue (+94% to $12.6 billion). Both disclose specific product drivers for their respective growth: Intel cites improved supply enabling backlog fulfillment for Altera and higher demand for Mobileye EyeQ products, whereas AMD cites higher sales of Instinct GPUs and EPYC CPUs. Intel's growth is fragmented across smaller non-reportable segments with offsetting decreases, contrasting with AMD's concentrated, high-growth narrative in its core reporting segment.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D071",
                 "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P066_S001",
+                    "paragraph_id": "intc_2024_7_P066",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "All other revenue was $5.6 billion, up $78 million from 2022.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "intc_2024_7_P066_S002",
                     "paragraph_id": "intc_2024_7_P066",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "Altera revenue was $2.9 billion, up $314 million from 2022, driven by improved external supply, which enabled the fulfillment of customer backlog.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_7_P066_S003",
-                    "paragraph_id": "intc_2024_7_P066",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Mobileye revenue was $2.1 billion, up $210 million from 2022, due to higher demand for EyeQ products.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -191,6 +198,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D023",
                 "sentences": [
                   {
@@ -216,64 +224,15 @@
       },
       {
         "peer_ticker": "AVGO",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_7_D048",
-            "peer_topic": "Segment Revenue Drivers",
-            "peer_summary": "Semiconductor solutions segment net revenue increased due to strong demand for AI networking products, partially offset by lower demand for broadband and server storage. Infrastructure software segment net revenue increased primarily due to contributions from VMware.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.086916,
-            "relationship": "related_topic",
-            "comparison": "Intel's 'All Other' segment revenue growth was driven by specific business units (Altera and Mobileye) with offsetting decreases in other non-reportable segments. Broadcom similarly details that its Semiconductor Solutions segment revenue increased due to strong demand in networking products (AI), partially offset by lower demand in broadband and server storage, illustrating a similar pattern of segmented growth and decline within broader reporting categories.",
-            "peer_source_status": "needs_review",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D071",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P066_S002",
-                    "paragraph_id": "intc_2024_7_P066",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Altera revenue was $2.9 billion, up $314 million from 2022, driven by improved external supply, which enabled the fulfillment of customer backlog.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_7_P066_S004",
-                    "paragraph_id": "intc_2024_7_P066",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "These 2023 increases were partially offset by a decrease in revenue from our remaining non-reportable segments and start-up businesses.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_7_D048",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P046_S002",
-                    "paragraph_id": "avgo_2024_7_P046",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Net revenue from our semiconductor solutions segment increased due to strong product demand for our networking products, primarily AI networking products, partially offset by lower demand for our broadband and server storage products.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Broadcom's disclosed topics focus on Operating Income drivers and Segment Revenue drivers (Semiconductor Solutions and Infrastructure Software), which do not directly match Intel's specific 'All Other Revenue Performance' disclosure detailing Altera and Mobileye financial results."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The available candidates for MU focus on interest expense trends and SBU operating income improvements driven by pricing and bit shipments. These topics do not align with Intel's specific disclosure of revenue performance drivers within its 'All Other' segment (Altera/Mobileye), nor do they share the same specific financial measure or business driver context."
+        "rationale": "Micron's disclosed topics focus on Interest Income/Expense trends and SBU operating income changes, which are not comparable to Intel's revenue performance disclosure."
       },
       {
         "peer_ticker": "NVDA",
@@ -282,17 +241,21 @@
           {
             "peer_ticker": "NVDA",
             "peer_disclosure_id": "nvda_2024_7_D017",
-            "peer_topic": "Total Fiscal 2024 Revenue",
-            "peer_summary": "Total revenue for fiscal year 2024 was $60.9 billion, representing a 126% increase from the prior year.",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Fiscal Year 2024 Total Revenue Growth",
+            "peer_summary": "Total revenue for fiscal year 2024 was $60.9 billion, representing a 126% increase from the previous year.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.139521,
+            "retrieval_score": 0.130114,
             "relationship": "related_topic",
-            "comparison": "While Intel's 'All Other' segment experienced modest revenue growth of $78 million driven by specific subsidiaries (Altera and Mobileye), NVIDIA reported a massive 126% increase in total revenue, reflecting a much more aggressive top-line expansion cycle compared to Intel's stable, niche growth in its non-core segments.",
+            "comparison": "Intel reports a relatively small absolute revenue increase of $78 million in its 'All Other' segment, reflecting stable but slow growth in niche areas. In contrast, NVIDIA reports a total revenue increase of 126% ($60.9 billion), driven by explosive demand in the AI infrastructure market. While both companies operate in the broader semiconductor space, Intel's disclosed segment shows incremental, supply-constrained recovery, whereas NVIDIA's disclosure highlights a fundamental structural shift in revenue magnitude driven by AI accelerators, illustrating vastly different scales of market expansion.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D071",
                 "sentences": [
                   {
@@ -301,26 +264,13 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "All other revenue was $5.6 billion, up $78 million from 2022.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_7_P066_S002",
-                    "paragraph_id": "intc_2024_7_P066",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Altera revenue was $2.9 billion, up $314 million from 2022, driven by improved external supply, which enabled the fulfillment of customer backlog.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_7_P066_S003",
-                    "paragraph_id": "intc_2024_7_P066",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Mobileye revenue was $2.1 billion, up $210 million from 2022, due to higher demand for EyeQ products.",
-                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D017",
                 "sentences": [
                   {
@@ -339,66 +289,15 @@
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_7_D023",
-            "peer_topic": "QCT segment revenue drivers and EBT margin change",
-            "peer_summary": "QCT revenues in fiscal 2024 increased primarily due to higher handset revenues driven by $2.8 billion in higher chipset shipments from major OEMs and higher automotive revenues from new vehicle launches with Snapdragon products, partially offset by lower IoT revenues; QCT EBT as a percentage of revenues increased primarily due to these higher revenues.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.10937,
-            "relationship": "related_topic",
-            "comparison": "Intel details specific revenue increases within its 'All Other' segment driven by product demand (Mobileye EyeQ) and supply fulfillment (Altera). Similarly, Qualcomm details specific revenue drivers in its QCT segment, citing higher handset revenues due to $2.8 billion in higher chipset shipments. Both companies break down segment growth into specific volume or product-led drivers rather than just aggregate figures.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D071",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P066_S003",
-                    "paragraph_id": "intc_2024_7_P066",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Mobileye revenue was $2.1 billion, up $210 million from 2022, due to higher demand for EyeQ products.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_7_P066_S002",
-                    "paragraph_id": "intc_2024_7_P066",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Altera revenue was $2.9 billion, up $314 million from 2022, driven by improved external supply, which enabled the fulfillment of customer backlog.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_7_D023",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P022_S002",
-                    "paragraph_id": "qcom_2024_7_P022",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "+ higher handsets revenues, due to $2.8 billion in higher chipset shipments driven by certain major OEMs (primarily driven by the normalization of customer inventory levels, which were elevated in the prior year), partially offset by $533 million in lower revenues per chipset primarily driven by unfavorable mix",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "qcom_2024_7_P022_S003",
-                    "paragraph_id": "qcom_2024_7_P022",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "+ higher automotive revenues, primarily driven by an increase in demand from new vehicle launches with our Snapdragon digital cockpit and connectivity products",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "Qualcomm's disclosed topics focus on QCT segment revenue drivers (handsets, automotive) and overall revenue increases, which are structurally different from Intel's 'All Other' segment comprising non-reportable entities like Altera and Mobileye."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "645e8f674fd064f37070ecd765bd6613e8eac747657ee3676aabb1164bf07426",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "9e4832655a7b31c0676302573967b0f8750464c66c0adb713a12bcd826e49d53"
+    }
   }
 }

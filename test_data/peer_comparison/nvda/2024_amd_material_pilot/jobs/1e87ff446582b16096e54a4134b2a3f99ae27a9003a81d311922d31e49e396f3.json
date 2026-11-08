@@ -1,178 +1,92 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "391ad0e3fe57b55bfd05f538c97b289282003b8bff57dd46808eaaf0f045869e",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "2763fc0774c84fa63d75e370e8d663a7e55ee73ab551c2bab6a92271391d38e7",
+  "request_hash": "f3d78ee21c10ad2bc5ccd2d3655e839e7039d8353dc800acdc88098ec6579dac",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D020\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose that their data center compute offerings integrate GPUs, DPUs, and AI software stacks to address data center workloads. However, NVDA explicitly mentions 'supercomputing platforms' and 'DGX Cloud' as part of its compute mix, whereas AMD lists a broader hardware portfolio including CPUs, FPGAs, SmartNICs, and Adaptive SoCs alongside the GPUs and DPUs.\",\n\"target_sentence_ids\": [\n\"nvda_2024_1_P018_S001\",\n\"nvda_2024_1_P018_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P016_S001\",\n\"amd_2024_1_P016_S002\"\n]\n}\n],\n\"no_match\": []\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1_D017",
     "item": "1",
-    "target_topic": "Customer Base and Partner Ecosystem",
-    "target_summary": "End customers include public cloud providers, enterprises, startups, and public sector entities, while direct customers include OEMs, ODMs, system integrators, and distributors, supported by partnerships in automotive, healthcare, financial services, manufacturing, and retail.",
+    "target_topic": "Compute Offerings Composition",
+    "target_summary": "Compute offerings include supercomputing platforms and servers integrating GPUs, DPUs, interconnects, and AI/HPC software stacks, along with NVIDIA AI Enterprise software, DGX Cloud, and various libraries, APIs, SDKs, and frameworks.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0253",
-        "relationship": "one_to_one",
-        "status": "ai_verified",
+        "match_id": "nvda_2023_2024_M0116",
+        "relationship": "current_only",
+        "status": "unmatched",
         "review_reasons": [],
-        "explanation": "Both disclosures describe NVIDIA's customer base and industry partnerships for AI adoption. D019 cites 'thousands of organizations', 'leading consumer internet and cloud services companies', and partnerships in 'transportation, retail, healthcare'. D017 cites 'world's leading public cloud and consumer internet companies', 'thousands of enterprises and startups', and partnerships in 'automotive, healthcare, financial services, manufacturing, and retail'. The specific subjects (customer segments and cross-industry partnerships) match.",
-        "previous_disclosures": [
-          {
-            "disclosure_id": "nvda_2023_1_D019",
-            "item": "1",
-            "section": "Data Center",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "NVIDIA engages with thousands of organizations across industries like finance, oil, and consumer services to implement AI, partnering with leaders in transportation, retail, and healthcare to accelerate adoption.",
-            "extraction_status": "source_validated"
-          }
-        ],
+        "explanation": "No counterpart found in 2023 data. The 2023 disclosures D012, D013, and D022 (already preserved as matched to other 2024 IDs) describe distinct compute/AI infrastructure offerings. D017 specifically details 'supercomputing platforms and servers' integrating 'GPUs, DPUs, interconnects' and 'AI Enterprise software'. While related to the broad 'Data Center' category, no single 2023 disclosure maps directly to this specific combination of hardware/software integration described in D017. D012 matched to D002, D013 to D016, and D022 to D021, leaving D017 unmatched.",
+        "previous_disclosures": [],
         "current_disclosures": [
           {
             "disclosure_id": "nvda_2024_1_D017",
             "item": "1",
             "section": "Data Center",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "End customers include public cloud providers, enterprises, startups, and public sector entities, while direct customers include OEMs, ODMs, system integrators, and distributors, supported by partnerships in automotive, healthcare, financial services, manufacturing, and retail.",
+            "taxonomy": "Technology & AI",
+            "summary": "Compute offerings include supercomputing platforms and servers integrating GPUs, DPUs, interconnects, and AI/HPC software stacks, along with NVIDIA AI Enterprise software, DGX Cloud, and various libraries, APIs, SDKs, and frameworks.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Modified",
-            "cosine_similarity": 0.554542,
-            "sequence_match_ratio": 0.350515,
-            "length_ratio": 0.813084,
-            "word_count_delta": -20,
-            "added_tokens_sample": [
-              "our",
-              "end",
-              "customers",
-              "public",
-              "cloud",
-              "and",
-              "thousands",
-              "of",
-              "and",
-              "public",
-              "sector",
-              "entities",
-              "work",
-              "build",
-              "or",
-              "and",
-              "data",
-              "center",
-              "infrastructure",
-              "our"
-            ],
-            "removed_tokens_sample": [
-              "we",
-              "are",
-              "engaged",
-              "with",
-              "thousands",
-              "of",
-              "organizations",
-              "working",
-              "on",
-              "ai",
-              "in",
-              "a",
-              "multitude",
-              "of",
-              "industries",
-              "from",
-              "automating",
-              "tasks",
-              "such",
-              "as"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2023_1_D019",
-            "score": 0.781547,
-            "normalised_score": 0.7815,
-            "label": "Modified",
-            "rationale": "Score 78.15% of ceiling with 32% word overlap — same disclosure, wording changed.",
-            "method": "embedding_cosine"
-          },
-          "llm": "Modified",
-          "final_taxonomy": "Modified"
+          "lexical": null,
+          "semantic": null,
+          "llm": "New",
+          "final_taxonomy": "New"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.6,
-          "confidence_score": 0.8,
-          "reason": "The 2023 disclosure described customers and partnerships in general terms ('thousands of organizations', 'industries like finance, oil'). The 2024 disclosure introduces specific, quantified customer categories ('public sector entities', 'OEMs, ODMs, system integrators and distributors') and expands the partnership list to include 'financial services, manufacturing'. This refines the understanding of the direct sales channel and the breadth of market penetration, materially changing the substance of the customer base description.",
-          "key_change": "Introduction of specific customer and partner segments"
+          "materiality_score": 0.8,
+          "confidence_score": 0.85,
+          "reason": "This is a newly introduced disclosure describing a holistic 'compute offerings' category that integrates GPUs, DPUs, interconnects, and software stacks into 'supercomputing platforms and servers.' The 2023 data did not have a corresponding disclosure aggregating these specific integrated solutions (CMP was separate, networking was separate). This introduces a new bundled value proposition and service layer (DGX Cloud, AI Enterprise) that reflects a strategic shift towards integrated systems rather than just component sales.",
+          "key_change": "Introduction of integrated compute platforms and software services as a unified offering"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0228",
+        "match_id": "nvda_2024_2025_M0101",
         "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures outline the customer base, distinguishing between end customers (cloud providers, enterprises, startups, public sector) and direct customers (OEMs, ODMs, system integrators, distributors), along with industry partnerships (automotive, healthcare, etc.). The source sentences (P020_S001-S004) in both years cover the same specific customer and channel relationships.",
+        "explanation": "Direct match. Both disclosures detail Compute offerings within the Data Center segment, including supercomputing platforms/servers with GPUs/CPUs/interconnects, AI software, DGX Cloud, and acceleration libraries.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_1_D017",
             "item": "1",
             "section": "Data Center",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "End customers include public cloud providers, enterprises, startups, and public sector entities, while direct customers include OEMs, ODMs, system integrators, and distributors, supported by partnerships in automotive, healthcare, financial services, manufacturing, and retail.",
+            "taxonomy": "Technology & AI",
+            "summary": "Compute offerings include supercomputing platforms and servers integrating GPUs, DPUs, interconnects, and AI/HPC software stacks, along with NVIDIA AI Enterprise software, DGX Cloud, and various libraries, APIs, SDKs, and frameworks.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_1_D014",
+            "disclosure_id": "nvda_2025_1_D017",
             "item": "1",
             "section": "Data Center",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "Customers include cloud providers, internet companies, enterprises, startups, and public sector entities, accessed via direct OEM/ODM/distributor partnerships and indirect partnerships in automotive, healthcare, financial services, and other industries.",
+            "taxonomy": "Technology & AI",
+            "summary": "Compute offerings include supercomputing platforms and servers integrating GPUs, CPUs, and interconnects, along with NVIDIA AI Enterprise software, DGX Cloud service, and various acceleration libraries, APIs, SDKs, and frameworks.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reworded",
-            "cosine_similarity": 0.988099,
-            "sequence_match_ratio": 0.977011,
-            "length_ratio": 1.0,
-            "word_count_delta": 0,
-            "added_tokens_sample": [
-              "retail",
-              "technology"
-            ],
-            "removed_tokens_sample": [
-              "end",
-              "retail"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2024_1_D017",
-            "score": 1.00503,
-            "normalised_score": 1.005,
-            "label": "Unchanged",
-            "rationale": "Score 100.50% of ceiling with 94% word overlap — text is effectively identical.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "No",
-          "materiality_score": 0.1,
-          "confidence_score": 0.95,
-          "reason": "The change is cosmetic and clarifying. It updates 'end customers' to 'customers' (clarification, as direct customers were already listed separately) and adds 'technology' to the list of partnership industries. The core customer base and channel strategy remain substantively unchanged.",
-          "key_change": "Clarification of customer terminology and minor partnership expansion"
+          "materiality_score": 0.15,
+          "confidence_score": 0.9,
+          "reason": "The primary change is the replacement of 'DPUs' with 'CPUs' in the description of compute offerings. While significant technically, in the context of the 2025 filing, this appears to be a correction or alignment with the current product mix description where CPUs are a distinct component of the server platforms alongside GPUs, whereas DPUs were highlighted in 2024. Since DPUs are still mentioned in the Networking section (M0102) and Blackwell (M0107), this specific sentence likely reflects a nuanced update to how compute *platforms* (servers) are described (integrating CPUs vs DPUs as the processor element in that specific list). It is a technical detail update, not a strategic shift.",
+          "key_change": "Technical component list update"
         }
       }
     ],
@@ -183,32 +97,36 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1_D050",
-            "peer_topic": "Data Center Segment Customer Base",
-            "peer_summary": "The Data Center Segment serves hyperscale data centers, OEMs, ODMs, system integrators, and independent distributors globally. ODMs provide design and manufacturing services to various resellers and manufacturers.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.222456,
+            "peer_disclosure_id": "amd_2024_1_D020",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Data Center Segment Product Portfolio and Strategy",
+            "peer_summary": "The Data Center segment includes server-class CPUs, GPUs, AI accelerators, DPUs, FPGAs, SmartNICs, and Adaptive SoC products. The company leverages these technologies to address computational, visual data processing, and AI workload acceleration needs by enabling optimization of performance and power for diverse workloads.",
+            "peer_taxonomy": "Technology & AI",
+            "retrieval_score": 0.113126,
             "relationship": "same_topic",
-            "comparison": "Both NVIDIA and AMD disclose a customer base for their data center businesses that includes Hyperscale/Data Center operators, OEMs, ODMs, system integrators, and distributors. NVIDIA broadly categorizes its customers into 'end customers' (cloud, enterprises, startups) and 'direct customers' (OEMs, ODMs, etc.). AMD specifically lists its Data Center Segment customers as 'hyperscale data centers, original equipment manufacturers (OEMs), original design manufacturers (ODMs), system integrators and independent distributors'. Both companies highlight the critical role of ODMs in their supply and distribution channels, with AMD noting ODMs provide design/manufacturing services and NVIDIA noting partnerships with ODMs to bring products to market.",
+            "comparison": "Both companies disclose that their data center compute offerings integrate GPUs, DPUs, and AI software stacks to address data center workloads. However, NVDA explicitly mentions 'supercomputing platforms' and 'DGX Cloud' as part of its compute mix, whereas AMD lists a broader hardware portfolio including CPUs, FPGAs, SmartNICs, and Adaptive SoCs alongside the GPUs and DPUs.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1",
                 "disclosure_id": "nvda_2024_1_D017",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1_P020_S001",
-                    "paragraph_id": "nvda_2024_1_P020",
+                    "sentence_id": "nvda_2024_1_P018_S001",
+                    "paragraph_id": "nvda_2024_1_P018",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our end customers include the world's leading public cloud and consumer internet companies, thousands of enterprises and startups, and public sector entities.",
+                    "text": "Our compute offerings include supercomputing platforms and servers, bringing together our energy efficient GPUs, DPUs, interconnects, and fully optimized AI and high-performance computing, or HPC, software stacks.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "nvda_2024_1_P020_S003",
-                    "paragraph_id": "nvda_2024_1_P020",
+                    "sentence_id": "nvda_2024_1_P018_S002",
+                    "paragraph_id": "nvda_2024_1_P018",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our direct customers include original equipment manufacturers, or OEMs, original device manufacturers, or ODMs, system integrators and distributors which we partner with to help bring our products to market.",
+                    "text": "In addition, they include NVIDIA AI Enterprise software; our DGX Cloud service; and a growing body of acceleration libraries, APIs, SDKs, and domain-specific application frameworks.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -216,75 +134,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D050",
+                "item": "1",
+                "disclosure_id": "amd_2024_1_D020",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1_P053_S001",
-                    "paragraph_id": "amd_2024_1_P053",
+                    "sentence_id": "amd_2024_1_P016_S001",
+                    "paragraph_id": "amd_2024_1_P016",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our Data Center Segment customers consist primarily of hyperscale data centers, original equipment manufacturers (OEMs), original design manufacturers (ODMs), system integrators and independent distributors in both domestic and international markets.",
+                    "text": "The Data Center segment primarily includes server-class CPUs, GPUs, AI accelerators, DPUs, FPGAs, SmartNICs, and Adaptive SoC products.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_1_P053_S002",
-                    "paragraph_id": "amd_2024_1_P053",
+                    "sentence_id": "amd_2024_1_P016_S002",
+                    "paragraph_id": "amd_2024_1_P016",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "ODMs provide design and/or manufacturing services to branded and unbranded private label resellers, OEMs and system builders.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1_D057",
-            "peer_topic": "Hyperscale Customer Base and Product Applications",
-            "peer_summary": "AMD's data center products, including server CPUs, GPU accelerators, and adaptive SOCs, are purchased by large public cloud providers and hyperscale private data centers. These customers incorporate the products into servers for web applications, public cloud services, and AI workloads such as generative AI models.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.125698,
-            "relationship": "same_topic",
-            "comparison": "Both companies identify large public cloud providers and hyperscale data centers as primary purchasers of data center products. NVIDIA identifies 'leading public cloud... companies' as end customers, while AMD states 'Large multi-national public cloud service providers and hyperscale private data centers directly and indirectly purchase a substantial portion of our data center-focused products'. Both disclosures explicitly mention the incorporation of these chips into servers used for AI workloads; NVIDIA mentions partnerships to 'accelerate the adoption of AI', while AMD specifies these products support 'AI workloads such as generative AI models'.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1_D017",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_1_P020_S001",
-                    "paragraph_id": "nvda_2024_1_P020",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our end customers include the world's leading public cloud and consumer internet companies, thousands of enterprises and startups, and public sector entities.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_1_P020_S004",
-                    "paragraph_id": "nvda_2024_1_P020",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "We also have partnerships in automotive, healthcare, financial services, manufacturing, and retail among others, to accelerate the adoption of AI.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D057",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_1_P060_S001",
-                    "paragraph_id": "amd_2024_1_P060",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Large multi-national public cloud service providers and hyperscale private data centers directly and indirectly purchase a substantial portion of our data center-focused products, including server CPUs, GPU accelerators, DPUs, FPGAs and Adaptive SOCs.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_1_P060_S003",
-                    "paragraph_id": "amd_2024_1_P060",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Hyperscale data centers use these products to operate web-based applications or to support public cloud computing and storage service offerings, including but not limited to AI workloads such as generative AI models.",
+                    "text": "We leverage our technology to address the computational, visual data processing and AI workload acceleration needs in the data center market.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -294,6 +158,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "2763fc0774c84fa63d75e370e8d663a7e55ee73ab551c2bab6a92271391d38e7",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "f3d78ee21c10ad2bc5ccd2d3655e839e7039d8353dc800acdc88098ec6579dac"
+    }
   }
 }

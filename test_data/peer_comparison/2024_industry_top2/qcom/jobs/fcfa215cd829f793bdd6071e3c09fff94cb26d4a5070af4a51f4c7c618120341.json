@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
-  "request_hash": "85ac940e218e938ae14105a1106428348474ffedf57601c2c1a9d3e041cb2fca",
+  "input_fingerprint": "e41e6022adb4d847c0289913c33de7b4a26701f19d2828a112ec60fbf96be8dd",
+  "job_fingerprint": "c4153a6226548130d1368b17ebab371b1bc7d048746348cc2132b4a03cff3315",
+  "request_hash": "1692921ea2bab223b3ec8c715c32ab8149cfa74c7888c8ea0909106bcb626213",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D034\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies explicitly discuss how the amortization expense related to acquired patents/intangibles impacted their financial metrics in fiscal 2024. QCOM attributes its QTL EBT margin expansion to a decrease in amortization expense related to acquired patents. AMD discloses that its amortization of acquisition-related intangibles decreased by 15% year-over-year to $2.4 billion, primarily due to certain intangibles being fully amortized. While QCOM focuses on the cost savings from this decrease boosting EBT margins, AMD focuses on the magnitude and reduction of the expense itself in its MD&A.\",\n\"target_sentence_ids\": [\n\"qcom_2024_7_P024_S006\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P047_S001\",\n\"amd_2024_7_P047_S002\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_7_D052\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"AVGO and QCOM both disclose specific details regarding amortization of acquisition-related intangibles for fiscal 2024. QCOM reports that lower amortization expense related to acquired patents was a key driver for increased QTL EBT margins. AVGO reports that amortization of acquisition-related intangible assets recognized in operating expenses increased by $1,850 million (133%) compared to the prior year, primarily due to higher amortization from the VMware Merger. The comparison highlights the divergent trends in acquisition-related amortization expenses between the two peers: QCOM benefited from a decrease, while AVGO experienced a significant increase.\",\n\"target_sentence_ids\": [\n\"qcom_2024_7_P024_S006\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_7_P051_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"While INTC discusses cost of sales drivers, its specific topics (CCG cost of sales changes and 'All other' segments including Altera/Mobileye) do not substantively match QCOM's specific disclosure regarding QTL segment EBT margin expansion driven by patent amortization decreases. The topics and segment contexts are distinct.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU's candidates discuss total revenue growth drivers (DRAM/NAND sales) and EBU operating income changes driven by ASPs and bit shipments. These do not match QCOM's specific topic of QTL EBT margin expansion driven by patent amortization decreases.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"NVDA's candidates discuss gross margin increases driven by Data Center revenue growth and lower net inventory provisions. This does not match QCOM's specific topic of EBT margin expansion driven by patent amortization expense decreases.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
   "result": {
     "target_ticker": "QCOM",
     "target_disclosure_id": "qcom_2024_7_D026",
@@ -202,9 +205,63 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate sufficiently comparable to the specific topic of QTL EBT margin expansion driven by amortization decreases. AMD's candidates discuss Embedded segment revenue declines due to inventory normalization or general amortization decreases without linking them to segment margin expansion in the same manner."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D034",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Amortization of Acquisition-Related Intangibles",
+            "peer_summary": "Amortization of acquisition-related intangibles was $2.4 billion for 2024, a decrease of 15% from $2.8 billion in 2023, primarily due to certain intangibles being fully amortized in the prior fiscal year.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.101048,
+            "relationship": "same_topic",
+            "comparison": "Both companies explicitly discuss how the amortization expense related to acquired patents/intangibles impacted their financial metrics in fiscal 2024. QCOM attributes its QTL EBT margin expansion to a decrease in amortization expense related to acquired patents. AMD discloses that its amortization of acquisition-related intangibles decreased by 15% year-over-year to $2.4 billion, primarily due to certain intangibles being fully amortized. While QCOM focuses on the cost savings from this decrease boosting EBT margins, AMD focuses on the magnitude and reduction of the expense itself in its MD&A.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "item": "7",
+                "disclosure_id": "qcom_2024_7_D026",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_7_P024_S006",
+                    "paragraph_id": "qcom_2024_7_P024",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "+ lower cost of sales driven by a decrease in amortization expense related to acquired patents",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D034",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P047_S001",
+                    "paragraph_id": "amd_2024_7_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Amortization of acquisition-related intangibles of $2.4 billion for 2024 decreased by $417 million, or 15%, compared to $2.8 billion in 2023.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P047_S002",
+                    "paragraph_id": "amd_2024_7_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "The decrease was primarily due to certain acquisition-related intangibles being fully amortized in the prior fiscal year.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
@@ -213,26 +270,23 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_7_D052",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Amortization of Acquisition-Related Intangible Assets Increase",
             "peer_summary": "Amortization of acquisition-related intangible assets recognized in operating expenses increased by $1,850 million, or 133%, in fiscal year 2024 compared to the prior fiscal year. This increase was primarily due to higher amortization of customer-related intangible assets resulting from the VMware Merger.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.122887,
+            "retrieval_score": 0.117805,
             "relationship": "same_topic",
-            "comparison": "Both QCOM and AVGO discuss the impact of amortization of acquired patents/intangibles on their financial results for fiscal 2024, but with opposite directions and business contexts. QCOM reports that a decrease in amortization expense was a primary driver for its QTL EBT margin expansion, indicating a tailwind to profitability. In contrast, AVGO reports a significant increase in amortization of acquisition-related intangible assets (up $1,850 million or 133%) driven by the VMware Merger, which contributed to a massive increase in unallocated expenses, representing a substantial cost burden rather than a margin expansion driver.",
+            "comparison": "AVGO and QCOM both disclose specific details regarding amortization of acquisition-related intangibles for fiscal 2024. QCOM reports that lower amortization expense related to acquired patents was a key driver for increased QTL EBT margins. AVGO reports that amortization of acquisition-related intangible assets recognized in operating expenses increased by $1,850 million (133%) compared to the prior year, primarily due to higher amortization from the VMware Merger. The comparison highlights the divergent trends in acquisition-related amortization expenses between the two peers: QCOM benefited from a decrease, while AVGO experienced a significant increase.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D026",
                 "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P024_S005",
-                    "paragraph_id": "qcom_2024_7_P024",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "QTL EBT as a percentage of revenues increased in fiscal 2024 primarily due to:",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "qcom_2024_7_P024_S006",
                     "paragraph_id": "qcom_2024_7_P024",
@@ -245,6 +299,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D052",
                 "sentences": [
                   {
@@ -265,76 +320,25 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate sufficiently comparable. INTC's candidates discuss CCG cost of sales decreases or DCAI revenue declines due to server volume/ASP dynamics, which do not align with the topic of margin expansion drivers via amortization or similar cost structures."
+        "rationale": "While INTC discusses cost of sales drivers, its specific topics (CCG cost of sales changes and 'All other' segments including Altera/Mobileye) do not substantively match QCOM's specific disclosure regarding QTL segment EBT margin expansion driven by patent amortization decreases. The topics and segment contexts are distinct."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate sufficiently comparable. MU's candidates discuss total revenue growth driven by DRAM/NAND shipment and ASP increases, or SG&A expense trends, which are unrelated to the specific topic of licensing segment margin expansion via patent amortization changes."
+        "rationale": "MU's candidates discuss total revenue growth drivers (DRAM/NAND sales) and EBU operating income changes driven by ASPs and bit shipments. These do not match QCOM's specific topic of QTL EBT margin expansion driven by patent amortization decreases."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D022",
-            "peer_topic": "Gross Margin Trends",
-            "peer_summary": "Gross margin increased in fiscal year 2024, primarily driven by Data Center revenue growth and lower net inventory provisions as a percentage of revenue.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.138352,
-            "relationship": "same_topic",
-            "comparison": "Both QCOM and NVDA attribute positive margin or earnings performance in fiscal 2024 to specific operational improvements alongside revenue growth, though the specific drivers differ. QCOM attributes its QTL EBT margin expansion to lower cost of sales (decreased amortization) and higher revenues. Similarly, NVDA attributes its overall gross margin increase to Data Center revenue growth and lower net inventory provisions. Both disclosures highlight a combination of top-line growth and favorable cost-side dynamics contributing to improved financial metrics, whereas NVDA's cost driver was inventory-related rather than amortization-related.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_7_D026",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P024_S005",
-                    "paragraph_id": "qcom_2024_7_P024",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "QTL EBT as a percentage of revenues increased in fiscal 2024 primarily due to:",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "qcom_2024_7_P024_S006",
-                    "paragraph_id": "qcom_2024_7_P024",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "+ lower cost of sales driven by a decrease in amortization expense related to acquired patents",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "qcom_2024_7_P024_S007",
-                    "paragraph_id": "qcom_2024_7_P024",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "+ higher revenues",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D022",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_7_P023_S001",
-                    "paragraph_id": "nvda_2024_7_P023",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Gross margin increased in fiscal year 2024, primarily driven by Data Center revenue growth and lower net inventory provisions as a percentage of revenue.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "NVDA's candidates discuss gross margin increases driven by Data Center revenue growth and lower net inventory provisions. This does not match QCOM's specific topic of EBT margin expansion driven by patent amortization expense decreases."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "c4153a6226548130d1368b17ebab371b1bc7d048746348cc2132b4a03cff3315",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
+      "request_hash": "1692921ea2bab223b3ec8c715c32ab8149cfa74c7888c8ea0909106bcb626213"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
-  "request_hash": "035a2755abfd5852e5e3dcc39cf8f20146f2e0277f4c6d84ea65d3e9c47320b8",
+  "input_fingerprint": "e41e6022adb4d847c0289913c33de7b4a26701f19d2828a112ec60fbf96be8dd",
+  "job_fingerprint": "e7e3b3151e4623b0f8a8ae90ffee3f968bd59da7e9f4f512820e969fe93ad0ec",
+  "request_hash": "0ca125aaa022dc25b9f07228fdd9596092013f44ec74c62241591b367e15dc38",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_1_D014\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both Qualcomm and Broadcom disclose wireless connectivity capabilities as core components of their mobile system solutions. Qualcomm's Snapdragon platforms integrate 'cellular modem... non-cellular wireless connectivity (such as Wi-Fi and Bluetooth)' (qcom_2024_1_P031_S002). Similarly, Broadcom's Connectivity Solutions include 'discrete and integrated Wi-Fi and Bluetooth solutions, and global positioning system/global navigation satellite system (\\\"GPS/GNSS\\\") receivers, designed for use in mobile devices' (avgo_2024_1_P010_S002). While Qualcomm emphasizes these as integrated parts of a broader SoC/platform strategy including application processors, Broadcom focuses specifically on the connectivity chipsets and location platforms themselves.\",\n\"target_sentence_ids\": [\n\"qcom_2024_1_P031_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_1_P010_S002\"\n]\n},\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D038\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Qualcomm and AMD both describe their hardware platforms as combining high-performance processing with specialized connectivity or graphics capabilities for diverse end-markets. Qualcomm's Snapdragon platforms consist of application processors and wireless connectivity, serving mobile and automotive segments (qcom_2024_1_P031_S001, qcom_2024_1_P031_S002). AMD's embedded portfolio includes CPUs, APUs, and GPUs designed for 'high performance compute, high-bandwidth network connectivity... and 4K multimedia requirements of automotive infotainment systems' (amd_2024_1_P032_S003). Both companies target the automotive infotainment/multimedia market, though Qualcomm integrates cellular modems into its mobile platform while AMD provides the compute/graphics engines for embedded platforms.\",\n\"target_sentence_ids\": [\n\"qcom_2024_1_P031_S001\",\n\"qcom_2024_1_P031_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P032_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The retrieved candidates for Intel describe discrete GPU architectures (Arc B-Series) and process node manufacturing (Intel 18A). These topics do not substantively match Qualcomm's disclosure of integrated Snapdragon system platforms comprising CPUs, modems, and wireless connectivity solutions. There is no overlap in specific product architecture, connectivity integration, or market application description between the provided Intel disclosures and the target.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The retrieved candidates for Micron describe GDDR memory products (GDDR6, GDDR7) used in graphics cards and data centers. This is a memory component supplier topic, which is distinct from Qualcomm's disclosure of system-based SoC platforms integrating application processors, modems, and wireless connectivity. No substantive comparison of platform architecture or connectivity features is possible.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates for NVIDIA describe supercomputing platforms, servers, and GPU parallel processing for AI/HPC. This differs significantly from Qualcomm's focus on mobile/embedded SoC platforms with integrated cellular and non-cellular wireless connectivity. The topics of high-performance data center compute/AI acceleration are not comparable to the mobile system-on-chip connectivity and application processing architecture disclosed by Qualcomm.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
   "result": {
     "target_ticker": "QCOM",
     "target_disclosure_id": "qcom_2024_1_D034",
@@ -170,9 +173,63 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate is sufficiently comparable. AMD's disclosures focus on embedded computing portfolios (CPUs, APUs, FPGAs, Adaptive SoCs) for automotive, industrial, and networking markets, whereas the target QCOM disclosure focuses on integrated Snapdragon platforms for mobile, compute, sound, and automotive sectors with specific emphasis on AI/NPU and modem integration. The product architectures and primary market verticals (embedded/enterprise vs. mobile/consumer SoC) are fundamentally different despite both being semiconductor companies."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1_D038",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Embedded Processor and GPU Product Portfolio",
+            "peer_summary": "AMD offers embedded CPUs, APUs, and GPUs, including EPYC Embedded, Ryzen Embedded V/R-Series, and Radeon Embedded products, designed for high-performance compute, networking, storage, and graphics in enterprise and automotive markets.",
+            "peer_taxonomy": "Technology & AI",
+            "retrieval_score": 0.085386,
+            "relationship": "related_topic",
+            "comparison": "Qualcomm and AMD both describe their hardware platforms as combining high-performance processing with specialized connectivity or graphics capabilities for diverse end-markets. Qualcomm's Snapdragon platforms consist of application processors and wireless connectivity, serving mobile and automotive segments (qcom_2024_1_P031_S001, qcom_2024_1_P031_S002). AMD's embedded portfolio includes CPUs, APUs, and GPUs designed for 'high performance compute, high-bandwidth network connectivity... and 4K multimedia requirements of automotive infotainment systems' (amd_2024_1_P032_S003). Both companies target the automotive infotainment/multimedia market, though Qualcomm integrates cellular modems into its mobile platform while AMD provides the compute/graphics engines for embedded platforms.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "item": "1",
+                "disclosure_id": "qcom_2024_1_D034",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1_P031_S001",
+                    "paragraph_id": "qcom_2024_1_P031",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "The Snapdragon family of highly integrated, system-based solutions include the Snapdragon mobile, compute, sound and automotive platforms.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "qcom_2024_1_P031_S002",
+                    "paragraph_id": "qcom_2024_1_P031",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Each platform consists of application processors and wireless connectivity capabilities, including our cellular modem that provides core baseband modem functionality for voice and data communications, non-cellular wireless connectivity (such as Wi-Fi and Bluetooth) and global positioning functions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "1",
+                "disclosure_id": "amd_2024_1_D038",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1_P032_S003",
+                    "paragraph_id": "amd_2024_1_P032",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Our embedded processors and GPUs are designed to support high performance compute, high-bandwidth network connectivity and security, high-performance storage requirements for enterprise and cloud infrastructure, 3D graphics performance and 4K multimedia requirements of automotive infotainment systems.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
@@ -181,17 +238,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_1_D014",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Wireless connectivity solutions",
             "peer_summary": "The company provides Wi-Fi, Bluetooth, and GPS/GNSS solutions for mobile devices, including integrated combination chips and location platform services.",
             "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.103565,
-            "relationship": "same_topic",
-            "comparison": "Both QCOM and AVGO disclose wireless connectivity capabilities (Wi-Fi, Bluetooth, GPS/GNSS) as integral components of their mobile platform offerings. QCOM describes these as part of the Snapdragon family's application processors and wireless connectivity capabilities, while AVGO provides discrete and integrated Wi-Fi, Bluetooth, and GPS/GNSS solutions specifically designed for mobile devices. AVGO further details the use of combination chips for integrated functionality, a strategy similar to QCOM's system-based integrated solutions.",
+            "retrieval_score": 0.100296,
+            "relationship": "related_topic",
+            "comparison": "Both Qualcomm and Broadcom disclose wireless connectivity capabilities as core components of their mobile system solutions. Qualcomm's Snapdragon platforms integrate 'cellular modem... non-cellular wireless connectivity (such as Wi-Fi and Bluetooth)' (qcom_2024_1_P031_S002). Similarly, Broadcom's Connectivity Solutions include 'discrete and integrated Wi-Fi and Bluetooth solutions, and global positioning system/global navigation satellite system (\"GPS/GNSS\") receivers, designed for use in mobile devices' (avgo_2024_1_P010_S002). While Qualcomm emphasizes these as integrated parts of a broader SoC/platform strategy including application processors, Broadcom focuses specifically on the connectivity chipsets and location platforms themselves.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "1",
                 "disclosure_id": "qcom_2024_1_D034",
                 "sentences": [
                   {
@@ -206,6 +267,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "1",
                 "disclosure_id": "avgo_2024_1_D014",
                 "sentences": [
                   {
@@ -213,13 +275,6 @@
                     "paragraph_id": "avgo_2024_1_P010",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "• Connectivity Solutions: Our connectivity solutions include discrete and integrated Wi-Fi and Bluetooth solutions, and global positioning system/global navigation satellite system (\"GPS/GNSS\") receivers, designed for use in mobile devices including smartphones, tablets and wearable products.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_1_P011_S005",
-                    "paragraph_id": "avgo_2024_1_P011",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "These solutions include combination chips that offer integrated Wi-Fi and Bluetooth functionality, which provides significant performance advantages over discrete solutions.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -233,20 +288,25 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate is sufficiently comparable. INTC's candidates discuss discrete client GPUs (Arc) and process node technology (Intel 18A). These do not align with the target's topic of integrated mobile/automotive Snapdragon platforms comprising application processors, modems, and wireless connectivity capabilities."
+        "rationale": "The retrieved candidates for Intel describe discrete GPU architectures (Arc B-Series) and process node manufacturing (Intel 18A). These topics do not substantively match Qualcomm's disclosure of integrated Snapdragon system platforms comprising CPUs, modems, and wireless connectivity solutions. There is no overlap in specific product architecture, connectivity integration, or market application description between the provided Intel disclosures and the target."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate is sufficiently comparable. MU's disclosures concern graphics market trends and GDDR7 memory products. While graphics are a component of the target's application processor, MU's focus is on memory technology rather than the integrated system-level platform architecture including modems and connectivity found in the target."
+        "rationale": "The retrieved candidates for Micron describe GDDR memory products (GDDR6, GDDR7) used in graphics cards and data centers. This is a memory component supplier topic, which is distinct from Qualcomm's disclosure of system-based SoC platforms integrating application processors, modems, and wireless connectivity. No substantive comparison of platform architecture or connectivity features is possible."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate is sufficiently comparable. NVDA's disclosures describe the evolution of GPUs for AI, deep learning, and parallel workloads in data centers and self-driving cars. This differs significantly from the target's focus on mobile-centric Snapdragon SoCs integrating cellular modems, Wi-Fi, Bluetooth, and CPUs/NPUs for consumer mobile and automotive applications."
+        "rationale": "The retrieved candidates for NVIDIA describe supercomputing platforms, servers, and GPU parallel processing for AI/HPC. This differs significantly from Qualcomm's focus on mobile/embedded SoC platforms with integrated cellular and non-cellular wireless connectivity. The topics of high-performance data center compute/AI acceleration are not comparable to the mobile system-on-chip connectivity and application processing architecture disclosed by Qualcomm."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e7e3b3151e4623b0f8a8ae90ffee3f968bd59da7e9f4f512820e969fe93ad0ec",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
+      "request_hash": "0ca125aaa022dc25b9f07228fdd9596092013f44ec74c62241591b367e15dc38"
+    }
   }
 }

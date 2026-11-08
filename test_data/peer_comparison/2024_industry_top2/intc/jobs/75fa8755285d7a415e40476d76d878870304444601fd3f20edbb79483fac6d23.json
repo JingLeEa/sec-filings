@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "f7fd3bfb49685f537052a79cef2e71c26a6cdae0bb926f2e1e0c1c6b7f76b112",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "831e870a50b78308f2793d20e2781ad070d29e93f51c91f0e6fff9d3444af030",
+  "request_hash": "b55c3c7a7f642afcaaef48794c8fa681b22a7c0146eac6ef629167a64f77e458",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D025\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both Intel and Broadcom disclose the accounting treatment for derivative financial instruments and their impact on earnings. Intel specifically identifies its liquidated damage provision for Fab 34 delays as a 'non-designated derivative' with a $755 million loss recognized in 2024. Broadcom discusses its use of non-designated foreign exchange forward contracts, noting that changes in fair value for these undesignated instruments are recognized in 'other income (expense), net' in the period of change, similar to Intel's treatment of its non-hedge derivative gain/loss in interest and other, net. However, the specific financial impact and underlying contracts differ: Intel's is a construction penalty derivative, while Broadcom's relates to currency hedging (and separately settled treasury rate locks for debt issuance).\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P093_S003\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P044_S002\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D004\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both Intel and Micron disclose the accounting policy for derivative instruments, specifically how gains or losses from changes in fair value are recognized in the income statement when derivatives are not designated for hedge accounting. Intel states that its liquidated damage provision, qualifying as a non-designated derivative, results in a loss recognized within 'Interest and other, net'. Micron states that for derivative instruments not designated for hedge accounting, 'gains or losses from changes in fair values are recognized in other non-operating income (expense)'. While both agree on the recognition of fair value changes in earnings for non-designated derivatives, Intel's specific instrument is a construction penalty, whereas Micron's disclosure is a general policy statement potentially applied to currency or commodity contracts.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P093_S003\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P017_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D044\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both Intel and Nvidia disclose the accounting treatment for derivative instruments, focusing on the recognition of fair value changes. Intel treats its Fab 34 liquidated damage provision as a 'non-designated derivative' and recognizes the change in fair value as a loss in earnings. Nvidia states that for derivative instruments not designated for hedge accounting, 'changes in fair value are recognized in earnings'. Both companies thus follow a similar principle where non-hedged derivatives flow through earnings, though Nvidia's disclosure is a general policy description without a specific material transaction comparable to Intel's $755 million construction penalty, and Nvidia does not mention liquidated damages or construction delays.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P093_S003\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P049_S008\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"No candidate was retrieved with sufficient comparability. AMD's provided disclosures (D115 and D117) focus exclusively on stock-based compensation expenses (Time-Based and Performance-Based RSUs), which is a fundamentally different accounting topic from Intel's disclosure of liquidated damages for construction delays classified as a non-designated derivative financial instrument.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D079",
@@ -183,7 +186,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that shares the same topic or risk exposure. AMD's candidates (D115 and D117) relate to stock-based compensation (RSUs), which is unrelated to Intel's disclosure on construction delay liquidated damages and non-designated derivatives."
+        "rationale": "No candidate was retrieved with sufficient comparability. AMD's provided disclosures (D115 and D117) focus exclusively on stock-based compensation expenses (Time-Based and Performance-Based RSUs), which is a fundamentally different accounting topic from Intel's disclosure of liquidated damages for construction delays classified as a non-designated derivative financial instrument."
       },
       {
         "peer_ticker": "AVGO",
@@ -192,17 +195,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D025",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Derivative instruments hedging policy and status",
             "peer_summary": "The company uses derivative financial instruments, specifically foreign exchange forward contracts and treasury rate locks, to manage exposure to foreign exchange and interest rate risks for hedging purposes, not for speculation. Outstanding derivatives are recognized at fair value based on Level 2 inputs. As of November 3, 2024, and October 29, 2023, the company had no material foreign exchange forward contracts outstanding. In August 2023, the company settled $5.5 billion in treasury rate lock contracts for a $371 million cumulative gain, with $75 million to be amortized to interest expense through October 2034 upon the issuance of $1.75 billion senior notes, and the remainder amortized for future debt.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.0713,
+            "retrieval_score": 0.065299,
             "relationship": "related_topic",
-            "comparison": "Both Intel and Broadcom utilize derivative accounting concepts to manage financial exposures resulting from operational decisions, though the specific instruments and nature differ significantly. Intel recognizes a $755 million loss in 2024 due to the change in fair value of liquidated damage provisions, which are classified as non-designated derivatives, triggered by construction delays at Fab 34. In contrast, Broadcom discloses a $371 million cumulative gain from settling treasury rate lock contracts in August 2023, which were also settled derivatives but related to interest rate risk hedging rather than contractual penalty provisions. Both companies recognize gains or losses from these non-designated or settled derivatives in other income/expense or net income, reflecting their impact on earnings from financial risk management activities.",
+            "comparison": "Both Intel and Broadcom disclose the accounting treatment for derivative financial instruments and their impact on earnings. Intel specifically identifies its liquidated damage provision for Fab 34 delays as a 'non-designated derivative' with a $755 million loss recognized in 2024. Broadcom discusses its use of non-designated foreign exchange forward contracts, noting that changes in fair value for these undesignated instruments are recognized in 'other income (expense), net' in the period of change, similar to Intel's treatment of its non-hedge derivative gain/loss in interest and other, net. However, the specific financial impact and underlying contracts differ: Intel's is a construction penalty derivative, while Broadcom's relates to currency hedging (and separately settled treasury rate locks for debt issuance).",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D079",
                 "sentences": [
                   {
@@ -217,13 +224,14 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D025",
                 "sentences": [
                   {
-                    "sentence_id": "avgo_2024_8_P045_S003",
-                    "paragraph_id": "avgo_2024_8_P045",
+                    "sentence_id": "avgo_2024_8_P044_S002",
+                    "paragraph_id": "avgo_2024_8_P044",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "In August 2023, we early settled all treasury rate lock contracts, which had a $5.5 billion notional amount, for a cumulative gain of $371 million.",
+                    "text": "These forward contracts are not designated as hedging instruments, and the changes in fair value are recognized in other income (expense), net in the period of change.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -240,17 +248,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D004",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Accounting Treatment of Derivative Instruments",
             "peer_summary": "Derivative instruments are measured at fair value and recognized as assets or liabilities. The accounting for changes in fair value depends on the designation: non-designated derivatives recognize gains/losses in other non-operating income/expense; cash flow hedges include gains/losses in accumulated other comprehensive income before reclassification to earnings; and fair value hedges recognize changes in both the derivative and hedged items' fair values in earnings. For foreign currency and commodity cash flow or fair value hedges, time value is excluded from effectiveness assessment and recognized in earnings via amortization.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.068062,
+            "retrieval_score": 0.058382,
             "relationship": "related_topic",
-            "comparison": "Micron and Intel both disclose accounting policies for derivative instruments, specifically regarding how changes in fair value are recognized when derivatives are not designated as hedges. Intel explicitly states that its liquidated damage provisions qualify as a non-designated derivative, resulting in a $755 million loss recognized in 'Interest and other, net' due to changes in fair value. Micron describes the general policy where gains or losses from changes in fair value for derivatives not designated for hedge accounting are also recognized in 'other non-operating income (expense)'. While Micron provides the general accounting framework and Intel provides specific application to a contractual penalty, both confirm that such non-designated derivative changes flow directly through earnings rather than other comprehensive income.",
+            "comparison": "Both Intel and Micron disclose the accounting policy for derivative instruments, specifically how gains or losses from changes in fair value are recognized in the income statement when derivatives are not designated for hedge accounting. Intel states that its liquidated damage provision, qualifying as a non-designated derivative, results in a loss recognized within 'Interest and other, net'. Micron states that for derivative instruments not designated for hedge accounting, 'gains or losses from changes in fair values are recognized in other non-operating income (expense)'. While both agree on the recognition of fair value changes in earnings for non-designated derivatives, Intel's specific instrument is a construction penalty, whereas Micron's disclosure is a general policy statement potentially applied to currency or commodity contracts.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D079",
                 "sentences": [
                   {
@@ -265,6 +277,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D004",
                 "sentences": [
                   {
@@ -283,16 +296,68 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that shares the same topic or risk exposure. NVDA's candidate (D001) is a standard Item 8 location disclosure, which does not provide comparable financial details on derivatives, liquidated damages, or construction risks."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D044",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Accounting for Derivative Instruments and Hedges",
+            "peer_summary": "Derivative instruments are recognized as assets or liabilities measured at fair value; their accounting depends on designation, with fair value hedges affecting earnings immediately, cash flow hedges affecting other comprehensive income initially, and undesignated hedges affecting earnings upon change in fair value.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.076138,
+            "relationship": "related_topic",
+            "comparison": "Both Intel and Nvidia disclose the accounting treatment for derivative instruments, focusing on the recognition of fair value changes. Intel treats its Fab 34 liquidated damage provision as a 'non-designated derivative' and recognizes the change in fair value as a loss in earnings. Nvidia states that for derivative instruments not designated for hedge accounting, 'changes in fair value are recognized in earnings'. Both companies thus follow a similar principle where non-hedged derivatives flow through earnings, though Nvidia's disclosure is a general policy description without a specific material transaction comparable to Intel's $755 million construction penalty, and Nvidia does not mention liquidated damages or construction delays.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D079",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P093_S003",
+                    "paragraph_id": "intc_2024_8_P093",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "As a result, in 2024 we recognized a loss of $755 million within Interest and other, net from the change in fair value of the liquidated damage provisions, which qualify as a non-designated derivative.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D044",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P049_S008",
+                    "paragraph_id": "nvda_2024_8_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "For derivative instruments not designated for hedge accounting, changes in fair value are recognized in earnings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "831e870a50b78308f2793d20e2781ad070d29e93f51c91f0e6fff9d3444af030",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "b55c3c7a7f642afcaaef48794c8fa681b22a7c0146eac6ef629167a64f77e458"
+    }
   }
 }

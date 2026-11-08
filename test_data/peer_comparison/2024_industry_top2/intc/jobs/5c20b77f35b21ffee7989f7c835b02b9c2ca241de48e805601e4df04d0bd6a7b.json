@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "2d000f17441152dafc043f2c7e461676e588033eb22d7d750df2aa6e2dc20dea",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "1b00e2c5e00885ccf67d02861a55124bd2cc6937486766021cf35be68af8859a",
+  "request_hash": "372dd17ada7269b478880293218458b96805c1d038fbd47b25fc9ee184f97669",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_8_D030\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and AMD disclose accounting for unhedged/available-for-sale debt securities reported at fair value with unrealized gains/losses in accumulated other comprehensive income. Intel specifies an adjusted cost of $5.2 billion approximating fair value, while AMD explicitly details that any excess of amortized cost over fair value is assessed for expected credit losses recognized in net income, whereas Intel's text does not mention a credit loss assessment mechanism for these specific investments.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P136_S001\",\n\"intc_2024_8_P136_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_8_P038_S002\",\n\"amd_2024_8_P038_S003\",\n\"amd_2024_8_P038_S005\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D118\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both disclosures involve the fair value measurement and classification of financial instruments where carrying value approximates fair value. Intel reports that the adjusted cost of its unhedged investments approximated fair value, while Broadcom reports that the carrying value of its 2023 Term Loans approximates their fair value because they carry a market observable interest rate. Both entities rely on market observable rates or market conditions to justify the approximation of fair value for significant balance sheet items.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P136_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P158_S003\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D004\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"While Intel discloses the accounting for debt investments (unrealized gains/losses in OCI), Micron discloses the accounting for derivative instruments where gains/losses on cash flow hedges are also included in accumulated other comprehensive income. Both disclosures explain the mechanism by which unrealized gains or losses are temporarily held in equity (OCI) rather than immediately recognized in net income, though the underlying asset classes (debt securities vs. derivatives) differ.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P136_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P017_S003\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D043\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and NVIDIA classify their marketable debt securities as available-for-sale (or report them at fair value with gains/losses in OCI) and determine fair value based on quoted market prices. Intel reports adjusted cost of $5.2 billion approximating fair value, while NVIDIA reports similar treatment for marketable securities comprised of available-for-sale securities, with both explicitly stating that unrealized gains/losses are net of tax and included in accumulated other comprehensive income.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P136_S001\",\n\"intc_2024_8_P136_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P049_S002\",\n\"nvda_2024_8_P049_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"no candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D120",
@@ -180,17 +183,21 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_8_D030",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Accounting for Available-for-Sale Debt Securities",
             "peer_summary": "Available-for-sale debt securities are classified in current assets, recorded at fair value with unrealized gains/losses reported in other comprehensive income until realized, and any excess of amortized cost over fair value is assessed for expected credit losses recognized in net income.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.302062,
+            "retrieval_score": 0.280854,
             "relationship": "same_topic",
-            "comparison": "Both Intel and AMD report unhedged/available-for-sale marketable debt securities at fair value, with unrealized gains and losses recorded in accumulated other comprehensive income (AOCI). Intel specifies an adjusted cost of $5.2 billion that approximated fair value, whereas AMD describes the valuation methodology (quoted market rates or observable data points) and notes that expected credit losses are recognized in net income, with remaining unrealized losses going to AOCI. Neither company disclosed significant unrealized gains or losses for these short-term investments in the cited text, implying fair value closely tracked amortized cost in both cases.",
+            "comparison": "Both Intel and AMD disclose accounting for unhedged/available-for-sale debt securities reported at fair value with unrealized gains/losses in accumulated other comprehensive income. Intel specifies an adjusted cost of $5.2 billion approximating fair value, while AMD explicitly details that any excess of amortized cost over fair value is assessed for expected credit losses recognized in net income, whereas Intel's text does not mention a credit loss assessment mechanism for these specific investments.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D120",
                 "sentences": [
                   {
@@ -212,8 +219,16 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "8",
                 "disclosure_id": "amd_2024_8_D030",
                 "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P038_S002",
+                    "paragraph_id": "amd_2024_8_P038",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Investments in marketable debt securities are available for use in current operations, including those with maturity dates beyond one year, and are classified within current assets on the Consolidated Balance Sheets.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "amd_2024_8_P038_S003",
                     "paragraph_id": "amd_2024_8_P038",
@@ -222,17 +237,10 @@
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_8_P038_S004",
+                    "sentence_id": "amd_2024_8_P038_S005",
                     "paragraph_id": "amd_2024_8_P038",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Fair value is determined based on quoted market rates when observable or utilizing data points that are observable.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_8_P038_S006",
-                    "paragraph_id": "amd_2024_8_P038",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Expected credit losses on securities are recognized in other income (expense) on the Consolidated Statements of Operations, and any remaining unrealized losses, net of tax, are included in Accumulated other comprehensive income (loss), in Consolidated Statements of Stockholders' Equity.",
+                    "text": "Securities with an amortized cost basis in excess of estimated fair value are assessed to determine what amount of the excess, if any, is caused by expected credit losses.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -244,28 +252,188 @@
       },
       {
         "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate is sufficiently comparable. AVGO's candidates focus on derivative hedging policies (avgo_2024_8_D025) and fair value of debt liabilities (avgo_2024_8_D118), whereas the target disclosure concerns the accounting for unhedged marketable debt *investments* (assets). Derivatives and debt liabilities are distinct financial instruments from investment securities."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D118",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Fair Value and Classification of Debt",
+            "peer_summary": "As of November 3, 2024, the estimated aggregate fair value of the company's debt was $65,022 million, with senior notes valued using quoted prices from less active markets and 2023 Term Loans carrying a value approximating fair value due to market observable interest rates. All debt obligations are categorized as Level 2 instruments.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.101217,
+            "relationship": "same_topic",
+            "comparison": "Both disclosures involve the fair value measurement and classification of financial instruments where carrying value approximates fair value. Intel reports that the adjusted cost of its unhedged investments approximated fair value, while Broadcom reports that the carrying value of its 2023 Term Loans approximates their fair value because they carry a market observable interest rate. Both entities rely on market observable rates or market conditions to justify the approximation of fair value for significant balance sheet items.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D120",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P136_S002",
+                    "paragraph_id": "intc_2024_8_P136",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "The adjusted cost of our unhedged investments was $5.2 billion as of December 28, 2024 ($4.7 billion as of December 30, 2023), which approximated the fair value for these periods.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D118",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P158_S003",
+                    "paragraph_id": "avgo_2024_8_P158",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The carrying value of the 2023 Term Loans approximates their fair value as the 2023 Term Loans are carried at a market observable interest rate that resets periodically.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate is sufficiently comparable. MU's candidates focus on derivative instruments (mu_2024_8_D004) and non-marketable equity investments (mu_2024_8_D034). Neither candidate addresses the accounting treatment for short-term marketable *debt* investments."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D004",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Accounting Treatment of Derivative Instruments",
+            "peer_summary": "Derivative instruments are measured at fair value and recognized as assets or liabilities. The accounting for changes in fair value depends on the designation: non-designated derivatives recognize gains/losses in other non-operating income/expense; cash flow hedges include gains/losses in accumulated other comprehensive income before reclassification to earnings; and fair value hedges recognize changes in both the derivative and hedged items' fair values in earnings. For foreign currency and commodity cash flow or fair value hedges, time value is excluded from effectiveness assessment and recognized in earnings via amortization.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.148447,
+            "relationship": "related_topic",
+            "comparison": "While Intel discloses the accounting for debt investments (unrealized gains/losses in OCI), Micron discloses the accounting for derivative instruments where gains/losses on cash flow hedges are also included in accumulated other comprehensive income. Both disclosures explain the mechanism by which unrealized gains or losses are temporarily held in equity (OCI) rather than immediately recognized in net income, though the underlying asset classes (debt securities vs. derivatives) differ.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D120",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P136_S001",
+                    "paragraph_id": "intc_2024_8_P136",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Our remaining unhedged marketable debt investments are reported at fair value, with unrealized gains or losses, net of tax, recorded in accumulated other comprehensive income (loss).",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D004",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P017_S003",
+                    "paragraph_id": "mu_2024_8_P017",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "For derivative instruments designated as cash flow hedges, gains or losses are included as a component of accumulated other comprehensive income and reclassified into earnings in the same line items and in the same periods in which the underlying transactions affect earnings.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D043",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Accounting for Marketable Securities",
+            "peer_summary": "Marketable securities are classified as available-for-sale, reported at fair value with unrealized gains or losses included in accumulated other comprehensive income, net of tax, with fair value determined based on quoted market prices.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.342436,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and NVIDIA classify their marketable debt securities as available-for-sale (or report them at fair value with gains/losses in OCI) and determine fair value based on quoted market prices. Intel reports adjusted cost of $5.2 billion approximating fair value, while NVIDIA reports similar treatment for marketable securities comprised of available-for-sale securities, with both explicitly stating that unrealized gains/losses are net of tax and included in accumulated other comprehensive income.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D120",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P136_S001",
+                    "paragraph_id": "intc_2024_8_P136",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Our remaining unhedged marketable debt investments are reported at fair value, with unrealized gains or losses, net of tax, recorded in accumulated other comprehensive income (loss).",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P136_S002",
+                    "paragraph_id": "intc_2024_8_P136",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "The adjusted cost of our unhedged investments was $5.2 billion as of December 28, 2024 ($4.7 billion as of December 30, 2023), which approximated the fair value for these periods.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D043",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P049_S002",
+                    "paragraph_id": "nvda_2024_8_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Marketable securities are comprised of available-for-sale securities that are reported at fair value with the related unrealized gains or losses included in accumulated other comprehensive income or loss, a component of shareholders' equity, net of tax.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P049_S003",
+                    "paragraph_id": "nvda_2024_8_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Fair value of the marketable securities is determined based on quoted market prices.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "1b00e2c5e00885ccf67d02861a55124bd2cc6937486766021cf35be68af8859a",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "372dd17ada7269b478880293218458b96805c1d038fbd47b25fc9ee184f97669"
+    }
   }
 }

@@ -1,229 +1,100 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "1926c95dd84f701a65a77cbaf01dbd5ed9e3ec9dee78cd85458805731c3952b9",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "9cadf823aa501fd26d184f620ce21be2a54ad23855753ceec77f29f3c653b0b5",
+  "request_hash": "2d8d01d040508bac556238acf98b8936ece763a080d768cbf5847a3861ea86e7",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D047\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose specific financial metrics and operational commitments within their fiscal year 2024 Item 7 discussions. NVIDIA reports Automotive revenue growth of 21% to $1.1 billion and highlights new strategic partnerships with OEMs like MediaTek, Foxconn, BYD, and XPENG to expand its platform adoption. In contrast, AMD discloses $5.0 billion in unconditional purchase commitments primarily for wafer and substrate purchases, with $4.5 billion due in fiscal year 2025. While both address supply chain and business development metrics, NVIDIA focuses on top-line revenue growth and customer adoption in the automotive sector, whereas AMD focuses on the magnitude of its long-term procurement obligations.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P028_S001\",\n\"nvda_2024_7_P028_S002\",\n\"nvda_2024_7_P028_S003\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P060_S001\",\n\"amd_2024_7_P060_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The candidates amd_2024_7_D034 (Amortization of Acquisition-Related Intangibles) and amd_2024_7_D045 (Commercial Paper Program Status) concern different topics (intangible asset accounting and liquidity financing, respectively) and do not share substantive related MD&A content with the target topic of Automotive Revenue and Partnerships.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D031",
     "item": "7",
-    "target_topic": "Causes of Inventory Excess or Obsolescence",
-    "target_summary": "Situations that may result in excess or obsolete inventory include changes in business/economic/market conditions, sudden demand decreases, technological obsolescence, new product introductions, demand estimation errors, long lead-time ordering, government regulations, or competitive actions. Cancellation or deferral of customer purchase orders could also result in holding excess inventory.",
+    "target_topic": "Automotive Revenue and Partnerships",
+    "target_summary": "Automotive revenue for fiscal year 2024 was $1.1 billion, up 21% from fiscal year 2023. The company partnered with MediaTek for automotive SoCs, collaborated with Foxconn on electric vehicles, and expanded NVIDIA DRIVE platform adoption with multiple OEMs.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0306",
-        "relationship": "many_to_many",
+        "match_id": "nvda_2023_2024_M0195",
+        "relationship": "one_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "This group combines related supply chain disclosures. D005 (2023) discusses total supply composition and inventory provisions. D037 (2023) lists situations causing excess inventory. D039 (2023) details non-cancellable ordering and lead times. In 2024, D005 covers demand/supply surge, commitments, and impairment risks (matching D005/D037). D031 lists situations for excess inventory (matching D037). D033 details inventory/capacity commitments, forecasts, and non-cancellable orders/lead times (matching D039). The split preserves specific topic links: D005->D005 (supply commitments/impairment), D037->D031 (excess inventory causes), D039->D033 (ordering process/lead times).",
+        "explanation": "Both 2024 disclosures report Automotive revenue metrics and drivers, corresponding to the 2023 disclosure. D021 states the 21% increase and self-driving platform growth. D031 states the $1.1 billion revenue amount and partnerships. D027 reports the prior year's 60% growth and DRIVE Orin/Thor production. They share the specific subject of Automotive revenue performance and key platform updates.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D005",
+            "disclosure_id": "nvda_2023_7_D027",
             "item": "7",
-            "section": "Supply, Products Transitions, and New Products and Business Models",
-            "taxonomy": "Supply Chain & Third Parties",
-            "summary": "At the end of fiscal year 2023, purchase obligations and prepaid supply agreements accounted for more than half of the company's total supply, with inventory provisions for excess inventory and purchase obligations totaling $2.17 billion in fiscal year 2023. The company warns it may incur further inventory provisions if supply commitments are misaligned with demand.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2023_7_D037",
-            "item": "7",
-            "section": "Critical Accounting Policies and Estimates > Inventories",
-            "taxonomy": "Supply Chain & Third Parties",
-            "summary": "Situations resulting in excess or obsolete inventory include changes in business/economic/market conditions, sudden demand decreases, technology obsolescence, new product introductions reducing demand for existing products, demand spikes from unexpected end uses, improper demand estimation, ordering ahead of lead times, and competitive actions.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2023_7_D039",
-            "item": "7",
-            "section": "Critical Accounting Policies and Estimates > Inventories",
-            "taxonomy": "Supply Chain & Third Parties",
-            "summary": "As a fabless semiconductor company, the company commits to purchasing inventory based on demand forecasts, accounting for third-party manufacturers' lead times which can exceed twelve months. To secure future supply and capacity, the company places non-cancellable inventory orders in advance of historical lead times, pays premiums, and provides deposits.",
+            "section": "Market Platform Highlights",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Automotive revenue for fiscal year 2023 grew 60% to $903 million compared to fiscal year 2022, and the company started production of the NVIDIA DRIVE Orin autonomous vehicle SOC and introduced next-generation NVIDIA DRIVE Thor.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2024_7_D005",
+            "disclosure_id": "nvda_2024_7_D021",
             "item": "7",
-            "section": "Demand and Supply, Product Transitions, and New Products and Business Models",
-            "taxonomy": "Supply Chain & Third Parties",
-            "summary": "Demand for data center systems surged in fiscal 2024, with visibility for new products ramping later in fiscal 2025. To meet this demand, the company increased supply purchases, added vendors, and entered prepaid agreements, though this complexity creates execution risks and potential inventory impairments if demand declines.",
+            "section": "Fiscal Year 2024 Summary",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Automotive revenue for fiscal year 2024 increased 21%, primarily reflecting growth in self-driving platforms.",
             "extraction_status": "source_validated"
           },
           {
             "disclosure_id": "nvda_2024_7_D031",
             "item": "7",
-            "section": "Critical Accounting Estimates > Inventories",
+            "section": "Market Platform Highlights",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Situations that may result in excess or obsolete inventory include changes in business/economic/market conditions, sudden demand decreases, technological obsolescence, new product introductions, demand estimation errors, long lead-time ordering, government regulations, or competitive actions. Cancellation or deferral of customer purchase orders could also result in holding excess inventory.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_7_D033",
-            "item": "7",
-            "section": "Critical Accounting Estimates > Inventories",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Inventory and capacity purchase commitments are based on customer demand forecasts. Manufacturing lead times can be long, sometimes exceeding twelve months, and the company may place non-cancellable orders in advance of historical lead times, paying premiums and deposits to secure supply. The company also adjusts to competitor actions and macroeconomic conditions.",
+            "summary": "Automotive revenue for fiscal year 2024 was $1.1 billion, up 21% from fiscal year 2023. The company partnered with MediaTek for automotive SoCs, collaborated with Foxconn on electric vehicles, and expanded NVIDIA DRIVE platform adoption with multiple OEMs.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Expanded",
-            "cosine_similarity": 0.868077,
-            "sequence_match_ratio": 0.60961,
-            "length_ratio": 1.395683,
-            "word_count_delta": 110,
-            "added_tokens_sample": [
-              "demand",
-              "for",
-              "our",
-              "data",
-              "center",
-              "systems",
-              "and",
-              "products",
-              "surged",
-              "in",
-              "fiscal",
-              "year",
-              "2024",
-              "entering",
-              "fiscal",
-              "year",
-              "2025",
-              "we",
-              "are",
-              "gathering"
-            ],
-            "removed_tokens_sample": [
-              "which",
-              "includes",
-              "inventory",
-              "on",
-              "hand",
-              "obligations",
-              "prepaid",
-              "supply",
-              "agreements",
-              "has",
-              "grown",
-              "significantly",
-              "due",
-              "to",
-              "current",
-              "conditions",
-              "of",
-              "products",
-              "recent",
-              "reductions"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2023_7_D037",
-            "score": 1.009676,
-            "normalised_score": 1.0097,
-            "rationale": "Regroup: 3 previous → 3 current. Best pair scored 100.97% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.85,
+          "materiality_score": 0.8,
           "confidence_score": 0.85,
-          "reason": "The disclosure materially changes the description of the supply chain environment from 'recent reductions in demand' and 'growth... due to current supply chain conditions' to a 'surge' in demand for data center systems and active expansion of capacity/vendors. This represents a significant escalation in business activity, capital commitment (prepaid agreements), and operational risk (execution risks due to complexity), fundamentally altering the company's financial and operational exposure compared to the prior year's contractionary narrative.",
-          "key_change": "Shift to demand surge and capacity expansion"
+          "reason": "Automotive revenue growth slowed significantly from 60% to 21%, and the disclosure introduces specific new partnerships (MediaTek, Foxconn) and expanded OEM adoption (BYD, XPENG, etc.), indicating a material change in growth trajectory and strategic alliances.",
+          "key_change": "Deceleration of automotive revenue growth and new strategic partnerships"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0312",
-        "relationship": "one_to_one",
-        "status": "ai_verified",
+        "match_id": "nvda_2024_2025_M0020",
+        "relationship": "previous_only",
+        "status": "unmatched",
         "review_reasons": [],
-        "explanation": "Both disclosures list the specific factors and situations that may result in excess or obsolete inventory or excess product purchase commitments, such as changes in market conditions, demand decreases, and technology obsolescence.",
+        "explanation": "No counterpart found in 2025 Item 7 for the specific 2024 Automotive revenue figure ($1.1B, up 21%) and partnership details (MediaTek, Foxconn, OEMs). While nvda_2025_7_D021 discusses Automotive revenue, it reports the FY2025 performance (up 55%), which is a distinct data point. The 2024 disclosure is a specific FY2024 result. No 2025 disclosure replicates the specific FY2024 revenue number and partnership context.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_7_D031",
             "item": "7",
-            "section": "Critical Accounting Estimates > Inventories",
+            "section": "Market Platform Highlights",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Situations that may result in excess or obsolete inventory include changes in business/economic/market conditions, sudden demand decreases, technological obsolescence, new product introductions, demand estimation errors, long lead-time ordering, government regulations, or competitive actions. Cancellation or deferral of customer purchase orders could also result in holding excess inventory.",
+            "summary": "Automotive revenue for fiscal year 2024 was $1.1 billion, up 21% from fiscal year 2023. The company partnered with MediaTek for automotive SoCs, collaborated with Foxconn on electric vehicles, and expanded NVIDIA DRIVE platform adoption with multiple OEMs.",
             "extraction_status": "source_validated"
           }
         ],
-        "current_disclosures": [
-          {
-            "disclosure_id": "nvda_2025_7_D027",
-            "item": "7",
-            "section": "Critical Accounting Estimates > Inventories",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Situations resulting in excess or obsolete inventory include changes in economic and market conditions, sudden demand decreases, technology obsolescence, new product introductions, demand estimation errors, lead-time ordering, government regulations, and competitive actions.",
-            "extraction_status": "source_validated"
-          }
-        ],
+        "current_disclosures": [],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reworded",
-            "cosine_similarity": 0.981807,
-            "sequence_match_ratio": 0.887805,
-            "length_ratio": 0.952381,
-            "word_count_delta": -5,
-            "added_tokens_sample": [
-              "including",
-              "potential",
-              "cancellation",
-              "or",
-              "deferral",
-              "of",
-              "customer",
-              "purchase",
-              "orders"
-            ],
-            "removed_tokens_sample": [
-              "cancellation",
-              "or",
-              "deferral",
-              "of",
-              "customer",
-              "purchase",
-              "orders",
-              "could",
-              "result",
-              "in",
-              "our",
-              "holding",
-              "excess",
-              "inventory"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2024_7_D031",
-            "score": 1.023102,
-            "normalised_score": 1.0231,
-            "label": "Unchanged",
-            "rationale": "Score 102.31% of ceiling — semantically identical despite surface differences (word overlap 88%).",
-            "method": "embedding_cosine"
-          },
-          "llm": "Modified",
-          "final_taxonomy": "Modified"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Removed",
+          "final_taxonomy": "Removed"
         },
         "materiality_analysis": {
           "materiality": "No",
-          "materiality_score": 0.15,
-          "confidence_score": 0.9,
-          "reason": "The list of risks leading to obsolete inventory remains substantively unchanged. The 2025 filing merges the separate sentence about customer order cancellation into the main list (adding the word 'potential'), which is a stylistic/structural clarification that does not alter the scope of risk or the company's exposure.",
-          "key_change": "Stylistic merger of cancellation risk into main inventory risk list"
+          "materiality_score": 0.1,
+          "confidence_score": 0.95,
+          "reason": "The 2024 disclosure reports historical fiscal year 2024 Automotive revenue ($1.1B) and specific past partnerships. The 2025 filing reports current year (FY2025) performance and partnerships. The absence of the specific FY2024 figure and specific past partnership announcements in the FY2025 MD&A is due to the annual update cycle, not a material change in the business or strategy itself.",
+          "key_change": "Removal of prior-year comparative revenue data"
         }
       }
     ],
@@ -234,32 +105,43 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D011",
-            "peer_topic": "Inventory valuation methodology",
-            "peer_summary": "Inventory is valued at standard cost adjusted for lower of cost or net realizable value using assumptions about future demand and market conditions, with excess or obsolescence reserves based on specific facts and circumstances such as technology changes or demand decreases.",
+            "peer_disclosure_id": "amd_2024_7_D047",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Contractual Purchase Commitments",
+            "peer_summary": "AMD had $5.0 billion in unconditional purchase commitments as of December 28, 2024, primarily for wafer and substrate purchases, with $4.5 billion due in fiscal year 2025.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.188719,
+            "retrieval_score": 0.050274,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD disclose specific factors that drive inventory excess or obsolescence within their critical accounting estimates. NVDA lists situations such as changing technology, customer requirements, new product introductions, and demand estimation errors. Similarly, AMD states that when determining excess or obsolescence reserves, it considers assumptions including changes in technology, customer requirements, and other-than-temporary decreases in demand. However, AMD's disclosure is framed more generally around the methodology of using 'specific facts and circumstances' to estimate carrying value adjustments, whereas NVDA provides a more exhaustive list of specific market drivers like sudden demand decreases and government regulations.",
+            "comparison": "Both companies disclose specific financial metrics and operational commitments within their fiscal year 2024 Item 7 discussions. NVIDIA reports Automotive revenue growth of 21% to $1.1 billion and highlights new strategic partnerships with OEMs like MediaTek, Foxconn, BYD, and XPENG to expand its platform adoption. In contrast, AMD discloses $5.0 billion in unconditional purchase commitments primarily for wafer and substrate purchases, with $4.5 billion due in fiscal year 2025. While both address supply chain and business development metrics, NVIDIA focuses on top-line revenue growth and customer adoption in the automotive sector, whereas AMD focuses on the magnitude of its long-term procurement obligations.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D031",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_7_P031_S001",
-                    "paragraph_id": "nvda_2024_7_P031",
+                    "sentence_id": "nvda_2024_7_P028_S001",
+                    "paragraph_id": "nvda_2024_7_P028",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Situations that may result in excess or obsolete inventory or excess product purchase commitments include changes in business and economic conditions, changes in market conditions, sudden and significant decreases in demand for our products, inventory obsolescence because of changing technology and customer requirements, new product introductions resulting in less demand for existing products or inconsistent spikes in demand, failure to estimate customer demand properly, ordering in advance of historical lead-times, government regulations and the impact of changes in future demand, or increase in demand for competitive products, including competitive actions.",
+                    "text": "Automotive revenue for fiscal year 2024 was $1.1 billion, up 21% from fiscal year 2023.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "nvda_2024_7_P031_S002",
-                    "paragraph_id": "nvda_2024_7_P031",
+                    "sentence_id": "nvda_2024_7_P028_S002",
+                    "paragraph_id": "nvda_2024_7_P028",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Cancellation or deferral of customer purchase orders could result in our holding excess inventory.",
+                    "text": "In Automotive, we announced a partnership with MediaTek, which will develop mainstream automotive systems on chips for global OEMs integrating a new NVIDIA GPU chiplet IP for AI and graphics.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P028_S003",
+                    "paragraph_id": "nvda_2024_7_P028",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We furthered our collaboration with Foxconn to develop next-generation electric vehicles, and announced further adoption of NVIDIA DRIVE platform with BYD, XPENG, GWM, Li Auto, ZEEKR and Xiaomi.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -267,20 +149,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D011",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D047",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_7_P022_S003",
-                    "paragraph_id": "amd_2024_7_P022",
+                    "sentence_id": "amd_2024_7_P060_S001",
+                    "paragraph_id": "amd_2024_7_P060",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Material assumptions we use to estimate necessary inventory carrying value adjustments can be unique to each product and are based on specific facts and circumstances.",
+                    "text": "As of December 28, 2024, we had unconditional purchase commitments of approximately $5.0 billion, of which $4.5 billion are in fiscal year 2025.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_7_P022_S004",
-                    "paragraph_id": "amd_2024_7_P022",
+                    "sentence_id": "amd_2024_7_P060_S002",
+                    "paragraph_id": "amd_2024_7_P060",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "In determining excess or obsolescence reserves for products, we consider assumptions such as changes in business and economic conditions, other-than-temporary decreases in demand for our products, and changes in technology or customer requirements.",
+                    "text": "Our contractual obligations and purchase commitments relate primarily to our obligations to purchase wafers and substrates from third parties and future payments related to certain software and technology licenses and IP licenses.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -293,6 +176,11 @@
           "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "9cadf823aa501fd26d184f620ce21be2a54ad23855753ceec77f29f3c653b0b5",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "2d8d01d040508bac556238acf98b8936ece763a080d768cbf5847a3861ea86e7"
+    }
   }
 }

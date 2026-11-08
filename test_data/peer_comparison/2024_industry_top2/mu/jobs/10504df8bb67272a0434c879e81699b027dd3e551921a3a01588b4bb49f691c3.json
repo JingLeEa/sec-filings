@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "da57824bcea7712df742c1941be041d81cf2b7abfb8910907592c732730dbffd",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "ef5278f06799474f55b800ab015435eed47b2a6071238beb66759f9b5fa703d5",
+  "request_hash": "9cc8c37b2738540bc63834abfa8ffa222aaf879921e8be94cc2a11a7f81c94c9",
+  "response_text": "{\n\"comparisons\":[\n{\n\"peer_ticker\":\"INTC\",\n\"peer_disclosure_id\":\"intc_2024_7_D100\",\n\"relationship\":\"same_topic\",\n\"comparison\":\"Both MU and INTC disclose multi-billion dollar U.S. semiconductor manufacturing expansion plans supported by government incentives, but they differ in project status and geographic focus. MU plans for two U.S. fabs (Boise and Clay, NY) to meet future capacity needs, with Boise construction already begun in 2023. INTC also outlines long-term expansion plans including a new leading-edge facility in Ohio and expansions in Arizona, New Mexico, and Oregon, but notes that some longer-term projects are currently on hold or slowed. MU's disclosures focus on forward-looking construction timelines and production ramping, whereas INTC's disclosure highlights execution risks and pauses in its capital program.\",\n\"target_sentence_ids\":[\n\"mu_2024_7_P031_S002\",\n\"mu_2024_7_P031_S005\",\n\"mu_2024_7_P031_S006\",\n\"mu_2024_7_P031_S007\"\n],\n\"peer_sentence_ids\":[\n\"intc_2024_7_P092_S007\",\n\"intc_2024_7_P092_S008\"\n]\n}\n],\n\"no_match\":[\n{\n\"peer_ticker\":\"AMD\",\n\"reason\":\"The retrieved candidates discuss the ZT Systems acquisition to extend data center infrastructure and AI capabilities, which is a distinct strategic M&A activity unrelated to MU's disclosure on CHIPS Act-funded U.S. fab expansion plans and capacity additions.\"\n},\n{\n\"peer_ticker\":\"AVGO\",\n\"reason\":\"The retrieved candidates discuss general liquidity sources (cash, credit facility) and sufficiency assessments, which are standard financial resource disclosures not comparable to MU's specific disclosure on manufacturing expansion plans and government incentive utilization.\"\n},\n{\n\"peer_ticker\":\"NVDA\",\n\"reason\":\"The retrieved candidates discuss primary liquidity sources, cash balances, and financing cash flow drivers, which do not address manufacturing expansion, fab construction, or CHIPS Act-related capital investments as described in MU's disclosure.\"\n},\n{\n\"peer_ticker\":\"QCOM\",\n\"reason\":\"The retrieved candidates discuss stock repurchase programs and future income tax payments/impacts on cash flow, which are capital allocation and tax-related topics unrelated to MU's disclosure on semiconductor manufacturing facility expansion.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_7_D031",
@@ -334,13 +337,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates (ZT Systems acquisition, general liquidity assessment) do not concern CHIPS Act-funded U.S. fab expansion plans or timeline, which is the specific topic of the target disclosure."
+        "rationale": "The retrieved candidates discuss the ZT Systems acquisition to extend data center infrastructure and AI capabilities, which is a distinct strategic M&A activity unrelated to MU's disclosure on CHIPS Act-funded U.S. fab expansion plans and capacity additions."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates (liquidity sources, sufficient liquidity assessment) concern general financial liquidity and do not discuss specific CHIPS Act-funded manufacturing expansion plans or timelines."
+        "rationale": "The retrieved candidates discuss general liquidity sources (cash, credit facility) and sufficiency assessments, which are standard financial resource disclosures not comparable to MU's specific disclosure on manufacturing expansion plans and government incentive utilization."
       },
       {
         "peer_ticker": "INTC",
@@ -349,17 +352,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_7_D100",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Manufacturing Expansion Plans and Pauses",
             "peer_summary": "Long-term investment plans include expanding operations in Arizona, New Mexico, and Oregon, and investing in a new leading-edge facility in Ohio, while some longer-term projects like new advanced packaging facilities are currently on hold or slowed.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.082081,
+            "retrieval_score": 0.089952,
             "relationship": "same_topic",
-            "comparison": "Both Micron and Intel disclose substantial U.S. manufacturing expansion plans funded or supported by the CHIPS Act to build new leading-edge fabrication facilities. Micron explicitly links its two new U.S. fabs (Boise, Idaho and Clay, New York) to CHIPS Act grants and tax credits, with construction already underway or scheduled to begin, aiming for capacity expansion in the latter half of the decade. Intel similarly identifies long-term investment plans that include a new leading-edge manufacturing facility in Ohio, though it notes that some longer-term projects have been slowed or put on hold, indicating a difference in execution pace and status between the two peers.",
+            "comparison": "Both MU and INTC disclose multi-billion dollar U.S. semiconductor manufacturing expansion plans supported by government incentives, but they differ in project status and geographic focus. MU plans for two U.S. fabs (Boise and Clay, NY) to meet future capacity needs, with Boise construction already begun in 2023. INTC also outlines long-term expansion plans including a new leading-edge facility in Ohio and expansions in Arizona, New Mexico, and Oregon, but notes that some longer-term projects are currently on hold or slowed. MU's disclosures focus on forward-looking construction timelines and production ramping, whereas INTC's disclosure highlights execution risks and pauses in its capital program.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "7",
                 "disclosure_id": "mu_2024_7_D031",
                 "sentences": [
                   {
@@ -382,12 +389,20 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "We expect construction site preparation to begin in calendar 2025, with production anticipated to ramp in the latter half of the decade.",
                     "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_7_P031_S007",
+                    "paragraph_id": "mu_2024_7_P031",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "We expect these new fabs to be key to meeting our requirements for additional wafer capacity starting in the second half of the decade and beyond, in line with industry demand trends and to maintain an objective of stable bit share.",
+                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D100",
                 "sentences": [
                   {
@@ -415,14 +430,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates (data center customer segments, cash flow from financing) do not concern CHIPS Act-funded U.S. fab expansion plans or timeline."
+        "rationale": "The retrieved candidates discuss primary liquidity sources, cash balances, and financing cash flow drivers, which do not address manufacturing expansion, fab construction, or CHIPS Act-related capital investments as described in MU's disclosure."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates (stock repurchase programs, future income tax payments) do not concern CHIPS Act-funded U.S. fab expansion plans or timeline."
+        "rationale": "The retrieved candidates discuss stock repurchase programs and future income tax payments/impacts on cash flow, which are capital allocation and tax-related topics unrelated to MU's disclosure on semiconductor manufacturing facility expansion."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "ef5278f06799474f55b800ab015435eed47b2a6071238beb66759f9b5fa703d5",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "9cc8c37b2738540bc63834abfa8ffa222aaf879921e8be94cc2a11a7f81c94c9"
+    }
   }
 }

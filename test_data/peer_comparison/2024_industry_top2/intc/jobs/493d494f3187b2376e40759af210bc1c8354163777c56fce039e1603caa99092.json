@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "4fb17f16c14710ae58e823b78df9db757aa9664c004d97d733a3c25ad0088ea9",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "0acd8557672afda7af8520502152f17d664f855f31c8a3d54ed9127d340633d4",
+  "request_hash": "daebc420e47717e6e02a93c369f8dbc18f6ae0698915fef46bd1ded7016643bf",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D043\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron disclose the capitalization and amortization of licensed technology and product/process technology as intangible assets. Intel capitalized $562 million in 2024 for licensed technology arrangements subject to amortization, whereas Micron capitalized $84 million for product and process technology with a 10-year weighted-average useful life in the same year. While Intel's disclosure focuses on the total cost of new or renewed arrangements, Micron provides specific useful life estimates for its capitalized technology.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P147_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P051_S001\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The candidate disclosures relate to depreciation expense and earnings per share, which are fundamentally different topics from the target's licensed technology arrangement costs and amortization.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The candidate disclosures relate to depreciation expense and net revenue by country, which are fundamentally different topics from the target's licensed technology arrangement costs and amortization.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The candidate disclosures relate to depreciation of physical assets/leasehold improvements and asset acquisitions via liabilities, which are substantively different from the target's specific disclosure of licensed technology arrangement costs and amortization.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D129",
@@ -172,13 +175,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for AMD discuss depreciation expense amounts ($454 million) and marketing/advertising expenses ($1.2 billion). These are distinct accounting categories (depreciation of tangible assets and operating expenses) that do not match the target topic of licensed technology arrangement costs, intangible asset capitalization, or amortization."
+        "rationale": "The candidate disclosures relate to depreciation expense and earnings per share, which are fundamentally different topics from the target's licensed technology arrangement costs and amortization."
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for AVGO discuss depreciation expense amounts ($593 million) and net revenue by major country. These topics (tangible asset depreciation and geographic revenue breakdown) are substantively different from the target topic of licensed technology arrangement costs and intangible asset amortization."
+        "rationale": "The candidate disclosures relate to depreciation expense and net revenue by country, which are fundamentally different topics from the target's licensed technology arrangement costs and amortization."
       },
       {
         "peer_ticker": "MU",
@@ -187,17 +190,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D043",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Intangible assets capitalization and amortization history",
             "peer_summary": "The company capitalized $84 million, $87 million, and $158 million for product and process technology in 2024, 2023, and 2022, respectively, with weighted-average useful lives ranging from 9 to 10 years. Amortization expense for these assets was $82 million, $86 million, and $85 million for the same respective years.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.192481,
+            "retrieval_score": 0.175356,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose significant costs related to licensing and capitalizing intangible technology assets subject to amortization. Intel explicitly states it entered into or renewed licensed technology arrangements totaling $562 million in 2024, which are subject to amortization. Similarly, Micron discloses capitalizing $84 million for product and process technology in 2024 with weighted-average useful lives of 10 years, and reports associated amortization expense of $82 million for the same year. While Intel highlights the gross volume of new/license renewals ($562M) versus Micron's capitalized amount ($84M), both companies demonstrate active capitalization and amortization policies for acquired or developed technological intangibles.",
+            "comparison": "Both Intel and Micron disclose the capitalization and amortization of licensed technology and product/process technology as intangible assets. Intel capitalized $562 million in 2024 for licensed technology arrangements subject to amortization, whereas Micron capitalized $84 million for product and process technology with a 10-year weighted-average useful life in the same year. While Intel's disclosure focuses on the total cost of new or renewed arrangements, Micron provides specific useful life estimates for its capitalized technology.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D129",
                 "sentences": [
                   {
@@ -212,6 +219,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D043",
                 "sentences": [
                   {
@@ -219,13 +227,6 @@
                     "paragraph_id": "mu_2024_8_P051",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "In 2024, 2023, and 2022, we capitalized $84 million, $87 million, and $158 million, respectively, for product and process technology with weighted-average useful lives of 10 years, 9 years, and 9 years, respectively.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_8_P051_S002",
-                    "paragraph_id": "mu_2024_8_P051",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Amortization expense was $82 million, $86 million, and $85 million for 2024, 2023, and 2022, respectively.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -237,9 +238,9 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "The candidate disclosures relate to depreciation of physical assets/leasehold improvements and asset acquisitions via liabilities, which are substantively different from the target's specific disclosure of licensed technology arrangement costs and amortization."
       },
       {
         "peer_ticker": "QCOM",
@@ -247,6 +248,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "0acd8557672afda7af8520502152f17d664f855f31c8a3d54ed9127d340633d4",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "daebc420e47717e6e02a93c369f8dbc18f6ae0698915fef46bd1ded7016643bf"
+    }
   }
 }

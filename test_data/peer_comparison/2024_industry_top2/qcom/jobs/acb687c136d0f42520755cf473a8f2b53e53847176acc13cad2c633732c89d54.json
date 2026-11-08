@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "02d1f954490bde9cdb03b424933969cb7ce620c8aef9c89e842f65a7284a2414",
-  "request_hash": "17c364a882602c7caa64f02a607c6fdd71a2605c16e5e785fa2fffa8b86d63c0",
+  "input_fingerprint": "e41e6022adb4d847c0289913c33de7b4a26701f19d2828a112ec60fbf96be8dd",
+  "job_fingerprint": "778919d69475f2e97ef2990c22307e986e5e55e5314245db6313a614743149c3",
+  "request_hash": "2eaa64e307bf3c8354b8905bba7275133b734f78ffdce663b12dba75d0fc36b8",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_1A_D010\",\n      \"relationship\": \"same_topic\",\n      \"comparison\": \"Both QCOM and AMD disclose risks of cyberattacks disrupting IT systems and operations. QCOM specifically links cyber-attacks to disruptions in manufacturing operations, referencing a separate risk factor for broader IT breaches. AMD broadly identifies IT outages, data breaches, and cyberattacks as risks that could disrupt operations and compromise intellectual property or sensitive information, impacting financial condition and reputation.\",\n      \"target_sentence_ids\": [\n        \"qcom_2024_1A_P050_S005\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_1A_P004_S006\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"INTC\",\n      \"peer_disclosure_id\": \"intc_2024_1A_D026\",\n      \"relationship\": \"related_topic\",\n      \"comparison\": \"QCOM discloses risks of cyber-attacks disrupting manufacturing IT systems. INTC discloses persistent cybersecurity risks including attacks on its manufacturing and data systems. While QCOM focuses on the disruption risk to manufacturing IT, INTC details the nature of the threats (state-sponsored, insider, ransomware) and the breadth of systems targeted, including manufacturing.\",\n      \"target_sentence_ids\": [\n        \"qcom_2024_1A_P050_S005\"\n      ],\n      \"peer_sentence_ids\": [\n        \"intc_2024_1A_P054_S001\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"AVGO\",\n      \"reason\": \"No candidate was substantively comparable. AVGO's disclosures focus on general IT system integrity, vendor dependencies, and software vulnerabilities rather than specifically addressing cyber-attacks disrupting manufacturing operations as the primary topic.\"\n    },\n    {\n      \"peer_ticker\": \"MU\",\n      \"reason\": \"No candidate was substantively comparable. MU's disclosures focus on general security breaches, physical security, and unauthorized access to facilities/infrastructure, but do not specifically link cyber-attacks to manufacturing operation disruptions in the same manner as QCOM.\"\n    },\n    {\n      \"peer_ticker\": \"NVDA\",\n      \"reason\": \"No candidate was substantively comparable. NVDA's disclosures focus on cybersecurity threats to services, data, and third-party suppliers, with less emphasis on manufacturing IT system disruptions specifically.\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
   "result": {
     "target_ticker": "QCOM",
     "target_disclosure_id": "qcom_2024_1A_D044",
@@ -123,15 +126,62 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "AMD's disclosed risks focus on general IT outages, data breaches, and compromises to intellectual property or sensitive information, without the specific emphasis on manufacturing operations disruption or the explicit link to state-sponsored manufacturing attacks found in the Qualcomm disclosure."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1A_D010",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "IT outages, data breaches, and cyberattacks",
+            "peer_summary": "IT outages, data loss, data breaches, and cyberattacks could disrupt operations, compromise intellectual property or sensitive information, and cause significant damage to the business, reputation, financial condition, and results of operations.",
+            "peer_taxonomy": "Cybersecurity & Data",
+            "retrieval_score": 0.105654,
+            "relationship": "same_topic",
+            "comparison": "Both QCOM and AMD disclose risks of cyberattacks disrupting IT systems and operations. QCOM specifically links cyber-attacks to disruptions in manufacturing operations, referencing a separate risk factor for broader IT breaches. AMD broadly identifies IT outages, data breaches, and cyberattacks as risks that could disrupt operations and compromise intellectual property or sensitive information, impacting financial condition and reputation.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "QCOM",
+                "item": "1A",
+                "disclosure_id": "qcom_2024_1A_D044",
+                "sentences": [
+                  {
+                    "sentence_id": "qcom_2024_1A_P050_S005",
+                    "paragraph_id": "qcom_2024_1A_P050",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
+                    "text": "Our manufacturing operations could also be disrupted by cyber-attacks on our IT systems, as described in the Risk Factor below titled \"Our business and operations could suffer in the event of security breaches of our IT systems, or other misappropriation of our technology, intellectual property or other proprietary or confidential information.\"",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "1A",
+                "disclosure_id": "amd_2024_1A_D010",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1A_P004_S006",
+                    "paragraph_id": "amd_2024_1A_P004",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "◦IT outages, data loss, data breaches and cyberattacks could disrupt operations and compromise our intellectual property or other sensitive information, be costly to remediate or cause significant damage to our business, reputation, financial condition and results of operations.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Broadcom's disclosed risks center on the confidentiality, integrity, and availability of IT systems and corporate infrastructure vendors, lacking the specific focus on manufacturing operation disruption or the explicit threat to manufacturing systems highlighted in Qualcomm's disclosure."
+        "rationale": "No candidate was substantively comparable. AVGO's disclosures focus on general IT system integrity, vendor dependencies, and software vulnerabilities rather than specifically addressing cyber-attacks disrupting manufacturing operations as the primary topic."
       },
       {
         "peer_ticker": "INTC",
@@ -140,17 +190,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_1A_D026",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Cybersecurity threats, attacks, and emerging technology risks",
             "peer_summary": "Intel faces persistent cyber threats from state-sponsored actors and others, including attacks on its manufacturing and data systems, with risks heightened by emerging technologies like generative AI which can be used to create sophisticated attacks or impersonate users; geopolitical conflicts may intensify these threats.",
             "peer_taxonomy": "Cybersecurity & Data",
-            "retrieval_score": 0.096805,
-            "relationship": "same_topic",
-            "comparison": "Both Qualcomm and Intel specifically disclose cybersecurity risks targeting their manufacturing and data systems. Qualcomm highlights disruption of manufacturing operations via IT system attacks, while Intel explicitly lists attacks on its manufacturing and data systems as a key source of persistent cybersecurity risk, further noting the involvement of state-sponsored actors and the use of third-party components in their infrastructure.",
+            "retrieval_score": 0.093789,
+            "relationship": "related_topic",
+            "comparison": "QCOM discloses risks of cyber-attacks disrupting manufacturing IT systems. INTC discloses persistent cybersecurity risks including attacks on its manufacturing and data systems. While QCOM focuses on the disruption risk to manufacturing IT, INTC details the nature of the threats (state-sponsored, insider, ransomware) and the breadth of systems targeted, including manufacturing.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D044",
                 "sentences": [
                   {
@@ -165,6 +219,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D026",
                 "sentences": [
                   {
@@ -172,13 +227,6 @@
                     "paragraph_id": "intc_2024_1A_P054",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "We face significant and persistent cybersecurity risks due to: the breadth of geographies, networks, and systems we must defend against cybersecurity attacks; the complexity, technical sophistication, value, and widespread use of our systems, products, and processes; the attractiveness of our systems, products, and processes to threat actors (including state-sponsored organizations) seeking to inflict harm on us or our customers; the substantial level of harm that could occur to us and our customers were we to suffer impacts of a material cybersecurity incident; and our use of third-party products, services, and components.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_1A_P054_S003",
-                    "paragraph_id": "intc_2024_1A_P054",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We regularly face attempts by malicious attackers who attempt to gain access to our network or data centers or those of our suppliers, customers, partners, end users, or other third parties; steal proprietary, personal, or confidential information related to our business, products, employees, suppliers, or customers; sabotage our systems or those of our suppliers, customers, partners, end users, or other third parties; interrupt our systems and services or those of our suppliers, customers, or others; or demand ransom to return control of such systems and services.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -190,114 +238,21 @@
       },
       {
         "peer_ticker": "MU",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_1A_D036",
-            "peer_topic": "Cybersecurity, Data Privacy, and Physical Security Risks",
-            "peer_summary": "The company faces risks from security breaches, cyberattacks, unauthorized access to infrastructure or data, and physical security incidents, which may result in data loss, system disruption, legal liability, and reputational damage, exacerbated by geopolitical tensions and the emergence of sophisticated AI-driven attack methods.",
-            "peer_taxonomy": "Cybersecurity & Data",
-            "retrieval_score": 0.112182,
-            "relationship": "same_topic",
-            "comparison": "Qualcomm and Micron both identify security breaches and system failures as risks that disrupt operations and expose proprietary information. Qualcomm specifies that manufacturing operations could be disrupted by cyber-attacks on IT systems, whereas Micron broadly covers breaches of security systems, systems failures, and unauthorized access to infrastructure or data that could result in the loss of proprietary information and operational interruptions.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1A_D044",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1A_P050_S005",
-                    "paragraph_id": "qcom_2024_1A_P050",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "Our manufacturing operations could also be disrupted by cyber-attacks on our IT systems, as described in the Risk Factor below titled \"Our business and operations could suffer in the event of security breaches of our IT systems, or other misappropriation of our technology, intellectual property or other proprietary or confidential information.\"",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_1A_D036",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_1A_P069_S001",
-                    "paragraph_id": "mu_2024_1A_P069",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Breaches of our security systems or products, systems failures, interruptions, delays in service, catastrophic events, and resulting interruptions in the availability of our systems or those of our customers, suppliers, or business partners, could expose us to losses.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_1A_P070_S004",
-                    "paragraph_id": "mu_2024_1A_P070",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Unauthorized persons, employees, former employees, nation states, or other parties may gain access to our facilities or technology infrastructure and systems through fraudulent means and may steal trade secrets or other proprietary information, compromise confidential information, create system disruptions, or have other impacts.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was substantively comparable. MU's disclosures focus on general security breaches, physical security, and unauthorized access to facilities/infrastructure, but do not specifically link cyber-attacks to manufacturing operation disruptions in the same manner as QCOM."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1A_D032",
-            "peer_topic": "Cybersecurity Threats and Attacks",
-            "peer_summary": "Sophisticated cyber-attacks, including ransomware and AI-enabled attacks by nation-states, pose risks to operations and may be exacerbated by geopolitical conflicts, with potential limitations on recovery due to backup issues.",
-            "peer_taxonomy": "Cybersecurity & Data",
-            "retrieval_score": 0.12525,
-            "relationship": "same_topic",
-            "comparison": "Both Qualcomm and NVIDIA disclose that cyber-attacks and security breaches pose significant risks to their business operations and intellectual property. Qualcomm notes that manufacturing operations could be disrupted by cyber-attacks on IT systems, which aligns with NVIDIA's broader warning that security breaches and cyber-attacks could disrupt operations, reduce revenue, increase expenses, and harm the business and reputation.",
-            "peer_source_status": "needs_review",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_1A_D044",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_1A_P050_S005",
-                    "paragraph_id": "qcom_2024_1A_P050",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "Our manufacturing operations could also be disrupted by cyber-attacks on our IT systems, as described in the Risk Factor below titled \"Our business and operations could suffer in the event of security breaches of our IT systems, or other misappropriation of our technology, intellectual property or other proprietary or confidential information.\"",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1A_D032",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_1A_P037_S001",
-                    "paragraph_id": "nvda_2024_1A_P037",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Product, system security, and data protection breaches, as well as cyber-attacks, could disrupt our operations, reduce our expected revenue, increase our expenses, and significantly harm our business and reputation.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_1A_P040_S001",
-                    "paragraph_id": "nvda_2024_1A_P040",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Individuals, groups of hackers and sophisticated organizations, including nation-states and nation-state-supported actors, and other threat actors have engaged and are expected to continue to engage in cyber-attacks.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was substantively comparable. NVDA's disclosures focus on cybersecurity threats to services, data, and third-party suppliers, with less emphasis on manufacturing IT system disruptions specifically."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "778919d69475f2e97ef2990c22307e986e5e55e5314245db6313a614743149c3",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/qcom",
+      "request_hash": "2eaa64e307bf3c8354b8905bba7275133b734f78ffdce663b12dba75d0fc36b8"
+    }
   }
 }

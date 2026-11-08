@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "55a3bf42acfa931120d074819075ccf2a0f183176affcdb184d542eca9e44355",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "31498ae9540ebf00a1e8de0f7e80c1ec17f0f531d147baa9855c88f02091a683",
+  "request_hash": "92accecc8635780575d10c0af3e144e71a6a590fa6456f4129eb5da6031fec98",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D029\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"INTC describes its Altera business providing programmable semiconductors (FPGAs) for embedded, communications, and cloud markets, representing a specific product-oriented business segment. AMD discloses operating income for its Embedded segment (which includes Xilinx, a key FPGA provider), highlighting financial performance metrics rather than just product definitions. Both disclosures relate to the semiconductor business lines involving programmable logic/FPGAs within the broader infrastructure, but INTC focuses on the product utility while AMD focuses on the financial result.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P062_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P041_S001\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_7_D001\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"INTC outlines its Altera business supplying programmable semiconductors for embedded and cloud enterprise applications. AVGO similarly defines its core business as designing and supplying a broad range of semiconductor devices, explicitly mentioning infrastructure software and products for enterprise and data center networking. While INTC identifies a specific acquired unit (Altera) and its product type (FPGAs), AVGO provides a broader overview of its semiconductor portfolio serving the same enterprise and cloud infrastructure markets, establishing a comparable strategic focus on infrastructure semiconductors.\",\n\"target_sentence_ids\": [\n\"intc_2024_7_P062_S002\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_7_P003_S001\",\n\"avgo_2024_7_P003_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"No candidate was retrieved that is substantively comparable. Micron's candidates focus on historical demand weakness (2023) and revenue growth drivers (2024) for memory/storage products (DRAM/NAND). This differs from Intel's disclosure which provides a business overview of its Altera semiconductor product offerings rather than analyzing revenue trends or macroeconomic demand impacts on memory pricing.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"No candidate was retrieved that is substantively comparable. NVIDIA's candidates focus on Data Center financial performance (revenue growth) and its general computing platform strategy across four markets. Intel's disclosure specifically details the product scope of its Altera business (FPGAs for embedded/communications/cloud). NVIDIA's disclosures do not discuss programmable semiconductors or FPGA-specific business lines comparable to Intel's Altera description.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved that is substantively comparable. Qualcomm's candidates describe its organizational structure (reportable segments) and its strategic belief regarding 5G technology leadership and adoption in automotive/IoT. Intel's disclosure describes the specific product portfolio (FPGAs) and application markets for its Altera business. There is no overlap in discussing programmable semiconductors or comparable business segment product definitions.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_7_D067",
@@ -125,9 +128,56 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "None of AMD's candidate disclosures (restructuring charges, embedded segment operating income decline) are substantively comparable to Intel's Altera business overview topic, which focuses on product offerings and market segments rather than financial restructuring or specific segment profitability declines."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D029",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Embedded segment operating income decline for fiscal year 2024",
+            "peer_summary": "Embedded operating income decreased to $1.4 billion in 2024 from $2.6 billion in 2023, primarily driven by lower revenue.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.049874,
+            "relationship": "related_topic",
+            "comparison": "INTC describes its Altera business providing programmable semiconductors (FPGAs) for embedded, communications, and cloud markets, representing a specific product-oriented business segment. AMD discloses operating income for its Embedded segment (which includes Xilinx, a key FPGA provider), highlighting financial performance metrics rather than just product definitions. Both disclosures relate to the semiconductor business lines involving programmable logic/FPGAs within the broader infrastructure, but INTC focuses on the product utility while AMD focuses on the financial result.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "7",
+                "disclosure_id": "intc_2024_7_D067",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_7_P062_S002",
+                    "paragraph_id": "intc_2024_7_P062",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Altera offers programmable semiconductors, primarily FPGAs, and related products, for a broad range of applications across our embedded, communications, and cloud and enterprise market segments.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D029",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P041_S001",
+                    "paragraph_id": "amd_2024_7_P041",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Embedded operating income was $1.4 billion in 2024, compared to operating income of $2.6 billion in 2023.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
@@ -135,66 +185,22 @@
         "comparisons": [
           {
             "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_7_D014",
-            "peer_topic": "Net Revenue Sources",
-            "peer_summary": "The company's net revenue is primarily derived from sales of semiconductor devices, modules, switches, and subsystems, as well as from software solutions for mainframe, cloud, and other computing platforms.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.086546,
-            "relationship": "same_topic",
-            "comparison": "Both Intels Altera and Avago identify their primary revenue sources as semiconductor devices and software solutions targeting enterprise and cloud markets. Intel's Altera unit focuses on programmable semiconductors (FPGAs) for embedded, communications, and cloud/enterprise applications, while Avago derives a majority of its revenue from a broad range of semiconductor devices, modules, switches, subsystems, and software solutions for mainframe, cloud, and other computing platforms. Both disclosures highlight the combination of hardware and software offerings in these high-value market segments.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D067",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P062_S002",
-                    "paragraph_id": "intc_2024_7_P062",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Altera offers programmable semiconductors, primarily FPGAs, and related products, for a broad range of applications across our embedded, communications, and cloud and enterprise market segments.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_7_D014",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P013_S001",
-                    "paragraph_id": "avgo_2024_7_P013",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "A majority of our net revenue is derived from sales of a broad range of semiconductor devices that are incorporated into electronic products, as well as from modules, switches and subsystems.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_7_P013_S002",
-                    "paragraph_id": "avgo_2024_7_P013",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Net revenue is also generated from the sale of software solutions that enable our customers to plan, develop, deliver, automate, manage, and secure applications across mainframe, distributed, edge, mobile, and private and hybrid cloud platforms.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_7_D001",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Global Technology Scope and Product Portfolio",
             "peer_summary": "Avago is a global technology leader designing semiconductor and infrastructure software solutions, including AI networking, home connectivity, and software for mainframe and cloud platforms, while also offering fibre channel storage area networking products.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.060687,
+            "retrieval_score": 0.067474,
             "relationship": "related_topic",
-            "comparison": "Intel's Altera business is described as serving embedded, communications, and cloud/enterprise markets through programmable semiconductors. Avago describes itself as a global technology leader designing semiconductor and infrastructure software solutions used in data center networking (including AI networking), enterprise, and cloud platforms. While Altera specifically highlights its FPGA technology for these applications, Avago highlights its broader portfolio of complex digital/analog devices and software solutions for similar enterprise and data center infrastructure environments.",
+            "comparison": "INTC outlines its Altera business supplying programmable semiconductors for embedded and cloud enterprise applications. AVGO similarly defines its core business as designing and supplying a broad range of semiconductor devices, explicitly mentioning infrastructure software and products for enterprise and data center networking. While INTC identifies a specific acquired unit (Altera) and its product type (FPGAs), AVGO provides a broader overview of its semiconductor portfolio serving the same enterprise and cloud infrastructure markets, establishing a comparable strategic focus on infrastructure semiconductors.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D067",
                 "sentences": [
                   {
@@ -209,6 +215,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D001",
                 "sentences": [
                   {
@@ -224,13 +231,6 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
                     "text": "We offer thousands of products that are used in end products such as enterprise and data center networking, including artificial intelligence (\"AI\") networking and connectivity, home connectivity, set-top boxes, broadband access, telecommunication equipment, smartphones and base stations, data center servers and storage systems, factory automation, power generation and alternative energy systems, and electronic displays.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_7_P003_S004",
-                    "paragraph_id": "avgo_2024_7_P003",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Our infrastructure software solutions help enterprises simplify their information technology environments so they can increase business velocity and flexibility, and enable customers to plan, develop, deliver, automate, manage and secure applications across mainframe, distributed, edge, mobile, and private and hybrid cloud platforms.",
-                    "visible_in_prompt": true
                   }
                 ]
               }
@@ -243,117 +243,25 @@
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "None of Micron's candidate disclosures (2023 industry weakness/demand decline, 2023 total revenue decline drivers) are substantively comparable to Intel's Altera business overview topic. Micron's disclosures focus on macroeconomic headwinds, inventory issues, and ASP declines in memory markets, which is distinct from Altera's product and market segment description."
+        "rationale": "No candidate was retrieved that is substantively comparable. Micron's candidates focus on historical demand weakness (2023) and revenue growth drivers (2024) for memory/storage products (DRAM/NAND). This differs from Intel's disclosure which provides a business overview of its Altera semiconductor product offerings rather than analyzing revenue trends or macroeconomic demand impacts on memory pricing."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "None of NVIDIA's candidate disclosures (new use cases/emerging tech risks, customer base diversity) are substantively comparable to Intel's Altera business overview topic. NVIDIA's disclosures focus on revenue volatility from emerging technologies like generative AI and the composition of its customer base, whereas Intel's Altera disclosure describes the static product portfolio and target market segments for FPGAs."
+        "rationale": "No candidate was retrieved that is substantively comparable. NVIDIA's candidates focus on Data Center financial performance (revenue growth) and its general computing platform strategy across four markets. Intel's disclosure specifically details the product scope of its Altera business (FPGAs for embedded/communications/cloud). NVIDIA's disclosures do not discuss programmable semiconductors or FPGA-specific business lines comparable to Intel's Altera description."
       },
       {
         "peer_ticker": "QCOM",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_7_D003",
-            "peer_topic": "Company Organization and Reportable Segments",
-            "peer_summary": "Qualcomm operates through three reportable segments: QCT (semiconductor), QTL (licensing), and QSI (strategic investments), along with nonreportable segments like QGOV.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.042085,
-            "relationship": "related_topic",
-            "comparison": "Both disclosures detail the organizational structure and business segments related to their semiconductor and connectivity businesses. Intel's Altera disclosure identifies specific market segments (embedded, communications, cloud/enterprise) where its programmable semiconductors are applied. Qualcomm's disclosure outlines its reportable segments, including QCT (semiconductor business) and QTL (licensing), which align with Intel's focus on hardware products and the underlying technology/IP ecosystems that serve similar communications and enterprise markets.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D067",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P062_S002",
-                    "paragraph_id": "intc_2024_7_P062",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Altera offers programmable semiconductors, primarily FPGAs, and related products, for a broad range of applications across our embedded, communications, and cloud and enterprise market segments.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_7_D003",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P004_S001",
-                    "paragraph_id": "qcom_2024_7_P004",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "We are organized on the basis of products and services and have three reportable segments.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "qcom_2024_7_P004_S002",
-                    "paragraph_id": "qcom_2024_7_P004",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "We conduct business primarily through our QCT (Qualcomm CDMA Technologies) semiconductor business and our QTL (Qualcomm Technology Licensing) licensing business.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "peer_ticker": "QCOM",
-            "peer_disclosure_id": "qcom_2024_7_D022",
-            "peer_topic": "QCT Revenue Streams and Products",
-            "peer_summary": "QCT's revenues consist of equipment and services totaling $32.6 billion in fiscal 2024 and $29.9 billion in fiscal 2023, primarily driven by sales of Snapdragon platforms, standalone Mobile Data Modems, RF, power management, and connectivity chipsets, as well as 4G, 5G sub-6, and 5G mmWave RFFE products.",
-            "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.027091,
-            "relationship": "related_topic",
-            "comparison": "Both disclosures describe revenue streams driven by specific hardware platforms used in enterprise and connectivity markets. Intel's Altera sells programmable semiconductors (FPGAs) for communications and cloud/enterprise applications. Qualcomm's QCT segment generates revenue primarily from Snapdragon platforms (processors and modems), standalone modems, and connectivity chipsets, which are fundamental components in the communications and computing infrastructure that also utilizes Altera's FPGAs. Both highlight the integration of processing and connectivity technologies.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_7_D067",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P062_S002",
-                    "paragraph_id": "intc_2024_7_P062",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Altera offers programmable semiconductors, primarily FPGAs, and related products, for a broad range of applications across our embedded, communications, and cloud and enterprise market segments.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "QCOM",
-                "disclosure_id": "qcom_2024_7_D022",
-                "sentences": [
-                  {
-                    "sentence_id": "qcom_2024_7_P021_S001",
-                    "paragraph_id": "qcom_2024_7_P021",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "Substantially all of QCT's revenues consist of equipment and services revenues, which were $32.6 billion and $29.9 billion in fiscal 2024 and 2023, respectively.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "qcom_2024_7_P021_S002",
-                    "paragraph_id": "qcom_2024_7_P021",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/804328/000080432824000075/qcom-20240929.htm",
-                    "text": "QCT handsets, automotive and IoT revenues mostly relate to sales of our Snapdragon platforms (which include processors and modems), stand-alone Mobile Data Modems, radio frequency transceiver, power management and wireless connectivity integrated chipsets as well as sales of 4G, 5G sub 6 and 5G millimeter wave RFFE products.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "No candidate was retrieved that is substantively comparable. Qualcomm's candidates describe its organizational structure (reportable segments) and its strategic belief regarding 5G technology leadership and adoption in automotive/IoT. Intel's disclosure describes the specific product portfolio (FPGAs) and application markets for its Altera business. There is no overlap in discussing programmable semiconductors or comparable business segment product definitions."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "31498ae9540ebf00a1e8de0f7e80c1ec17f0f531d147baa9855c88f02091a683",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "92accecc8635780575d10c0af3e144e71a6a590fa6456f4129eb5da6031fec98"
+    }
   }
 }

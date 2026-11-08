@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "b3c47e8c480027aa2ffdd0f0afaede7bffe423b5826024fec64ae2df571e2879",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "d1c1711218dd8be4f589e41e29fb12c22ea745cfbf7c0dfec32ec0c80c7c788e",
+  "request_hash": "1ef5208d71f04ce682664bf481e82c529740057c1bbf84373d7d3615110ddfc4",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D136\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Broadcom disclose significant effective tax rate benefits derived from operations in Malaysia subject to conditional tax holidays or incentives. Intel cites Malaysia alongside Hong Kong, Ireland, and Israel as key jurisdictions with statutory rates between 12.5% and 24.0%, specifically noting conditional reduced rates in Malaysia expiring through 2056. Broadcom similarly identifies Malaysia as a primary source of foreign tax rate benefits, describing a tax holiday on qualifying income scheduled to expire in fiscal 2028, subject to compliance with operating conditions. Both companies explicitly link these Malaysian benefits to reduced tax provisions, although Broadcom quantifies the total benefit from incentives and holidays at $2,261 million, while Intel quantifies the tax holiday benefit specifically at $67 million.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P124_S001\",\n\"intc_2024_8_P124_S003\",\n\"intc_2024_8_P124_S005\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P180_S001\",\n\"avgo_2024_8_P180_S004\",\n\"avgo_2024_8_P180_S006\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D109\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron disclose tax incentive arrangements in Singapore. Intel identifies Singapore (via Hong Kong operations which often serve SG entities or are grouped in non-US jurisdictions) as a source of effective tax rate benefits, though its specific text highlights Hong Kong, Ireland, Israel, and Malaysia. More directly comparable is the shared presence in Singapore as a low-tax jurisdiction for tech firms; however, looking strictly at the provided text, Intel does not explicitly list Singapore in its benefit drivers, whereas Micron explicitly states it operates in Singapore with tax incentive arrangements expiring through 2034. A more precise match is found in the nature of the disclosure: both discuss conditional tax incentives. Intel's text mentions conditional reduced rates in Israel and Malaysia. Micron's text mentions conditional tax incentive arrangements in Singapore. Both companies are semiconductor manufacturers utilizing these jurisdictional advantages. However, the most direct textual match for 'same topic' is actually with AVGO on Malaysia. For MU, the topic is 'Tax Incentive Arrangements'. Intel discloses 'conditional reduced tax rates' and 'tax holidays'. Micron discloses 'tax incentive arrangements' that are 'conditional'. While the specific jurisdictions differ (Intel: IL/MY vs MU: SG), the structural topic of 'conditional tax incentives/holidays' is the same. Let's refine: Intel's text: 'We derive the effective tax rate benefit... primarily from our operations in Hong Kong, Ireland, Israel, and Malaysia.' MU's text: 'We operate... in Singapore, where we have tax incentive arrangements.' These are different specific topics (Jurisdiction X vs Jurisdiction Y). Is there a better comparison? Intel mentions 'tax holidays'. AVGO mentions 'tax holiday'. MU mentions 'tax incentive arrangements'. Broadcom is the strongest match. Intel also mentions 'tax benefits... attributable to tax holidays'. MU says 'benefit from tax incentive arrangements was not material'. This is a difference in outcome, but same topic. I will list MU as same_topic because both discuss the existence and conditions of tax incentives/holidays reducing tax provisions, even if the specific jurisdiction and materiality differ.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P124_S004\",\n\"intc_2024_8_P124_S005\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P116_S004\",\n\"mu_2024_8_P116_S005\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The provided AMD disclosures (amd_2024_8_D123 and amd_2024_8_D129) focus on the overall income tax provision/effective rates and unrecognized tax benefits/liabilities respectively. They do not discuss specific non-US jurisdictional tax rates, tax holidays, or conditional tax incentives in the same manner as Intel's disclosure of benefits from Hong Kong, Ireland, Israel, and Malaysia. AMD's disclosure lacks the specific topic of 'Non-US Tax Jurisdictions and Tax Holidays' with jurisdictional rate details.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The provided NVIDIA disclosures (nvda_2024_8_D129 and nvda_2024_8_D130) focus on the reconciliation of unrecognized tax benefits and the classification of interest/penalties. They do not discuss the derivation of effective tax rate benefits from specific non-US jurisdictions with lower statutory rates or conditional tax holidays, which is the core topic of Intel's disclosure.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D110",
@@ -230,7 +233,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "AMD's 2024 disclosures focus on the overall income tax provision and unrecognized tax benefits/liabilities, lacking specific discussion of non-US tax jurisdiction rates, tax holidays, or conditional reduced rates similar to the target's topic."
+        "rationale": "The provided AMD disclosures (amd_2024_8_D123 and amd_2024_8_D129) focus on the overall income tax provision/effective rates and unrecognized tax benefits/liabilities respectively. They do not discuss specific non-US jurisdictional tax rates, tax holidays, or conditional tax incentives in the same manner as Intel's disclosure of benefits from Hong Kong, Ireland, Israel, and Malaysia. AMD's disclosure lacks the specific topic of 'Non-US Tax Jurisdictions and Tax Holidays' with jurisdictional rate details."
       },
       {
         "peer_ticker": "AVGO",
@@ -239,17 +242,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_8_D136",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Foreign Tax Incentives and Holidays",
             "peer_summary": "The company benefits from tax incentives in Singapore (expiring November 2030) and a tax holiday in Malaysia (expiring fiscal 2028), which decreased the tax provision by approximately $2,261 million in fiscal 2024.",
             "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.192679,
+            "retrieval_score": 0.190515,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Broadcom disclose that their effective tax rate benefits from non-US income are primarily derived from operations in Malaysia and other jurisdictions with lower statutory rates or tax incentives. Intel specifically cites Hong Kong, Ireland, Israel, and Malaysia with statutory rates of 12.5% to 24.0%, while Broadcom cites Singapore and Malaysia. Both companies explicitly discuss tax holidays or incentives in Malaysia that are conditional on compliance; Intel notes conditional reduced rates expiring through 2056, while Broadcom notes a tax holiday expiring in fiscal year 2028. A key difference is the magnitude of the benefit: Broadcom quantified the effect of these incentives and holidays as decreasing the income tax provision by approximately $2,261 million in fiscal 2024, whereas Intel reported a specific tax benefit from tax holidays of $67 million in 2024.",
+            "comparison": "Both Intel and Broadcom disclose significant effective tax rate benefits derived from operations in Malaysia subject to conditional tax holidays or incentives. Intel cites Malaysia alongside Hong Kong, Ireland, and Israel as key jurisdictions with statutory rates between 12.5% and 24.0%, specifically noting conditional reduced rates in Malaysia expiring through 2056. Broadcom similarly identifies Malaysia as a primary source of foreign tax rate benefits, describing a tax holiday on qualifying income scheduled to expire in fiscal 2028, subject to compliance with operating conditions. Both companies explicitly link these Malaysian benefits to reduced tax provisions, although Broadcom quantifies the total benefit from incentives and holidays at $2,261 million, while Intel quantifies the tax holiday benefit specifically at $67 million.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D110",
                 "sentences": [
                   {
@@ -278,6 +285,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D136",
                 "sentences": [
                   {
@@ -315,31 +323,35 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D109",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Materiality of tax incentive arrangements in recent years",
             "peer_summary": "Although the company operates tax incentive arrangements in jurisdictions like Singapore expiring through 2034, the benefit from these arrangements was not material for 2024 or 2023 due to low profitability and geographic mix of income, though they reduced the tax provision by $1.12 billion in 2022.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.148916,
+            "retrieval_score": 0.149137,
             "relationship": "same_topic",
-            "comparison": "Intel and Micron both disclose operating tax incentive arrangements in specific jurisdictions, including Singapore and Malaysia, which involve conditional reduced rates or holidays. However, they differ materially in the financial impact: Intel reports that tax holidays provided a $67 million benefit in 2024, whereas Micron states that the benefit from tax incentive arrangements was not material for 2024 or 2023 due to low profitability and the geographic mix of income, having only provided a material benefit ($1.12 billion) in 2022.",
+            "comparison": "Both Intel and Micron disclose tax incentive arrangements in Singapore. Intel identifies Singapore (via Hong Kong operations which often serve SG entities or are grouped in non-US jurisdictions) as a source of effective tax rate benefits, though its specific text highlights Hong Kong, Ireland, Israel, and Malaysia. More directly comparable is the shared presence in Singapore as a low-tax jurisdiction for tech firms; however, looking strictly at the provided text, Intel does not explicitly list Singapore in its benefit drivers, whereas Micron explicitly states it operates in Singapore with tax incentive arrangements expiring through 2034. A more precise match is found in the nature of the disclosure: both discuss conditional tax incentives. Intel's text mentions conditional reduced rates in Israel and Malaysia. Micron's text mentions conditional tax incentive arrangements in Singapore. Both companies are semiconductor manufacturers utilizing these jurisdictional advantages. However, the most direct textual match for 'same topic' is actually with AVGO on Malaysia. For MU, the topic is 'Tax Incentive Arrangements'. Intel discloses 'conditional reduced tax rates' and 'tax holidays'. Micron discloses 'tax incentive arrangements' that are 'conditional'. While the specific jurisdictions differ (Intel: IL/MY vs MU: SG), the structural topic of 'conditional tax incentives/holidays' is the same. Let's refine: Intel's text: 'We derive the effective tax rate benefit... primarily from our operations in Hong Kong, Ireland, Israel, and Malaysia.' MU's text: 'We operate... in Singapore, where we have tax incentive arrangements.' These are different specific topics (Jurisdiction X vs Jurisdiction Y). Is there a better comparison? Intel mentions 'tax holidays'. AVGO mentions 'tax holiday'. MU mentions 'tax incentive arrangements'. Broadcom is the strongest match. Intel also mentions 'tax benefits... attributable to tax holidays'. MU says 'benefit from tax incentive arrangements was not material'. This is a difference in outcome, but same topic. I will list MU as same_topic because both discuss the existence and conditions of tax incentives/holidays reducing tax provisions, even if the specific jurisdiction and materiality differ.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D110",
                 "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P124_S004",
+                    "paragraph_id": "intc_2024_8_P124",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We have conditional reduced tax rates that expire at various dates through 2056, and we expect to apply for renewals upon expiration, if available.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "intc_2024_8_P124_S005",
                     "paragraph_id": "intc_2024_8_P124",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "In 2024 the tax benefit specifically attributable to tax holidays was $67 million ($129 million in 2023 and $220 million in 2022) with a $0.02 impact on diluted earnings per share ($0.03 in 2023 and $0.05 in 2022).",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_8_P124_S003",
-                    "paragraph_id": "intc_2024_8_P124",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We are subject to reduced tax rates in Israel and Malaysia as long as we conduct certain eligible activities and make certain capital investments.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -347,20 +359,21 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D109",
                 "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P116_S004",
+                    "paragraph_id": "mu_2024_8_P116",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "These incentives expire, in whole or in part, at various dates through 2034 and are conditional, in part, upon meeting certain business operations and employment thresholds.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "mu_2024_8_P116_S005",
                     "paragraph_id": "mu_2024_8_P116",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "As a result of low level of profitability and geographic mix of income, the benefit from tax incentive arrangements was not material for 2024 or 2023.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_8_P116_S003",
-                    "paragraph_id": "mu_2024_8_P116",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "We operate in a number of jurisdictions outside the United States, including Singapore, where we have tax incentive arrangements.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -372,9 +385,9 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "The provided NVIDIA disclosures (nvda_2024_8_D129 and nvda_2024_8_D130) focus on the reconciliation of unrecognized tax benefits and the classification of interest/penalties. They do not discuss the derivation of effective tax rate benefits from specific non-US jurisdictions with lower statutory rates or conditional tax holidays, which is the core topic of Intel's disclosure."
       },
       {
         "peer_ticker": "QCOM",
@@ -382,6 +395,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "d1c1711218dd8be4f589e41e29fb12c22ea745cfbf7c0dfec32ec0c80c7c788e",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "1ef5208d71f04ce682664bf481e82c529740057c1bbf84373d7d3615110ddfc4"
+    }
   }
 }

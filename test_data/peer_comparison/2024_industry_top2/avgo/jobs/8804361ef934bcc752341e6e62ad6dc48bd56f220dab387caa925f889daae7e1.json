@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "32724cccddb2c4157e7f1669d71e309735ce2c8139792a93fcce273f98e5f338",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "0b48c0ace1c4156c1a41c4bfea4c194a90131dbbe7d073f7a32c1a3bbc1b28d9",
+  "request_hash": "56d49463a55149288563824af07f17c18dc7d91786d5d665488b585020f211f8",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D170\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both companies disclose the structure and vesting terms of their performance stock unit (PSU) and restricted stock unit (RSU) awards as part of their employee equity incentive plans. While Broadcom's disclosure focuses on the specific assumption and conversion of VMware awards in the context of a merger, Intel details the standard grant terms for its own equity plans. Specifically, Intel states that PSUs are granted to senior officers and employees with a vesting period of three years and one month, whereas Broadcom describes converting VMware awards into Broadcom common stock RSUs for continuing employees, highlighting a difference in operational context (post-merger integration vs. standard annual granting) but the same instrument type (PSUs/RSUs) and beneficiary groups (employees/senior officers).\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P096_S001\",\n\"avgo_2024_8_P096_S002\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P197_S002\",\n\"intc_2024_8_P197_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The supplied candidates for AMD disclose general definitions of time-based RSUs and diluted EPS calculation methodology. These do not address the specific topic of assuming or converting outstanding equity awards from an acquisition (VMware) or the treatment of such awards for continuing employees or non-employee directors. The topics are too distinct to form a meaningful comparison on the specific event/policy of award assumption and conversion.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The supplied candidates for Micron disclose equity compensation plan share availability and ESPP participation mechanics. These topics do not relate to the specific assumption and conversion of acquisition equity awards (VMware RSUs/PSUs) discussed by Broadcom. No candidate addresses post-acquisition equity conversion.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The supplied candidates for NVIDIA disclose the 2007 Plan authorization/share availability and ESPP mechanics. Neither candidate addresses the assumption or conversion of equity awards from a business combination or merger, which is the core topic of Broadcom's disclosure. Therefore, no substantively comparable candidate was retrieved.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved for QCOM.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D071",
@@ -165,22 +168,32 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The supplied candidates for AMD disclose general definitions of time-based RSUs and diluted EPS calculation methodology. These do not address the specific topic of assuming or converting outstanding equity awards from an acquisition (VMware) or the treatment of such awards for continuing employees or non-employee directors. The topics are too distinct to form a meaningful comparison on the specific event/policy of award assumption and conversion."
+      },
+      {
+        "peer_ticker": "INTC",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_8_D109",
-            "peer_topic": "Time-Based Restricted Stock Unit (RSU) Structure",
-            "peer_summary": "Time-based RSUs are awards granted to employees, directors, or consultants that obligate the Company to issue common stock upon satisfaction of vesting terms.",
+            "peer_ticker": "INTC",
+            "peer_disclosure_id": "intc_2024_8_D170",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "RSU and PSU Grant Terms and Vesting",
+            "peer_summary": "The 2006 Plan authorizes RSUs and stock options, with PSUs granted to senior officers and employees vesting after three years and one month. Other RSU and option awards generally vest over four years, with 10 million PSUs outstanding as of December 28, 2024.",
             "peer_taxonomy": "Human Capital & Organization",
-            "retrieval_score": 0.121067,
-            "relationship": "same_topic",
-            "comparison": "Both Broadcom and AMD disclose the mechanics of Restricted Stock Unit (RSU) awards for employees. Broadcom’s disclosure specifically addresses the assumption and conversion of VMware RSUs into Broadcom common stock RSUs as part of an acquisition, stating that it 'assumed all outstanding VMware RSU awards... held by continuing employees' and that 'The assumed awards were converted into RSU awards for shares of Broadcom common stock.' Similarly, AMD discloses the general structure of its time-based RSUs, noting they are 'awards that can be granted to any employee... and that obligate the Company to issue a specific number of shares of the Company's common stock in the future if the vesting terms and conditions are satisfied.' While Broadcom’s disclosure is driven by a specific M&A integration event converting external awards, and AMD’s is a general policy statement on grant obligations, both confirm the issuance of common stock upon vesting for employee RSUs.",
+            "retrieval_score": 0.114716,
+            "relationship": "related_topic",
+            "comparison": "Both companies disclose the structure and vesting terms of their performance stock unit (PSU) and restricted stock unit (RSU) awards as part of their employee equity incentive plans. While Broadcom's disclosure focuses on the specific assumption and conversion of VMware awards in the context of a merger, Intel details the standard grant terms for its own equity plans. Specifically, Intel states that PSUs are granted to senior officers and employees with a vesting period of three years and one month, whereas Broadcom describes converting VMware awards into Broadcom common stock RSUs for continuing employees, highlighting a difference in operational context (post-merger integration vs. standard annual granting) but the same instrument type (PSUs/RSUs) and beneficiary groups (employees/senior officers).",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D071",
                 "sentences": [
                   {
@@ -201,14 +214,22 @@
               },
               {
                 "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_8_D109",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D170",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_8_P115_S002",
-                    "paragraph_id": "amd_2024_8_P115",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Time-based RSUs are awards that can be granted to any employee, director or consultant and that obligate the Company to issue a specific number of shares of the Company's common stock in the future if the vesting terms and conditions are satisfied.",
+                    "sentence_id": "intc_2024_8_P197_S002",
+                    "paragraph_id": "intc_2024_8_P197",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We grant RSUs with a service condition as well as RSUs with a market condition, performance condition, and a service condition, which we call PSUs.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "intc_2024_8_P197_S003",
+                    "paragraph_id": "intc_2024_8_P197",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "PSUs are granted to a group of senior officers and employees.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -219,29 +240,28 @@
         "rationale": ""
       },
       {
-        "peer_ticker": "INTC",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "No candidate was retrieved that shares the specific topic of assuming or converting acquired equity awards. INTC candidates (D088, D170) cover general EPS calculation methodology and standard grant/vesting terms for its own plans, respectively, which are not substantively comparable to Broadcom's specific disclosure of post-acquisition award conversion mechanics."
-      },
-      {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved that shares the specific topic of assuming or converting acquired equity awards. MU candidates (D084, D086) cover equity compensation plan share availability and ESPP mechanics, which are distinct from Broadcom's disclosure of converting acquired VMware RSUs/PSUs."
+        "rationale": "The supplied candidates for Micron disclose equity compensation plan share availability and ESPP participation mechanics. These topics do not relate to the specific assumption and conversion of acquisition equity awards (VMware RSUs/PSUs) discussed by Broadcom. No candidate addresses post-acquisition equity conversion."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_candidate_retrieved",
+        "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "The supplied candidates for NVIDIA disclose the 2007 Plan authorization/share availability and ESPP mechanics. Neither candidate addresses the assumption or conversion of equity awards from a business combination or merger, which is the core topic of Broadcom's disclosure. Therefore, no substantively comparable candidate was retrieved."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved for QCOM."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "0b48c0ace1c4156c1a41c4bfea4c194a90131dbbe7d073f7a32c1a3bbc1b28d9",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "56d49463a55149288563824af07f17c18dc7d91786d5d665488b585020f211f8"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "683f08aa2ba3053fedf467f6aff9209c472f65ad56324bc18eeb784c58540e19",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "936bcd68395653d32f41e3f000fc19fadd4ddf438afba32c4f624381ab72ca1f",
+  "request_hash": "3e1a5847a872a6b6a633791c09be9caeb30c6647ef1d3fe08468e27bf6fb2e47",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D172\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose share-based compensation expense amounts for fiscal 2024. AVGO reports a total stock-based compensation expense (across all awards including Multi-Year Equity) of significantly higher amounts in prior years ($794M in 2022, $596M in 2023) compared to the specific Multi-Year Award expense of $356M in 2024, though AVGO's total SBC expense including VMware-assumed awards was $1,613 million (as per context D130). Intel reports a total share-based compensation expense of $3.4 billion for 2024. While both track SBC expense, the magnitude and composition differ substantially; AVGO's disclosed Multi-Year specific expense is much lower than Intel's total reported SBC expense. However, both provide the specific dollar amount of expense recognized in the income statement for the fiscal year.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P172_S003\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P198_S001\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D091\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose unrecognized stock-based compensation costs and capitalization practices. AVGO notes that its Multi-Year Equity Awards resulted in $356 million of expense in 2024, implying future costs are recognized over the vesting period. Similarly, Micron explicitly quantifies its unrecognized compensation costs for unvested awards as $1.44 billion as of August 2024, to be recognized through Q4 2028. Both disclosures provide transparency into the deferred nature of SBC expenses relative to current period recognition.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P172_S003\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P098_S004\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D076\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both companies disclose aggregate unearned (unrecognized) stock-based compensation expense. AVGO details the expense recognized for specific Multi-Year Awards ($356 million in 2024), which implies a corresponding unearned balance. NVDA explicitly states there was $8.6 billion of aggregate unearned stock-based compensation expense as of January 28, 2024, to be recognized over a weighted average period. Both companies address the timing of SBC expense recognition across fiscal years.\",\n\"target_sentence_ids\": [\n\"avgo_2024_8_P172_S003\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P075_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"Candidate amd_2024_8_D050 discusses depreciation expense, which is not comparable to stock-based compensation. Candidate amd_2024_8_D113 discusses stock option intrinsic value exercised and unrecognized option expense, which is a related but distinct topic (options vs. RSUs/Multi-Year awards) and lacks the specific expense recognition narrative for broad equity awards found in the target. The target focuses on Multi-Year Equity Awards expense, while AMD's option data is limited to exercise intrinsic value and unrecognized option costs only.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_8_D131",
@@ -210,7 +213,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidate amd_2024_8_D050 discusses depreciation expense, which is unrelated to stock-based compensation. The second candidate amd_2024_8_D113 discusses stock option activity and intrinsic value, but AVGO's specific disclosure concerns RSU-based Multi-Year Equity Awards expense recognition; while both are stock-based compensation, the specific topics (option exercise vs. RSU expense) are sufficiently distinct in nature (exercise proceeds/intrinsic value vs. non-cash expense recognition for multi-year grants) to warrant a no_match when stricter topic alignment is required, or specifically because the prompt asks for meaningful comparison of the same specific topic and AMD's option data does not align with AVGO's RSU expense recognition mechanism described."
+        "rationale": "Candidate amd_2024_8_D050 discusses depreciation expense, which is not comparable to stock-based compensation. Candidate amd_2024_8_D113 discusses stock option intrinsic value exercised and unrecognized option expense, which is a related but distinct topic (options vs. RSUs/Multi-Year awards) and lacks the specific expense recognition narrative for broad equity awards found in the target. The target focuses on Multi-Year Equity Awards expense, while AMD's option data is limited to exercise intrinsic value and unrecognized option costs only."
       },
       {
         "peer_ticker": "INTC",
@@ -219,17 +222,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_8_D172",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Share-based compensation expense and tax impacts",
             "peer_summary": "Intel recognized $3.4 billion in share-based compensation expense in 2024, with associated tax benefits totaling $684 million. Additionally, the company recorded a $139 million tax expense in 2024 due to a shortfall between the tax deduction received and the related deferred tax assets.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.119579,
+            "retrieval_score": 0.109796,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and INTC disclose share-based compensation expenses for fiscal year 2024. AVGO reports specific expenses related to its Multi-Year Equity Awards of $356 million for 2024, whereas INTC reports total share-based compensation expense of $3.4 billion for 2024. Both companies report associated tax impacts, with INTC detailing a $684 million tax benefit and a $139 million tax expense related to shortfalls, while AVGO's disclosure focuses on the expense amounts rather than tax impacts in this specific segment.",
+            "comparison": "Both companies disclose share-based compensation expense amounts for fiscal 2024. AVGO reports a total stock-based compensation expense (across all awards including Multi-Year Equity) of significantly higher amounts in prior years ($794M in 2022, $596M in 2023) compared to the specific Multi-Year Award expense of $356M in 2024, though AVGO's total SBC expense including VMware-assumed awards was $1,613 million (as per context D130). Intel reports a total share-based compensation expense of $3.4 billion for 2024. While both track SBC expense, the magnitude and composition differ substantially; AVGO's disclosed Multi-Year specific expense is much lower than Intel's total reported SBC expense. However, both provide the specific dollar amount of expense recognized in the income statement for the fiscal year.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D131",
                 "sentences": [
                   {
@@ -244,6 +251,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D172",
                 "sentences": [
                   {
@@ -251,20 +259,6 @@
                     "paragraph_id": "intc_2024_8_P198",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "Share-based compensation recognized in 2024 was $3.4 billion ($3.2 billion in 2023 and $3.1 billion in 2022).",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_8_P198_S002",
-                    "paragraph_id": "intc_2024_8_P198",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "During 2024, the actual tax benefit that we realized for the tax deduction from share-based awards totaled $684 million ($571 million in 2023 and $478 million in 2022).",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_8_P198_S003",
-                    "paragraph_id": "intc_2024_8_P198",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We realized a related tax expense of $139 million in 2024 for the share-based awards as a result of the shortfall between the tax deduction being less than the associated deferred tax asset for the awards.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -280,18 +274,22 @@
         "comparisons": [
           {
             "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_8_D090",
-            "peer_topic": "Recognition and amounts of income tax benefits for share-based awards",
-            "peer_summary": "Income tax benefits related to tax deductions for share-based awards are recognized upon settlement of the awards, amounting to $140 million, $68 million, and $77 million for the fiscal years 2024, 2023, and 2022, respectively.",
+            "peer_disclosure_id": "mu_2024_8_D091",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Capitalized stock-based compensation and unrecognized compensation costs",
+            "peer_summary": "As of August 2024 and 2023, $99 million and $88 million of stock-based compensation expense was capitalized and remained in inventory, respectively. Unrecognized compensation costs for unvested awards were $1.44 billion as of August 2024, expected to be recognized through Q4 2028 with a weighted-average period of 1.2 years.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.199475,
+            "retrieval_score": 0.165189,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and MU disclose the recognition and amounts of tax benefits related to share-based awards in fiscal 2024. MU reports income tax benefits of $140 million recognized upon settlement of share-based awards. While AVGO's provided text focuses on the pre-tax expense recognition ($356 million), both disclosures address the financial impact of share-based compensation, specifically highlighting tax-related outcomes or expense recognition in the context of Item 8 financial notes.",
+            "comparison": "Both companies disclose unrecognized stock-based compensation costs and capitalization practices. AVGO notes that its Multi-Year Equity Awards resulted in $356 million of expense in 2024, implying future costs are recognized over the vesting period. Similarly, Micron explicitly quantifies its unrecognized compensation costs for unvested awards as $1.44 billion as of August 2024, to be recognized through Q4 2028. Both disclosures provide transparency into the deferred nature of SBC expenses relative to current period recognition.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "8",
                 "disclosure_id": "avgo_2024_8_D131",
                 "sentences": [
                   {
@@ -306,20 +304,14 @@
               {
                 "side": "peer",
                 "ticker": "MU",
-                "disclosure_id": "mu_2024_8_D090",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D091",
                 "sentences": [
                   {
-                    "sentence_id": "mu_2024_8_P098_S001",
+                    "sentence_id": "mu_2024_8_P098_S004",
                     "paragraph_id": "mu_2024_8_P098",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Income tax benefits related to the tax deductions for share-based awards are recognized only upon the settlement of the related share-based awards.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_8_P098_S002",
-                    "paragraph_id": "mu_2024_8_P098",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Income tax benefits for share-based awards were $140 million, $68 million, and $77 million for 2024, 2023, and 2022, respectively.",
+                    "text": "As of August 29, 2024, $1.44 billion of total unrecognized compensation costs for unvested awards, before the effect of any future forfeitures, was expected to be recognized through the fourth quarter of 2028, resulting in a weighted-average period of 1.2 years.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -331,9 +323,56 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The retrieved candidate nvda_2024_8_D001 is a generic location statement indicating that information is in the Consolidated Financial Statements and Notes. It does not contain specific data on share-based compensation expense or tax impacts comparable to AVGO's disclosure."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D076",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Recognition of Stock-Based Compensation Expense",
+            "peer_summary": "Stock-based compensation expense is included in Consolidated Statements of Income net of amounts allocated to inventory, though amounts capitalized in inventories were not significant in fiscal years 2024, 2023, and 2022. As of January 28, 2024, there was $8.6 billion of aggregate unearned stock-based compensation expense expected to be recognized over a weighted average period of 2.5 years for RSUs/PSUs and 0.8 years for ESPP.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.19008,
+            "relationship": "same_topic",
+            "comparison": "Both companies disclose aggregate unearned (unrecognized) stock-based compensation expense. AVGO details the expense recognized for specific Multi-Year Awards ($356 million in 2024), which implies a corresponding unearned balance. NVDA explicitly states there was $8.6 billion of aggregate unearned stock-based compensation expense as of January 28, 2024, to be recognized over a weighted average period. Both companies address the timing of SBC expense recognition across fiscal years.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D131",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P172_S003",
+                    "paragraph_id": "avgo_2024_8_P172",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Stock-based compensation expense related to the Multi-Year Equity Awards was $356 million, $596 million and $794 million for fiscal years 2024, 2023 and 2022, respectively.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D076",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P075_S002",
+                    "paragraph_id": "nvda_2024_8_P075",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "As of January 28, 2024, there was $8.6 billion of aggregate unearned stock-based compensation expense.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
@@ -341,6 +380,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "936bcd68395653d32f41e3f000fc19fadd4ddf438afba32c4f624381ab72ca1f",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "3e1a5847a872a6b6a633791c09be9caeb30c6647ef1d3fe08468e27bf6fb2e47"
+    }
   }
 }

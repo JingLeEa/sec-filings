@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "37c94ede705d24b3e500ab66cc7d70c868f85f101822e5b97865d3622df22018",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "ec82b3a601bdeb9d24ecf72b806faa5609b57f3f0b30008922cb520bff2e7469",
+  "request_hash": "99810f82761521f50b13e15d47dd7939a8ec501b7ab808a25e6f7cf85486959e",
+  "response_text": "{\n  \"comparisons\": [\n    {\n      \"peer_ticker\": \"AMD\",\n      \"peer_disclosure_id\": \"amd_2024_8_D037\",\n      \"relationship\": \"related_topic\",\n      \"comparison\": \"The target (MU) discloses specific financial exposure via financial lease liabilities and right-of-use assets ($680 million) associated with third-party Special Purpose Entities (Lease SPEs) used for equipment lease financing. In contrast, AMD (amd_2024_8_D037) describes a general lease accounting policy for operating and finance leases but explicitly states that its finance leases are considered immaterial, whereas MU's finance/financial leases are material and tied to specific SPE structures.\",\n      \"target_sentence_ids\": [\n        \"mu_2024_8_P036_S006\"\n      ],\n      \"peer_sentence_ids\": [\n        \"amd_2024_8_P045_S001\",\n        \"amd_2024_8_P045_S003\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"AVGO\",\n      \"peer_disclosure_id\": \"avgo_2024_8_D027\",\n      \"relationship\": \"related_topic\",\n      \"comparison\": \"Both MU and AVGO recognize right-of-use assets and lease liabilities for their lease arrangements. MU specifically highlights $680 million in financial lease liabilities and right-of-use assets associated with third-party Lease SPEs for equipment financing. AVGO describes its policy for recognizing ROU assets and liabilities for operating and finance leases with terms greater than 12 months based on present value, but does not disclose a comparable specific material amount tied to third-party SPE equipment financing structures in this excerpt.\",\n      \"target_sentence_ids\": [\n        \"mu_2024_8_P036_S006\"\n      ],\n      \"peer_sentence_ids\": [\n        \"avgo_2024_8_P047_S003\",\n        \"avgo_2024_8_P047_S005\"\n      ]\n    },\n    {\n      \"peer_ticker\": \"NVDA\",\n      \"peer_disclosure_id\": \"nvda_2024_8_D052\",\n      \"relationship\": \"related_topic\",\n      \"comparison\": \"The target (MU) discloses $680 million in financial lease liabilities and right-of-use assets linked to third-party Lease SPEs. NVDA (nvda_2024_8_D052) discusses the recognition of operating lease assets and liabilities on the consolidated balance sheet for terms exceeding 12 months but does not mention financial leases or specific exposure to third-party special purpose entities for equipment financing.\",\n      \"target_sentence_ids\": [\n        \"mu_2024_8_P036_S006\"\n      ],\n      \"peer_sentence_ids\": [\n        \"nvda_2024_8_P053_S002\",\n        \"nvda_2024_8_P053_S003\"\n      ]\n    }\n  ],\n  \"no_match\": [\n    {\n      \"peer_ticker\": \"INTC\",\n      \"reason\": \"INTC's candidates (intc_2024_8_D179, intc_2024_8_D057) focus on operating lease expense amounts and accounting for lease/non-lease components for supplier capacity. They do not discuss financial lease liabilities, right-of-use assets, or specific exposures to third-party special purpose entities (SPEs) for equipment financing, which is the core topic of the target disclosure.\"\n    },\n    {\n      \"peer_ticker\": \"QCOM\",\n      \"reason\": \"no candidate was retrieved\"\n    }\n  ]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D030",
@@ -205,9 +208,63 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "Candidates discuss general lease accounting policies (ROU assets/liabilities recognition) or future payment schedules, but do not provide a comparable specific financial exposure amount or VIE-related lease liability quantification as seen in the target disclosure."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_8_D037",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Lease Accounting Policy and Recognition",
+            "peer_summary": "AMD recognizes operating and finance leases as right-of-use (ROU) assets and lease liabilities on its Consolidated Balance Sheets, calculated based on the present value of lease payments using the implicit rate or, if unavailable, the consolidated group incremental borrowing rate. Operating lease expense is recognized on a straight-line basis, while short-term leases (12 months or less) are not recognized. The Company's finance leases are considered immaterial.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.146547,
+            "relationship": "related_topic",
+            "comparison": "The target (MU) discloses specific financial exposure via financial lease liabilities and right-of-use assets ($680 million) associated with third-party Special Purpose Entities (Lease SPEs) used for equipment lease financing. In contrast, AMD (amd_2024_8_D037) describes a general lease accounting policy for operating and finance leases but explicitly states that its finance leases are considered immaterial, whereas MU's finance/financial leases are material and tied to specific SPE structures.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P036_S006",
+                    "paragraph_id": "mu_2024_8_P036",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "As of August 29, 2024, we had approximately $680 million of financial lease liabilities and right-of-use assets under these arrangements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "8",
+                "disclosure_id": "amd_2024_8_D037",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_8_P045_S001",
+                    "paragraph_id": "amd_2024_8_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Operating and finance leases are recorded as right-of-use (ROU) assets and lease liabilities on the Company's Consolidated Balance Sheets.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_8_P045_S003",
+                    "paragraph_id": "amd_2024_8_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Operating and finance lease ROU assets and liabilities are initially recognized based on the present value of lease payments over the lease term.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
@@ -215,18 +272,22 @@
         "comparisons": [
           {
             "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_8_D167",
-            "peer_topic": "FY2024 Lease Liability Obligations",
-            "peer_summary": "As of November 3, 2024, short-term and long-term lease liabilities included $192 million of obligations related to restructured leases, compared to $44 million as of October 29, 2023.",
+            "peer_disclosure_id": "avgo_2024_8_D027",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Lease accounting policy",
+            "peer_summary": "The company recognizes right-of-use assets and lease liabilities for leases with terms greater than 12 months, using implicit or incremental borrowing rates to determine present value, with operating lease expense recognized on a straight-line basis and finance lease expense using the effective interest method.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.138328,
-            "relationship": "same_topic",
-            "comparison": "Both MU and AVGO disclose specific quantitative exposures related to lease liabilities within the context of VIEs or specific lease obligations, though the nature of the exposure differs. MU reports $680 million in total financial lease liabilities and right-of-use assets associated with Lease SPEs (special purpose entities), which are variable interest entities where MU is not the primary beneficiary. In contrast, AVGO reports $192 million of obligations related specifically to 'restructured leases' included in its short-term and long-term lease liabilities as of November 3, 2024. While MU's figure represents the full balance sheet exposure to its third-party lease SPEs, AVGO's figure isolates a subset of liabilities (restructured) within its broader lease obligations, highlighting different granularity and drivers (SPE financing vs. restructuring) of lease liability exposure.",
+            "retrieval_score": 0.165333,
+            "relationship": "related_topic",
+            "comparison": "Both MU and AVGO recognize right-of-use assets and lease liabilities for their lease arrangements. MU specifically highlights $680 million in financial lease liabilities and right-of-use assets associated with third-party Lease SPEs for equipment financing. AVGO describes its policy for recognizing ROU assets and liabilities for operating and finance leases with terms greater than 12 months based on present value, but does not disclose a comparable specific material amount tied to third-party SPE equipment financing structures in this excerpt.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D030",
                 "sentences": [
                   {
@@ -241,13 +302,21 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_8_D167",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D027",
                 "sentences": [
                   {
-                    "sentence_id": "avgo_2024_8_P206_S001",
-                    "paragraph_id": "avgo_2024_8_P206",
+                    "sentence_id": "avgo_2024_8_P047_S003",
+                    "paragraph_id": "avgo_2024_8_P047",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "As of November 3, 2024 and October 29, 2023, short-term and long-term lease liabilities included $192 million and $44 million of obligations related to restructured leases, respectively.",
+                    "text": "We recognize right-of-use (\"ROU\") assets and lease liabilities for operating and finance leases with terms greater than 12 months, and account for the lease and non-lease components as a single component.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_8_P047_S005",
+                    "paragraph_id": "avgo_2024_8_P047",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Operating and finance lease ROU assets and liabilities are recognized based on the present value of lease payments over the lease term at the lease commencement date.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -261,20 +330,79 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Candidates discuss operating lease expense amounts or accounting policies for supplier capacity leases, which are income statement or policy-focused and not comparable to the target's balance sheet exposure to financial lease liabilities under Lease SPEs."
+        "rationale": "INTC's candidates (intc_2024_8_D179, intc_2024_8_D057) focus on operating lease expense amounts and accounting for lease/non-lease components for supplier capacity. They do not discuss financial lease liabilities, right-of-use assets, or specific exposures to third-party special purpose entities (SPEs) for equipment financing, which is the core topic of the target disclosure."
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The only candidate is a navigational statement regarding Item 8 content, containing no substantive lease data for comparison."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D052",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Lease Definition and Balance Sheet Classification",
+            "peer_summary": "The company determines if an arrangement is a lease at inception. Operating leases with terms exceeding 12 months are recognized as operating lease assets and corresponding current and long-term liabilities on the consolidated balance sheet.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.154569,
+            "relationship": "related_topic",
+            "comparison": "The target (MU) discloses $680 million in financial lease liabilities and right-of-use assets linked to third-party Lease SPEs. NVDA (nvda_2024_8_D052) discusses the recognition of operating lease assets and liabilities on the consolidated balance sheet for terms exceeding 12 months but does not mention financial leases or specific exposure to third-party special purpose entities for equipment financing.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "MU",
+                "item": "8",
+                "disclosure_id": "mu_2024_8_D030",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_8_P036_S006",
+                    "paragraph_id": "mu_2024_8_P036",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "As of August 29, 2024, we had approximately $680 million of financial lease liabilities and right-of-use assets under these arrangements.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D052",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P053_S002",
+                    "paragraph_id": "nvda_2024_8_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Operating leases with lease terms of more than 12 months are included in operating lease assets, accrued and other current liabilities, and long-term operating lease liabilities on our consolidated balance sheet.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P053_S003",
+                    "paragraph_id": "nvda_2024_8_P053",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Operating lease assets represent our right to use an underlying asset for the lease term and lease liabilities represent our obligation to make lease payments over the lease term.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved"
+        "rationale": "no candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "ec82b3a601bdeb9d24ecf72b806faa5609b57f3f0b30008922cb520bff2e7469",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "99810f82761521f50b13e15d47dd7939a8ec501b7ab808a25e6f7cf85486959e"
+    }
   }
 }

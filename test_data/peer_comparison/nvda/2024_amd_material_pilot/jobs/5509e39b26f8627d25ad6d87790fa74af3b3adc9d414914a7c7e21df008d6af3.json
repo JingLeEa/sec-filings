@@ -1,176 +1,117 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "14de660f561e0ed52d0f557a103b8fdf3195c22190985cbdc85eef22b070dec6",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "ea1a4271cd7b46507f6216a6d3fea7cf9f3a8b2c552b887f1947fb0250c3ed33",
+  "request_hash": "e75f297a256eff8479e06a626a9c19f00dea99ee36b8d1d1a7cd7d481675d66a",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D057\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVIDIA and AMD disclose that hyperscale data centers and public cloud providers are primary customers using their data center products (accelerated computing platforms/GPUs) specifically for AI workloads, including generative AI. NVIDIA states enterprises and startups use its platforms for generative AI products and services, while AMD explicitly notes that hyperscale data centers use their GPU accelerators and CPUs to support public cloud computing and 'AI workloads such as generative AI models.'\",\n\"target_sentence_ids\": [\n\"nvda_2024_1_P008_S001\",\n\"nvda_2024_1_P008_S002\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P060_S001\",\n\"amd_2024_1_P060_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The remaining candidate amd_2024_1_D037 focuses on embedded product technical requirements (low power, small form factors, operating systems) which does not match the target's topic of enterprise generative AI applications. The candidate amd_2024_1_D006 provides a high-level strategic overview of AMD as a computing leader but lacks the specific factual alignment regarding hyperscale customer usage for generative AI found in the target disclosure and the other AMD candidate.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1_D008",
     "item": "1",
-    "target_topic": "Professional Workstation and Generative AI Adoption",
-    "target_summary": "Professional artists and designers use NVIDIA partner products for creative and design work. Generative AI is expanding the market for workstation-class GPUs as enterprise customers develop and deploy AI applications on-premises.",
+    "target_topic": "Enterprise and Industry Applications",
+    "target_summary": "Enterprises and startups across industries use NVIDIA platforms to build generative AI products or reduce costs, applying these solutions to AI assistants, autonomous driving, drug discovery, and fraud detection.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0245",
-        "relationship": "one_to_one",
+        "match_id": "nvda_2023_2024_M0108",
+        "relationship": "one_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "Both disclosures focus on the specific use of NVIDIA technology by professional designers and artists for creative work. D009 (2023) mentions visual effects, buildings, and products. D008 (2024) mentions visual effects, buildings, and products, and explicitly links this to workstation-class GPUs. The subject matter (professional design/creative use) is identical.",
+        "explanation": "Both disclosures focus on cloud service providers (CSPs) and consumer internet companies using NVIDIA's accelerated computing platforms to deliver end-user services like search, AI assistants, and social networking.\n\nBoth disclosures detail how enterprises and startups across industries (transportation, healthcare, financial services) use NVIDIA platforms for automation, AI assistants, autonomous driving, drug discovery, and fraud detection.\n\nBoth disclosures describe the use of NVIDIA GPUs and software by professional artists, architects, and designers for creative work such as visual effects, movie production, and product/building design.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_1_D009",
+            "disclosure_id": "nvda_2023_1_D006",
             "item": "1",
             "section": "Our Company",
             "taxonomy": "Strategy & Business Model",
-            "summary": "Professional designers utilize NVIDIA GPUs and software to create visual effects in movies and design products ranging from cell phones to commercial aircraft.",
+            "summary": "Cloud service providers and enterprises use NVIDIA's accelerated computing platforms to deliver services like search, AI assistants, and automation for industries including transportation, healthcare, and financial services.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
+            "disclosure_id": "nvda_2024_1_D007",
+            "item": "1",
+            "section": "Our Company",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Leading cloud service providers and consumer internet companies utilize NVIDIA's data-center-scale accelerated computing platforms to enable and enrich services for billions of end users, including AI assistants and search.",
+            "extraction_status": "source_validated"
+          },
+          {
             "disclosure_id": "nvda_2024_1_D008",
             "item": "1",
             "section": "Our Company",
             "taxonomy": "Strategy & Business Model",
-            "summary": "Professional artists and designers use NVIDIA partner products for creative and design work. Generative AI is expanding the market for workstation-class GPUs as enterprise customers develop and deploy AI applications on-premises.",
+            "summary": "Enterprises and startups across industries use NVIDIA platforms to build generative AI products or reduce costs, applying these solutions to AI assistants, autonomous driving, drug discovery, and fraud detection.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2024_1_D011",
+            "item": "1",
+            "section": "Our Company",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Professional artists and designers use NVIDIA partner products for creative use cases, while generative AI expands the market for workstation-class GPUs as enterprises deploy AI applications on-premises.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Expanded",
-            "cosine_similarity": 0.36827,
-            "sequence_match_ratio": 0.311111,
-            "length_ratio": 2.461538,
-            "word_count_delta": 38,
-            "added_tokens_sample": [
-              "artists",
-              "architects",
-              "and",
-              "nvidia",
-              "partner",
-              "products",
-              "accelerated",
-              "with",
-              "platform",
-              "for",
-              "a",
-              "range",
-              "of",
-              "creative",
-              "and",
-              "design",
-              "use",
-              "cases",
-              "such",
-              "as"
-            ],
-            "removed_tokens_sample": [
-              "to",
-              "create",
-              "and",
-              "to",
-              "design",
-              "ranging",
-              "from",
-              "cell",
-              "phones",
-              "to",
-              "commercial",
-              "aircraft"
-            ]
-          },
-          "semantic": {
-            "matched_id": "nvda_2023_1_D009",
-            "score": 0.832101,
-            "normalised_score": 0.8321,
-            "label": "Expanded",
-            "rationale": "Score 83.21% of ceiling — content grew from ~26 to ~62 words (2.4×).",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.75,
-          "confidence_score": 0.85,
-          "reason": "The disclosure expands the market scope for workstation GPUs by explicitly linking 'generative AI' to the expansion of the market as enterprises deploy AI applications on-premises. This adds a new, significant revenue driver and use case (enterprise on-prem AI) to the traditional creative professional narrative, changing the substance of the market opportunity described.",
-          "key_change": "Expansion of workstation GPU market scope to include on-prem AI"
+          "materiality_score": 0.85,
+          "confidence_score": 0.9,
+          "reason": "The 2024 disclosure explicitly introduces 'generative AI' as a primary driver for enterprise and startup adoption, noting the building of 'new generative AI-enabled products' and specific use cases like AI assistants/chatbots. The 2023 disclosure referred generally to 'automation' and 'acceleration'. This shift from general acceleration to specific generative AI adoption reflects a fundamental change in the nature of customer demand and business activity.",
+          "key_change": "Introduction of generative AI as a primary business driver and customer use case"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0030",
-        "relationship": "previous_only",
-        "status": "unmatched",
+        "match_id": "nvda_2024_2025_M0091",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "The 2024 disclosure (nvda_2024_1_D008) specifically describes the use of NVIDIA products by 'Professional artists, architects and designers' and the expansion of the 'workstation-class GPUs' market due to generative AI. In 2025, the closest topic is Professional Visualization (nvda_2025_1_D024), which discusses serving the 'Professional Visualization market' and 'design and manufacturing' workflows. However, the 2024 disclosure is focused on the specific end-user base (artists/designers) and the resulting market expansion for workstation GPUs, whereas the 2025 disclosure (nvda_2025_1_D024) is framed as a market segment service strategy involving ISV optimization. Furthermore, the 2025 disclosure nvda_2025_1_D006 mentions 'workstation GPU demand growing' but focuses on enterprise/enterprise software use cases rather than the specific 'professional artists and designers' user base definition found in the 2024 text. There is no exact counterpart defining the 'Professional artists and designers' user group as the primary subject of a segment or business model statement in the same way. The 2024 D008 is a unique observation of user base expansion, not a segment definition like D011/D012",
+        "explanation": "Both disclosures describe how enterprises and startups across industries (transportation, healthcare, financial services) use NVIDIA platforms for generative AI products, autonomous driving, drug discovery, and cost reduction.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_1_D008",
             "item": "1",
             "section": "Our Company",
             "taxonomy": "Strategy & Business Model",
-            "summary": "Professional artists and designers use NVIDIA partner products for creative and design work. Generative AI is expanding the market for workstation-class GPUs as enterprise customers develop and deploy AI applications on-premises.",
+            "summary": "Enterprises and startups across industries use NVIDIA platforms to build generative AI products or reduce costs, applying these solutions to AI assistants, autonomous driving, drug discovery, and fraud detection.",
             "extraction_status": "source_validated"
           }
         ],
-        "current_disclosures": [],
+        "current_disclosures": [
+          {
+            "disclosure_id": "nvda_2025_1_D007",
+            "item": "1",
+            "section": "Our Company",
+            "taxonomy": "Strategy & Business Model",
+            "summary": "Enterprises and startups across industries, including transportation, healthcare, and financial services, use NVIDIA's accelerated computing platforms to build generative and agentic AI products or to accelerate and reduce costs of workflows.",
+            "extraction_status": "source_validated"
+          }
+        ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Removed",
-            "cosine_similarity": 0.0,
-            "sequence_match_ratio": 0.0,
-            "length_ratio": 0.0,
-            "word_count_delta": -64,
-            "added_tokens_sample": [],
-            "removed_tokens_sample": [
-              "professional",
-              "artists",
-              "architects",
-              "and",
-              "designers",
-              "use",
-              "nvidia",
-              "partner",
-              "products",
-              "accelerated",
-              "with",
-              "our",
-              "gpus",
-              "and",
-              "software",
-              "platform",
-              "for",
-              "a",
-              "range",
-              "of"
-            ]
-          },
-          "semantic": {
-            "label": "Removed",
-            "score": null,
-            "normalised_score": null,
-            "matched_id": null,
-            "rationale": "One-sided change established by the finalized alignment.",
-            "method": "alignment_presence"
-          },
-          "llm": "Removed",
-          "final_taxonomy": "Removed"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
-          "materiality": "No",
-          "materiality_score": 0.2,
+          "materiality": "Yes",
+          "materiality_score": 0.6,
           "confidence_score": 0.85,
-          "reason": "The removed text described professional artists and designers as end-users and noted market expansion due to generative AI. The 2025 filing likely covers the Professional Visualization market in aggregated segment disclosures or updated product strategy text. The removal of this specific user-base description is a stylistic or structural update rather than a material change in business activity or strategy.",
-          "key_change": "Removal of specific user base description"
+          "reason": "The 2025 disclosure introduces 'agentic AI' as a distinct product category alongside 'generative AI' and adds 'agents' to the enterprise software use case list. This reflects a strategic evolution in the company's product focus and customer applications, moving beyond static generative outputs to autonomous agents, which is a meaningful change in the substance of the business description.",
+          "key_change": "Introduction of agentic AI products and agents"
         }
       }
     ],
@@ -181,32 +122,36 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1_D035",
-            "peer_topic": "Professional GPU product family",
-            "peer_summary": "The AMD Radeon PRO family provides professional graphics products optimized for demanding use cases such as 3D rendering, CAD, and media/entertainment pipelines on high-resolution displays.",
-            "peer_taxonomy": "Technology & AI",
-            "retrieval_score": 0.071482,
+            "peer_disclosure_id": "amd_2024_1_D057",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Hyperscale Customer Base and Product Applications",
+            "peer_summary": "AMD's data center products, including server CPUs, GPU accelerators, and adaptive SOCs, are purchased by large public cloud providers and hyperscale private data centers. These customers incorporate the products into servers for web applications, public cloud services, and AI workloads such as generative AI models.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.058995,
             "relationship": "same_topic",
-            "comparison": "Both NVIDIA and AMD disclose the role of professional workstations in their business models, specifically targeting creative and design workloads. NVIDIA describes how professional artists and designers use its GPU-accelerated partner products for creative and design use cases, such as visual effects and product design. Similarly, AMD describes its Radeon PRO family of professional graphics products as being optimized for demanding use cases including 3D rendering, Computer-Aided Design (CAD), and media and entertainment pipelines. While both address the professional workstation market, NVIDIA explicitly links its workstation GPUs to the expansion driven by generative AI deployments on-premises, whereas AMD's disclosure in this specific context focuses on the technical optimization for traditional creative and design pipelines like broadcast and animation.",
+            "comparison": "Both NVIDIA and AMD disclose that hyperscale data centers and public cloud providers are primary customers using their data center products (accelerated computing platforms/GPUs) specifically for AI workloads, including generative AI. NVIDIA states enterprises and startups use its platforms for generative AI products and services, while AMD explicitly notes that hyperscale data centers use their GPU accelerators and CPUs to support public cloud computing and 'AI workloads such as generative AI models.'",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1",
                 "disclosure_id": "nvda_2024_1_D008",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1_P011_S001",
-                    "paragraph_id": "nvda_2024_1_P011",
+                    "sentence_id": "nvda_2024_1_P008_S001",
+                    "paragraph_id": "nvda_2024_1_P008",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Professional artists, architects and designers use NVIDIA partner products accelerated with our GPUs and software platform for a range of creative and design use cases, such as creating visual effects in movies or designing buildings and products.",
+                    "text": "Enterprises and startups across a broad range of industries use our accelerated computing platforms to build new generative AI-enabled products and services, or to dramatically accelerate and reduce the costs of their workloads and workflows.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "nvda_2024_1_P011_S002",
-                    "paragraph_id": "nvda_2024_1_P011",
+                    "sentence_id": "nvda_2024_1_P008_S002",
+                    "paragraph_id": "nvda_2024_1_P008",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "In addition, generative AI is expanding the market for our workstation-class GPUs, as more enterprise customers develop and deploy AI applications with their data on-premises.",
+                    "text": "The enterprise software industry uses them for new AI assistants and chatbots; the transportation industry for autonomous driving; the healthcare industry for accelerated and computer-aided drug discovery; and the financial services industry for customer support and fraud detection.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -214,13 +159,21 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D035",
+                "item": "1",
+                "disclosure_id": "amd_2024_1_D057",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1_P030_S002",
-                    "paragraph_id": "amd_2024_1_P030",
+                    "sentence_id": "amd_2024_1_P060_S001",
+                    "paragraph_id": "amd_2024_1_P060",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our AMD Radeon PRO family of professional graphics products are designed for integration in desktop workstations, optimized through hardware and software for demanding use cases such as 3D rendering, design and manufacturing for Computer-Aided Design (CAD), and media and entertainment for broadcast and animation pipelines on high resolution displays.",
+                    "text": "Large multi-national public cloud service providers and hyperscale private data centers directly and indirectly purchase a substantial portion of our data center-focused products, including server CPUs, GPU accelerators, DPUs, FPGAs and Adaptive SOCs.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1_P060_S003",
+                    "paragraph_id": "amd_2024_1_P060",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Hyperscale data centers use these products to operate web-based applications or to support public cloud computing and storage service offerings, including but not limited to AI workloads such as generative AI models.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -233,6 +186,11 @@
           "ignored_no_match_note_for_peer_with_comparisons"
         ]
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "ea1a4271cd7b46507f6216a6d3fea7cf9f3a8b2c552b887f1947fb0250c3ed33",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "e75f297a256eff8479e06a626a9c19f00dea99ee36b8d1d1a7cd7d481675d66a"
+    }
   }
 }

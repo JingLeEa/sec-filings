@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "efdf8cd2e984726fd12861ca78b3cd959d7abc38e9b8bfe105293a8258fd4d70",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "f4122407b06a853115be697e15703f67914fdc7b02a2cf00b51a75a2144415ea",
+  "request_hash": "1be6e8e27eaefc50bbe26552e364f0410ffaa11984a55fae4223fb922918c25b",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_8_D096\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Micron and Intel disclose government incentive structures primarily consisting of cash grants and refundable tax credits linked to capital expenditures and R&D activities, with terms extending up to 15 years. Both companies explicitly warn that these incentives are conditional and subject to recapture or termination if specific operational or investment conditions are not met. Micron details reimbursement risks for construction and headcount requirements, while Intel specifies reduction, recapture, or termination risks for failing to satisfy conditions.\",\n\"target_sentence_ids\": [\n\"mu_2024_8_P102_S001\",\n\"mu_2024_8_P102_S002\",\n\"mu_2024_8_P102_S003\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_8_P110_S003\",\n\"intc_2024_8_P110_S004\",\n\"intc_2024_8_P110_S009\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved candidates for AMD do not discuss the general government incentive structure (cash grants/tax credits for capital expenditures with reimbursement/recapture conditions). One candidate describes a specific tax holiday (DEI) in Singapore related to the Xilinx acquisition without mentioning broader capital incentive structures or recapture terms, and the other describes a ZT Systems acquisition, which is unrelated to government incentives.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved candidates for AVGO discuss foreign tax incentives (Singapore and Malaysia) and restructuring charges. The tax incentive disclosure focuses on effective tax rate benefits and expiration dates rather than the structure of capital expenditure grants with construction/headcount conditions and reimbursement risks described in the target. The restructuring candidate is unrelated to government incentives.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates for NVDA discuss tax authority examinations and geographic revenue concentration. Neither candidate discloses information regarding the structure of government incentives, such as cash grants, tax credits, or conditions related to capital expenditures and recapture risks.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_8_D095",
@@ -174,90 +177,13 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The available candidates discuss an acquisition of ZT Systems and a specific Singapore tax incentive (DEI) granted as part of the Xilinx acquisition. These do not describe a general government incentive structure, cash grants, or tax credits related to capital expenditures with terms and conditions comparable to Micron's broad disclosure. The DEI is a specific tax rate reduction rather than a grant/credit program with reimbursement conditions for capital investment."
+        "rationale": "The retrieved candidates for AMD do not discuss the general government incentive structure (cash grants/tax credits for capital expenditures with reimbursement/recapture conditions). One candidate describes a specific tax holiday (DEI) in Singapore related to the Xilinx acquisition without mentioning broader capital incentive structures or recapture terms, and the other describes a ZT Systems acquisition, which is unrelated to government incentives."
       },
       {
         "peer_ticker": "AVGO",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_8_D136",
-            "peer_topic": "Foreign Tax Incentives and Holidays",
-            "peer_summary": "The company benefits from tax incentives in Singapore (expiring November 2030) and a tax holiday in Malaysia (expiring fiscal 2028), which decreased the tax provision by approximately $2,261 million in fiscal 2024.",
-            "peer_taxonomy": "Regulation, Legal & Compliance",
-            "retrieval_score": 0.055321,
-            "relationship": "related_topic",
-            "comparison": "Micron and Broadcom both receive tax incentives in Singapore as part of their government incentive structures. Micron receives cash grants and tax credits primarily related to capital expenditures, while Broadcom specifically benefits from reduced tax rates on qualifying income through incentives from the Singapore Economic Development Board. Both disclose that these incentives are subject to compliance with specific conditions. Unlike Micron, which details the physical conditions (construction, headcount), Broadcom highlights the financial impact, noting these incentives decreased its tax provision by approximately $2,261 million in fiscal 2024.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_8_D095",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_8_P102_S001",
-                    "paragraph_id": "mu_2024_8_P102",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "We receive incentives from governmental entities primarily in India, Japan, Singapore, Taiwan, and the United States principally in the form of cash grants and tax credits.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_8_P102_S002",
-                    "paragraph_id": "mu_2024_8_P102",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "These incentives primarily relate to capital expenditures, have initial terms ranging from one year to 15 years, and may be subject to reimbursement if certain conditions are not met or maintained.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_8_P102_S003",
-                    "paragraph_id": "mu_2024_8_P102",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "The conditions attached to these incentives require us to incur expenditures related to the construction of new manufacturing facilities, the purchase and installation of specialized tools and equipment, R&D expenditures, and/or maintain certain levels of fixed asset investment or employee headcount during the incentive terms.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_8_D136",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_8_P180_S001",
-                    "paragraph_id": "avgo_2024_8_P180",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We derive the effective tax rate benefit attributed to foreign income taxed at different rates primarily from our operations in Singapore and Malaysia.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P180_S002",
-                    "paragraph_id": "avgo_2024_8_P180",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Our tax incentives from the Singapore Economic Development Board provide that any qualifying income earned in Singapore is subject to tax incentives or reduced rates of Singapore income tax, subject to our compliance with the conditions specified in these incentives and legislative developments.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P180_S003",
-                    "paragraph_id": "avgo_2024_8_P180",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "These Singapore tax incentives are scheduled to expire in November 2030.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P180_S006",
-                    "paragraph_id": "avgo_2024_8_P180",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Before taking into consideration the effects of the U.S. Tax Cuts and Jobs Act and other indirect tax impacts, the effect of these tax incentives and tax holiday was to decrease the provision for income taxes by approximately $2,261 million, $2,104 million and $1,821 million for fiscal years 2024, 2023 and 2022, respectively.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for AVGO discuss foreign tax incentives (Singapore and Malaysia) and restructuring charges. The tax incentive disclosure focuses on effective tax rate benefits and expiration dates rather than the structure of capital expenditure grants with construction/headcount conditions and reimbursement risks described in the target. The restructuring candidate is unrelated to government incentives."
       },
       {
         "peer_ticker": "INTC",
@@ -266,17 +192,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_8_D096",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Government incentive structure and conditions",
             "peer_summary": "Intel enters into government incentive arrangements structured as cash grants and refundable tax credits for qualifying capital investments, R&D, and activities, with terms up to 15 years for capital-related incentives and varied terms for operating-related incentives. These arrangements require compliance with conditions such as operational targets and minimum capital investment, with potential reduction, recapture, or termination if conditions are not satisfied.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.193328,
+            "retrieval_score": 0.210586,
             "relationship": "same_topic",
-            "comparison": "Both Micron and Intel disclose government incentive structures primarily comprising cash grants and tax credits related to capital expenditures, with similar maximum term lengths of 15 years and conditions requiring specific capital investments or R&D. However, Intel explicitly distinguishes between capital-related and operating-related incentives with varied terms for the latter, while Micron groups them generally under conditions tied to construction, equipment, and headcount without explicitly segregating operating incentives in this summary. Intel also notes the potential for reduction, recapture, or termination, whereas Micron specifies reimbursement if conditions are not met.",
+            "comparison": "Both Micron and Intel disclose government incentive structures primarily consisting of cash grants and refundable tax credits linked to capital expenditures and R&D activities, with terms extending up to 15 years. Both companies explicitly warn that these incentives are conditional and subject to recapture or termination if specific operational or investment conditions are not met. Micron details reimbursement risks for construction and headcount requirements, while Intel specifies reduction, recapture, or termination risks for failing to satisfy conditions.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D095",
                 "sentences": [
                   {
@@ -305,15 +235,9 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D096",
                 "sentences": [
-                  {
-                    "sentence_id": "intc_2024_8_P110_S001",
-                    "paragraph_id": "intc_2024_8_P110",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We enter into government incentive arrangements with local, regional, and national governments, both US and non-US.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "intc_2024_8_P110_S003",
                     "paragraph_id": "intc_2024_8_P110",
@@ -326,13 +250,6 @@
                     "paragraph_id": "intc_2024_8_P110",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "Capital-related incentives have terms of up to 15 years and operating-related incentives have terms that can vary widely.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_8_P110_S005",
-                    "paragraph_id": "intc_2024_8_P110",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We are eligible to receive these incentives because we engage in qualifying capital investments, R&D, and other activities as defined by the relevant government entities.",
                     "visible_in_prompt": true
                   },
                   {
@@ -353,14 +270,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The only retrieved candidate is a boilerplate statement regarding the location of required information in the financial statements. It contains no substantive disclosure about government incentives, tax credits, or related conditions comparable to Micron's topic."
+        "rationale": "The retrieved candidates for NVDA discuss tax authority examinations and geographic revenue concentration. Neither candidate discloses information regarding the structure of government incentives, such as cash grants, tax credits, or conditions related to capital expenditures and recapture risks."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "f4122407b06a853115be697e15703f67914fdc7b02a2cf00b51a75a2144415ea",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "1be6e8e27eaefc50bbe26552e364f0410ffaa11984a55fae4223fb922918c25b"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "1d9f5546854dbbc858b9263a7b4c235b84a9c17c6a66ead7d44729b27ee531d7",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "f5489c75273c531bfa31830ced820aaaef392f44fe7ae29b0452a53e81f5745b",
+  "request_hash": "5154bf061d45997d166d2264999f3a8f586ccddb58273ee5b0282965a8858958",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1A_D059\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both companies disclose risks and objectives related to advanced semiconductor manufacturing technology and capacity. Intel explicitly states its Foundry Services business objective to offer 'leading-edge packaging and process technology' and 'geographically balanced manufacturing capacity.' AMD contrasts this by highlighting the risk that its reliance on third-party manufacturers (like TSMC) may fail to 'develop, expand, obtain or successfully implement leading-edge manufacturing process or packaging technologies... on a timely basis,' which could lead to delays or lost sales. While Intel frames the provision of these technologies as a core business service, AMD frames the successful implementation of similar technologies as a critical operational risk dependent on external suppliers.\",\n\"target_sentence_ids\": [\n\"intc_2024_1A_P107_S004\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1A_P048_S001\",\n\"amd_2024_1A_P048_S004\"\n]\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_1A_D067\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Intel and Broadcom both identify intellectual property (IP) as a critical strategic asset in the semiconductor industry. Intel's Foundry Services business model aims to provide customers with a 'world-class IP portfolio' as a key objective. Broadcom similarly notes that some competitors possess 'more comprehensive IP portfolio or better patent protection' as a competitive advantage that can hinder Intel's (or Broadcom's) ability to compete. Both disclosures recognize that a strong IP portfolio is essential for commercial success, though Intel promotes it as a service offering while Broadcom cites it as a competitive threat/advantage factor.\",\n\"target_sentence_ids\": [\n\"intc_2024_1A_P107_S004\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_1A_P090_S001\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_1A_D073\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both Intel and Qualcomm emphasize the strategic importance of maintaining and accessing sufficient manufacturing capacity as a key business objective and risk. Intel states that its Foundry Services business aims to provide 'geographically balanced manufacturing capacity.' Qualcomm lists 'maintain access to sufficient capacity in the supply chain relative to our competitors' as a key goal. While Intel's statement relates to its own foundry service capabilities, and Qualcomm's relates to securing fabless supply chain capacity, both disclosures highlight manufacturing capacity availability as a central strategic priority for sustaining competitiveness.\",\n\"target_sentence_ids\": [\n\"intc_2024_1A_P107_S004\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_1A_P090_S008\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"The provided candidates for MU focus on capital expenditure estimates and product specification failures affecting gross margins, which are distinct from Intel's strategic objectives for its Foundry Services business regarding technology, capacity, and IP.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The provided candidates for NVDA focus on risks related to new cloud service offerings (DGX Cloud) and general competition, which do not substantively match Intel's specific strategic objectives for its Foundry Services business.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1A_D059",
@@ -114,9 +117,63 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "AMD's candidate disclosures focus on manufacturing yield risks and strategic investment liquidity, not on defining business objectives for capacity or technology offerings. The AMD yield risk disclosure describes potential failures ('low yields can result from design failures...') rather than a strategic aim to provide leading-edge technology or balanced capacity as Intel does. The investment disclosure is unrelated to manufacturing strategy."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_1A_D059",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Manufacturing yield risks",
+            "peer_summary": "Failure to achieve expected manufacturing yields, caused by design, process, or packaging technology failures, could increase per-unit costs, harm gross margins, and result in product delivery delays or lost sales.",
+            "peer_taxonomy": "Operations & Capacity",
+            "retrieval_score": 0.071335,
+            "relationship": "related_topic",
+            "comparison": "Both companies disclose risks and objectives related to advanced semiconductor manufacturing technology and capacity. Intel explicitly states its Foundry Services business objective to offer 'leading-edge packaging and process technology' and 'geographically balanced manufacturing capacity.' AMD contrasts this by highlighting the risk that its reliance on third-party manufacturers (like TSMC) may fail to 'develop, expand, obtain or successfully implement leading-edge manufacturing process or packaging technologies... on a timely basis,' which could lead to delays or lost sales. While Intel frames the provision of these technologies as a core business service, AMD frames the successful implementation of similar technologies as a critical operational risk dependent on external suppliers.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "1A",
+                "disclosure_id": "intc_2024_1A_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_1A_P107_S004",
+                    "paragraph_id": "intc_2024_1A_P107",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "Our foundry services business aims to offer leading-edge packaging and process technology, geographically balanced manufacturing capacity, and a world-class IP portfolio.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "1A",
+                "disclosure_id": "amd_2024_1A_D059",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_1A_P048_S001",
+                    "paragraph_id": "amd_2024_1A_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "Semiconductor manufacturing yields are a result of product design, process technology and packaging technology, which is typically proprietary to the manufacturer, and low yields can result from design failures, packaging technology failures, process technology failures or a combination of some or all of these.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1A_P048_S004",
+                    "paragraph_id": "amd_2024_1A_P048",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "We cannot be certain that our third-party manufacturers will be able to develop, expand, obtain or successfully implement leading-edge manufacturing process or packaging technologies needed to manufacture future generations of our products profitably or on a timely basis or that our competitors will not develop new technologies, products or processes earlier.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "AVGO",
@@ -124,18 +181,22 @@
         "comparisons": [
           {
             "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_1A_D015",
-            "peer_topic": "Internal Manufacturing Capacity Risk",
-            "peer_summary": "The company may be unable to maintain appropriate manufacturing capacity or product yields at its own facilities.",
-            "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.072894,
+            "peer_disclosure_id": "avgo_2024_1A_D067",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Competitive landscape and resources",
+            "peer_summary": "Competition in the industry is intense, characterized by rapid technological changes and consolidation, with competitors often having longer histories, greater resources, or government support; aggressive pricing, bundling, or leverage of market position by competitors could reduce market share and gross margins, hindering revenue growth.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.041631,
             "relationship": "related_topic",
-            "comparison": "Both Intel and Broadcom disclose specific objectives and risks regarding their manufacturing capabilities, but they differ in operational model and focus. Intel's Foundry Services business explicitly aims to provide 'leading-edge packaging and process technology' and 'geographically balanced manufacturing capacity' as a core strategic objective for external customers. In contrast, Broadcom’s disclosure focuses on the risk of failing to maintain 'appropriate manufacturing capacity or product yields' at its own facilities, highlighting the operational consequence of not meeting demand rather than a commercial service objective. While both mention capacity, Intel defines it as a service offering goal, whereas Broadcom frames it as a risk to fulfillment.",
+            "comparison": "Intel and Broadcom both identify intellectual property (IP) as a critical strategic asset in the semiconductor industry. Intel's Foundry Services business model aims to provide customers with a 'world-class IP portfolio' as a key objective. Broadcom similarly notes that some competitors possess 'more comprehensive IP portfolio or better patent protection' as a competitive advantage that can hinder Intel's (or Broadcom's) ability to compete. Both disclosures recognize that a strong IP portfolio is essential for commercial success, though Intel promotes it as a service offering while Broadcom cites it as a competitive threat/advantage factor.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D059",
                 "sentences": [
                   {
@@ -150,13 +211,14 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_1A_D015",
+                "item": "1A",
+                "disclosure_id": "avgo_2024_1A_D067",
                 "sentences": [
                   {
-                    "sentence_id": "avgo_2024_1A_P003_S017",
-                    "paragraph_id": "avgo_2024_1A_P003",
+                    "sentence_id": "avgo_2024_1A_P090_S001",
+                    "paragraph_id": "avgo_2024_1A_P090",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "• We may be unable to maintain appropriate manufacturing capacity or product yields at our own manufacturing facilities.",
+                    "text": "Some of our competitors have longer operating histories, greater name recognition or presence in key markets, a larger installed customer base, larger technical staff, a more comprehensive IP portfolio or better patent protection, more established relationships with vendors or suppliers, or greater manufacturing, distribution, financial, research and development, technical and marketing resources than us.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -170,13 +232,13 @@
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "Micron's candidate disclosures concern capital expenditure estimates and supply-driven price pressures. The capital expenditure disclosure outlines financial budgeting for 2025, while the price pressure disclosure discusses market dynamics of supply vs. demand. Neither disclosure articulates a business objective regarding the provision of manufacturing capacity, leading-edge technology services, or IP portfolios as Intel's Foundry Services does."
+        "rationale": "The provided candidates for MU focus on capital expenditure estimates and product specification failures affecting gross margins, which are distinct from Intel's strategic objectives for its Foundry Services business regarding technology, capacity, and IP."
       },
       {
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "NVIDIA's candidate disclosures address risks associated with new cloud/software business models and competitive pressures. These topics relate to product marketability and competition, not the underlying manufacturing or foundry service objectives that characterize Intel's disclosure. There is no factual overlap regarding manufacturing capacity goals or technology IP portfolio objectives."
+        "rationale": "The provided candidates for NVDA focus on risks related to new cloud service offerings (DGX Cloud) and general competition, which do not substantively match Intel's specific strategic objectives for its Foundry Services business."
       },
       {
         "peer_ticker": "QCOM",
@@ -185,17 +247,21 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_1A_D073",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Strategic goals for supply chain, acquisitions, and partnerships",
             "peer_summary": "Qualcomm aims to maintain supply chain capacity, create value through acquisitions and joint ventures, integrate new businesses effectively, and remain a preferred partner for industry participants.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.043091,
+            "retrieval_score": 0.045803,
             "relationship": "related_topic",
-            "comparison": "Intel and Qualcomm both articulate strategic business objectives that include supply chain or manufacturing capacity goals, but their contexts differ significantly. Intel’s objective for its Foundry Services is to offer 'geographically balanced manufacturing capacity' and 'leading-edge... technology' as a product to attract external clients. Qualcomm’s strategic goal is to 'maintain access to sufficient capacity in the supply chain relative to our competitors' as a defensive measure to ensure it can meet customer demand for its own fabless products. Intel treats capacity as a competitive advantage to sell; Qualcomm treats it as a necessary input to secure market share.",
+            "comparison": "Both Intel and Qualcomm emphasize the strategic importance of maintaining and accessing sufficient manufacturing capacity as a key business objective and risk. Intel states that its Foundry Services business aims to provide 'geographically balanced manufacturing capacity.' Qualcomm lists 'maintain access to sufficient capacity in the supply chain relative to our competitors' as a key goal. While Intel's statement relates to its own foundry service capabilities, and Qualcomm's relates to securing fabless supply chain capacity, both disclosures highlight manufacturing capacity availability as a central strategic priority for sustaining competitiveness.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D059",
                 "sentences": [
                   {
@@ -210,6 +276,7 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "1A",
                 "disclosure_id": "qcom_2024_1A_D073",
                 "sentences": [
                   {
@@ -226,6 +293,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "f5489c75273c531bfa31830ced820aaaef392f44fe7ae29b0452a53e81f5745b",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "5154bf061d45997d166d2264999f3a8f586ccddb58273ee5b0282965a8858958"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "15b2123bf82ffab84f29b383329f44f578724c0d6b6299fa2693b6aab1aee793",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "0d4d9bfc63df5022f5bb10b96c95c825a79ef200bc4fe07fffcc46908d98ab09",
+  "request_hash": "5be9e5b550416b3532701fd2c631deeed50b0591e2b747f4cd24a88cc6232b1d",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D006\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron utilize master netting arrangements to mitigate credit risk in derivative transactions and allow for net settlement with counterparties. However, Intel specifically quantifies its credit exposure limit, stating that total credit exposure to any single counterparty did not exceed $1.4 billion as of December 28, 2024, whereas Micron states that the amounts netted under its master netting arrangements were not significant, without providing a specific exposure cap figure.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P060_S001\",\n\"intc_2024_8_P060_S003\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P018_S001\",\n\"mu_2024_8_P018_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The retrieved candidates for AMD focus on foreign currency hedge accounting (derivatives designated as hedges) and concentration of trade receivables, rather than the specific credit risk mitigation mechanics (master netting and collateral) for derivative transactions and single-counterparty exposure limits disclosed by Intel.\"\n},\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The retrieved candidate for AVGO (D021) discusses credit risk mitigation for cash and accounts receivable via collateral and credit evaluations, and another candidate (D101) concerns retirement plan balance sheet presentation. Neither addresses the specific derivative credit risk mitigation via master netting and collateral arrangements or single-counterparty exposure limits central to Intel's disclosure.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The retrieved candidates for NVDA discuss credit risk related to cash equivalents, marketable securities, and accounts receivable, including investment policies and allowances for credit losses. They do not address the specific derivative credit risk mitigation strategies (master netting and collateral) and counterparty exposure limits disclosed by Intel.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved for QCOM.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D045",
@@ -182,24 +185,47 @@
     "peer_results": [
       {
         "peer_ticker": "AMD",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidates for AMD focus on foreign currency hedge accounting (derivatives designated as hedges) and concentration of trade receivables, rather than the specific credit risk mitigation mechanics (master netting and collateral) for derivative transactions and single-counterparty exposure limits disclosed by Intel."
+      },
+      {
+        "peer_ticker": "AVGO",
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "The retrieved candidate for AVGO (D021) discusses credit risk mitigation for cash and accounts receivable via collateral and credit evaluations, and another candidate (D101) concerns retirement plan balance sheet presentation. Neither addresses the specific derivative credit risk mitigation via master netting and collateral arrangements or single-counterparty exposure limits central to Intel's disclosure."
+      },
+      {
+        "peer_ticker": "MU",
         "status": "compared",
         "comparisons": [
           {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_8_D101",
-            "peer_topic": "Concentration of Trade Receivables",
-            "peer_summary": "As of December 28, 2024 and December 30, 2023, one customer accounted for approximately 24% and another for 16% of total consolidated accounts receivable, though the Company does not believe these balances represent significant credit risk due to past collection experience.",
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_8_D006",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Netting Arrangements for Derivative Contracts",
+            "peer_summary": "The company enters into master netting arrangements with counterparties to mitigate credit risk and allow for net settlement of amounts owed. Consequently, derivative assets and liabilities that can be net settled with each counterparty are presented on a net basis in the consolidated balance sheet.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.092258,
-            "relationship": "related_topic",
-            "comparison": "While Intel (INTC) specifically addresses credit risk mitigation for derivative instruments through master netting and collateral, with a defined single-counterparty exposure limit, AMD (QCOM peer) addresses credit risk concentration specifically for trade receivables. Intel does not disclose specific customer concentration percentages for receivables in this note, focusing instead on derivative counterparty limits. AMD discloses that one customer accounted for approximately 24% of consolidated accounts receivable, whereas Intel’s disclosure focuses on the $1.4 billion limit for derivatives rather than trade customer concentration.",
+            "retrieval_score": 0.241654,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and Micron utilize master netting arrangements to mitigate credit risk in derivative transactions and allow for net settlement with counterparties. However, Intel specifically quantifies its credit exposure limit, stating that total credit exposure to any single counterparty did not exceed $1.4 billion as of December 28, 2024, whereas Micron states that the amounts netted under its master netting arrangements were not significant, without providing a specific exposure cap figure.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D045",
                 "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P060_S001",
+                    "paragraph_id": "intc_2024_8_P060",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We enter into master netting arrangements to mitigate credit risk in derivative transactions by permitting net settlement of transactions with the same counterparty.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "intc_2024_8_P060_S003",
                     "paragraph_id": "intc_2024_8_P060",
@@ -211,138 +237,8 @@
               },
               {
                 "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_8_D101",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_8_P106_S002",
-                    "paragraph_id": "amd_2024_8_P106",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "One customer accounted for approximately 24% and another customer accounted for 16% of the total consolidated accounts receivable balance as of December 28, 2024 and December 30, 2023, respectively.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_8_P106_S003",
-                    "paragraph_id": "amd_2024_8_P106",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "However, the Company does not believe the receivable balance from these customers represents a significant credit risk based on past collection experience and review of their current credit quality.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
-      },
-      {
-        "peer_ticker": "AVGO",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_8_D021",
-            "peer_topic": "Concentrations of credit risk",
-            "peer_summary": "The company mitigates credit risks on cash and accounts receivable by using high-quality financial institutions, spreading risks across multiple counterparties, performing regular credit evaluations, and requiring collateral in certain circumstances.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.102231,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and Broadcom (AVGO) disclose strategies to mitigate credit risk by using high-quality counterparties and spreading risk. Intel limits its exposure to any single derivative counterparty to $1.4 billion and uses master netting and collateral. Broadcom mitigates credit risk on cash and receivables by using high-quality financial institutions and spreading risk across multiple counterparties, and also requires collateral for receivables in certain circumstances. Both employ collateral and counterparty diversification, but Intel provides a specific monetary cap for derivatives while Broadcom describes general practices for cash and receivables.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D045",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_8_P060_S001",
-                    "paragraph_id": "intc_2024_8_P060",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We enter into master netting arrangements to mitigate credit risk in derivative transactions by permitting net settlement of transactions with the same counterparty.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_8_P060_S004",
-                    "paragraph_id": "intc_2024_8_P060",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "To further reduce credit risk, we enter into collateral security arrangements with certain of our derivative counterparties and obtain and secure collateral from counterparties against obligations, including securities lending transactions when we deem it appropriate.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_8_D021",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_8_P037_S003",
-                    "paragraph_id": "avgo_2024_8_P037",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Cash and cash equivalents may be redeemable upon demand and are maintained with financial institutions that management believes are of high credit quality and therefore bear minimal credit risk.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P037_S004",
-                    "paragraph_id": "avgo_2024_8_P037",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We seek to mitigate our credit risks by spreading such risks across multiple counterparties and monitoring the risk profile of these counterparties.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_8_P037_S005",
-                    "paragraph_id": "avgo_2024_8_P037",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Our accounts receivable are derived from revenue earned from customers located both within and outside the U.S. We mitigate collection risks from our customers by performing regular credit evaluations of our customers' financial conditions, and require collateral, such as letters of credit and bank guarantees, in certain circumstances.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
-      },
-      {
-        "peer_ticker": "MU",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_8_D006",
-            "peer_topic": "Netting Arrangements for Derivative Contracts",
-            "peer_summary": "The company enters into master netting arrangements with counterparties to mitigate credit risk and allow for net settlement of amounts owed. Consequently, derivative assets and liabilities that can be net settled with each counterparty are presented on a net basis in the consolidated balance sheet.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.242238,
-            "relationship": "same_topic",
-            "comparison": "Both Intel and Micron (MU) utilize master netting arrangements to mitigate credit risk in derivative transactions by permitting net settlement. Intel states that these arrangements limit credit risk to the net amount owed by the counterparty. Similarly, Micron enters into master netting arrangements to mitigate credit risk in derivative hedge transactions, allowing net settlement of amounts owed, and presents net derivative assets and liabilities on the balance sheet. Both companies rely on this mechanism to reduce gross credit exposure, though Micron notes the amounts netted were not significant as of its fiscal year-end.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "INTC",
-                "disclosure_id": "intc_2024_8_D045",
-                "sentences": [
-                  {
-                    "sentence_id": "intc_2024_8_P060_S001",
-                    "paragraph_id": "intc_2024_8_P060",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We enter into master netting arrangements to mitigate credit risk in derivative transactions by permitting net settlement of transactions with the same counterparty.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_8_P060_S002",
-                    "paragraph_id": "intc_2024_8_P060",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Due to master netting arrangements, the amounts subject to credit risk related to derivative instruments are generally limited to the amounts, if any, by which the counterparty's obligations exceed our obligations with that counterparty.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D006",
                 "sentences": [
                   {
@@ -358,13 +254,6 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
                     "text": "These master netting arrangements allow us and our counterparties to net settle amounts owed to each other.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "mu_2024_8_P018_S003",
-                    "paragraph_id": "mu_2024_8_P018",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Derivative assets and liabilities that can be net settled with each counterparty have been presented in our consolidated balance sheet on a net basis.",
-                    "visible_in_prompt": true
                   }
                 ]
               }
@@ -377,7 +266,7 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The only retrieved candidate (nvda_2024_8_D001) discloses the location of financial statement information (Item 8 location) and does not contain substantive data on credit risk, derivative netting, or exposure limits comparable to Intel's disclosure."
+        "rationale": "The retrieved candidates for NVDA discuss credit risk related to cash equivalents, marketable securities, and accounts receivable, including investment policies and allowances for credit losses. They do not address the specific derivative credit risk mitigation strategies (master netting and collateral) and counterparty exposure limits disclosed by Intel."
       },
       {
         "peer_ticker": "QCOM",
@@ -385,6 +274,11 @@
         "comparisons": [],
         "rationale": "No candidate was retrieved for QCOM."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "0d4d9bfc63df5022f5bb10b96c95c825a79ef200bc4fe07fffcc46908d98ab09",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "5be9e5b550416b3532701fd2c631deeed50b0591e2b747f4cd24a88cc6232b1d"
+    }
   }
 }

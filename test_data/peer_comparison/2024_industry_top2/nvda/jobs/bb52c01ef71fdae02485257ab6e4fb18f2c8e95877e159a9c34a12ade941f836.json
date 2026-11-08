@@ -1,123 +1,126 @@
 {
-  "input_fingerprint": "0b38b2ffd36541924c6794ab50b702e4a1c712ba048b7ca1d5c7e4702bfc3742",
-  "request_hash": "d1ebf62d311a75fd8bd212d666e8ea2fb96fc1d1b57cb958b8fede34c282c36b",
+  "input_fingerprint": "7ac7e51684ec84d3077e2cb91f5a79d3d16b4e1e9214066f2ee5185d5b16eb45",
+  "job_fingerprint": "858045a88b323576be8bf0f59a3a8b1d7c3618ffd434e54ebd86fbcdff6e1851",
+  "request_hash": "b0db5d761f627c41882d321a23951cb89facb73d2227bb84ff0a663675c801a0",
+  "response_text": "{\n\"comparisons\": [\n  {\n    \"peer_ticker\": \"AVGO\",\n    \"peer_disclosure_id\": \"avgo_2024_7_D045\",\n    \"relationship\": \"same_topic\",\n    \"comparison\": \"Both NVDA and AVGO disclose significant customer concentration in their fiscal 2024 results, highlighting specific revenue percentages attributed to single large customers or distributors. NVDA reports that sales to one direct customer ('Customer A') represented 13% of total revenue, with an additional indirect customer accounting for approximately 19%, noting that demand is expected to remain concentrated. Similarly, AVGO discloses that direct sales to a single distributor accounted for 28% of net revenue, and aggregate sales to the top five end customers represented approximately 40% of net revenue. Both companies explicitly warn that such concentration exposes them to risk if key customers reduce demand.\",\n    \"target_sentence_ids\": [\n      \"nvda_2024_7_P054_S001\",\n      \"nvda_2024_7_P055_S001\",\n      \"nvda_2024_7_P056_S001\"\n    ],\n    \"peer_sentence_ids\": [\n      \"avgo_2024_7_P042_S001\",\n      \"avgo_2024_7_P042_S002\",\n      \"avgo_2024_7_P043_S002\",\n      \"avgo_2024_7_P043_S003\"\n    ]\n  }\n],\n\"no_match\": [\n  {\n    \"peer_ticker\": \"AMD\",\n    \"reason\": \"The retrieved candidates discuss international sales revenue (66% of net revenue) and Embedded segment revenue drivers (decrease due to inventory normalization). Neither candidate addresses customer concentration, revenue dependency on major accounts, or the specific risk of losing key customers, which is the core topic of the target disclosure.\"\n  },\n  {\n    \"peer_ticker\": \"INTC\",\n    \"reason\": \"The retrieved candidates focus on Total Intel Products revenue decline ($47.7 billion) and Cost of Sales trends ($23.8 billion). There is no disclosed information regarding customer concentration, specific major customer percentages, or related revenue dependency risks in the provided candidates.\"\n  },\n  {\n    \"peer_ticker\": \"MU\",\n    \"reason\": \"The retrieved candidates describe total revenue changes driven by DRAM and NAND product sales volume and average selling prices (ASP) for fiscal years 2023 and 2024. These disclosures relate to commodity market dynamics and pricing rather than customer concentration or specific large customer revenue percentages.\"\n  },\n  {\n    \"peer_ticker\": \"QCOM\",\n    \"reason\": \"The retrieved candidates explain revenue increases due to QCT equipment/services and QTL licensing revenues, and reference segment reporting notes. They do not contain disclosures about revenue concentration from specific major customers or distributors.\"\n  }\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/nvda",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D051",
     "item": "7",
-    "target_topic": "Single customer concentration",
-    "target_summary": "Sales to Customer A represented 13% of total revenue in fiscal year 2024, attributable to the Compute & Networking segment.",
+    "target_topic": "Revenue concentration from major customers",
+    "target_summary": "Sales to Customer A represented 13% of fiscal 2024 total revenue in the Compute & Networking segment, while one indirect customer accounted for approximately 19%, attributable to the same segment. This contrasts with fiscal years 2023 and 2022, where no single customer accounted for 10% or more of total revenue, although demand is expected to remain concentrated.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0346",
-        "relationship": "current_only",
-        "status": "unmatched",
+        "match_id": "nvda_2023_2024_M0220",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "nvda_2024_7_D051 reports 13% revenue from Customer A in 2024. No 2023 disclosure identified a customer with >=10% revenue; the 2023 group (D053, D054, D055, D056) covers segment performance, geographic revenue, and the absence of concentration. Therefore, no 2023 counterpart exists.",
-        "previous_disclosures": [],
+        "explanation": "The topic is Customer Concentration. While the 2023 disclosure states no single customer exceeded 10%, the 2024 disclosure reveals a new situation where a single customer (Customer A) accounted for 13% of revenue. They share the specific subject of 'Customer Concentration' and reference the prior year's 'no customer >10%' status as context, making them the aligned topic despite the factual change in status.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2023_7_D053",
+            "item": "7",
+            "section": "Results of Operations > Concentration of Revenue",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "No single customer represented 10% or more of total revenue for fiscal years 2023 and 2022.",
+            "extraction_status": "source_validated"
+          }
+        ],
         "current_disclosures": [
           {
             "disclosure_id": "nvda_2024_7_D051",
             "item": "7",
             "section": "Results of Operations > Concentration of Revenue",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Sales to Customer A represented 13% of total revenue in fiscal year 2024, attributable to the Compute & Networking segment.",
+            "summary": "Sales to Customer A represented 13% of fiscal 2024 total revenue in the Compute & Networking segment, while one indirect customer accounted for approximately 19%, attributable to the same segment. This contrasts with fiscal years 2023 and 2022, where no single customer accounted for 10% or more of total revenue, although demand is expected to remain concentrated.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "New",
-            "cosine_similarity": 0.0,
-            "sequence_match_ratio": 0.0,
-            "length_ratio": 0.0,
-            "word_count_delta": 23,
-            "added_tokens_sample": [
-              "sales",
-              "to",
-              "one",
-              "customer",
-              "customer",
-              "a",
-              "represented",
-              "13",
-              "of",
-              "total",
-              "revenue",
-              "for",
-              "fiscal",
-              "year",
-              "2024",
-              "which",
-              "was",
-              "attributable",
-              "to",
-              "the"
-            ],
-            "removed_tokens_sample": []
-          },
-          "semantic": {
-            "label": "New",
-            "score": null,
-            "normalised_score": null,
-            "matched_id": null,
-            "rationale": "One-sided change established by the finalized alignment.",
-            "method": "alignment_presence"
-          },
-          "llm": "New",
-          "final_taxonomy": "New"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
           "materiality_score": 0.95,
-          "confidence_score": 0.98,
-          "reason": "The 2024 filing discloses that a single direct customer (Customer A) accounted for 13% of total revenue. The 2023 filing explicitly stated that no customer accounted for 10% or more. The emergence of a customer representing over 10% of revenue is a material change in concentration risk and financial dependency, directly impacting the assessment of business stability and reliance on specific entities.",
-          "key_change": "emergence of a single customer with >10% revenue concentration"
+          "confidence_score": 0.95,
+          "reason": "The company disclosed a fundamental change in customer concentration, identifying a single customer ('Customer A') accounting for 13% of total revenue in FY2024. This is a material change from FY2022/2023 where no single customer exceeded 10%. The disclosure of this specific dependency represents a significant new risk and operational concentration for the company.",
+          "key_change": "Identification of a single customer accounting for 13% of total revenue"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0329",
-        "relationship": "one_to_one",
-        "status": "needs_review",
-        "review_reasons": [
-          "input_extraction_needs_review"
-        ],
-        "explanation": "Both disclosures address significant direct customer concentration. The 2024 disclosure identifies 'Customer A' at 13%. The 2025 disclosure establishes the threshold for reporting significant direct customers (10% or more) and notes that no single direct customer represented 10% or more in fiscal 2023 (a prior year comparison, but the disclosure defines the scope of direct customer reporting relevant to the Concentration of Revenue section). While 2024 cites a specific >10% customer and 2025 cites <10% for 2023, they share the same specific topic of defining and reporting direct customer revenue concentration within the Compute & Networking segment. Note: The 2025 disclosure implies current year direct customers might not reach 10%, unlike 2024. However, they are the matched counterparts for the direct customer concentration topic.",
+        "match_id": "nvda_2024_2025_M0199",
+        "relationship": "one_to_many",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures address direct customer concentration. D049 identifies Customer A as a direct customer representing 13% of revenue. D047 defines direct customers and introduces the table of such customers for 2025. Shared subject: Identification and definition of direct customers contributing >=10% revenue.\n\nD049 discusses Customer A and indirect customer concentration for 2024. D048 states no single direct customer exceeded 10% in 2023. While both relate to customer concentration, D048 is a specific historical negative finding for direct customers, whereas D049 is a specific positive finding for a direct customer. They are distinct points on the concentration timeline and nature (direct vs indirect/historical). D048 matches best with no direct 2025 counterpart in the current proposals that captures the 'no customer >10%' fact for a specific year other than the current year's main table. However, looking at D049 (2025), it discusses indirect customers. D048 (2025) discusses 2023 direct customers. D049 (2024) discusses 2024 direct/indirect. There is no 2025 disclosure explicitly stating 'No direct customer >10% in 2024' in the provided list. D048 is the only 2025 disclosure making ",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_7_D051",
             "item": "7",
             "section": "Results of Operations > Concentration of Revenue",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Sales to Customer A represented 13% of total revenue in fiscal year 2024, attributable to the Compute & Networking segment.",
+            "summary": "Sales to Customer A represented 13% of fiscal 2024 total revenue in the Compute & Networking segment, while one indirect customer accounted for approximately 19%, attributable to the same segment. This contrasts with fiscal years 2023 and 2022, where no single customer accounted for 10% or more of total revenue, although demand is expected to remain concentrated.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2025_7_D046",
+            "disclosure_id": "nvda_2025_7_D047",
             "item": "7",
             "section": "Results of Operations > Concentration of Revenue",
             "taxonomy": "Financial & Capital Resources",
-            "summary": "Sales to direct customers, primarily from the Compute & Networking segment, represented significant portions of total revenue, with no single direct customer representing 10% or more in fiscal year 2023.",
-            "extraction_status": "needs_review"
+            "summary": "Direct customers are defined as those purchasing directly from NVIDIA, such as AIBs and distributors, with sales representing 10% or more of total revenue primarily attributed to the Compute & Networking segment.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_7_D048",
+            "item": "7",
+            "section": "Results of Operations > Concentration of Revenue",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "No single direct customer represented 10% or more of total revenue during fiscal year 2023.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_7_D049",
+            "item": "7",
+            "section": "Results of Operations > Concentration of Revenue",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "Indirect customer revenue is estimated based on multiple factors and may differ from actuals; for fiscal year 2025, one indirect customer is estimated to represent 10% or more of total revenue, attributable to the Compute & Networking segment.",
+            "extraction_status": "source_validated"
+          },
+          {
+            "disclosure_id": "nvda_2025_7_D050",
+            "item": "7",
+            "section": "Results of Operations > Concentration of Revenue",
+            "taxonomy": "Financial & Capital Resources",
+            "summary": "NVIDIA has experienced periods of significant revenue from a limited number of customers, a trend that may continue.",
+            "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
-          "status": "not_started",
+          "status": "completed",
           "lexical": null,
           "semantic": null,
-          "llm": null,
-          "final_taxonomy": null
+          "llm": "Modified",
+          "final_taxonomy": "Modified"
         },
-        "materiality_analysis": null
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.95,
+          "confidence_score": 0.95,
+          "reason": "The disclosure shifts from stating no single customer exceeded 10% in 2023 (2024 filing) to explicitly identifying Customer A as a direct customer representing 13% of revenue in 2024, and projecting an indirect customer at ~10%+ for 2025. This represents a fundamental change in customer concentration risk, moving from a diversified base to significant concentration in specific entities.",
+          "key_change": "Identification of significant direct and indirect customer concentration"
+        }
       }
     ],
     "peer_results": [
@@ -125,7 +128,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates discuss amortization of acquisition-related intangibles and unconditional purchase commitments, which do not pertain to the target topic of single customer revenue concentration."
+        "rationale": "The retrieved candidates discuss international sales revenue (66% of net revenue) and Embedded segment revenue drivers (decrease due to inventory normalization). Neither candidate addresses customer concentration, revenue dependency on major accounts, or the specific risk of losing key customers, which is the core topic of the target disclosure."
       },
       {
         "peer_ticker": "AVGO",
@@ -134,17 +137,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_7_D045",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Customer Concentration and Key Customer Risk",
             "peer_summary": "Direct sales to a single distributor accounted for 28% and 21% of net revenue in fiscal years 2024 and 2023, with top five end customers representing approximately 40% and 35% respectively. The company expects significant customer concentration to continue and warns that loss of these customers could materially adversely affect business results.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.125259,
+            "retrieval_score": 0.121383,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and Broadcom disclose significant customer concentration risks in their 2024 fiscal year operations. NVDA discloses that a single customer ('Customer A') accounted for 13% of total revenue. Broadcom reports a similar but more acute concentration, where a single distributor customer accounted for 28% of net revenue, and the top five end customers collectively accounted for approximately 40% of net revenue. Both companies highlight this reliance on a small number of customers as a material factor in their business results.",
+            "comparison": "Both NVDA and AVGO disclose significant customer concentration in their fiscal 2024 results, highlighting specific revenue percentages attributed to single large customers or distributors. NVDA reports that sales to one direct customer ('Customer A') represented 13% of total revenue, with an additional indirect customer accounting for approximately 19%, noting that demand is expected to remain concentrated. Similarly, AVGO discloses that direct sales to a single distributor accounted for 28% of net revenue, and aggregate sales to the top five end customers represented approximately 40% of net revenue. Both companies explicitly warn that such concentration exposes them to risk if key customers reduce demand.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D051",
                 "sentences": [
                   {
@@ -153,14 +160,36 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
                     "text": "Sales to one customer, Customer A, represented 13% of total revenue for fiscal year 2024, which was attributable to the Compute & Networking segment.",
                     "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P055_S001",
+                    "paragraph_id": "nvda_2024_7_P055",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "One indirect customer which primarily purchases our products through system integrators and distributors, including through Customer A, is estimated to have represented approximately 19% of total revenue for fiscal year 2024, attributable to the Compute & Networking segment.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P056_S001",
+                    "paragraph_id": "nvda_2024_7_P056",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our estimated Compute & Networking demand is expected to remain concentrated.",
+                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "7",
                 "disclosure_id": "avgo_2024_7_D045",
                 "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_7_P042_S001",
+                    "paragraph_id": "avgo_2024_7_P042",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "A relatively small number of customers account for a significant portion of our net revenue.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "avgo_2024_7_P042_S002",
                     "paragraph_id": "avgo_2024_7_P042",
@@ -169,10 +198,17 @@
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "avgo_2024_7_P043_S001",
+                    "sentence_id": "avgo_2024_7_P043_S002",
                     "paragraph_id": "avgo_2024_7_P043",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We believe aggregate sales to our top five end customers, through all channels, accounted for approximately 40% and 35% of our net revenue for fiscal years 2024 and 2023, respectively.",
+                    "text": "We expect to continue to experience significant customer concentration in future periods.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "avgo_2024_7_P043_S003",
+                    "paragraph_id": "avgo_2024_7_P043",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "The loss of, or significant decrease in demand from, any of our top five end customers could have a material adverse effect on our business, results of operations and financial condition.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -186,20 +222,25 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates discuss trends in cost of sales and revenue declines for Intel Products, lacking any disclosure regarding customer concentration."
+        "rationale": "The retrieved candidates focus on Total Intel Products revenue decline ($47.7 billion) and Cost of Sales trends ($23.8 billion). There is no disclosed information regarding customer concentration, specific major customer percentages, or related revenue dependency risks in the provided candidates."
       },
       {
         "peer_ticker": "MU",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates discuss revenue growth drivers based on DRAM and NAND sales volumes and ASPs, not customer concentration."
+        "rationale": "The retrieved candidates describe total revenue changes driven by DRAM and NAND product sales volume and average selling prices (ASP) for fiscal years 2023 and 2024. These disclosures relate to commodity market dynamics and pricing rather than customer concentration or specific large customer revenue percentages."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates discuss revenue increases by segment and segment reporting references, with no mention of customer concentration."
+        "rationale": "The retrieved candidates explain revenue increases due to QCT equipment/services and QTL licensing revenues, and reference segment reporting notes. They do not contain disclosures about revenue concentration from specific major customers or distributors."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "858045a88b323576be8bf0f59a3a8b1d7c3618ffd434e54ebd86fbcdff6e1851",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/nvda",
+      "request_hash": "b0db5d761f627c41882d321a23951cb89facb73d2227bb84ff0a663675c801a0"
+    }
   }
 }

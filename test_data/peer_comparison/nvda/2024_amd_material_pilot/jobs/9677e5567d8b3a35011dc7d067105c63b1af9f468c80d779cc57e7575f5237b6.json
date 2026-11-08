@@ -1,170 +1,83 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "75ea744bdb92d0b95fd7d320f44d7750162d3d3888f7b28379eb970136640dab",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "0825059bf3859add4db194c0c77457a88ed9b305f76a20f40fc450f7793d72b4",
+  "request_hash": "80e9e32ecf7a3d304e48b25cade10d9113f55a62e1cd9049cf312a6aad530c67",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D047\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD disclose specific unconditional purchase commitments for inventory components (NVDA for inventory/manufacturing capacity, AMD for wafers and substrates) at the end of fiscal year 2024. NVDA emphasizes that these commitments were impacted by 'shortening lead times' and highlights the risk of incurring inventory provisions if commitments exceed demand. In contrast, AMD provides a precise monetary quantification of its obligations ($5.0 billion total, with $4.5 billion due in FY2025) and notes that it actively manages payment and delivery timing with suppliers based on business conditions, rather than explicitly stating the commitments were driven by lead time changes in this specific disclosure segment.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P005_S006\",\n\"nvda_2024_7_P005_S010\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P060_S001\",\n\"amd_2024_7_P060_S003\"\n]\n},\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_7_D011\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"NVDA and AMD both address the risk of inventory valuation adjustments and the assumptions driving them. NVDA explicitly states it may incur 'inventory provisions or impairments if our inventory or supply or capacity commitments exceed demand,' focusing on the volume and supply chain risk. AMD discloses its methodology for valuing inventory at the lower of cost or net realizable value, noting that additional write-downs may be required if assumptions about future demand or market conditions become less favorable. While NVDA links the risk to excess supply capacity commitments, AMD links the risk to broader demand assumptions and market conditions affecting inventory carrying value.\",\n\"target_sentence_ids\": [\n\"nvda_2024_7_P005_S010\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_7_P022_S004\",\n\"amd_2024_7_P022_S002\"\n]\n}\n],\n\"no_match\": []\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_7_D005",
     "item": "7",
-    "target_topic": "Fiscal 2024 Data Center Demand and Fiscal 2025 Supply Strategy",
-    "target_summary": "Demand for data center systems surged in fiscal 2024, with visibility for new products ramping later in fiscal 2025. To meet this demand, the company increased supply purchases, added vendors, and entered prepaid agreements, though this complexity creates execution risks and potential inventory impairments if demand declines.",
+    "target_topic": "Inventory and Commitment Risks",
+    "target_summary": "Purchase commitments and obligations at the end of fiscal year 2024 were impacted by shortening component lead times. The company may incur inventory provisions or impairments if commitments exceed demand, and it may not be able to secure sufficient capacity commitments despite long-term arrangements.",
     "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0306",
-        "relationship": "many_to_many",
+        "match_id": "nvda_2023_2024_M0182",
+        "relationship": "one_to_many",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "This group combines related supply chain disclosures. D005 (2023) discusses total supply composition and inventory provisions. D037 (2023) lists situations causing excess inventory. D039 (2023) details non-cancellable ordering and lead times. In 2024, D005 covers demand/supply surge, commitments, and impairment risks (matching D005/D037). D031 lists situations for excess inventory (matching D037). D033 details inventory/capacity commitments, forecasts, and non-cancellable orders/lead times (matching D039). The split preserves specific topic links: D005->D005 (supply commitments/impairment), D037->D031 (excess inventory causes), D039->D033 (ordering process/lead times).",
+        "explanation": "Both disclosures cover supply chain dynamics and purchase obligations. 2023 D004 focuses on inventory provisions due to reduced demand and the composition of supply (purchase obligations/prepaid agreements). 2024 D004 focuses on the surge in demand leading to increased supply purchases and execution risks. While the specific market driver (reduction vs surge) differs, the subject matter (Supply Chain Risks/Obligations) is the same specific topic within Item 7.\n\nBoth disclosures discuss the risk of incurring inventory provisions or impairments if supply commitments exceed demand. 2023 D004 explicitly mentions incurring provisions if commitments are misaligned with demand. 2024 D005 discusses shortening lead times impacting commitments and the risk of provisions if commitments exceed demand. This is a shared specific risk topic within the Supply Chain section.",
         "previous_disclosures": [
           {
-            "disclosure_id": "nvda_2023_7_D005",
+            "disclosure_id": "nvda_2023_7_D004",
             "item": "7",
             "section": "Supply, Products Transitions, and New Products and Business Models",
             "taxonomy": "Supply Chain & Third Parties",
-            "summary": "At the end of fiscal year 2023, purchase obligations and prepaid supply agreements accounted for more than half of the company's total supply, with inventory provisions for excess inventory and purchase obligations totaling $2.17 billion in fiscal year 2023. The company warns it may incur further inventory provisions if supply commitments are misaligned with demand.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2023_7_D037",
-            "item": "7",
-            "section": "Critical Accounting Policies and Estimates > Inventories",
-            "taxonomy": "Supply Chain & Third Parties",
-            "summary": "Situations resulting in excess or obsolete inventory include changes in business/economic/market conditions, sudden demand decreases, technology obsolescence, new product introductions reducing demand for existing products, demand spikes from unexpected end uses, improper demand estimation, ordering ahead of lead times, and competitive actions.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2023_7_D039",
-            "item": "7",
-            "section": "Critical Accounting Policies and Estimates > Inventories",
-            "taxonomy": "Supply Chain & Third Parties",
-            "summary": "As a fabless semiconductor company, the company commits to purchasing inventory based on demand forecasts, accounting for third-party manufacturers' lead times which can exceed twelve months. To secure future supply and capacity, the company places non-cancellable inventory orders in advance of historical lead times, pays premiums, and provides deposits.",
+            "summary": "In fiscal year 2023, inventory provisions for excess inventory and purchase obligations totaled $2.17 billion, with purchase obligations and prepaid supply agreements representing more than half of total supply due to complex products and reduced demand; the company may incur further provisions if supply commitments are misaligned with demand.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
+            "disclosure_id": "nvda_2024_7_D004",
+            "item": "7",
+            "section": "Demand and Supply, Product Transitions, and New Products and Business Models",
+            "taxonomy": "Supply Chain & Third Parties",
+            "summary": "Demand for data center systems surged in fiscal year 2024, leading to increased supply purchases, new vendor onboarding, and prepaid manufacturing agreements. However, this expanded supply chain creates complexity and execution risks, with future next-generation products expected to be supply-constrained.",
+            "extraction_status": "source_validated"
+          },
+          {
             "disclosure_id": "nvda_2024_7_D005",
             "item": "7",
             "section": "Demand and Supply, Product Transitions, and New Products and Business Models",
             "taxonomy": "Supply Chain & Third Parties",
-            "summary": "Demand for data center systems surged in fiscal 2024, with visibility for new products ramping later in fiscal 2025. To meet this demand, the company increased supply purchases, added vendors, and entered prepaid agreements, though this complexity creates execution risks and potential inventory impairments if demand declines.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_7_D031",
-            "item": "7",
-            "section": "Critical Accounting Estimates > Inventories",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Situations that may result in excess or obsolete inventory include changes in business/economic/market conditions, sudden demand decreases, technological obsolescence, new product introductions, demand estimation errors, long lead-time ordering, government regulations, or competitive actions. Cancellation or deferral of customer purchase orders could also result in holding excess inventory.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_7_D033",
-            "item": "7",
-            "section": "Critical Accounting Estimates > Inventories",
-            "taxonomy": "Financial & Capital Resources",
-            "summary": "Inventory and capacity purchase commitments are based on customer demand forecasts. Manufacturing lead times can be long, sometimes exceeding twelve months, and the company may place non-cancellable orders in advance of historical lead times, paying premiums and deposits to secure supply. The company also adjusts to competitor actions and macroeconomic conditions.",
+            "summary": "Purchase commitments and obligations at the end of fiscal year 2024 were impacted by shortening component lead times. The company may incur inventory provisions or impairments if commitments exceed demand, and it may not be able to secure sufficient capacity commitments despite long-term arrangements.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Expanded",
-            "cosine_similarity": 0.868077,
-            "sequence_match_ratio": 0.60961,
-            "length_ratio": 1.395683,
-            "word_count_delta": 110,
-            "added_tokens_sample": [
-              "demand",
-              "for",
-              "our",
-              "data",
-              "center",
-              "systems",
-              "and",
-              "products",
-              "surged",
-              "in",
-              "fiscal",
-              "year",
-              "2024",
-              "entering",
-              "fiscal",
-              "year",
-              "2025",
-              "we",
-              "are",
-              "gathering"
-            ],
-            "removed_tokens_sample": [
-              "which",
-              "includes",
-              "inventory",
-              "on",
-              "hand",
-              "obligations",
-              "prepaid",
-              "supply",
-              "agreements",
-              "has",
-              "grown",
-              "significantly",
-              "due",
-              "to",
-              "current",
-              "conditions",
-              "of",
-              "products",
-              "recent",
-              "reductions"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2023_7_D037",
-            "score": 1.009676,
-            "normalised_score": 1.0097,
-            "rationale": "Regroup: 3 previous → 3 current. Best pair scored 100.97% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
           "materiality": "Yes",
           "materiality_score": 0.85,
-          "confidence_score": 0.85,
-          "reason": "The disclosure materially changes the description of the supply chain environment from 'recent reductions in demand' and 'growth... due to current supply chain conditions' to a 'surge' in demand for data center systems and active expansion of capacity/vendors. This represents a significant escalation in business activity, capital commitment (prepaid agreements), and operational risk (execution risks due to complexity), fundamentally altering the company's financial and operational exposure compared to the prior year's contractionary narrative.",
-          "key_change": "Shift to demand surge and capacity expansion"
+          "confidence_score": 0.9,
+          "reason": "The disclosure reveals a fundamental shift in supply chain dynamics from 'reduced demand' and inventory provisions in 2023 to a 'surge in demand' and supply constraints in 2024. This represents a material change in operational conditions, financial exposure (prepaid agreements), and risk profile (execution risk vs. excess inventory risk).",
+          "key_change": "Shift from demand reduction to supply constraints"
         }
       },
       {
         "window": "2024-2025",
         "side": "previous",
-        "match_id": "nvda_2024_2025_M0293",
-        "relationship": "many_to_one",
+        "match_id": "nvda_2024_2025_M0164",
+        "relationship": "one_to_one",
         "status": "ai_verified",
         "review_reasons": [],
-        "explanation": "The previous disclosures D005 and D006 collectively describe the supply chain strategy: increasing purchases, adding vendors, entering prepaid agreements, and the resulting risks of complexity, execution risk, and inventory impairments. The current disclosure D006 covers the same specific topic of increasing supply/capacity purchases, prepaid agreements, integration of new suppliers, and inventory impairment risks. D005 (demand visibility/surge) and D006 (inventory building/commitment risks) are distinct aspects of supply chain management that merge into the broader 'Supply Chain & Third Parties' topic in D006.",
+        "explanation": "2024 D005 discusses purchase commitments, shortening lead times, and risks of inventory provisions if commitments exceed demand. 2025 D006 discusses increasing supply/capacity purchases, prepaid agreements, and the complexity/risks of managing this expanded supply chain. Both address the supply chain commitment and execution risk topic.",
         "previous_disclosures": [
           {
             "disclosure_id": "nvda_2024_7_D005",
             "item": "7",
             "section": "Demand and Supply, Product Transitions, and New Products and Business Models",
             "taxonomy": "Supply Chain & Third Parties",
-            "summary": "Demand for data center systems surged in fiscal 2024, with visibility for new products ramping later in fiscal 2025. To meet this demand, the company increased supply purchases, added vendors, and entered prepaid agreements, though this complexity creates execution risks and potential inventory impairments if demand declines.",
-            "extraction_status": "source_validated"
-          },
-          {
-            "disclosure_id": "nvda_2024_7_D006",
-            "item": "7",
-            "section": "Demand and Supply, Product Transitions, and New Products and Business Models",
-            "taxonomy": "Supply Chain & Third Parties",
-            "summary": "The company builds inventory in advance of demand and has entered long-term supply commitments, but may not secure sufficient capacity or face changing demand expectations. These risks are heightened by shortened product cycles, new business lines, and supply chain complexity from new suppliers.",
+            "summary": "Purchase commitments and obligations at the end of fiscal year 2024 were impacted by shortening component lead times. The company may incur inventory provisions or impairments if commitments exceed demand, and it may not be able to secure sufficient capacity commitments despite long-term arrangements.",
             "extraction_status": "source_validated"
           }
         ],
@@ -174,81 +87,23 @@
             "item": "7",
             "section": "Demand and Supply",
             "taxonomy": "Supply Chain & Third Parties",
-            "summary": "The company is increasing supply and capacity purchases with existing and new suppliers and entering prepaid manufacturing agreements, which creates complexity in managing multiple suppliers and may lead to increased inventory levels due to expanding product portfolios; the company has incurred and may incur inventory provisions or impairments if supply or capacity commitments exceed demand.",
+            "summary": "The company continues to increase supply and capacity purchases with existing and new suppliers and has entered prepaid manufacturing and capacity agreements to support demand projections. This expansion and the integration of new suppliers create complexity in managing multiple suppliers with variations in production planning, execution, and logistics.",
             "extraction_status": "source_validated"
           }
         ],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Reduced",
-            "cosine_similarity": 0.746492,
-            "sequence_match_ratio": 0.298429,
-            "length_ratio": 0.503937,
-            "word_count_delta": -126,
-            "added_tokens_sample": [
-              "continue",
-              "to",
-              "increase",
-              "and",
-              "new",
-              "to",
-              "support",
-              "our",
-              "demand",
-              "projections",
-              "increasing",
-              "complexity",
-              "of",
-              "our",
-              "data",
-              "center",
-              "products",
-              "with",
-              "these",
-              "additions"
-            ],
-            "removed_tokens_sample": [
-              "demand",
-              "for",
-              "our",
-              "data",
-              "center",
-              "systems",
-              "and",
-              "products",
-              "surged",
-              "in",
-              "fiscal",
-              "year",
-              "2024",
-              "entering",
-              "fiscal",
-              "year",
-              "2025",
-              "are",
-              "gathering",
-              "customer"
-            ]
-          },
-          "semantic": {
-            "label": "Modified",
-            "matched_id": "nvda_2024_7_D006",
-            "score": 0.884895,
-            "normalised_score": 0.8849,
-            "rationale": "Merge: 2 previous → 1 current. Best pair scored 88.49% of ceiling.",
-            "method": "embedding_cosine"
-          },
+          "lexical": null,
+          "semantic": null,
           "llm": "Modified",
           "final_taxonomy": "Modified"
         },
         "materiality_analysis": {
-          "materiality": "No",
-          "materiality_score": 0.2,
+          "materiality": "Yes",
+          "materiality_score": 0.75,
           "confidence_score": 0.85,
-          "reason": "This row consolidates previous supply chain disclosures into a single narrative. It updates the context to 'increasing complexity' and 'prepaid manufacturing agreements' in the current year. While it highlights ongoing execution risks, the substance of the risk (supply chain complexity and inventory impairment) is consistent with the previous year, merely updated for the current fiscal period's operational scale.",
-          "key_change": "Consolidation and update of supply chain risks"
+          "reason": "The 2025 disclosure introduces specific supply chain commitments not present in 2024, specifically 'prepaid manufacturing and capacity agreements' and 'prepaid... agreements to supply both current and future products'. It also explicitly links the complexity of managing new suppliers to the 'increasing complexity of our data center products'. This represents a meaningful escalation in capital commitment (prepayments) and operational complexity compared to the 2024 focus on general purchase commitments and inventory provisions.",
+          "key_change": "Introduction of prepaid manufacturing agreements and expanded supply chain complexity"
         }
       }
     ],
@@ -259,18 +114,82 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D011",
-            "peer_topic": "Inventory valuation methodology",
-            "peer_summary": "Inventory is valued at standard cost adjusted for lower of cost or net realizable value using assumptions about future demand and market conditions, with excess or obsolescence reserves based on specific facts and circumstances such as technology changes or demand decreases.",
+            "peer_disclosure_id": "amd_2024_7_D047",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Contractual Purchase Commitments",
+            "peer_summary": "AMD had $5.0 billion in unconditional purchase commitments as of December 28, 2024, primarily for wafer and substrate purchases, with $4.5 billion due in fiscal year 2025.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.032174,
+            "retrieval_score": 0.114921,
             "relationship": "same_topic",
-            "comparison": "Both companies explicitly link inventory valuation or impairment risks to assumptions about future demand and technological changes. NVIDIA warns that it may incur inventory provisions if supply commitments exceed demand or if demand declines, citing risks from supply complexity and capacity commitments. Similarly, AMD states that it determines excess or obsolescence reserves by considering assumptions such as 'other-than-temporary decreases in demand for our products' and 'changes in technology or customer requirements.' Both disclosures highlight the same risk: that incorrect assumptions regarding demand or rapid technological shifts can lead to financial write-downs.",
+            "comparison": "Both NVDA and AMD disclose specific unconditional purchase commitments for inventory components (NVDA for inventory/manufacturing capacity, AMD for wafers and substrates) at the end of fiscal year 2024. NVDA emphasizes that these commitments were impacted by 'shortening lead times' and highlights the risk of incurring inventory provisions if commitments exceed demand. In contrast, AMD provides a precise monetary quantification of its obligations ($5.0 billion total, with $4.5 billion due in FY2025) and notes that it actively manages payment and delivery timing with suppliers based on business conditions, rather than explicitly stating the commitments were driven by lead time changes in this specific disclosure segment.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D005",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_7_P005_S006",
+                    "paragraph_id": "nvda_2024_7_P005",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Our purchase commitments and obligations for inventory and manufacturing capacity at the end of fiscal year 2024 were impacted by shortening lead times for certain components.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_7_P005_S010",
+                    "paragraph_id": "nvda_2024_7_P005",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "We may incur inventory provisions or impairments if our inventory or supply or capacity commitments exceed demand for our products or demand declines.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AMD",
+                "item": "7",
+                "disclosure_id": "amd_2024_7_D047",
+                "sentences": [
+                  {
+                    "sentence_id": "amd_2024_7_P060_S001",
+                    "paragraph_id": "amd_2024_7_P060",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "As of December 28, 2024, we had unconditional purchase commitments of approximately $5.0 billion, of which $4.5 billion are in fiscal year 2025.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_7_P060_S003",
+                    "paragraph_id": "amd_2024_7_P060",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "On an ongoing basis, we work with our suppliers on the timing of payments and deliveries of purchase commitments, taking into account business conditions.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "peer_ticker": "AMD",
+            "peer_disclosure_id": "amd_2024_7_D011",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Inventory valuation methodology",
+            "peer_summary": "Inventory is valued at standard cost adjusted for lower of cost or net realizable value using assumptions about future demand and market conditions, with excess or obsolescence reserves based on specific facts and circumstances such as technology changes or demand decreases.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.032268,
+            "relationship": "related_topic",
+            "comparison": "NVDA and AMD both address the risk of inventory valuation adjustments and the assumptions driving them. NVDA explicitly states it may incur 'inventory provisions or impairments if our inventory or supply or capacity commitments exceed demand,' focusing on the volume and supply chain risk. AMD discloses its methodology for valuing inventory at the lower of cost or net realizable value, noting that additional write-downs may be required if assumptions about future demand or market conditions become less favorable. While NVDA links the risk to excess supply capacity commitments, AMD links the risk to broader demand assumptions and market conditions affecting inventory carrying value.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "NVDA",
+                "item": "7",
                 "disclosure_id": "nvda_2024_7_D005",
                 "sentences": [
                   {
@@ -279,19 +198,13 @@
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
                     "text": "We may incur inventory provisions or impairments if our inventory or supply or capacity commitments exceed demand for our products or demand declines.",
                     "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_7_P005_S005",
-                    "paragraph_id": "nvda_2024_7_P005",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "These increased purchase volumes, the number of suppliers, and the integration of new vendors into our supply chain may create more complexity and execution risk.",
-                    "visible_in_prompt": true
                   }
                 ]
               },
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D011",
                 "sentences": [
                   {
@@ -311,68 +224,15 @@
                 ]
               }
             ]
-          },
-          {
-            "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_7_D047",
-            "peer_topic": "Contractual Purchase Commitments",
-            "peer_summary": "AMD had $5.0 billion in unconditional purchase commitments as of December 28, 2024, primarily for wafer and substrate purchases, with $4.5 billion due in fiscal year 2025.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.057035,
-            "relationship": "related_topic",
-            "comparison": "Both companies disclose significant supply chain commitments and procurement strategies to support data center growth. NVIDIA describes increasing supply and capacity purchases, adding new vendors, and entering prepaid manufacturing agreements to meet surging data center demand, noting the execution risk of this expanded supplier base. AMD discloses unconditional purchase commitments of $5.0 billion, primarily for wafers and substrates, with the majority due in fiscal year 2025. While NVIDIA focuses on the operational execution risks of scaling suppliers and capacity, AMD quantifies the specific financial obligations for upstream components, reflecting the same underlying driver of securing supply for AI/data center products.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D005",
-                "sentences": [
-                  {
-                    "sentence_id": "nvda_2024_7_P005_S004",
-                    "paragraph_id": "nvda_2024_7_P005",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "We have increased our supply and capacity purchases with existing suppliers, added new vendors and entered into prepaid manufacturing and capacity agreements.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_7_P005_S005",
-                    "paragraph_id": "nvda_2024_7_P005",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "These increased purchase volumes, the number of suppliers, and the integration of new vendors into our supply chain may create more complexity and execution risk.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D047",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P060_S001",
-                    "paragraph_id": "amd_2024_7_P060",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "As of December 28, 2024, we had unconditional purchase commitments of approximately $5.0 billion, of which $4.5 billion are in fiscal year 2025.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_7_P060_S002",
-                    "paragraph_id": "amd_2024_7_P060",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our contractual obligations and purchase commitments relate primarily to our obligations to purchase wafers and substrates from third parties and future payments related to certain software and technology licenses and IP licenses.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
           }
         ],
-        "rationale": "",
-        "agent_warnings": [
-          "ignored_no_match_note_for_peer_with_comparisons"
-        ]
+        "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "0825059bf3859add4db194c0c77457a88ed9b305f76a20f40fc450f7793d72b4",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "80e9e32ecf7a3d304e48b25cade10d9113f55a62e1cd9049cf312a6aad530c67"
+    }
   }
 }

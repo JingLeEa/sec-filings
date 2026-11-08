@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "1219dd33818ea384fb55c2f3288fc1815e92c9fb3e93ef438c7c7d1a6d3d4b97",
-  "request_hash": "34670d1e4f9209871a96c2d7a33954ddd3c237220fbd5fb848b023da8cb6019f",
+  "input_fingerprint": "e44a678266eded72fa1872e44fae1741459134188fd5b7e654a9e10d424fe944",
+  "job_fingerprint": "e681767b4056ebb76fa597de58f831a445b51e7ce52e446739a91fd9435ea703",
+  "request_hash": "6e960b8ee0788942f6b6be1642034bc3f5ffd3c8585fee45815b9660ccfab21b",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1A_D109\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and AMD disclose details of their stock repurchase programs, noting that the authorizations do not obligate the company to purchase any specific amount of stock and that the programs may be suspended or discontinued. However, the scale differs significantly: MU has authorized up to $10 billion with $300 million expended in 2024, while AMD has authorized up to $12 billion with $4.7 billion remaining available for future repurchases as of its fiscal year end.\",\n\"target_sentence_ids\": [\n\"mu_2024_1A_P132_S002\",\n\"mu_2024_1A_P132_S005\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1A_P143_S001\",\n\"amd_2024_1A_P143_S002\",\n\"amd_2024_1A_P143_S003\"\n]\n},\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_1A_D042\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both MU and INTC discuss the lack of obligation to execute share repurchases and the uncertainty regarding whether they will enhance shareholder value. A key difference is the current status: MU actively executed $300 million in repurchases in 2024 under its authorization, whereas INTC explicitly states it has ceased stock repurchases and suspended its dividend, highlighting a divergent capital allocation strategy despite similar risk language regarding the non-obligatory nature of such programs.\",\n\"target_sentence_ids\": [\n\"mu_2024_1A_P131_S001\",\n\"mu_2024_1A_P132_S002\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_1A_P085_S004\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"The provided AVGO candidates (avgo_2024_1A_D084, avgo_2024_1A_D082) focus on dividend policy and stock price volatility, not share repurchase programs. While AVGO discusses dividends, the target MU disclosure specifically addresses share repurchase authorizations, expenditures, and repurchase risks, which are distinct capital return mechanisms not covered in the selected AVGO texts.\"\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"reason\": \"The provided NVDA candidates (nvda_2024_1A_D035, nvda_2024_1A_D053) focus on operating result fluctuations due to payment terms and the existence of a commercial paper program. Neither candidate discusses share repurchase programs, authorizations, or associated risks, making them substantively incomparable to MU's Item 1A disclosure on repurchases.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The provided QCOM candidates (qcom_2024_1A_D094, qcom_2024_1A_D010) focus on risks associated with outstanding debt and cash flow impacts from revenue reduction. While qcom_2024_1A_D094 mentions that debt issues might lead to suspending repurchases, it does not disclose the specifics of an active repurchase authorization, expenditure history, or program mechanics comparable to MU's detailed repurchase disclosure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
   "result": {
     "target_ticker": "MU",
     "target_disclosure_id": "mu_2024_1A_D066",
@@ -218,26 +221,23 @@
           {
             "peer_ticker": "AMD",
             "peer_disclosure_id": "amd_2024_1A_D109",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Stock repurchase program",
             "peer_summary": "AMD has an approved stock repurchase program authorizing up to $12 billion in repurchases, with $4.7 billion available as of December 28, 2024, which may be suspended or discontinued at any time and could affect cash reserves and stock volatility.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.211475,
+            "retrieval_score": 0.235101,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Micron disclose share repurchase programs with specific authorization amounts but explicitly state that these authorizations do not obligate the companies to purchase any specific amount of stock. Micron reported $300 million in repurchases for 2024 under a $10 billion authorization, whereas AMD reported $4.7 billion remaining available for future repurchases out of a $12 billion total authorization. Both companies highlight the discretion and flexibility in execution, noting that repurchases are subject to fluctuation based on cash needs and priorities, and neither guarantees that the authorization will enhance shareholder value or be fully consummated.",
+            "comparison": "Both MU and AMD disclose details of their stock repurchase programs, noting that the authorizations do not obligate the company to purchase any specific amount of stock and that the programs may be suspended or discontinued. However, the scale differs significantly: MU has authorized up to $10 billion with $300 million expended in 2024, while AMD has authorized up to $12 billion with $4.7 billion remaining available for future repurchases as of its fiscal year end.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1A",
                 "disclosure_id": "mu_2024_1A_D066",
                 "sentences": [
-                  {
-                    "sentence_id": "mu_2024_1A_P132_S001",
-                    "paragraph_id": "mu_2024_1A_P132",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "The amount, frequency, and execution of our share repurchases pursuant to our share repurchase authorization may fluctuate based on our operating results, cash flows, and priorities for the use of cash for other purposes.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "mu_2024_1A_P132_S002",
                     "paragraph_id": "mu_2024_1A_P132",
@@ -257,6 +257,7 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
+                "item": "1A",
                 "disclosure_id": "amd_2024_1A_D109",
                 "sentences": [
                   {
@@ -291,7 +292,7 @@
         "peer_ticker": "AVGO",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for AVGO focus on dividend policy (avgo_2024_1A_D084) and general stock price volatility (avgo_2024_1A_D082). Neither candidate discloses a specific share repurchase authorization amount, remaining availability, or current repurchase expenditures comparable to Micron's disclosure of a $10 billion program and $300 million actual spend."
+        "rationale": "The provided AVGO candidates (avgo_2024_1A_D084, avgo_2024_1A_D082) focus on dividend policy and stock price volatility, not share repurchase programs. While AVGO discusses dividends, the target MU disclosure specifically addresses share repurchase authorizations, expenditures, and repurchase risks, which are distinct capital return mechanisms not covered in the selected AVGO texts."
       },
       {
         "peer_ticker": "INTC",
@@ -300,31 +301,35 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_1A_D042",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
             "peer_topic": "Debt Obligations and Capital Return Restrictions",
             "peer_summary": "Intel faces risks related to its significant debt obligations ($51.0 billion in senior unsecured notes as of Dec 28, 2024) and cyclical industry nature, which pose risks to its financial condition, including potential credit rating downgrades that have already occurred in 2024. Additionally, Intel has ceased stock repurchases and suspended its quarterly dividend in Q4 2024, with additional restrictions under the CHIPS Act agreement creating uncertainty regarding future dividend payments or share repurchases.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.113507,
+            "retrieval_score": 0.131055,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose their share repurchase programs with explicit disclaimers that they are not obligated to repurchase any stock. While Micron actively spent $300 million in 2024 under its authorization, Intel discloses that it is 'not obligated to make repurchases' and provides no assurance on timing or execution, reflecting a divergent operational reality despite similar boilerplate language regarding the non-obligatory nature of the programs.",
+            "comparison": "Both MU and INTC discuss the lack of obligation to execute share repurchases and the uncertainty regarding whether they will enhance shareholder value. A key difference is the current status: MU actively executed $300 million in repurchases in 2024 under its authorization, whereas INTC explicitly states it has ceased stock repurchases and suspended its dividend, highlighting a divergent capital allocation strategy despite similar risk language regarding the non-obligatory nature of such programs.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "MU",
+                "item": "1A",
                 "disclosure_id": "mu_2024_1A_D066",
                 "sentences": [
                   {
-                    "sentence_id": "mu_2024_1A_P132_S001",
-                    "paragraph_id": "mu_2024_1A_P132",
+                    "sentence_id": "mu_2024_1A_P131_S001",
+                    "paragraph_id": "mu_2024_1A_P131",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "The amount, frequency, and execution of our share repurchases pursuant to our share repurchase authorization may fluctuate based on our operating results, cash flows, and priorities for the use of cash for other purposes.",
+                    "text": "The amount and frequency of our share repurchases may fluctuate, and we cannot guarantee that we will purchase all of the shares under our share repurchase authorization, or that it will enhance long-term shareholder value.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "mu_2024_1A_P132_S005",
+                    "sentence_id": "mu_2024_1A_P132_S002",
                     "paragraph_id": "mu_2024_1A_P132",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Although our Board of Directors has authorized share repurchases of up to $10 billion of our outstanding common stock, the authorization does not obligate us to repurchase any common stock.",
+                    "text": "Our expenditures for these share repurchases were $300 million in 2024, $425 million in 2023, $2.43 billion in 2022, $1.20 billion in 2021, $176 million in 2020, and $2.66 billion in 2019.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -332,6 +337,7 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "1A",
                 "disclosure_id": "intc_2024_1A_D042",
                 "sentences": [
                   {
@@ -352,14 +358,19 @@
         "peer_ticker": "NVDA",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for NVDA focus on operating results fluctuation (nvda_2024_1A_D043) and tax liabilities (nvda_2024_1A_D011). Neither candidate contains information regarding share repurchase authorizations, remaining balances, or specific repurchase expenditures, which are central to Micron's disclosure."
+        "rationale": "The provided NVDA candidates (nvda_2024_1A_D035, nvda_2024_1A_D053) focus on operating result fluctuations due to payment terms and the existence of a commercial paper program. Neither candidate discusses share repurchase programs, authorizations, or associated risks, making them substantively incomparable to MU's Item 1A disclosure on repurchases."
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for QCOM focus on risks associated with outstanding debt (qcom_2024_1A_D094) and revenue reduction impact on cash (qcom_2024_1A_D010). While one candidate mentions that debt covenants might limit the ability to reduce or eliminate repurchase programs, it does not provide specific data on repurchase authorizations, remaining balances, or current expenditures comparable to Micron's detailed financial disclosure."
+        "rationale": "The provided QCOM candidates (qcom_2024_1A_D094, qcom_2024_1A_D010) focus on risks associated with outstanding debt and cash flow impacts from revenue reduction. While qcom_2024_1A_D094 mentions that debt issues might lead to suspending repurchases, it does not disclose the specifics of an active repurchase authorization, expenditure history, or program mechanics comparable to MU's detailed repurchase disclosure."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "e681767b4056ebb76fa597de58f831a445b51e7ce52e446739a91fd9435ea703",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/mu",
+      "request_hash": "6e960b8ee0788942f6b6be1642034bc3f5ffd3c8585fee45815b9660ccfab21b"
+    }
   }
 }

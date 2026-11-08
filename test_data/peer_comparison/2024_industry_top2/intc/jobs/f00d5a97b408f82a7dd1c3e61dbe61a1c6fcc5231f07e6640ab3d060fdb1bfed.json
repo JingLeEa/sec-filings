@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "02eface189f5fdd70686c422e40cff22fce54d0a9b44b1f57bf26efd89b74eaf",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "ba4cc7b0899551293bfc671108f209f00ef62a1fb552b3091a04d989ce7e16f5",
+  "request_hash": "421cc9438ee67343461fdba2bfce35087a49cbe397430cb6fded089b932e9fbe",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_1_D074\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Avago disclose a manufacturing presence in Asia, but Intel details a broad global factory network including US and European sites, while Avago highlights its long-standing history of operating in Asia as the primary location for manufacturing and sourcing. Intel's disclosure lists specific facility locations across multiple continents (US, Ireland, Israel, Costa Rica, China, Malaysia, Vietnam), whereas Avago specifically notes storing the majority of inventory in Malaysia to be close to customers. Both acknowledge Asia's role, but Intel emphasizes a diversified global self-owned network while Avago emphasizes the concentration of operations in Asia.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P013_S003\",\n\"intc_2024_1_P013_S004\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_1_P037_S001\",\n\"avgo_2024_1_P037_S002\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_1_D050\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Intel and Micron both describe operating their own manufacturing facilities globally, contrasting with fabless peers. Intel lists wafer, assembly, testing, and packaging facilities in the US, Ireland, Israel, and Asia, intending to build the majority of products in its own factories. Micron similarly states it manufactures products in its own facilities across seven countries (including Taiwan, Singapore, Japan, US, Malaysia, China, India) and uses subcontractors for certain processes. Both companies explicitly claim ownership and operation of manufacturing infrastructure, differing in specific geography (Intel has significant European presence; Micron lists India/Japan/Singapore more prominently) but sharing the IDM-like operational model of owning key production sites.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P013_S003\",\n\"intc_2024_1_P013_S004\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_1_P052_S001\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1_D043\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Intel and Nvidia are directly contrasted on their manufacturing strategies: Intel intends to build the majority of its products in its own global factory network, while Nvidia explicitly utilizes a fabless strategy, partnering with suppliers for all manufacturing phases to avoid the costs and risks of owning operations. This highlights a fundamental divergence in business models, with Intel maintaining capital-intensive owned facilities and Nvidia outsourcing fabrication, assembly, and packaging to third parties like TSMC.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P013_S003\",\n\"intc_2024_1_P013_S004\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1_P043_S001\",\n\"nvda_2024_1_P043_S003\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_1_D037\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Intel and Qualcomm are contrasted on their reliance on internal versus third-party manufacturing. Intel plans to continue building the majority of products in its own factories, whereas Qualcomm (specifically its QCT division) primarily relies on third parties for the manufacturing and assembly of integrated circuits, owning no foundries for silicon wafer production. While Qualcomm does use some internal facilities for specific RFFE modules (as seen in the other candidate), its primary model is fabless, differing from Intel's majority-owned manufacturing approach.\",\n\"target_sentence_ids\": [\n\"intc_2024_1_P013_S004\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_1_P034_S001\",\n\"qcom_2024_1_P034_S002\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"The supplied candidates for AMD describe R&D collaboration structures and intellectual property portfolios, not manufacturing facilities or production strategies. Candidate amd_2024_1_D071 discusses R&D locations and consortia, and amd_2024_1_D075 discusses patent counts. Neither addresses the ownership, location, or operation of manufacturing fabs, assembly, or testing facilities, which is the core topic of Intel's Item 1 disclosure. Therefore, no substantively comparable manufacturing topic was retrieved.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_1_D014",
@@ -208,7 +211,7 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The retrieved candidates for AMD (amd_2024_1_D071 and amd_2024_1_D053) focus on R&D collaboration structures and customer product development support, respectively. They do not contain substantive information regarding manufacturing facilities, production intent, or supply chain operational footprint comparable to Intel's disclosure of its global factory network and plan to build products in its own factories."
+        "rationale": "The supplied candidates for AMD describe R&D collaboration structures and intellectual property portfolios, not manufacturing facilities or production strategies. Candidate amd_2024_1_D071 discusses R&D locations and consortia, and amd_2024_1_D075 discusses patent counts. Neither addresses the ownership, location, or operation of manufacturing fabs, assembly, or testing facilities, which is the core topic of Intel's Item 1 disclosure. Therefore, no substantively comparable manufacturing topic was retrieved."
       },
       {
         "peer_ticker": "AVGO",
@@ -217,17 +220,21 @@
           {
             "peer_ticker": "AVGO",
             "peer_disclosure_id": "avgo_2024_1_D074",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Geographic Manufacturing Presence",
             "peer_summary": "The company has a long history of operating in Asia, where it manufactures and sources the majority of its products and materials, and stores the majority of its product inventory in a warehouse in Malaysia.",
             "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.096316,
+            "retrieval_score": 0.106618,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Broadcom (AVGO) highlight their manufacturing presence in Asia, though with different strategic emphases. Intel lists specific assembly and testing facilities in China, Malaysia, and Vietnam, and wafer facilities in Ireland and Israel, as part of a global network intended to build the majority of products internally. Broadcom notes a long history of operating in Asia where it manufactures and sources the majority of its products, storing the majority of inventory in Malaysia to stay close to customer manufacturing facilities. While both utilize Asian facilities for manufacturing/sourcing, Intel emphasizes its broad global footprint including US/Ireland/Israel wafer sites and internal building intent, whereas Broadcom emphasizes its historical reliance on Asia for the majority of manufacturing and sourcing.",
+            "comparison": "Both Intel and Avago disclose a manufacturing presence in Asia, but Intel details a broad global factory network including US and European sites, while Avago highlights its long-standing history of operating in Asia as the primary location for manufacturing and sourcing. Intel's disclosure lists specific facility locations across multiple continents (US, Ireland, Israel, Costa Rica, China, Malaysia, Vietnam), whereas Avago specifically notes storing the majority of inventory in Malaysia to be close to customers. Both acknowledge Asia's role, but Intel emphasizes a diversified global self-owned network while Avago emphasizes the concentration of operations in Asia.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D014",
                 "sentences": [
                   {
@@ -249,6 +256,7 @@
               {
                 "side": "peer",
                 "ticker": "AVGO",
+                "item": "1",
                 "disclosure_id": "avgo_2024_1_D074",
                 "sentences": [
                   {
@@ -279,17 +287,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_1_D050",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Global manufacturing footprint and subcontractor use",
             "peer_summary": "Products are manufactured in own facilities across seven countries and utilize subcontractors for certain processes.",
             "peer_taxonomy": "Operations & Capacity",
-            "retrieval_score": 0.090174,
+            "retrieval_score": 0.107064,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose operating a global network of owned manufacturing facilities across multiple countries, emphasizing direct control over production. Intel specifies wafer, assembly, testing, and packaging sites in the US, Ireland, Israel, Costa Rica, China, Malaysia, and Vietnam, intending to build the majority of products in its own factories. Similarly, Micron manufactures products in its own facilities in Taiwan, Singapore, Japan, the US, Malaysia, China, and India, noting that while it utilizes subcontractors for certain processes, the core manufacturing footprint is owned and global. Both companies highlight their extensive geographic spread and internal capacity as key operational features, contrasting with fabless peers.",
+            "comparison": "Intel and Micron both describe operating their own manufacturing facilities globally, contrasting with fabless peers. Intel lists wafer, assembly, testing, and packaging facilities in the US, Ireland, Israel, and Asia, intending to build the majority of products in its own factories. Micron similarly states it manufactures products in its own facilities across seven countries (including Taiwan, Singapore, Japan, US, Malaysia, China, India) and uses subcontractors for certain processes. Both companies explicitly claim ownership and operation of manufacturing infrastructure, differing in specific geography (Intel has significant European presence; Micron lists India/Japan/Singapore more prominently) but sharing the IDM-like operational model of owning key production sites.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D014",
                 "sentences": [
                   {
@@ -311,6 +323,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "1",
                 "disclosure_id": "mu_2024_1_D050",
                 "sentences": [
                   {
@@ -333,25 +346,29 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1_D040",
-            "peer_topic": "Fabless manufacturing strategy and cost benefits",
-            "peer_summary": "NVIDIA utilizes a fabless and contracting manufacturing strategy, employing partners for wafer fabrication, assembly, testing, and packaging to avoid significant costs and risks associated with owning manufacturing operations. This approach allows the company to focus resources on product design, quality assurance, marketing, and customer support.",
+            "peer_disclosure_id": "nvda_2024_1_D043",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Fabless manufacturing strategy and supplier responsibilities",
+            "peer_summary": "The company utilizes a fabless strategy, partnering with suppliers for wafer fabrication, assembly, testing, and packaging, while suppliers handle the procurement of most raw materials.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.065101,
+            "retrieval_score": 0.078903,
             "relationship": "same_topic",
-            "comparison": "Intel and NVIDIA present fundamentally opposite strategies regarding manufacturing ownership. Intel explicitly states its intention to remain a major manufacturer and build the majority of its products in its own factories, leveraging its global factory network for product optimization and supply resilience. In contrast, NVIDIA utilizes a fabless strategy, employing partners for all phases of manufacturing including wafer fabrication, assembly, and packaging to avoid the significant costs and risks associated with owning manufacturing operations. This contrast highlights Intel's integrated model versus NVIDIA's asset-light approach.",
+            "comparison": "Intel and Nvidia are directly contrasted on their manufacturing strategies: Intel intends to build the majority of its products in its own global factory network, while Nvidia explicitly utilizes a fabless strategy, partnering with suppliers for all manufacturing phases to avoid the costs and risks of owning operations. This highlights a fundamental divergence in business models, with Intel maintaining capital-intensive owned facilities and Nvidia outsourcing fabrication, assembly, and packaging to third parties like TSMC.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D014",
                 "sentences": [
                   {
-                    "sentence_id": "intc_2024_1_P013_S002",
+                    "sentence_id": "intc_2024_1_P013_S003",
                     "paragraph_id": "intc_2024_1_P013",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Our global factory network has been foundational to our success, enabling product optimization, improved economics, and supply resilience.",
+                    "text": "We operate wafer manufacturing facilities in the United States (Oregon and Arizona), Ireland, and Israel, assembly and testing facilities in Costa Rica, China, Malaysia, and Vietnam, and packaging facilities in the United States (New Mexico), Costa Rica, Vietnam, and Malaysia.",
                     "visible_in_prompt": true
                   },
                   {
@@ -366,7 +383,8 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1_D040",
+                "item": "1",
+                "disclosure_id": "nvda_2024_1_D043",
                 "sentences": [
                   {
                     "sentence_id": "nvda_2024_1_P043_S001",
@@ -396,26 +414,23 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_1_D037",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
             "peer_topic": "Fabless Manufacturing and Third-Party Suppliers",
             "peer_summary": "QCT primarily uses a fabless production model, relying on third parties for manufacturing, assembly, and testing of integrated circuits, with suppliers located mainly in the Asia-Pacific region. Primary foundry suppliers include TSMC, Global Foundries, Samsung, and SMIC, while primary assembly and test suppliers include ASE, Amkor, SPI, and STATSChipPAC.",
             "peer_taxonomy": "Supply Chain & Third Parties",
-            "retrieval_score": 0.034195,
+            "retrieval_score": 0.038346,
             "relationship": "same_topic",
-            "comparison": "Intel and Qualcomm differ significantly in their reliance on internal versus third-party manufacturing. Intel describes its global factory network as foundational, intending to build the majority of its products in its own facilities to ensure supply resilience. Conversely, Qualcomm (specifically its QCT segment) primarily uses a fabless production model, meaning it does not own foundries for silicon wafer production and instead relies on third parties for manufacturing, assembly, and testing. While Qualcomm uses internal facilities for specific RFFE products, its general model is distinct from Intel's integrated manufacturing approach.",
+            "comparison": "Intel and Qualcomm are contrasted on their reliance on internal versus third-party manufacturing. Intel plans to continue building the majority of products in its own factories, whereas Qualcomm (specifically its QCT division) primarily relies on third parties for the manufacturing and assembly of integrated circuits, owning no foundries for silicon wafer production. While Qualcomm does use some internal facilities for specific RFFE modules (as seen in the other candidate), its primary model is fabless, differing from Intel's majority-owned manufacturing approach.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "1",
                 "disclosure_id": "intc_2024_1_D014",
                 "sentences": [
-                  {
-                    "sentence_id": "intc_2024_1_P013_S002",
-                    "paragraph_id": "intc_2024_1_P013",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "Our global factory network has been foundational to our success, enabling product optimization, improved economics, and supply resilience.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "intc_2024_1_P013_S004",
                     "paragraph_id": "intc_2024_1_P013",
@@ -428,6 +443,7 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "1",
                 "disclosure_id": "qcom_2024_1_D037",
                 "sentences": [
                   {
@@ -451,6 +467,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "ba4cc7b0899551293bfc671108f209f00ef62a1fb552b3091a04d989ce7e16f5",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "421cc9438ee67343461fdba2bfce35087a49cbe397430cb6fded089b932e9fbe"
+    }
   }
 }

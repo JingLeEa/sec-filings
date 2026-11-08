@@ -1,138 +1,92 @@
 {
-  "input_fingerprint": "f1424d9628220ad2e679db6f2b87391d67b970e120011601a2c4b1c53e393e8f",
-  "request_hash": "9abf6966572cd03b0f514b681995fe60dc65583b0ec78b688bb450d3ba429f66",
+  "input_fingerprint": "a1f27f11876ed1ebb36535216f2f3493c5dcd235e66898b41cfcb977fef10971",
+  "job_fingerprint": "f272d1484f5566a12287e821f0b67890e1f4571372570dbeaaa3a55219d83593",
+  "request_hash": "cbc481ffb1911eb2bd2152a4d7647b856c9bf876f1b2f6bc367773cd920572f5",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1A_D107\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both NVDA and AMD identify the ability to attract, retain, and motivate executives and key employees as a critical risk to business execution. NVDA emphasizes dependency on its longstanding executive team and succession planning, while AMD highlights the intense competition specifically in AI and machine learning fields, noting that failure to retain talent could hinder product development. Both companies acknowledge the use of stock-based incentives as a tool for retention, though AMD explicitly links stock value fluctuations to retention risk.\",\n\"target_sentence_ids\": [\n\"nvda_2024_1A_P059_S001\",\n\"nvda_2024_1A_P059_S004\",\n\"nvda_2024_1A_P059_S005\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1A_P140_S003\",\n\"amd_2024_1A_P140_S004\",\n\"amd_2024_1A_P140_S005\"\n]\n}\n],\n\"no_match\": []\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
   "result": {
     "target_ticker": "NVDA",
     "target_disclosure_id": "nvda_2024_1A_D032",
     "item": "1A",
-    "target_topic": "Cybersecurity Threats and Attacks",
-    "target_summary": "Sophisticated cyber-attacks, including ransomware and AI-enabled attacks by nation-states, pose risks to operations and may be exacerbated by geopolitical conflicts, with potential limitations on recovery due to backup issues.",
-    "target_source_status": "needs_review",
+    "target_topic": "Executive Retention and Key Personnel Dependency",
+    "target_summary": "The business is highly dependent on the longstanding executive team, and failure to attract, retain, and motivate executives and key employees, or to ensure effective succession planning, could harm the business. Labor market competition and immigration regulations also impact this ability.",
+    "target_source_status": "source_validated",
     "target_year_over_year_context": [
       {
         "window": "2023-2024",
         "side": "current",
-        "match_id": "nvda_2023_2024_M0220",
-        "relationship": "one_to_many",
-        "status": "needs_review",
-        "review_reasons": [
-          "input_extraction_needs_review"
-        ],
-        "explanation": "Both disclosures focus on the risk of sophisticated cyber-attacks, including ransomware and nation-state actors. D027 (2023) details threats from criminal actors and nation-states, and limitations on recovery from ransomware. D032 (2024) similarly details cyber-attacks by nation-states and ransomware, noting the increased sophistication and impact on operations. While D027 and D032 cover broader cybersecurity contexts, this alignment captures the specific shared topic of external nation-state/ransomware threats and operational disruption.\n\nD033 (2024) focuses on insider threats and third-party supplier security vulnerabilities (supply-chain attacks). D027 (2023) covers general cyber-security risks, including explicit risks from third-party suppliers and supply-chain attacks. D033 expands on the supplier risk aspect of D027 with specific details on insider misconduct and AI data supply chain risks. This represents a sub-topic continuation within the broader cybersecurity risk theme.\n\nBoth disclosures address risks related to the global nature of NVIDIA's operating business, specifically highlighting vulnerability to geopolitical conflicts, nation-state actors, and broader internatio",
-        "previous_disclosures": [
+        "match_id": "nvda_2023_2024_M0089",
+        "relationship": "current_only",
+        "status": "unmatched",
+        "review_reasons": [],
+        "explanation": "2024 D032 discusses risks related to attracting and retaining executives and key employees. No corresponding 2023 disclosure in the required list or existing groups focuses on this specific human capital topic.",
+        "previous_disclosures": [],
+        "current_disclosures": [
           {
-            "disclosure_id": "nvda_2023_1A_D027",
+            "disclosure_id": "nvda_2024_1A_D032",
             "item": "1A",
             "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Cybersecurity & Data",
-            "summary": "NVIDIA is exposed to cyber-attacks, including ransomware and nation-state actors, which can disrupt operations and compromise critical infrastructure and supply chain partners. Breaches of security measures, particularly involving proprietary data such as game source code from GFN partners, could result in litigation, regulatory action, reputational damage, and liability for both NVIDIA and its partners.",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "The business is highly dependent on the longstanding executive team, and failure to attract, retain, and motivate executives and key employees, or to ensure effective succession planning, could harm the business. Labor market competition and immigration regulations also impact this ability.",
+            "extraction_status": "source_validated"
+          }
+        ],
+        "change_analysis": {
+          "status": "completed",
+          "lexical": null,
+          "semantic": null,
+          "llm": "New",
+          "final_taxonomy": "New"
+        },
+        "materiality_analysis": {
+          "materiality": "Yes",
+          "materiality_score": 0.8,
+          "confidence_score": 0.9,
+          "reason": "This is a newly introduced disclosure regarding human capital risks. For a technology company, the ability to attract and retain key executives and employees is a critical strategic asset. The explicit disclosure of risks related to labor market competition and immigration regulations adds a material layer of operational risk not previously highlighted in this manner.",
+          "key_change": "Introduction of human capital retention risk"
+        }
+      },
+      {
+        "window": "2024-2025",
+        "side": "previous",
+        "match_id": "nvda_2024_2025_M0068",
+        "relationship": "one_to_one",
+        "status": "ai_verified",
+        "review_reasons": [],
+        "explanation": "Both disclosures cover the risk of attracting and retaining executives and key employees, citing competitive labor markets, immigration regulations, stock-based compensation volatility, and succession planning dependencies.",
+        "previous_disclosures": [
+          {
+            "disclosure_id": "nvda_2024_1A_D032",
+            "item": "1A",
+            "section": "Risks Related to Our Global Operating Business",
+            "taxonomy": "Human Capital & Organization",
+            "summary": "The business is highly dependent on the longstanding executive team, and failure to attract, retain, and motivate executives and key employees, or to ensure effective succession planning, could harm the business. Labor market competition and immigration regulations also impact this ability.",
             "extraction_status": "source_validated"
           }
         ],
         "current_disclosures": [
           {
-            "disclosure_id": "nvda_2024_1A_D031",
+            "disclosure_id": "nvda_2025_1A_D054",
             "item": "1A",
             "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Strategy & Business Model",
-            "summary": "International sales represent 56% of fiscal 2024 revenue, exposing the company to geopolitical and regulatory risks; sales to China decreased from 19% to 14% of Data Center revenue due to USG licensing requirements.",
-            "extraction_status": "needs_review"
-          },
-          {
-            "disclosure_id": "nvda_2024_1A_D032",
-            "item": "1A",
-            "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Cybersecurity & Data",
-            "summary": "Sophisticated cyber-attacks, including ransomware and AI-enabled attacks by nation-states, pose risks to operations and may be exacerbated by geopolitical conflicts, with potential limitations on recovery due to backup issues.",
-            "extraction_status": "needs_review"
-          },
-          {
-            "disclosure_id": "nvda_2024_1A_D033",
-            "item": "1A",
-            "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Cybersecurity & Data",
-            "summary": "The company faces risks from insider misconduct and third-party supplier vulnerabilities, including supply-chain attacks and insufficient security practices by partners providing critical infrastructure and AI training data.",
-            "extraction_status": "needs_review"
+            "taxonomy": "Human Capital & Organization",
+            "summary": "The company must attract and retain executives and key employees amidst a competitive labor market, immigration regulation changes, and stock price volatility that may decrease the retentive value of stock-based compensation; failure in succession planning could hinder strategic execution.",
+            "extraction_status": "source_validated"
           }
         ],
-        "change_analysis": {
-          "status": "not_started",
-          "lexical": null,
-          "semantic": null,
-          "llm": null,
-          "final_taxonomy": null
-        },
-        "materiality_analysis": null
-      },
-      {
-        "window": "2024-2025",
-        "side": "previous",
-        "match_id": "nvda_2024_2025_M0022",
-        "relationship": "previous_only",
-        "status": "unmatched",
-        "review_reasons": [],
-        "explanation": "D032 (2024) discusses 'Cyber-attacks', 'ransomware', 'nation-states', and 'AI-enabled attacks'. The search for this topic in 2025 returned D026 (Disasters), D006 (AI Responsible Use), D039 (AI Ethics). D026 is 'Operations & Capacity' (natural disasters). D006 and D039 are 'Regulatory, Legal' (AI ethics/liability). The audit hits show P038_AUDIT and P039_AUDIT covering cyber-attacks in 2025, but they were excluded/ungrouped. There is no single disclosure in 2025 that captures 'Cyber-attacks/Security Breaches' as a primary topic in 'Global Operating Business'. D026 is the closest in section but different topic. D032 (2024) is unmatched.",
-        "previous_disclosures": [
-          {
-            "disclosure_id": "nvda_2024_1A_D032",
-            "item": "1A",
-            "section": "Risks Related to Our Global Operating Business",
-            "taxonomy": "Cybersecurity & Data",
-            "summary": "Sophisticated cyber-attacks, including ransomware and AI-enabled attacks by nation-states, pose risks to operations and may be exacerbated by geopolitical conflicts, with potential limitations on recovery due to backup issues.",
-            "extraction_status": "needs_review"
-          }
-        ],
-        "current_disclosures": [],
         "change_analysis": {
           "status": "completed",
-          "lexical": {
-            "method": "tfidf_difflib_hybrid",
-            "change_taxonomy": "Removed",
-            "cosine_similarity": 0.0,
-            "sequence_match_ratio": 0.0,
-            "length_ratio": 0.0,
-            "word_count_delta": -220,
-            "added_tokens_sample": [],
-            "removed_tokens_sample": [
-              "product",
-              "system",
-              "security",
-              "and",
-              "data",
-              "protection",
-              "breaches",
-              "as",
-              "well",
-              "as",
-              "cyber",
-              "attacks",
-              "could",
-              "disrupt",
-              "our",
-              "operations",
-              "reduce",
-              "our",
-              "expected",
-              "revenue"
-            ]
-          },
-          "semantic": {
-            "label": "Removed",
-            "score": null,
-            "normalised_score": null,
-            "matched_id": null,
-            "rationale": "One-sided change established by the finalized alignment.",
-            "method": "alignment_presence"
-          },
-          "llm": "Removed",
-          "final_taxonomy": "Removed"
+          "lexical": null,
+          "semantic": null,
+          "llm": "Reworded",
+          "final_taxonomy": "Reworded"
         },
         "materiality_analysis": {
           "materiality": "Yes",
-          "materiality_score": 0.9,
+          "materiality_score": 0.7,
           "confidence_score": 0.9,
-          "reason": "Removal of the specific 'Cyber-attacks' risk disclosure from Item 1A in the 2025 filing eliminates a dedicated section detailing risks from ransomware, AI-enabled attacks, and nation-states. This represents a significant reduction in the granularity of disclosed cybersecurity risks, which is a critical exposure for the company.",
-          "key_change": "Removal of specific cybersecurity risk disclosure"
+          "reason": "The 2025 disclosure introduces a new specific risk factor: 'stock price volatility' decreasing the retentive value of stock-based compensation. While the general need to retain talent is unchanged, the explicit linkage of equity volatility to retention risk is a substantive addition to the human capital risk profile.",
+          "key_change": "Introduction of stock price volatility risk to talent retention"
         }
       }
     ],
@@ -143,32 +97,43 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1A_D061",
-            "peer_topic": "Product Security Vulnerabilities and Cyberattack Risks",
-            "peer_summary": "AMD's complex products and IT infrastructure are subject to security vulnerabilities and cyberattacks, including those leveraging AI, which may result in data breaches, litigation, reputational harm, and adverse effects on revenue and operations, with mitigation efforts dependent on potentially ineffective third parties.",
-            "peer_taxonomy": "Cybersecurity & Data",
-            "retrieval_score": 0.123181,
+            "peer_disclosure_id": "amd_2024_1A_D107",
+            "target_item": "1A",
+            "peer_item": "1A",
+            "cross_item": false,
+            "peer_topic": "Key employee retention risk",
+            "peer_summary": "Competition for skilled executives and employees in AI and machine learning is intense, and failure to attract, train, and retain key personnel could hinder product development, affected by stock-based compensation value and future restructuring plans.",
+            "peer_taxonomy": "Human Capital & Organization",
+            "retrieval_score": 0.228202,
             "relationship": "same_topic",
-            "comparison": "Both NVDA and AMD identify cyber-attacks as increasingly sophisticated threats that can disrupt operations, with specific emphasis on the role of Artificial Intelligence in enhancing attack capabilities. NVDA discloses that attacks by nation-states and organized criminals are becoming more prevalent and severe, exacerbated by geopolitical conflicts. AMD similarly notes that as AI capabilities improve, threat actors are using AI to launch automated, targeted, and coordinated cyberattacks, crafting phishing emails or attacking IT systems with increased speed and efficiency. While NVDA highlights the geopolitical driver of these attacks, AMD focuses more on the technical vector of AI-enabled automation and zero-day vulnerabilities in open-source or commercial software.",
+            "comparison": "Both NVDA and AMD identify the ability to attract, retain, and motivate executives and key employees as a critical risk to business execution. NVDA emphasizes dependency on its longstanding executive team and succession planning, while AMD highlights the intense competition specifically in AI and machine learning fields, noting that failure to retain talent could hinder product development. Both companies acknowledge the use of stock-based incentives as a tool for retention, though AMD explicitly links stock value fluctuations to retention risk.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "NVDA",
+                "item": "1A",
                 "disclosure_id": "nvda_2024_1A_D032",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_1A_P039_S001",
-                    "paragraph_id": "nvda_2024_1A_P039",
+                    "sentence_id": "nvda_2024_1A_P059_S001",
+                    "paragraph_id": "nvda_2024_1A_P059",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Cyber-attacks, including ransomware attacks by organized criminal threat actors, nation-states, and nation-state-supported actors, may become more prevalent and severe.",
+                    "text": "To be competitive and execute our business strategy successfully, we must attract, retain and motivate our executives and key employees and recruit and develop capable and diverse talent.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "nvda_2024_1A_P040_S003",
-                    "paragraph_id": "nvda_2024_1A_P040",
+                    "sentence_id": "nvda_2024_1A_P059_S004",
+                    "paragraph_id": "nvda_2024_1A_P059",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Due to geopolitical conflicts and during times of war or other major conflicts, we and the third parties we rely upon may be vulnerable to a heightened risk of cyber-attacks that could materially disrupt our ability to provide services and products.",
+                    "text": "Competition for personnel results in increased costs in the form of cash and stock-based compensation, and in times of stock price volatility, as we have experienced in the past and may experience in the future, the retentive value of our stock-based compensation may decrease.",
+                    "visible_in_prompt": false
+                  },
+                  {
+                    "sentence_id": "nvda_2024_1A_P059_S005",
+                    "paragraph_id": "nvda_2024_1A_P059",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Additionally, we are highly dependent on the services of our longstanding executive team.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -176,20 +141,28 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1A_D061",
+                "item": "1A",
+                "disclosure_id": "amd_2024_1A_D107",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1A_P056_S002",
-                    "paragraph_id": "amd_2024_1A_P056",
+                    "sentence_id": "amd_2024_1A_P140_S003",
+                    "paragraph_id": "amd_2024_1A_P140",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "As AI capabilities improve and are increasingly adopted, we may see more sophisticated threats created through the use of AI technology to launch more automated, targeted and coordinated cyberattacks.",
+                    "text": "If we are not able to continue to attract, train and retain our leadership team and our qualified employees necessary for our business, the progress of our product development programs could be hindered, and we could be materially adversely affected.",
                     "visible_in_prompt": true
                   },
                   {
-                    "sentence_id": "amd_2024_1A_P056_S003",
-                    "paragraph_id": "amd_2024_1A_P056",
+                    "sentence_id": "amd_2024_1A_P140_S004",
+                    "paragraph_id": "amd_2024_1A_P140",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "These attacks could be crafted with an AI tool to directly attack IT Systems with increased speed and/or efficiency than a human threat actor or create more effective phishing emails.",
+                    "text": "We use share-based incentive awards to help attract, retain and motivate our executives and qualified employees.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "amd_2024_1A_P140_S005",
+                    "paragraph_id": "amd_2024_1A_P140",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
+                    "text": "If the value of such stock awards does not appreciate as measured by the performance of the price of our common stock, or if our share-based compensation otherwise ceases to be viewed as a valuable benefit, our ability to attract, retain and motivate our executives and employees could be weakened, which could harm our results of operations.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -197,11 +170,13 @@
             ]
           }
         ],
-        "rationale": "",
-        "agent_warnings": [
-          "ignored_no_match_note_for_unrequested_peer:INTC"
-        ]
+        "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "f272d1484f5566a12287e821f0b67890e1f4571372570dbeaaa3a55219d83593",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/nvda/2024_amd_material_pilot",
+      "request_hash": "cbc481ffb1911eb2bd2152a4d7647b856c9bf876f1b2f6bc367773cd920572f5"
+    }
   }
 }

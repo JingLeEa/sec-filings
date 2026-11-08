@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "acb3391627decaa12e15de70132769fdaed543089c68d6999b930d3d45385b9c",
-  "request_hash": "a53a58aca74260c43cbed3713c43598d7dd6379b886f34a97529e86585aeeee4",
+  "input_fingerprint": "a68e191016f3ab0527bdc85a29f64160c258de854666fdf7d73eb781eab4bd45",
+  "job_fingerprint": "2f0ce542ae59d9956efad0d3235da6156a55d254c9bf87de713d0cf17e10febb",
+  "request_hash": "b8cb56a8ef19c7058f68b8469d62c97ed6abdb978e4b73d6a309206d3c1896b1",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"INTC\",\n\"peer_disclosure_id\": \"intc_2024_7_D149\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AMD and Intel disclose specific aggregate debt outstanding figures and maturity profiles. AMD reports $1.8 billion in aggregate principal debt as of December 28, 2024, with remaining maturities starting in 2030 after repaying $750 million in June 2024. In contrast, Intel reports a significantly higher leverage position, with $51.0 billion in aggregate principal senior unsecured notes and other borrowings outstanding as of December 28, 2024, and explicitly notes expectations to incur additional indebtedness.\",\n\"target_sentence_ids\": [\n\"amd_2024_7_P059_S001\",\n\"amd_2024_7_P059_S002\"\n],\n\"peer_sentence_ids\": [\n\"intc_2024_7_P194_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_7_D067\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"AMD and Nvidia both address their debt repayment obligations within the context of their overall liquidity positions. AMD specifies that it repaid $750 million in notes in June 2024 and that remaining debt matures starting in 2030. Nvidia similarly identifies specific near-term debt obligations in its sufficiency assessment, stating it has sufficient liquidity to meet operating requirements including '$1.3 billion of debt repayment due in fiscal year 2025.'\",\n\"target_sentence_ids\": [\n\"amd_2024_7_P059_S002\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_7_P076_S003\"\n]\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"peer_disclosure_id\": \"qcom_2024_7_D042\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"AMD and Qualcomm both disclose the composition and maturity schedule of their fixed-rate note debt. AMD states that remaining debt will mature starting in 2030 after recent repayments. Qualcomm provides more granular detail, holding $15.0 billion in principal fixed-rate notes, with $1.4 billion maturing in May 2025 and the remainder maturing between 2027 and 2053.\",\n\"target_sentence_ids\": [\n\"amd_2024_7_P059_S002\"\n],\n\"peer_sentence_ids\": [\n\"qcom_2024_7_P038_S002\",\n\"qcom_2024_7_P038_S003\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"reason\": \"AVGO candidates focus on cash flow drivers from financing activities (net proceeds from borrowings, debt repayments, dividends) and merger-related debt increases, rather than the specific aggregate debt principal outstanding and maturity profile details that define AMD's disclosure.\"\n},\n{\n\"peer_ticker\": \"MU\",\n\"reason\": \"MU candidates describe historical financing activity cash flows for prior years (2022 and 2023), including debt repayments and issuances, but do not contain current period aggregate debt principal or maturity schedule data comparable to AMD's 2024 disclosure.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
   "result": {
     "target_ticker": "AMD",
     "target_disclosure_id": "amd_2024_7_D046",
@@ -191,72 +194,9 @@
     "peer_results": [
       {
         "peer_ticker": "AVGO",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "AVGO",
-            "peer_disclosure_id": "avgo_2024_7_D065",
-            "peer_topic": "VMware Merger impact on debt and liquidity",
-            "peer_summary": "Debt and liquidity needs increased in fiscal 2024 due to the VMware Merger, involving $30,390 million in term loans, $8,250 million in assumed notes, and $16,795 million in term loan repayments.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.080628,
-            "relationship": "same_topic",
-            "comparison": "Both AMD and Broadcom report significant debt obligations and changes in their capital structure during FY2024. AMD specifically notes the repayment of its $750 million 2.95% Notes and a total aggregate debt of $1.8 billion. In contrast, Broadcom's debt obligations increased substantially due to the VMware Merger, involving $30,390 million in term loans and assuming $8,250 million in notes, resulting in much higher leverage than AMD's $1.8 billion. Both companies actively manage their debt portfolios, with AMD focusing on repayment and Broadcom on funding a major acquisition.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D046",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P059_S001",
-                    "paragraph_id": "amd_2024_7_P059",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our aggregate principal debt obligations were $1.8 billion as of December 28, 2024.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "amd_2024_7_P059_S002",
-                    "paragraph_id": "amd_2024_7_P059",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our 2.95% Notes with a principal amount of $750 million were repaid in June 2024 and our remaining debt will mature starting in 2030.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "AVGO",
-                "disclosure_id": "avgo_2024_7_D065",
-                "sentences": [
-                  {
-                    "sentence_id": "avgo_2024_7_P063_S004",
-                    "paragraph_id": "avgo_2024_7_P063",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "Our debt and liquidity needs increased in fiscal year 2024 as a result of completing the VMware Merger.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_7_P063_S005",
-                    "paragraph_id": "avgo_2024_7_P063",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We funded the cash portion of the consideration with net proceeds from the issuance of $30,390 million in term loans (the \"2023 Term Loans\"), as well as cash on hand.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "avgo_2024_7_P063_S006",
-                    "paragraph_id": "avgo_2024_7_P063",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
-                    "text": "We also assumed $8,250 million of VMware's outstanding senior unsecured notes.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "AVGO candidates focus on cash flow drivers from financing activities (net proceeds from borrowings, debt repayments, dividends) and merger-related debt increases, rather than the specific aggregate debt principal outstanding and maturity profile details that define AMD's disclosure."
       },
       {
         "peer_ticker": "INTC",
@@ -265,17 +205,21 @@
           {
             "peer_ticker": "INTC",
             "peer_disclosure_id": "intc_2024_7_D149",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Financial Leverage, Debt Obligations, and Capital Return Policies",
             "peer_summary": "Intel faces risks related to its significant debt obligations, with $51.0 billion in senior unsecured notes outstanding, and potential for additional indebtedness. Cyclical revenue and debt service have led to multiple credit rating downgrades in 2024, potentially increasing borrowing costs and limiting capital access. Furthermore, the company has ceased returning capital to stockholders, suspending its quarterly dividend in Q4 2024 and agreeing to forgo dividends for two years under its CHIPS Act agreement, with no assurance of future dividends or share repurchases.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.105441,
+            "retrieval_score": 0.10791,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Intel disclose their aggregate principal debt obligations as of the end of fiscal year 2024, but with vastly different magnitudes and implications. AMD reported aggregate principal debt obligations of $1.8 billion, including the repayment of $750 million in notes. Intel, however, faced significant risks related to its massive debt obligations, reporting $51.0 billion in aggregate principal amount of senior unsecured notes and other borrowings. Intel explicitly highlights the risk of credit rating downgrades and increased borrowing costs associated with this high leverage, whereas AMD's disclosure is more factual regarding the reduction of its debt load from $2.5 billion to $1.8 billion.",
+            "comparison": "Both AMD and Intel disclose specific aggregate debt outstanding figures and maturity profiles. AMD reports $1.8 billion in aggregate principal debt as of December 28, 2024, with remaining maturities starting in 2030 after repaying $750 million in June 2024. In contrast, Intel reports a significantly higher leverage position, with $51.0 billion in aggregate principal senior unsecured notes and other borrowings outstanding as of December 28, 2024, and explicitly notes expectations to incur additional indebtedness.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D046",
                 "sentences": [
                   {
@@ -297,27 +241,14 @@
               {
                 "side": "peer",
                 "ticker": "INTC",
+                "item": "7",
                 "disclosure_id": "intc_2024_7_D149",
                 "sentences": [
-                  {
-                    "sentence_id": "intc_2024_7_P194_S001",
-                    "paragraph_id": "intc_2024_7_P194",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "We have incurred significant debt obligations that could adversely affect our business and financial condition, including our ability to fully implement our strategy.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "intc_2024_7_P194_S002",
                     "paragraph_id": "intc_2024_7_P194",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
                     "text": "As of December 28, 2024, we had $51.0 billion in aggregate principal amount of senior unsecured notes and other borrowings outstanding.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "intc_2024_7_P194_S006",
-                    "paragraph_id": "intc_2024_7_P194",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
-                    "text": "These fluctuations, together with our debt level and related debt service obligations, could have the effect of, among other things, reducing our flexibility to respond to changing business and economic conditions and increasing the risk of a future downgrade in our credit ratings that can impact the value of our outstanding debt and increase our borrowing costs.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -329,51 +260,9 @@
       },
       {
         "peer_ticker": "MU",
-        "status": "compared",
-        "comparisons": [
-          {
-            "peer_ticker": "MU",
-            "peer_disclosure_id": "mu_2024_7_D042",
-            "peer_topic": "Financing Activities 2023",
-            "peer_summary": "For 2023, net cash provided by financing activities primarily included proceeds from Term Loan A borrowings ($3.20 billion) and various note issuances ($3.214 billion total), partially offset by $761 million in debt repayments, $504 million in dividends, $425 million in share repurchases, and $138 million in equipment purchase payments.",
-            "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.081487,
-            "relationship": "related_topic",
-            "comparison": "Both AMD and Micron discuss financing activities involving debt repayments and issuances, though the specific contexts differ. AMD's FY2024 disclosure highlights the repayment of $750 million in notes, reducing its total debt to $1.8 billion. Micron's FY2023 financing activities (referenced in the 2024 filing) included significant debt repayments of $761 million, partially offset by new borrowings. While AMD's activity was focused on deleveraging specific notes, Micron's activity involved a mix of term loans and note issuances to fund operations, with debt repayments being a component of its overall financing cash flow.",
-            "peer_source_status": "source_validated",
-            "evidence": [
-              {
-                "side": "target",
-                "ticker": "AMD",
-                "disclosure_id": "amd_2024_7_D046",
-                "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P059_S002",
-                    "paragraph_id": "amd_2024_7_P059",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our 2.95% Notes with a principal amount of $750 million were repaid in June 2024 and our remaining debt will mature starting in 2030.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              },
-              {
-                "side": "peer",
-                "ticker": "MU",
-                "disclosure_id": "mu_2024_7_D042",
-                "sentences": [
-                  {
-                    "sentence_id": "mu_2024_7_P044_S002",
-                    "paragraph_id": "mu_2024_7_P044",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
-                    "text": "Cash used for financing activities included $761 million for repayments of debt; $504 million for payments of dividends to shareholders; $425 million for the acquisition of 8.6 million shares of our common stock under our share repurchase authorization; and $138 million of payments on equipment purchase contracts.",
-                    "visible_in_prompt": true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "rationale": ""
+        "status": "no_comparable_candidate",
+        "comparisons": [],
+        "rationale": "MU candidates describe historical financing activity cash flows for prior years (2022 and 2023), including debt repayments and issuances, but do not contain current period aggregate debt principal or maturity schedule data comparable to AMD's 2024 disclosure."
       },
       {
         "peer_ticker": "NVDA",
@@ -381,27 +270,24 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_7_D082",
-            "peer_topic": "Debt Maturities and Commercial Paper Program Status",
-            "peer_summary": "As of January 28, 2024, the company's aggregate debt maturities were detailed by year, and it maintained a $575 million commercial paper program for general corporate purposes, with no commercial paper outstanding at the end of fiscal year 2024.",
+            "peer_disclosure_id": "nvda_2024_7_D067",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
+            "peer_topic": "Primary liquidity sources and sufficiency assertion",
+            "peer_summary": "The company's primary liquidity sources are cash, cash equivalents, marketable securities, and operating cash flows, with $26.0 billion held at the end of fiscal year 2024. Management believes these resources are sufficient to meet operating requirements for at least the next twelve months, including future supply obligations and $1.3 billion in debt repayment due in fiscal year 2025.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.073491,
+            "retrieval_score": 0.087158,
             "relationship": "same_topic",
-            "comparison": "Both AMD and NVIDIA disclose details regarding their debt obligations and liquidity resources. AMD reports aggregate principal debt obligations of $1.8 billion as of December 28, 2024, with specific mention of the repayment of $750 million in notes. NVIDIA, in its FY2024 disclosure, details its aggregate debt maturities and maintains a commercial paper program, noting no commercial paper outstanding. Both companies emphasize sufficient liquidity, with NVIDIA holding $26.0 billion in cash and marketable securities to meet debt repayment requirements, whereas AMD focuses on its current debt maturity schedule starting in 2030.",
-            "peer_source_status": "needs_review",
+            "comparison": "AMD and Nvidia both address their debt repayment obligations within the context of their overall liquidity positions. AMD specifies that it repaid $750 million in notes in June 2024 and that remaining debt matures starting in 2030. Nvidia similarly identifies specific near-term debt obligations in its sufficiency assessment, stating it has sufficient liquidity to meet operating requirements including '$1.3 billion of debt repayment due in fiscal year 2025.'",
+            "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D046",
                 "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P059_S001",
-                    "paragraph_id": "amd_2024_7_P059",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our aggregate principal debt obligations were $1.8 billion as of December 28, 2024.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "amd_2024_7_P059_S002",
                     "paragraph_id": "amd_2024_7_P059",
@@ -414,27 +300,14 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_7_D082",
+                "item": "7",
+                "disclosure_id": "nvda_2024_7_D067",
                 "sentences": [
                   {
-                    "sentence_id": "nvda_2024_7_P084_S001",
-                    "paragraph_id": "nvda_2024_7_P084",
+                    "sentence_id": "nvda_2024_7_P076_S003",
+                    "paragraph_id": "nvda_2024_7_P076",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "Our aggregate debt maturities as of January 28, 2024, by year payable, are as follows:",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_7_P084_S002",
-                    "paragraph_id": "nvda_2024_7_P084",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "We have a $575 million commercial paper program to support general corporate purposes.",
-                    "visible_in_prompt": true
-                  },
-                  {
-                    "sentence_id": "nvda_2024_7_P084_S003",
-                    "paragraph_id": "nvda_2024_7_P084",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
-                    "text": "As of the end of fiscal year 2024, we had no commercial paper outstanding.",
+                    "text": "We believe that we have sufficient liquidity to meet our operating requirements for at least the next twelve months, and for the foreseeable future, including our future supply obligations and $1.3 billion of debt repayment due in fiscal year 2025 and share purchases.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -451,26 +324,23 @@
           {
             "peer_ticker": "QCOM",
             "peer_disclosure_id": "qcom_2024_7_D042",
+            "target_item": "7",
+            "peer_item": "7",
+            "cross_item": false,
             "peer_topic": "Outstanding debt details",
             "peer_summary": "As of September 29, 2024, the company had $15.0 billion in principal fixed-rate notes outstanding, with $1.4 billion maturing in May 2025 and the remainder maturing between 2027 and 2053.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.196889,
+            "retrieval_score": 0.204407,
             "relationship": "same_topic",
-            "comparison": "Both AMD and Qualcomm disclose the aggregate principal amount of their debt obligations and maturity profiles as of the end of fiscal year 2024. AMD reported $1.8 billion in aggregate principal debt obligations, with remaining debt maturing starting in 2030 after the repayment of $750 million in notes. Qualcomm reported $15.0 billion in principal fixed-rate notes outstanding, with $1.4 billion maturing in May 2025 and the remainder maturing between 2027 and 2053. While both companies have debt maturing in the late 2020s, AMD's overall debt burden is significantly smaller than Qualcomm's, and AMD's recent activity involved reducing debt, whereas Qualcomm maintained a larger outstanding balance.",
+            "comparison": "AMD and Qualcomm both disclose the composition and maturity schedule of their fixed-rate note debt. AMD states that remaining debt will mature starting in 2030 after recent repayments. Qualcomm provides more granular detail, holding $15.0 billion in principal fixed-rate notes, with $1.4 billion maturing in May 2025 and the remainder maturing between 2027 and 2053.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AMD",
+                "item": "7",
                 "disclosure_id": "amd_2024_7_D046",
                 "sentences": [
-                  {
-                    "sentence_id": "amd_2024_7_P059_S001",
-                    "paragraph_id": "amd_2024_7_P059",
-                    "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "Our aggregate principal debt obligations were $1.8 billion as of December 28, 2024.",
-                    "visible_in_prompt": true
-                  },
                   {
                     "sentence_id": "amd_2024_7_P059_S002",
                     "paragraph_id": "amd_2024_7_P059",
@@ -483,6 +353,7 @@
               {
                 "side": "peer",
                 "ticker": "QCOM",
+                "item": "7",
                 "disclosure_id": "qcom_2024_7_D042",
                 "sentences": [
                   {
@@ -506,6 +377,11 @@
         ],
         "rationale": ""
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "2f0ce542ae59d9956efad0d3235da6156a55d254c9bf87de713d0cf17e10febb",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/amd",
+      "request_hash": "b8cb56a8ef19c7058f68b8469d62c97ed6abdb978e4b73d6a309206d3c1896b1"
+    }
   }
 }

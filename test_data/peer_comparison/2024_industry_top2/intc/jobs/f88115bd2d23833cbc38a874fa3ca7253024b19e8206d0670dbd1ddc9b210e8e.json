@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "d5caf6b5d40d8fb5c287084564a69be9eccf9ff8d4f50633f571d70b2dd19ee0",
-  "request_hash": "f4404cf3e1ecf985a22439410d26fa92d6e56393b64b97768111c3e82f2a2a9a",
+  "input_fingerprint": "3f9a1f51ad0f2cb6d0514bdfc3a383efd54e09818993a4e46e16dd482e13e331",
+  "job_fingerprint": "221dec53f5083454267e12d5b92b0cd0928540df2c5c9badc0bfaf7e7467448f",
+  "request_hash": "91009b4306b7a0a9b166465c9959add6d25af7193e1bb52779a6da39f93cbfbe",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AVGO\",\n\"peer_disclosure_id\": \"avgo_2024_8_D156\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both Intel and Broadcom disclose specific minimum purchase obligations. Intel's disclosure details a mandatory minimum purchase of factory output from Ireland SCIP with volume-related damages for non-compliance. Broadcom defines its own 'Purchase Commitments' as unconditional, legally binding obligations specifying fixed or minimum quantities to be purchased, primarily for inventory.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P093_S006\"\n],\n\"peer_sentence_ids\": [\n\"avgo_2024_8_P195_S003\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_8_D058\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and Micron disclose non-cancelable purchase obligations. Intel specifies obligations to purchase minimum quantities of factory output from Ireland SCIP. Micron discloses approximately $6.7 billion in noncancelable purchase obligations primarily covering fixed or minimum quantity and price payments for goods, services, and PP&E.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P093_S006\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_8_P064_S001\",\n\"mu_2024_8_P064_S002\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_8_D007\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both Intel and NVIDIA address 'excess product purchase commitments' as part of their financial disclosures. Intel outlines the obligation to purchase minimum quantities from Ireland SCIP. NVIDIA identifies provisions for excess product purchase commitments as a critical audit matter, noting significant outstanding inventory purchase and long-term supply obligations.\",\n\"target_sentence_ids\": [\n\"intc_2024_8_P093_S006\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_8_P010_S002\",\n\"nvda_2024_8_P010_S003\",\n\"nvda_2024_8_P010_S004\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"AMD\",\n\"reason\": \"Retrieved candidates concern future lease payments and revenue reductions for customer incentives, which are unrelated to Intel's topic of minimum purchase obligations for semiconductor factory output.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"No candidate was retrieved\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
   "result": {
     "target_ticker": "INTC",
     "target_disclosure_id": "intc_2024_8_D080",
@@ -154,13 +157,60 @@
         "peer_ticker": "AMD",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "AMD's candidate disclosures concern future minimum lease payments and a general definition of purchase commitments (noncancellable purchase orders). Neither addresses minimum purchase obligations for factory output or volume-related damages associated with a specific semiconductor manufacturing co-investment program like Intel's Ireland SCIP disclosure."
+        "rationale": "Retrieved candidates concern future lease payments and revenue reductions for customer incentives, which are unrelated to Intel's topic of minimum purchase obligations for semiconductor factory output."
       },
       {
         "peer_ticker": "AVGO",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "AVGO's candidate disclosure defines purchase commitments as unconditional, legally binding obligations for goods or services (primarily inventory) but excludes cancelable agreements and short-term obligations. It does not disclose specific minimum quantity purchase obligations for semiconductor factory output or co-investment program damages comparable to Intel's Ireland SCIP note."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "AVGO",
+            "peer_disclosure_id": "avgo_2024_8_D156",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Definition of Purchase Commitments",
+            "peer_summary": "The company defines purchase commitments as unconditional, legally binding obligations for goods or services, primarily inventory, excluding cancelable agreements or those with terms of one year or less.",
+            "peer_taxonomy": "Operations & Capacity",
+            "retrieval_score": 0.049351,
+            "relationship": "related_topic",
+            "comparison": "Both Intel and Broadcom disclose specific minimum purchase obligations. Intel's disclosure details a mandatory minimum purchase of factory output from Ireland SCIP with volume-related damages for non-compliance. Broadcom defines its own 'Purchase Commitments' as unconditional, legally binding obligations specifying fixed or minimum quantities to be purchased, primarily for inventory.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D080",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P093_S006",
+                    "paragraph_id": "intc_2024_8_P093",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We will be required to purchase minimum quantities of the related factory output from Ireland SCIP, or we will be subject to pay certain volume-related damages to Ireland SCIP, beginning at the earlier of when construction is complete or Q3 2027.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "AVGO",
+                "item": "8",
+                "disclosure_id": "avgo_2024_8_D156",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_8_P195_S003",
+                    "paragraph_id": "avgo_2024_8_P195",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "Represent unconditional purchase obligations to purchase goods or services, primarily inventory, that are enforceable and legally binding on us and specify all significant terms, including fixed or minimum quantities to be purchased, price provisions, and the approximate timing of the transaction.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "MU",
@@ -169,17 +219,21 @@
           {
             "peer_ticker": "MU",
             "peer_disclosure_id": "mu_2024_8_D058",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
             "peer_topic": "Long-term purchase obligations breakdown",
             "peer_summary": "As of August 29, 2024, the company had approximately $6.7 billion in noncancelable purchase obligations with remaining terms exceeding one year, primarily covering fixed or minimum quantity/price payments for goods, services, and property, plant, and equipment, with payments scheduled annually from 2025 through 2030 and thereafter.",
             "peer_taxonomy": "Financial & Capital Resources",
-            "retrieval_score": 0.046315,
+            "retrieval_score": 0.048904,
             "relationship": "same_topic",
-            "comparison": "Both Intel and Micron disclose obligations to purchase minimum quantities of goods or services with remaining terms exceeding one year, though the specific nature and structure differ. Intel's obligation is tied to a specific semiconductor co-investment program (Ireland SCIP) for Fab 34 output, triggering volume-related damages if minimums are not met, with obligations starting upon construction completion or Q3 2027. In contrast, Micron discloses a broader portfolio of noncancelable purchase obligations totaling approximately $6.7 billion, which include payments for goods, services, and property, plant, and equipment with fixed or minimum quantities and prices, scheduled over a multi-year horizon (2025-2030+).",
+            "comparison": "Both Intel and Micron disclose non-cancelable purchase obligations. Intel specifies obligations to purchase minimum quantities of factory output from Ireland SCIP. Micron discloses approximately $6.7 billion in noncancelable purchase obligations primarily covering fixed or minimum quantity and price payments for goods, services, and PP&E.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "INTC",
+                "item": "8",
                 "disclosure_id": "intc_2024_8_D080",
                 "sentences": [
                   {
@@ -194,6 +248,7 @@
               {
                 "side": "peer",
                 "ticker": "MU",
+                "item": "8",
                 "disclosure_id": "mu_2024_8_D058",
                 "sentences": [
                   {
@@ -219,16 +274,82 @@
       },
       {
         "peer_ticker": "NVDA",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "NVDA's candidate disclosure is a boilerplate statement regarding the location of required information in the financial statements and contains no substantive disclosure about purchase obligations or co-investment programs."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "NVDA",
+            "peer_disclosure_id": "nvda_2024_8_D007",
+            "target_item": "8",
+            "peer_item": "8",
+            "cross_item": false,
+            "peer_topic": "Valuation of Inventories and Provisions for Excess or Obsolete Inventory",
+            "peer_summary": "The audit identified the valuation of inventories, specifically provisions for excess or obsolete inventory and excess product purchase commitments, as a critical audit matter due to significant management judgment regarding future demand and market conditions assumptions, which in turn required significant auditor effort and subjective judgment.",
+            "peer_taxonomy": "Financial & Capital Resources",
+            "retrieval_score": 0.045706,
+            "relationship": "same_topic",
+            "comparison": "Both Intel and NVIDIA address 'excess product purchase commitments' as part of their financial disclosures. Intel outlines the obligation to purchase minimum quantities from Ireland SCIP. NVIDIA identifies provisions for excess product purchase commitments as a critical audit matter, noting significant outstanding inventory purchase and long-term supply obligations.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "INTC",
+                "item": "8",
+                "disclosure_id": "intc_2024_8_D080",
+                "sentences": [
+                  {
+                    "sentence_id": "intc_2024_8_P093_S006",
+                    "paragraph_id": "intc_2024_8_P093",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm",
+                    "text": "We will be required to purchase minimum quantities of the related factory output from Ireland SCIP, or we will be subject to pay certain volume-related damages to Ireland SCIP, beginning at the earlier of when construction is complete or Q3 2027.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "NVDA",
+                "item": "8",
+                "disclosure_id": "nvda_2024_8_D007",
+                "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_8_P010_S002",
+                    "paragraph_id": "nvda_2024_8_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "As described in Notes 1, 10 and 13 to the consolidated financial statements, the Company charges cost of sales for inventory provisions to write-down inventory for excess or obsolete inventory and for excess product purchase commitments.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P010_S003",
+                    "paragraph_id": "nvda_2024_8_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "Most of the Company's inventory provisions relate to excess quantities of products, based on the Company's inventory levels and future product purchase commitments compared to assumptions about future demand and market conditions.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "nvda_2024_8_P010_S004",
+                    "paragraph_id": "nvda_2024_8_P010",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "As of January 28, 2024, the Company's consolidated inventories balance was $5.3 billion and the Company's consolidated outstanding inventory purchase and long-term supply and capacity obligations balance was $16.1 billion, of which a significant portion relates to inventory purchase obligations.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "QCOM",
         "status": "no_candidate_retrieved",
         "comparisons": [],
-        "rationale": "No candidate was retrieved for QCOM."
+        "rationale": "No candidate was retrieved"
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "221dec53f5083454267e12d5b92b0cd0928540df2c5c9badc0bfaf7e7467448f",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/intc",
+      "request_hash": "91009b4306b7a0a9b166465c9959add6d25af7193e1bb52779a6da39f93cbfbe"
+    }
   }
 }

@@ -1,6 +1,9 @@
 {
-  "input_fingerprint": "e8f5d2d82ad7c45dadb101d3e71f0b28413408c433dcda43df5eb8735034b677",
-  "request_hash": "386bff014c11eb4c0d14f38d08621ae0219c6c2b9774993736444e4eb13b1bf4",
+  "input_fingerprint": "90285536b2e1b4c01858f9983f0dea8f72c5967ee49b24577d2ccc673c8b7d97",
+  "job_fingerprint": "ab614f91c154abe7691e5c8facb28c378c995a894e5b91d10e123b8f2dd72590",
+  "request_hash": "ac85e938902459e6ba5bdd477d45aabe9f59d616dd2c6ab63a34286a21063fb8",
+  "response_text": "{\n\"comparisons\": [\n{\n\"peer_ticker\": \"AMD\",\n\"peer_disclosure_id\": \"amd_2024_1_D067\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and AMD identify specific competitors in their respective hardware segments, but AVGO explicitly names infrastructure software vendors (Microsoft, Oracle, ServiceNow) while AMD focuses on FPGA and ASSP hardware vendors (Intel, Lattice, Marvell). AVGO characterizes the competitive landscape as large enterprise vendors expanding product lines versus niche players, whereas AMD frames the competition around primary FPGA competitors and ASSP vendors with a specific list of semiconductor firms.\",\n\"target_sentence_ids\": [\n\"avgo_2024_1_P040_S001\"\n],\n\"peer_sentence_ids\": [\n\"amd_2024_1_P067_S001\"\n]\n},\n{\n\"peer_ticker\": \"NVDA\",\n\"peer_disclosure_id\": \"nvda_2024_1_D046\",\n\"relationship\": \"same_topic\",\n\"comparison\": \"Both AVGO and NVDA describe highly competitive markets characterized by broad product offerings and rapid technological change. AVGO notes competition from large enterprise software vendors consolidating into broad product lines, while NVDA highlights performance, breadth of product offerings, and software support as key competitive factors. Both acknowledge that competitors may have greater resources or introduce products with better performance/features.\",\n\"target_sentence_ids\": [\n\"avgo_2024_1_P040_S001\"\n],\n\"peer_sentence_ids\": [\n\"nvda_2024_1_P045_S001\",\n\"nvda_2024_1_P045_S002\"\n]\n},\n{\n\"peer_ticker\": \"MU\",\n\"peer_disclosure_id\": \"mu_2024_1_D047\",\n\"relationship\": \"related_topic\",\n\"comparison\": \"Both AVGO and MU disclose intense competition from major industry players and concern regarding competitor resources and consolidation. AVGO lists specific software competitors (Microsoft, Oracle, etc.) and notes large enterprise vendors expanding offerings. MU identifies large semiconductor firms (Samsung, SK hynix) as having greater resources and market share, and explicitly warns that industry consolidation could put them at a disadvantage. While the sectors differ (software vs. memory/storage), both highlight the threat of well-resourced incumbents and consolidation.\",\n\"target_sentence_ids\": [\n\"avgo_2024_1_P040_S001\"\n],\n\"peer_sentence_ids\": [\n\"mu_2024_1_P049_S003\",\n\"mu_2024_1_P049_S004\"\n]\n}\n],\n\"no_match\": [\n{\n\"peer_ticker\": \"INTC\",\n\"reason\": \"The retrieved candidates for INTC focus on Foundry Business Strategy (intending to serve external customers) and Patent Lifecycle. These topics do not substantially overlap with AVGO's Item 1 disclosure on Infrastructure Software competitors. INTC's foundry strategy is a business model pivot rather than a description of competitive pressures from specific software or hardware peers in the same manner as AVGO's list of enterprise software vendors.\"\n},\n{\n\"peer_ticker\": \"QCOM\",\n\"reason\": \"The retrieved candidates for QCOM focus on QCT Business Scope/Roadmap (mobile, automotive, IoT) and R&D investment diversification. While QCOM mentions competing in industries with rapid change, the specific content regarding its product roadmap and R&D targets does not provide a comparable discussion of specific competitor identities or competitive dynamics in the same context as AVGO's infrastructure software competition.\"\n}\n]\n}",
+  "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
   "result": {
     "target_ticker": "AVGO",
     "target_disclosure_id": "avgo_2024_1_D077",
@@ -219,18 +222,22 @@
         "comparisons": [
           {
             "peer_ticker": "AMD",
-            "peer_disclosure_id": "amd_2024_1_D060",
-            "peer_topic": "Competitive landscape and determinants of product competitiveness",
-            "peer_summary": "AMD operates in a highly competitive market where timely delivery of latest products is critical for revenue growth. Key factors determining product competitiveness include total cost of ownership, performance, features (including AI accelerations), energy efficiency, and software compatibility.",
+            "peer_disclosure_id": "amd_2024_1_D067",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Primary FPGA and ASSP Competition",
+            "peer_summary": "AMD expects continued competition in the FPGA market from primary FPGA competitors such as Intel, Lattice Semiconductor Corporation, and Microsemi Corporation, as well as from ASSP vendors including Broadcom, Marvell, Analog Devices, Texas Instruments, NXP Semiconductors, Qualcomm, and NVIDIA.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.067152,
+            "retrieval_score": 0.078316,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and AMD disclose that their respective markets are highly competitive and that timely delivery of products is a critical factor for revenue growth. AVGO specifically notes in infrastructure software that it competes with large vendors expanding product lines and niche players, while AMD states broadly that its markets are 'highly competitive' and that 'delivering the latest and best products to market on a timely basis is critical to achieving revenue growth.' Both companies emphasize the competitive pressure to innovate and bring products to market quickly, although AVGO's specific focus is on software ecosystem consolidation and AMD's is on hardware performance and features.",
+            "comparison": "Both AVGO and AMD identify specific competitors in their respective hardware segments, but AVGO explicitly names infrastructure software vendors (Microsoft, Oracle, ServiceNow) while AMD focuses on FPGA and ASSP hardware vendors (Intel, Lattice, Marvell). AVGO characterizes the competitive landscape as large enterprise vendors expanding product lines versus niche players, whereas AMD frames the competition around primary FPGA competitors and ASSP vendors with a specific list of semiconductor firms.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "1",
                 "disclosure_id": "avgo_2024_1_D077",
                 "sentences": [
                   {
@@ -245,13 +252,14 @@
               {
                 "side": "peer",
                 "ticker": "AMD",
-                "disclosure_id": "amd_2024_1_D060",
+                "item": "1",
+                "disclosure_id": "amd_2024_1_D067",
                 "sentences": [
                   {
-                    "sentence_id": "amd_2024_1_P063_S001",
-                    "paragraph_id": "amd_2024_1_P063",
+                    "sentence_id": "amd_2024_1_P067_S001",
+                    "paragraph_id": "amd_2024_1_P067",
                     "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm",
-                    "text": "The markets in which our products are sold are highly competitive and delivering the latest and best products to market on a timely basis is critical to achieving revenue growth.",
+                    "text": "We expect continued competition from our primary FPGA competitors such as Intel, Lattice Semiconductor Corporation and Microsemi Corporation, and from ASSP vendors such as Broadcom Corporation, Marvell Technology Group, Ltd., Analog Devices, Texas Instruments Incorporated and NXP Semiconductors N.V., and from Qualcomm Incorporated and NVIDIA.",
                     "visible_in_prompt": true
                   }
                 ]
@@ -265,13 +273,67 @@
         "peer_ticker": "INTC",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The provided Intel candidates focus on foundry business strategy (D015) and open platform standards (D010), which do not share specific facts, outcomes, or risk exposure with AVGO's disclosure regarding competition in infrastructure software against named enterprise software vendors."
+        "rationale": "The retrieved candidates for INTC focus on Foundry Business Strategy (intending to serve external customers) and Patent Lifecycle. These topics do not substantially overlap with AVGO's Item 1 disclosure on Infrastructure Software competitors. INTC's foundry strategy is a business model pivot rather than a description of competitive pressures from specific software or hardware peers in the same manner as AVGO's list of enterprise software vendors."
       },
       {
         "peer_ticker": "MU",
-        "status": "no_comparable_candidate",
-        "comparisons": [],
-        "rationale": "The provided Micron candidates focus on intense competition from large semiconductor/memory firms like Samsung and SK Hynix, and manufacturing complexity (D047, D054). This is a different sector (memory/storage vs. infrastructure software) with distinct competitors and business drivers compared to AVGO's disclosure."
+        "status": "compared",
+        "comparisons": [
+          {
+            "peer_ticker": "MU",
+            "peer_disclosure_id": "mu_2024_1_D047",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Competitor Landscape and Resources",
+            "peer_summary": "The company faces intense competition from large semiconductor firms like Samsung and SK hynix, which may have greater resources and market share, and is concerned about industry consolidation potentially creating a competitive disadvantage.",
+            "peer_taxonomy": "Strategy & Business Model",
+            "retrieval_score": 0.073587,
+            "relationship": "related_topic",
+            "comparison": "Both AVGO and MU disclose intense competition from major industry players and concern regarding competitor resources and consolidation. AVGO lists specific software competitors (Microsoft, Oracle, etc.) and notes large enterprise vendors expanding offerings. MU identifies large semiconductor firms (Samsung, SK hynix) as having greater resources and market share, and explicitly warns that industry consolidation could put them at a disadvantage. While the sectors differ (software vs. memory/storage), both highlight the threat of well-resourced incumbents and consolidation.",
+            "peer_source_status": "source_validated",
+            "evidence": [
+              {
+                "side": "target",
+                "ticker": "AVGO",
+                "item": "1",
+                "disclosure_id": "avgo_2024_1_D077",
+                "sentences": [
+                  {
+                    "sentence_id": "avgo_2024_1_P040_S001",
+                    "paragraph_id": "avgo_2024_1_P040",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm",
+                    "text": "In infrastructure software, we compete with large enterprise software vendors who continue to expand their product and service offerings and consolidate offerings into broad product lines, and smaller, niche players focused on specific markets, such as Atlassian Corporation, Plc, BeyondTrust Corporation, BMC Software Inc., Cisco Systems, Inc., CrowdStrike Holdings, Inc., CyberArk Software, Ltd., Dino-Software Corporation, Fortinet, Inc., Hewlett Packard Enterprise Company, International Business Machines Corporation, Microsoft Corporation, New Relic, Inc., OpenText Corporation, Oracle Corporation, Palo Alto Networks, Inc., Proofpoint, Inc., Rocket Software, Inc., SailPoint Technologies Holdings, Inc., Salesforce.com, Inc., ServiceNow, Inc., SolarWinds Corporation, Versa Networks, Inc., and Zscaler, Inc.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              },
+              {
+                "side": "peer",
+                "ticker": "MU",
+                "item": "1",
+                "disclosure_id": "mu_2024_1_D047",
+                "sentences": [
+                  {
+                    "sentence_id": "mu_2024_1_P049_S003",
+                    "paragraph_id": "mu_2024_1_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Some of our competitors are large corporations or conglomerates that may have a larger market share and greater resources to invest in technology, capitalize on growth opportunities, and withstand downturns in the semiconductor markets in which we compete.",
+                    "visible_in_prompt": true
+                  },
+                  {
+                    "sentence_id": "mu_2024_1_P049_S004",
+                    "paragraph_id": "mu_2024_1_P049",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000027/mu-20240829.htm",
+                    "text": "Consolidation of industry competitors could put us at a competitive disadvantage as our competitors may benefit from increased manufacturing scale and a stronger product portfolio.",
+                    "visible_in_prompt": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rationale": ""
       },
       {
         "peer_ticker": "NVDA",
@@ -279,18 +341,22 @@
         "comparisons": [
           {
             "peer_ticker": "NVDA",
-            "peer_disclosure_id": "nvda_2024_1_D043",
-            "peer_topic": "Competitive landscape and factors",
-            "peer_summary": "The market for NVDA's products is intensely competitive, with principal factors including performance, product breadth, software support, and manufacturing capabilities, while competition is expected to increase from both existing players and new entrants offering lower prices or better features.",
+            "peer_disclosure_id": "nvda_2024_1_D046",
+            "target_item": "1",
+            "peer_item": "1",
+            "cross_item": false,
+            "peer_topic": "Competitive landscape and key factors",
+            "peer_summary": "The market for the company's products is intensely competitive, driven by factors such as performance, product breadth, software support, and pricing. Competition is expected to increase from existing and new entrants, including alliances, potentially offering lower prices or better performance.",
             "peer_taxonomy": "Strategy & Business Model",
-            "retrieval_score": 0.070221,
+            "retrieval_score": 0.065408,
             "relationship": "same_topic",
-            "comparison": "Both AVGO and NVDA identify the breadth of product offerings as a key competitive factor or characteristic of their competitive landscape. AVGO describes competitors as 'large enterprise software vendors who continue to expand their product and service offerings and consolidate offerings into broad product lines.' Similarly, NVDA lists 'breadth of product offerings' as one of the 'principal competitive factors' in its market. Both disclosures highlight that the market is characterized by competitors offering comprehensive or expanding solution sets, creating a complex competitive environment.",
+            "comparison": "Both AVGO and NVDA describe highly competitive markets characterized by broad product offerings and rapid technological change. AVGO notes competition from large enterprise software vendors consolidating into broad product lines, while NVDA highlights performance, breadth of product offerings, and software support as key competitive factors. Both acknowledge that competitors may have greater resources or introduce products with better performance/features.",
             "peer_source_status": "source_validated",
             "evidence": [
               {
                 "side": "target",
                 "ticker": "AVGO",
+                "item": "1",
                 "disclosure_id": "avgo_2024_1_D077",
                 "sentences": [
                   {
@@ -305,8 +371,16 @@
               {
                 "side": "peer",
                 "ticker": "NVDA",
-                "disclosure_id": "nvda_2024_1_D043",
+                "item": "1",
+                "disclosure_id": "nvda_2024_1_D046",
                 "sentences": [
+                  {
+                    "sentence_id": "nvda_2024_1_P045_S001",
+                    "paragraph_id": "nvda_2024_1_P045",
+                    "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+                    "text": "The market for our products is intensely competitive and is characterized by rapid technological change and evolving industry standards.",
+                    "visible_in_prompt": true
+                  },
                   {
                     "sentence_id": "nvda_2024_1_P045_S002",
                     "paragraph_id": "nvda_2024_1_P045",
@@ -325,8 +399,13 @@
         "peer_ticker": "QCOM",
         "status": "no_comparable_candidate",
         "comparisons": [],
-        "rationale": "The provided Qualcomm candidates focus on the QCT business scope for mobile/automotive/IoT (D033) and R&D investment diversification (D049). These disclosures do not provide comparable specific facts about competition against named enterprise software vendors or the specific competitive dynamics of infrastructure software as described by AVGO."
+        "rationale": "The retrieved candidates for QCOM focus on QCT Business Scope/Roadmap (mobile, automotive, IoT) and R&D investment diversification. While QCOM mentions competing in industries with rapid change, the specific content regarding its product roadmap and R&D targets does not provide a comparable discussion of specific competitor identities or competitive dynamics in the same context as AVGO's infrastructure software competition."
       }
-    ]
+    ],
+    "cache_provenance": {
+      "job_fingerprint": "ab614f91c154abe7691e5c8facb28c378c995a894e5b91d10e123b8f2dd72590",
+      "source_profile": "/Users/jingleea/Documents/My Files/NUS course/Y4S1/BT4103/simple_extraction/data/nvda_peer_regeneration/.cache/peer_comparison/2024_industry_top2/avgo",
+      "request_hash": "ac85e938902459e6ba5bdd477d45aabe9f59d616dd2c6ab63a34286a21063fb8"
+    }
   }
 }
