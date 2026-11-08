@@ -283,6 +283,75 @@ class PeerComparisonTests(unittest.TestCase):
         self.assertEqual(len(result[0]["comparisons"]), 2)
         self.assertEqual(result[0]["comparisons"][0]["evidence"][0]["sentences"][0]["sentence_id"], "a1")
 
+    def test_omitted_peer_with_no_retrieved_candidates_is_determined_locally(self):
+        target, ranked = self._inputs()
+        result = validate_response({"comparisons": [{
+            "peer_ticker": "BBB", "peer_disclosure_id": self.peer["disclosure_id"],
+            "relationship": "same_topic", "comparison": "Both identify supplier concentration.",
+            "target_sentence_ids": ["a1"], "peer_sentence_ids": ["b1"],
+        }], "no_match": []}, target, {"bbb": ranked, "qcom": []}, ["bbb", "qcom"])
+        self.assertEqual(result[0]['status'], 'compared')
+        self.assertEqual(result[1]['peer_ticker'], 'QCOM')
+        self.assertEqual(result[1]['status'], 'no_candidate_retrieved')
+        self.assertEqual(result[1]['comparisons'], [])
+        self.assertIn('does not establish filing-wide absence', result[1]['rationale'])
+
+    def test_missing_peer_with_retrieved_candidates_still_requires_a_model_decision(self):
+        target, ranked = self._inputs()
+        with self.assertRaisesRegex(ValueError, r'Missing: BBB\.'):
+            validate_response({'comparisons': [], 'no_match': []}, target,
+                              {'bbb': ranked, 'qcom': []}, ['bbb', 'qcom'])
+
+    def test_all_empty_candidate_lists_need_no_model_absence_decisions(self):
+        target, _ = self._inputs()
+        result = validate_response({'comparisons': [], 'no_match': []}, target,
+                                   {'bbb': [], 'qcom': []}, ['bbb', 'qcom'])
+        self.assertEqual([row['status'] for row in result], ['no_candidate_retrieved'] * 2)
+
+    def test_failed_validation_cache_can_be_revalidated_without_new_requests(self):
+        from sec_disclosure.agents import peer_comparison as agent
+        args = self.retry_args()
+        args.max_validation_attempts, args.max_retries = 1, 0
+        response = CompletionResult(json.dumps({'comparisons': [], 'no_match': []}),
+            'test-model', 'stop', {'prompt_tokens': 10, 'completion_tokens': 5, 'total_tokens': 15})
+        request, _ = self.retry_patches([response])
+        with patch.object(agent, 'make_candidates', return_value={self.target['disclosure_id']: {'bbb': []}}):
+            with patch.object(agent, 'validate_response', side_effect=ValueError('Legacy empty-peer rejection')):
+                with self.assertRaisesRegex(ValueError, '1 target comparisons failed'):
+                    run(args)
+            path = next((args.output_dir / 'requests').glob('*.json'))
+            original = json.loads(path.read_text())
+            self.assertEqual(original['validation_status'], 'failed')
+            request.reset_mock()
+            args.max_requests = 0
+            report = run(args)
+        request.assert_not_called()
+        self.assertTrue(report['run_complete'])
+        self.assertEqual(report['new_api_requests'], 0)
+        self.assertEqual(report['token_usage']['total_tokens'], 15)
+        self.assertEqual(report['comparisons'][0]['peer_results'][0]['status'], 'no_candidate_retrieved')
+        revalidated = json.loads(path.read_text())
+        self.assertEqual(revalidated['validation_status'], 'passed')
+        self.assertNotIn('validation_error', revalidated)
+        self.assertEqual(revalidated['previous_validation_error'], original['validation_error'])
+        self.assertEqual(revalidated['usage'], original['usage'])
+        self.assertEqual(revalidated['text'], original['text'])
+
+    def test_revalidating_failed_cache_still_rejects_invalid_response(self):
+        args = self.retry_args()
+        args.max_validation_attempts, args.max_retries = 1, 0
+        request, _ = self.retry_patches([CompletionResult('{}', 'test-model', 'stop',
+            {'prompt_tokens': 10, 'completion_tokens': 5, 'total_tokens': 15})])
+        with self.assertRaisesRegex(ValueError, '1 target comparisons failed'):
+            run(args)
+        request.reset_mock()
+        args.max_requests = 0
+        report = run(args)
+        request.assert_not_called()
+        self.assertFalse(report['run_complete'])
+        record = json.loads(next((args.output_dir / 'requests').glob('*.json')).read_text())
+        self.assertEqual(record['validation_status'], 'failed')
+
     def test_material_change_filter_keeps_only_stage_five_yes(self):
         rows = [
             {"disclosure_id": "yes", "year_over_year_context": [

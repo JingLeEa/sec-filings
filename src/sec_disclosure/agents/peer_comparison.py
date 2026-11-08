@@ -376,8 +376,14 @@ def validate_response(value: dict, target: dict, candidate_map: dict[str, list[d
 
     if set(no_match) & matched_tickers:
         raise ValueError("A peer ticker cannot have both comparisons and a no_match decision.")
-    if set(no_match) | matched_tickers != set(peer_tickers):
-        raise ValueError("Agent must return at least one supported comparison or no_match for every peer.")
+    # Retrieval already establishes this outcome. A model omission for an
+    # empty candidate list must not discard otherwise valid comparisons.
+    empty_peers = {ticker for ticker in peer_tickers if not candidates[ticker]}
+    covered = set(no_match) | matched_tickers | empty_peers
+    missing = set(peer_tickers) - covered
+    if covered != set(peer_tickers):
+        raise ValueError("Agent must return at least one supported comparison or no_match for every peer "
+                         "with retrieved candidates. Missing: " + ", ".join(sorted(missing)) + ".")
 
     result = []
     for ticker in peer_tickers:
@@ -393,7 +399,8 @@ def validate_response(value: dict, target: dict, candidate_map: dict[str, list[d
                 "peer_ticker": ticker,
                 "status": "no_candidate_retrieved",
                 "comparisons": [],
-                "rationale": no_match[ticker]
+                "rationale": no_match.get(ticker, "No candidate was retrieved for this peer in the eligible "
+                                          "saved disclosures; this does not establish filing-wide absence.")
             })
         else:
             result.append({
@@ -722,7 +729,7 @@ def run(args, *, database_inputs=None) -> dict:
             request_record = None
             for cached_path in attempts:
                 cached = json.loads(cached_path.read_text(encoding="utf-8"))
-                if cached.get("status") == "completed" and cached.get("validation_status") != "failed":
+                if cached.get("status") == "completed":
                     # HTTP completion does not establish valid citations. Older
                     # runs cached invalid responses without flagging them, which
                     # otherwise makes every resume replay the same failed JSON.
@@ -732,6 +739,14 @@ def run(args, *, database_inputs=None) -> dict:
                         cached.update(validation_status="failed", validation_error=str(error)[:1000])
                         write_json(cached_path, cached)
                         continue
+                    # Validator fixes can make an old response usable. Replay
+                    # it through current checks, retaining its original usage
+                    # rather than requesting another model response.
+                    if cached.get("validation_status") == "failed":
+                        cached['previous_validation_error'] = cached.get('validation_error')
+                        cached.update(validation_status="passed")
+                        cached.pop("validation_error", None)
+                        write_json(cached_path, cached)
                     request_record = cached
                     request_path = cached_path
             if request_record is None:

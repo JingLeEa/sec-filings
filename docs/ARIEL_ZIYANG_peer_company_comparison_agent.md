@@ -135,6 +135,11 @@ on both sides, and the UI/Markdown show pairs such as `JPM Item 15 ↔ BAC Item 
 This retrieval does not run the main pipeline's lexical or semantic change
 analysis. Each comparison must cite exact sentences from the target and peer.
 A missing candidate is distinct from a retrieved candidate judged incomparable.
+If retrieval supplies no candidates for a peer, code records
+`no_candidate_retrieved` even when the model omits that peer. This describes the
+retrieval result, not filing-wide absence. Peers with retrieved candidates still
+require a validated comparison or an explicit model `no_match` decision. A
+correction error names any such missing peers.
 
 There are **6 concurrent target-comparison workers** by default, with a maximum
 of **20**. Each worker handles one target disclosure and all requested peers,
@@ -211,6 +216,13 @@ Reused jobs link to the original profile/request in `cache_provenance`. The UI,
 activity log and Markdown report show reuse counts. New attempts, including
 automatic retries, still count against `--max-requests`; a zero budget permits
 cache reuse but makes no new model requests.
+
+Completed responses previously marked invalid are checked again against the
+current validator on resume. If they now pass, their original response text and
+token usage are retained, the validation marker is updated, and the previous
+validation error remains in `previous_validation_error`. Invalid citations,
+relationships and missing decisions for peers with candidates still fail; a
+validator change does not automatically accept an old response.
 
 The Item-15 matching policy uses a new cache-policy version. Results created
 under the earlier same-Item-only rules are retained in their old profiles and
