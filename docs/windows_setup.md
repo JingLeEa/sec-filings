@@ -4,6 +4,33 @@ Use PowerShell from the repository root. Install Python 3.13 and Docker Desktop,
 start Docker Desktop, and select Linux containers. A new PowerShell window may be
 needed after installing Python so its launcher is on PATH.
 
+For the shared Google Cloud API settings, ask the maintainer to grant your
+Google account Secret Manager Secret Accessor on `bt4103-api-key`, then run:
+
+```powershell
+py -3.13 scripts\setup_app.py
+```
+
+This prepares `.venv`, installs Python dependencies, downloads and verifies the
+Google CLI when needed, preserves existing `.env` settings (or creates local
+database settings), and starts Google sign-in if required. Complete the browser
+login with your authorized account. It finishes by checking secret access
+without running a pipeline. A separate Google CLI installer is not required.
+
+Then start Docker Desktop and run:
+
+```powershell
+docker compose up -d --wait
+.\.venv\Scripts\python.exe scripts\run_with_gcp_secrets.py
+```
+
+For later sessions, keep Docker running and reuse the launch command. Setup is
+safe to rerun; use `--skip-login` to prohibit browser prompts when checking an
+existing login. The [main README](../README.md) covers cloud permissions and
+running terminal pipelines through the same cloud launcher.
+
+## Manual installation with local API settings
+
 Create the project environment and install the backend, dashboard, and test tools:
 
 ```powershell

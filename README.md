@@ -35,9 +35,60 @@ Run all remaining commands from the project folder containing `README.md`, `app/
 
 ## 3. Install the app
 
-Use the commands for your operating system. The `.venv` folder keeps this project's Python dependencies together; you do not need to activate it.
+For shared Google Cloud API access, ask the maintainer to grant your Google
+account **Secret Manager Secret Accessor** on `bt4103-api-key`, then run one
+setup command from the project folder:
 
-### macOS — Terminal
+**macOS:**
+
+```sh
+python3.13 scripts/setup_app.py
+```
+
+**Windows PowerShell:**
+
+```powershell
+py -3.13 scripts\setup_app.py
+```
+
+Setup creates or reuses `.venv`, installs the app's Python dependencies, and
+downloads Google's CLI into the ignored `.tools` folder if needed. Downloads
+use a pinned release with Google's published SHA256 checksum. Existing local
+settings are preserved; a fresh installation gets a `.env` containing only the
+local PostgreSQL settings. No administrator rights, Homebrew, or PowerShell
+execution-policy changes are needed.
+
+If your existing Google credentials can access the shared secret, setup reuses
+them. Otherwise, complete the Google sign-in in your browser using the account
+granted access. Setup checks that the shared API settings are present; it does
+not run a filing pipeline or call SEC/AI providers. If a step fails, fix the
+reported issue and rerun the same setup command.
+
+After **Setup complete**, go to **step 5** to start PostgreSQL, then launch with:
+
+```sh
+# macOS
+.venv/bin/python scripts/run_with_gcp_secrets.py
+```
+
+```powershell
+# Windows PowerShell
+.\.venv\Scripts\python.exe scripts\run_with_gcp_secrets.py
+```
+
+Keep Docker Desktop running while using the dashboard. Google credentials are
+stored in Google's normal local credential location; fetched API keys stay in
+the app's memory. Reuse the launch command for later sessions. To rerun setup
+without a browser prompt, add `--skip-login`; to reuse already installed Python
+packages, also add `--skip-install`.
+
+### Manual Python installation
+
+If you prefer to install dependencies manually and use your own local API
+settings, use the commands below and continue with step 4. The `.venv` folder
+keeps this project's Python dependencies together; you do not need to activate it.
+
+#### macOS — Terminal
 
 ```sh
 python3.13 --version
@@ -46,7 +97,7 @@ python3.13 -m venv .venv
 .venv/bin/python -m pip install -r app/requirements.txt
 ```
 
-### Windows — PowerShell
+#### Windows — PowerShell
 
 ```powershell
 py -3.13 --version
@@ -123,28 +174,13 @@ That private file is ignored by Git and is not included when someone clones the
 project. `SOCLAAS_CHATBOT_MODEL` and the `DATABASE_URL`/`POSTGRES_*` settings from
 `.env.example` are also supported, but local database settings normally stay local.
 
-**One-time setup for each groupmate:**
-
-1. Install the [Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk)
-   for Mac or Windows.
-2. Ask the maintainer to grant your Google account **Secret Manager Secret
-   Accessor** on `bt4103-api-key`. This lets you retrieve the actual shared API
-   keys. Cloning the repository alone does not grant access.
-3. Sign in with the same Google account from Terminal or PowerShell:
-
-```sh
-gcloud auth application-default login --project=bt4103-514213
-```
-
-On the maintainer's Mac, a project-local Google CLI is installed in the ignored
-`.tools` folder. If `gcloud` is not on PATH, use this command from the project root:
-
-```sh
-.tools/google-cloud-sdk/bin/gcloud auth application-default login --project=bt4103-514213
-```
-
-This creates Google's local application credentials; it does not download the API
-settings into a local `.env`. No service-account key JSON is needed.
+Use the **one-command setup in step 3** on each computer. It handles both Google
+CLI installation and Google application-default sign-in. Cloning the repository
+does not grant access to the secret; the maintainer must grant your Google
+account Secret Accessor. This role lets you retrieve the actual shared API keys.
+No service-account key JSON is needed. If you prefer a system-wide CLI, install
+it using [Google's installer](https://docs.cloud.google.com/sdk/docs/install-sdk)
+and sign in with `gcloud auth application-default login --project=bt4103-514213`.
 
 **Check access without starting the app or calling SEC/AI providers:**
 
@@ -194,8 +230,15 @@ override the committed identifiers.
 **Maintainer: upload an updated file** as a new version, then restart the app:
 
 ```sh
-gcloud secrets versions add bt4103-api-key --project=bt4103-514213 --data-file=gcp-secrets.env
+.venv/bin/python -S .tools/google-cloud-sdk/lib/gcloud.py secrets versions add bt4103-api-key --project=bt4103-514213 --data-file=gcp-secrets.env
 ```
+
+For this upload command, authenticate the CLI with the same prefix followed by
+`auth login` if needed, for example
+`.venv/bin/python -S .tools/google-cloud-sdk/lib/gcloud.py auth login`.
+Google CLI login and application-default login use separate credentials. If you
+use a system-wide CLI, replace `.venv/bin/python -S .tools/google-cloud-sdk/lib/gcloud.py`
+with `gcloud`. On Windows, use `.\.venv\Scripts\python.exe` for the Python path.
 
 Existing runs keep the version loaded when they started. New launches use
 `latest`; you can select a fixed version with `--version 2`.
