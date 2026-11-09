@@ -99,6 +99,115 @@ Fill in the remaining settings according to what you want to do:
 
 Save the file before launching the app. After changing settings, restart the app; changes do not update a pipeline that is already running. Keep `.env` private and out of GitHub; it is ignored by Git. Each new installation needs its own settings file.
 
+### Use shared API settings from Google Cloud
+
+You can load the API settings from **Google Cloud Secret Manager** instead of
+putting API keys in each person's `.env`. Keep the local PostgreSQL settings
+above in `.env`; the database still runs through Docker on each person's computer.
+The normal dependency installation in step 3 includes the Google Python client.
+
+The committed [gcp-secrets.json](gcp-secrets.json) contains only these identifiers:
+
+```json
+{
+  "project": "bt4103-514213",
+  "secret": "bt4103-api-key",
+  "version": "latest"
+}
+```
+
+The secret's value must be the **contents of the combined `.env` file**, including
+`SEC_USER_AGENT`, `SEC_API_KEY`, `SOCLAAS_BASE_URL`, `SOCLAAS_API_KEY`, and
+`SOCLAAS_MODEL`. Upload `gcp-secrets.env` if the maintainer has prepared it locally.
+That private file is ignored by Git and is not included when someone clones the
+project. `SOCLAAS_CHATBOT_MODEL` and the `DATABASE_URL`/`POSTGRES_*` settings from
+`.env.example` are also supported, but local database settings normally stay local.
+
+**One-time setup for each groupmate:**
+
+1. Install the [Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk)
+   for Mac or Windows.
+2. Ask the maintainer to grant your Google account **Secret Manager Secret
+   Accessor** on `bt4103-api-key`. This lets you retrieve the actual shared API
+   keys. Cloning the repository alone does not grant access.
+3. Sign in with the same Google account from Terminal or PowerShell:
+
+```sh
+gcloud auth application-default login --project=bt4103-514213
+```
+
+On the maintainer's Mac, a project-local Google CLI is installed in the ignored
+`.tools` folder. If `gcloud` is not on PATH, use this command from the project root:
+
+```sh
+.tools/google-cloud-sdk/bin/gcloud auth application-default login --project=bt4103-514213
+```
+
+This creates Google's local application credentials; it does not download the API
+settings into a local `.env`. No service-account key JSON is needed.
+
+**Check access without starting the app or calling SEC/AI providers:**
+
+```sh
+# macOS
+.venv/bin/python scripts/run_with_gcp_secrets.py --check
+```
+
+```powershell
+# Windows PowerShell
+.\.venv\Scripts\python.exe scripts\run_with_gcp_secrets.py --check
+```
+
+**Launch the dashboard with the shared API settings**, after starting Docker as
+described in step 5:
+
+```sh
+# macOS
+.venv/bin/python scripts/run_with_gcp_secrets.py
+```
+
+```powershell
+# Windows PowerShell
+.\.venv\Scripts\python.exe scripts\run_with_gcp_secrets.py
+```
+
+This is an alternative to the local-file launch commands in step 6. The launcher
+fetches and validates the selected secret version once, then starts Streamlit
+using the same Python environment. The settings stay in process memory and take
+priority over local API settings. Pipeline jobs, peer comparison, chatbot
+requests, and Manual Review background jobs inherit them. The launcher clears
+the old `SEC_UI_PIPELINE_ENV_FILE` override because review workers do not need a
+downloaded env file. It never writes the fetched settings to a file, PostgreSQL,
+or an activity log, and it does not start the app if secret access fails.
+
+For a terminal pipeline, put the Python script and its arguments after `--`:
+
+```sh
+.venv/bin/python scripts/run_with_gcp_secrets.py -- scripts/run_full_pipeline.py --ticker MS --years 2023 2024 2025 --until preprocessing
+```
+
+On Windows, use `.\.venv\Scripts\python.exe` in place of `.venv/bin/python`.
+The same launcher can run `scripts/run_peer_comparison_pipeline.py` or other
+Python entry points. Use `--project`, `--secret`, or `--version` before `--` to
+override the committed identifiers.
+
+**Maintainer: upload an updated file** as a new version, then restart the app:
+
+```sh
+gcloud secrets versions add bt4103-api-key --project=bt4103-514213 --data-file=gcp-secrets.env
+```
+
+Existing runs keep the version loaded when they started. New launches use
+`latest`; you can select a fixed version with `--version 2`.
+
+If access fails, check that the Secret Manager API is enabled in this project,
+that the secret contains the complete `.env` text, and that your account has
+Secret Accessor on this secret. If Google reports a quota-project permission
+error, ask the maintainer for **Service Usage Consumer** on the quota project,
+then run `gcloud auth application-default set-quota-project bt4103-514213`.
+See [Google's authentication guide](https://docs.cloud.google.com/secret-manager/docs/authentication)
+and [quota-project instructions](https://docs.cloud.google.com/sdk/gcloud/reference/auth/application-default/set-quota-project).
+
 ## 5. Start PostgreSQL
 
 With Docker Desktop running, execute:
