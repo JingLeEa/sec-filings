@@ -27,6 +27,8 @@ def bundler(monkeypatch, tmp_path):
             return "source-commit\n"
         if command[1] == "ls-tree":
             return original + "\n"
+        if command[1] == "log":
+            return "source-commit\n"
         assert command == ["git", "show", "source-commit:" + original]
         return json.dumps(base).encode()
 
@@ -51,6 +53,7 @@ def test_rebuild_preserves_financial_supplement_and_its_provenance(bundler, tmp_
     manifest = json.loads((output / "manifest.json").read_text())
     assert manifest["source_commit"] == "source-commit"
     [entry] = manifest["files"]
+    assert entry["known_payload_sha256"]
     if include_supplement:
         assert entry["source"] == {
             "kind": "supplemental_synthesis",

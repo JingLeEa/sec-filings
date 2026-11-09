@@ -92,6 +92,37 @@ To run the same import explicitly:
 .venv/bin/python scripts/seed_starter_data.py
 ```
 
+To load a newer bundled pack into an existing database, including updates to
+older starter records:
+
+```bash
+.venv/bin/python scripts/seed_starter_data.py --refresh
+```
+
+On Windows PowerShell, use
+`.\.venv\Scripts\python.exe scripts\seed_starter_data.py --refresh`.
+Pull the updated `main` branch and start PostgreSQL first, then click **Reload data**
+in the UI or restart Streamlit
+after the command completes. No model calls, SEC downloads or local result
+exports are performed.
+
+Refresh is explicit; ordinary startup remains missing-only. It replaces only
+records whose starter provenance is intact. Normalized disclosures and alignment
+rows must still match their saved starter snapshots. Legacy synthesis reports
+must match a historical report fingerprint in the bundle manifest and the import
+transaction timestamp shared with seeded filing snapshots; legacy peer reports
+use historical fingerprints and their recorded starter import source. New
+synthesis and peer imports carry a checksum of the imported payload so later
+edits are detectable.
+
+Human reviews, pending review jobs, active pipelines, non-starter checkpoints,
+and pipeline-produced snapshots protect the affected company. Unverifiable
+records protect the company too; peer reports involving protected companies are
+preserved. The loader shares pipeline and review locks with their writers, and
+updates the database in one transaction: a failed update rolls back. It reports
+refreshed, unchanged and protected scope counts without clearing caches, run
+history, human labels, or raw/XBRL inputs.
+
 `SEC_UI_BOOTSTRAP_TEST_DATA=0` disables automatic importing. Explicit
 `SEC_UI_DATA_SOURCE=files` also skips it for offline fixture development. A
 database/import failure stops normal app startup with setup instructions rather
@@ -112,6 +143,6 @@ archive so later rebuilds retain financial refreshes.
 
 Review and commit the archive, manifest and supplemental reports together. App
 startup never fetches Git branches or runs model requests. Existing PostgreSQL
-reports remain protected from replacement; this refresh supplies new
-installations and missing report scopes. JPM's report was also regenerated
-directly in the originating PostgreSQL database.
+reports remain protected during startup; `seed_starter_data.py --refresh` is the
+explicit update path for unchanged older starter records. JPM's report was also
+regenerated directly in the originating PostgreSQL database.

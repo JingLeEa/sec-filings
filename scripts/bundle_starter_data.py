@@ -16,8 +16,25 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from sec_disclosure.alignment_policy import EXCLUSION_POLICY, exclude_from_reports
 from sec_disclosure.storage.synthesis_reports import read_report
+from sec_disclosure.storage.starter_refresh import digest, report_body
 
 SUPPLEMENTAL = ROOT / "starter_data" / "supplemental"
+
+
+def known_report_digests(commit, original, report):
+    """Ship fingerprints, not old report bodies, for safe legacy import updates."""
+    fingerprints = {digest(report_body(report))}
+    history = subprocess.check_output(
+        ["git", "log", "--format=%H", commit, "--", original], cwd=ROOT, text=True).splitlines()
+    for revision in history:
+        try:
+            raw = subprocess.check_output(["git", "show", f"{revision}:{original}"], cwd=ROOT,
+                                          stderr=subprocess.DEVNULL)
+            fingerprints.add(digest(report_body(json.loads(raw))))
+        except (subprocess.CalledProcessError, ValueError):
+            # Deleted paths or pre-JSON history are not trusted import baselines.
+            continue
+    return sorted(fingerprints)
 
 
 def bundle(ref, destination):
@@ -91,6 +108,8 @@ def bundle(ref, destination):
                          "peers": sorted(p.lower() for p in report["peers"]), "items": sorted(report["items"]),
                          "target_selection": report.get("target_selection") or "all"}
             entry["scope"] = scope
+            if group in {"synthesis", "peer_comparison"}:
+                entry["known_payload_sha256"] = known_report_digests(commit, original, report)
             if name.startswith(("disclosures/", "alignments/")):
                 companies.add(name.split("/")[1])
             manifest["files"].append(entry)

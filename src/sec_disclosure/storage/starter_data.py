@@ -144,7 +144,8 @@ def import_alignments(cur, company, years, documents):
 
 
 def import_report(cur, kind, document):
-    report = document["payload"]
+    from .starter_refresh import tag_report
+    report = tag_report(document)
     if kind == "synthesis":
         cur.execute("INSERT INTO synthesis_reports (company,years,report) VALUES (%s,%s,%s::jsonb) "
                     "ON CONFLICT DO NOTHING RETURNING company", (report["company"].upper(), sorted(map(int, report["years"])),
@@ -207,7 +208,7 @@ def mark_completed_starter_reports(cur, manifest, available):
     return written
 
 
-def seed_connection(conn, bundle=BUNDLE):
+def seed_connection(conn, bundle=BUNDLE, *, refresh=False):
     """One atomic import; repeated launches only inspect existing scope keys."""
     manifest = read_manifest(bundle)
     imported = Counter()
@@ -220,9 +221,13 @@ def seed_connection(conn, bundle=BUNDLE):
         missing = wanted - available
         if not missing:
             markers = mark_completed_starter_reports(cur, manifest, available)
-            return {"imported": {}, "skipped": len(wanted), "companies": manifest["companies"],
+            result = {"imported": {}, "skipped": len(wanted), "companies": manifest["companies"],
                     "excluded_alignments": excluded, "cleanup_pending": sorted(pending),
                     "completion_markers": markers}
+            if refresh:
+                from .starter_refresh import refresh_existing
+                result.update(refresh_existing(cur, bundle, manifest, available))
+            return result
         apply_outdated(cur)
         for key, documents in report_groups(bundle, manifest, missing):
             kind, company, years, *_ = key
@@ -237,18 +242,22 @@ def seed_connection(conn, bundle=BUNDLE):
                 saved = import_report(cur, kind, next(iter(documents.values())))
             imported[kind] += bool(saved)
         markers = mark_completed_starter_reports(cur, manifest, existing_scopes(cur))
-        return {"imported": dict(imported), "skipped": len(wanted) - sum(imported.values()),
+        result = {"imported": dict(imported), "skipped": len(wanted) - sum(imported.values()),
                 "companies": manifest["companies"], "excluded_alignments": excluded, "cleanup_pending": sorted(pending),
                 "completion_markers": markers}
+        if refresh:
+            from .starter_refresh import refresh_existing
+            result.update(refresh_existing(cur, bundle, manifest, available))
+        return result
 
 
-def seed_database(*, bundle=BUNDLE, env_file=None):
+def seed_database(*, bundle=BUNDLE, env_file=None, refresh=False):
     try:
         import psycopg
         arguments = disclosures.connection_arguments(env_file)
         arguments["connect_timeout"] = 3
         with psycopg.connect(**arguments) as conn:
-            return seed_connection(conn, bundle)
+            return seed_connection(conn, bundle, **({"refresh": True} if refresh else {}))
     except Exception as error:
         raise StarterDataError(f"Starter data could not be loaded into PostgreSQL ({type(error).__name__}). "
                                "Start Docker/PostgreSQL with docker compose up -d and apply db/init schemas, "

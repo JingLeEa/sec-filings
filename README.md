@@ -140,6 +140,35 @@ On the first launch, bundled reports are loaded into PostgreSQL automatically. W
 
 Available years and report coverage vary by company. Use the dashboard's selectors to see the saved choices. These are shipped examples; cloning the repository does not copy another person's private PostgreSQL database or their later runs.
 
+### Load an updated starter pack
+
+After pulling an updated `main` branch, start Docker Desktop and run the command
+below from the project folder. It loads missing data and refreshes older,
+untouched starter records in PostgreSQL. No SEC or AI requests are made.
+
+**macOS:**
+
+```sh
+docker compose up -d --wait
+.venv/bin/python scripts/seed_starter_data.py --refresh
+```
+
+**Windows PowerShell:**
+
+```powershell
+docker compose up -d --wait
+.\.venv\Scripts\python.exe scripts\seed_starter_data.py --refresh
+```
+
+The command reports what was refreshed, unchanged, or protected. Companies with
+human reviews, pending review updates, active/unfinished pipelines, or your own
+results are preserved. Unrecognised or edited records are also protected. Without
+`--refresh`, the command only loads missing scopes, like normal app startup.
+Click **Reload data** in the dashboard, or restart Streamlit, after it finishes.
+This loads the starter pack included in
+your checkout; fetching `test-data` and rebuilding the pack is a separate
+[maintainer step](starter_data/README.md).
+
 ### Try your first report
 
 1. On **Home**, choose **AMD** and **FY2024 to FY2025** in the sidebar.
