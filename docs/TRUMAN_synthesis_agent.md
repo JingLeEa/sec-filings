@@ -1,9 +1,11 @@
 # Synthesis Agent User Guide
 
 The synthesis agent creates an evidence-grounded report from material disclosure
-changes and company-wide XBRL facts already stored in PostgreSQL. It writes a
-portable JSON report and also upserts that report into the `synthesis_reports`
-table.
+changes and, when available, company-wide XBRL facts already stored in PostgreSQL.
+Financial inputs are optional: the agent still synthesizes and cites material
+disclosure changes if no XBRL facts were retrieved, and clearly marks the
+financial analysis and trends as unavailable. It writes a portable JSON report
+and also upserts that report into the `synthesis_reports` table.
 Change taxonomies come directly from the saved `change_analysis.llm` labels;
 synthesis does not require lexical or semantic enrichment.
 
@@ -22,7 +24,12 @@ synthesis does not require lexical or semantic enrichment.
 3. Ensure that the requested company and years have completed materiality
    classifications in PostgreSQL. Synthesis only selects changes explicitly
    labeled material. Load XBRL facts for the financial analysis when available;
-   the report explains when no company-wide facts were retrieved.
+   they are optional, and the report explains when no company-wide facts were
+   retrieved. The full pipeline saves verified yearly API/XBRL facts to
+   `xbrl_value_context`; synthesis retrieves supported annual and year-end facts
+   for the requested filing years, calculates trends where possible, and includes
+   their source IDs in the report. No separate XBRL reload is needed after a
+   successful pipeline run.
 4. The writer creates `synthesis_reports` if needed, and fresh databases receive
    it from `db/init/06_synthesis_reports.sql`. If the pipeline database user cannot
    create tables, apply the migration once with a database owner:
@@ -110,6 +117,12 @@ PostgreSQL with no local cache or output files. Add `--save-local-output` to the
 full-pipeline command to export report/usage files beneath `--data-dir`; cache
 files remain in PostgreSQL. The direct standalone command above retains its
 explicit file-oriented workflow.
+
+The bundled starter reports do not include XBRL facts. They can still be viewed
+and queried, but their `financial_metrics_supplied` count is zero unless facts
+were loaded separately or the company's pipeline was run. A completed pipeline
+report records the supplied metrics and calculated trends; the synthesis page
+shows the financial figures and their source IDs.
 
 ## Outputs and validation
 
