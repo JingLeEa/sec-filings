@@ -33,7 +33,8 @@ from urllib.parse import urljoin, urlparse, urldefrag
 
 from lxml import etree
 from sec_disclosure.comparison import compare_html_tables as html_tables
-from sec_disclosure.table_extraction import filing_sections as narrative
+from sec_disclosure.extraction import sec_10k_extractor as narrative
+from sec_disclosure.table_extraction import filing_sections as reference_syntax
 
 VERSION = '1.10.0'
 DEFAULT_ITEMS = ('1', '1A', '7', '8')
@@ -479,7 +480,7 @@ def unquoted_report_reference(body):
 
 class Layout:
     """Printed-page and Item evidence, independent of XBRL value decoding."""
-    def __init__(self, doc, resolve_references=True):
+    def __init__(self, doc, resolve_references=True, *, items=None, agent_args=None):
         self.doc = doc
         self.headings, self.references, self.ranges, self.external = [], [], [], []
         self.excluded, self.layout_headings, self.footers = set(), [], []
@@ -595,10 +596,11 @@ class Layout:
         self.footers.sort()
         self.footer_positions = [p for p, _ in self.footers]
         from sec_disclosure.table_extraction.item_boundaries import detect
-        text_headings, self.item_boundaries = detect(doc, self.headings)
-        selected = {b['item']: b['start'] for b in self.item_boundaries}
+        text_headings, self.item_boundaries = detect(doc, self.headings, items=items, agent_args=agent_args)
+        selected = {b['item'] for b in self.item_boundaries}
+        starts = {(b['item'], b['start']) for b in self.item_boundaries}
         headings = {(h['item'], h['position']): h for h in self.headings + text_headings
-                    if h['item'] not in selected or h['position'] == selected[h['item']]}
+                    if h['item'] not in selected or (h['item'], h['position']) in starts}
         self.headings = sorted(headings.values(), key=lambda h: h['position'])
         known_blocks = {pos for pos, _, _ in self.blocks}
         self.blocks.extend((h['position'], h['text'], doc.nodes[h['position']])
@@ -780,7 +782,8 @@ class Layout:
             if tables:
                 inventory = self.item_statement_inventory(tables, body) if item == '8' else []
                 if inventory:
-                    reference = narrative.report_reference([narrative.FilingBlock(start, 'p', body)]) if re.search(r'["“].+["”]', body) else None
+                    reference = (narrative.report_reference([narrative.FilingBlock(start, 'p', body)])
+                                 or reference_syntax.report_reference([narrative.FilingBlock(start, 'p', body)])) if re.search(r'["“].+["”]', body) else None
                     paths = [[entry['title']] for entry in inventory]
                     paths += [path for path in (reference or {}).get('section_paths', []) if path not in paths]
                     self.external.append({'item': item, 'reference_text': body, 'section_paths': paths,
@@ -823,7 +826,8 @@ class Layout:
             # Named external report incorporation (e.g. Exhibit 13). In-document
             # Item 8 references are resolved separately through their anchors.
             if re.search(r'["“].+["”]', body) and re.search(r'incorporat\w*.*reference', body, re.I):
-                reference = narrative.report_reference([narrative.FilingBlock(start, 'p', body)])
+                reference = (narrative.report_reference([narrative.FilingBlock(start, 'p', body)])
+                             or reference_syntax.report_reference([narrative.FilingBlock(start, 'p', body)]))
                 if reference:
                     self.external.append({'item': item, **reference, 'source_locator': heading['source_locator']})
             else:
@@ -1429,7 +1433,10 @@ class Layout:
             raise ValueError(f'Cannot resolve Items {sorted(missing)}. Use original filing XHTML, or --all-items to inspect all tables.')
         for item in items:
             if counts[item] > 1:
-                raise ValueError(f'Multiple body headings for Item {item}; cannot resolve scope uniquely.')
+                approved = {b['start'] for b in self.item_boundaries if b['item'] == item}
+                actual = {h['position'] for h in self.headings if h['item'] == item}
+                if actual != approved:
+                    raise ValueError(f'Multiple body headings for Item {item}; cannot resolve scope uniquely.')
         labels = Counter(page_key(page) for _, page in self.footers)
         images = {int(g['inferred_page']) for g in self.image_gaps}
         for reference in self.references:
@@ -1503,7 +1510,7 @@ def referenced_report_source(doc, *, allow_missing=False):
     return sources.pop()
 
 
-def attach_report_ranges(layout, references):
+def attach_report_ranges(layout, references, *, agent_args=None):
     indexed = [ref for ref in references if ref.get('linked_statement_index')]
     for ref in indexed:
         attach_linked_statement_ranges(layout, ref)
@@ -1557,17 +1564,27 @@ def attach_report_ranges(layout, references):
     paths = [path for ref in references for path in ref['section_paths']]
     try:
         outline = narrative.report_outline(events, paths)
+        resolved = [(ref, narrative.referenced_section_ranges(outline, ref['section_paths'])) for ref in references]
     except ValueError:
         # Some reports have a page-based TOC but use styled divs, split titles
         # and abbreviated TOC labels instead of semantic HTML headings.
-        if not attach_hierarchical_linked_toc_ranges(layout, references) and not attach_linked_toc_ranges(layout, references):
-            attach_styled_toc_ranges(layout, references)
-        return
-    for ref in references:
-        for section in narrative.referenced_section_ranges(outline, ref['section_paths']):
+        try:
+            if not attach_hierarchical_linked_toc_ranges(layout, references) and not attach_linked_toc_ranges(layout, references):
+                attach_styled_toc_ranges(layout, references)
+            return
+        except ValueError:
+            if agent_args is None or agent_args.no_agent_fallback:
+                raise
+            recovered = narrative.apply_report_fallback(
+                doc.source, doc.data.decode('utf-8', errors='replace'), events, paths, agent_args)
+            resolved = [(ref, narrative.referenced_section_ranges(recovered.nodes, ref['section_paths']))
+                        for ref in references]
+    for ref, sections in resolved:
+        for section in sections:
             layout.ranges.append({'item': ref['item'], 'start': positions[section['start']],
                                   'end': positions[section['end']] if section['end'] < len(positions) else len(doc.nodes),
                                   'method': 'external_report_section', 'section': section['title'],
+                                  'end_method': 'verified_heading' if section['end'] < len(positions) else 'document_end',
                                   'evidence': ref['reference_text']})
 
 
@@ -2426,7 +2443,7 @@ def collect_tables(layout, document_id, company, year, items, financial_only=Tru
 
 
 def extract_tables(data, company, year, source='', items=DEFAULT_ITEMS, report_loader=None, report_source=None,
-                   financial_only=True):
+                   financial_only=True, *, agent_args=None):
     """Extract tables and document-scoped facts; ``items=None`` inspects all Items.
 
     report_loader(source) returns bytes. It is called only for an explicit
@@ -2443,7 +2460,7 @@ def extract_tables(data, company, year, source='', items=DEFAULT_ITEMS, report_l
             fiscal_years.add(clean(doc.content(node)))
     if fiscal_years and fiscal_years != {str(year)}:
         raise ValueError(f'Requested FY{year}, but DocumentFiscalYearFocus is {sorted(fiscal_years)}.')
-    layout = Layout(doc, resolve_references=items is not None)
+    layout = Layout(doc, resolve_references=items is not None, items=items, agent_args=agent_args)
     if items is not None:
         layout.validate(items)
     layouts = [('primary', layout)]
@@ -2461,7 +2478,7 @@ def extract_tables(data, company, year, source='', items=DEFAULT_ITEMS, report_l
         if entities(doc) and entities(report) and not entities(doc).intersection(entities(report)):
             raise ValueError('The referenced report has a different XBRL entity from the primary filing.')
         report_layout = Layout(report)
-        attach_report_ranges(report_layout, references)
+        attach_report_ranges(report_layout, references, agent_args=agent_args)
         layouts.append(('report1', report_layout))
     documents, tables = {}, []
     for document_id, current in layouts:
@@ -2558,7 +2575,10 @@ def main(argv=None):
             company = args.company or args.ticker or issuer_data['name']
             print(f'Selected {filings[args.year]["accessionNumber"]}; report date {filings[args.year]["reportDate"]}.', flush=True)
         result = extract_tables(load(source), company, args.year, source, items, load, args.report_source,
-                                financial_only=not args.include_layout_tables)
+                                financial_only=not args.include_layout_tables,
+                                agent_args=narrative.item_recovery_options(
+                                    (args.cache_dir or Path('data/sec_cache')).parent / 'filing_page_cache',
+                                    enabled=items is not None and os.environ.get('SEC_TABLE_AGENT_FALLBACK', '1') != '0'))
         if metadata:
             result['sec_selection'] = metadata
         label = 'all' if items is None else 'items_' + '_'.join(i.lower() for i in items)

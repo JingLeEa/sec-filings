@@ -6,8 +6,10 @@ may be shared within the verified document set; ambiguous shared resources fail.
 from __future__ import annotations
 
 from collections import defaultdict
+from argparse import Namespace
 from sec_disclosure.storage.artifacts import ArtifactPath as Path
 import re
+import os
 from urllib.parse import parse_qs, urljoin, urlparse
 
 from lxml import html
@@ -121,7 +123,10 @@ def report_from_document_list(data, filing_url):
 
 def resolve_documents(data, source, parameters, items, loader=None, *, boundary_items=()):
     doc = ix.Document(data, source)
-    layout = ix.Layout(doc)
+    agent_args = getattr(loader, 'agent_args', None)
+    if not isinstance(agent_args, Namespace):
+        agent_args = None
+    layout = ix.Layout(doc, items=items, agent_args=agent_args)
     layout.validate(items)
     result = {'primary': {'doc': doc, 'layout': layout, 'url': parameters.get('htm-url')}}
     references = [ref for ref in layout.external if ref['item'] in items]
@@ -167,7 +172,8 @@ def resolve_documents(data, source, parameters, items, loader=None, *, boundary_
     # Item membership comes only from verified incorporated sections/pages.
     report_layout.headings, report_layout.references, report_layout.ranges = [], [], []
     if references:
-        ix.attach_report_ranges(report_layout, references + boundary_references)
+        ix.attach_report_ranges(report_layout, references + boundary_references,
+                                agent_args=agent_args)
     result['report1'] = {'doc': report, 'layout': report_layout, 'url': target}
     if boundary_references:
         result['report1']['boundary_evidence'] = {
@@ -194,6 +200,10 @@ def resolve_documents(data, source, parameters, items, loader=None, *, boundary_
 class ReportLoader:
     """Cache report bytes and their verified SEC URL/hash, outside output folders."""
     def __init__(self, cache, user_agent='', offline=False):
+        from sec_disclosure.extraction import sec_10k_extractor as text
+        self.agent_args = text.item_recovery_options(
+            Path(cache).parent / 'filing_page_cache',
+            enabled=not offline and os.environ.get('SEC_TABLE_AGENT_FALLBACK', '1') != '0')
         self.cache, self.user_agent, self.offline = Path(cache), user_agent, offline
         self.client = None
 

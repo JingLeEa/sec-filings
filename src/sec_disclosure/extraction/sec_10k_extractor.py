@@ -1334,7 +1334,8 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
                              ranges: list[dict], exclusions: list[dict],
                              preserve_toc_levels: bool = False,
                              allowed_pages: set[int] | None = None,
-                             use_html_hierarchy: bool = False) -> list[FilingBlock]:
+                             use_html_hierarchy: bool = False,
+                             selected_events: set[int] | None = None) -> list[FilingBlock]:
     headings = {node["start"]: node for node in nodes}
     known_titles = {node["key"] for node in nodes}
     known_titles.update(report_title_key(node['source_heading']) for node in nodes if node.get('source_heading'))
@@ -1356,6 +1357,8 @@ def referenced_report_blocks(events: list[FilingStructureEvent], nodes: list[dic
             page = page_by_position.get(position)
             if page is not None and page not in allowed_pages:
                 continue
+        if selected_events is not None:
+            selected_events.add(position)
         if position in heading_continuations:
             continue
         if position in marker_positions or page_marker_from_text(event.text) is not None:
@@ -1514,6 +1517,7 @@ def blocks_for_exact_title(
     preserve_toc_levels: bool = False,
     allowed_pages: set[int] | None = None,
     use_html_hierarchy: bool = False,
+    selected_events: set[int] | None = None,
 ) -> list[FilingBlock]:
     key = report_title_key(title)
     starts = []
@@ -1553,6 +1557,7 @@ def blocks_for_exact_title(
         preserve_toc_levels=preserve_toc_levels,
         allowed_pages=allowed_pages,
         use_html_hierarchy=use_html_hierarchy,
+        selected_events=selected_events,
     )
 
 
@@ -1681,7 +1686,7 @@ def terminal_section_start(text: str, start_position: int) -> int | None:
     return start_position + match.start()
 
 
-def extract_item15_toc_section_blocks(html_text: str) -> list[FilingBlock] | None:
+def extract_item15_toc_section_blocks(html_text: str, *, selected_events=None) -> list[FilingBlock] | None:
     events = html_to_structure_events(html_text)
     item_range = item15_event_range(events)
     if item_range is None:
@@ -1691,6 +1696,9 @@ def extract_item15_toc_section_blocks(html_text: str) -> list[FilingBlock] | Non
     toc_table_index, toc_entries = find_item15_toc(events, start_index, end_index)
     if toc_table_index is None or not is_supported_item15_toc(toc_entries):
         return None
+    if selected_events is not None:
+        selected_events.update(position for position in range(start_index + 1, end_index)
+                               if events[position].index != toc_table_index)
 
     entries_by_key = {entry.match_key: entry for entry in toc_entries}
     seen_toc_headers: set[str] = set()
@@ -2234,6 +2242,7 @@ def item7_root_range(nodes: list[dict], events: list[FilingStructureEvent], titl
 def extract_indexed_section_blocks(
     html_text: str,
     items: Iterable[str] = DEFAULT_ITEMS,
+    *, selected_events: dict[str, set[int]] | None = None,
 ) -> dict[str, list[FilingBlock]]:
     """Fallback for filings organized by cross-reference index or multi-column TOC."""
     wanted = {normalize_item(item) for item in items}
@@ -2247,6 +2256,7 @@ def extract_indexed_section_blocks(
 
     for item, refs in references.items():
         blocks: list[FilingBlock] = []
+        event_ids = set() if selected_events is not None else None
         seen_blocks: set[tuple[int, str]] = set()
         allowed_pages = pages_by_item.get(item) or None
         excluded_pages = (
@@ -2274,6 +2284,7 @@ def extract_indexed_section_blocks(
                         preserve_toc_levels=False,
                         allowed_pages=allowed_pages,
                         use_html_hierarchy=True,
+                        selected_events=event_ids,
                     ):
                         marker = (block.index, block.text)
                         if marker not in seen_blocks:
@@ -2294,6 +2305,7 @@ def extract_indexed_section_blocks(
                     preserve_toc_levels=False,
                     allowed_pages=allowed_pages,
                     use_html_hierarchy=item == "7",
+                    selected_events=event_ids,
                 ):
                     marker = (block.index, block.text)
                     if marker in seen_blocks:
@@ -2309,6 +2321,7 @@ def extract_indexed_section_blocks(
                 preserve_toc_levels=False,
                 allowed_pages=allowed_pages,
                 use_html_hierarchy=item == "7",
+                selected_events=event_ids,
             ):
                 marker = (block.index, block.text)
                 if marker in seen_blocks:
@@ -2317,8 +2330,17 @@ def extract_indexed_section_blocks(
                 blocks.append(block)
         if any(not is_subheader_block(block) for block in blocks):
             sections[item] = sorted(blocks, key=lambda block: block.index)
+            if selected_events is not None:
+                selected_events[item] = event_ids
 
     remove_broad_item_overlaps(sections)
+    if selected_events is not None:
+        selected = {item: [events[index] for index in sorted(ids)]
+                    for item, ids in selected_events.items() if item in sections}
+        remove_broad_item_overlaps(selected)
+        selected_events.clear()
+        positions = {id(event): position for position, event in enumerate(events)}
+        selected_events.update({item: {positions[id(event)] for event in rows} for item, rows in selected.items()})
     return sections
 
 
@@ -3847,6 +3869,7 @@ def apply_item_fallback(
     *,
     already_merged: bool = False,
     warn_missing_config: bool = True,
+    source_ranges: dict | None = None,
 ) -> set[str]:
     """Apply only validated, nonoverlapping recovered Items."""
     if not targets or args.no_agent_fallback:
@@ -3899,9 +3922,79 @@ def apply_item_fallback(
             else:
                 section_blocks.pop("15")
         section_blocks[item] = merge_continued_blocks(recovered) if already_merged else recovered
+        if source_ranges is not None:
+            source_ranges[item] = list(getattr(fallback, "source_ranges", {}).get(item, []))
         recovered_items.add(item)
         print(f"Item {item}: recovered by fallback agent ({len(recovered)} source blocks).")
     return recovered_items
+
+
+@dataclass
+class ItemSectionSelection:
+    blocks: list[FilingBlock]
+    sections: dict[str, list[FilingBlock]]
+    active_items: list[str]
+    plain_sections: dict[str, str]
+    clean_text: str
+    recovered_items: set[str]
+    source_ranges: dict[str, list[dict]]
+
+
+def item_recovery_options(cache_dir, *, enabled=True):
+    """Default agent settings for entry points sharing the text boundary pipeline."""
+    return argparse.Namespace(no_agent_fallback=not enabled, agent_check_items=[], env_file=None,
+                              agent_timeout=180, agent_max_tokens=1200, agent_page_recovery=True,
+                              agent_page_cache_dir=Path(cache_dir))
+
+
+def select_item_sections(raw_html: str, requested_items=DEFAULT_ITEMS, *, blocks=None, agent_args=None):
+    """The shared text/table section-selection pipeline, before narrative cleanup.
+
+    Source event IDs are retained separately from narrative blocks so a financial
+    table stays in scope even when the text preprocessor omits its numeric rows.
+    Agent recovery is enabled by the extraction entry points, not by DOM parsing.
+    """
+    requested_items = list(dict.fromkeys(normalize_item(item) for item in requested_items))
+    active_items = list(requested_items)
+    blocks = item_blocks_with_layout_headings(raw_html, html_to_blocks(raw_html) if blocks is None else blocks)
+    sections = extract_section_blocks(blocks, items=requested_items)
+    indexed_items = [item for item in requested_items if item not in sections]
+    if "7" in requested_items and "7" not in indexed_items:
+        indexed_items.append("7")
+    source_ranges = {}
+    if indexed_items:
+        events = {}
+        indexed = extract_indexed_section_blocks(raw_html, items=indexed_items, selected_events=events)
+        for item, rows in indexed.items():
+            if item not in sections or item == "7":
+                sections[item] = rows
+                source_ranges[item] = [{"coordinate": "events", "indices": sorted(events.get(item, ())),
+                                        "method": "text_index"}]
+    if "15" in requested_items or should_auto_include_item15(sections, requested_items):
+        if "15" not in active_items:
+            active_items.append("15")
+        events = set()
+        item15 = extract_item15_toc_section_blocks(raw_html, selected_events=events)
+        if item15:
+            sections["15"] = item15
+            source_ranges["15"] = [{"coordinate": "events", "indices": sorted(events),
+                                     "method": "text_item15_toc"}]
+        elif "15" not in sections:
+            sections.update(extract_section_blocks(blocks, items=("15",)))
+            if "15" not in sections:
+                events = {}
+                sections.update(extract_indexed_section_blocks(raw_html, items=("15",), selected_events=events))
+                if events.get("15"):
+                    source_ranges["15"] = [{"coordinate": "events", "indices": sorted(events["15"]),
+                                             "method": "text_index"}]
+    clean_text = html_to_clean_text(raw_html)
+    plain_sections = extract_sections(clean_text, items=active_items) if not sections else {}
+    recovered = set()
+    if agent_args is not None:
+        targets = [item for item in active_items
+                   if (item not in sections and item not in plain_sections) or item in agent_args.agent_check_items]
+        recovered = apply_item_fallback(raw_html, blocks, sections, targets, agent_args, source_ranges=source_ranges)
+    return ItemSectionSelection(blocks, sections, active_items, plain_sections, clean_text, recovered, source_ranges)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -3955,44 +4048,10 @@ def extract_filing(args: argparse.Namespace) -> int:
         print("Warning: --raw-dir is deprecated and ignored; source HTML is no longer saved.", file=sys.stderr)
 
     requested_items = list(dict.fromkeys(normalize_item(item) for item in args.items))
-    active_items = list(requested_items)
-    blocks = item_blocks_with_layout_headings(raw_html, html_to_blocks(raw_html))
-    section_blocks = extract_section_blocks(blocks, items=requested_items)
-    missing_items = [item for item in requested_items if item not in section_blocks]
-    indexed_items = list(missing_items)
-
-    if "7" in requested_items and "7" not in indexed_items:
-        indexed_items.append("7")
-    if indexed_items:
-        indexed_blocks = extract_indexed_section_blocks(raw_html, items=indexed_items)
-        section_blocks.update(
-            {
-                item: item_blocks
-                for item, item_blocks in indexed_blocks.items()
-                if item not in section_blocks or item == "7"
-            }
-        )
-
-    needs_item15 = "15" in requested_items or should_auto_include_item15(section_blocks, requested_items)
-    if needs_item15:
-        if "15" not in active_items:
-            active_items.append("15")
-        item15_toc_blocks = extract_item15_toc_section_blocks(raw_html)
-        if item15_toc_blocks:
-            section_blocks["15"] = item15_toc_blocks
-        elif "15" not in section_blocks:
-            direct_item15 = extract_section_blocks(blocks, items=("15",))
-            section_blocks.update(direct_item15)
-            if "15" not in section_blocks:
-                indexed_item15 = extract_indexed_section_blocks(raw_html, items=("15",))
-                section_blocks.update(indexed_item15)
-    clean_text = html_to_clean_text(raw_html)
-    plain_sections = extract_sections(clean_text, items=active_items) if not section_blocks else {}
-    fallback_targets = [
-        item for item in active_items
-        if (item not in section_blocks and item not in plain_sections) or item in args.agent_check_items
-    ]
-    recovered_items = apply_item_fallback(raw_html, blocks, section_blocks, fallback_targets, args)
+    selection = select_item_sections(raw_html, requested_items, agent_args=args)
+    blocks, section_blocks = selection.blocks, selection.sections
+    active_items, plain_sections = selection.active_items, selection.plain_sections
+    clean_text, recovered_items = selection.clean_text, selection.recovered_items
     section_blocks = assign_embedded_report_blocks(
         section_blocks, source, {}, include_overlaps=args.include_reference_overlaps,
     )

@@ -6,7 +6,7 @@ import json
 import re
 import time
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
@@ -96,6 +96,7 @@ def _coerce_block_id(value: Any) -> int | None:
 class FallbackResult:
     sections: dict[str, list[Any]]
     attempts: int
+    source_ranges: dict[str, list[dict]] = field(default_factory=dict)
 
 
 def _request_json(

@@ -188,7 +188,7 @@ def _previous_page(page: Any) -> Any:
     return page - 1 if type(page) is int else previous_page(page)
 
 
-def _block_pages(events: list[Any], blocks: list[Any]) -> tuple[dict[int, int], set[int]]:
+def _block_pages(events: list[Any], blocks: list[Any], *, page_ranges=None) -> tuple[dict[int, int], set[int]]:
     """Match generic parsed blocks to independently parsed printed folios."""
     from sec_disclosure.extraction.sec_10k_extractor import (
         event_page_numbers, validated_page_markers,
@@ -218,6 +218,13 @@ def _block_pages(events: list[Any], blocks: list[Any]) -> tuple[dict[int, int], 
             block_pages[block.index] = pages[position]
         if position in folio_positions:
             folio_blocks.add(block.index)
+    if page_ranges is not None:
+        for position, page in sorted(pages.items()):
+            spans = page_ranges.setdefault(page, [])
+            if spans and spans[-1][1] == position:
+                spans[-1] = (spans[-1][0], position + 1)
+            else:
+                spans.append((position, position + 1))
     return block_pages, folio_blocks
 
 
@@ -245,6 +252,7 @@ def _indexed_sections(
     block_pages: dict[int, int], folio_blocks: set[int], *, config: LLMConfig,
     timeout: float, max_tokens: int, retries: int,
     available_pages: set | None = None,
+    source_ranges=None, page_ranges=None,
 ) -> tuple[dict[str, list[Any]], int]:
     """Use model-selected index rows; ask the model who owns shared page spans."""
     from sec_disclosure.extraction.sec_10k_extractor import (
@@ -334,6 +342,10 @@ def _indexed_sections(
                 or not _covers_index_pages(item, selected, pages_by_item, block_pages)):
             continue
         sections[item] = selected
+        if source_ranges is not None and page_ranges is not None and item_pages <= page_ranges.keys():
+            source_ranges[item] = [{"coordinate": "events", "start": start, "end": end,
+                                    "method": "text_agent_pages"}
+                                   for page in sorted(item_pages, key=_page_key) for start, end in page_ranges[page]]
     return sections, attempts
 
 
@@ -425,7 +437,7 @@ def _global_heading_options(
 
 def _select_ranges(item: str, blocks: list[Any], options: list[dict], *, context: str,
                    used: set[int], config: LLMConfig, timeout: float,
-                   max_tokens: int, retries: int) -> tuple[list[Any], int]:
+                   max_tokens: int, retries: int, source_ranges=None) -> tuple[list[Any], int]:
     """Accept only model-chosen source ranges with supplied boundary IDs."""
     from sec_disclosure.extraction.sec_10k_extractor import (
         is_boilerplate_or_nav, should_drop_line,
@@ -455,6 +467,8 @@ def _select_ranges(item: str, blocks: list[Any], options: list[dict], *, context
         "\nContext: "
         + context + "\nBoundary options: " + json.dumps(options, ensure_ascii=False)
     )
+
+    validated_spans = []
 
     def validate(value: Any) -> list[Any]:
         raw = value.get("ranges") if isinstance(value, dict) else None
@@ -510,11 +524,16 @@ def _select_ranges(item: str, blocks: list[Any], options: list[dict], *, context
                         and len(preview) < 1000 and _is_navigation_pointer(preview))
         if raw and (len(selected) < 2 or pointer_only):
             raise InvalidFallbackResponse("selected body is empty or only a pointer")
+        validated_spans[:] = [{"coordinate": "blocks", "start": _coerce_block_id(span["start_block"]),
+                              "end": _coerce_block_id(span["end_block_exclusive"]), "method": "text_agent"}
+                             for span in raw]
         return selected
 
     try:
-        return _ask(prompt, validate, config=config, timeout=timeout,
-                    max_tokens=max_tokens, retries=retries)
+        result = _ask(prompt, validate, config=config, timeout=timeout, max_tokens=max_tokens, retries=retries)
+        if result[0] and source_ranges is not None:
+            source_ranges.extend(validated_spans)
+        return result
     except InvalidFallbackResponse as exc:
         print(f"Warning: Item {item} body ranges could not be validated: {exc}", file=sys.stderr)
         return [], 0
@@ -606,7 +625,8 @@ def locate_item_blocks(raw_html: str, blocks: list[Any], targets: list[str], *,
                                          timeout=timeout, max_tokens=max_tokens,
                                          retries=retries, **reference_options)
     attempts += count
-    block_pages, folio_blocks = _block_pages(events, blocks)
+    source_ranges, page_ranges = {}, {}
+    block_pages, folio_blocks = _block_pages(events, blocks, page_ranges=page_ranges)
     pages_by_item: dict[str, set[int]] = defaultdict(set)
     for ref in references:
         if page_recovery:
@@ -618,6 +638,7 @@ def locate_item_blocks(raw_html: str, blocks: list[Any], targets: list[str], *,
     sections, count = _indexed_sections(
         blocks, pages_by_item, references, block_pages, folio_blocks,
         config=config, timeout=timeout, max_tokens=max_tokens, retries=retries,
+        source_ranges=source_ranges, page_ranges=page_ranges,
     )
     attempts += count
     used = {block.index for rows in sections.values() for block in rows}
@@ -627,16 +648,19 @@ def locate_item_blocks(raw_html: str, blocks: list[Any], targets: list[str], *,
         context = json.dumps({"index_hints": [ref for ref in references
                                                if ref["item"] in pending]}, ensure_ascii=False)
         for item in list(pending):
+            spans = []
             heading_options = _global_heading_options(blocks, item, references)
             if not heading_options:
                 continue
             selected, count = _select_ranges(
                 item, blocks, heading_options, context=context, used=used,
                 config=config, timeout=timeout, max_tokens=max_tokens, retries=retries,
+                source_ranges=spans,
             )
             attempts += count
             if selected and _covers_index_pages(item, selected, pages_by_item, block_pages):
                 sections[item] = selected
+                source_ranges[item] = spans
                 used.update(block.index for block in selected)
         pending = [item for item in targets if item not in sections]
     if pending:
@@ -645,6 +669,7 @@ def locate_item_blocks(raw_html: str, blocks: list[Any], targets: list[str], *,
                                               retries=retries, references=references)
         attempts += count
         for item in pending:
+            spans = []
             starts = {entry["block_id"] for entry in locations
                       if entry["item"] == item and entry["role"] == "start"}
             ends = {entry["block_id"] for entry in locations
@@ -658,10 +683,12 @@ def locate_item_blocks(raw_html: str, blocks: list[Any], targets: list[str], *,
                 item, blocks, options, context="Outline body boundaries selected by the model.",
                 used=used, config=config, timeout=timeout,
                 max_tokens=max_tokens, retries=retries,
+                source_ranges=spans,
             )
             attempts += count
             if selected and _covers_index_pages(item, selected, pages_by_item, block_pages):
                 sections[item] = selected
+                source_ranges[item] = spans
                 used.update(block.index for block in selected)
     pending = [item for item in targets if item not in sections]
     pointer_checks = set()
@@ -716,13 +743,18 @@ def locate_item_blocks(raw_html: str, blocks: list[Any], targets: list[str], *,
                 covered = {recovered_pages[block.index] for block in sections[item] if block.index in recovered_pages}
                 if expected - covered or covered - label_pages[item]:
                     discarded = sections.pop(item)
+                    source_ranges.pop(item, None)
                     used.difference_update(block.index for block in discarded)
                     if item not in pending:
                         pending.append(item)
                     print(f"Warning: Item {item} selection contradicted its verified body-page pointer; retrying its full scope.", file=sys.stderr)
             # A multi-page reference is a body scope. A single page from a TOC
             # remains a start hint, never a complete section by itself.
-            available = set(page_boundaries(mapping.markers))
+            positions = {event.index: index for index, event in enumerate(events)}
+            source_pages = {page: [(positions[start] + 1, positions[end])]
+                            for page, (start, end) in page_boundaries(mapping.markers).items()
+                            if start in positions and end in positions and positions[start] < positions[end]}
+            available = set(source_pages)
             complete = {}
             for item, pages in label_pages.items():
                 others = set().union(*(value for key, value in label_pages.items() if key != item))
@@ -730,16 +762,20 @@ def locate_item_blocks(raw_html: str, blocks: list[Any], targets: list[str], *,
                     complete[item] = pages
                 elif item in pending:
                     print(f"Warning: Item {item} lacks complete printed-page boundaries; not recovering a fragment.", file=sys.stderr)
+            recovered_ranges = {}
             recovered, count = _indexed_sections(
                 blocks, complete, references, recovered_pages, recovered_folios,
                 config=config, timeout=timeout, max_tokens=max_tokens, retries=retries, available_pages=available,
+                source_ranges=recovered_ranges,
+                page_ranges=source_pages,
             )
             attempts += count
             for item in pending:
                 selected = recovered.get(item, [])
                 if selected and not any(block.index in used for block in selected):
                     sections[item] = selected
+                    source_ranges[item] = recovered_ranges.get(item, [])
                     used.update(block.index for block in selected)
         except (ValueError, RuntimeError, OSError) as exc:
             print(f"Warning: printed-page recovery could not complete: {exc}", file=sys.stderr)
-    return FallbackResult(sections, attempts)
+    return FallbackResult(sections, attempts, source_ranges)

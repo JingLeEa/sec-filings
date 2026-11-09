@@ -4,11 +4,14 @@ Run commands from the repository root after installing the dependencies. Set `SE
 
 ## Item boundaries and printed pages
 
-The API/XBRL and HTML table pipelines call the existing text preprocessor's
-section selector in `extraction/sec_10k_extractor.py`. A table-side adapter maps
-the selected section back to start/end positions in the original filing HTML.
-It uses the same closing Items and longest-section selection for repeated Item
-headings. Text preprocessing code and outputs are unchanged.
+The API/XBRL and HTML table pipelines call the same section-selection pipeline
+as text preprocessing in `extraction/sec_10k_extractor.py`. This includes normal
+Item headings, closing Items, longest-section selection, cross-reference/TOC
+recovery, Item 15 TOCs, and the existing Item locator/printed-page agent when
+deterministic recovery cannot find the requested sections. A table-side adapter
+maps the validated selections to the untouched original HTML; recovered scopes
+retain numeric tables that narrative preprocessing omits. Text extraction uses
+this shared entry point too, keeping these recovery steps aligned.
 
 Tables and facts before the first narrative paragraph or after the last one
 remain inside the full heading-to-heading span. Printed page labels are still
@@ -17,7 +20,15 @@ Explicit incorporated sections, page references and same-accession reports
 retain their existing verification and take priority over physical membership.
 For sections with no retained narrative, the verified table-heading fallback
 remains available. Membership audit scopes record shared ranges under
-`item_boundaries`, with `method: "text_preprocessing"` and original HTML positions.
+`item_boundaries`, with methods `text_preprocessing`, `text_index`,
+`text_item15_toc`, `text_agent`, or `text_agent_pages` and original HTML positions.
+Discontiguous recovered sections retain separate, validated spans. Referenced
+report headings use the text extractor's current outline/section helpers and
+its referenced-report fallback after deterministic table evidence is exhausted.
+Live entry points enable agent recovery when configured; offline extraction
+does not make model calls. Set `SEC_TABLE_AGENT_FALLBACK=0` to disable model
+recovery explicitly. Recovery caches follow the configured SEC cache root,
+including PostgreSQL storage in the main pipeline.
 Existing exports are preserved; choose a new output directory to generate new
 results with the shared section selection.
 

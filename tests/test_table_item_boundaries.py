@@ -1,5 +1,6 @@
 """Table Item ranges share the unchanged text preprocessor's section selector."""
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from sec_disclosure.extraction import sec_10k_extractor as text
@@ -14,6 +15,70 @@ def layout(body):
 
 
 class TableItemBoundaryTests(unittest.TestCase):
+    def test_referenced_report_uses_shared_fallback_only_after_deterministic_recovery_fails(self):
+        reference = {'item': '8', 'section_paths': [['Financial Statements']],
+                     'reference_text': 'Financial statements incorporated by reference.'}
+        options = text.item_recovery_options('cache', enabled=True)
+        for tag, expected_calls in (('h1', 0), ('p', 1)):
+            with self.subTest(tag=tag):
+                body = f'<{tag}>Financial Statements</{tag}>' + table(number('10', 'inside'))
+                body += f'<{tag}>Outside</{tag}>' + table(number('20', 'outside'))
+                doc = ix.Document(filing(body), 'report.htm')
+                scope = ix.Layout(doc, resolve_references=False)
+
+                def recover(source, raw, events, paths, args):
+                    start = next(i for i, event in enumerate(events) if event.text == 'Financial Statements')
+                    end = next(i for i, event in enumerate(events) if event.text == 'Outside')
+                    return SimpleNamespace(nodes=[{'title': 'Financial Statements',
+                        'key': text.report_title_key('Financial Statements'), 'start': start, 'end': end}])
+
+                with patch.object(text, 'apply_report_fallback', side_effect=recover) as fallback:
+                    ix.attach_report_ranges(scope, [reference], agent_args=options)
+                self.assertEqual(fallback.call_count, expected_calls)
+                self.assertEqual(scope.membership(doc.ids['inside'])[2], ['8'])
+                self.assertNotIn('8', scope.membership(doc.ids['outside'])[2])
+
+    def test_ms_style_index_keeps_numeric_tables_without_item_number_headings(self):
+        body = ('<table><tr><th>Table of Contents</th><th>Part</th><th>Item Number</th><th>Page</th></tr>'
+                '<tr><td>Business</td><td>I</td><td>1</td><td>1</td></tr>'
+                '<tr><td>Risk Factors</td><td>I</td><td>1A</td><td>2</td></tr>'
+                '<tr><td>Management\'s Discussion and Analysis of Financial Condition and Results of Operations</td><td>II</td><td>7</td><td>3</td></tr>'
+                '<tr><td>Financial Statements and Supplementary Data</td><td>II</td><td>8</td><td>4</td></tr>'
+                '</table><h1>Business</h1><p>Our business serves clients.</p>')
+        body += '<h1>Risk Factors</h1><p>Market risks affect results.</p>'
+        body += '<h1>Management\'s Discussion and Analysis of Financial Condition and Results of Operations</h1>'
+        body += table(number('10', 'mda_first')) + '<p>Revenue increased.</p>' + table(number('20', 'mda_last'))
+        body += '<h1>Financial Statements and Supplementary Data</h1>'
+        body += table(number('30', 'statement_first')) + '<p>These are our financial statements.</p>'
+        body += table(number('40', 'statement_last'))
+        doc, scope = layout(body)
+        scope.validate(('1', '1A', '7', '8'))
+        for name in ('mda_first', 'mda_last'):
+            self.assertEqual(scope.membership(doc.ids[name])[2], ['7'])
+        for name in ('statement_first', 'statement_last'):
+            self.assertEqual(scope.membership(doc.ids[name])[2], ['8'])
+        self.assertTrue(all(boundary['method'] == 'text_index' for boundary in scope.item_boundaries))
+
+    def test_shared_agent_ranges_map_to_original_tables_only_when_recovery_is_enabled(self):
+        from sec_disclosure.agents.filing_item_fallback import FallbackResult
+        body = '<h1>Discussion</h1><p>We discuss performance.</p>'
+        body += table(number('10', 'inside')) + '<p>Further business details.</p>'
+        body += '<h1>Appendix</h1>' + table(number('20', 'outside'))
+        doc = ix.Document(filing(body), 'original.htm')
+        blocks = text.html_to_blocks(doc.data.decode())
+        end = next(block.index for block in blocks if block.text == 'Appendix')
+        chosen = [block for block in blocks if block.index < end]
+        recovered = FallbackResult({'7': chosen}, 1, {'7': [
+            {'coordinate': 'blocks', 'start': chosen[0].index, 'end': end, 'method': 'text_agent'}]})
+        options = text.item_recovery_options('cache', enabled=True)
+        with patch('sec_disclosure.llm.config.load_config', return_value=object()), \
+             patch('sec_disclosure.agents.filing_item_locator.locate_item_blocks', return_value=recovered) as agent:
+            scope = ix.Layout(doc, items=('7',), agent_args=options)
+        agent.assert_called_once()
+        scope.validate(('7',))
+        self.assertEqual(scope.membership(doc.ids['inside'])[2], ['7'])
+        self.assertNotIn('7', scope.membership(doc.ids['outside'])[2])
+
     def test_calls_the_text_selector_and_keeps_tables_before_and_after_narrative(self):
         body = '<h1>Item 7. Discussion</h1>' + table(number('1', 'first'))
         body += '<p>Management discusses revenue and its business performance.</p>'

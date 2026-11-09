@@ -100,7 +100,7 @@ def _styled_heading(node, value):
     return False
 
 
-def detect(doc, legacy_headings):
+def detect(doc, legacy_headings, *, items=None, agent_args=None):
     """Return canonical headings and selected half-open original-DOM ranges.
 
     Items with no retained narrative (e.g. a table-only section) have no text
@@ -108,7 +108,8 @@ def detect(doc, legacy_headings):
     """
     html = doc.data.decode('utf-8', errors='replace')
     parsed = _read(_Blocks(doc), html)
-    blocks = text.item_blocks_with_layout_headings(html, parsed.blocks)
+    selection = text.select_item_sections(html, items or text.DEFAULT_ITEMS, blocks=parsed.blocks, agent_args=agent_args)
+    blocks = selection.blocks
     locations = parsed.locations
     if blocks is not parsed.blocks:
         locations = _read(_Events(doc), html).locations
@@ -131,10 +132,12 @@ def detect(doc, legacy_headings):
         headings.append({'item': heading[0], 'position': doc.order[node], 'text': block.text,
                          'source_locator': doc.paths[node], 'block_position': index})
 
-    selected = text.extract_section_blocks(blocks, items=tuple(text.ITEM_ENDS))
+    selected = selection.sections
     block_positions = {id(block): index for index, block in enumerate(blocks)}
     boundaries = []
     for item, chosen in selected.items():
+        if item in selection.source_ranges:
+            continue
         chosen_positions = [block_positions[id(block)] for block in chosen]
         for heading in headings:
             if heading['item'] != item or heading['block_position'] >= chosen_positions[0]:
@@ -159,9 +162,49 @@ def detect(doc, legacy_headings):
                     'end': doc.order[locations[blocks[end].index]] if end < len(blocks) else len(doc.nodes),
                     'method': 'text_preprocessing', 'source_locator': heading['source_locator']})
                 break
+    if selection.source_ranges:
+        events = _read(_Events(doc), html)
+        for item, spans in selection.source_ranges.items():
+            intervals = []
+            for span in spans:
+                event_coordinates = span['coordinate'] == 'events'
+                mapping = ({position: events.locations[event.index] for position, event in enumerate(events.events)}
+                           if event_coordinates else locations)
+                sentinel = len(events.events) if event_coordinates else blocks[-1].index + 1
+                indices = span.get('indices')
+                runs = []
+                if indices is not None:
+                    for index in indices:
+                        if runs and index == runs[-1][1]:
+                            runs[-1] = (runs[-1][0], index + 1)
+                        else:
+                            runs.append((index, index + 1))
+                else:
+                    runs = [(span['start'], span['end'])]
+                for start, end in runs:
+                    if start not in mapping or (end not in mapping and end != sentinel):
+                        raise ValueError('Recovered text boundaries cannot be mapped to the original XHTML.')
+                    first = doc.order[mapping[start]]
+                    last = len(doc.nodes) if end == sentinel else doc.order[mapping[end]]
+                    if first >= last or doc.hidden[mapping[start]]:
+                        raise ValueError('Recovered text boundaries are reversed or hidden in the original XHTML.')
+                    intervals.append((first, last, span['method']))
+            merged = []
+            for first, last, method in sorted(intervals):
+                if merged and first <= merged[-1][1]:
+                    previous = merged[-1]
+                    merged[-1] = (previous[0], max(last, previous[1]), method)
+                else:
+                    merged.append((first, last, method))
+            for first, last, method in merged:
+                locator = doc.paths[doc.nodes[first]]
+                boundaries.append({'item': item, 'start': first, 'end': last,
+                                   'method': method, 'source_locator': locator})
+                headings.append({'item': item, 'position': first, 'text': text.ITEM_TITLES.get(item, item),
+                                 'source_locator': locator})
     edges = {b[key] for b in boundaries for key in ('start', 'end')}
     headings = [h for h in headings if h['position'] in edges | legacy_positions
                 or _styled_heading(doc.nodes[h['position']], h['text'])]
     for heading in headings:
-        heading.pop('block_position')
-    return headings, boundaries
+        heading.pop('block_position', None)
+    return headings, sorted(boundaries, key=lambda boundary: boundary['start'])
