@@ -24,11 +24,13 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
 SDK_VERSION = '592.0.0'
-# Pinned official release and published SHA256s, not a mutable 'latest' download.
+# Checksums verified against the exact versioned Google archives below.
+# Google's latest/rapid Mac archives have different checksums, even when the
+# CLI version is the same; do not copy their checksums for these versioned URLs.
 # https://docs.cloud.google.com/sdk/docs/downloads-versioned-archives
 ARCHIVES = {
-    ('Darwin', 'arm64'): ('darwin-arm.tar.gz', '57553ae3c300f4ebaaa8fb4dee8d40c4d8c1141d84d266b41c1daf1669c4001a'),
-    ('Darwin', 'x86_64'): ('darwin-x86_64.tar.gz', 'bad0a5caba7b67c5d97a278e8ef31e56d341c72f944293f4e3b06091ef69148d'),
+    ('Darwin', 'arm64'): ('darwin-arm.tar.gz', 'a0b1f5bae5d036ade6570b7c9d10bbdf8c1f4b319714a5b4a6f04a3af10548e0'),
+    ('Darwin', 'x86_64'): ('darwin-x86_64.tar.gz', 'cf80fb6e63435cd4f6e9fb36f7361b98e133d108eda16addc04ce26f366dcfd3'),
     ('Windows', 'x86_64'): ('windows-x86_64.zip', '95b606b92ff63d84c7ac23fbc20752f1f3fd673b973f77200994d480a53791ab'),
     ('Windows', 'x86'): ('windows-x86.zip', 'c7af3ab51a963b9d8bb2172e6ff6692b43e41db1503d629fa250049dc21f4ca8'),
 }
@@ -116,8 +118,13 @@ def download_archive(url, destination, checksum):
                 output.write(chunk)
     except (URLError, TimeoutError, OSError):
         raise SetupError('Could not download Google Cloud CLI. Check your internet connection and rerun setup.') from None
-    if digest.hexdigest() != checksum:
-        raise SetupError('The Google CLI download failed its SHA256 check. Nothing was installed; rerun setup to download it again.')
+    actual = digest.hexdigest()
+    if actual != checksum:
+        filename = url.rsplit('/', 1)[-1]
+        raise SetupError(f'The Google CLI download failed its SHA256 check for {filename} '
+                         f'({size} bytes). Expected {checksum}; received {actual}. '
+                         'Nothing was installed. Update the project and rerun setup; '
+                         'if it persists, report these public archive details to the maintainer.')
 
 
 def archive_target(directory, name):

@@ -53,8 +53,8 @@ py -3.13 scripts\setup_app.py
 
 Setup creates or reuses `.venv`, installs the app's Python dependencies, and
 downloads Google's CLI into the ignored `.tools` folder if needed. Downloads
-use a pinned release with Google's published SHA256 checksum. Existing local
-settings are preserved; a fresh installation gets a `.env` containing only the
+use a pinned release with checksums verified for those exact versioned archives.
+Existing local settings are preserved; a fresh installation gets a `.env` containing only the
 local PostgreSQL settings. No administrator rights, Homebrew, or PowerShell
 execution-policy changes are needed.
 

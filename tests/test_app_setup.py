@@ -48,8 +48,35 @@ def test_download_is_verified_and_never_promoted_on_checksum_failure(tmp_path):
     assert target.read_bytes() == data
     target.unlink()
     with patch.object(setup, 'urlopen', return_value=BytesIO(data)):
-        with pytest.raises(setup.SetupError, match='SHA256'):
+        with pytest.raises(setup.SetupError, match='SHA256') as error:
             setup.download_archive('https://storage.googleapis.com/example', target, '0' * 64)
+    assert 'example' in str(error.value)
+    assert '0' * 64 in str(error.value)
+    assert hashlib.sha256(data).hexdigest() in str(error.value)
+    assert str(len(data)) + ' bytes' in str(error.value)
+
+
+@pytest.mark.skipif(not os.environ.get('SEC_GCLOUD_ARCHIVE_TEST_DIR'),
+                    reason='Optional: provide downloaded official versioned Google archives')
+@pytest.mark.parametrize('system,machine', list(setup.ARCHIVES))
+def test_pinned_checksums_match_official_versioned_archive_bytes(system, machine):
+    # This caught mismatches between Google's rapid Mac builds and the
+    # versioned archive bucket. Fixtures are real downloads, never generated
+    # from the expected digest. Ordinary tests perform no network requests.
+    url, expected = setup.archive_spec(system, machine)
+    path = Path(os.environ['SEC_GCLOUD_ARCHIVE_TEST_DIR']) / url.rsplit('/', 1)[-1]
+    digest = hashlib.sha256()
+    with path.open('rb') as stream:
+        while chunk := stream.read(1024 * 1024):
+            digest.update(chunk)
+    assert digest.hexdigest() == expected
+    if path.suffix == '.zip':
+        with zipfile.ZipFile(path) as archive:
+            version = archive.read('google-cloud-sdk/VERSION')
+    else:
+        with tarfile.open(path, 'r:gz') as archive:
+            version = archive.extractfile('google-cloud-sdk/VERSION').read()
+    assert version.decode('utf-8').strip() == setup.SDK_VERSION
 
 
 def make_archive(path, kind, entries):
