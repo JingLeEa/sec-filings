@@ -75,9 +75,9 @@ def test_legacy_storage_import_cleans_both_partitions_before_database_mapping(tm
     assert {path.name: path.read_bytes() for path in tmp_path.iterdir()} == original
 
 
-def test_shipped_starter_data_excludes_638_unresolved_cases_and_keeps_3118_new_removed():
+def test_shipped_starter_data_excludes_819_unresolved_cases_and_keeps_3118_new_removed():
     manifest = starter_data.read_manifest()
-    assert manifest["excluded_unreviewable_alignments"] == 638
+    assert manifest["excluded_unreviewable_alignments"] == 819
     scopes = {starter_data.scope_key(entry["scope"]) for entry in manifest["files"] if entry["scope"]["kind"] == "alignments"}
     unmatched = 0
     for _, documents in starter_data.report_groups(starter_data.BUNDLE, manifest, scopes):

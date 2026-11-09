@@ -58,7 +58,7 @@ def bundle(ref, destination):
             raise ValueError(f"Supplement has a different company or year selection: {path.name}")
         supplements[original] = (report, {
             "kind": "supplemental_synthesis",
-            "path": str(path.relative_to(ROOT)),
+            "path": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(raw).hexdigest(),
         })
     order = {"disclosures": 0, "alignments": 1, "synthesis": 2, "peer_comparison": 3}

@@ -175,6 +175,9 @@ def test_fresh_database_parallel_startup_preserves_new_results_and_repairs_missi
     import psycopg
     from psycopg import sql
 
+    manifest = seed.read_manifest()
+    scopes = {seed.scope_key(entry["scope"]) for entry in manifest["files"]}
+    expected = Counter(key[0] for key in scopes)
     arguments = seed.disclosures.connection_arguments()
     connection_info = psycopg.conninfo.conninfo_to_dict(arguments.get("conninfo", ""),
                        **{key: value for key, value in arguments.items() if key != "conninfo"})
@@ -200,16 +203,18 @@ def test_fresh_database_parallel_startup_preserves_new_results_and_repairs_missi
 
             with ThreadPoolExecutor(max_workers=2) as pool:
                 results = list(pool.map(launch, range(2)))
-            assert sorted(sum(row["imported"].values()) for row in results) == [0, 77]
+            assert sorted(sum(row["imported"].values()) for row in results) == [0, len(scopes)]
             with psycopg.connect(**target) as conn:
-                for table, count in (("filings", 33), ("alignment_runs", 22),
-                                     ("synthesis_reports", 10), ("peer_comparison_reports", 12)):
+                for table, count in (("filings", expected["disclosures"]), ("alignment_runs", expected["alignments"]),
+                                     ("synthesis_reports", expected["synthesis"]),
+                                     ("peer_comparison_reports", expected["peer_comparison"])):
                     assert conn.execute(sql.SQL("SELECT count(*) FROM {}").format(sql.Identifier(table))).fetchone()[0] == count
                 markers = conn.execute("SELECT path,content FROM pipeline_artifacts WHERE namespace='main' AND path LIKE 'pipeline_runs/%/status.json'").fetchall()
-                assert len(markers) == 10
+                assert len(markers) == expected["synthesis"]
                 mu = next(json.loads(bytes(content)) for path, content in markers if '/mu/' in path)
                 assert mu['full_pipeline_complete'] and mu['completion_source'] == 'starter_data'
-                assert not any('/c/' in path for path, _ in markers)  # No bundled synthesis for Citigroup.
+                c = next(json.loads(bytes(content)) for path, content in markers if '/c/' in path)
+                assert c['full_pipeline_complete'] and c['completion_source'] == 'starter_data'
                 disclosure = conn.execute("SELECT disclosure_id FROM disclosures ORDER BY disclosure_id LIMIT 1").fetchone()[0]
                 conn.execute("UPDATE disclosures SET summary='Newer pipeline result' WHERE disclosure_id=%s", (disclosure,))
                 conn.execute("UPDATE synthesis_reports SET report=jsonb_set(report,'{report,executive_summary}',%s::jsonb) "
@@ -263,7 +268,7 @@ def test_fresh_database_parallel_startup_preserves_new_results_and_repairs_missi
                 assert len(at.sidebar.selectbox(key="sel_company").options) == 11
                 at.switch_page("pages/1_Synthesis_Report.py").run()
                 assert not at.exception and not at.error
-                assert sum("(PostgreSQL)" in choice for choice in at.sidebar.selectbox(key="sel_synthesis").options) == 10
+                assert sum("(PostgreSQL)" in choice for choice in at.sidebar.selectbox(key="sel_synthesis").options) == expected["synthesis"]
                 with psycopg.connect(**target) as conn:
                     assert conn.execute("SELECT count(*) FROM synthesis_reports WHERE company='GS'").fetchone()[0] == 1
             finally:
