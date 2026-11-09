@@ -4,10 +4,10 @@ This directory is a versioned input dataset for new installations. It is tracked
 in the main branch so a clone needs no second checkout, Git command, model API
 key or SEC download to browse the example companies.
 
-`reports.tar.gz` contains 127 saved reports based on `origin/test-data`, pinned to
-the commit in `manifest.json`, with explicit supplemental synthesis refreshes.
+`reports.tar.gz` contains 133 saved reports based on `origin/test-data`, pinned to
+the commit in `manifest.json`.
 The manifest records each report's checksum, scope and any supplemental source.
-Completed reports exclude 638 unresolved, one-sided alignment review cases that
+Completed reports exclude 819 unresolved, one-sided alignment review cases that
 have no counterpart for a person to compare. All 3,118 accepted New/Removed
 results are retained. Exclusion IDs and reasons remain in report metadata for
 coverage accounting; excluded rows do not enter the review queue or downstream
@@ -19,30 +19,42 @@ The bundle includes:
 | --- | ---: |
 | Disclosures | 33 company/filing years |
 | Alignments and their saved change/materiality results | 22 year comparisons |
-| Synthesis | 10 reports |
+| Synthesis | 11 reports |
 | Peer comparison | 12 reports, preserving their completion status |
 
 Companies: AMD, AVGO, BAC, C, GS, INTC, JPM, MS, MU, NVDA and QCOM.
 
 ### Financial figures in the saved synthesis reports
 
-The base reports follow `test-data` commit
-`0f6795397c834bf0ef77c1e4b9f4c2dcc5f7635c` (8 November 2026). JPM's
-FY2023–FY2025 synthesis was refreshed separately on 9 November 2026 after
-extracting and verifying its original filings' XBRL figures. The refreshed report
-retains the same 180 material disclosure changes and passes evidence validation.
+The reports follow `test-data` commit
+`5cfccfe4cc6fb55bae1836a7f211106950bf6d63` (9 November 2026). All synthesis
+reports are taken directly from that commit, including the newly added
+Citigroup report, updated financial figures, and the corrected GS and NVDA
+reports generated from their current disclosure and alignment inputs.
 
 | Synthesis report | Financial metrics | Calculated trends |
 | --- | ---: | ---: |
 | AMD FY2023–FY2025 | 61 | 81 |
+| AVGO FY2023–FY2025 | 52 | 65 |
+| BAC FY2023–FY2025 | 30 | 29 |
+| C FY2023–FY2025 | 32 | 30 |
+| GS FY2023–FY2024 | 30 | 29 |
+| INTC FY2023–FY2025 | 56 | 73 |
 | JPM FY2023–FY2025 | 30 | 29 |
-| Other bundled companies | 0 | 0 |
+| MS FY2023–FY2025 | 32 | 34 |
+| MU FY2023–FY2025 | 58 | 75 |
+| NVDA FY2023–FY2025 | 48 | 47 |
+| QCOM FY2023–FY2025 | 41 | 41 |
 
-JPM's refreshed report is tracked in
-`supplemental/jpm_2023_2025_synthesis_output.json`. Bundling uses it in place of
-the matching, finance-free branch report. A missing figures table in the other
-reports reflects their source data, rather than a failed import. Financial data
-is not generated during bundling or app startup.
+The older JPM supplemental override has been retired because the branch now
+contains the updated report itself. All 11 bundled synthesis reports include
+structured financial metrics. Financial data is not generated during bundling
+or app startup.
+
+All bundled reports passed active disclosure-ID and verbatim sentence-citation
+checks. GS and NVDA synthesis each cover 50 selected material changes, with 241
+and 244 source sentence citations respectively. Their reports match the current
+bundled disclosures and alignments.
 
 On the first app launch, the reports are streamed into PostgreSQL in one
 transaction. The archive is never extracted to local files. Each new app process
@@ -57,7 +69,7 @@ status stays in PostgreSQL. Concurrent launches share a database lock; a failed 
 rolls back and can be retried by reloading the app.
 
 These files are shipped inputs, separate from generated pipeline output. The
-test-data branch does not contain original raw preprocessing inputs, XBRL facts
+test-data branch does not contain original raw preprocessing inputs, standalone XBRL exports
 or the complete extraction/alignment audit metadata. The bootstrap does not
 invent those inputs or historical execution records. When stored disclosures,
 completed adjacent-year alignments, and a matching synthesis report are all
@@ -73,11 +85,10 @@ fresh execution requires `--no-resume`. Run the real pipeline to
 obtain full preprocessing inputs before using downstream manual-review reruns.
 Historical request/job caches are excluded from the bundle.
 
-The source's Citigroup alignments reference 39 disclosure IDs absent from its
-disclosure exports. For those starter comparisons only, the UI reads the original
-saved alignment snapshot from PostgreSQL and shows available cited evidence when
-the full disclosure text is missing. It does not create replacement text. Normal
-pipeline and peer-input validation still reject incomplete normalized inputs.
+Citigroup's review-candidate disclosures for 2023–2025 and both alignment review
+reports are now included. These resolve the 39 disclosure IDs absent from the
+earlier bundle. Active Citigroup alignment and synthesis references validate
+against the included disclosures.
 
 Normal setup, after installing dependencies:
 
@@ -135,14 +146,15 @@ git fetch origin test-data
 .venv/bin/python scripts/bundle_starter_data.py
 ```
 
-Validated reports in `starter_data/supplemental/` override matching synthesis
+Optional validated reports in `starter_data/supplemental/` override matching synthesis
 reports from the branch during every rebuild. A supplement must have the same
 filename, company and fiscal years as the branch report; its source path and
-checksum are recorded in the bundle manifest. Keep supplemental inputs with the
-archive so later rebuilds retain financial refreshes.
+checksum are recorded in the bundle manifest. There are no active supplemental
+overrides in this bundle. Retire an override once its updated report is included
+in the source branch so it cannot replace a newer branch version.
 
 Review and commit the archive, manifest and supplemental reports together. App
 startup never fetches Git branches or runs model requests. Existing PostgreSQL
 reports remain protected during startup; `seed_starter_data.py --refresh` is the
-explicit update path for unchanged older starter records. JPM's report was also
-regenerated directly in the originating PostgreSQL database.
+explicit update path for unchanged older starter records. Rebuilding the bundle
+does not connect to or modify PostgreSQL.

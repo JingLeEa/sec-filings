@@ -27,7 +27,7 @@ def test_bundled_reports_include_every_company_and_report_scope():
         counts[key[0]] += 1
         if key[0] == "peer_comparison":
             seed.peer_comparisons.validate_report(next(iter(documents.values()))["payload"])
-    assert counts == {"disclosures": 33, "alignments": 22, "synthesis": 10, "peer_comparison": 12}
+    assert counts == {"disclosures": 33, "alignments": 22, "synthesis": 11, "peer_comparison": 12}
     assert seen == wanted
 
 
@@ -37,7 +37,47 @@ def test_existing_database_skips_archive_read_and_all_imports():
     with patch.object(seed, "existing_scopes", return_value=wanted), \
          patch.object(seed, "report_groups", side_effect=AssertionError("Do not reload existing reports")):
         result = seed.seed_connection(MagicMock())
-    assert result["imported"] == {} and result["skipped"] == 77
+    assert result["imported"] == {} and result["skipped"] == len(wanted)
+
+
+@pytest.mark.parametrize("company,years", [("gs", (2023, 2024)), ("nvda", (2023, 2024, 2025))])
+def test_refreshed_synthesis_has_financials_and_matches_bundled_evidence(company, years):
+    manifest = seed.read_manifest()
+    wanted = {("synthesis", company, years, (), (), "")}
+    wanted.update(("disclosures", company, (year,), (), (), "") for year in years)
+    wanted.update(("alignments", company, pair, (), (), "") for pair in zip(years, years[1:]))
+    sentences, alignment_sources = {}, {}
+    report = None
+    for key, documents in seed.report_groups(seed.BUNDLE, manifest, wanted):
+        for document in documents.values():
+            payload = document["payload"]
+            if key[0] == "synthesis":
+                report = payload
+            elif key[0] == "disclosures":
+                for row in payload["disclosures"]:
+                    for source in row.get("sources", []):
+                        for sentence in source.get("sentences", []):
+                            sentences[row["disclosure_id"], sentence["sentence_id"]] = (
+                                sentence["text"], source.get("paragraph_id"), source.get("source_url"))
+            elif key[0] == "alignments":
+                for row in payload["alignments"]:
+                    human = row.get("manual_review") or {}
+                    evidence = human.get("source_evidence") if human.get("source_fingerprint") else None
+                    alignment_sources[row["match_id"]] = {
+                        (block["disclosure_id"], sentence["sentence_id"], sentence["text"])
+                        for block in evidence or row.get("evidence") or []
+                        for sentence in block.get("sentences", [])}
+    assert report is not None
+    assert report["financial_metrics"]
+    assert report["input_summary"]["financial_metrics_supplied"] == len(report["financial_metrics"])
+    assert "sample_regeneration" not in report
+    assert report["source_catalog"]
+    for match_id, entry in report["source_catalog"].items():
+        assert match_id in alignment_sources
+        for sentence in entry.get("sources", []):
+            key = sentence["disclosure_id"], sentence["sentence_id"]
+            assert sentences[key] == (sentence["text"], sentence.get("paragraph_id"), sentence.get("source_url"))
+            assert (*key, sentence["text"]) in alignment_sources[match_id]
 
 
 def marker_cursor(company='mu', pairs=((2023, 2024), (2024, 2025))):
