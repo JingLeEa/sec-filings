@@ -1222,6 +1222,7 @@ def report_title_key(title: str) -> str:
 def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -> list[dict]:
     """Use the report's own TOC (or explicit HTML heading levels) for ranges."""
     required = {report_title_key(title) for path in paths for title in path}
+    audit_title_key = report_title_key('Report of Independent Registered Public Accounting Firm')
     toc = None
     titles: dict[str, dict] = {}
     for position, event in enumerate(events):
@@ -1243,6 +1244,27 @@ def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -
 
     nodes = []
     seen = set()
+
+    def entry_for(title, position):
+        key = report_title_key(title)
+        if key in titles:
+            return titles[key]
+        # The TOC may qualify the audit title with its opinion, while the
+        # body separates them with an addressee and company name. Require
+        # both exact headings so prose mentions and control audits cannot
+        # accidentally close the financial notes.
+        if key != audit_title_key:
+            return None
+        candidates = []
+        for following in events[position + 1:position + 5]:
+            opinion = report_title_key(following.text)
+            if not opinion.startswith('opinion '):
+                continue
+            combined = key + ' ' + opinion
+            candidates.extend(entry for candidate, entry in titles.items()
+                              if candidate == combined or candidate.startswith(combined + ' '))
+        return candidates[0] if len(candidates) == 1 else None
+
     for position, event in enumerate(events):
         if toc is not None and position <= toc:
             continue
@@ -1256,12 +1278,15 @@ def report_outline(events: list[FilingStructureEvent], paths: list[list[str]]) -
                 cells = [cell for cell in row if cell]
                 if not cells:
                     continue
-                if len(cells) != 1 or report_title_key(cells[0]) not in titles:
+                entry = entry_for(cells[0], position) if len(cells) == 1 else None
+                if entry is None:
                     break
-                matches.append((cells[0], titles[report_title_key(cells[0])]["level"], 1, event.font_size))
+                title = cells[0] if report_title_key(cells[0]) in titles else entry['title']
+                matches.append((title, entry["level"], 1, event.font_size))
         else:
-            entry = titles.get(report_title_key(event.text))
-            matches = [(event.text, entry["level"], 1, event.font_size)] if entry and not starts_with_bullet(event.text) else []
+            entry = entry_for(event.text, position)
+            title = event.text if report_title_key(event.text) in titles else entry['title'] if entry else event.text
+            matches = [(title, entry["level"], 1, event.font_size)] if entry and not starts_with_bullet(event.text) else []
             if not matches and position + 1 < len(events):
                 next_event = events[position + 1]
                 combined = f"{event.text} {next_event.text}"
