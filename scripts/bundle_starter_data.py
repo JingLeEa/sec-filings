@@ -15,6 +15,9 @@ import tarfile
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from sec_disclosure.alignment_policy import EXCLUSION_POLICY, exclude_from_reports
+from sec_disclosure.storage.synthesis_reports import read_report
+
+SUPPLEMENTAL = ROOT / "starter_data" / "supplemental"
 
 
 def bundle(ref, destination):
@@ -26,6 +29,21 @@ def bundle(ref, destination):
              "peer_comparison": {"peer_comparison.json"}}
     selected = [name for name in paths if Path(name).name in names.get(name.split("/")[1], set())
                 or name.startswith("test_data/synthesis/") and name.endswith("_synthesis_output.json")]
+    supplements = {}
+    for path in sorted(SUPPLEMENTAL.glob("*_synthesis_output.json")):
+        original = "test_data/synthesis/" + path.name
+        if original not in selected:
+            raise ValueError(f"Supplement must replace an existing synthesis report: {path.name}")
+        report, raw = read_report(path)
+        base = json.loads(subprocess.check_output(["git", "show", f"{commit}:{original}"], cwd=ROOT))
+        if (report["company"].lower(), sorted(map(int, report["years"]))) != (
+                base["company"].lower(), sorted(map(int, base["years"]))):
+            raise ValueError(f"Supplement has a different company or year selection: {path.name}")
+        supplements[original] = (report, {
+            "kind": "supplemental_synthesis",
+            "path": str(path.relative_to(ROOT)),
+            "sha256": hashlib.sha256(raw).hexdigest(),
+        })
     order = {"disclosures": 0, "alignments": 1, "synthesis": 2, "peer_comparison": 3}
     selected.sort(key=lambda name: (order[name.split("/")[1]], name))
     destination.mkdir(parents=True, exist_ok=True)
@@ -37,7 +55,9 @@ def bundle(ref, destination):
             gzip.GzipFile(fileobj=output, mode="wb", filename="", mtime=0) as compressed, \
             tarfile.open(fileobj=compressed, mode="w|", format=tarfile.PAX_FORMAT) as archive:
         for original in selected:
-            if original.startswith("test_data/alignments/"):
+            if original in supplements:
+                report = supplements[original][0]
+            elif original.startswith("test_data/alignments/"):
                 group_path = str(Path(original).parent)
                 if alignment_group != group_path:
                     alignment_group = group_path
@@ -56,6 +76,8 @@ def bundle(ref, destination):
             info.mode = 0o644
             archive.addfile(info, io.BytesIO(raw))
             entry = {"path": name, "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw)}
+            if original in supplements:
+                entry["source"] = supplements[original][1]
             group = name.split("/")[0]
             if group == "disclosures":
                 scope = {"kind": group, "company": report["company"].lower(), "years": [int(report["fiscal_year"])]}

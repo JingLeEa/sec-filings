@@ -4,10 +4,11 @@ This directory is a versioned input dataset for new installations. It is tracked
 in the main branch so a clone needs no second checkout, Git command, model API
 key or SEC download to browse the example companies.
 
-`reports.tar.gz` contains 127 saved reports from `origin/test-data`, pinned to the
-commit in `manifest.json`. The manifest records each report's checksum and scope.
-Completed reports exclude 680 unresolved, one-sided alignment review cases that
-have no counterpart for a person to compare. All 3,101 accepted New/Removed
+`reports.tar.gz` contains 127 saved reports based on `origin/test-data`, pinned to
+the commit in `manifest.json`, with explicit supplemental synthesis refreshes.
+The manifest records each report's checksum, scope and any supplemental source.
+Completed reports exclude 638 unresolved, one-sided alignment review cases that
+have no counterpart for a person to compare. All 3,118 accepted New/Removed
 results are retained. Exclusion IDs and reasons remain in report metadata for
 coverage accounting; excluded rows do not enter the review queue or downstream
 analysis. Rebuilding the bundle applies this rule automatically.
@@ -22,6 +23,26 @@ The bundle includes:
 | Peer comparison | 12 reports, preserving their completion status |
 
 Companies: AMD, AVGO, BAC, C, GS, INTC, JPM, MS, MU, NVDA and QCOM.
+
+### Financial figures in the saved synthesis reports
+
+The base reports follow `test-data` commit
+`0f6795397c834bf0ef77c1e4b9f4c2dcc5f7635c` (8 November 2026). JPM's
+FY2023–FY2025 synthesis was refreshed separately on 9 November 2026 after
+extracting and verifying its original filings' XBRL figures. The refreshed report
+retains the same 180 material disclosure changes and passes evidence validation.
+
+| Synthesis report | Financial metrics | Calculated trends |
+| --- | ---: | ---: |
+| AMD FY2023–FY2025 | 61 | 81 |
+| JPM FY2023–FY2025 | 30 | 29 |
+| Other bundled companies | 0 | 0 |
+
+JPM's refreshed report is tracked in
+`supplemental/jpm_2023_2025_synthesis_output.json`. Bundling uses it in place of
+the matching, finance-free branch report. A missing figures table in the other
+reports reflects their source data, rather than a failed import. Financial data
+is not generated during bundling or app startup.
 
 On the first app launch, the reports are streamed into PostgreSQL in one
 transaction. The archive is never extracted to local files. Each new app process
@@ -83,5 +104,14 @@ git fetch origin test-data
 .venv/bin/python scripts/bundle_starter_data.py
 ```
 
-Review and commit the new archive and manifest together. App startup never fetches
-Git branches or runs model requests.
+Validated reports in `starter_data/supplemental/` override matching synthesis
+reports from the branch during every rebuild. A supplement must have the same
+filename, company and fiscal years as the branch report; its source path and
+checksum are recorded in the bundle manifest. Keep supplemental inputs with the
+archive so later rebuilds retain financial refreshes.
+
+Review and commit the archive, manifest and supplemental reports together. App
+startup never fetches Git branches or runs model requests. Existing PostgreSQL
+reports remain protected from replacement; this refresh supplies new
+installations and missing report scopes. JPM's report was also regenerated
+directly in the originating PostgreSQL database.
