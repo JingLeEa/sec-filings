@@ -423,12 +423,12 @@ def _financial_fact_notes(diagnostics: list[dict]) -> list[str]:
 
 
 def synthesize(request: dict, calls: SynthesisCalls) -> dict:
-    required = ("company", "years", "material_changes", "financial_metrics")
+    required = ("company", "years", "material_changes")
     missing = [field for field in required if field not in request]
     if missing:
         raise ValueError("Missing synthesis input fields: " + ", ".join(missing))
     changes = request["material_changes"]
-    metrics = request["financial_metrics"]
+    metrics = request.get("financial_metrics", [])
     if not request["years"] or not isinstance(changes, list) or not isinstance(metrics, list):
         raise ValueError("Synthesis years, material_changes, and financial_metrics have invalid shapes.")
     ids = [str(item["id"]) for item in changes + metrics]

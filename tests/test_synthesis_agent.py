@@ -209,6 +209,45 @@ class SynthesisAgentTests(unittest.TestCase):
         self.assertIn("Company-wide XBRL financial facts were unavailable for the requested periods.",
                       result["report"]["limitations"])
 
+    def test_synthesis_runs_when_financial_metrics_are_omitted(self):
+        request = self.request()
+        request.pop("financial_metrics")
+        calls = FakeCalls([finding("c1"), finding("c2"), FINAL_REPORT])
+
+        result = synthesize(request, calls)
+
+        final_prompt = json.loads(calls.prompts[-1][1])
+        self.assertEqual(final_prompt["financial_metrics"], [])
+        self.assertTrue(result["validation"]["valid"])
+        self.assertEqual(result["validation"]["material_change_coverage"], 2)
+        self.assertIn("No company-wide XBRL financial facts",
+                      result["report"]["financial_analysis"])
+        self.assertIn("Company-wide XBRL financial facts were unavailable for the requested periods.",
+                      result["report"]["limitations"])
+
+    def test_final_report_receives_xbrl_facts_and_calculated_trends(self):
+        request = self.request()
+        request["financial_metrics"] = [
+            {"id": "revenue-2023", "year": 2023, "concept": "Revenue",
+             "label": "Revenue", "value": 100, "unit": "USD"},
+            {"id": "revenue-2024", "year": 2024, "concept": "Revenue",
+             "label": "Revenue", "value": 125, "unit": "USD"},
+        ]
+        calls = FakeCalls([finding("c1"), finding("c2"), FINAL_REPORT])
+
+        result = synthesize(request, calls)
+
+        final_prompt = json.loads(calls.prompts[-1][1])
+        self.assertEqual(final_prompt["financial_metrics"], request["financial_metrics"])
+        revenue_trend = next(
+            trend for trend in final_prompt["financial_trends"]
+            if trend["type"] == "year_over_year_change"
+        )
+        self.assertEqual(Decimal(revenue_trend["growth_pct"]), Decimal("25"))
+        self.assertEqual(revenue_trend["source_ids"], ["revenue-2023", "revenue-2024"])
+        self.assertEqual(result["financial_trends"][0]["source_ids"], revenue_trend["source_ids"])
+        self.assertEqual(result["financial_trends"][0]["growth_pct"], Decimal("25"))
+
     def test_batch_can_consolidate_changes_when_all_ids_are_cited(self):
         calls = FakeCalls([
             json.dumps({"key_findings": [{
